@@ -13,9 +13,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm that those details are correct
-    Then I am shown details of the found LPA
-    And I confirm that those details are correct
-    Then a letter is requested containing activation key
+    Then a letter is requested containing a one time use code
 
   @integration @acceptance @pact
   Scenario: The user cannot add an older LPA to their account that does not exist
@@ -65,7 +63,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I lost the letter received having the activation key
     When I request for a new activation key again
-    Then a letter is requested containing activation key
+    Then a letter is requested containing a one time use code
     Then I am told a new activation key is posted to the provided postcode
 
   @acceptance @integration

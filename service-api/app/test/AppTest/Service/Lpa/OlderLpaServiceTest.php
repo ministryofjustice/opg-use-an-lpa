@@ -14,14 +14,12 @@ use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
-use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -48,9 +46,6 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirements;
 
-    /** @var ObjectProphecy|ResolveActor */
-    private $resolveActorProphecy;
-
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -64,7 +59,6 @@ class OlderLpaServiceTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
-        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -80,8 +74,7 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->validateOlderLpaRequirements->reveal(),
-            $this->resolveActorProphecy->reveal()
+            $this->validateOlderLpaRequirements->reveal()
         );
     }
 
@@ -106,7 +99,7 @@ class OlderLpaServiceTest extends TestCase
                 'middlenames'   => 'Donor',
                 'surname'       => 'Person',
             ],
-            'caseSubtype'   => 'hw',
+            'caseSubtype' => 'hw',
             'lpaActorToken' => 'qwerty-54321',
         ];
 
@@ -246,11 +239,6 @@ class OlderLpaServiceTest extends TestCase
      */
     public function returns_actor_and_lpa_details_if_match_found_in_lookup(?array $expectedResponse, array $userData)
     {
-        $mockActor = [
-            'details'   => [],
-            'type'      => 'Attorney',
-        ];
-
         $lpa = [
             'uId' => '700000012345',
             'donor' => [
@@ -348,9 +336,7 @@ class OlderLpaServiceTest extends TestCase
                 'systemStatus' => true,
             ])
             ->willReturn(0); // active attorney
-        $this->resolveActorProphecy
-            ->__invoke(Argument::type('array'), Argument::type('string'))
-            ->willReturn($mockActor);
+
         $service = $this->getOlderLpaService();
 
         $userData = $service->cleanseUserData($userData);
@@ -365,8 +351,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 [
                     'actor-id' => '700000001234', // successful match for attorney
-                    'lpa-id'   => '700000012345',
-                    'role'     => 'Attorney'
+                    'lpa-id'   => '700000012345'
                 ],
                 [
                     'dob'         => '1980-03-01',
@@ -378,8 +363,7 @@ class OlderLpaServiceTest extends TestCase
             [
                 [
                     'actor-id' => '700000001111', // successful match for donor
-                    'lpa-id'   => '700000012345',
-                    'role'     => 'Attorney'
+                    'lpa-id'   => '700000012345'
                 ],
                 [
                     'dob'         => '1975-10-05',
@@ -531,13 +515,12 @@ class OlderLpaServiceTest extends TestCase
         );
 
         $dataToMatch = [
-            'reference_number'          => $this->lpaUid,
-            'dob'                       => '1980-03-01',
-            'first_names'               => 'Test Tester',
-            'last_name'                 => 'Testing',
-            'postcode'                  => 'Ab1 2Cd',
-            'force_activation_key'      => false,
-            'request_activation_key'    => false
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -568,13 +551,12 @@ class OlderLpaServiceTest extends TestCase
     public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
     {
         $dataToMatch = [
-            'reference_number'          => $this->lpaUid,
-            'dob'                       => '1980-03-01',
-            'first_names'               => 'Wrong Name',
-            'last_name'                 => 'Incorrect',
-            'postcode'                  => 'wR0 nG1',
-            'force_activation_key'      => false,
-            'request_activation_key'    => false
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Wrong Name',
+            'last_name'             => 'Incorrect',
+            'postcode'              => 'wR0 nG1',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -609,13 +591,12 @@ class OlderLpaServiceTest extends TestCase
         $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
 
         $dataToMatch = [
-            'reference_number'          => $this->lpaUid,
-            'dob'                       => '1980-03-01',
-            'first_names'               => 'Test Tester',
-            'last_name'                 => 'Testing',
-            'postcode'                  => 'Ab1 2Cd',
-            'force_activation_key'      => false,
-            'request_activation_key'    => false
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
@@ -664,13 +645,12 @@ class OlderLpaServiceTest extends TestCase
     public function allow_user_continue_to_generate_new_activation_key_even_if_actor_has_active_activation_key()
     {
         $dataToMatch = [
-            'reference_number'          =>  $this->lpaUid,
-            'dob'                       => '1980-03-01',
-            'first_names'               => 'Test Tester',
-            'last_name'                 => 'Testing',
-            'postcode'                  => 'Ab1 2Cd',
-            'force_activation_key'      => true,
-            'request_activation_key'    => true
+            'reference_number'      =>  $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => true
         ];
 
         $service = $this->getOlderLpaService();
@@ -707,13 +687,12 @@ class OlderLpaServiceTest extends TestCase
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
         $dataToMatch = [
-            'reference_number'          => $this->lpaUid,
-            'dob'                       => '1980-03-01',
-            'first_names'               => 'Test Tester',
-            'last_name'                 => 'Testing',
-            'postcode'                  => 'Ab1 2Cd',
-            'force_activation_key'      => false,
-            'request_activation_key'    => false
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
 
         $service = $this->getOlderLpaService();
