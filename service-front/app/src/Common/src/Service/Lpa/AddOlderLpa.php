@@ -102,7 +102,7 @@ class AddOlderLpa
             }
         }
         if (!empty($lpaData)) {
-            return new OlderLpaApiResponse(OlderLpaApiResponse::ADD_LPA_FOUND, $lpaData);
+            return new OlderLpaApiResponse(OlderLpaApiResponse::OLDER_LPA_FOUND, $lpaData);
         }
 
         $eventCode = ($forceActivationKey and $requestNewActivationKey) ?

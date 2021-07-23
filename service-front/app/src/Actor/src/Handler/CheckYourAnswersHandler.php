@@ -126,6 +126,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        // do a validation of lpa to see if
+        //
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
             $result = ($this->addOlderLpa)(
@@ -184,7 +186,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
 
-                case OlderLpaApiResponse::ADD_LPA_FOUND:
+                case OlderLpaApiResponse::OLDER_LPA_FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
                     $form->setData($this->data);
