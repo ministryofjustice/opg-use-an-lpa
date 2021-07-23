@@ -51,6 +51,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
             $nextPageName = $this->getRouteNameFromAnswersInSession();
             return $this->redirectToRoute($nextPageName);
         }
+
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
