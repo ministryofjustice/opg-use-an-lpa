@@ -15,6 +15,12 @@ class RequestContactDetails extends AbstractForm implements InputFilterProviderI
 {
     public const FORM_NAME = 'contact-details';
 
+    public const OPTION_NOT_SELECTED = 'OptionNotSelected';
+
+    protected array $messageTemplates = [
+        self::OPTION_NOT_SELECTED => 'Enter your phone number or check the box to say you cannot take calls',
+    ];
+
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);

@@ -89,8 +89,12 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
             $this->session->set('telephone', $postData['telephone']);
             $this->session->set('no_phone', $postData['no_phone']);
 
-            //TODO: Redirect to end of journey
-            //return $this->redirectToRoute('Somewhere');
+            if ($postData['telephone'] != '' || $postData['no_phone'] == 'yes') {
+                //TODO: Redirect to end of journey
+                //return $this->redirectToRoute('Somewhere');
+            } else {
+                $this->form->addErrorMessage(RequestContactDetails::OPTION_NOT_SELECTED);
+            }
         }
 
         return new HtmlResponse($this->renderer->render('actor::contact-details', [
