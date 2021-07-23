@@ -40,5 +40,4 @@ class ActorRoleTest extends TestCase implements TestsLaminasForm
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new ActorRole($guardProphecy->reveal());
     }
-
 }
