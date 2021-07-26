@@ -317,6 +317,10 @@ locals {
         {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(local.account.allow_meris_lpas)
+        },
+        {
+          name  = "SAVE_OLDER_LPA_REQUESTS",
+          value = tostring(local.account.save_older_lpa_requests)
         }
       ]
   })
