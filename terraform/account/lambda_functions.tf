@@ -14,7 +14,10 @@ module "clsf_to_sqs" {
   working_directory = "/var/task"
   environment_variables = {
     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id,
-    "METRIC_PROJECT_NAME" : local.environment
+    "METRIC_PROJECT_NAME" : "use-an-lpa",
+    "METRIC_CATEGORY" : "kpi",
+    "METRIC_SUBCATEGORY" : "service",
+    "METRIC_ENVIRONMENT" : local.environment
   }
   image_uri                   = "${data.aws_ecr_repository.clsf_to_sqs.repository_url}:${var.lambda_container_version}"
   ecr_arn                     = data.aws_ecr_repository.clsf_to_sqs.arn
