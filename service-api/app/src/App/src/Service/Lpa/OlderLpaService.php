@@ -31,6 +31,7 @@ class OlderLpaService
     private GetAttorneyStatus $getAttorneyStatus;
     private ValidateOlderLpaRequirements $validateLpaRequirements;
     private UserLpaActorMapInterface $userLpaActorMap;
+    private ResolveActor $resolveActor;
 
     public function __construct(
         LpaAlreadyAdded $lpaAlreadyAdded,
@@ -41,7 +42,8 @@ class OlderLpaService
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements,
         UserLpaActorMapInterface $userLpaActorMap,
-        FeatureEnabled $featureEnabled
+        FeatureEnabled $featureEnabled,
+        ResolveActor $resolveActor
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -52,6 +54,41 @@ class OlderLpaService
         $this->validateLpaRequirements = $validateLpaRequirements;
         $this->userLpaActorMap = $userLpaActorMap;
         $this->featureEnabled = $featureEnabled;
+        $this->resolveActor = $resolveActor;
+    }
+
+    public function validateOlderLpaRequest(string $userId, array $requestData): array
+    {
+        // Check LPA with user provided reference number
+        $lpaMatchResponse = $this->checkLPAMatchAndGetActorDetails($userId, $requestData);
+
+        if (!isset($lpaMatchResponse['lpa-id'])) {
+            throw new BadRequestException('The lpa-id is missing from the data match response');
+        }
+
+        if (!isset($lpaMatchResponse['actor-id'])) {
+            throw new BadRequestException('The actor-id is missing from the data match response');
+        }
+
+        // Checks if the actor already has an active activation key. If forced ignore
+        if (!$requestData['force_activation_key']) {
+            $hasActivationCode = $this->hasActivationCode(
+                $lpaMatchResponse['lpa-id'],
+                $lpaMatchResponse['actor-id']
+            );
+
+            if ($hasActivationCode instanceof DateTime) {
+                throw new BadRequestException(
+                    'LPA has an activation key already',
+                    [
+                        'donor'         => $lpaMatchResponse['donor'],
+                        'caseSubtype'   => $lpaMatchResponse['caseSubtype']
+                    ]
+                );
+            }
+        }
+
+        return $lpaMatchResponse;
     }
 
     /**
@@ -167,9 +204,12 @@ class OlderLpaService
             return null;
         }
 
+        $this->resolveActor;
+
         return [
+            'actor' => $actor,
             'actor-id' => $actorId,
-            'lpa-id' => $lpaId,
+            'lpa-id' => $lpaId
         ];
     }
 
@@ -264,6 +304,16 @@ class OlderLpaService
                 ]
             );
             throw new BadRequestException('LPA details do not match');
+        }
+
+        $actor = ($this->resolveActor)($lpa, $actorMatch['actor-id']);
+        if ($actor['type'] !== 'donor') {
+            $actorMatch['attorney'] = [
+                'uId'           => $actor['details']['uId'],
+                'firstname'     => $actor['details']['firstname'],
+                'middlenames'   => $actor['details']['middlenames'],
+                'surname'       => $actor['details']['surname'],
+            ];
         }
 
         $actorMatch['caseSubtype'] = $lpa['caseSubtype'];

@@ -7,6 +7,7 @@
         {{ govuk_form_element(form.get('last_name')) }}
         {{ govuk_form_element(form.get('dob')) }}
         {{ govuk_form_element(form.get('postcode')) }}
+        {{ govuk_form_element(form.get('force_activation_key')) }}
 
         <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--primary">
             {% trans %}Continue and ask for a new key{% endtrans %}

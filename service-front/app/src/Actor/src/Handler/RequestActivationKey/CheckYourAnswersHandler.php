@@ -133,7 +133,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            $result = ($this->addOlderLpa)(
+            $result = $this->addOlderLpa->validate(
                 $this->identity,
                 $this->data['reference_number'],
                 $this->data['first_names'],
@@ -162,6 +162,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
+                    $this->data['force_activation_key'] = 'true';
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
 
@@ -201,22 +202,26 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
                     ));
-                case OlderLpaApiResponse::SUCCESS:
-                    $letterExpectedDate = (new Carbon())->addWeeks(2);
+                case OlderLpaApiResponse::FOUND:
+                    $this->data['force_activation_key'] = 'false';
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
+                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setData($this->data);
 
-                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-                        $this->user->getDetails()['Email'],
-                        (string)$this->data['reference_number'],
-                        $this->data['postcode'],
-                        ($this->localisedDate)($letterExpectedDate)
-                    );
+                    $lpaData = $result->getData();
+
+                    $actor = is_null($lpaData->getAttorney()) ? $lpaData->getDonor() : $lpaData->getAttorney();
 
                     return new HtmlResponse(
                         $this->renderer->render(
-                            'actor::send-activation-key-confirmation',
+                            'actor::confirm-lpa-for-key-request',
                             [
-                                'date' => $letterExpectedDate,
-                                'user'  => $this->user
+                                'form'      => $form,
+                                'user'      => $this->user,
+                                'actor'     => $actor,
+                                'actorRole' => (is_null($lpaData->getAttorney()) ? 'Donor' : 'Attorney'),
+                                'donor'     => $lpaData->getDonor(),
+                                'lpaType'   => $lpaData->getCaseSubtype()
                             ]
                         )
                     );
