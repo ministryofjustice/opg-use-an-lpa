@@ -2,7 +2,7 @@
 
 namespace ActorTest\Form;
 
-use Actor\Form\RequestActivationKey;
+use Actor\Form\RequestActivationKey\RequestNames;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Common\Form\Fieldset\Date;
@@ -11,11 +11,11 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class RequestActivationKeyTest extends TestCase implements TestsLaminasForm
+class RequestNamesTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
-    protected RequestActivationKey $form;
+    protected RequestNames $form;
 
     public function getForm(): AbstractForm
     {
@@ -24,24 +24,21 @@ class RequestActivationKeyTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key';
+        return 'request_activation_key_names';
     }
 
     public function getFormElements(): array
     {
         return [
             '__csrf'                => Csrf::class,
-            'opg_reference_number'  => Text::class,
             'first_names'           => Text::class,
-            'last_name'             => Text::class,
-            'dob'                   => Date::class,
-            'postcode'              => Text::class
+            'last_name'             => Text::class
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestActivationKey($guardProphecy->reveal());
+        $this->form = new RequestNames($guardProphecy->reveal());
     }
 }
