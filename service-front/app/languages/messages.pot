@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-07-28T08:34:46+00:00\n"
+"POT-Creation-Date: 2021-07-28T09:03:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1552,49 +1552,49 @@ msgid "Check your date of birth is correct - you cannot be an attorney or donor 
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:55
+#: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:58
+#: src/Actor/templates/actor/form-error-messages.html.twig:59
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:59
+#: src/Actor/templates/actor/form-error-messages.html.twig:60
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:60
+#: src/Actor/templates/actor/form-error-messages.html.twig:61
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:61
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:62
+#: src/Actor/templates/actor/form-error-messages.html.twig:63
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:65
+#: src/Actor/templates/actor/form-error-messages.html.twig:66
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:66
+#: src/Actor/templates/actor/form-error-messages.html.twig:67
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -4038,4 +4038,10 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/create-activation-key.html.twig:12
 msgid "Continue and ask for a new key"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:53
+msgctxt "error"
+msgid "Select whether you are the donor or an attorney on the LPA"
 msgstr ""
