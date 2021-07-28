@@ -1,19 +1,19 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-06-23T11:36:19+00:00\n"
+"POT-Creation-Date: 2021-07-28T08:34:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:48
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
+#: src/Actor/templates/actor/partials/create-activation-key.html.twig:16
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
 msgid "Back to your LPAs"
 msgstr ""
@@ -142,6 +142,7 @@ msgid "Confirm your new email address"
 msgstr ""
 
 #: src/Actor/templates/actor/activate-account.html.twig:12
+#: src/Actor/templates/actor/actor-role.html.twig:14
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
 #: src/Actor/templates/actor/change-email.html.twig:12
@@ -1801,6 +1802,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:45
+#: src/Actor/templates/actor/actor-role.html.twig:48
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:91
@@ -1974,7 +1976,7 @@ msgstr ""
 msgid "beta"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/cancel-code-option.html.twig:11
+#: src/Actor/templates/actor/partials/cancel-code-option.html.twig:8
 msgid "Cancel organisation's access"
 msgstr ""
 
@@ -2960,7 +2962,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:252
+#: src/Actor/src/Handler/CheckLpaHandler.php:253
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -4016,4 +4018,24 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
 msgid "ask for an activation key if you have not been given one"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-role.html.twig:21
+msgid "What is your role on the LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-role.html.twig:35
+msgid "The donor - the person who made the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-role.html.twig:39
+msgid "An attorney - a person appointed to make decisions on the donor's behalf"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-already-added.html.twig:3
+msgid "You've already added this LPA to your account"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/create-activation-key.html.twig:12
+msgid "Continue and ask for a new key"
 msgstr ""
