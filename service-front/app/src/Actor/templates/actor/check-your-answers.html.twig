@@ -11,10 +11,6 @@
 
         {{ include('@partials/welsh-switch.html.twig') }}
 
-        <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.add-by-paper') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
-        </div>
-
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
@@ -30,7 +26,7 @@
                                 {{ data.reference_number }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                <a class="govuk-link" id="change-reference-number" href="{{ path('lpa.add-by-paper') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> reference number</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -43,7 +39,7 @@
                                 {{ data.first_names ~ ' ' ~  data.last_name }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                <a class="govuk-link" id="change-name" href="{{ path('lpa.your-name') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> name</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -56,7 +52,7 @@
                                 {{ code_date(data.dob) }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                <a class="govuk-link" id="change-date-of-birth" href="{{ path('lpa.date-of-birth') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> dob</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -69,7 +65,7 @@
                                 {{ data.postcode }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('lpa.add-by-paper') }}">
+                                <a class="govuk-link" id="change-postcode" href="{{ path('lpa.postcode') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> postcode</span>{% endtrans %}
                                 </a>
                             </dd>

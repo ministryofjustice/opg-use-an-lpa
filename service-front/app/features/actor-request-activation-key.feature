@@ -22,8 +22,8 @@ Feature: Ask for an activation key
       |                  | Enter the LPA reference number |
 
   @ui
-  Scenario Outline: The user cannot request an activation key without inputting their details
-    Given I am on the request an activation key page
+  Scenario Outline: The user cannot request an activation key without inputting their name
+    Given I am on the ask for your name page
     When I request an activation key without entering my <data>
     Then I am told that my input is invalid because <reason>
 
@@ -31,12 +31,10 @@ Feature: Ask for an activation key
       | data       | reason |
       | firstnames | Enter your first names   |
       | last name  | Enter your last name     |
-      | dob        | Enter your date of birth |
-      | postcode   | Enter your postcode      |
 
   @ui
   Scenario Outline: The user cannot request an activation key with an invalid dob
-    Given I am on the request an activation key page
+    Given I am on the ask for your date of birth page
     When I request an activation key with an invalid DOB format of "<day>" "<month>" "<year>"
     Then I am told that my input is invalid because <reason>
 
@@ -57,3 +55,22 @@ Feature: Ask for an activation key
     Given I am on the request an activation key page
     When I request an activation key with valid details
     Then I am asked to check my answers before requesting an activation key
+
+  @ui
+  Scenario: As a user I am unable to visit the your name page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Your Name page without filling out the form
+    Then I am redirected to the activation key page
+
+  @ui
+  Scenario: As a user I am unable to visit the date of birth page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Date of Birth page without filling out the form
+    Then I am redirected to the activation key page
+
+  @ui
+  Scenario: As a user I am unable to visit the postcode page without filling in my other details before
+    Given I am on the request an activation key page
+    When I visit the Postcode page without filling out the form
+    Then I am redirected to the activation key page
+
