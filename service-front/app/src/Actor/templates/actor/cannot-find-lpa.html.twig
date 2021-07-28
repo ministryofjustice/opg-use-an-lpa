@@ -33,7 +33,7 @@
 
                     {{ include('@partials/contact-details/contact-details.html.twig') }}
 
-                    <a href="{{ path('lpa.add-by-paper') }}"  draggable="false" class="govuk-button">{% trans %}Try again{% endtrans %}</a>
+                    <a href="{{ path('lpa.add-by-paper',{}, {'startAgain': 'true'})}}" draggable="false" class="govuk-button">{% trans %}Try again{% endtrans %}</a>
                     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('logout') }}">
                         {% trans %}Sign out{% endtrans %}
                     </a>

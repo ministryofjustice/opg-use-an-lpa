@@ -16,6 +16,9 @@ exec:
 up_all: | up_dependencies up_services seed
 .PHONY: up_all
 
+restart_all: | down_all up_all
+.PHONY: restart_all
+
 build:
 	$(COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: build

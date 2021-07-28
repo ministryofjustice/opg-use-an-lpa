@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Actor\Form;
+namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
@@ -18,9 +18,9 @@ use Mezzio\Csrf\CsrfGuardInterface;
  * Class RequestActivationKey
  * @package Actor\Form
  */
-class RequestActivationKey extends AbstractForm implements InputFilterProviderInterface
+class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'request_activation_key';
+    public const FORM_NAME = 'request_activation_key_reference_number';
 
     /**
      * RequestActivationKey constructor.
@@ -32,23 +32,6 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
 
         $this->add([
             'name' => 'opg_reference_number',
-            'type' => 'Text',
-        ]);
-
-        $this->add([
-            'name' => 'first_names',
-            'type' => 'Text',
-        ]);
-
-        $this->add([
-            'name' => 'last_name',
-            'type' => 'Text',
-        ]);
-
-        $this->add(new Date('dob'));
-
-        $this->add([
-            'name' => 'postcode',
             'type' => 'Text',
         ]);
     }
@@ -92,60 +75,6 @@ class RequestActivationKey extends AbstractForm implements InputFilterProviderIn
                             'message' =>
                                 'Enter the 12 numbers of the LPA reference number. ' .
                                 'Do not include letters or other characters'
-                        ],
-                    ],
-                ]
-            ],
-            'first_names' => [
-                'filters'  => [
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'message'  => 'Enter your first names',
-                        ],
-                    ],
-                ]
-            ],
-            'last_name' => [
-                'filters'  => [
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'message'  => 'Enter your last name',
-                        ],
-                    ],
-                ]
-            ],
-            'dob' => [
-                'filters'  => [
-                    ['name' => DateTrimFilter::class],
-                    ['name' => DatePrefixFilter::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => DobValidator::class,
-                    ],
-                ]
-            ],
-            'postcode' => [
-                'filters'  => [
-                    ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class],
-                ],
-                'validators' => [
-                    [
-                        'name'                   => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'message'  => 'Enter your postcode',
                         ],
                     ],
                 ]

@@ -1,0 +1,41 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}What is your date of birth?{% endtrans %}</h1>
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    {{ govuk_form_fieldset(form.get('dob'), {
+                        'hint': 'For example, 31 03 1980'| trans,
+                        'attr': {'class': 'xyz', 'label_class': 'govuk-!-font-weight-bold'} }) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
