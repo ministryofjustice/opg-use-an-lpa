@@ -224,6 +224,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\RemoveLpaHandler::class
         ], ['GET', 'POST'], 'lpa.remove-lpa');
     }
+
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
+        $app->route('/lpa/add/actor-role', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\ActorRoleHandler::class
+        ], ['GET', 'POST'], 'lpa.add.actor-role');
+    }
 };
 
 switch (getenv('CONTEXT')) {

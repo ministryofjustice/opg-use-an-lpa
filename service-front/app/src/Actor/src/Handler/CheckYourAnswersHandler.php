@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Actor\Form\ActorRole;
 use Actor\Form\CheckYourAnswers;
 use Actor\Form\CreateNewActivationKey;
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ use Common\Handler\{AbstractHandler,
     UserAware};
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -46,6 +48,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private ?UserInterface $user;
     private array $data;
     private ?string $identity;
+    private FeatureEnabled $featureEnabled;
 
     /** @var LocalisedDate */
     private $localisedDate;
@@ -60,7 +63,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
         EmailClient $emailClient,
-        LocalisedDate $localisedDate
+        LocalisedDate $localisedDate,
+        FeatureEnabled $featureEnabled
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -68,6 +72,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->addOlderLpa = $addOlderLpa;
         $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -175,8 +180,23 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
+                    if (($this->featureEnabled)('allow_older_lpas')) {
+                        $form = new ActorRole($this->getCsrfGuard($request));
+                        $form->setAttribute('action', $this->urlHelper->generate('lpa.add.actor-role'));
+                        return new HtmlResponse($this->renderer->render(
+                            'actor::actor-role',
+                            [
+                                'user'  => $this->user,
+                                'form'  => $form
+                            ]
+                        ));
+                    } else {
+                        return new HtmlResponse($this->renderer->render(
+                            'actor::cannot-find-lpa',
+                            ['user'  => $this->user]
+                        ));
+                    }
                 case OlderLpaApiResponse::NOT_FOUND:
-
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
