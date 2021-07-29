@@ -179,3 +179,9 @@ Feature: Add an older LPA
     And I provide the donor's details
     Then I am taken back to the consent and check details page
     And I can see my role is now correctly set as the Attorney
+
+  @ui
+  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
+    Given I am on the check LPA details page
+    When  I realise this is not the correct LPA
+    Then I am taken back to the start of the "request an activation key" process

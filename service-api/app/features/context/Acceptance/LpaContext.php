@@ -1994,6 +1994,9 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        //does verification first
+        $this->iAmShownDetailsOfAnLpa();
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2696,11 +2699,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
+                'reference_number' => $this->lpaUid,
+                'first_names' => $this->userFirstnames,
+                'last_name' => $this->userSurname,
+                'dob' => $this->userDob,
+                'postcode' => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -2709,21 +2712,21 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'lpa-id'    => $this->lpaUid,
-            'actor-id'  => $this->actorId,
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+            'lpa-id' => $this->lpaUid,
+            'actor-id' => $this->actorId,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
             ],
-            'attorney'         => [
-                'uId'           => $this->lpa->attorneys[0]->uId,
-                'firstname'     => $this->lpa->attorneys[0]->firstname,
-                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
-                'surname'       => $this->lpa->attorneys[0]->surname,
+            'attorney' => [
+                'uId' => $this->lpa->attorneys[0]->uId,
+                'firstname' => $this->lpa->attorneys[0]->firstname,
+                'middlenames' => $this->lpa->attorneys[0]->middlenames,
+                'surname' => $this->lpa->attorneys[0]->surname,
             ],
-            'caseSubtype'    => $this->lpa->caseSubtype,
+            'caseSubtype' => $this->lpa->caseSubtype,
         ];
 
         assertArrayHasKey('lpa-id', $this->getResponseAsJson());
