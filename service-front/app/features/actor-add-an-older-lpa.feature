@@ -14,6 +14,8 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
     And I confirm that those details are correct
+    Then I am shown the details of an LPA
+    And I confirm that those details are correct
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
@@ -103,3 +105,10 @@ Feature: Add an older LPA
     Given I have navigated to the contact-details page
     When I enter nothing
     Then I am told that I must enter a phone number
+
+  @ui
+  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
+    Given I am on the check LPA details page
+    When  I realise this is not the correct LPA
+    Then I am taken back to the start of the "request an activation key" process
+    

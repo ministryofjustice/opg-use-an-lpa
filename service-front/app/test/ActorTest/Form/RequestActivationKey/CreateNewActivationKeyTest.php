@@ -32,12 +32,13 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'reference_number'      => Hidden::class,
-            'first_names'           => Hidden::class,
-            'last_name'             => Hidden::class,
-            'dob'                   => Hidden::class,
-            'postcode'              => Hidden::class,
+            '__csrf'                    => Csrf::class,
+            'reference_number'          => Hidden::class,
+            'first_names'               => Hidden::class,
+            'last_name'                 => Hidden::class,
+            'dob'                       => Hidden::class,
+            'postcode'                  => Hidden::class,
+            'force_activation_key'      => Hidden::class,
         ];
     }
 

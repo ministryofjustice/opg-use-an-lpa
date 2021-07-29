@@ -11,8 +11,10 @@ use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\OlderLpaMatchResponse;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -38,6 +40,8 @@ class AddOlderLpaTest extends TestCase
     private $parseKeyExistsProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaAlreadyAddedResponse */
     private $parseAlreadyAddedProphecy;
+    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseOlderLpaMatchResponse */
+    private $parseOlderLpaMatchProphecy;
 
     public function setUp(): void
     {
@@ -45,6 +49,7 @@ class AddOlderLpaTest extends TestCase
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->parseKeyExistsProphecy = $this->prophesize(ParseActivationKeyExistsResponse::class);
         $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
+        $this->parseOlderLpaMatchProphecy = $this->prophesize(ParseOlderLpaMatchResponse::class);
 
         $this->olderLpa = [
             'reference_number'  => 700000000000,
@@ -60,7 +65,8 @@ class AddOlderLpaTest extends TestCase
             $this->apiClientProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->parseAlreadyAddedProphecy->reveal(),
-            $this->parseKeyExistsProphecy->reveal()
+            $this->parseKeyExistsProphecy->reveal(),
+            $this->parseOlderLpaMatchProphecy->reveal()
         );
     }
 
@@ -68,11 +74,24 @@ class AddOlderLpaTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function it_will_successfully_add_an_lpa(): void
+    public function it_will_successfully_finds_an_lpa(): void
     {
+        $response = [
+            'actor' => null,
+            'lpa-id' => (string)$this->olderLpa['reference_number'],
+            'actor-id' => '700000000001',
+            'caseSubtype' => 'hw',
+            'donor' => [
+                'uId' => '',
+                'firstname' => '',
+                'middlenames' => '',
+                'surname' => '',
+            ],
+        ];
+
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
                     'first_names'               => $this->olderLpa['first_names'],
@@ -81,14 +100,23 @@ class AddOlderLpaTest extends TestCase
                     'postcode'                  => $this->olderLpa['postcode'],
                     'force_activation_key'      => false
                 ]
-            )->willReturn(
-                [
-                    'lpa-id'    => (string) $this->olderLpa['reference_number'],
-                    'actor-id'  => '700000000001'
-                ]
-            );
+            )->willReturn($response);
 
-        $result = ($this->sut)(
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new OlderLpaMatchResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+
+        $this->parseOlderLpaMatchProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -98,7 +126,7 @@ class AddOlderLpaTest extends TestCase
             false
         );
 
-        $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
+        $this->assertEquals(OlderLpaApiResponse::FOUND, $result->getResponse());
     }
 
     /**
@@ -110,7 +138,7 @@ class AddOlderLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
                     'first_names'               => $this->olderLpa['first_names'],
@@ -126,7 +154,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $result = ($this->sut)(
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -148,7 +176,7 @@ class AddOlderLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
                     'first_names'               => $this->olderLpa['first_names'],
@@ -165,7 +193,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $result = ($this->sut)(
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -197,7 +225,7 @@ class AddOlderLpaTest extends TestCase
 
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -229,7 +257,7 @@ class AddOlderLpaTest extends TestCase
             ->__invoke($response)
             ->willReturn($dto);
 
-        $result = ($this->sut)(
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -263,7 +291,7 @@ class AddOlderLpaTest extends TestCase
 
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -296,7 +324,7 @@ class AddOlderLpaTest extends TestCase
             ->__invoke($response)
             ->willReturn($dto);
 
-        $result = ($this->sut)(
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -319,7 +347,7 @@ class AddOlderLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -335,7 +363,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $result = ($this->sut)(
+        $result = $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -356,7 +384,7 @@ class AddOlderLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -375,7 +403,7 @@ class AddOlderLpaTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
-        ($this->sut)(
+        $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -395,7 +423,7 @@ class AddOlderLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPatch(
-                '/v1/lpas/request-letter',
+                '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -412,7 +440,7 @@ class AddOlderLpaTest extends TestCase
             );
 
         $this->expectException(RuntimeException::class);
-        ($this->sut)(
+        $this->sut->validate(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
@@ -430,9 +458,22 @@ class AddOlderLpaTest extends TestCase
      */
     public function generate_new_activation_key_again_for_user(): void
     {
+        $response = [
+//            'actor' => null,
+//            'lpa-id' => (string)$this->olderLpa['reference_number'],
+//            'actor-id' => '700000000001',
+//            'caseSubtype' => 'hw',
+//            'donor' => [
+//                'uId' => '',
+//                'firstname' => '',
+//                'middlenames' => '',
+//                'surname' => '',
+//            ],
+        ];
+
         $this->apiClientProphecy
-            ->httpPatch(
-                '/v1/lpas/request-letter',
+            ->httpPost(
+                '/v1/older-lpa/confirm',
                 [
                     'reference_number'      => (string)$this->olderLpa['reference_number'],
                     'first_names'           => $this->olderLpa['first_names'],
@@ -441,9 +482,14 @@ class AddOlderLpaTest extends TestCase
                     'postcode'              => $this->olderLpa['postcode'],
                     'force_activation_key'  => true,
                 ]
-            )->willReturn([]);
+            )->willReturn($response);
 
-        $result = ($this->sut)(
+        $dto = new OlderLpaMatchResponse();
+        $this->parseOlderLpaMatchProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = $this->sut->confirm(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
