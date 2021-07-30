@@ -46,5 +46,4 @@ class ParseOlderLpaMatchResponse
 
         return $response;
     }
-
 }
