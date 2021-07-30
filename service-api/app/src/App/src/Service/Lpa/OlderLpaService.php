@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
+use App\DataAccess\DataObject\ExpiringUserLpaActorMapData;
+use App\DataAccess\DataObject\UserLpaActorMapData;
+use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 class OlderLpaService
 {
@@ -23,6 +28,7 @@ class OlderLpaService
     private ActorCodes $actorCodes;
     private GetAttorneyStatus $getAttorneyStatus;
     private ValidateOlderLpaRequirements $validateLpaRequirements;
+    private UserLpaActorMapInterface $userLpaActorMap;
 
     public function __construct(
         LpaAlreadyAdded $lpaAlreadyAdded,
@@ -32,6 +38,8 @@ class OlderLpaService
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements
+        ValidateOlderLpaRequirements $validateLpaRequirements,
+        UserLpaActorMapInterface $userLpaActorMap
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -40,6 +48,7 @@ class OlderLpaService
         $this->actorCodes = $actorCodes;
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->validateLpaRequirements = $validateLpaRequirements;
+        $this->userLpaActorMap = $userLpaActorMap;
     }
 
     /**
@@ -324,4 +333,21 @@ class OlderLpaService
             throw $apiException;
         }
     }
+
+    public function storeLPARequest(string $lpaId, string $userId, string $actorId)
+    {
+        do {
+            $added = false;
+
+            $id = Uuid::uuid4()->toString();
+
+            try {
+                $this->userLpaActorMap->create($id, $lpaId, $userId, $actorId, 'P6M');
+                $added = true;
+            } catch (KeyCollisionException $e) {
+                // Allows the loop to repeat with a new ID.
+            }
+        } while (!$added);
+    }
+
 }

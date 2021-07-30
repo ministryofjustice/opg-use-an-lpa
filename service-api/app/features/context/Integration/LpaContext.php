@@ -81,6 +81,40 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Then /^A record of the LPA requested is saved to the database$/
+     */
+    public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
+    {
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        $lpa = $this->lpaService->getAllForUser($this->userId);
+
+        assertArrayHasKey($this->userLpaActorToken, $lpa);
+        assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+    }
+
+    /**
      * @Given /^Co\-actors have also created access codes for the same LPA$/
      */
     public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()

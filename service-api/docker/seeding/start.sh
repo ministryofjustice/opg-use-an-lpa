@@ -64,6 +64,13 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT \
     --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+
+     aws dynamodb update-time-to-live \
+    --table-name UserLpaActorMap \
+    --region eu-west-1 \
+    --endpoint $DYNAMODN_ENDPOINT \
+    --time-to-live-specification "Enabled=true, AttributeName=ActivateBy"
+
 fi
 
 # Seed UaLPA database

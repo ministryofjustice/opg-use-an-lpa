@@ -7,22 +7,17 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\KeyCollisionException;
 use Aws\DynamoDb\DynamoDbClient;
-use DateTime;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Exception;
+use Ramsey\Uuid\Uuid;
 
 class UserLpaActorMap implements UserLpaActorMapInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
+    private DynamoDbClient $client;
 
-    /**
-     * @var string
-     */
-    private $userLpaActorTable;
+    private string $userLpaActorTable;
 
     /**
      * ViewerCodeActivity constructor.
@@ -56,22 +51,29 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
-    public function create(string $lpaActorToken, string $userId, string $siriusUid, int $actorId)
+    public function create(string $uuid, string $lpaId, string $userId, string $actorId, string $expiryInterval = null)
     {
-        // The current DateTime, including microseconds
-        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+        $added = new \DateTime();
+        $array = [
+            'Id'        => ['S' => $uuid],
+            'UserId'    => ['S' => $userId],
+            'SiriusUid' => ['S' => $lpaId],
+            'ActorId'   => ['N' => $actorId],
+            'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
+        ];
+
+        //Add ActivatedBy field to array if expiry interval is present
+        if ($expiryInterval != null) {
+            $expiry = $added->add(new \DateInterval($expiryInterval));
+            $array['ActivatedBy'] = ['N' => $expiry->getTimestamp()];
+        }
 
         try {
             $this->client->putItem([
                 'TableName' => $this->userLpaActorTable,
-                'Item' => [
-                    'Id'        => ['S' => $lpaActorToken],
-                    'UserId'    => ['S' => $userId],
-                    'SiriusUid' => ['S' => $siriusUid],
-                    'ActorId'   => ['N' => (string)$actorId],
-                    'Added'     => ['S' => $now],
-                ],
+                'Item' => $array,
                 'ConditionExpression' => 'attribute_not_exists(Id)'
             ]);
         } catch (DynamoDbException $e) {

@@ -3,6 +3,7 @@
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
+use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\Response\Lpa;
@@ -15,6 +16,7 @@ use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
+use Common\Entity\User;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -46,6 +48,8 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirements;
 
+    private $userLpaActorMap;
+
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -59,6 +63,7 @@ class OlderLpaServiceTest extends TestCase
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
+        $this->userLpaActorMap = $this->prophesize(UserLpaActorMap::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -74,7 +79,8 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->validateOlderLpaRequirements->reveal()
+            $this->validateOlderLpaRequirements->reveal(),
+            $this->userLpaActorMap->reveal()
         );
     }
 

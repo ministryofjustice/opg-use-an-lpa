@@ -41,6 +41,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^A record of the LPA requested is saved to the database$/
+     */
+    public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
+    {
+        //Not used in this context
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
@@ -2019,6 +2027,22 @@ class LpaContext implements Context
                 )
             );
 
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
+
         // API call to request an activation key
         $this->apiPatch(
             '/v1/lpas/request-letter',
@@ -2443,6 +2467,22 @@ class LpaContext implements Context
                     []
                 )
             );
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // API call to request an activation key
         $this->apiPatch(

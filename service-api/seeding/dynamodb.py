@@ -128,11 +128,19 @@ userLpaActorMap = [
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
     },
     {
-            'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
-            'SiriusUid': '700000000047',
-            'ActorId': '9',
-            'Added': '2021-04-22T15:01:11.548361Z',
-            'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+        'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
+        'SiriusUid': '700000000047',
+        'ActorId': '9',
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+    },
+    {
+        'Id': 'e69a80db-0001-45a1-a4c5-06bd7ecf8d2e',
+        'SiriusUid': '700000000435',
+        'ActorId': '78',
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'ActivatedBy': '2493072000'
     },
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',

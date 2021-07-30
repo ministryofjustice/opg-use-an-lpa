@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\DataAccess\DataObject\UserLpaActorMapData;
+use Common\Entity\User;
 use DateTime;
 
 /**
@@ -16,19 +18,19 @@ interface UserLpaActorMapInterface
 {
     /**
      * Creates a new mapping in the DB
-     *
-     * @param string $lpaActorToken
+     * @param string $uuid
+     * @param string $lpaId
      * @param string $userId
-     * @param string $siriusUid
-     * @param int $actorId
+     * @param string $actorId
+     * @param string $expiryInterval
      * @throws KeyCollisionException
      */
-    public function create(string $lpaActorToken, string $userId, string $siriusUid, int $actorId);
+    public function create(string $uuid, string $lpaId, string $userId, string $actorId, string $expiryInterval = null);
 
     /**
      * Returns the IDs for the LPA and associated Actor for the given token.
      *
-     * @param $lpaActorToken
+     * @param string $lpaActorToken
      * @return mixed
      */
     public function get(string $lpaActorToken): ?array;
