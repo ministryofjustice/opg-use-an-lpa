@@ -179,15 +179,30 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
         $app->route('/lpa/add-by-paper-information', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKeyInfoHandler::class
+            Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class
         ], ['GET', 'POST'], 'lpa.add-by-paper-information');
 
-        $app->route('/lpa/add-by-paper', [
+        $app->route('/lpa/request-code/lpa-reference-number', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKeyHandler::class
+            Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class
         ], ['GET', 'POST'], 'lpa.add-by-paper');
 
-        $app->route('/lpa/check-answers', [
+        $app->route('/lpa/request-code/your-name', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RequestActivationKey\NameHandler::class
+        ], ['GET', 'POST'], 'lpa.your-name');
+
+        $app->route('/lpa/request-code/date-of-birth', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RequestActivationKey\DateOfBirthHandler::class
+        ], ['GET', 'POST'], 'lpa.date-of-birth');
+
+        $app->route('/lpa/request-code/postcode', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RequestActivationKey\PostcodeHandler::class
+        ], ['GET', 'POST'], 'lpa.postcode');
+
+        $app->route('/lpa/request-code/check-answers', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\CheckYourAnswersHandler::class
         ], ['GET', 'POST'], 'lpa.check-answers');
@@ -208,6 +223,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RemoveLpaHandler::class
         ], ['GET', 'POST'], 'lpa.remove-lpa');
+    }
+
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
+        $app->route('/lpa/add/actor-role', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\ActorRoleHandler::class
+        ], ['GET', 'POST'], 'lpa.add.actor-role');
     }
 };
 
