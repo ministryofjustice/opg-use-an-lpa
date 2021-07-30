@@ -49,6 +49,9 @@ class KmsEncryptedCookie implements EncryptInterface
             return [];
         }
 
+        // unquote the value if necessary
+        $data = preg_replace('/\\\\(.)|"/', '$1', $data);
+
         // Separate out the key ID and the data
         [$keyId, $payload] = explode('.', trim($data, '"'), 2);
 
