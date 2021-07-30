@@ -39,9 +39,9 @@ class RequestActivationKeyContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
 
-        $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
+       // $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
     }
 
     /**
@@ -384,7 +384,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->patch('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -408,7 +408,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->patch('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -436,17 +436,27 @@ class RequestActivationKeyContext implements Context
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response
-            $this->apiFixtures->patch('/v1/lpas/request-letter')
+            $this->apiFixtures->patch('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
-                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        StatusCodeInterface::STATUS_OK,
                         [],
-                        ''
+                        json_encode(
+                            [
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                            ]
+                        )
                     )
                 );
         } else {
             // Setup fixture for activation key already existing
-            $this->apiFixtures->patch('/v1/lpas/request-letter')
+            $this->apiFixtures->patch('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -456,14 +466,14 @@ class RequestActivationKeyContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'donor' => [
-                                        'uId' => $this->lpa->donor->uId,
-                                        'firstname' => $this->lpa->donor->firstname,
-                                        'middlenames' => $this->lpa->donor->middlenames,
-                                        'surname' => $this->lpa->donor->surname,
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
                                     ],
                                     'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken,
+                                    'lpaActorToken' => $this->userLpaActorToken
                                 ],
                             ]
                         )
@@ -491,7 +501,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->fillAndSubmitOlderLpaForm();
 
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->patch('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -501,14 +511,14 @@ class RequestActivationKeyContext implements Context
                             'title' => 'Bad request',
                             'details' => 'LPA already added',
                             'data' => [
-                                'donor' => [
-                                    'uId' => $this->lpa->donor->uId,
-                                    'firstname' => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname' => $this->lpa->donor->surname,
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken,
+                                'lpaActorToken' => $this->userLpaActorToken
                             ],
                         ]
                     )
@@ -707,5 +717,42 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->fillField('postcode', $array['postcode']);
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am on the check LPA details page$/
+     */
+    public function iAmOnTheCheckLPADetailsPage()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iAmShownTheDetailsOfAnLPA();
+    }
+
+    /**
+     * @Then /^I am shown the details of an LPA$/
+     */
+    public function iAmShownTheDetailsOfAnLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertElementContainsText('h1', 'Check we\'ve found the right LPA');
+    }
+
+    /**
+     * @When /^I realise this is not the correct LPA$/
+     */
+    public function iRealiseThisIsNotTheCorrectLPA()
+    {
+        $this->ui->assertPageContainsText('This is not the correct LPA');
+        $this->ui->clickLink('This is not the correct LPA');
+    }
+
+    /**
+     * @Then /^I am taken back to the start of the (.*) process$/
+     */
+    public function iAmTakenBackToTheStartOfRequestAnActivationKeyProcess()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
     }
 }

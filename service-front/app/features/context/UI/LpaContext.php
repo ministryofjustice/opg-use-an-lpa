@@ -68,38 +68,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
-    {
-        $this->fillAndSubmitOlderLpaForm();
-
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'LPA already added',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken
-                            ],
-                        ]
-                    )
-                )
-            );
-    }
-
-    /**
      * @When /^I request to remove an LPA from my account without the lpa actor token$/
      */
     public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
@@ -166,14 +134,6 @@ class LpaContext implements Context
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
         //Not needed for this context
-    }
-
-    /**
-     * @Then /^a letter is requested containing a one time use code$/
-     */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
-    {
-        $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
     }
 
     /**
@@ -1512,165 +1472,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When I provide details from an LPA registered before Sept 2019
-     */
-    public function iProvideDetailsFromAnLpaRegisteredBeforeSept2019()
-    {
-        $this->fillAndSubmitOlderLpaForm();
-
-        // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'LPA not eligible due to registration date',
-                            'details' => 'LPA not eligible due to registration date',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
-    }
-
-    /**
-     * @When I provide details that do not match a valid paper document
-     */
-    public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
-    {
-        $this->fillAndSubmitOlderLpaForm();
-
-        // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'LPA details do not match',
-                            'details' => 'LPA details do not match',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
-    }
-
-    /**
-     * @When I provide the details from a valid paper document
-     */
-    public function iProvideTheDetailsFromAValidPaperDocument()
-    {
-        $this->fillAndSubmitOlderLpaForm();
-
-        /**
-         * This step definition needs to behave differently dependant on some prior context step
-         */
-        if ($this->activationCode === null) {
-            // Setup fixture for success response
-            $this->apiFixtures->patch('/v1/older-lpa/validate')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'donor' => [
-                                    'uId' => $this->lpa->donor->uId,
-                                    'firstname' => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname' => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                            ]
-                        )
-                    )
-                );
-        } else {
-            // Setup fixture for activation key already existing
-            $this->apiFixtures->patch('/v1/older-lpa/validate')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_BAD_REQUEST,
-                        [],
-                        json_encode(
-                            [
-                                'title' => 'Bad request',
-                                'details' => 'LPA has an activation key already',
-                                'data' => [
-                                    'donor'         => [
-                                        'uId'           => $this->lpa->donor->uId,
-                                        'firstname'     => $this->lpa->donor->firstname,
-                                        'middlenames'   => $this->lpa->donor->middlenames,
-                                        'surname'       => $this->lpa->donor->surname,
-                                    ],
-                                    'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken
-                                ],
-                            ]
-                        )
-                    )
-                );
-        }
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
-            );
-    }
-
-    /**
-     * @When /^I request an activation key with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
-     */
-    public function iRequestAnActivationKeyWithAnInvalidDOBFormatOf($day, $month, $year)
-    {
-        $this->ui->assertPageAddress('/lpa/add-by-paper');
-        $this->ui->fillField('opg_reference_number', '700000000001');
-        $this->ui->fillField('first_names', 'Attorney');
-        $this->ui->fillField('last_name', 'Person');
-        $this->ui->fillField('postcode', 'ABC123');
-        $this->ui->fillField('dob[day]', $day);
-        $this->ui->fillField('dob[month]', $month);
-        $this->ui->fillField('dob[year]', $year);
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I request an activation key with an invalid lpa reference number format of "([^"]*)"$/
-     */
-    public function iRequestAnActivationKeyWithAnInvalidLpaReferenceNumberFormatOf($referenceNumber)
-    {
-        $this->ui->fillField('opg_reference_number', $referenceNumber);
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I request an activation key with valid details$/
-     */
-    public function iRequestAnActivationKeyWithValidDetails()
-    {
-        $this->ui->assertPageAddress('/lpa/add-by-paper');
-        $this->ui->fillField('opg_reference_number', '700000000001');
-        $this->ui->fillField('first_names', 'The Attorney');
-        $this->ui->fillField('last_name', 'Person');
-        $this->ui->fillField('postcode', 'ABC123');
-        $this->ui->fillField('dob[day]', '09');
-        $this->ui->fillField('dob[month]', '02');
-        $this->ui->fillField('dob[year]', '1998');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
      * @When /^I request an activation key without entering my (.*)$/
      */
     public function iRequestAnActivationKeyWithoutEnteringMy($data)
@@ -2539,42 +2340,5 @@ class LpaContext implements Context
     public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
     {
         $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
-    }
-
-    /**
-     * @Then /^I am shown the details of an LPA$/
-     */
-    public function iAmShownTheDetailsOfAnLPA()
-    {
-        $this->ui->assertPageAddress('/lpa/check-answers');
-        $this->ui->assertElementContainsText('h1', 'Check we\'ve found the right LPA');
-    }
-
-    /**
-     * @Then /^I am on the check LPA details page$/
-     */
-    public function iAmOnTheCheckLPADetailsPage()
-    {
-        $this->iAmOnTheRequestAnActivationKeyPage();
-        $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
-        $this->iAmShownTheDetailsOfAnLPA();
-    }
-
-    /**
-     * @When /^I realise this is not the correct LPA$/
-     */
-    public function iRealiseThisIsNotTheCorrectLPA()
-    {
-        $this->ui->assertPageContainsText('This is not the correct LPA');
-        $this->ui->clickLink('This is not the correct LPA');
-    }
-
-    /**
-     * @Then /^I am taken back to the start of the (.*) process$/
-     */
-    public function iAmTakenBackToTheStartOfRequestAnActivationKeyProcess()
-    {
-        $this->ui->assertPageAddress('/lpa/add');
     }
 }
