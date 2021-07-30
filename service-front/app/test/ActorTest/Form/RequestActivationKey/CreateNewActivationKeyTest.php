@@ -37,7 +37,7 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new CreateNewActivationKey($guardProphecy->reveal());
