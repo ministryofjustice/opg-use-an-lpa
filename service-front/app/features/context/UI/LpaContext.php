@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Actor\Form\RequestContactDetails;
+use Actor\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -55,7 +56,7 @@ class LpaContext implements Context
      */
     public function iAmToldThatIMustEnterAPhoneNumber()
     {
-        $this->ui->assertPageContainsText(RequestContactDetails::OPTION_NOT_SELECTED_MESSAGE);
+        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
     }
 
     /**
