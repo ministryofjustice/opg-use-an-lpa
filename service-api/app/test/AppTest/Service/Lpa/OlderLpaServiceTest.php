@@ -945,4 +945,69 @@ class OlderLpaServiceTest extends TestCase
 
         $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
     }
+
+    /**
+     * @test
+     */
+    public function allow_user_to_continue_request_for_activation_key_if_lpa_match_found()
+    {
+        $dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
+        ];
+
+        $lpaMatchResponse = [
+            'actor' => null,
+            'actor-id' => '700000055554',
+            'lpa-id' => '700000012345',
+            'attorney' => [
+                'uId' => null,
+                'firstname' => null,
+                'middlenames' => null,
+                'surname' => null
+            ],
+            'caseSubtype' => 'pfa',
+            'donor' => [
+                'uId' => '700000001111',
+                'firstname' => 'Donor',
+                'middlenames' => 'Example',
+                'surname' => 'Person'
+            ],
+        ];
+
+        $service = $this->getOlderLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn();
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($this->lpaUid, $this->actorUid)
+            ->willReturn(new ActorCode(
+                             [
+                                 'Created' => null
+                             ],
+                             new DateTime()
+                         ));
+
+       $result = $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
+       $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
+       $this->assertIsArray($response);
+
+       $this->assertEquals($lpaMatchResponse, $response);
+    }
 }

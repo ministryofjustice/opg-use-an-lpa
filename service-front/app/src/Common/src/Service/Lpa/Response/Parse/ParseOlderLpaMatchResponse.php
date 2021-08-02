@@ -38,6 +38,7 @@ class ParseOlderLpaMatchResponse
         }
 
         $response = new OlderLpaMatchResponse();
+
         if (array_key_exists('attorney', $data)) {
             $response->setAttorney($this->lpaFactory->createCaseActorFromData($data['attorney']));
         }

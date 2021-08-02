@@ -72,7 +72,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      */
     public function it_will_successfully_finds_an_lpa(): void
     {
@@ -131,7 +131,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_an_ineligible_lpa(): void
@@ -169,7 +169,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_due_to_a_bad_data_match(): void
@@ -208,7 +208,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::badRequestReturned
      */
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
@@ -273,7 +273,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::badRequestReturned
      */
     public function it_will_fail_if_they_have_already_added_the_LPA(): void
@@ -340,7 +340,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::notFoundReturned
      */
     public function it_will_fail_to_add_due_to_not_finding_the_lpa(): void
@@ -378,7 +378,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      */
     public function it_will_fail_to_add_due_to_an_api_exception(): void
     {
@@ -416,7 +416,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::validate
      * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
@@ -453,23 +453,12 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers ::confirm
      * @covers ::badRequestReturned
      */
     public function generate_new_activation_key_again_for_user(): void
     {
-        $response = [
-//            'actor' => null,
-//            'lpa-id' => (string)$this->olderLpa['reference_number'],
-//            'actor-id' => '700000000001',
-//            'caseSubtype' => 'hw',
-//            'donor' => [
-//                'uId' => '',
-//                'firstname' => '',
-//                'middlenames' => '',
-//                'surname' => '',
-//            ],
-        ];
+        $response = [];
 
         $this->apiClientProphecy
             ->httpPost(
@@ -480,7 +469,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => true,
+                    'force_activation_key'  => false,
                 ]
             )->willReturn($response);
 
@@ -496,7 +485,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            true
+            false
         );
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
