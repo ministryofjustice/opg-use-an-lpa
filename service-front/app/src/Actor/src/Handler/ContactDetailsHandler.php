@@ -91,7 +91,6 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
 
             //TODO: Redirect to end of journey
             //return $this->redirectToRoute('Somewhere');
-
         }
 
         return new HtmlResponse($this->renderer->render('actor::contact-details', [
