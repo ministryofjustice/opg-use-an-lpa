@@ -49,7 +49,7 @@ Feature: Add an older LPA
   @integration @acceptance @pact
   Scenario: The user is informed if they have an activation key
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document that already has an activation  key
+    When I provide the details from a valid paper document that already has an activation key
     And I confirm that those details are correct
     Then I am told that I have an activation key for this LPA and where to find it
 

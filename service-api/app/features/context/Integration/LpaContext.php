@@ -1321,7 +1321,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation  key$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {

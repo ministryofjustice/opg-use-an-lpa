@@ -40,8 +40,6 @@ class RequestActivationKeyContext implements Context
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
         $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
-
-       // $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
     }
 
     /**
