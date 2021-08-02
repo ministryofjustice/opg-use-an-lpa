@@ -27,7 +27,7 @@
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('telephone'), {
+                        {{ govuk_form_element(form.get('telephone_option').get('telephone'), {
                             'label': 'Your telephone number'| trans,
                             'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label'},
                             'inputmode': 'numeric',
@@ -36,7 +36,7 @@
 
                         <p class="govuk-body govuk-!-margin-bottom-6">{% trans %}or{% endtrans %}</p>
 
-                        {{ govuk_form_element(form.get('no_phone'), {
+                        {{ govuk_form_element(form.get('telephone_option').get('no_phone'), {
                             'label': 'I do not have a phone or cannot use a phone to take calls'| trans,
                         }) }}
 

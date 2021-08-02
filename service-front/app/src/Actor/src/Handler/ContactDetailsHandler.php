@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Actor\Form\ChangeEmail;
 use Actor\Form\RequestContactDetails;
 use Common\Handler\AbstractHandler;
@@ -34,17 +35,20 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
     private RequestContactDetails $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
+    private TranslatorInterface $translator;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authentication,
-        UrlValidityCheckService $urlValidityCheckService
+        UrlValidityCheckService $urlValidityCheckService,
+        TranslatorInterface $translator
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authentication);
         $this->urlValidityCheckService = $urlValidityCheckService;
+        $this->translator = $translator;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -86,12 +90,9 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
             $this->session->set('telephone', $postData['telephone']);
             $this->session->set('no_phone', $postData['no_phone']);
 
-            if ($postData['telephone'] != '' || $postData['no_phone'] == 'yes') {
-                //TODO: Redirect to end of journey
-                //return $this->redirectToRoute('Somewhere');
-            } else {
-                $this->form->addErrorMessage(RequestContactDetails::OPTION_NOT_SELECTED);
-            }
+            //TODO: Redirect to end of journey
+            //return $this->redirectToRoute('Somewhere');
+
         }
 
         return new HtmlResponse($this->renderer->render('actor::contact-details', [
