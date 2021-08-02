@@ -18,7 +18,6 @@ use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ResolveActor;
-use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -59,6 +58,9 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ResolveActor */
     private $resolveActorProphecy;
 
+    /** @var ObjectProphecy|OlderLpaService */
+    private $checkLPAMatchAndGetActorDetailsProphecy;
+
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -76,6 +78,7 @@ class OlderLpaServiceTest extends TestCase
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
+        $this->checkLPAMatchAndGetActorDetailsProphecy = $this->prophesize(OlderLpaService::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -96,6 +99,8 @@ class OlderLpaServiceTest extends TestCase
             $this->validateOlderLpaRequirementsProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
             $this->featureEnabledProphecy->reveal()
+            $this->resolveActorProphecy->reveal(),
+            $this->checkLPAMatchAndGetActorDetailsProphecy->reveal()
         );
     }
 
@@ -719,16 +724,10 @@ class OlderLpaServiceTest extends TestCase
                 )
             );
 
-        $result = $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('LPA has an activation key already');
 
-        $this->assertEquals($this->actorUid, $result['actor-id']);
-        $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertArrayHasKey('donor', $result);
-        $this->assertEquals($lpa->getData()['donor']['uId'], $result['donor']['uId']);
-        $this->assertEquals($lpa->getData()['donor']['firstname'], $result['donor']['firstname']);
-        $this->assertEquals($lpa->getData()['donor']['middlenames'], $result['donor']['middlenames']);
-        $this->assertEquals($lpa->getData()['donor']['surname'], $result['donor']['surname']);
-        $this->assertEquals($lpa->getData()['caseSubtype'], $result['caseSubtype']);
+        $service->validateOlderLpaRequest($this->userId, $dataToMatch);
     }
 
     /**
@@ -762,7 +761,7 @@ class OlderLpaServiceTest extends TestCase
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
-        $result = $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
+        $result = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
 
         $this->assertEquals($this->actorUid, $result['actor-id']);
         $this->assertEquals($this->lpaUid, $result['lpa-id']);

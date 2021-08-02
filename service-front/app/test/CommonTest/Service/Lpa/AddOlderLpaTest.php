@@ -134,7 +134,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::validate
      * @covers ::badRequestReturned
      */
-    public function it_will_fail_to_add_an_ineligible_lpa(): void
+    public function it_will_fail_to_validate_an_ineligible_lpa(): void
     {
         $this->apiClientProphecy
             ->httpPatch(
@@ -172,7 +172,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::validate
      * @covers ::badRequestReturned
      */
-    public function it_will_fail_to_add_due_to_a_bad_data_match(): void
+    public function it_will_fail_to_validate_due_to_a_bad_data_match(): void
     {
         $this->apiClientProphecy
             ->httpPatch(
@@ -343,7 +343,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::validate
      * @covers ::notFoundReturned
      */
-    public function it_will_fail_to_add_due_to_not_finding_the_lpa(): void
+    public function it_will_fail_to_validate_due_to_not_finding_the_lpa(): void
     {
         $this->apiClientProphecy
             ->httpPatch(
@@ -380,7 +380,7 @@ class AddOlderLpaTest extends TestCase
      * @test
      * @covers ::validate
      */
-    public function it_will_fail_to_add_due_to_an_api_exception(): void
+    public function it_will_fail_to_validate_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
             ->httpPatch(
@@ -419,7 +419,7 @@ class AddOlderLpaTest extends TestCase
      * @covers ::validate
      * @covers ::badRequestReturned
      */
-    public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
+    public function it_will_fail_to_validate_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
             ->httpPatch(
@@ -489,5 +489,43 @@ class AddOlderLpaTest extends TestCase
         );
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
+    }
+
+    /**
+     * @test
+     * @covers ::confirm
+     */
+    public function it_will_fail_to_confirm_due_to_an_api_exception(): void
+    {
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number' => (string)$this->olderLpa['reference_number'],
+                    'first_names' => $this->olderLpa['first_names'],
+                    'last_name' => $this->olderLpa['last_name'],
+                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode' => $this->olderLpa['postcode'],
+                    'force_activation_key' => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'Service Error',
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )
+            );
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Service Error');
+
+        $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            false
+        );
     }
 }
