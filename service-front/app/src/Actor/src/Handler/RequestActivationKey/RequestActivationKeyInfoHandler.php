@@ -12,6 +12,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Service\Features\FeatureEnabled;
 
 /**
  * Class RequestActivationKeyInfoHandler
@@ -23,15 +24,18 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     use User;
 
     private ?SessionInterface $session;
+    private FeatureEnabled $featureEnabled;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        FeatureEnabled $featureEnabled
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -41,7 +45,11 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
-
+        if (($this->featureEnabled)('allow_older_lpas')) {
+            return new HtmlResponse($this->renderer->render('actor::before-requesting-activation-key-info', [
+                'user' => $user,
+            ]));
+        }
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/info', [
             'user' => $user,
         ]));
