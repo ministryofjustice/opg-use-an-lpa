@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\ActorRole;
+use Actor\Form\RequestActivationKey\ActorRole;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
@@ -20,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class ActorRoleHandler
- * @package Actor\Handler
+ * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAware
@@ -54,7 +54,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::actor-role',
+            'actor::request-activation-key/actor-role',
             [
                 'user'  => $this->user,
                 'form'  => $this->form
@@ -74,12 +74,13 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                // TODO: implement Donor route redirect here UML-1555
+                return $this->redirectToRoute('lpa.add.contact-details');
+            } else {
+                return $this->redirectToRoute('lpa.add.donor-details');
             }
-            // TODO: implement Actor route redirect here UML-1606
         }
 
-        return new HtmlResponse($this->renderer->render('actor::actor-role', [
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
             'user'  => $this->user,
             'form'  => $this->form
         ]));
