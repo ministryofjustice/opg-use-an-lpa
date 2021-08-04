@@ -99,6 +99,7 @@ resource "aws_security_group" "admin_loadbalancer" {
 
 resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress" {
   count             = local.account.build_admin == true ? 1 : 0
+  description       = "Port 80 ingress for redirection to port 443"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
