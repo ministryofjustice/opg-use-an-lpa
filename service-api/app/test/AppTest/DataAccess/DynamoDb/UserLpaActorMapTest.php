@@ -18,7 +18,7 @@ class UserLpaActorMapTest extends TestCase
 {
     use GenerateAwsResultTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    public const TABLE_NAME = 'test-table-name';
 
     private $dynamoDbClientProphecy;
 

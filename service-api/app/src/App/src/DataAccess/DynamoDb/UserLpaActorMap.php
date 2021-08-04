@@ -64,10 +64,10 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
         ];
 
-        //Add ActivatedBy field to array if expiry interval is present
+        //Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval != null) {
             $expiry = $added->add(new \DateInterval($expiryInterval));
-            $array['ActivatedBy'] = ['N' => $expiry->getTimestamp()];
+            $array['ActivateBy'] = ['N' => $expiry->getTimestamp()];
         }
 
         try {

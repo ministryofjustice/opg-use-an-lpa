@@ -2,6 +2,7 @@ import os
 import boto3
 import json
 from passlib.hash import sha256_crypt
+from decimal import Decimal
 import datetime
 import pytz
 
@@ -47,6 +48,7 @@ endOfToday = timezone.localize(now.replace(hour=23, minute=59, second=59, micros
 
 lastWeek = endOfToday - datetime.timedelta(days=7)
 nextWeek = endOfToday + datetime.timedelta(days=7)
+nextMonth = endOfToday + datetime.timedelta(days=31)
 
 viewerCodes = [
     {
@@ -140,7 +142,7 @@ userLpaActorMap = [
         'ActorId': '78',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-        'ActivatedBy': '2493072000'
+        'ActivateBy': Decimal(nextMonth.timestamp())
     },
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',
