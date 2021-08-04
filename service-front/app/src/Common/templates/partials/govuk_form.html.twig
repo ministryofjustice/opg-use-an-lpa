@@ -11,11 +11,9 @@
 {%- block form_element_simple -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
-        {% if label is defined or label is not empty %}
-            <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-                {{ label | raw }}
-            </label>
-        {% endif %}
+        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
+            {{ label | raw }}
+        </label>
 
         {% if element.getName() == 'opg_reference_number' %}
             <p class="govuk-body">{% trans %}The LPA reference number (also called OPG reference number) is on the first page of the paper LPA and printed on any letter you get from the Office of the Public Guardian.{% endtrans %}</p>
