@@ -37,7 +37,6 @@ class OlderLpaService
         LoggerInterface $logger,
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
-        ValidateOlderLpaRequirements $validateLpaRequirements
         ValidateOlderLpaRequirements $validateLpaRequirements,
         UserLpaActorMapInterface $userLpaActorMap
     ) {
