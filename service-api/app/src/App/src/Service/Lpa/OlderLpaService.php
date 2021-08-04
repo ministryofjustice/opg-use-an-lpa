@@ -341,7 +341,7 @@ class OlderLpaService
             $id = Uuid::uuid4()->toString();
 
             try {
-                $this->userLpaActorMap->create($id, $lpaId, $userId, $actorId, 'P6M');
+                $this->userLpaActorMap->create($id, $lpaId, $userId, $actorId, 'P1Y');
                 $added = true;
             } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.
