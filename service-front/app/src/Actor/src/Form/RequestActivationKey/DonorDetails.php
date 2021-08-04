@@ -52,6 +52,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
     {
         return [
             'first_names' => [
+                'required'   => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
                 ],
@@ -65,6 +66,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                 ]
             ],
             'last_name' => [
+                'required'   => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
                 ],
@@ -78,6 +80,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                 ]
             ],
             'dob' => [
+                'required'   => true,
                 'filters'  => [
                     ['name' => DateTrimFilter::class],
                     ['name' => DatePrefixFilter::class],
@@ -86,7 +89,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name' => DobValidator::class,
                         'options'                => [
-                            'message'  => 'Enter the donor\'s dob',
+                            'message'  => 'Enter the donor\'s date of birth',
                         ],
                     ],
                 ]
