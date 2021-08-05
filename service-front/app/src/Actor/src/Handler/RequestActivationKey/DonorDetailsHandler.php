@@ -53,11 +53,20 @@ class DonorDetailsHandler extends AbstractHandler implements UserAware, CsrfGuar
             $form->setData($request->getParsedBody());
 
             if ($form->isValid()) {
-                return new HtmlResponse($this->renderer->render('actor::contact-details', [
-                    'user' => $user,
-                    'form' => $form->prepare(),
-                    'referer' => $session->get('referer')
-                ]));
+                $donorData = $form->getData();
+
+                $dobString = sprintf(
+                    '%s-%s-%s',
+                    $donorData['dob']['year'],
+                    $donorData['dob']['month'],
+                    $donorData['dob']['day']
+                );
+
+                $session->set('donor_firstnames', $donorData['first_names']);
+                $session->set('donor_lastname', $donorData['last_name']);
+                $session->set('donor_dob', $dobString);
+
+                return $this->redirectToRoute('lpa.add.contact-details');
             }
         }
 
