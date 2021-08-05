@@ -4,6 +4,7 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
+use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\Response\Lpa;
@@ -20,8 +21,10 @@ use Common\Entity\User;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use PhpParser\Node\Arg;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -48,6 +51,7 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirements;
 
+    /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMap;
 
     public string $userId;
@@ -803,5 +807,59 @@ class OlderLpaServiceTest extends TestCase
             ],
             new DateTime()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function older_lpa_request_is_saved_with_a_TTL()
+    {
+        $this->userLpaActorMap->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-lpaId'),
+            Argument::exact('test-user'),
+            Argument::exact('1'),
+            Argument::exact('P1Y')
+        )->shouldBeCalled();
+
+        $service = $this->getOlderLpaService();
+
+        $service->storeLPARequest('test-lpaId', 'test-user', '1');
+    }
+
+    /**
+     * @test
+     */
+    public function older_lpa_request_is_looped_until_no_id_collision()
+    {
+        $createCalls = 0;
+        $this->userLpaActorMap->create(
+            Argument::that(
+                function (string $id) {
+                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
+                    return true;
+                }
+            ),
+            Argument::exact('test-lpaId'),
+            Argument::exact('test-user'),
+            Argument::exact('1'),
+            Argument::exact('P1Y')
+        )->will(function () use (&$createCalls) {
+            if ($createCalls > 0) {
+                return;
+            }
+
+            $createCalls++;
+            throw new KeyCollisionException();
+        });
+
+        $service = $this->getOlderLpaService();
+
+        $service->storeLPARequest('test-lpaId', 'test-user', '1');
     }
 }

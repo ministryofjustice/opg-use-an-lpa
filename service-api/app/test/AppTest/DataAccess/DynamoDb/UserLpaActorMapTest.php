@@ -140,6 +140,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertArrayHasKey('TableName', $data);
             $this->assertArrayHasKey('Item', $data);
             $this->assertArrayHasKey('ConditionExpression', $data);
+            $this->assertArrayNotHasKey('ActivateBy', $data);
 
             $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
 
@@ -161,6 +162,55 @@ class UserLpaActorMapTest extends TestCase
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
         $repo->create($testToken, $testSiriusUid, $testUserId, (string)$testActorId);
+    }
+
+    /** @test */
+    public function add_unique_token_with_TTL()
+    {
+        $yearInEpoch = 31536000;
+        $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+
+        $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
+            $yearInEpoch,
+            $testToken,
+            $testSiriusUid,
+            $testUserId,
+            $testActorId
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            //---
+
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertArrayHasKey('Item', $data);
+            $this->assertArrayHasKey('ConditionExpression', $data);
+
+            $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
+
+            $this->assertEquals(['S' => $testToken], $data['Item']['Id']);
+            $this->assertIsString($data['Item']['Id']['S']);
+            $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
+            $this->assertIsString($data['Item']['UserId']['S']);
+            $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertIsString($data['Item']['SiriusUid']['S']);
+            $this->assertEquals(['N' => $testActorId], $data['Item']['ActorId']);
+            $this->assertIsString($data['Item']['ActorId']['N']);
+
+            // Checks 'now' is correct, we a little bit of leeway
+            $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+            $this->assertEqualsWithDelta(time() + $yearInEpoch, $data['Item']['ActivateBy']['N'], 5);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->create($testToken, $testSiriusUid, $testUserId, (string)$testActorId, 'P365D');
     }
 
     /** @test */
