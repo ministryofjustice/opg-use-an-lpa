@@ -697,6 +697,16 @@ class OlderLpaServiceTest extends TestCase
             'force_activation_key'  => false,
         ];
 
+        $responseData = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+        ];
+
         $service = $this->getOlderLpaService();
 
         $lpa = $this->older_lpa_get_by_uid_response();
@@ -724,9 +734,8 @@ class OlderLpaServiceTest extends TestCase
                 )
             );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('LPA has an activation key already');
-
+        $expectedException = new BadRequestException('LPA has an activation key already', $responseData);
+        $this->expectExceptionObject($expectedException);
         $service->validateOlderLpaRequest($this->userId, $dataToMatch);
     }
 
@@ -894,6 +903,72 @@ class OlderLpaServiceTest extends TestCase
     /**
      * @test
      */
+    public function thows_exception_when_lpa_match_found_but_activation_key_already_exists()
+    {
+        $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
+
+        $dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
+        ];
+
+        $lpaMatchResponse = [
+            'actor-id' => '700000055554',
+            'lpa-id' => '700000012345',
+            'attorney' => [
+                'uId' => null,
+                'firstname' => null,
+                'middlenames' => null,
+                'surname' => null
+            ],
+            'caseSubtype' => 'pfa',
+            'donor' => [
+                'uId' => '700000001111',
+                'firstname' => 'Donor',
+                'middlenames' => 'Example',
+                'surname' => 'Person'
+            ],
+        ];
+
+        $service = $this->getOlderLpaService();
+
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn();
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirements
+            ->__invoke($lpa->getData())
+            ->willReturn(true);
+
+        $this->actorCodesProphecy
+            ->checkActorHasCode($this->lpaUid, $this->actorUid)
+            ->willReturn(
+                new ActorCode(
+                    [
+                        'Created' => $createdDate,
+                    ],
+                    new DateTime()
+                )
+            );
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('LPA has an activation key already');
+        $service->validateOlderLpaRequest($this->userId, $dataToMatch);
+    }
+
+    /**
+     * @test
+     */
     public function older_lpa_request_is_saved_with_a_TTL()
     {
         $this->userLpaActorMapProphecy->create(
@@ -960,7 +1035,6 @@ class OlderLpaServiceTest extends TestCase
         ];
 
         $lpaMatchResponse = [
-            'actor' => null,
             'actor-id' => '700000055554',
             'lpa-id' => '700000012345',
             'attorney' => [
@@ -1003,7 +1077,6 @@ class OlderLpaServiceTest extends TestCase
                              new DateTime()
                          ));
 
-       $result = $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
        $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
        $this->assertIsArray($response);
 

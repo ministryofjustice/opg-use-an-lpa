@@ -17,6 +17,7 @@ use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\OlderLpaMatchResponse;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Common\Service\Lpa\ViewerCodeService;
@@ -128,7 +129,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->post('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
@@ -1517,7 +1517,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->patch('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
@@ -1538,22 +1537,31 @@ class LpaContext extends BaseIntegrationContext
             );
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
-        try {
-            $addOlderLpa->validate(
-                $this->userIdentity,
-                intval($this->referenceNo),
-                $this->userFirstname,
-                $this->userSurname,
-                DateTime::createFromFormat('Y-m-d', $this->userDob),
-                $this->userPostCode,
-                false
-            );
-        } catch (ApiException $e) {
-            throw new Exception(
-                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
+
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $foundMatchLpaDTO = new OlderLpaMatchResponse();
+        $foundMatchLpaDTO->setDonor($donor);
+        $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::FOUND,
+            $foundMatchLpaDTO
+        );
+        assertEquals($response, $result);
     }
 }

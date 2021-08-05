@@ -1981,9 +1981,6 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        //does verification first
-        $this->iAmShownDetailsOfAnLpa();
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2209,7 +2206,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
+     * @When /^I provide the details from a valid paper document that already has an activation  key$/
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
@@ -2581,7 +2578,6 @@ class LpaContext implements Context
      */
     public function iAmShownDetailsOfAnLpa()
     {
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result(

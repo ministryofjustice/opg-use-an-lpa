@@ -26,6 +26,11 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $this->olderLpaService = $olderLpaService;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws \Exception
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();

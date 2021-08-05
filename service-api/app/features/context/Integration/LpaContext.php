@@ -1185,7 +1185,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
@@ -1223,7 +1223,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA not found', $ex->getMessage());
@@ -1259,7 +1259,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA details do not match', $ex->getMessage());
@@ -1321,7 +1321,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
+     * @When /^I provide the details from a valid paper document that already has an activation  key$/
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
@@ -1934,7 +1934,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+        $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
     }
 
     /**

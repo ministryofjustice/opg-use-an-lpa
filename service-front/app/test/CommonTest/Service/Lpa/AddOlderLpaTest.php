@@ -77,7 +77,6 @@ class AddOlderLpaTest extends TestCase
     public function it_will_successfully_finds_an_lpa(): void
     {
         $response = [
-            'actor' => null,
             'lpa-id' => (string)$this->olderLpa['reference_number'],
             'actor-id' => '700000000001',
             'caseSubtype' => 'hw',

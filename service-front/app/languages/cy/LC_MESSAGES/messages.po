@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-07-29T17:40:28+00:00\n"
+"POT-Creation-Date: 2021-08-04T12:02:07+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -176,6 +176,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/activate-account.html.twig:12
 #: src/Actor/templates/actor/actor-role.html.twig:14
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:14
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:14
 #: src/Actor/templates/actor/change-details.html.twig:20
 #: src/Actor/templates/actor/change-email.html.twig:12
 #: src/Actor/templates/actor/change-lpa-details.html.twig:20
@@ -2500,22 +2501,24 @@ msgstr ""
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:45
 #: src/Actor/templates/actor/actor-role.html.twig:48
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:87
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:84
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:79
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:67
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:36
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
 #: src/Viewer/templates/viewer/enter-code.html.twig:60
 msgid "Continue"
 msgstr "Parhau"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:63
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:94
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
 #: src/Actor/templates/actor/lpa-add.html.twig:81
@@ -3217,15 +3220,15 @@ msgstr "Y Dyddiad y llofnododd y rhoddwr yr LPA"
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
-#: src/Common/templates/partials/govuk_form.html.twig:145
+#: src/Common/templates/partials/govuk_form.html.twig:154
 msgid "Day"
 msgstr "Dydd"
 
-#: src/Common/templates/partials/govuk_form.html.twig:155
+#: src/Common/templates/partials/govuk_form.html.twig:164
 msgid "Month"
 msgstr "Mis"
 
-#: src/Common/templates/partials/govuk_form.html.twig:165
+#: src/Common/templates/partials/govuk_form.html.twig:174
 msgid "Year"
 msgstr "Blwyddyn"
 
@@ -4259,12 +4262,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr "Diddymwyd ar %cancellationDate%"
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:229
+#: src/Common/templates/partials/govuk_form.html.twig:238
 msgid "Show"
 msgstr "Dangos"
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:230
+#: src/Common/templates/partials/govuk_form.html.twig:239
 msgid "Hide"
 msgstr "Cuddio"
 
@@ -5375,6 +5378,7 @@ msgstr[5] "Mae gennych %count% LPA ar eich cyfrif"
 msgid "Check if you can ask for an activation key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
 
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:23
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:23
 msgid "You can only ask for an activation key if:"
 msgstr "Ni allwch ond gofyn am allwedd cadarnhau:"
@@ -5383,10 +5387,12 @@ msgstr "Ni allwch ond gofyn am allwedd cadarnhau:"
 msgid "your LPA was registered on or after 1 September 2019"
 msgstr "os cofrestrwyd eich LPA rhwng 1 Medi 2019 a 16 Gorffennaf 2020"
 
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:26
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:27
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr "os ydych yn rhoddwr neu’n atwrnai ar yr LPA (nid yn atwrnai cyfnewid)"
 
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:27
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:28
 msgid "you live in the UK"
 msgstr "os ydych yn byw yn y Deyrnas Unedig"
@@ -5515,11 +5521,6 @@ msgstr ""
 "cofnodion."
 
 #: src/Actor/templates/actor/request-activation-key.html.twig:56
-#, fuzzy
-#| msgid ""
-#| "This must be your current postcode and match the one we have on our "
-#| "records. The activation key will be posted to this address. <a href=\"%link%"
-#| "\" class=\"govuk-link\">Let us know if you have moved.</a>"
 msgid ""
 "This must be your current postcode and match the one we have on our records. "
 "The activation key will be posted to this address. <a href=\"%link%\" class="
@@ -5530,7 +5531,7 @@ msgstr ""
 "hwn. <a href=\"%link%\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi "
 "symud.</a>"
 
-#: src/Common/templates/partials/govuk_form.html.twig:19
+#: src/Common/templates/partials/govuk_form.html.twig:21
 msgid ""
 "The LPA reference number (also called OPG reference number) is on the first "
 "page of the paper LPA and printed on any letter you get from the Office of the "
@@ -5781,7 +5782,6 @@ msgid "ask for an activation key if you have not been given one"
 msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
 
 #: src/Actor/templates/actor/actor-role.html.twig:21
-#| msgid "Your role on this LPA"
 msgid "What is your role on the LPA?"
 msgstr "Eich swyddogaeth yn yr LPA hon"
 
@@ -5794,13 +5794,11 @@ msgid "An attorney - a person appointed to make decisions on the donor's behalf"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:3
-#| msgid "We've removed an LPA from your account"
 msgid "You've already added this LPA to your account"
 msgstr "Rydym wedi dileu LPA o’ch cyfrif"
 
 # Welsh is currently: Ask for an activation key
 #: src/Actor/templates/actor/partials/create-activation-key.html.twig:13
-#| msgid "Check if you can ask for an activation key"
 msgid "Continue and ask for a new key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
 
@@ -5842,3 +5840,58 @@ msgstr ""
 "cofnodion. Bydd yr allwedd cadarnhau cyfrif yn cael ei phostio i’r cyfeiriad "
 "hwn. <a href=\"%link%\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi "
 "symud.</a>"
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
+msgid "Before you begin"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:28
+msgid "the LPA was made for use in England and Wales"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:31
+msgid "You cannot ask for a key for:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:34
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:35
+msgid "LPAs registered by the Office of the Public Guardian Scotland"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:38
+msgid "What you'll need"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:40
+msgid "To ask for a key, you'll need to give us:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:43
+msgid "your name, date of birth and UK postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:44
+msgid ""
+"the LPA reference number - you'll find this on the paper LPA and on letters "
+"from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:51
+msgid "I do not know the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:55
+msgid ""
+"If you do not have the paper LPA or any letters from OPG, check with other "
+"people named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:56
+msgid ""
+"On the LPA, the donor told us who they wanted the registered paper LPA sent "
+"to. This may have been the donor or an attorney. If a professional, such as a "
+"solicitor, helped to make the LPA, it may have been sent to them."
+msgstr ""

@@ -52,7 +52,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_creates_an_already_added_dto_from_array_data()
+    public function it_creates_a_lpa_match_actor_details_dto_from_array_data()
     {
         $this->lpaFactory
             ->createCaseActorFromData($this->response['donor'])
@@ -72,7 +72,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_creates_an_already_added_dto_from_array_data_with_null_name_fields()
+    public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields()
     {
         $this->response['donor']['firstname'] = null;
         $this->response['donor']['middlenames'] = null;
@@ -101,7 +101,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
+    public function it_will_fail_if_lpa_match_actor_donor_firstname_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -123,7 +123,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
+    public function it_will_fail_if_lpa_match_actor_donor_middlenames_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -145,7 +145,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
+    public function it_will_fail_if_lpa_match_actor_donor_surname_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -167,10 +167,10 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     }
 
     /**
-     * @dataProvider alreadyAddedDataProvider
+     * @dataProvider lpaMatchActorDetailsDataProvider
      * @test
      */
-    public function it_will_fail_if_donor_uId_or_lpa_type_is_not_set(array $data)
+    public function it_will_fail_if_lpa_match_actor_uId_or_lpa_type_is_not_set(array $data)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -182,7 +182,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    public function alreadyAddedDataProvider()
+    public function lpaMatchActorDetailsDataProvider()
     {
         return [
             [
@@ -193,7 +193,13 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ],
             [
                 [
-                    'donor'         => [
+                    'attorney'          => [
+                        'uId'           => null,
+                        'firstname'     => 'Example',
+                        'middlenames'   => 'Attorney',
+                        'surname'       => 'Person',
+                    ],
+                    'donor'             => [
                         'uId'           => null,
                         'firstname'     => 'Example',
                         'middlenames'   => 'Donor',
@@ -204,7 +210,30 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ],
             [
                 [
-                    'donor'         => [
+                    'attorney'          => [
+                        'uId'           => '12378',
+                        'firstname'     => 'Example',
+                        'middlenames'   => 'Attorney',
+                        'surname'       => 'Person',
+                    ],
+                    'donor'             => [
+                        'uId'           => '12345',
+                        'firstname'     => 'Example',
+                        'middlenames'   => 'Donor',
+                        'surname'       => 'Person',
+                    ],
+                    'caseSubtype' => null
+                ]
+            ],
+            [
+                [
+                    'attorney'          => [
+                        'uId'           => '12378',
+                        'firstname'     => 'Example',
+                        'middlenames'   => 'Attorney',
+                        'surname'       => 'Person',
+                    ],
+                    'donor'             => [
                         'uId'           => '12345',
                         'firstname'     => 'Example',
                         'middlenames'   => 'Donor',

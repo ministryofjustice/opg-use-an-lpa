@@ -203,11 +203,8 @@ class OlderLpaService
         if (is_null($actorId)) {
             return null;
         }
-
-        $this->resolveActor;
-
+        
         return [
-            'actor' => $actor,
             'actor-id' => $actorId,
             'lpa-id' => $lpaId
         ];
