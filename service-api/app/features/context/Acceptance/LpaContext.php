@@ -1994,9 +1994,6 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        //does verification first
-        $this->iAmShownDetailsOfAnLpa();
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
