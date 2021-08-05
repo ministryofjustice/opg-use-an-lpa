@@ -3,3 +3,4 @@ requests-aws4auth
 boto3
 passlib
 pytz
+simplejson

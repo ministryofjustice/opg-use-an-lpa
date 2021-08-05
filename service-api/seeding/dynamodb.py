@@ -1,6 +1,6 @@
 import os
 import boto3
-import json
+import simplejson as json
 from passlib.hash import sha256_crypt
 import time
 import datetime
