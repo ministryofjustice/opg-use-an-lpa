@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Lpa\OlderLpaService;
+use Common\Service\Features\FeatureEnabled;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,10 +20,12 @@ use DateTime;
 class LpasActionsHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
+    private FeatureEnabled $featureEnabled;
 
-    public function __construct(OlderLpaService $olderLpaService)
+    public function __construct(OlderLpaService $olderLpaService, FeatureEnabled $featureEnabled)
     {
         $this->olderLpaService = $olderLpaService;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -73,8 +76,13 @@ class LpasActionsHandler implements RequestHandlerInterface
             }
         }
 
-        $this->olderLpaService->storeLPARequest($lpaMatchResponse['lpa-id'], $userId, $lpaMatchResponse['actor-id']);
-
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            $this->olderLpaService->storeLPARequest(
+                $lpaMatchResponse['lpa-id'],
+                $userId,
+                $lpaMatchResponse['actor-id']
+            );
+        }
         //If all criteria pass, request letter with activation key
         $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
 
