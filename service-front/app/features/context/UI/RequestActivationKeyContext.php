@@ -387,10 +387,16 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I confirm that those details are correct$/
      * @When /^I confirm the details I provided are correct$/
+<<<<<<< HEAD
+=======
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
+>>>>>>> test fixes and some amendements
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+
+
         $this->ui->pressButton('Continue');
     }
 
@@ -800,7 +806,7 @@ class RequestActivationKeyContext implements Context
     public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
     {
         $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
         $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
