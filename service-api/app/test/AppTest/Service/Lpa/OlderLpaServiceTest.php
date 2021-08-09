@@ -78,7 +78,6 @@ class OlderLpaServiceTest extends TestCase
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
-        $this->checkLPAMatchAndGetActorDetailsProphecy = $this->prophesize(OlderLpaService::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -94,13 +93,10 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->validateOlderLpaRequirements->reveal(),
-            $this->resolveActorProphecy->reveal(),
             $this->validateOlderLpaRequirementsProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal()
-            $this->resolveActorProphecy->reveal(),
-            $this->checkLPAMatchAndGetActorDetailsProphecy->reveal()
+            $this->featureEnabledProphecy->reveal(),
+            $this->resolveActorProphecy->reveal()
         );
     }
 
@@ -448,7 +444,6 @@ class OlderLpaServiceTest extends TestCase
                 [
                     'actor-id' => '700000001234', // successful match for attorney
                     'lpa-id'   => '700000012345',
-                    'actor' => null
                 ],
                 [
                     'dob'         => '1980-03-01',
@@ -461,7 +456,6 @@ class OlderLpaServiceTest extends TestCase
                 [
                     'actor-id' => '700000001111', // successful match for donor
                     'lpa-id'   => '700000012345',
-                    'actor' => null
                 ],
                 [
                     'dob'         => '1975-10-05',
@@ -961,9 +955,13 @@ class OlderLpaServiceTest extends TestCase
                 )
             );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('LPA has an activation key already');
-        $service->validateOlderLpaRequest($this->userId, $dataToMatch);
+        try {
+            $service->validateOlderLpaRequest($this->userId, $dataToMatch);
+        } catch (BadRequestException $ex) {
+            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            $this->assertEquals('LPA has an activation key already', $ex->getMessage());
+            $this->assertEquals($lpaMatchResponse, $ex->getAdditionalData());
+        }
     }
 
     /**

@@ -13,9 +13,9 @@ Feature: Add an older LPA
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am shown the details of an LPA
-    And I confirm that those details are correct
+    And I confirm details shown to me of the found LPA are correct
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
@@ -23,14 +23,14 @@ Feature: Add an older LPA
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
   @ui @integration
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
     When I provide details from an LPA registered before Sept 2019
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I cannot request an activation key
 
   @ui @integration
@@ -38,7 +38,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
     When I provide the details from a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
   @ui
@@ -61,7 +61,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I have added an LPA to my account
     When I provide the details from a valid paper LPA which I have already added to my account
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
   # Older Older LPA Journey
@@ -111,4 +111,10 @@ Feature: Add an older LPA
     Given I am on the check LPA details page
     When  I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
-    
+
+  @ui
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    Then I being the donor on the LPA I am not shown the donor name back again

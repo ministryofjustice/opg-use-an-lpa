@@ -789,9 +789,10 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I confirm that those details are correct$/
+     * @When /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         // Not needed for this context
     }

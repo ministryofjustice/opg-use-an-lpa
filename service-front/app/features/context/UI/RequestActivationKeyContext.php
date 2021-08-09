@@ -281,10 +281,14 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @When /^I confirm that those details are correct$/
+     * @When /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+
+
         $this->ui->pressButton('Continue');
     }
 
@@ -625,7 +629,7 @@ class RequestActivationKeyContext implements Context
     public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
     {
         $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
         $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
@@ -724,17 +728,19 @@ class RequestActivationKeyContext implements Context
     {
         $this->iAmOnTheRequestAnActivationKeyPage();
         $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
         $this->iAmShownTheDetailsOfAnLPA();
     }
 
     /**
      * @Then /^I am shown the details of an LPA$/
+     * @Then /^I being the donor on the LPA I am not shown the donor name back again$/
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->assertElementContainsText('h1', 'Check we\'ve found the right LPA');
+        $this->ui->assertPageNotContainsText('The donor\'s name');
     }
 
     /**

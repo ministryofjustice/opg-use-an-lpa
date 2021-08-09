@@ -62,14 +62,6 @@ class OlderLpaService
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->checkLPAMatchAndGetActorDetails($userId, $requestData);
 
-        if (!isset($lpaMatchResponse['lpa-id'])) {
-            throw new BadRequestException('The lpa-id is missing from the data match response');
-        }
-
-        if (!isset($lpaMatchResponse['actor-id'])) {
-            throw new BadRequestException('The actor-id is missing from the data match response');
-        }
-
         // Checks if the actor already has an active activation key. If forced ignore
         if (!$requestData['force_activation_key']) {
             $hasActivationCode = $this->hasActivationCode(
@@ -203,7 +195,7 @@ class OlderLpaService
         if (is_null($actorId)) {
             return null;
         }
-        
+
         return [
             'actor-id' => $actorId,
             'lpa-id' => $lpaId
@@ -304,6 +296,7 @@ class OlderLpaService
         }
 
         $actor = ($this->resolveActor)($lpa, $actorMatch['actor-id']);
+
         if ($actor['type'] !== 'donor') {
             $actorMatch['attorney'] = [
                 'uId'           => $actor['details']['uId'],

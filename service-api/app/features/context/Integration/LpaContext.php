@@ -1055,10 +1055,11 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I confirm that those details are correct$/
+     * @Given /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
      * @Then /^I am shown the details of an LPA$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         // Not needed for this context
     }
@@ -1321,7 +1322,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation  key$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {

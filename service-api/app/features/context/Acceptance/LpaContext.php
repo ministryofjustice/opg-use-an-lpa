@@ -2055,9 +2055,10 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I confirm that those details are correct$/
+     * @Given /^I confirm the details I provided are correct$/
+     * @When /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         // Not needed for this context
     }
@@ -2206,7 +2207,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper document that already has an activation  key$/
+     * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
@@ -2575,24 +2576,23 @@ class LpaContext implements Context
 
     /**
      * @Then /^I am shown the details of an LPA$/
+     * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      */
     public function iAmShownDetailsOfAnLpa()
     {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+
+        $this->lpaUid = '700000000047';
+        $this->userFirstnames = 'Rachel';
+        $this->userSurname = 'Sanderson';
+        $this->userDob = '1948-11-01';
+        $this->userPostCode = 'DN37 5SH';
+        $this->actorId = '700000000799';
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorId,
-                                'UserId' => $this->userId,
-                            ]
-                        ),
-                    ],
                 ]
             )
         );
@@ -2628,6 +2628,8 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
+            'lpa-id'    => $this->lpaUid,
+            'actor-id'  => $this->actorId,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
@@ -2635,9 +2637,87 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype'    => $this->lpa->caseSubtype,
-            'lpaActorToken'  => $this->userLpaActorToken
         ];
 
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        assertArrayNotHasKey('attorney', $this->getResponseAsJson());
+        assertEquals($expectedResponse, $this->getResponseAsJson());
+    }
+
+    /**
+     * @Then /^I being the attorney on the LPA I am shown the donor details$/
+     */
+    public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails()
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+
+        $this->lpaUid = '700000000047';
+        $this->userFirstnames = 'jean';
+        $this->userSurname = 'Sanderson';
+        $this->userDob = '1990-05-04';
+        $this->userPostCode = 'DN37 5SH';
+        $this->actorId = '700000000815';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result(
+                [
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key' => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $expectedResponse = [
+            'lpa-id'    => $this->lpaUid,
+            'actor-id'  => $this->actorId,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'attorney'         => [
+                'uId'           => $this->lpa->attorneys[0]->uId,
+                'firstname'     => $this->lpa->attorneys[0]->firstname,
+                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
+                'surname'       => $this->lpa->attorneys[0]->surname,
+            ],
+            'caseSubtype'    => $this->lpa->caseSubtype,
+        ];
+
+        assertArrayHasKey('lpa-id', $this->getResponseAsJson());
+        assertArrayHasKey('actor-id', $this->getResponseAsJson());
+        assertArrayHasKey('caseSubtype', $this->getResponseAsJson());
+        assertArrayHasKey('donor', $this->getResponseAsJson());
+        assertArrayHasKey('attorney', $this->getResponseAsJson());
+        assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 }
