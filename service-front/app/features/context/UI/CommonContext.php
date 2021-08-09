@@ -223,17 +223,17 @@ class CommonContext implements Context
         $session = $this->ui->getSession();
 
         // retrieving response headers:
-        $cookies = $session->getResponseHeaders()['Set-Cookie'];
+        $cookieStr = $session->getResponseHeader('Set-Cookie') ?? null;
 
-        if (!$cookies === null) {
-            foreach ($cookies as $value) {
-                if (strstr($value, 'seen-cookie-message')) {
-                    assertContains('true', $value);
-                } else {
-                    throw new \Exception('Cookie named seen-cookie-message not found in the response header');
-                }
-            }
+        if ($cookieStr === null) {
+            throw new \Exception('Cookies not set in response');
         }
+
+        assertStringContainsString(
+            'seen_cookie_message',
+            $cookieStr,
+            '"seen_cookie_message" not found in cookie string'
+        );
     }
 
     /**
