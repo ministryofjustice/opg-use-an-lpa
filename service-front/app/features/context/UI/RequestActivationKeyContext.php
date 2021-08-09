@@ -182,7 +182,7 @@ class RequestActivationKeyContext implements Context
     public function iAmOnTheRequestAnActivationKeyPage()
     {
         $this->ui->visit('/lpa/request-code/lpa-reference-number');
-        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
     /**
@@ -190,7 +190,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmRedirectedToTheActivationKeyPage()
     {
-        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
     /**
@@ -897,7 +897,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
     {
-        $this->ui->visit('lpa/request-code/date-of-birth');
+        $this->ui->visit('/lpa/request-code/date-of-birth');
     }
 
     /**
@@ -905,7 +905,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iVisitThePostcodePageWithoutFillingOutTheForm()
     {
-        $this->ui->visit('lpa/request-code/postcode');
+        $this->ui->visit('/lpa/request-code/postcode');
     }
 
     /**
