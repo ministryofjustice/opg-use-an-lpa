@@ -1068,12 +1068,14 @@ class OlderLpaServiceTest extends TestCase
 
         $this->actorCodesProphecy
             ->checkActorHasCode($this->lpaUid, $this->actorUid)
-            ->willReturn(new ActorCode(
-                             [
-                                 'Created' => null
-                             ],
-                             new DateTime()
-                         ));
+            ->willReturn(
+                new ActorCode(
+                    [
+                        'Created' => null,
+                    ],
+                    new DateTime()
+                )
+            );
 
        $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
        $this->assertIsArray($response);
