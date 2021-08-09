@@ -1,11 +1,10 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestPostcode;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Common\Form\Fieldset\Date;
 use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;

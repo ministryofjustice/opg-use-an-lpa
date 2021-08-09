@@ -1,6 +1,6 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
 use Common\Form\AbstractForm;
