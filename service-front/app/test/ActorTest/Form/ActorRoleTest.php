@@ -2,7 +2,7 @@
 
 namespace ActorTest\Form;
 
-use Actor\Form\ActorRole;
+use Actor\Form\RequestActivationKey\ActorRole;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;
