@@ -89,7 +89,9 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name' => DobValidator::class,
                         'options'                => [
-                            'message'  => 'Enter the donor\'s date of birth',
+                            'messages' => [
+                                DobValidator::DATE_EMPTY => 'Enter the donor\'s date of birth',
+                            ]
                         ],
                     ],
                 ]
