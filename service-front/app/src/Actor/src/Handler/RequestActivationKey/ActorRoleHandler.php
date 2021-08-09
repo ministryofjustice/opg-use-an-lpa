@@ -20,6 +20,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ActorRoleHandler
@@ -32,6 +33,8 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     use CsrfGuard;
     use SessionTrait;
 
+    /** @var LoggerInterface */
+    protected $logger;
     private ActorRole $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
@@ -39,10 +42,12 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator
+        AuthenticationInterface $authenticator,
+        LoggerInterface $logger
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->setAuthenticator($authenticator);
+        $this->logger = $logger;
     }
 
     /**
@@ -80,12 +85,24 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
+                $this->logger->info(
+                    'User {id} identified as the Donor on the LPA after a partial match was found on their details',
+                    [
+                        'id' => $this->user->getIdentity()
+                    ]
+                );
                 // these will have been set if the actor was the attorney for a previous request
                 $this->session->unset('donor_firstnames');
                 $this->session->unset('donor_lastname');
                 $this->session->unset('donor_dob');
                 return $this->redirectToRoute('lpa.add.contact-details');
             } else {
+                $this->logger->info(
+                    'User {id} identified as an Attorney on the LPA after a partial match was found on their details',
+                    [
+                        'id' => $this->user->getIdentity()
+                    ]
+                );
                 return $this->redirectToRoute('lpa.add.donor-details');
             }
         }
