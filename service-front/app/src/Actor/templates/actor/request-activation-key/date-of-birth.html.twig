@@ -18,7 +18,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}What is your date of birth?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="dob_heading">{% trans %}What is your date of birth?{% endtrans %}</h1>
 
                     {{ govuk_error_summary(form) }}
 
@@ -28,7 +28,12 @@
 
                     {{ govuk_form_fieldset(form.get('dob'), {
                         'hint': 'For example, 31 03 1980'| trans,
-                        'attr': {'class': 'xyz', 'label_class': 'govuk-!-font-weight-bold'} }) }}
+                        'attr': {
+                            'class': 'xyz',
+                            'label_class': 'govuk-!-font-weight-bold'
+                        },
+                        'aria_labelledby': 'dob_heading'
+                    }) }}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 

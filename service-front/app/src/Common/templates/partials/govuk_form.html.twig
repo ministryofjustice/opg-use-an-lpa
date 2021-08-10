@@ -11,9 +11,11 @@
 {%- block form_element_simple -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
-        <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
-            {{ label | raw }}
-        </label>
+        {% if label is defined %}
+            <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
+                {{ label | raw }}
+            </label>
+        {% endif %}
 
         {% if element.getName() == 'opg_reference_number' %}
             <p class="govuk-body">{% trans %}The LPA reference number (also called OPG reference number) is on the first page of the paper LPA and printed on any letter you get from the Office of the Public Guardian.{% endtrans %}</p>
@@ -125,12 +127,19 @@
 {%- block form_fieldset_date -%}
     <div class="govuk-form-group {% if fieldset.getMessages() is not empty %}govuk-form-group--error{% endif %}">
 
-        <fieldset name="{{ fieldset.getName() }}" class="govuk-fieldset" aria-describedby="{{ fieldset.getName() }}-hint" role="group">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                <label class="govuk-label {{- block('input_extra_label_class') -}}" for="{{ fieldset.getName() }}">
-                    {{ label | raw }}
-                </label>
-            </legend>
+        <fieldset
+                name="{{ fieldset.getName() }}"
+                class="govuk-fieldset"
+                aria-describedby="{{ fieldset.getName() }}-hint"
+                {%- if aria_labelledby is defined -%}aria-labelledby="{{ aria_labelledby }}"{% endif %}
+                role="group">
+            {% if label is defined %}
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    <label class="govuk-label {{- block('input_extra_label_class') -}}" for="{{ fieldset.getName() }}">
+                        {{ label | raw }}
+                    </label>
+                </legend>
+            {% endif %}
 
             {% with { element: fieldset } %}
                 {{- block('input_hint') -}}
@@ -238,5 +247,6 @@
             {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
             {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
             {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
-            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}/>
+            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
+            {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}/>
 {%- endblock form_input -%}

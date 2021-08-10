@@ -1,0 +1,68 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Before you begin{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Before you begin{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
+                        <li>{% trans %}you live in the UK{% endtrans %}</li>
+                        <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
+                    </ul>
+
+                    <p class="govuk-body">{% trans %}You cannot ask for a key for:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
+                        <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
+                    </ul>
+
+                    <h2 class="govuk-heading-m">{% trans %}What you'll need{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}To ask for a key, you'll need to give us:{% endtrans %}</p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}your name, date of birth and UK postcode{% endtrans %}</li>
+                        <li>{% trans %}the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG){% endtrans %}</li>
+                    </ul>
+
+
+                    <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}I do not know the LPA reference number{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA.{% endtrans %}</p>
+                            <p>{% trans %}On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them.{% endtrans %}</p>
+                        </div>
+                    </details>
+
+                    <a href="{{ path('lpa.add-by-paper') }}" class="govuk-button">{% trans %}Continue{% endtrans %}</a>
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
