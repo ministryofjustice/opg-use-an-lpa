@@ -34,46 +34,6 @@ class LpaContext implements Context
     use BaseUiContextTrait;
 
     /**
-     * @Given /^I have navigated to the contact-details page$/
-     */
-    public function givenIHaveNavigatedToTheContactDetailsPage()
-    {
-        $this->ui->visit('/lpa/add/contact-details');
-    }
-
-    /**
-     * @When /^I enter my contact details$/
-     */
-    public function whenIEnterMyContactDetails()
-    {
-        $this->ui->fillField('telephone', '0123456789');
-    }
-
-    /**
-     * @Then /^I am told that I must enter a phone number$/
-     */
-    public function iAmToldThatIMustEnterAPhoneNumber()
-    {
-        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
-    }
-
-    /**
-     * @Given /^I do not see any errors$/
-     */
-    public function iDoNotSeeAnyErrors()
-    {
-        $this->ui->assertElementNotOnPage('govuk-error-summary');
-    }
-
-    /**
-     * @When /^I enter nothing$/
-     */
-    public function iEnterNothing()
-    {
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
      * @Then /^I am taken to the change LPA details page$/
      */
     public function iAmTakenToTheChangeLPADetailsPage()
