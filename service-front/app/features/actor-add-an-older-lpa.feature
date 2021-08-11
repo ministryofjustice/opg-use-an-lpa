@@ -64,7 +64,7 @@ Feature: Add an older LPA
 
   # Older Older LPA Journey
 
-  @ui @integration
+  @ui
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
