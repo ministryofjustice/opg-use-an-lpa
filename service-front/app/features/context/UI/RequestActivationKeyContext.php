@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Actor\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -31,6 +32,7 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
+
     /**
      * @Then /^a letter is requested containing a one time use code$/
      */
@@ -39,6 +41,16 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
 
         $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
+    }
+
+    /**
+     * @Given /^I have navigated to the contact-details page$/
+     */
+    public function givenIHaveNavigatedToTheContactDetailsPage()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->visit('/lpa/add/contact-details');
+        }
     }
 
     /**
@@ -71,7 +83,7 @@ class RequestActivationKeyContext implements Context
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
             $this->ui->assertPageContainsText('What is your role on the LPA?');
         } else {
-            $this->ui->assertPageAddress('/lpa/check-answers');
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
         }
     }
@@ -193,12 +205,42 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am told that I must enter a phone number$/
+     */
+    public function iAmToldThatIMustEnterAPhoneNumber()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        }
+    }
+
+    /**
      * @When /^I confirm that those details are correct$/
      */
     public function iConfirmThatThoseDetailsAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I do not see any errors$/
+     */
+    public function iDoNotSeeAnyErrors()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertElementNotOnPage('govuk-error-summary');
+        }
+    }
+
+    /**
+     * @When /^I enter nothing$/
+     */
+    public function iEnterNothing()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->pressButton('Continue');
+        }
     }
 
     /**
@@ -501,14 +543,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I visit the Your Name page without filling out the form$/
-     */
-    public function iVisitTheYourNamePageWithoutFillingOutTheForm()
-    {
-        $this->ui->visit('lpa/request-code/your-name');
-    }
-
-    /**
      * @When /^I visit the Date of Birth page without filling out the form$/
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
@@ -522,6 +556,24 @@ class RequestActivationKeyContext implements Context
     public function iVisitThePostcodePageWithoutFillingOutTheForm()
     {
         $this->ui->visit('lpa/request-code/postcode');
+    }
+
+    /**
+     * @When /^I visit the Your Name page without filling out the form$/
+     */
+    public function iVisitTheYourNamePageWithoutFillingOutTheForm()
+    {
+        $this->ui->visit('lpa/request-code/your-name');
+    }
+
+    /**
+     * @When /^I enter my contact details$/
+     */
+    public function whenIEnterMyContactDetails()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->fillField('telephone', '0123456789');
+        }
     }
 
     protected function fillAndSubmitOlderLpaForm()
