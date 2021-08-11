@@ -8,7 +8,6 @@ module "view_ecs_autoscaling" {
   ecs_task_autoscaling_maximum     = local.account.autoscaling.view.maximum
   max_scaling_alarm_actions        = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
 }
-
 module "use_ecs_autoscaling" {
   source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
