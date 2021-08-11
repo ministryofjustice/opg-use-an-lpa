@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Validator\OptionSelectedValidator;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
