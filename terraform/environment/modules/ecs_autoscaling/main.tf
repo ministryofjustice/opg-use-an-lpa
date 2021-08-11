@@ -11,8 +11,8 @@ resource "aws_appautoscaling_target" "target" {
 resource "aws_appautoscaling_policy" "up" {
   name               = "${var.environment}-${var.aws_ecs_service_name}-scale-up"
   service_namespace  = "ecs"
-  resource_id        = aws_appautoscaling_target.ecs_service.resource_id
-  scalable_dimension = aws_appautoscaling_target.ecs_service.scalable_dimension
+  resource_id        = aws_appautoscaling_target.target.resource_id
+  scalable_dimension = aws_appautoscaling_target.target.scalable_dimension
 
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
@@ -32,8 +32,8 @@ resource "aws_appautoscaling_policy" "up" {
 resource "aws_appautoscaling_policy" "down" {
   name               = "${var.environment}-${var.aws_ecs_service_name}-scale-down"
   service_namespace  = "ecs"
-  resource_id        = aws_appautoscaling_target.ecs_service.resource_id
-  scalable_dimension = aws_appautoscaling_target.ecs_service.scalable_dimension
+  resource_id        = aws_appautoscaling_target.target.resource_id
+  scalable_dimension = aws_appautoscaling_target.target.scalable_dimension
 
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
