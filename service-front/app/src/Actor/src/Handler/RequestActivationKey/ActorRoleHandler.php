@@ -86,7 +86,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
             if ($selected === 'Donor') {
                 $this->logger->info(
-                    'User {id} identified as the Donor on the LPA after a partial match was found on their details',
+                    'User {id} identified as the Donor on the LPA after a partial match was found with their details',
                     [
                         'id' => $this->user->getIdentity()
                     ]
@@ -98,7 +98,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 return $this->redirectToRoute('lpa.add.contact-details');
             } else {
                 $this->logger->info(
-                    'User {id} identified as an Attorney on the LPA after a partial match was found on their details',
+                    'User {id} identified as an Attorney on the LPA after a partial match was found with their details',
                     [
                         'id' => $this->user->getIdentity()
                     ]
