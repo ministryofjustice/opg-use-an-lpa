@@ -40,7 +40,9 @@ class LpaContext implements Context
      */
     public function givenIHaveNavigatedToTheContactDetailsPage()
     {
-        $this->ui->visit('/lpa/add/contact-details');
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->visit('/lpa/add/contact-details');
+        }
     }
 
     /**
@@ -48,7 +50,9 @@ class LpaContext implements Context
      */
     public function whenIEnterMyContactDetails()
     {
-        $this->ui->fillField('telephone', '0123456789');
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->fillField('telephone', '0123456789');
+        }
     }
 
     /**
@@ -56,7 +60,9 @@ class LpaContext implements Context
      */
     public function iAmToldThatIMustEnterAPhoneNumber()
     {
-        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        }
     }
 
     /**
@@ -64,7 +70,9 @@ class LpaContext implements Context
      */
     public function iDoNotSeeAnyErrors()
     {
-        $this->ui->assertElementNotOnPage('govuk-error-summary');
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertElementNotOnPage('govuk-error-summary');
+        }
     }
 
     /**
@@ -72,7 +80,9 @@ class LpaContext implements Context
      */
     public function iEnterNothing()
     {
-        $this->ui->pressButton('Continue');
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->pressButton('Continue');
+        }
     }
 
     /**

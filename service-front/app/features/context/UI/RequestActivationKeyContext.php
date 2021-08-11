@@ -71,7 +71,7 @@ class RequestActivationKeyContext implements Context
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
             $this->ui->assertPageContainsText('What is your role on the LPA?');
         } else {
-            $this->ui->assertPageAddress('/lpa/check-answers');
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
         }
     }
