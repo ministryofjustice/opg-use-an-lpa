@@ -87,12 +87,12 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
             $letterExpectedDate = (new Carbon())->addWeeks(2);
 
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
-                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-                    $user->getDetails()['Email'],
-                    $data['reference_number'],
-                    strtoupper($data['postcode']),
-                    ($this->localisedDate)($letterExpectedDate)
-                );
+//                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+//                    $user->getDetails()['Email'],
+//                    $data['reference_number'],
+//                    strtoupper($data['postcode']),
+//                    ($this->localisedDate)($letterExpectedDate)
+//                );
 
                 return new HtmlResponse(
                     $this->renderer->render(

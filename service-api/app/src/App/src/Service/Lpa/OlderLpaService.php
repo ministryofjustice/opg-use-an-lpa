@@ -31,6 +31,7 @@ class OlderLpaService
     private GetAttorneyStatus $getAttorneyStatus;
     private ValidateOlderLpaRequirements $validateLpaRequirements;
     private UserLpaActorMapInterface $userLpaActorMap;
+    private ActivationKeyAlreadyRequested $activationKeyAlreadyRequested;
 
     public function __construct(
         LpaAlreadyAdded $lpaAlreadyAdded,
@@ -40,6 +41,7 @@ class OlderLpaService
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements,
+        ActivationKeyAlreadyRequested $activationKeyAlreadyRequested,
         UserLpaActorMapInterface $userLpaActorMap,
         FeatureEnabled $featureEnabled
     ) {
@@ -50,9 +52,9 @@ class OlderLpaService
         $this->actorCodes = $actorCodes;
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->validateLpaRequirements = $validateLpaRequirements;
+        $this->activationKeyAlreadyRequested = $activationKeyAlreadyRequested;
         $this->userLpaActorMap = $userLpaActorMap;
         $this->featureEnabled = $featureEnabled;
-    }
 
     /**
      * Formats data attributes for comparison in the older lpa journey
@@ -218,6 +220,27 @@ class OlderLpaService
                 ]
             );
             throw new BadRequestException('LPA already added', $lpaAddedData);
+        }
+    }
+
+    //UML-1578
+    /**
+     * Checks if the activation key already requested by actor for lpa
+     *
+     * @param string $userId
+     * @param string $lpaId
+     */
+    public function checkIfActivationKeyAlreadyRequested(string $userId, string $lpaId): void
+    {
+        if (null !== $lpaAddedData = ($this->activationKeyAlreadyRequested)($userId, $lpaId)) {
+            $this->logger->notice(
+                'An activation key already requested for the LPA {uId} for user {id}',
+                [
+                    'id' => $userId,
+                    'uId' => $lpaId,
+                ]
+            );
+            throw new BadRequestException('LPA has an activation key already', $lpaAddedData);
         }
     }
 

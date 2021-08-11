@@ -11,6 +11,7 @@ use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
+use App\Service\Features\FeatureEnabled;
 
 /**
  * Class LpasActionHandler
@@ -20,10 +21,12 @@ use DateTime;
 class LpasActionsHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
+    private FeatureEnabled $featureEnabled;
 
-    public function __construct(OlderLpaService $olderLpaService)
+    public function __construct(OlderLpaService $olderLpaService, FeatureEnabled $featureEnabled)
     {
         $this->olderLpaService = $olderLpaService;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -45,6 +48,17 @@ class LpasActionsHandler implements RequestHandlerInterface
         ) {
             throw new BadRequestException('Required data missing to request an activation key');
         }
+
+        //UML-1578 Check if activation key already requested by actor for LPA
+        if (($this->featureEnabled)('allow_older_lpas')) {
+            if (!$requestData['force_activation_key']) {
+                $this->olderLpaService->checkIfActivationKeyAlreadyRequested(
+                    $userId,
+                    (string)$requestData['reference_number']
+                );
+            }
+        }
+
         // Check LPA with user provided reference number
         $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($userId, $requestData);
 
