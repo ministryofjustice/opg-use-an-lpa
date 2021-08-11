@@ -1,4 +1,4 @@
-FROM buildkite/puppeteer:7.1.0 AS production
+FROM buildkite/puppeteer:10.0.0 AS production
 
 RUN apt-get update && apt-get upgrade -y
 
