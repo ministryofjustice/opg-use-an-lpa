@@ -129,10 +129,9 @@ class LpaService
      * Return all LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPAs for
-     * @param bool $keyCheck flag set to true if the request is for active Activation Key check
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllForUser(string $userId, bool $keyCheck): array
+    public function getAllAddedLpasForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
@@ -172,7 +171,34 @@ class LpaService
                     ];
                 }
             }
+        }
+        return $result;
+    }
 
+    /**
+     * Return all activation key request made LPAs for the given user_id
+     *
+     * @param string $userId User account ID to fetch LPAs for
+     * @param bool $keyCheck flag set to true if the request is for active Activation Key check
+     * @return array An array of LPA data structures containing processed LPA data and metadata
+     */
+    public function getAllKeyRequestMadeLpasForUser(string $userId, bool $keyCheck): array
+    {
+        // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
+        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
+
+        if (empty($lpaUids)) {
+            return [];
+        }
+
+        // Return all the LPA details based on the Sirius Ids.
+        $lpas = $this->lpaRepository->lookup($lpaUids);
+
+        $result = [];
+
+        // Map the results...
+        foreach ($lpaActorMaps as $item) {
             //Filter LPAs that have activation key requests made already.
             //The column ActivateBy will only exist on LPAs that have not been activated
             if ($keyCheck) {
@@ -202,40 +228,82 @@ class LpaService
         return $result;
     }
 
-
-//            $this->logger->info(
-//                'Account  added LPA count is {id} ----------------------------------',
-//                [
-//                    'id' => $lpa->getData()['uId'],
-//                ]
-//            );
-
-//            $lpaData = $lpa->getData();
-//            $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+//    /**
+//     * Return all LPAs for the given user_id
+//     *
+//     * @param string $userId User account ID to fetch LPAs for
+//     * @param bool $keyCheck flag set to true if the request is for active Activation Key check
+//     * @return array An array of LPA data structures containing processed LPA data and metadata
+//     */
+//    public function getAllForUser(string $userId, bool $keyCheck): array
+//    {
+//        // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
+//        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+//        $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
 //
-//            $added = $item['Added']->format('Y-m-d H:i:s');
-//            unset($lpaData['original_attorneys']);
+//        if (empty($lpaUids)) {
+//            return [];
+//        }
 //
-//            //Extract and return only LPA's where status is Registered or Cancelled
-//            if (($this->isValidLpa)($lpaData)) {
-//                // if (is_null($item['ActivateBy'])) {
-//                $result[$item['Id']] = [
-//                    'user-lpa-actor-token' => $item['Id'],
-//                    'date' => $lpa->getLookupTime()->format('c'),
-//                    'actor' => $actor,
-//                    'lpa' => $lpaData,
-//                    'added' => $added
-//                ];
-                // }
-
-//                $this->logger->info(
-//                    'Account  retrieved {count} LPA(s) ----and result is {}-----------------------------',
-//                    [
-//                        'count' => count($lpaData),
-//                        'result'  => count($result)
-//                    ]
-//                );
-
+//        // Return all the LPA details based on the Sirius Ids.
+//        $lpas = $this->lpaRepository->lookup($lpaUids);
+//
+//        $result = [];
+//
+//        // Map the results...
+//        foreach ($lpaActorMaps as $item) {
+//            // Filter already added LPA.
+//            //The column ActivateBy will not exist on LPAs that have been activated or added
+//            if (is_null($item['ActivateBy'])) {
+//                $lpa = $lpas[$item['SiriusUid']];
+//
+//                $lpaData = $lpa->getData();
+//                $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+//
+//                $added = $item['Added']->format('Y-m-d H:i:s');
+//                unset($lpaData['original_attorneys']);
+//
+//                //Extract and return only LPA's where status is Registered or Cancelled
+//                if (($this->isValidLpa)($lpaData)) {
+//                    // if (is_null($item['ActivateBy'])) {
+//                    $result[$item['Id']] = [
+//                        'user-lpa-actor-token' => $item['Id'],
+//                        'date' => $lpa->getLookupTime()->format('c'),
+//                        'actor' => $actor,
+//                        'lpa' => $lpaData,
+//                        'added' => $added
+//                    ];
+//                }
+//            }
+//
+//            //Filter LPAs that have activation key requests made already.
+//            //The column ActivateBy will only exist on LPAs that have not been activated
+//            if ($keyCheck) {
+//                if (!is_null($item['ActivateBy'])) {
+//                    $lpa = $lpas[$item['SiriusUid']];
+//
+//                    $lpaData = $lpa->getData();
+//                    $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+//
+//                    $added = $item['Added']->format('Y-m-d H:i:s');
+//                    unset($lpaData['original_attorneys']);
+//
+//                    //Extract and return only LPA's where status is Registered or Cancelled
+//                    if (($this->isValidLpa)($lpaData)) {
+//                        // if (is_null($item['ActivateBy'])) {
+//                        $result[$item['Id']] = [
+//                            'user-lpa-actor-token' => $item['Id'],
+//                            'date' => $lpa->getLookupTime()->format('c'),
+//                            'actor' => $actor,
+//                            'lpa' => $lpaData,
+//                            'added' => $added
+//                        ];
+//                    }
+//                }
+//            }
+//        }
+//        return $result;
+//    }
 
     /**
      * Get an LPA using the share code.

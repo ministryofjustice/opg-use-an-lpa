@@ -35,9 +35,9 @@ class ActivationKeyAlreadyRequested
     public function __invoke(string $userId, string $lpaUid): ?array
     {
         $activeActivationKeyCheck = true;
-        $lpasAdded = $this->lpaService->getAllForUser($userId, $activeActivationKeyCheck);
+        $lpasRequested = $this->lpaService->getAllKeyRequestMadeLpasForUser($userId, $activeActivationKeyCheck);
 
-        foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
+        foreach ($lpasRequested as $userLpaActorToken => $lpaData) {
             if ($lpaData['lpa']['uId'] === $lpaUid) {
                 $this->logger->info(
                     'User {id} has has already an active activation key for the  LPA {uId}',
