@@ -49,10 +49,6 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = [aws_appautoscaling_target.target]
 }
 
-# Use bespoke metrics for two reasons.
-# 1) so we dont wobble between cpu and memory scaling
-# 2) we can turn off alarms at min scaling
-
 resource "aws_cloudwatch_metric_alarm" "scale_up" {
   alarm_name                = "${var.environment}-${var.aws_ecs_service_name}-scale-up"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
