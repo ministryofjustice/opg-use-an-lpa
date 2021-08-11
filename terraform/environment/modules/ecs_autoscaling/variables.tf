@@ -8,24 +8,24 @@ variable "aws_ecs_service_name" {
   type        = string
 }
 
-variable "max_scaling_alarm_actions" {
-  description = "List of alarm actions for maximum autoscaling being reached."
-  type        = list(string)
-}
-
 variable "ecs_autoscaling_service_role_arn" {
   description = "The ARN of the IAM role that allows Application AutoScaling to modify your scalable target on your behalf."
   type        = string
 }
 
 variable "environment" {
-  description = "Name of the environment instance of the online LPA service."
+  description = "Name of the environment instance of the online Digideps service."
   type        = string
 }
 
 variable "ecs_task_autoscaling_maximum" {
   description = "The max capacity of the scalable target."
   type        = number
+}
+
+variable "max_scaling_alarm_actions" {
+  description = "List of alarm actions for maximum autoscaling being reached."
+  type        = list(string)
 }
 
 variable "autoscaling_metric_track_cpu_target" {
@@ -46,25 +46,13 @@ variable "ecs_task_autoscaling_minimum" {
   default     = 1
 }
 
-variable "memory_track_metric_scale_in_cooldown" {
+variable "scale_down_cooldown" {
   description = "The amount of time, in seconds, after a scale in activity completes before another scale in activity can start."
   type        = number
   default     = 60
 }
 
-variable "memory_track_metric_scale_out_cooldown" {
-  description = "The amount of time, in seconds, after a scale out activity completes before another scale out activity can start."
-  type        = number
-  default     = 60
-}
-
-variable "cpu_track_metric_scale_in_cooldown" {
-  description = "The amount of time, in seconds, after a scale in activity completes before another scale in activity can start."
-  type        = number
-  default     = 60
-}
-
-variable "cpu_track_metric_scale_out_cooldown" {
+variable "scale_up_cooldown" {
   description = "The amount of time, in seconds, after a scale out activity completes before another scale out activity can start."
   type        = number
   default     = 60

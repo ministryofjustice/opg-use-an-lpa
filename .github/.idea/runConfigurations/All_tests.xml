@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All tests" type="CompoundRunConfigurationType">
+    <toRun name="Front Integration" type="PhpBehatConfigurationType" />
+    <toRun name="API Pact" type="PhpBehatConfigurationType" />
+    <toRun name="API" type="PHPUnitRunConfigurationType" />
+    <toRun name="Front" type="PHPUnitRunConfigurationType" />
+    <toRun name="API Acceptance" type="PhpBehatConfigurationType" />
+    <toRun name="API Integration" type="PhpBehatConfigurationType" />
+    <toRun name="Front UI" type="PhpBehatConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

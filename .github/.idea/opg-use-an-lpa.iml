@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Common/src" isTestSource="false" packagePrefix="Common" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Actor/src" isTestSource="false" packagePrefix="Actor" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Viewer/src" isTestSource="false" packagePrefix="Viewer" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ActorTest" isTestSource="true" packagePrefix="ActorTest" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/BehatTest" isTestSource="true" packagePrefix="BehatTest" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/CommonTest" isTestSource="true" packagePrefix="CommonTest" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ViewerTest" isTestSource="true" packagePrefix="ViewerTest" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/src/App/src" isTestSource="false" packagePrefix="App" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/AppTest" isTestSource="true" packagePrefix="AppTest" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/BehatTest" isTestSource="true" packagePrefix="BehatTest" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
