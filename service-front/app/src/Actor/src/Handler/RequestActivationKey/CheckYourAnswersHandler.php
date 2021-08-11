@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
-use Actor\Form\CheckYourAnswers;
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\CheckYourAnswers;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,

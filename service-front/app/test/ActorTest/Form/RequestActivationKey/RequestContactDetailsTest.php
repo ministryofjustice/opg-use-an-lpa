@@ -1,10 +1,10 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
+use Actor\Form\RequestActivationKey\RequestContactDetails;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Actor\Form\RequestContactDetails;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};

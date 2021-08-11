@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
 use Acpr\I18n\TranslatorInterface;
-use Actor\Form\RequestContactDetails;
+use Actor\Form\RequestActivationKey\RequestContactDetails;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;

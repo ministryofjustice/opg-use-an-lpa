@@ -1,8 +1,8 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\CheckYourAnswers;
+use Actor\Form\RequestActivationKey\CheckYourAnswers;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;

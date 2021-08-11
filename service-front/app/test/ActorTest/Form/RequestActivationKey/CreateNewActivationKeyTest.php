@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
