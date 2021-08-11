@@ -1,5 +1,5 @@
 module "view_ecs_autoscaling" {
-  source                           = "./modules/ecs_autoscaling_combined"
+  source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
   aws_ecs_cluster_name             = aws_ecs_cluster.use-an-lpa.name
   aws_ecs_service_name             = aws_ecs_service.viewer.name
