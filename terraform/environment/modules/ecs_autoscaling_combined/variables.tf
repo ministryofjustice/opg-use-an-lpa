@@ -46,25 +46,13 @@ variable "ecs_task_autoscaling_minimum" {
   default     = 1
 }
 
-variable "memory_track_metric_scale_in_cooldown" {
+variable "scale_down_cooldown" {
   description = "The amount of time, in seconds, after a scale in activity completes before another scale in activity can start."
   type        = number
   default     = 60
 }
 
-variable "memory_track_metric_scale_out_cooldown" {
-  description = "The amount of time, in seconds, after a scale out activity completes before another scale out activity can start."
-  type        = number
-  default     = 60
-}
-
-variable "cpu_track_metric_scale_in_cooldown" {
-  description = "The amount of time, in seconds, after a scale in activity completes before another scale in activity can start."
-  type        = number
-  default     = 60
-}
-
-variable "cpu_track_metric_scale_out_cooldown" {
+variable "scale_up_cooldown" {
   description = "The amount of time, in seconds, after a scale out activity completes before another scale out activity can start."
   type        = number
   default     = 60
