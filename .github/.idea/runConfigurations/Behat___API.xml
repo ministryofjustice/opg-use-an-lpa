@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Behat - API" type="CompoundRunConfigurationType">
-    <toRun name="API Integration" type="PhpBehatConfigurationType" />
-    <toRun name="API Pact" type="PhpBehatConfigurationType" />
-    <toRun name="API Acceptance" type="PhpBehatConfigurationType" />
-    <method v="2" />
-  </configuration>
-</component>
