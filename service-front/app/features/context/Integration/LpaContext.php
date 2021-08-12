@@ -129,7 +129,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        $this->apiFixtures->post('/v1/older-lpa/confirm')
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NO_CONTENT,
@@ -187,7 +187,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
@@ -235,7 +235,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldThatICannotRequestAnActivationKey()
     {
         // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -1338,7 +1338,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
         // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -1397,7 +1397,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
         // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -1518,7 +1518,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,

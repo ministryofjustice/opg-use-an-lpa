@@ -81,7 +81,7 @@ class AddOlderLpa
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $response = $this->apiClient->httpPatch('/v1/older-lpa/validate', $data);
+            $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
@@ -134,7 +134,7 @@ class AddOlderLpa
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $response = $this->apiClient->httpPost('/v1/older-lpa/confirm', $data);
+            $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 default:

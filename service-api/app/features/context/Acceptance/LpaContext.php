@@ -2036,7 +2036,7 @@ class LpaContext implements Context
         );
 
         // API call to request an activation key
-        $this->apiPost(
+        $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2092,7 +2092,7 @@ class LpaContext implements Context
             );
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => '700000004321',
@@ -2131,7 +2131,7 @@ class LpaContext implements Context
             );
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2180,7 +2180,7 @@ class LpaContext implements Context
             );
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2233,7 +2233,7 @@ class LpaContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => $createdDate])));
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2289,7 +2289,7 @@ class LpaContext implements Context
             $dataAttributes[$name] = null;
 
             // API call to request an activation key
-            $this->apiPatch(
+            $this->apiPost(
                 '/v1/older-lpa/validate',
                 $dataAttributes,
                 [
@@ -2482,7 +2482,7 @@ class LpaContext implements Context
         );
 
         // API call to request an activation key
-        $this->apiPost(
+        $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2543,7 +2543,7 @@ class LpaContext implements Context
             );
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2612,7 +2612,7 @@ class LpaContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,
@@ -2680,7 +2680,7 @@ class LpaContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
         // API call to request an activation key
-        $this->apiPatch(
+        $this->apiPost(
             '/v1/older-lpa/validate',
             [
                 'reference_number'  => $this->lpaUid,

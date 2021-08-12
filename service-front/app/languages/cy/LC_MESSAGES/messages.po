@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-08-04T12:02:07+00:00\n"
+"POT-Creation-Date: 2021-08-12T07:43:58+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -183,6 +183,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/check-lpa.html.twig:12
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
+#: src/Actor/templates/actor/contact-details.html.twig:14
 #: src/Actor/templates/actor/create-account-success.html.twig:12
 #: src/Actor/templates/actor/create-account.html.twig:12
 #: src/Actor/templates/actor/death-notification.html.twig:20
@@ -2174,50 +2175,50 @@ msgstr ""
 "neu’n rhoddwr os ydych o dan 18 oed"
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:56
+#: src/Actor/templates/actor/form-error-messages.html.twig:57
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr "Nodwch enw sefydliad"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:59
+#: src/Actor/templates/actor/form-error-messages.html.twig:60
 msgctxt "error"
 msgid "Enter your current password"
 msgstr "Teipiwch eich cyfrinair cyfredol"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:60
+#: src/Actor/templates/actor/form-error-messages.html.twig:61
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr "Mae’r cyfrinair cyfredol yn anghywir"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:61
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
 msgctxt "error"
 msgid "Enter your new password"
 msgstr "Teipiwch eich cyfrinair newydd"
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:62
+#: src/Actor/templates/actor/form-error-messages.html.twig:63
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 "Nid yw eich cyfrinair newydd a’r cyfrinair i gadarnhau eich cyfrif yn cyfateb"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:63
+#: src/Actor/templates/actor/form-error-messages.html.twig:64
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr "Teipiwch eich cyfrinair eto i’w gadarnhau"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:66
+#: src/Actor/templates/actor/form-error-messages.html.twig:67
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr "Cadarnhau eich cyfeiriad e-bost"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:68
 msgctxt "error"
 msgid "The emails did not match"
 msgstr "Nid oedd y cyfeiriadau e-bost yn cyfateb"
@@ -2505,6 +2506,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:87
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:84
+#: src/Actor/templates/actor/contact-details.html.twig:45
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:79
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
@@ -5808,27 +5810,25 @@ msgctxt "error"
 msgid "Select whether you are the donor or an attorney on the LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
-msgid "Check we've found the right LPA"
-msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
-
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
-msgid "Using the information you gave us, we found these details."
+#: src/Actor/templates/actor/contact-details.html.twig:21
+msgid "Your contact details"
 msgstr ""
-"Gan ddefnyddio’r wybodaeth roeddech chi wedi’i rhoi, bu inni dod o hyd i’r "
-"manylion hyn"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
-msgid "Your role on the LPA"
-msgstr "Eich swyddogaeth yn yr LPA hon"
+#: src/Actor/templates/actor/contact-details.html.twig:31
+msgid "Your telephone number"
+msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
-msgid "The donor's name"
-msgstr "Enw’r rhoddwr"
+#: src/Actor/templates/actor/contact-details.html.twig:37
+msgid "or"
+msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
-msgid "This is not the correct LPA"
-msgstr "Nid dyma’r atwrneiaeth arhosol gywir"
+#: src/Actor/templates/actor/contact-details.html.twig:40
+msgid "I do not have a phone or cannot use a phone to take calls"
+msgstr ""
+
+#: src/Actor/templates/actor/contact-details.html.twig:43
+msgid "We may also contact you by email on"
+msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
 msgid ""
@@ -5840,6 +5840,12 @@ msgstr ""
 "cofnodion. Bydd yr allwedd cadarnhau cyfrif yn cael ei phostio i’r cyfeiriad "
 "hwn. <a href=\"%link%\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi "
 "symud.</a>"
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
+msgctxt "error"
+msgid "Enter your phone number or check the box to say you cannot take calls"
+msgstr ""
 
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
 msgid "Before you begin"
@@ -5895,3 +5901,25 @@ msgid ""
 "to. This may have been the donor or an attorney. If a professional, such as a "
 "solicitor, helped to make the LPA, it may have been sent to them."
 msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+msgid "Using the information you gave us, we found these details."
+msgstr ""
+"Gan ddefnyddio’r wybodaeth roeddech chi wedi’i rhoi, bu inni dod o hyd i’r "
+"manylion hyn"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
+msgid "Your role on the LPA"
+msgstr "Eich swyddogaeth yn yr LPA hon"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
+msgid "The donor's name"
+msgstr "Enw’r rhoddwr"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
+msgid "This is not the correct LPA"
+msgstr "Nid dyma’r atwrneiaeth arhosol gywir"

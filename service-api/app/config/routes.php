@@ -36,12 +36,12 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
-    $app->patch(
+    $app->post(
         '/v1/older-lpa/validate',
         App\Handler\OlderLpaValidationHandler::class,
         'lpa.older.validate'
     );
-    $app->post(
+    $app->patch(
         '/v1/older-lpa/confirm',
         App\Handler\OlderLpaConfirmationHandler::class,
         'lpa.older.confirm'

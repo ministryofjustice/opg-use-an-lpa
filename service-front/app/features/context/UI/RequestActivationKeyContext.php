@@ -386,7 +386,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -410,7 +410,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -438,7 +438,7 @@ class RequestActivationKeyContext implements Context
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response
-            $this->apiFixtures->patch('/v1/older-lpa/validate')
+            $this->apiFixtures->post('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_OK,
@@ -458,7 +458,7 @@ class RequestActivationKeyContext implements Context
                 );
         } else {
             // Setup fixture for activation key already existing
-            $this->apiFixtures->patch('/v1/older-lpa/validate')
+            $this->apiFixtures->post('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -503,7 +503,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->fillAndSubmitOlderLpaForm();
 
-        $this->apiFixtures->patch('/v1/older-lpa/validate')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,

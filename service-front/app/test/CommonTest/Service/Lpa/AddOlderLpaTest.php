@@ -89,7 +89,7 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
@@ -136,7 +136,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_validate_an_ineligible_lpa(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
@@ -174,7 +174,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_a_bad_data_match(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'          => (string) $this->olderLpa['reference_number'],
@@ -223,7 +223,7 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
@@ -289,7 +289,7 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
@@ -345,7 +345,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_not_finding_the_lpa(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
@@ -382,7 +382,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
@@ -421,7 +421,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->httpPost(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'      => (string) $this->olderLpa['reference_number'],
@@ -460,7 +460,7 @@ class AddOlderLpaTest extends TestCase
         $response = [];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->httpPatch(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number'      => (string)$this->olderLpa['reference_number'],
@@ -497,7 +497,7 @@ class AddOlderLpaTest extends TestCase
     public function it_will_fail_to_confirm_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->httpPatch(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number' => (string)$this->olderLpa['reference_number'],
