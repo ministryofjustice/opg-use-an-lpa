@@ -5932,19 +5932,17 @@ msgstr ""
 msgid "Check we've found the right LPA"
 msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
-msgid "Using the information you gave us, we found these details."
+#: src/Actor/templates/actor/contact-details.html.twig:31
+msgid "Your telephone number"
 msgstr ""
-"Gan ddefnyddio’r wybodaeth roeddech chi wedi’i rhoi, bu inni dod o hyd i’r "
-"manylion hyn"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
-msgid "Your role on the LPA"
-msgstr "Eich swyddogaeth yn yr LPA hon"
+#: src/Actor/templates/actor/contact-details.html.twig:37
+msgid "or"
+msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
-msgid "The donor's name"
-msgstr "Enw’r rhoddwr"
+#: src/Actor/templates/actor/contact-details.html.twig:40
+msgid "I do not have a phone or cannot use a phone to take calls"
+msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:80
 msgid "This is not the correct LPA"
@@ -5952,6 +5950,12 @@ msgstr "Nid dyma’r atwrneiaeth arhosol gywir"
 
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:27
 msgid "the LPA was registered on or after 1 January 2016"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
+msgctxt "error"
+msgid "Enter your phone number or check the box to say you cannot take calls"
 msgstr ""
 
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
@@ -6008,3 +6012,25 @@ msgid ""
 "to. This may have been the donor or an attorney. If a professional, such as a "
 "solicitor, helped to make the LPA, it may have been sent to them."
 msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+msgid "Using the information you gave us, we found these details."
+msgstr ""
+"Gan ddefnyddio’r wybodaeth roeddech chi wedi’i rhoi, bu inni dod o hyd i’r "
+"manylion hyn"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
+msgid "Your role on the LPA"
+msgstr "Eich swyddogaeth yn yr LPA hon"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
+msgid "The donor's name"
+msgstr "Enw’r rhoddwr"
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
+msgid "This is not the correct LPA"
+msgstr "Nid dyma’r atwrneiaeth arhosol gywir"

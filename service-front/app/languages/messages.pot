@@ -1790,12 +1790,14 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:57
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:31
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:59
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:27
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
 msgid "Donor"
 msgstr ""
 
@@ -4244,4 +4246,72 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:76
 msgid "Not provided"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
+msgid "Before you begin"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:28
+msgid "the LPA was made for use in England and Wales"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:31
+msgid "You cannot ask for a key for:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:34
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:35
+msgid "LPAs registered by the Office of the Public Guardian Scotland"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:38
+msgid "What you'll need"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:40
+msgid "To ask for a key, you'll need to give us:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:43
+msgid "your name, date of birth and UK postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:44
+msgid "the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:51
+msgid "I do not know the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:55
+msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:56
+msgid "On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+msgid "Using the information you gave us, we found these details."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
+msgid "Your role on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
+msgid "The donor's name"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
+msgid "This is not the correct LPA"
 msgstr ""
