@@ -37,7 +37,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
     {
         $data = $request->getParsedBody();
 
-        $actorId = $request->getHeader('user-token')[0];
+        $userId = $request->getHeader('user-token')[0];
 
         if (!isset($data['actor-code']) || !isset($data['uid']) || !isset($data['dob'])) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
@@ -47,7 +47,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
             $data['actor-code'],
             $data['uid'],
             $data['dob'],
-            $actorId
+            $userId
         );
 
         // We deliberately don't return details of why the (validated) code was not found.

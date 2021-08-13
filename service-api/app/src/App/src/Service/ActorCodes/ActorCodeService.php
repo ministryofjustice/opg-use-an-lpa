@@ -86,11 +86,11 @@ class ActorCodeService
      * @param string $code
      * @param string $uid
      * @param string $dob
-     * @param string $actorId
+     * @param string $userId
      * @return array|null
      * @throws \Exception
      */
-    public function confirmDetails(string $code, string $uid, string $dob, string $actorId): ?string
+    public function confirmDetails(string $code, string $uid, string $dob, string $userId): ?string
     {
         $details = $this->validateDetails($code, $uid, $dob);
 
@@ -112,7 +112,7 @@ class ActorCodeService
                 $this->userLpaActorMapRepository->create(
                     $id,
                     $details['lpa']['uId'],
-                    $actorId,
+                    $userId,
                     (string)$details['actor']['details']['id']
                 );
 
