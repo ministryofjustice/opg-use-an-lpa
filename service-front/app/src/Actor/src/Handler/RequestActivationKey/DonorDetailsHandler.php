@@ -47,27 +47,24 @@ class DonorDetailsHandler extends AbstractHandler implements UserAware, CsrfGuar
     {
         $user = $this->getUser($request);
         $form = new DonorDetails($this->getCsrfGuard($request));
+        $form->setData($request->getParsedBody());
         $session = $this->getSession($request, 'session');
 
-        if ($request->getMethod() === 'POST') {
-            $form->setData($request->getParsedBody());
+        if ($request->getMethod() === 'POST' && $form->isValid()) {
+            $donorData = $form->getData();
 
-            if ($form->isValid()) {
-                $donorData = $form->getData();
+            $dobString = sprintf(
+                '%s-%s-%s',
+                $donorData['dob']['year'],
+                $donorData['dob']['month'],
+                $donorData['dob']['day']
+            );
 
-                $dobString = sprintf(
-                    '%s-%s-%s',
-                    $donorData['dob']['year'],
-                    $donorData['dob']['month'],
-                    $donorData['dob']['day']
-                );
+            $session->set('donor_firstnames', $donorData['first_names']);
+            $session->set('donor_lastname', $donorData['last_name']);
+            $session->set('donor_dob', $dobString);
 
-                $session->set('donor_firstnames', $donorData['first_names']);
-                $session->set('donor_lastname', $donorData['last_name']);
-                $session->set('donor_dob', $dobString);
-
-                return $this->redirectToRoute('lpa.add.contact-details');
-            }
+            return $this->redirectToRoute('lpa.add.contact-details');
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/donor-details', [
