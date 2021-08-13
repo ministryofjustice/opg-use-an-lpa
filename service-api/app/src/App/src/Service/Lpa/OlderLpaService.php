@@ -297,6 +297,11 @@ class OlderLpaService
         return $this->lookupActorInLpa($lpaMatch->getData(), $dataToMatch);
     }
 
+    public function removeLpaRequest(string $requestId)
+    {
+        $this->userLpaActorMap->delete($requestId);
+    }
+
     /**
      * Provides the capability to request a letter be sent to the registered
      * address of the specified actor with a new one-time-use registration code.
@@ -333,19 +338,25 @@ class OlderLpaService
         }
     }
 
-    public function storeLPARequest(string $lpaId, string $userId, string $actorId)
+    /**
+     * Stores an Entry in UserLPAActorMap for the request of an older lpa
+     * @param string $lpaId
+     * @param string $userId
+     * @param string $actorId
+     *
+     * @return string       The lpaActorToken
+     * @throws Exception    throws an ApiException
+     */
+    public function storeLPARequest(string $lpaId, string $userId, string $actorId): string
     {
         do {
-            $added = false;
-
             $id = Uuid::uuid4()->toString();
-
             try {
                 $this->userLpaActorMap->create($id, $lpaId, $userId, $actorId, 'P1Y');
-                $added = true;
+                return $id;
             } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.
             }
-        } while (!$added);
+        } while (true);
     }
 }

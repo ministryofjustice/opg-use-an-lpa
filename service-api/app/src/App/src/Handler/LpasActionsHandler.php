@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\OlderLpaService;
+use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
@@ -26,7 +29,10 @@ class LpasActionsHandler implements RequestHandlerInterface
      * @param OlderLpaService $olderLpaService
      * @param FeatureEnabled  $featureEnabled
      */
-    public function __construct(OlderLpaService $olderLpaService, FeatureEnabled $featureEnabled)
+    public function __construct(
+        OlderLpaService $olderLpaService,
+        FeatureEnabled $featureEnabled
+    )
     {
         $this->olderLpaService = $olderLpaService;
         $this->featureEnabled = $featureEnabled;
@@ -35,7 +41,7 @@ class LpasActionsHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -61,7 +67,6 @@ class LpasActionsHandler implements RequestHandlerInterface
         if (!isset($lpaMatchResponse['actor-id'])) {
             throw new BadRequestException('The actor-id is missing from the data match response');
         }
-
         // Checks if the actor already has an active activation key. If forced ignore
         if (!$requestData['force_activation_key']) {
             $hasActivationCode = $this->olderLpaService->hasActivationCode(
@@ -80,15 +85,25 @@ class LpasActionsHandler implements RequestHandlerInterface
             }
         }
 
+        $requestId = null;
+
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $this->olderLpaService->storeLPARequest(
+            $requestId = $this->olderLpaService->storeLPARequest(
                 $lpaMatchResponse['lpa-id'],
                 $userId,
                 $lpaMatchResponse['actor-id']
             );
         }
-        //If all criteria pass, request letter with activation key
-        $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+
+        try {
+            //If all criteria pass, request letter with activation key
+            $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
+        } catch (ApiException $apiException) {
+            if ($requestId) {
+                $this->olderLpaService->removeLpaRequest($requestId);
+            }
+            throw $apiException;
+        }
 
         return new EmptyResponse();
     }
