@@ -2036,7 +2036,7 @@ class LpaContext implements Context
                             'UserId' => $this->base->userAccountId,
                             'SiriusUid' => $this->lpaUid,
                             'ActorId' => $this->actorId,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z')
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
                         ]
                     ),
                 ]
@@ -2477,7 +2477,7 @@ class LpaContext implements Context
                             'UserId' => $this->base->userAccountId,
                             'SiriusUid' => $this->lpaUid,
                             'ActorId' => $this->actorId,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z')
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
                         ]
                     ),
                 ]
