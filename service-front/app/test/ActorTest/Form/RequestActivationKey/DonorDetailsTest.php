@@ -31,9 +31,9 @@ class DonorDetailsTest extends TestCase
     {
         return [
             '__csrf'        => Csrf::class,
-            'first_names'   => Text::class,
-            'last_name'     => Text::class,
-            'dob'           => Date::class
+            'donor_first_names'   => Text::class,
+            'donor_last_name'     => Text::class,
+            'donor_dob'           => Date::class
         ];
     }
 

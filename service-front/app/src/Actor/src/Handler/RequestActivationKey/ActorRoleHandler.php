@@ -91,10 +91,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                         'id' => $this->user->getIdentity()
                     ]
                 );
-                // these will have been set if the actor was the attorney for a previous request
-                $this->session->unset('donor_first_names');
-                $this->session->unset('donor_last_name');
-                $this->session->unset('donor_dob');
+                $this->session->set('actor_role', 'donor');
                 return $this->redirectToRoute('lpa.add.contact-details');
             } else {
                 $this->logger->info(
@@ -103,6 +100,7 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                         'id' => $this->user->getIdentity()
                     ]
                 );
+                $this->session->set('actor_role', 'attorney');
                 return $this->redirectToRoute('lpa.add.donor-details');
             }
         }
