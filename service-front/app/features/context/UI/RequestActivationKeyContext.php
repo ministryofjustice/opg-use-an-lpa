@@ -522,11 +522,11 @@ class RequestActivationKeyContext implements Context
     public function iProvideTheDonorSDetails()
     {
         if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->fillField('first_names', $this->lpa->donor->firstname);
-            $this->ui->fillField('last_name', $this->lpa->donor->surname);
-            $this->ui->fillField('dob[day]', '09');
-            $this->ui->fillField('dob[month]', '02');
-            $this->ui->fillField('dob[year]', '1998');
+            $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
+            $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
+            $this->ui->fillField('donor_dob[day]', '09');
+            $this->ui->fillField('donor_dob[month]', '02');
+            $this->ui->fillField('donor_dob[year]', '1998');
             $this->ui->pressButton('Continue');
         }
     }

@@ -26,15 +26,15 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    {{ govuk_form_element(form.get('first_names'), {
+                    {{ govuk_form_element(form.get('donor_first_names'), {
                         'label': 'First names' | trans,
                     }) }}
 
-                    {{ govuk_form_element(form.get('last_name'), {
+                    {{ govuk_form_element(form.get('donor_last_name'), {
                         'label': 'Last name' | trans,
                     }) }}
 
-                    {{ govuk_form_fieldset(form.get('dob'), {
+                    {{ govuk_form_fieldset(form.get('donor_dob'), {
                         'label': 'Donor\'s date of birth'| trans,
                         'hint': 'For example, 31 03 1980'| trans,
                         'attr': {'class': 'xyz', 'label_class': 'govuk-label--m'}

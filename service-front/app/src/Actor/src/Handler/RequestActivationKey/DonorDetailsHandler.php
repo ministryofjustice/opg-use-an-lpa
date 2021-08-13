@@ -13,7 +13,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,26 +45,30 @@ class DonorDetailsHandler extends AbstractHandler implements UserAware, CsrfGuar
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
-        $form = new DonorDetails($this->getCsrfGuard($request));
-        $form->setData($request->getParsedBody());
         $session = $this->getSession($request, 'session');
+        $form = new DonorDetails($this->getCsrfGuard($request));
 
-        if ($request->getMethod() === 'POST' && $form->isValid()) {
-            $donorData = $form->getData();
+        if ($request->getMethod() === 'POST') {
+            $form->setData($request->getParsedBody());
+            if ($form->isValid()) {
+                $postData = $form->getData();
 
-            $dobString = sprintf(
-                '%s-%s-%s',
-                $donorData['dob']['year'],
-                $donorData['dob']['month'],
-                $donorData['dob']['day']
-            );
+                $session->set('donor_first_names', $postData['donor_first_names']);
+                $session->set('donor_last_name', $postData['donor_last_name']);
+                $session->set(
+                    'donor_dob',
+                    [
+                        'day' => $postData['donor_dob']['day'],
+                        'month' => $postData['donor_dob']['month'],
+                        'year' => $postData['donor_dob']['year']
+                    ]
+                );
 
-            $session->set('donor_firstnames', $donorData['first_names']);
-            $session->set('donor_lastname', $donorData['last_name']);
-            $session->set('donor_dob', $dobString);
-
-            return $this->redirectToRoute('lpa.add.contact-details');
+                return $this->redirectToRoute('lpa.add.contact-details');
+            }
         }
+
+        $form->setData($session->toArray());
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/donor-details', [
             'user' => $user,

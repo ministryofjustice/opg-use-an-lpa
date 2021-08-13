@@ -32,16 +32,16 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add([
-            'name' => 'first_names',
+            'name' => 'donor_first_names',
             'type' => 'Text',
         ]);
 
         $this->add([
-            'name' => 'last_name',
+            'name' => 'donor_last_name',
             'type' => 'Text',
         ]);
 
-        $this->add(new Date('dob'));
+        $this->add(new Date('donor_dob'));
     }
 
     /**
@@ -51,7 +51,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'first_names' => [
+            'donor_first_names' => [
                 'required'   => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
@@ -65,7 +65,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ]
             ],
-            'last_name' => [
+            'donor_last_name' => [
                 'required'   => true,
                 'filters'  => [
                     ['name' => StringTrim::class],
@@ -79,7 +79,7 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ]
             ],
-            'dob' => [
+            'donor_dob' => [
                 'required'   => true,
                 'filters'  => [
                     ['name' => DateTrimFilter::class],
