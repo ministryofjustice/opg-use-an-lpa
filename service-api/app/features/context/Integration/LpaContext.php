@@ -95,7 +95,7 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => $this->actorLpaId,
                                 'UserId' => $this->userId,
