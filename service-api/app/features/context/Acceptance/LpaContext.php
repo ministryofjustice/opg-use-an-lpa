@@ -12,6 +12,7 @@ use DateTime;
 use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use Common\Service\Features\FeatureEnabled;
 
 /**
  * @property mixed lpa
@@ -1981,6 +1982,10 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2075,6 +2080,10 @@ class LpaContext implements Context
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist()
     {
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2113,6 +2122,10 @@ class LpaContext implements Context
      */
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2161,6 +2174,10 @@ class LpaContext implements Context
     {
         $this->lpa->registrationDate = '2019-08-31';
 
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2208,6 +2225,10 @@ class LpaContext implements Context
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+
+        $this->awsFixtures->append(
+            new Result([])
+        );
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -2436,6 +2457,10 @@ class LpaContext implements Context
      */
     public function iRequestForANewActivationKeyAgain()
     {
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2508,6 +2533,10 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result(

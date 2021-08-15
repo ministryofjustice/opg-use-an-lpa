@@ -12,6 +12,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\ActivationKeyAlreadyRequested;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\LpaAlreadyAdded;
@@ -25,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use App\Service\Features\FeatureEnabled;
 
 class OlderLpaServiceTest extends TestCase
 {
@@ -55,6 +57,12 @@ class OlderLpaServiceTest extends TestCase
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapProphecy;
 
+    /** @var ObjectProphecy|ActivationKeyAlreadyRequested */
+    private $activationKeyAlreadyRequestedProphecy;
+
+    /** @var ObjectProphecy|FeatureEnabled */
+    private $featureEnabled;
+
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -70,6 +78,7 @@ class OlderLpaServiceTest extends TestCase
         $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
+        $this->activationKeyAlreadyRequestedProphecy = $this->prophesize(ActivationKeyAlreadyRequested::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -85,8 +94,9 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
+            $this->activationKeyAlreadyRequestedProphecy->reveal(),
+            $this->featureEnabled->reveal(),
             $this->validateOlderLpaRequirementsProphecy->reveal(),
-            $this->userLpaActorMapProphecy->reveal(),
             $this->featureEnabledProphecy->reveal()
         );
     }

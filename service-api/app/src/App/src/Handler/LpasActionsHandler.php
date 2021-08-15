@@ -51,12 +51,12 @@ class LpasActionsHandler implements RequestHandlerInterface
 
         //UML-1578 Check if activation key already requested by actor for LPA
         if (($this->featureEnabled)('allow_older_lpas')) {
-            if (!$requestData['force_activation_key']) {
+           if (!$requestData['force_activation_key']) {
                 $this->olderLpaService->checkIfActivationKeyAlreadyRequested(
                     $userId,
                     (string)$requestData['reference_number']
                 );
-            }
+           }
         }
 
         // Check LPA with user provided reference number
