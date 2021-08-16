@@ -1,20 +1,21 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\CheckYourAnswers;
+use Actor\Form\RequestActivationKey\DonorDetails;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Common\Form\Fieldset\Date;
 use CommonTest\Form\LaminasFormTests;
-use CommonTest\Form\TestsLaminasForm;
+use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class CheckYourAnswersTest extends TestCase implements TestsLaminasForm
+class DonorDetailsTest extends TestCase
 {
     use LaminasFormTests;
 
-    protected CheckYourAnswers $form;
+    protected DonorDetails $form;
 
     public function getForm(): AbstractForm
     {
@@ -23,19 +24,22 @@ class CheckYourAnswersTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'check_answers';
+        return 'donor_details';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf' => Csrf::class
+            '__csrf'        => Csrf::class,
+            'donor_first_names'   => Text::class,
+            'donor_last_name'     => Text::class,
+            'donor_dob'           => Date::class
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CheckYourAnswers($guardProphecy->reveal());
+        $this->form = new DonorDetails($guardProphecy->reveal());
     }
 }
