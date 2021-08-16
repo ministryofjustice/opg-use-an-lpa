@@ -1,0 +1,106 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Check your details{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Check your details{% endtrans %}</h1>
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        {% if data.telephone is defined %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Telephone number{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ data.telephone }}
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-reference-number" href="{{ path('lpa.add.contact-details') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> telephone number</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                        {% endif %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Your role{% endtrans %}
+                            </dt>
+                            {% if data.actor_role|lower == 'donor' %}
+                                <dd class="govuk-summary-list__value">
+                                    Donor
+                                </dd>
+                            {% else %}
+                                <dd class="govuk-summary-list__value">
+                                    Attorney
+                                </dd>
+                            {% endif %}
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link" id="change-name" href="{{ path('lpa.add.actor-role') }}">
+                                    {% trans %}Change<span class="govuk-visually-hidden"> role</span>{% endtrans %}
+                                </a>
+                            </dd>
+                        </div>
+                        {% if data.actor_role|lower == 'attorney' %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Donor's name{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ data.donor_first_names ~ ' ' ~  data.donor_last_name }}
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> donor's name</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Donor's date of birth{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ code_date(data.donor_dob) }}
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-postcode" href="{{ path('lpa.add.donor-details') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> donor's date of birth</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                        {% endif %}
+                    </dl>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}I understand that the information I've given will be stored securely and used to process my activation key request.{% endtrans %}
+                        </strong>
+                    </div>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Confirm and submit request{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}

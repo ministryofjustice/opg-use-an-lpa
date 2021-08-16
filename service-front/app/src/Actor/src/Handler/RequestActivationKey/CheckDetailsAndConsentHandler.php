@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\CheckDetailsAndConsent;
+use Carbon\Carbon;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -15,6 +16,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Features\FeatureEnabled;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
@@ -56,9 +58,64 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
         if (
             is_null($this->session)
-            || (is_null($this->session->get('telephone')) || is_null($this->session->get('no_phone')))
+            || is_null($this->session->get('actor_role'))
+            || (
+                is_null($this->session->get('telephone_option')['telephone'])
+                && is_null($this->session->get('telephone_option')['no_phone'])
+            )
         ) {
             throw new SessionTimeoutException();
         }
+
+        $this->data['actor_role'] = $this->session->get('actor_role');
+
+        if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
+            $this->data['telephone'] = $telephone;
+        }
+
+        if (strtolower($this->session->get('actor_role')) === 'attorney') {
+            if (
+                is_null($this->session->get('donor_first_names')) ||
+                is_null($this->session->get('donor_last_name')) ||
+                is_null($this->session->get('donor_dob')['day']) ||
+                is_null($this->session->get('donor_dob')['month']) ||
+                is_null($this->session->get('donor_dob')['year'])
+            ) {
+                throw new SessionTimeoutException();
+            }
+
+            $this->data['donor_first_names'] = $this->session->get('donor_first_names');
+            $this->data['donor_last_name'] = $this->session->get('donor_last_name');
+            $this->data['donor_dob'] = Carbon::create(
+                $this->session->get('donor_dob')['year'],
+                $this->session->get('donor_dob')['month'],
+                $this->session->get('donor_dob')['day']
+            )->toImmutable();
+        }
+
+        switch ($request->getMethod()) {
+            case 'POST':
+                return $this->handlePost($request);
+            default:
+                return $this->handleGet($request);
+        }
+    }
+
+    public function handleGet(ServerRequestInterface $request): ResponseInterface
+    {
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
+            'user'  => $this->user,
+            'form'  => $this->form,
+            'data'  => $this->data
+        ]));
+    }
+
+    public function handlePost(ServerRequestInterface $request): ResponseInterface
+    {
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
+            'user'  => $this->user,
+            'form'  => $this->form,
+            'data'  => $this->data
+        ]));
     }
 }
