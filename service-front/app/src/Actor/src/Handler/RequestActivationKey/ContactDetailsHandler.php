@@ -86,11 +86,15 @@ class ContactDetailsHandler extends AbstractHandler implements UserAware
             $postData = $this->form->getData();
 
             //  Set the data in the session
-            $this->session->set('telephone', $postData['telephone']);
-            $this->session->set('no_phone', $postData['no_phone']);
+            $this->session->set(
+                'telephone_option',
+                [
+                    'telephone' => $postData['telephone_option']['telephone'],
+                    'no_phone' => $postData['telephone_option']['no_phone']
+                ]
+            );
 
-            //TODO: Redirect to end of journey
-            //return $this->redirectToRoute('Somewhere');
+            return $this->redirectToRoute('lpa.add.check-details-and-consent');
         }
 
         return new HtmlResponse($this->renderer->render('actor::contact-details', [
