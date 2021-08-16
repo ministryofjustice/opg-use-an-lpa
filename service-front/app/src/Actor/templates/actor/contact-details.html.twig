@@ -1,0 +1,53 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Your contact details{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ referer }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">{% trans %}Your contact details{% endtrans %}</h1>
+                    <div id="lpa-type-hint" class="govuk-hint govuk-!-margin-bottom-6">We may need to contact you to ask for more information.</div>
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        {{ govuk_form_element(form.get('telephone_option').get('telephone'), {
+                            'label': 'Your telephone number'| trans,
+                            'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label'},
+                            'inputmode': 'numeric',
+                            'pattern': '[0-9 -]*'
+                        }) }}
+
+                        <p class="govuk-body govuk-!-margin-bottom-6">{% trans %}or{% endtrans %}</p>
+
+                        {{ govuk_form_element(form.get('telephone_option').get('no_phone'), {
+                            'label': 'I do not have a phone or cannot use a phone to take calls'| trans,
+                        }) }}
+
+                    <p class="govuk-body">{% trans %} We may also contact you by email on {% endtrans %} <b>{{ user.getDetail('email') }}</b> </p>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+
+    </div>
+{% endblock %}
