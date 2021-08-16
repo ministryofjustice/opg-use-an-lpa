@@ -76,7 +76,10 @@ class ConfigProvider
                 DataAccess\ApiGateway\RequestSigner::class => DataAccess\ApiGateway\RequestSignerFactory::class,
 
                 // Handlers
-                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class
+                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+
+                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class
+
             ],
 
             'delegators' => [
