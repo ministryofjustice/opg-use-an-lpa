@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Actor\Form;
+namespace Actor\Form\RequestActivationKey;
 
 use Common\Form\AbstractForm;
 use Laminas\InputFilter\InputFilterProviderInterface;

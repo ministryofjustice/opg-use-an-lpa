@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
@@ -16,7 +16,6 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Email\EmailClient;
-use IntlDateFormatter;
 use DateTime;
 use Common\Service\Lpa\LocalisedDate;
 

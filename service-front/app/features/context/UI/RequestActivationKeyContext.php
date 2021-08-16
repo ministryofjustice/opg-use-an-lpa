@@ -9,6 +9,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -63,6 +64,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am asked for my contact details$/
+     */
+    public function iAmAskedForMyContactDetails()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/contact-details');
+            $this->ui->assertPageContainsText('Your contact details');
+        }
+    }
+
+    /**
      * @Then /^I am asked to check my answers before requesting an activation key$/
      */
     public function iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey()
@@ -76,11 +88,32 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am asked to provide the donor's details to verify that I am the attorney$/
+     */
+    public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+            $this->ui->assertPageContainsText('The donor\'s details');
+        }
+    }
+
+    /**
+     * @Given /^I am asked for my role on the LPA$/
+     */
+    public function iAmAskedForMyRoleOnTheLPA()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('What is your role on the LPA?');
+        }
+    }
+
+    /**
      * @Then I am informed that an LPA could not be found with these details
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->assertPageContainsText('What is your role on the LPA?');
         } else {
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
@@ -113,6 +146,18 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->fillField('opg_reference_number', '700000000001');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am on the donor details page$/
+     */
+    public function iAmOnTheDonorDetailsPage()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+            $this->iConfirmThatIAmTheAttorney();
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+        }
     }
 
     /**
@@ -211,6 +256,28 @@ class RequestActivationKeyContext implements Context
     {
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
             $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        }
+    }
+
+    /**
+     * @When /^I confirm that I am the attorney$/
+     */
+    public function iConfirmThatIAmTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('actor_role_radio', 'Attorney');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @When /^I confirm that I am the donor on the LPA$/
+     */
+    public function iConfirmThatIAmTheDonorOnTheLPA()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('actor_role_radio', 'Donor');
+            $this->ui->pressButton('Continue');
         }
     }
 
@@ -450,6 +517,21 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I provide the donor's details$/
+     */
+    public function iProvideTheDonorSDetails()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
+            $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
+            $this->ui->fillField('donor_dob[day]', '09');
+            $this->ui->fillField('donor_dob[month]', '02');
+            $this->ui->fillField('donor_dob[year]', '1998');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
      * @When /^I request an activation key with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
      */
     public function iRequestAnActivationKeyWithAnInvalidDOBFormatOf($day, $month, $year)
@@ -574,6 +656,16 @@ class RequestActivationKeyContext implements Context
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
             $this->ui->fillField('telephone', '0123456789');
         }
+    }
+
+    /**
+     * @Given /^My LPA has been found but my details did not match$/
+     */
+    public function myLPAHasBeenFoundButMyDetailsDidNotMatch()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideDetailsThatDoNotMatchAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
     }
 
     protected function fillAndSubmitOlderLpaForm()

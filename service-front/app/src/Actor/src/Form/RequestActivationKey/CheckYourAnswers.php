@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Actor\Form;
+namespace Actor\Form\RequestActivationKey;
 
 use Common\Form\AbstractForm;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 class CheckYourAnswers extends AbstractForm
 {
-    const FORM_NAME = 'check_answers';
+    public const FORM_NAME = 'check_answers';
 
     /**
      * CheckYourAnswers constructor.

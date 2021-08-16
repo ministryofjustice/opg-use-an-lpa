@@ -1,21 +1,20 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\ActorRole;
+use Actor\Form\RequestActivationKey\CheckYourAnswers;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;
 use CommonTest\Form\TestsLaminasForm;
-use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class ActorRoleTest extends TestCase implements TestsLaminasForm
+class CheckYourAnswersTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
-    protected ActorRole $form;
+    protected CheckYourAnswers $form;
 
     public function getForm(): AbstractForm
     {
@@ -24,20 +23,19 @@ class ActorRoleTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'actor_role';
+        return 'check_answers';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'actor_role_radio' => Radio::class
+            '__csrf' => Csrf::class
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActorRole($guardProphecy->reveal());
+        $this->form = new CheckYourAnswers($guardProphecy->reveal());
     }
 }

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\ActorRole;
-use Actor\Form\CheckYourAnswers;
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\ActorRole;
+use Actor\Form\RequestActivationKey\CheckYourAnswers;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -184,7 +184,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $form = new ActorRole($this->getCsrfGuard($request));
                         $form->setAttribute('action', $this->urlHelper->generate('lpa.add.actor-role'));
                         return new HtmlResponse($this->renderer->render(
-                            'actor::actor-role',
+                            'actor::request-activation-key/actor-role',
                             [
                                 'user'  => $this->user,
                                 'form'  => $form
