@@ -287,8 +287,6 @@ class RequestActivationKeyContext implements Context
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-
-
         $this->ui->pressButton('Continue');
     }
 
@@ -677,7 +675,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->iAmOnTheRequestAnActivationKeyPage();
         $this->iProvideDetailsThatDoNotMatchAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
     }
 
     protected function fillAndSubmitOlderLpaForm()
