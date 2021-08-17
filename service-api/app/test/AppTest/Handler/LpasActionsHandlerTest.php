@@ -45,7 +45,7 @@ class LpasActionsHandlerTest extends TestCase
 
         $olderLpaServiceProphecy->checkLPAMatchAndGetActorDetails('123', $requestData)->willReturn($matchedLPAData);
 
-        $featureEnabledProphecy->method('__invoke')->willReturn(true);
+        $featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $olderLpaServiceProphecy->storeLPARequest('number', '123', '123')->shouldBeCalled()->willReturn('recordId');
 
