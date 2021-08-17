@@ -12,7 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class LpasActionsHandlerTest extends TestCase
 {
-    public function test_when_sirius_is_down_remove_stored_LPA_request()
+    /**
+     * @test
+     */
+    public function when_sirius_is_down_remove_stored_LPA_request()
     {
         $olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
         $featureEnabledProphecy =  $this->getMockBuilder(FeatureEnabled::class)
