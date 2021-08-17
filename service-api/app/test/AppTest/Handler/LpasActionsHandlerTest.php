@@ -96,7 +96,7 @@ class LpasActionsHandlerTest extends TestCase
 
         $olderLpaServiceProphecy->checkLPAMatchAndGetActorDetails('123', $requestData)->willReturn($matchedLPAData);
 
-        $featureEnabledProphecy->method('__invoke')->willReturn(false);
+        $featureEnabledProphecy->__invoke()->willReturn(false);
 
         $olderLpaServiceProphecy->storeLPARequest('number', '123', '123')->shouldNotBeCalled();
 
