@@ -2,19 +2,20 @@
 
 namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\RequestActivationKey\RequestDateOfBirth;
+use Actor\Form\RequestActivationKey\ActorRole;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Common\Form\Fieldset\Date;
-use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use CommonTest\Form\LaminasFormTests;
+use CommonTest\Form\TestsLaminasForm;
+use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
+class ActorRoleTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
-    protected RequestDateOfBirth $form;
+    protected ActorRole $form;
 
     public function getForm(): AbstractForm
     {
@@ -23,20 +24,20 @@ class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key_dob';
+        return 'actor_role';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf' => Csrf::class,
-            'dob'    => Date::class
+            '__csrf'           => Csrf::class,
+            'actor_role_radio' => Radio::class
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestDateOfBirth($guardProphecy->reveal());
+        $this->form = new ActorRole($guardProphecy->reveal());
     }
 }

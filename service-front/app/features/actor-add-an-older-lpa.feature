@@ -62,6 +62,35 @@ Feature: Add an older LPA
     And I confirm that those details are correct
     Then I should be told that I have already added this LPA
 
+  # Older Older LPA Journey
+
+  @ui
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    When I provide details that do not match a valid paper document
+    And I confirm that those details are correct
+    Then I am asked for my role on the LPA
+
+  @ui
+  Scenario: The user is asked for the donor's details if they are the attorney on the LPA
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    When I confirm that I am the attorney
+    Then I am asked to provide the donor's details to verify that I am the attorney
+
+  @ui
+  Scenario: The attorney is asked for their contact details after providing donor details
+    Given I am on the donor details page
+    When I provide the donor's details
+    Then I am asked for my contact details
+
+  @ui
+  Scenario: The user is asked for their contact details if they are the donor on the LPA
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    When I confirm that I am the donor on the LPA
+    Then I am asked for my contact details
+
   #TODO : Change test to use actual previous page rather than just the dashboard
   @ui
   Scenario: The user can access the contact-details page
@@ -74,4 +103,3 @@ Feature: Add an older LPA
     Given I have navigated to the contact-details page
     When I enter nothing
     Then I am told that I must enter a phone number
-

@@ -2,42 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\ActorRole;
+use Actor\Form\RequestActivationKey\ActorRole;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ActorRoleHandler
- * @package Actor\Handler
+ * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAware, SessionAware
 {
     use User;
     use CsrfGuard;
+    use SessionTrait;
 
+    /** @var LoggerInterface */
+    protected $logger;
     private ActorRole $form;
+    private ?SessionInterface $session;
     private ?UserInterface $user;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator
+        AuthenticationInterface $authenticator,
+        LoggerInterface $logger
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->setAuthenticator($authenticator);
+        $this->logger = $logger;
     }
 
     /**
@@ -48,13 +58,14 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     {
         $this->form = new ActorRole($this->getCsrfGuard($request));
         $this->user = $this->getUser($request);
+        $this->session = $this->getSession($request, 'session');
 
         if ($request->getMethod() == 'POST') {
             return $this->handlePost($request);
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::actor-role',
+            'actor::request-activation-key/actor-role',
             [
                 'user'  => $this->user,
                 'form'  => $this->form
@@ -74,12 +85,27 @@ class ActorRoleHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                // TODO: implement Donor route redirect here UML-1555
+                $this->logger->info(
+                    'User {id} identified as the Donor on the LPA after a partial match was found with their details',
+                    [
+                        'id' => $this->user->getIdentity()
+                    ]
+                );
+                $this->session->set('actor_role', 'donor');
+                return $this->redirectToRoute('lpa.add.contact-details');
+            } else {
+                $this->logger->info(
+                    'User {id} identified as an Attorney on the LPA after a partial match was found with their details',
+                    [
+                        'id' => $this->user->getIdentity()
+                    ]
+                );
+                $this->session->set('actor_role', 'attorney');
+                return $this->redirectToRoute('lpa.add.donor-details');
             }
-            // TODO: implement Actor route redirect here UML-1606
         }
 
-        return new HtmlResponse($this->renderer->render('actor::actor-role', [
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
             'user'  => $this->user,
             'form'  => $this->form
         ]));
