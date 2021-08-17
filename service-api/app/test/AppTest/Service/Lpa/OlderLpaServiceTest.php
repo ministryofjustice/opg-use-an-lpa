@@ -894,10 +894,10 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-lpaId'),
-            Argument::exact('test-user'),
-            Argument::exact('1'),
-            Argument::exact('P1Y')
+            'test-lpaId',
+            'test-user',
+            '1',
+            'P1Y'
         )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
@@ -918,10 +918,10 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-lpaId'),
-            Argument::exact('test-user'),
-            Argument::exact('1'),
-            Argument::exact('P1Y')
+            'test-lpaId',
+            'test-user',
+            '1',
+            'P1Y'
         )->will(function () use (&$createCalls) {
             if ($createCalls > 0) {
                 return;
