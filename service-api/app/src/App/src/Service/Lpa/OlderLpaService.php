@@ -14,6 +14,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
 use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -21,6 +22,7 @@ use Ramsey\Uuid\Uuid;
 
 class OlderLpaService
 {
+    private FeatureEnabled $featureEnabled;
     private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
     private LpasInterface $lpaRepository;
@@ -38,7 +40,8 @@ class OlderLpaService
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements,
-        UserLpaActorMapInterface $userLpaActorMap
+        UserLpaActorMapInterface $userLpaActorMap,
+        FeatureEnabled $featureEnabled
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -48,6 +51,7 @@ class OlderLpaService
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->validateLpaRequirements = $validateLpaRequirements;
         $this->userLpaActorMap = $userLpaActorMap;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -300,6 +304,13 @@ class OlderLpaService
     public function removeLpaRequest(string $requestId)
     {
         $this->userLpaActorMap->delete($requestId);
+
+        $this->logger->notice(
+            'Removing request from UserLPAActorMap {id}',
+            [
+                'id' => $requestId
+            ]
+        );
     }
 
     /**
@@ -310,8 +321,17 @@ class OlderLpaService
      * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
      */
-    public function requestAccessByLetter(string $uid, string $actorUid): void
+    public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
+        $requestId = null;
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            $requestId = $this->storeLPARequest(
+                $uid,
+                $userId,
+                $actorUid
+            );
+        }
+
         $uidInt = (int)$uid;
         $actorUidInt = (int)$actorUid;
 
@@ -329,11 +349,13 @@ class OlderLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
                 [
-                    'attorney'  => $actorUidInt,
-                    'lpa'       => $uidInt,
+                    'attorney' => $actorUidInt,
+                    'lpa' => $uidInt,
                 ]
             );
-
+            if ($requestId !== null) {
+                $this->removeLpaRequest($requestId);
+            }
             throw $apiException;
         }
     }

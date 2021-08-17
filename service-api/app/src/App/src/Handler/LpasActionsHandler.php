@@ -85,25 +85,13 @@ class LpasActionsHandler implements RequestHandlerInterface
             }
         }
 
-        $requestId = null;
+        //If all criteria pass, request letter with activation key
+        $this->olderLpaService->requestAccessByLetter(
+            $lpaMatchResponse['lpa-id'],
+            $lpaMatchResponse['actor-id'],
+            $userId
+        );
 
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $requestId = $this->olderLpaService->storeLPARequest(
-                $lpaMatchResponse['lpa-id'],
-                $userId,
-                $lpaMatchResponse['actor-id']
-            );
-        }
-
-        try {
-            //If all criteria pass, request letter with activation key
-            $this->olderLpaService->requestAccessByLetter($lpaMatchResponse['lpa-id'], $lpaMatchResponse['actor-id']);
-        } catch (ApiException $apiException) {
-            if ($requestId) {
-                $this->olderLpaService->removeLpaRequest($requestId);
-            }
-            throw $apiException;
-        }
 
         return new EmptyResponse();
     }

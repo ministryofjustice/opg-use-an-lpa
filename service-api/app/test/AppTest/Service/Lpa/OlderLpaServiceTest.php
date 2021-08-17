@@ -12,6 +12,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
@@ -30,6 +31,9 @@ use Psr\Log\LoggerInterface;
 
 class OlderLpaServiceTest extends TestCase
 {
+    /** @var ObjectProphecy|FeatureEnabled */
+    private $featureEnabled;
+
     /** @var ObjectProphecy|LpaAlreadyAdded */
     private $lpaAlreadyAddedProphecy;
 
@@ -68,6 +72,7 @@ class OlderLpaServiceTest extends TestCase
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->userLpaActorMap = $this->prophesize(UserLpaActorMap::class);
+        $this->featureEnabled = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -84,7 +89,8 @@ class OlderLpaServiceTest extends TestCase
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
             $this->validateOlderLpaRequirements->reveal(),
-            $this->userLpaActorMap->reveal()
+            $this->userLpaActorMap->reveal(),
+            $this->featureEnabled->reveal()
         );
     }
 
@@ -95,8 +101,39 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
             ->shouldBeCalled();
 
+        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMap->create(
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string')
+        )->shouldBeCalled();
+
         $service = $this->getOlderLpaService();
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid);
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+
+    /** @test */
+    public function request_access_code_letter_without_flag(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->shouldBeCalled();
+
+        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(false);
+
+        $this->userLpaActorMap->create(
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string')
+        )->shouldNotBeCalled();
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
 
     /** @test */
@@ -135,7 +172,46 @@ class OlderLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $this->expectException(ApiException::class);
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid);
+
+        $this->userLpaActorMap->create(
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string')
+        )->shouldBeCalled();
+
+        $this->userLpaActorMap->delete(Argument::type('string'))->willReturn([])->shouldBeCalled();
+
+        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+
+    /** @test */
+    public function request_access_code_letter_api_call_fails_without_flag(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->willThrow(ApiException::create('bad api call'));
+
+        $service = $this->getOlderLpaService();
+
+        $this->expectException(ApiException::class);
+
+        $this->userLpaActorMap->create(
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('string')
+        )->shouldNotBeCalled();
+
+        $this->userLpaActorMap->delete(Argument::type('string'))->willReturn([])->shouldNotBeCalled();
+
+        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(false);
+
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
 
     /** @test */
