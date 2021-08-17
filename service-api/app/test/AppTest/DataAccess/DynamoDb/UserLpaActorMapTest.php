@@ -12,8 +12,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use DateTime;
 
-use function Symfony\Component\Translation\t;
-
 class UserLpaActorMapTest extends TestCase
 {
     use GenerateAwsResultTrait;
