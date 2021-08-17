@@ -10,7 +10,7 @@ class OptionSelectedValidator extends AbstractValidator
 {
     public const OPTION_MUST_BE_SELECTED = 'noOptionSelected';
     public const OPTION_MUST_BE_SELECTED_MESSAGE =
-        'Enter your phone number or check the box to say you cannot take calls';
+        'Either enter your phone number or check the box to say you cannot take calls';
 
     protected array $messageTemplates = [
         self::OPTION_MUST_BE_SELECTED => self::OPTION_MUST_BE_SELECTED_MESSAGE,
@@ -26,7 +26,7 @@ class OptionSelectedValidator extends AbstractValidator
      */
     public function isValid($value): bool
     {
-        $valid = (!empty($value['telephone']) xor $value['no_phone'] === '1');
+        $valid = (!empty($value['telephone']) xor $value['no_phone'] === 'yes');
         if (!$valid) {
             $this->error(self::OPTION_MUST_BE_SELECTED);
         }

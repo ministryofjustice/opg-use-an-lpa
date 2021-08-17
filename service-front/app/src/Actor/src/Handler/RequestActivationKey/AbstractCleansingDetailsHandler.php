@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler,
-    CsrfGuardAware,
-    Traits\CsrfGuard,
-    Traits\Session as SessionTrait,
-    UserAware,
-    WorkflowStep};
+use Common\Handler\AbstractHandler;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Session\SessionInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Handler\UserAware;
+use Common\Handler\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class RequestActivationKeyHandler
- * @package Actor\Handler
- * @codeCoverageIgnore
- */
-abstract class AbstractRequestKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
+abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     use User;
     use CsrfGuard;
@@ -55,7 +51,7 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
     protected function getRouteNameFromAnswersInSession(bool $back = false): string
     {
         if ($this->hasFutureAnswersInSession()) {
-            return 'lpa.check-answers';
+            return 'lpa.add.check-details-and-consent';
         } else {
             return $back ? $this->lastPage() : $this->nextPage();
         }
@@ -63,6 +59,7 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -71,7 +68,7 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite()) {
-            return $this->redirectToRoute('lpa.add-by-paper');
+            return $this->redirectToRoute('lpa.add.actor-role');
         }
 
         switch ($request->getMethod()) {
@@ -88,6 +85,6 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements User
 
     protected function hasFutureAnswersInSession(): bool
     {
-        return $this->session->has('postcode');
+        return $this->session->has('telephone_option');
     }
 }
