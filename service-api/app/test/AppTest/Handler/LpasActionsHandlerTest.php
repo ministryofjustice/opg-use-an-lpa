@@ -15,7 +15,9 @@ class LpasActionsHandlerTest extends TestCase
     public function test_when_sirius_is_down_remove_stored_LPA_request()
     {
         $olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
-        $featureEnabledProphecy =  $this->getMockBuilder(FeatureEnabled::class)->setConstructorArgs([['save_older_lpa_requests']])->setMethods(['__invoke'])->getMock();
+        $featureEnabledProphecy =  $this->getMockBuilder(FeatureEnabled::class)
+            ->setConstructorArgs([['save_older_lpa_requests']])
+            ->setMethods(['__invoke'])->getMock();
 
 
         $requestData = [
@@ -64,7 +66,9 @@ class LpasActionsHandlerTest extends TestCase
     public function test_no_records_stored_or_removed_when_feature_flag_is_false()
     {
         $olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
-        $featureEnabledProphecy =  $this->getMockBuilder(FeatureEnabled::class)->setConstructorArgs([['save_older_lpa_requests']])->setMethods(['__invoke'])->getMock();
+        $featureEnabledProphecy =  $this->getMockBuilder(FeatureEnabled::class)
+            ->setConstructorArgs([['save_older_lpa_requests']])
+            ->setMethods(['__invoke'])->getMock();
 
 
         $requestData = [
