@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 class OlderLpaServiceTest extends TestCase
 {
     /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabled;
+    private $featureEnabledProphecy;
 
     /** @var ObjectProphecy|LpaAlreadyAdded */
     private $lpaAlreadyAddedProphecy;
@@ -50,10 +50,10 @@ class OlderLpaServiceTest extends TestCase
     private $getAttorneyStatusProphecy;
 
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
-    private $validateOlderLpaRequirements;
+    private $validateOlderLpaRequirementsProphecy;
 
     /** @var UserLpaActorMapInterface|ObjectProphecy */
-    private $userLpaActorMap;
+    private $userLpaActorMapProphecy;
 
     public string $userId;
     public string $lpaUid;
@@ -67,9 +67,9 @@ class OlderLpaServiceTest extends TestCase
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
-        $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
-        $this->userLpaActorMap = $this->prophesize(UserLpaActorMap::class);
-        $this->featureEnabled = $this->prophesize(FeatureEnabled::class);
+        $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
+        $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
+        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -85,9 +85,9 @@ class OlderLpaServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->validateOlderLpaRequirements->reveal(),
-            $this->userLpaActorMap->reveal(),
-            $this->featureEnabled->reveal()
+            $this->validateOlderLpaRequirementsProphecy->reveal(),
+            $this->userLpaActorMapProphecy->reveal(),
+            $this->featureEnabledProphecy->reveal()
         );
     }
 
@@ -98,9 +98,9 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
             ->shouldBeCalled();
 
-        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(true);
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),
@@ -119,9 +119,9 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
             ->shouldBeCalled();
 
-        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(false);
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),
@@ -170,7 +170,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),
@@ -178,9 +178,9 @@ class OlderLpaServiceTest extends TestCase
             Argument::type('string')
         )->shouldBeCalled();
 
-        $this->userLpaActorMap->delete(Argument::type('string'))->willReturn([])->shouldBeCalled();
+        $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldBeCalled();
 
-        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(true);
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
@@ -196,7 +196,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),
@@ -204,9 +204,9 @@ class OlderLpaServiceTest extends TestCase
             Argument::type('string')
         )->shouldNotBeCalled();
 
-        $this->userLpaActorMap->delete(Argument::type('string'))->willReturn([])->shouldNotBeCalled();
+        $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldNotBeCalled();
 
-        $this->featureEnabled->__invoke('save_older_lpa_requests')->willReturn(false);
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
@@ -616,7 +616,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(false);
 
@@ -654,7 +654,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
@@ -694,7 +694,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
@@ -748,7 +748,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
@@ -790,7 +790,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
@@ -887,7 +887,7 @@ class OlderLpaServiceTest extends TestCase
      */
     public function older_lpa_request_is_saved_with_a_TTL()
     {
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::that(
                 function (string $id) {
                     $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
@@ -911,7 +911,7 @@ class OlderLpaServiceTest extends TestCase
     public function older_lpa_request_is_looped_until_no_id_collision()
     {
         $createCalls = 0;
-        $this->userLpaActorMap->create(
+        $this->userLpaActorMapProphecy->create(
             Argument::that(
                 function (string $id) {
                     $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
