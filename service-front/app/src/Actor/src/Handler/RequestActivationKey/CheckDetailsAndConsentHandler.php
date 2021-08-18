@@ -15,6 +15,7 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Log\EventCodes;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -102,6 +103,19 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
             // TODO: UML-1577
+            $this->logger->notice(
+                'User {id} has requested an activation key for their OOLPA ' .
+                'and provided the following contact information: {role}, {phone}',
+                [
+                    'id'    => $this->user->getIdentity(),
+                    'role'  => $this->data['actor_role'] === 'donor' ?
+                        EventCodes::OOLPA_KEY_REQUESTED_FOR_DONOR :
+                        EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
+                    'phone' => array_key_exists('telephone', $this->data) ?
+                        EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
+                        EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED
+                ]
+            );
         }
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
             'user'  => $this->user,

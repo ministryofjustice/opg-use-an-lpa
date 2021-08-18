@@ -61,20 +61,8 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAw
 
             if ($selected === 'Donor') {
                 $this->session->set('actor_role', 'donor');
-                $this->logger->info(
-                    'User {id} identified as the Donor on the LPA after a partial match was found with their details',
-                    [
-                        'id' => $this->user->getIdentity()
-                    ]
-                );
             } elseif ($selected === 'Attorney') {
                 $this->session->set('actor_role', 'attorney');
-                $this->logger->info(
-                    'User {id} identified as an Attorney on the LPA after a partial match was found with their details',
-                    [
-                        'id' => $this->user->getIdentity()
-                    ]
-                );
             }
             $nextPageName = $this->getRouteNameFromAnswersInSession();
             return $this->redirectToRoute($nextPageName);
