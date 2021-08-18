@@ -8,8 +8,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\KeyCollisionException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTimeImmutable;
 use Exception;
-use Ramsey\Uuid\Uuid;
 
 class UserLpaActorMap implements UserLpaActorMapInterface
 {
@@ -60,7 +60,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $actorId,
         string $expiryInterval = null
     ) {
-        $added = new \DateTime();
+        $added = new DateTimeImmutable();
         $array = [
             'Id'        => ['S' => $lpaActorToken],
             'UserId'    => ['S' => $userId],
