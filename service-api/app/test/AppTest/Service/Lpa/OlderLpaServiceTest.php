@@ -102,10 +102,10 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string')
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
         )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
@@ -123,10 +123,10 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string')
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
         )->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
@@ -172,10 +172,10 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(
             Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string')
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
         )->shouldBeCalled();
 
         $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldBeCalled();
@@ -894,15 +894,15 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            'test-user',
-            'test-lpaId',
-            '1',
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
             'P1Y'
         )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
 
-        $service->storeLPARequest('test-lpaId', 'test-user', '1');
+        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
     }
 
     /**
@@ -918,9 +918,9 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            'test-user',
-            'test-lpaId',
-            '1',
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
             'P1Y'
         )->will(function () use (&$createCalls) {
             if ($createCalls > 0) {
@@ -933,6 +933,6 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $service->storeLPARequest('test-lpaId', 'test-user', '1');
+        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
     }
 }
