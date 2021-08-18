@@ -301,7 +301,7 @@ class OlderLpaService
         return $this->lookupActorInLpa($lpaMatch->getData(), $dataToMatch);
     }
 
-    public function removeLpaRequest(string $requestId)
+    private function removeLpa(string $requestId)
     {
         $this->userLpaActorMap->delete($requestId);
 
@@ -354,7 +354,7 @@ class OlderLpaService
                 ]
             );
             if ($requestId !== null) {
-                $this->removeLpaRequest($requestId);
+                $this->removeLpa($requestId);
             }
             throw $apiException;
         }
