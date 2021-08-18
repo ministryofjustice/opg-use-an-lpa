@@ -153,7 +153,7 @@ Feature: Add an older LPA
     Then I am asked to consent and confirm my details
     And I can see my attorney role, donor details and that I have not provided a telephone number
 
-  # The following steps are for testing navigation of the OOL partial match journey
+  # The following scenarios are for testing navigation of the OOL partial match journey
 
   @ui
   Scenario: The user skips to final consent page when they go back and change details
