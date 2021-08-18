@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Common\Filter;
-
 
 use DateTime;
 use DateTimeInterface;
