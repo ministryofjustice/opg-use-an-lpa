@@ -133,15 +133,7 @@ class AddOlderLpa
 
         $this->apiClient->setUserTokenHeader($userToken);
 
-        try {
-            $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
-        } catch (ApiException $apiEx) {
-            switch ($apiEx->getCode()) {
-                default:
-                    // An API exception that we don't want to handle has been caught, pass it up the stack
-                    throw $apiEx;
-            }
-        }
+        $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
 
         $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 

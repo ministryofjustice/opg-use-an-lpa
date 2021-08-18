@@ -16,7 +16,6 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Email\EmailClient;
-use DateTime;
 use Common\Service\Lpa\LocalisedDate;
 
 /**
@@ -76,12 +75,13 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
 
             $result = $this->addOlderLpa->confirm(
                 $identity,
-                (int) $data['reference_number'],
+                $data['reference_number'],
                 $data['first_names'],
                 $data['last_name'],
-                new DateTime($data['dob']),
+                $data['dob'],
                 $data['postcode'],
-                filter_var($data['force_activation_key'], FILTER_VALIDATE_BOOLEAN) ?: false
+                $data['force_activation_key'],
+             //   filter_var($data['force_activation_key'], FILTER_VALIDATE_BOOLEAN) ?: false
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(2);
@@ -89,7 +89,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
                 $this->emailClient->sendActivationKeyRequestConfirmationEmail(
                     $user->getDetails()['Email'],
-                    $data['reference_number'],
+                    strval($data['reference_number']),
                     strtoupper($data['postcode']),
                     ($this->localisedDate)($letterExpectedDate)
                 );

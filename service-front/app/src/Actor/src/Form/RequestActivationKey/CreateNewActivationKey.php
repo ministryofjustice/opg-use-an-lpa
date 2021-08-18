@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
+use Common\Filter\ToDateTime;
 use Common\Form\AbstractForm;
+use Laminas\Filter\Boolean;
+use Laminas\Filter\ToInt;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
 
@@ -59,6 +62,11 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
         return [
             'reference_number' => [
                 'required'   => true,
+                'filters'    => [
+                    [
+                        'name' => ToInt::class,
+                    ],
+                ],
             ],
             'first_names' => [
                 'required'   => true,
@@ -68,12 +76,28 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
             ],
             'dob' => [
                 'required'   => true,
+                'filters' => [
+                    [
+                        'name' => ToDateTime::class,
+                    ],
+                ],
             ],
             'postcode' => [
                 'required'   => true,
             ],
             'force_activation_key' => [
                 'required'   => true,
+                'filters' => [
+                    [
+                        'name' => Boolean::class,
+                        'options' => [
+                            'type' => [
+                                \Laminas\Filter\Boolean::TYPE_FALSE_STRING
+                            ]
+                        ],
+                    ],
+
+                ],
             ],
         ];
     }
