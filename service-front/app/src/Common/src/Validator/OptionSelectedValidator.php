@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Actor\Validator;
+namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
 
 class OptionSelectedValidator extends AbstractValidator
 {
     public const OPTION_MUST_BE_SELECTED = 'noOptionSelected';
-    public const OPTION_MUST_BE_SELECTED_MESSAGE =
-        'Either enter your phone number or check the box to say you cannot take calls';
 
     protected array $messageTemplates = [
-        self::OPTION_MUST_BE_SELECTED => self::OPTION_MUST_BE_SELECTED_MESSAGE,
+        self::OPTION_MUST_BE_SELECTED => 'Either enter your phone number or check the box to say you cannot take calls',
     ];
 
     public function __construct($options = null)

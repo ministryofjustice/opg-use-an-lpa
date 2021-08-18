@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
-use Actor\Validator\OptionSelectedValidator;
+use Common\Validator\OptionSelectedValidator;
 use Common\Form\AbstractForm;
 use Laminas\Filter\Digits;
 use Laminas\Form\Fieldset;
