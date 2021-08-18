@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Behat\Mink\Session;
 use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
@@ -164,6 +165,16 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am taken back to the consent and check details page$/
+     */
+    public function iAmTakenBackToTheConsentAndCheckDetailsPage()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+        }
+    }
+
+    /**
      * @Then /^I am taken back to the date of birth page where I can see my answers and change them$/
      */
     public function iAmTakenBackToTheDateOfBirthPageWhereICanSeeMyAnswersAndChangeThem()
@@ -225,13 +236,15 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmToldThatIMustEnterAPhoneNumberOrSelectThatICannotTakeCalls()
     {
-        $this->ui->assertPageContainsText('Either enter your phone number or check the box to say you cannot take calls');
+        $this->ui->assertPageContainsText(
+            'Either enter your phone number or check the box to say you cannot take calls'
+        );
     }
 
     /**
      * @Then /^I am asked to consent and confirm my details$/
      */
-    public function iAskedToConsentAndConfirmMyDetails()
+    public function iAmAskedToConsentAndConfirmMyDetails()
     {
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
     }
@@ -279,6 +292,57 @@ class RequestActivationKeyContext implements Context
         if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->assertPageContainsText('Donor');
             $this->ui->assertPageContainsText('Not provided');
+        }
+    }
+
+    /**
+     * @Given /^I can see my role is now correctly set as the Attorney$/
+     */
+    public function iCanSeeMyRoleIsNowCorrectlySetAsTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Donor');
+            $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+            $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+            $this->ui->assertPageContainsText('Not provided');
+        }
+    }
+
+    /**
+     * @Given /^I can see my role is now correctly set as the Donor$/
+     */
+    public function iCanSeeMyRoleIsNowCorrectlySetAsTheDonor()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Donor');
+            $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . ' ' . 'Different');
+            $this->ui->assertPageNotContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+            $this->ui->assertPageContainsText('0123456789');
+        }
+    }
+
+    /**
+     * @Given /^I can see the donors name is now correct$/
+     */
+    public function iCanSeeTheDonorsNameIsNowCorrect()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Attorney');
+            $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . 'Different');
+            $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+            $this->ui->assertPageContainsText('0123456789');
+        }
+    }
+
+    /**
+     * @When /^I change the donors name$/
+     */
+    public function iChangeTheDonorsName()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+            $this->ui->fillField('donor_last_name', 'Different');
+            $this->ui->pressButton('Continue');
         }
     }
 
@@ -337,7 +401,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iEnterBothATelephoneNumberAndSelectThatICannotTakeCalls()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->fillField('telephone', '0123456789');
             $this->ui->fillField('telephone_option[no_phone]', 'yes');
             $this->ui->pressButton('Continue');
@@ -397,6 +461,35 @@ class RequestActivationKeyContext implements Context
             'applicationHasGuidance' => false,
             'lpa' => $this->lpa,
         ];
+    }
+
+    /**
+     * @Given /^I have reached the check details and consent page as the Attorney$/
+     */
+    public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+            $this->iConfirmThatIAmThe('Attorney');
+            $this->iProvideTheDonorSDetails();
+            $this->whenIEnterMyTelephoneNumber();
+            $this->iAmAskedToConsentAndConfirmMyDetails();
+            $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
+        }
+    }
+
+    /**
+     * @Given /^I have reached the check details and consent page as the Donor$/
+     */
+    public function iHaveReachedTheCheckDetailsAndConsentPageAsTheDonor()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+            $this->iConfirmThatIAmThe('Donor');
+            $this->iSelectThatICannotTakeCalls();
+            $this->iAmAskedToConsentAndConfirmMyDetails();
+            $this->iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber();
+        }
     }
 
     /**
@@ -640,6 +733,26 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I request to change my role$/
+     */
+    public function iRequestToChangeMyRole()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->clickLink('Change role');
+        }
+    }
+
+    /**
+     * @Given /^I request to change the donors name$/
+     */
+    public function iRequestToChangeTheDonorsName()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->clickLink('Change donor\'s name');
+        }
+    }
+
+    /**
      * @When /^I request to go back and change my date of birth/
      */
     public function iRequestToGoBackAndChangeMyDateOfBirth()
@@ -676,7 +789,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iSelectThatICannotTakeCalls()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->assertPageAddress('/lpa/add/contact-details');
             $this->ui->fillField('telephone_option[no_phone]', 'yes');
             $this->ui->pressButton('Continue');
@@ -725,7 +838,7 @@ class RequestActivationKeyContext implements Context
      */
     public function whenIEnterMyTelephoneNumber()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->assertPageAddress('/lpa/add/contact-details');
             $this->ui->fillField('telephone', '0123456789');
             $this->ui->pressButton('Continue');

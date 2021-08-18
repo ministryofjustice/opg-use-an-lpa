@@ -152,3 +152,30 @@ Feature: Add an older LPA
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
     And I can see my attorney role, donor details and that I have not provided a telephone number
+
+  # The following steps are for testing navigation of the OOL partial match journey
+
+  @ui
+  Scenario: The user skips to final consent page when they go back and change details
+    Given I have reached the check details and consent page as the Attorney
+    And I request to change the donors name
+    When I change the donors name
+    Then I am taken back to the consent and check details page
+    And I can see the donors name is now correct
+
+  @ui
+  Scenario: The user skips to final consent page when they go back and change details
+    Given I have reached the check details and consent page as the Attorney
+    And I request to change my role
+    When I confirm that I am the Donor
+    Then I am taken back to the consent and check details page
+    And I can see my role is now correctly set as the Donor
+
+  @ui
+  Scenario: The user skips to final consent page when they go back and change details
+    Given I have reached the check details and consent page as the Donor
+    And I request to change my role
+    When I confirm that I am the Attorney
+    And I provide the donor's details
+    Then I am taken back to the consent and check details page
+    And I can see my role is now correctly set as the Attorney
