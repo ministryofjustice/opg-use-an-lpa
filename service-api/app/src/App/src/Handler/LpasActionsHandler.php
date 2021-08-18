@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Exception\ApiException;
 use App\Exception\BadRequestException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\OlderLpaService;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
-use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
@@ -23,19 +20,13 @@ use DateTime;
 class LpasActionsHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
-    private FeatureEnabled $featureEnabled;
 
     /**
      * @param OlderLpaService $olderLpaService
-     * @param FeatureEnabled  $featureEnabled
      */
-    public function __construct(
-        OlderLpaService $olderLpaService,
-        FeatureEnabled $featureEnabled
-    )
+    public function __construct(OlderLpaService $olderLpaService)
     {
         $this->olderLpaService = $olderLpaService;
-        $this->featureEnabled = $featureEnabled;
     }
 
     /**

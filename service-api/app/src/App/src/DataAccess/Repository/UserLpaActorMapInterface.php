@@ -27,7 +27,13 @@ interface UserLpaActorMapInterface
      *
      * @throws KeyCollisionException
      */
-    public function create(string $lpaActorToken, string $userId, string $siriusUid, string $actorId, string $expiryInterval = null);
+    public function create(
+        string $lpaActorToken, 
+        string $userId, 
+        string $siriusUid, 
+        string $actorId, 
+        string $expiryInterval = null
+    );
 
     /**
      * Returns the IDs for the LPA and associated Actor for the given token.

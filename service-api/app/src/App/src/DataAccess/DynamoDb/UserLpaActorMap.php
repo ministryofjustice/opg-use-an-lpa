@@ -59,8 +59,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $siriusUid,
         string $actorId,
         string $expiryInterval = null
-    )
-    {
+    ) {
         $added = new \DateTime();
         $array = [
             'Id'        => ['S' => $lpaActorToken],
