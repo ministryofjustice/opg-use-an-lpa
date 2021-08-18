@@ -53,13 +53,19 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @inheritDoc
      * @throws Exception
      */
-    public function create(string $uuid, string $lpaId, string $userId, string $actorId, string $expiryInterval = null)
+    public function create(
+        string $lpaActorToken,
+        string $userId,
+        string $siriusUid,
+        string $actorId,
+        string $expiryInterval = null
+    )
     {
         $added = new \DateTime();
         $array = [
-            'Id'        => ['S' => $uuid],
+            'Id'        => ['S' => $lpaActorToken],
             'UserId'    => ['S' => $userId],
-            'SiriusUid' => ['S' => $lpaId],
+            'SiriusUid' => ['S' => $siriusUid],
             'ActorId'   => ['N' => $actorId],
             'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
         ];

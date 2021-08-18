@@ -159,7 +159,7 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testToken, $testSiriusUid, $testUserId, (string)$testActorId);
+        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId);
     }
 
     /** @test */
@@ -208,7 +208,7 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testToken, $testSiriusUid, $testUserId, (string)$testActorId, 'P365D');
+        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
     }
 
     /** @test */

@@ -111,8 +111,8 @@ class ActorCodeService
             try {
                 $this->userLpaActorMapRepository->create(
                     $id,
-                    $details['lpa']['uId'],
                     $userId,
+                    $details['lpa']['uId'],
                     (string)$details['actor']['details']['id']
                 );
 

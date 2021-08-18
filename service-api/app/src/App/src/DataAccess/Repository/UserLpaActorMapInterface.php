@@ -18,14 +18,16 @@ interface UserLpaActorMapInterface
 {
     /**
      * Creates a new mapping in the DB
+     *
      * @param string $uuid
-     * @param string $lpaId
      * @param string $userId
+     * @param string $lpaId
      * @param string $actorId
      * @param string $expiryInterval
+     *
      * @throws KeyCollisionException
      */
-    public function create(string $uuid, string $lpaId, string $userId, string $actorId, string $expiryInterval = null);
+    public function create(string $lpaActorToken, string $userId, string $siriusUid, string $actorId, string $expiryInterval = null);
 
     /**
      * Returns the IDs for the LPA and associated Actor for the given token.

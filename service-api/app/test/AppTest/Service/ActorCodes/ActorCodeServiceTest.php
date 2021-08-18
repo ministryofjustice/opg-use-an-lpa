@@ -86,8 +86,8 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-uid'),
             Argument::exact('test-user'),
+            Argument::exact('test-uid'),
             Argument::exact("1")
         )->shouldBeCalled();
 
@@ -114,8 +114,8 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-uid'),
             Argument::exact('test-user'),
+            Argument::exact('test-uid'),
             Argument::exact(1)
         )->shouldBeCalled();
 
@@ -153,8 +153,8 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-uid'),
             Argument::exact('test-user'),
+            Argument::exact('test-uid'),
             Argument::exact("1")
         )->will(function () use (&$createCalls) {
             if ($createCalls > 0) {

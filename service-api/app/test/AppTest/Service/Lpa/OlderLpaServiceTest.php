@@ -894,8 +894,8 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            'test-lpaId',
             'test-user',
+            'test-lpaId',
             '1',
             'P1Y'
         )->shouldBeCalled();
@@ -918,8 +918,8 @@ class OlderLpaServiceTest extends TestCase
                     return true;
                 }
             ),
-            'test-lpaId',
             'test-user',
+            'test-lpaId',
             '1',
             'P1Y'
         )->will(function () use (&$createCalls) {
