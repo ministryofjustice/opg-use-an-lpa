@@ -92,7 +92,7 @@ Feature: Add an older LPA
   Scenario: The user must enter a telephone number or click the no phone box
     And I have reached the contact details page
     When I enter nothing
-    Then I am told that I must enter a phone number
+    Then I am told that I must enter a phone number or select that I cannot take calls
 
   @ui
   Scenario: The user is taken back to start of activation request if the found LPA is incorrect
@@ -106,3 +106,15 @@ Feature: Add an older LPA
     When I provide the details from a valid paper document
     And I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the donor name back again
+
+  @ui
+  Scenario: The user must enter a telephone number or click the no phone box
+    Given I have reached the contact details page
+    When I enter nothing
+    Then I am told that I must enter a phone number or select that I cannot take calls
+
+  @ui
+  Scenario: The user is shown an error message when entering a telephone number and ticking the checkbox
+    Given I have reached the contact details page
+    When I enter both a telephone number and select that I cannot take calls
+    Then I am told that I must enter a phone number or select that I cannot take calls

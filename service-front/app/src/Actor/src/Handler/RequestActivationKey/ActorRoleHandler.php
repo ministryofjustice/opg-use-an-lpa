@@ -98,7 +98,10 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAw
 
     public function nextPage(): string
     {
-        return 'lpa.add.donor-details';
+        if ($this->session->get('actor_role') === 'attorney') {
+            return 'lpa.add.donor-details';
+        }
+        return 'lpa.add.contact-details';
     }
 
     public function lastPage(): string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Validator\OptionSelectedValidator;
+use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -46,7 +46,9 @@ class RequestActivationKeyContext implements Context
      */
     public function givenIHaveReachedTheContactDetailsPage()
     {
-        $this->ui->visit('/lpa/add/contact-details');
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iAmAskedForMyRoleOnTheLPA();
+        $this->iConfirmThatIAmTheDonorOnTheLPA();
     }
 
     /**
@@ -219,11 +221,19 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am told that I must enter a phone number$/
+     * @Then /^I am told that I must enter a phone number or select that I cannot take calls$/
      */
-    public function iAmToldThatIMustEnterAPhoneNumber()
+    public function iAmToldThatIMustEnterAPhoneNumberOrSelectThatICannotTakeCalls()
     {
-        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        $this->ui->assertPageContainsText('Either enter your phone number or check the box to say you cannot take calls');
+    }
+
+    /**
+     * @Then /^I asked to consent and confirm my details$/
+     */
+    public function iAskedToConsentAndConfirmMyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
     }
 
     /**
@@ -283,6 +293,18 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I enter both a telephone number and select that I cannot take calls$/
+     */
+    public function iEnterBothATelephoneNumberAndSelectThatICannotTakeCalls()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->fillField('telephone', '0123456789');
+            $this->ui->fillField('telephone_option[no_phone]', 'yes');
+            $this->ui->pressButton('Continue');
+        }
     }
 
     /**
@@ -636,6 +658,20 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * @When /^I enter my telephone number$/
+     */
+    public function whenIEnterMyTelephoneNumber()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->fillField('telephone', '0123456789');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+>>>>>>> written behat test for contact details validation
      * @Given /^My LPA has been found but my details did not match$/
      */
     public function myLPAHasBeenFoundButMyDetailsDidNotMatch()

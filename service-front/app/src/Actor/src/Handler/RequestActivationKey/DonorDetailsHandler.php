@@ -63,10 +63,9 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler implements Use
                     'year' => $postData['donor_dob']['year']
                 ]
             );
-
-            $nextPageName = $this->getRouteNameFromAnswersInSession();
-            return $this->redirectToRoute($nextPageName);
         }
+        $nextPageName = $this->getRouteNameFromAnswersInSession();
+        return $this->redirectToRoute($nextPageName);
     }
 
     public function isMissingPrerequisite(): bool
@@ -81,7 +80,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler implements Use
 
     public function nextPage(): string
     {
-        return 'lpa.add.check-details-and-consent';
+        return 'lpa.add.contact-details';
     }
 
     public function lastPage(): string
