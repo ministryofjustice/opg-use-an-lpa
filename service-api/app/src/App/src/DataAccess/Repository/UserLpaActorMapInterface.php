@@ -15,13 +15,14 @@ interface UserLpaActorMapInterface
     /**
      * Creates a new mapping in the DB
      *
-     * @param string $lpaActorToken
-     * @param string $userId
-     * @param string $siriusUid
-     * @param string $actorId The Sirius formated UID that is associated with an actor in the system
-     * @param string|null $expiryInterval
+     * @param string $lpaActorToken The UUID to represent this mapping in the database
+     * @param string $userId The UserID of the actors account
+     * @param string $siriusUid The Sirius formatted UID that is associated with an LPA in the system
+     * @param string $actorId The Sirius formatted UID that is associated with an actor in the system
+     * @param string|null $expiryInterval The interval of when this record should expire.
+     *                                    If null the record will not expire
      *
-     * @throws KeyCollisionException
+     * @throws KeyCollisionException Thrown if the lpaActorToken is not unique
      */
     public function create(
         string $lpaActorToken,
