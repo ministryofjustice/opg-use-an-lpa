@@ -13,8 +13,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm that those details are correct
-    Then A record of the LPA requested is saved to the database
-    And a letter is requested containing a one time use code
+    Then a letter is requested containing a one time use code
 
   @integration @acceptance @pact
   Scenario: The user cannot add an older LPA to their account that does not exist
