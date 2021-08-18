@@ -20,6 +20,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class AbstractCleansingDetailsHandler
+ * @package Actor\Handler
+ * @codeCoverageIgnore
+ */
 abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     use User;

@@ -20,7 +20,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 
 /**
- * Class RequestActivationKeyHandler
+ * Class AbstractRequestKeyHandler
  * @package Actor\Handler
  * @codeCoverageIgnore
  */

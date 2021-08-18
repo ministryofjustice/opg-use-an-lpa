@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Behat\Mink\Session;
-use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
