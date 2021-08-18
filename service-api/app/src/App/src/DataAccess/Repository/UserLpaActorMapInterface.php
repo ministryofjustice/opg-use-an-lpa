@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\DataAccess\DataObject\UserLpaActorMapData;
-use Common\Entity\User;
-use DateTime;
-
 /**
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
@@ -19,19 +15,19 @@ interface UserLpaActorMapInterface
     /**
      * Creates a new mapping in the DB
      *
-     * @param string $uuid
+     * @param string $lpaActorToken
      * @param string $userId
-     * @param string $lpaId
+     * @param string $siriusUid
      * @param string $actorId
-     * @param string $expiryInterval
+     * @param string|null $expiryInterval
      *
      * @throws KeyCollisionException
      */
     public function create(
-        string $lpaActorToken, 
-        string $userId, 
-        string $siriusUid, 
-        string $actorId, 
+        string $lpaActorToken,
+        string $userId,
+        string $siriusUid,
+        string $actorId,
         string $expiryInterval = null
     );
 
