@@ -21,9 +21,6 @@ class LpasActionsHandler implements RequestHandlerInterface
 {
     private OlderLpaService $olderLpaService;
 
-    /**
-     * @param OlderLpaService $olderLpaService
-     */
     public function __construct(OlderLpaService $olderLpaService)
     {
         $this->olderLpaService = $olderLpaService;
