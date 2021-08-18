@@ -78,8 +78,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
             || !$this->session->has('postcode')
             || !$this->session->has('actor_role');
 
-        $actorRole = $this->session->has('actor_role') ? $this->session->get('actor_role') : null;
-        if ($actorRole === 'attorney') {
+        if ($this->session->get('actor_role') === 'attorney') {
             return $required
                 || !$this->session->has('donor_first_names')
                 || !$this->session->has('donor_last_name')
@@ -96,8 +95,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
 
     public function lastPage(): string
     {
-        $actorRole = $this->session->has('actor_role') ? $this->session->get('actor_role') : null;
-        if ($actorRole === 'attorney') {
+        if ($this->session->get('actor_role') === 'attorney') {
                 return 'lpa.add.donor-details';
         }
         return 'lpa.add.actor-role';

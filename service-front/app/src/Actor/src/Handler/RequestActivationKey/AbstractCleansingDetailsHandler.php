@@ -89,6 +89,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
             $this->session->has('telephone_option') ?
             array_key_exists('telephone', $this->session->get('telephone_option')) ||
             array_key_exists('no_phone', $this->session->get('telephone_option'))
-            : false);
+            : false
+        );
     }
 }

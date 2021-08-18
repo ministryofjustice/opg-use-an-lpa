@@ -15,7 +15,6 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
-use Common\Service\Features\FeatureEnabled;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -33,20 +32,21 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     use SessionTrait;
     use Logger;
 
+    private CheckDetailsAndConsent $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
+    private array $data;
+    private ?string $identity;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger,
-        FeatureEnabled $featureEnabled
+        LoggerInterface $logger
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->featureEnabled = $featureEnabled;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -56,34 +56,21 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->session = $this->getSession($request, 'session');
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        if (
-            is_null($this->session)
-            || is_null($this->session->get('actor_role'))
-            || (
-                is_null($this->session->get('telephone_option')['telephone'])
-                && is_null($this->session->get('telephone_option')['no_phone'])
-            )
-        ) {
+        if (!$this->hasRequiredSessionValues()) {
             throw new SessionTimeoutException();
         }
-
-        $this->data['actor_role'] = $this->session->get('actor_role');
 
         if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
             $this->data['telephone'] = $telephone;
         }
 
-        if (strtolower($this->session->get('actor_role')) === 'attorney') {
-            if (
-                is_null($this->session->get('donor_first_names')) ||
-                is_null($this->session->get('donor_last_name')) ||
-                is_null($this->session->get('donor_dob')['day']) ||
-                is_null($this->session->get('donor_dob')['month']) ||
-                is_null($this->session->get('donor_dob')['year'])
-            ) {
-                throw new SessionTimeoutException();
-            }
+        if ($this->session->get('telephone_option')['no_phone'] === "yes") {
+            $this->data['no_phone'] = true;
+        }
 
+        $this->data['actor_role'] = $this->session->get('actor_role');
+
+        if (strtolower($this->data['actor_role']) === 'attorney') {
             $this->data['donor_first_names'] = $this->session->get('donor_first_names');
             $this->data['donor_last_name'] = $this->session->get('donor_last_name');
             $this->data['donor_dob'] = Carbon::create(
@@ -112,10 +99,33 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $this->form->setData($request->getParsedBody());
+        if ($this->form->isValid()) {
+            // TODO: UML-1577
+        }
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
             'user'  => $this->user,
             'form'  => $this->form,
             'data'  => $this->data
         ]));
+    }
+
+    private function hasRequiredSessionValues(): bool
+    {
+        $required = $this->session->has('opg_reference_number')
+            || $this->session->has('first_names')
+            || $this->session->has('last_name')
+            || $this->session->has('dob')
+            || $this->session->has('postcode')
+            || $this->session->has('actor_role')
+            || $this->session->has('telephone_option');
+
+        if ($this->session->get('actor_role') === 'attorney') {
+            return $required
+                || $this->session->has('donor_first_names')
+                || $this->session->has('donor_last_name')
+                || $this->session->has('donor_dob');
+        }
+        return $required;
     }
 }
