@@ -48,7 +48,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iAmAskedForMyRoleOnTheLPA();
-        $this->iConfirmThatIAmTheDonorOnTheLPA();
+        $this->iConfirmThatIAmThe('Donor');
     }
 
     /**
@@ -141,7 +141,7 @@ class RequestActivationKeyContext implements Context
     public function iAmOnTheDonorDetailsPage()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
-        $this->iConfirmThatIAmTheAttorney();
+        $this->iConfirmThatIAmThe('Attorney');
         $this->ui->assertPageAddress('/lpa/add/donor-details');
     }
 
@@ -229,7 +229,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I asked to consent and confirm my details$/
+     * @Then /^I am asked to consent and confirm my details$/
      */
     public function iAskedToConsentAndConfirmMyDetails()
     {
@@ -237,18 +237,55 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I confirm that I am the attorney$/
+     * @Given /^I can see my attorney role, donor details and telephone number$/
      */
-    public function iConfirmThatIAmTheAttorney()
+    public function iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber()
     {
-        $this->ui->fillField('actor_role_radio', 'Attorney');
-        $this->ui->pressButton('Continue');
+        $this->ui->assertPageContainsText('Attorney');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('0123456789');
     }
 
     /**
-     * @When /^I confirm that I am the donor on the LPA$/
+     * @Given /^I can see my attorney role, donor details and that I have not provided a telephone number$/
      */
-    public function iConfirmThatIAmTheDonorOnTheLPA()
+    public function iCanSeeMyAttorneyRoleDonorDetailsAndThatIHaveNotProvidedATelephoneNumber()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Attorney');
+            $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+            $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+            $this->ui->assertPageContainsText('Not provided');
+        }
+    }
+
+    /**
+     * @Given /^I can see my donor role and telephone number$/
+     */
+    public function iCanSeeMyDonorRoleAndTelephoneNumber()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Donor');
+            $this->ui->assertPageContainsText('0123456789');
+        }
+    }
+
+    /**
+     * @Given /^I can see my donor role and that I have not provided a telephone number$/
+     */
+    public function iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('Donor');
+            $this->ui->assertPageContainsText('Not provided');
+        }
+    }
+
+    /**
+     * @Given /^I confirm that I am the (.*)$/
+     */
+    public function iConfirmThatIAmThe($role)
     {
         $this->ui->fillField('actor_role_radio', 'Donor');
         $this->ui->pressButton('Continue');
@@ -526,9 +563,10 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
         $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
-        $this->ui->fillField('donor_dob[day]', '09');
-        $this->ui->fillField('donor_dob[month]', '02');
-        $this->ui->fillField('donor_dob[year]', '1998');
+        $donorDob = new DateTime($this->lpa->donor->dob);
+        $this->ui->fillField('donor_dob[day]', $donorDob->format('d'));
+        $this->ui->fillField('donor_dob[month]', $donorDob->format('m'));
+        $this->ui->fillField('donor_dob[year]', $donorDob->format('Y'));
         $this->ui->pressButton('Continue');
     }
 
@@ -634,6 +672,31 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I select that I cannot take calls$/
+     */
+    public function iSelectThatICannotTakeCalls()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/contact-details');
+            $this->ui->fillField('telephone_option[no_phone]', 'yes');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Continue and ask for a new key');
+    }
+
+    /**
      * @When /^I visit the Date of Birth page without filling out the form$/
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
@@ -658,20 +721,18 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-<<<<<<< HEAD
-=======
      * @When /^I enter my telephone number$/
      */
     public function whenIEnterMyTelephoneNumber()
     {
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/contact-details');
             $this->ui->fillField('telephone', '0123456789');
             $this->ui->pressButton('Continue');
         }
     }
 
     /**
->>>>>>> written behat test for contact details validation
      * @Given /^My LPA has been found but my details did not match$/
      */
     public function myLPAHasBeenFoundButMyDetailsDidNotMatch()

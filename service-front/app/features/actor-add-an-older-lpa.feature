@@ -72,7 +72,7 @@ Feature: Add an older LPA
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
-    When I confirm that I am the attorney
+    When I confirm that I am the Attorney
     Then I am asked to provide the donor's details to verify that I am the attorney
 
   @ui @ff:allow_older_lpas:true
@@ -85,7 +85,7 @@ Feature: Add an older LPA
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
-    When I confirm that I am the donor on the LPA
+    When I confirm that I am the Donor
     Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true
@@ -118,3 +118,37 @@ Feature: Add an older LPA
     Given I have reached the contact details page
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
+
+  @ui
+  Scenario: The user can is shown the correct information on the check and consent page
+    Given My LPA has been found but my details did not match
+    And I confirm that I am the Donor
+    When I enter my telephone number
+    Then I am asked to consent and confirm my details
+    And I can see my donor role and telephone number
+
+  @ui
+  Scenario: The user can is shown the correct information on the check and consent page
+    Given My LPA has been found but my details did not match
+    And I confirm that I am the Donor
+    When I select that I cannot take calls
+    Then I am asked to consent and confirm my details
+    And I can see my donor role and that I have not provided a telephone number
+
+  @ui
+  Scenario: The user can is shown the correct information on the check and consent page
+    Given My LPA has been found but my details did not match
+    And I confirm that I am the Attorney
+    And I provide the donor's details
+    When I enter my telephone number
+    Then I am asked to consent and confirm my details
+    And I can see my attorney role, donor details and telephone number
+
+  @ui
+  Scenario: The user can is shown the correct information on the check and consent page
+    Given My LPA has been found but my details did not match
+    And I confirm that I am the Attorney
+    And I provide the donor's details
+    When I select that I cannot take calls
+    Then I am asked to consent and confirm my details
+    And I can see my attorney role, donor details and that I have not provided a telephone number
