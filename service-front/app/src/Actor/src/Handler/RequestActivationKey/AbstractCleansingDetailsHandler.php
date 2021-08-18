@@ -85,11 +85,18 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
 
     protected function hasFutureAnswersInSession(): bool
     {
-        return (
-            $this->session->has('telephone_option') ?
+        $standardAnswers = $this->session->has('telephone_option') ?
             array_key_exists('telephone', $this->session->get('telephone_option')) ||
             array_key_exists('no_phone', $this->session->get('telephone_option'))
-            : false
-        );
+            : false;
+
+        if ($this->session->get('actor_role') === 'attorney') {
+            return $standardAnswers &&
+                $this->session->has('donor_first_names') &&
+                $this->session->has('donor_last_name') &&
+                $this->session->has('donor_dob')
+            ;
+        }
+        return $standardAnswers;
     }
 }
