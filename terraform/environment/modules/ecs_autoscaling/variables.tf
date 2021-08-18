@@ -30,16 +30,28 @@ variable "ecs_task_autoscaling_maximum" {
 
 
 
-variable "autoscaling_metric_track_cpu_target" {
+variable "autoscaling_metric_max_cpu_target" {
   description = "The target value for the CPU metric."
   type        = number
   default     = 80
 }
 
-variable "autoscaling_metric_track_memory_target" {
+variable "autoscaling_metric_max_memory_target" {
   description = "The target value for the memory metric."
   type        = number
   default     = 80
+}
+
+variable "autoscaling_metric_min_cpu_target" {
+  description = "The target value for the CPU metric."
+  type        = number
+  default     = 30
+}
+
+variable "autoscaling_metric_min_memory_target" {
+  description = "The target value for the memory metric."
+  type        = number
+  default     = 30
 }
 
 variable "ecs_task_autoscaling_minimum" {

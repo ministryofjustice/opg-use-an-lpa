@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
 
   metric_query {
     id          = "up"
-    expression  = "IF((cpu > ${var.autoscaling_metric_track_cpu_target} OR mem > ${var.autoscaling_metric_track_memory_target}) AND tc < ${var.ecs_task_autoscaling_maximum}, 1, 0)"
+    expression  = "IF((cpu > ${var.autoscaling_metric_max_cpu_target} OR mem > ${var.autoscaling_metric_max_memory_target}) AND tc < ${var.ecs_task_autoscaling_maximum}, 1, 0)"
     label       = "ContainerScaleUp"
     return_data = "true"
   }
@@ -125,7 +125,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
 
   metric_query {
     id          = "down"
-    expression  = "IF((cpu < 30 AND mem < 40) AND tc > ${var.ecs_task_autoscaling_minimum}, 1, 0)"
+    expression  = "IF((cpu < ${var.autoscaling_metric_min_cpu_target} AND mem < ${var.autoscaling_metric_min_memory_target}) AND tc > ${var.ecs_task_autoscaling_minimum}, 1, 0)"
     label       = "ContainerScaleDown"
     return_data = "true"
   }
