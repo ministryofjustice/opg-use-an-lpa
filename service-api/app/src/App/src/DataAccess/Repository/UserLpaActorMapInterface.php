@@ -18,7 +18,7 @@ interface UserLpaActorMapInterface
      * @param string $lpaActorToken
      * @param string $userId
      * @param string $siriusUid
-     * @param string $actorId
+     * @param string $actorId The Sirius formated UID that is associated with an actor in the system
      * @param string|null $expiryInterval
      *
      * @throws KeyCollisionException
