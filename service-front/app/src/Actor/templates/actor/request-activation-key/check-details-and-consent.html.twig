@@ -24,11 +24,11 @@
                             </dt>
                             {% if data.actor_role|lower == 'donor' %}
                                 <dd class="govuk-summary-list__value">
-                                    Donor
+                                    {% trans %}Donor{% endtrans %}
                                 </dd>
                             {% else %}
                                 <dd class="govuk-summary-list__value">
-                                    Attorney
+                                    {% trans %}Attorney{% endtrans %}
                                 </dd>
                             {% endif %}
                             <dd class="govuk-summary-list__actions">
@@ -73,7 +73,7 @@
                                 {% if data.telephone is defined %}
                                     {{ data.telephone }}
                                 {% elseif data.no_phone %}
-                                    Not provided
+                                    {% trans %}Not provided{% endtrans %}
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
