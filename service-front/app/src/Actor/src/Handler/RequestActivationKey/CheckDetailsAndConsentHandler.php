@@ -26,6 +26,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class CheckDetailsAndConsentHandler
+ * @package Actor\Handler\RequestActivationKey
+ * @codeCoverageIgnore
+ */
 class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
 {
     use User;
