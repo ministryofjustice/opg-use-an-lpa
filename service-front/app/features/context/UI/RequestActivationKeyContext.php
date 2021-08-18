@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -320,6 +321,16 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I asked to consent and confirm my details$/
+     */
+    public function iAskedToConsentAndConfirmMyDetails()
+    {
+        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+        }
+    }
+
+    /**
      * @Given /^I can see the donors name is now correct$/
      */
     public function iCanSeeTheDonorsNameIsNowCorrect()
@@ -387,16 +398,10 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I confirm that those details are correct$/
      * @When /^I confirm the details I provided are correct$/
-<<<<<<< HEAD
-=======
-     * @Then /^I confirm details shown to me of the found LPA are correct$/
->>>>>>> test fixes and some amendements
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-
-
         $this->ui->pressButton('Continue');
     }
 
@@ -405,11 +410,9 @@ class RequestActivationKeyContext implements Context
      */
     public function iEnterBothATelephoneNumberAndSelectThatICannotTakeCalls()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->fillField('telephone', '0123456789');
-            $this->ui->fillField('telephone_option[no_phone]', 'yes');
-            $this->ui->pressButton('Continue');
-        }
+        $this->ui->fillField('telephone', '0123456789');
+        $this->ui->fillField('telephone_option[no_phone]', 'yes');
+        $this->ui->pressButton('Continue');
     }
 
     /**

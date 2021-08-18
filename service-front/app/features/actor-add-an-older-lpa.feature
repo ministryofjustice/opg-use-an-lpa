@@ -185,3 +185,16 @@ Feature: Add an older LPA
     Given I am on the check LPA details page
     When  I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
+
+  @ui
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    Then I being the donor on the LPA I am not shown the donor name back again
+
+  @ui
+  Scenario: The user is shown an error message when entering a telephone number and ticking the checkbox
+    Given I am on the contact details page
+    When I enter both a telephone number and select that I cannot take calls
+    Then I am told that I must enter a phone number or select that I cannot take calls
