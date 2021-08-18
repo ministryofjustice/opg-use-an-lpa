@@ -9,14 +9,14 @@ use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\AddOlderLpa};
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Service\Email\EmailClient;
+use Common\Service\Lpa\LocalisedDate;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Common\Service\Lpa\OlderLpaApiResponse;
-use Common\Service\Email\EmailClient;
-use Common\Service\Lpa\LocalisedDate;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class CreateActivationKeyHandler
@@ -81,7 +81,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 $data['dob'],
                 $data['postcode'],
                 $data['force_activation_key'],
-             //   filter_var($data['force_activation_key'], FILTER_VALIDATE_BOOLEAN) ?: false
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(2);

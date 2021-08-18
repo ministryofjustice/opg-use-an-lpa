@@ -8,8 +8,8 @@ use Common\Filter\ToDateTime;
 use Common\Form\AbstractForm;
 use Laminas\Filter\Boolean;
 use Laminas\Filter\ToInt;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
  * Class CreateNewActivationKey
@@ -86,7 +86,9 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
                 'required'   => true,
             ],
             'force_activation_key' => [
-                'required'   => true,
+                'required' => false,
+                'allow_empty' => true,
+                'continue_if_empty' => true,
                 'filters' => [
                     [
                         'name' => Boolean::class,
@@ -96,7 +98,6 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
                             ]
                         ],
                     ],
-
                 ],
             ],
         ];
