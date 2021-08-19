@@ -18,6 +18,7 @@ use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ResolveActor;
+use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -58,9 +59,6 @@ class OlderLpaServiceTest extends TestCase
     /** @var ObjectProphecy|ResolveActor */
     private $resolveActorProphecy;
 
-    /** @var ObjectProphecy|OlderLpaService */
-    private $checkLPAMatchAndGetActorDetailsProphecy;
-
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -76,7 +74,6 @@ class OlderLpaServiceTest extends TestCase
         $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
-        $this->validateOlderLpaRequirements = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
 
         $this->userId = 'user-zxywq-54321';
@@ -911,14 +908,6 @@ class OlderLpaServiceTest extends TestCase
         ];
 
         $lpaMatchResponse = [
-            'actor-id' => '700000055554',
-            'lpa-id' => '700000012345',
-            'attorney' => [
-                'uId' => null,
-                'firstname' => null,
-                'middlenames' => null,
-                'surname' => null
-            ],
             'caseSubtype' => 'pfa',
             'donor' => [
                 'uId' => '700000001111',
@@ -940,7 +929,7 @@ class OlderLpaServiceTest extends TestCase
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
-        $this->validateOlderLpaRequirements
+        $this->validateOlderLpaRequirementsProphecy
             ->__invoke($lpa->getData())
             ->willReturn(true);
 
