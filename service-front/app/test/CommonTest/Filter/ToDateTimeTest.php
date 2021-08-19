@@ -24,4 +24,15 @@ class ToDateTimeTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $convertedDate);
         $this->assertEquals($expectedDate, $convertedDate);
     }
+
+    public function testToDateTimeConversionWhenDatePassedIsNotString()
+    {
+        $date = 1948 - 11 - 01;
+        $expectedDate = new DateTime($date);
+
+        $convertedDate = $this->filter->filter($date);
+        $this->assertNotInstanceOf(DateTime::class, $convertedDate);
+        $this->assertNotEquals($expectedDate, $convertedDate);
+        $this->assertEquals($date, $convertedDate);
+    }
 }
