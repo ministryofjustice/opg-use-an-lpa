@@ -77,11 +77,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAw
 
     public function isMissingPrerequisite(): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names')
-            || !$this->session->has('last_name')
-            || !$this->session->has('dob')
-            || !$this->session->has('postcode');
+        return parent::isMissingPrerequisite();
     }
 
     public function nextPage(): string

@@ -70,12 +70,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler implements Use
 
     public function isMissingPrerequisite(): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names')
-            || !$this->session->has('last_name')
-            || !$this->session->has('dob')
-            || !$this->session->has('postcode')
-            || !$this->session->has('actor_role');
+        return parent::isMissingPrerequisite() || !$this->session->has('actor_role');
     }
 
     public function nextPage(): string

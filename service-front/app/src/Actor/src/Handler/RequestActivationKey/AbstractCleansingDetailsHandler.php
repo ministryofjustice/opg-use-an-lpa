@@ -84,6 +84,15 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         }
     }
 
+    public function isMissingPrerequisite(): bool
+    {
+        return !$this->session->has('opg_reference_number')
+            || !$this->session->has('first_names')
+            || !$this->session->has('last_name')
+            || !$this->session->has('dob')
+            || !$this->session->has('postcode');
+    }
+
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
