@@ -191,6 +191,11 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     projection_type = "ALL"
   }
 
+  ttl {
+    attribute_name = "ActivateBy"
+    enabled        = true
+  }
+
   point_in_time_recovery {
     enabled = true
   }

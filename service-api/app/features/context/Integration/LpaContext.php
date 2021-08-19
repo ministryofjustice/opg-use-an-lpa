@@ -77,7 +77,7 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId);
+        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
     }
 
     /**

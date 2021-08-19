@@ -16,7 +16,7 @@ class UserLpaActorMapTest extends TestCase
 {
     use GenerateAwsResultTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    public const TABLE_NAME = 'test-table-name';
 
     private $dynamoDbClientProphecy;
 
@@ -37,7 +37,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId = 1;
         $testAdded = gmdate('c');
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -87,7 +87,7 @@ class UserLpaActorMapTest extends TestCase
     {
         $testToken = 'test-token';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -124,7 +124,55 @@ class UserLpaActorMapTest extends TestCase
         $testUserId = 'test-user-id';
         $testActorId = 1;
 
-        $this->dynamoDbClientProphecy->putItem(Argument::that(function(array $data) use (
+        $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
+            $testToken,
+            $testSiriusUid,
+            $testUserId,
+            $testActorId
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            //---
+
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertArrayHasKey('Item', $data);
+            $this->assertArrayHasKey('ConditionExpression', $data);
+            $this->assertArrayNotHasKey('ActivateBy', $data);
+
+            $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
+
+            $this->assertEquals(['S' => $testToken], $data['Item']['Id']);
+            $this->assertIsString($data['Item']['Id']['S']);
+            $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
+            $this->assertIsString($data['Item']['UserId']['S']);
+            $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertIsString($data['Item']['SiriusUid']['S']);
+            $this->assertEquals(['N' => $testActorId], $data['Item']['ActorId']);
+            $this->assertIsString($data['Item']['ActorId']['N']);
+
+            // Checks 'now' is correct, we a little bit of leeway
+            $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId);
+    }
+
+    /** @test */
+    public function add_unique_token_with_TTL()
+    {
+        $yearInEpoch = 31536000;
+        $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+
+        $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
+            $yearInEpoch,
             $testToken,
             $testSiriusUid,
             $testUserId,
@@ -141,24 +189,26 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
 
-            $this->assertEquals(['S'=>$testToken], $data['Item']['Id']);
+            $this->assertEquals(['S' => $testToken], $data['Item']['Id']);
             $this->assertIsString($data['Item']['Id']['S']);
-            $this->assertEquals(['S'=>$testUserId], $data['Item']['UserId']);
+            $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
             $this->assertIsString($data['Item']['UserId']['S']);
-            $this->assertEquals(['S'=>$testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
             $this->assertIsString($data['Item']['SiriusUid']['S']);
-            $this->assertEquals(['N'=>$testActorId], $data['Item']['ActorId']);
+            $this->assertEquals(['N' => $testActorId], $data['Item']['ActorId']);
             $this->assertIsString($data['Item']['ActorId']['N']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+            $this->assertEqualsWithDelta(time() + $yearInEpoch, $data['Item']['ActivateBy']['N'], 5);
 
             return true;
         }))->shouldBeCalled();
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testToken, $testUserId, $testSiriusUid, $testActorId);
+        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
     }
 
     /** @test */
@@ -179,7 +229,7 @@ class UserLpaActorMapTest extends TestCase
         // We expect our own KeyCollisionException
         $this->expectException(KeyCollisionException::class);
 
-        $repo->create('test-val', 'test-val', 'test-val', 1);
+        $repo->create('test-val', 'test-val', 'test-val', 'test-val');
     }
 
     /** @test */
@@ -196,7 +246,7 @@ class UserLpaActorMapTest extends TestCase
         // We should now expect a DynamoDbException
         $this->expectException(DynamoDbException::class);
 
-        $repo->create('test-val', 'test-val', 'test-val', 1);
+        $repo->create('test-val', 'test-val', 'test-val', 'test-val');
     }
 
     //--------------------------------------------------------------------------------
@@ -207,10 +257,10 @@ class UserLpaActorMapTest extends TestCase
     {
         $testToken = 'test-token';
 
-        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function(array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertIsArray($data);
 
-            $this->assertStringContainsString(SELF::TABLE_NAME, serialize($data));
+            $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
             $this->assertStringContainsString($testToken, serialize($data));
 
             return true;
@@ -252,7 +302,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId = 1;
         $testAdded = gmdate('c');
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function(array $data) use ($testUserId) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($testUserId) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -271,7 +321,7 @@ class UserLpaActorMapTest extends TestCase
 
             return true;
         }))->willReturn(
-            $this->createAWSResult(['Items'=>[
+            $this->createAWSResult(['Items' => [
                 [
                     'Id' => [
                         'S' => $testToken,

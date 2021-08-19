@@ -2019,6 +2019,22 @@ class LpaContext implements Context
                 )
             );
 
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
+
         // API call to request an activation key
         $this->apiPatch(
             '/v1/lpas/request-letter',
@@ -2443,6 +2459,22 @@ class LpaContext implements Context
                     []
                 )
             );
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // API call to request an activation key
         $this->apiPatch(

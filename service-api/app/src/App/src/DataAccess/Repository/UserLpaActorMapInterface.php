@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use DateTime;
-
 /**
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
@@ -17,18 +15,27 @@ interface UserLpaActorMapInterface
     /**
      * Creates a new mapping in the DB
      *
-     * @param string $lpaActorToken
-     * @param string $userId
-     * @param string $siriusUid
-     * @param int $actorId
-     * @throws KeyCollisionException
+     * @param string $lpaActorToken The UUID to represent this mapping in the database
+     * @param string $userId The UserID of the actors account
+     * @param string $siriusUid The Sirius formatted UID that is associated with an LPA in the system
+     * @param string $actorId The Sirius formatted UID that is associated with an actor in the system
+     * @param string|null $expiryInterval The interval of when this record should expire.
+     *                                    If null the record will not expire
+     *
+     * @throws KeyCollisionException Thrown if the lpaActorToken is not unique
      */
-    public function create(string $lpaActorToken, string $userId, string $siriusUid, int $actorId);
+    public function create(
+        string $lpaActorToken,
+        string $userId,
+        string $siriusUid,
+        string $actorId,
+        string $expiryInterval = null
+    );
 
     /**
      * Returns the IDs for the LPA and associated Actor for the given token.
      *
-     * @param $lpaActorToken
+     * @param string $lpaActorToken
      * @return mixed
      */
     public function get(string $lpaActorToken): ?array;

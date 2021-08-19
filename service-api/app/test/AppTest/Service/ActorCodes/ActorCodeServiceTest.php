@@ -86,9 +86,9 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-user'),
-            Argument::exact('test-uid'),
-            Argument::exact(1)
+            'test-user',
+            'test-uid',
+            '1'
         )->shouldBeCalled();
 
         $service = $this->getActorCodeService();
@@ -114,9 +114,9 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-user'),
-            Argument::exact('test-uid'),
-            Argument::exact(1)
+            'test-user',
+            'test-uid',
+            '1'
         )->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->delete(
@@ -153,9 +153,9 @@ class ActorCodeServiceTest extends TestCase
                     return true;
                 }
             ),
-            Argument::exact('test-user'),
-            Argument::exact('test-uid'),
-            Argument::exact(1)
+            'test-user',
+            'test-uid',
+            '1'
         )->will(function () use (&$createCalls) {
             if ($createCalls > 0) {
                 return;
