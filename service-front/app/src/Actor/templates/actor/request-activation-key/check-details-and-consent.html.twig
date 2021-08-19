@@ -32,7 +32,7 @@
                                 </dd>
                             {% endif %}
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-name" href="{{ path('lpa.add.actor-role') }}">
+                                <a class="govuk-link" id="change-your-role" href="{{ path('lpa.add.actor-role') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> role</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -46,7 +46,7 @@
                                     {{ data.donor_first_names ~ ' ' ~  data.donor_last_name }}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" id="change-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
+                                    <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.donor-details') }}">
                                         {% trans %}Change<span class="govuk-visually-hidden"> donor's name</span>{% endtrans %}
                                     </a>
                                 </dd>
@@ -59,7 +59,7 @@
                                     {{ code_date(data.donor_dob) }}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" id="change-postcode" href="{{ path('lpa.add.donor-details') }}">
+                                    <a class="govuk-link" id="change-donors-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
                                         {% trans %}Change<span class="govuk-visually-hidden"> donor's date of birth</span>{% endtrans %}
                                     </a>
                                 </dd>
@@ -77,7 +77,7 @@
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-reference-number" href="{{ path('lpa.add.contact-details') }}">
+                                <a class="govuk-link" id="change-telephone-number-details" href="{{ path('lpa.add.contact-details') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> telephone number</span>{% endtrans %}
                                 </a>
                             </dd>
