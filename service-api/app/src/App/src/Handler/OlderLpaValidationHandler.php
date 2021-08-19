@@ -11,6 +11,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use DateTime;
+use Exception;
 
 /**
  * Class OlderLpaValidationHandler
@@ -29,7 +30,7 @@ class OlderLpaValidationHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

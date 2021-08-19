@@ -360,6 +360,7 @@ class OlderLpaService
      *
      * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
+     * @param string $userId
      */
     public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
