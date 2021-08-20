@@ -65,7 +65,6 @@ class OlderLpaServiceTest extends TestCase
         return new OlderLpaService(
             $this->actorCodesProphecy->reveal(),
             $this->activationKeyAlreadyRequestedProphecy->reveal(),
-            $this->addOlderLpaProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
             $this->featureEnabledProphecy->reveal(),
@@ -229,7 +228,7 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
+        $service->storeLpaRequest($this->lpaUid, $this->userId, $this->actorUid);
     }
 
     /**
@@ -260,6 +259,6 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
+        $service->storeLpaRequest($this->lpaUid, $this->userId, $this->actorUid);
     }
 }

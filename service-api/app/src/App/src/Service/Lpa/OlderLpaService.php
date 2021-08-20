@@ -20,7 +20,6 @@ class OlderLpaService
 {
     private ActivationKeyAlreadyRequested $activationKeyAlreadyRequested;
     private ActorCodes $actorCodes;
-    private AddOlderLpa $addOlderLpa;
     private LoggerInterface $logger;
     private LpasInterface $lpaRepository;
     private FeatureEnabled $featureEnabled;
@@ -29,7 +28,6 @@ class OlderLpaService
     public function __construct(
         ActorCodes $actorCodes,
         ActivationKeyAlreadyRequested $activationKeyAlreadyRequested,
-        AddOlderLpa $addOlderLpa,
         LpasInterface $lpaRepository,
         UserLpaActorMapInterface $userLpaActorMap,
         FeatureEnabled $featureEnabled,
@@ -37,7 +35,6 @@ class OlderLpaService
     ) {
         $this->actorCodes = $actorCodes;
         $this->activationKeyAlreadyRequested = $activationKeyAlreadyRequested;
-        $this->addOlderLpa = $addOlderLpa;
         $this->lpaRepository = $lpaRepository;
         $this->userLpaActorMap = $userLpaActorMap;
         $this->featureEnabled = $featureEnabled;
@@ -93,22 +90,6 @@ class OlderLpaService
         }
     }
 
-    /**
-     * Gets LPA by Uid, checks registration date and identifies the actor
-     *
-     * @param string $userId
-     * @param array  $dataToMatch
-     *
-     * @return array
-     * @throws Exception
-     *
-     * @deprecated
-     */
-    public function checkLPAMatchAndGetActorDetails(string $userId, array $dataToMatch): array
-    {
-        return ($this->addOlderLpa)($userId, $dataToMatch);
-    }
-
     private function removeLpa(string $requestId)
     {
         $this->userLpaActorMap->delete($requestId);
@@ -133,7 +114,7 @@ class OlderLpaService
     {
         $requestId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $requestId = $this->storeLPARequest(
+            $requestId = $this->storeLpaRequest(
                 $uid,
                 $userId,
                 $actorUid
@@ -177,7 +158,7 @@ class OlderLpaService
      * @return string       The lpaActorToken
      * @throws Exception    throws an ApiException
      */
-    public function storeLPARequest(string $lpaId, string $userId, string $actorId): string
+    public function storeLpaRequest(string $lpaId, string $userId, string $actorId): string
     {
         do {
             $id = Uuid::uuid4()->toString();
