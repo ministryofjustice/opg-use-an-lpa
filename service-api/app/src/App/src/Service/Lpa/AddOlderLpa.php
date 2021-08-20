@@ -31,8 +31,7 @@ class AddOlderLpa
         LpaAlreadyAdded $lpaAlreadyAdded,
         ValidateOlderLpaRequirements $validateOlderLpaRequirements,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->findActorInLpa = $findActorInLpa;
         $this->lpaService = $lpaService;
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
