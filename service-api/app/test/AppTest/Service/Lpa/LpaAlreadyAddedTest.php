@@ -63,7 +63,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
         $this->lpaServiceProphecy
-            ->getAllAddedLpasForUser('12345')
+            ->getAllForUser('12345')
             ->willReturn(
                 [
                     $this->userLpaActorToken => [
@@ -155,7 +155,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
         $this->lpaServiceProphecy
-            ->getAllAddedLpasForUser($this->userId)
+            ->getAllForUser($this->userId)
             ->willReturn(
                 [
                     'xyz321-987ltc' => [

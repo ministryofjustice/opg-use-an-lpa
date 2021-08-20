@@ -12,7 +12,6 @@ use DateTime;
 use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
-use Common\Service\Features\FeatureEnabled;
 
 /**
  * @property mixed lpa
@@ -177,7 +176,7 @@ class LpaContext implements Context
      */
     public function iAttemptToAddTheSameLPAAgain()
     {
-        //UserLpaActorMap: getAllForUser
+        //UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
                 [
@@ -188,10 +187,27 @@ class LpaContext implements Context
                                 'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => $this->actorId,
-                                'UserId' => $this->userId,
+                                'UserId' => $this->base->userAccountId,
                             ]
                         ),
                     ],
+                ]
+            )
+        );
+
+        //UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->base->userAccountId,
+                        ]
+                    ),
                 ]
             )
         );
@@ -2533,11 +2549,7 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
-        //UserLpaActorMap: getAllForUser
+        //UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
                 [
@@ -2555,6 +2567,33 @@ class LpaContext implements Context
                 ]
             )
         );
+
+        //UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)

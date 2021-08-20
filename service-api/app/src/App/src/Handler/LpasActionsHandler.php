@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Service\Features\FeatureEnabled;
+use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\OlderLpaService;
+use DateTime;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
-use DateTime;
-use App\Service\Features\FeatureEnabled;
 
 /**
  * Class LpasActionHandler
@@ -20,12 +21,18 @@ use App\Service\Features\FeatureEnabled;
  */
 class LpasActionsHandler implements RequestHandlerInterface
 {
+    private AddOlderLpa $addOlderLpa;
     private OlderLpaService $olderLpaService;
     private FeatureEnabled $featureEnabled;
 
-    public function __construct(OlderLpaService $olderLpaService, FeatureEnabled $featureEnabled)
+    public function __construct(
+        OlderLpaService $olderLpaService,
+        AddOlderLpa $addOlderLpa,
+        FeatureEnabled $featureEnabled
+    )
     {
         $this->olderLpaService = $olderLpaService;
+        $this->addOlderLpa = $addOlderLpa;
         $this->featureEnabled = $featureEnabled;
     }
 
@@ -60,7 +67,7 @@ class LpasActionsHandler implements RequestHandlerInterface
         }
 
         // Check LPA with user provided reference number
-        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($userId, $requestData);
+        $lpaMatchResponse = ($this->addOlderLpa)->validateRequest($userId, $requestData);
 
         if (!isset($lpaMatchResponse['lpa-id'])) {
             throw new BadRequestException('The lpa-id is missing from the data match response');
