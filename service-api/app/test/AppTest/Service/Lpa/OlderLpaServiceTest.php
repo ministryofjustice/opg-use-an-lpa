@@ -3,42 +3,25 @@
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\ActorCode;
-use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
-use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
-use App\Service\Lpa\ActivationKeyAlreadyRequested;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\GetAttorneyStatus;
-use App\Service\Lpa\LpaAlreadyAdded;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\ActivationKeyAlreadyRequested;
+use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\OlderLpaService;
-use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
-use Exception;
-use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Service\Features\FeatureEnabled;
 
 class OlderLpaServiceTest extends TestCase
 {
     /** @var ObjectProphecy|FeatureEnabled */
     private $featureEnabledProphecy;
-
-    /** @var ObjectProphecy|LpaAlreadyAdded */
-    private $lpaAlreadyAddedProphecy;
-
-    /** @var ObjectProphecy|LpaService */
-    private $lpaServiceProphecy;
 
     /** @var ObjectProphecy|LpasInterface */
     private $lpasInterfaceProphecy;
@@ -48,12 +31,6 @@ class OlderLpaServiceTest extends TestCase
 
     /** @var ObjectProphecy|ActorCodes */
     public $actorCodesProphecy;
-
-    /** @var ObjectProphecy|GetAttorneyStatus */
-    private $getAttorneyStatusProphecy;
-
-    /** @var ObjectProphecy|ValidateOlderLpaRequirements */
-    private $validateOlderLpaRequirementsProphecy;
 
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapProphecy;
@@ -73,9 +50,10 @@ class OlderLpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy = $this->prophesize(LpasInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
-        $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->activationKeyAlreadyRequestedProphecy = $this->prophesize(ActivationKeyAlreadyRequested::class);
         $this->addOlderLpaProphecy = $this->prophesize(AddOlderLpa::class);
+        $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -86,14 +64,12 @@ class OlderLpaServiceTest extends TestCase
     {
         return new OlderLpaService(
             $this->actorCodesProphecy->reveal(),
-            $this->getAttorneyStatusProphecy->reveal(),
             $this->activationKeyAlreadyRequestedProphecy->reveal(),
             $this->addOlderLpaProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
+            $this->userLpaActorMapProphecy->reveal(),
+            $this->featureEnabledProphecy->reveal(),
             $this->loggerProphecy->reveal(),
-            $this->featureEnabled->reveal(),
-            $this->validateOlderLpaRequirementsProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal()
         );
     }
 

@@ -8,8 +8,7 @@ use App\DataAccess\Repository\{LpasInterface,
     Response\LpaInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
-    ViewerCodesInterface
-};
+    ViewerCodesInterface};
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -119,6 +118,7 @@ class LpaService
                 'date' => $lpa->getLookupTime()->format('c'),
                 'actor' => $actor,
                 'lpa' => $lpaData,
+                //'added' => $map['Added']->format('Y-m-d H:i:s')
             ];
         }
 

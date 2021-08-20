@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\DataObject\ExpiringUserLpaActorMapData;
-use App\DataAccess\DataObject\UserLpaActorMapData;
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
+use App\Service\Features\FeatureEnabled;
 use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -23,18 +23,24 @@ class OlderLpaService
     private AddOlderLpa $addOlderLpa;
     private LoggerInterface $logger;
     private LpasInterface $lpaRepository;
+    private FeatureEnabled $featureEnabled;
+    private UserLpaActorMapInterface $userLpaActorMap;
 
     public function __construct(
         ActorCodes $actorCodes,
         ActivationKeyAlreadyRequested $activationKeyAlreadyRequested,
         AddOlderLpa $addOlderLpa,
         LpasInterface $lpaRepository,
+        UserLpaActorMapInterface $userLpaActorMap,
+        FeatureEnabled $featureEnabled,
         LoggerInterface $logger
     ) {
         $this->actorCodes = $actorCodes;
         $this->activationKeyAlreadyRequested = $activationKeyAlreadyRequested;
         $this->addOlderLpa = $addOlderLpa;
         $this->lpaRepository = $lpaRepository;
+        $this->userLpaActorMap = $userLpaActorMap;
+        $this->featureEnabled = $featureEnabled;
         $this->logger = $logger;
     }
 
@@ -176,7 +182,7 @@ class OlderLpaService
         do {
             $id = Uuid::uuid4()->toString();
             try {
-                $this->lpaRepository->create($id, $userId, $lpaId, $actorId, 'P1Y');
+                $this->userLpaActorMap->create($id, $userId, $lpaId, $actorId, 'P1Y');
                 return $id;
             } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.
