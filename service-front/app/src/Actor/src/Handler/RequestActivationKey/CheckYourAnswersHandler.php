@@ -162,7 +162,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
-                    $this->data['force_activation_key'] = 'true';
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
                     return new HtmlResponse(
@@ -200,13 +199,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::FOUND:
-                    $this->data['force_activation_key'] = 'false';
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
-                    $form->setData($this->data);
 
                     $lpaData = $result->getData();
-
                     $actor = is_null($lpaData->getAttorney()) ? $lpaData->getDonor() : $lpaData->getAttorney();
 
                     return new HtmlResponse(

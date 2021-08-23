@@ -737,7 +737,7 @@ class RequestActivationKeyContext implements Context
     public function iAmShownTheDetailsOfAnLPA()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'Check we\'ve found the right LPA');
+        $this->ui->assertPageContainsText('Check we\'ve found the right LPA');
         $this->ui->assertPageNotContainsText('The donor\'s name');
     }
 

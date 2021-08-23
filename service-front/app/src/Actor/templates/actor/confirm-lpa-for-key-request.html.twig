@@ -74,13 +74,6 @@
                         <div class="govuk-grid-column-three-quarters">
                             {{ govuk_form_element(form.get('__csrf')) }}
 
-                            {{ govuk_form_element(form.get('reference_number')) }}
-                            {{ govuk_form_element(form.get('first_names')) }}
-                            {{ govuk_form_element(form.get('last_name')) }}
-                            {{ govuk_form_element(form.get('dob')) }}
-                            {{ govuk_form_element(form.get('postcode')) }}
-                            {{ govuk_form_element(form.get('force_activation_key')) }}
-
                             <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
                             <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
