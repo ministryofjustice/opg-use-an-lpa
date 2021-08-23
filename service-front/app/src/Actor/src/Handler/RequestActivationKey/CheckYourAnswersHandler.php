@@ -165,9 +165,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     $this->data['force_activation_key'] = 'true';
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
-
-                    $form->setData($this->data);
-
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',

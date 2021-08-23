@@ -15,7 +15,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
  * Class CreateNewActivationKey
  * @package Actor\Form
  */
-class CreateNewActivationKey extends AbstractForm implements InputFilterProviderInterface
+class CreateNewActivationKey extends AbstractForm
 {
     public const FORM_NAME = 'create_new_activation_key';
 
@@ -26,80 +26,5 @@ class CreateNewActivationKey extends AbstractForm implements InputFilterProvider
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
-
-        $this->add([
-            'name' => 'reference_number',
-            'type' => 'Hidden',
-        ]);
-        $this->add([
-            'name' => 'first_names',
-            'type' => 'Hidden',
-        ]);
-        $this->add([
-             'name' => 'last_name',
-             'type' => 'Hidden',
-        ]);
-        $this->add([
-             'name' => 'dob',
-             'type' => 'Hidden',
-        ]);
-        $this->add([
-             'name' => 'postcode',
-             'type' => 'Hidden',
-        ]);
-        $this->add([
-            'name' => 'force_activation_key',
-            'type' => 'Hidden',
-        ]);
-    }
-
-    /**
-     * @return array
-     * @codeCoverageIgnore
-     */
-    public function getInputFilterSpecification(): array
-    {
-        return [
-            'reference_number' => [
-                'required'   => true,
-                'filters'    => [
-                    [
-                        'name' => ToInt::class,
-                    ],
-                ],
-            ],
-            'first_names' => [
-                'required'   => true,
-            ],
-            'last_name' => [
-                'required'   => true,
-            ],
-            'dob' => [
-                'required'   => true,
-                'filters' => [
-                    [
-                        'name' => ToDateTime::class,
-                    ],
-                ],
-            ],
-            'postcode' => [
-                'required'   => true,
-            ],
-            'force_activation_key' => [
-                'required' => false,
-                'allow_empty' => true,
-                'continue_if_empty' => true,
-                'filters' => [
-                    [
-                        'name' => Boolean::class,
-                        'options' => [
-                            'type' => [
-                                \Laminas\Filter\Boolean::TYPE_FALSE_STRING
-                            ]
-                        ],
-                    ],
-                ],
-            ],
-        ];
     }
 }

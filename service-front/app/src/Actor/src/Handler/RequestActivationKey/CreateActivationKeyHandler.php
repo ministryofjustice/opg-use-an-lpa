@@ -7,7 +7,12 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Handler\{AbstractHandler,
+    CsrfGuardAware,
+    Traits\CsrfGuard,
+    Traits\Session,
+    Traits\User,
+    UserAware};
 use Common\Service\{Lpa\AddOlderLpa};
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LocalisedDate;
@@ -64,23 +69,32 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new CreateNewActivationKey($this->getCsrfGuard($request));
         $user = $this->getUser($request);
+        $form = new CreateNewActivationKey($this->getCsrfGuard($request));
         $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $session = $this->getSession($request, 'session');
 
         $form->setData($request->getParsedBody());
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-
+        if (
+            $form->isValid() &&
+            $session->has('opg_reference_number') &&
+            $session->has('first_names') &&
+            $session->has('last_name') &&
+            $session->has('dob') &&
+            $session->has('postcode')
+        ) {
             $result = $this->addOlderLpa->confirm(
                 $identity,
-                $data['reference_number'],
-                $data['first_names'],
-                $data['last_name'],
-                $data['dob'],
-                $data['postcode'],
-                $data['force_activation_key'],
+                (int) $session->get('opg_reference_number'),
+                $session->get('first_names'),
+                $session->get('last_name'),
+                Carbon::create(
+                    $session->get('dob')['year'],
+                    $session->get('dob')['month'],
+                    $session->get('dob')['day']
+                )->toImmutable(),
+                $session->get('postcode'),
+                true,
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(2);
@@ -88,8 +102,8 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
                 $this->emailClient->sendActivationKeyRequestConfirmationEmail(
                     $user->getDetails()['Email'],
-                    strval($data['reference_number']),
-                    strtoupper($data['postcode']),
+                    $session->get('opg_reference_number'),
+                    strtoupper($session->get('postcode')),
                     ($this->localisedDate)($letterExpectedDate)
                 );
 
