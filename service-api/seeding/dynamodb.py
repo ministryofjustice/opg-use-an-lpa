@@ -49,7 +49,8 @@ endOfToday = timezone.localize(now.replace(hour=23, minute=59, second=59, micros
 lastWeek = endOfToday - datetime.timedelta(days=7)
 nextWeek = endOfToday + datetime.timedelta(days=7)
 nextYear = endOfToday + datetime.timedelta(days=365)
-activateBy = int(time.mktime(nextYear.timetuple()))
+
+activateBy = Decimal(nextYear.timestamp())
 
 viewerCodes = [
     {
