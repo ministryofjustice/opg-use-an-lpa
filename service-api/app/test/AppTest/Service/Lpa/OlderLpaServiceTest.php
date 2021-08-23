@@ -575,7 +575,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpasInterfaceProphecy
             ->get($this->lpaUid)
@@ -616,7 +616,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -654,7 +654,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -704,7 +704,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -751,7 +751,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -793,7 +793,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -923,7 +923,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
@@ -1045,7 +1045,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn(null);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)

@@ -34,7 +34,6 @@ class ViewerContext implements Context
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
         $this->lpaViewedBy = 'Santander';
-
         $this->lpa = json_decode(
             file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'),
             true
