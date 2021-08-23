@@ -69,6 +69,6 @@ return [
 
     'feature_flags' => [
         'use_legacy_codes_service' => 'false',
-        'save_older_lpa_requests' => true
+        'save_older_lpa_requests' => false
     ],
 ];
