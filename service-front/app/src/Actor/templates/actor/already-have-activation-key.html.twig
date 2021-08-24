@@ -45,7 +45,15 @@
                     <p class="govuk-body">{% trans %}If you've lost the letter, you can ask for a new key. This will cancel the key we sent to you before.{% endtrans %}</p>
                     <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}If the letter did not arrive, <a class="govuk-link" href="%link%">check we have your correct address</a> before you ask for a new key.{% endtrans %}</p>
 
-                    {{ include('@actor/partials/create-activation-key.html.twig') }}
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">
+                        {% trans %}Continue and ask for a new key{% endtrans %}
+                    </button>
+
+                    {{ govuk_form_close() }}
                 </div>
             </div>
         </main>

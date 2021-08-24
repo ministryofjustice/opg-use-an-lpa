@@ -13,7 +13,7 @@ msgstr ""
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
-#: src/Actor/templates/actor/partials/create-activation-key.html.twig:16
+#: src/Actor/templates/actor/partials/create-activation-key.html.twig:17
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
 msgid "Back to your LPAs"
 msgstr ""
@@ -21,6 +21,7 @@ msgstr ""
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:33
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/check-lpa.html.twig:29
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:64
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
@@ -34,6 +35,7 @@ msgstr ""
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:35
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:31
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:66
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
@@ -149,6 +151,7 @@ msgstr ""
 #: src/Actor/templates/actor/change-lpa-details.html.twig:20
 #: src/Actor/templates/actor/check-lpa.html.twig:12
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:13
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
 #: src/Actor/templates/actor/contact-details.html.twig:14
 #: src/Actor/templates/actor/create-account-success.html.twig:12
 #: src/Actor/templates/actor/create-account.html.twig:12
@@ -1763,6 +1766,7 @@ msgid "Is this the LPA you want to add?"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:25
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:60
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Viewer/templates/viewer/check-code-found.html.twig:28
 msgid "Type of LPA"
@@ -1775,6 +1779,7 @@ msgid "Donor name"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:45
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:29
 msgid "Your name"
 msgstr ""
 
@@ -1783,10 +1788,12 @@ msgid "Your role on this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:57
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:59
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
 msgid "Donor"
 msgstr ""
 
@@ -1811,6 +1818,7 @@ msgstr ""
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:60
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:87
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:84
 #: src/Actor/templates/actor/contact-details.html.twig:45
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-add.html.twig:79
@@ -4059,7 +4067,7 @@ msgstr ""
 msgid "You've already added this LPA to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/create-activation-key.html.twig:12
+#: src/Actor/templates/actor/partials/create-activation-key.html.twig:13
 msgid "Continue and ask for a new key"
 msgstr ""
 
@@ -4165,4 +4173,72 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 msgid "Donor's date of birth"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
+msgid "Before you begin"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:28
+msgid "the LPA was made for use in England and Wales"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:31
+msgid "You cannot ask for a key for:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:34
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:35
+msgid "LPAs registered by the Office of the Public Guardian Scotland"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:38
+msgid "What you'll need"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:40
+msgid "To ask for a key, you'll need to give us:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:43
+msgid "your name, date of birth and UK postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:44
+msgid "the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:51
+msgid "I do not know the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:55
+msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:56
+msgid "On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+msgid "Using the information you gave us, we found these details."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
+msgid "Your role on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
+msgid "The donor's name"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
+msgid "This is not the correct LPA"
 msgstr ""

@@ -1055,9 +1055,11 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I confirm that those details are correct$/
+     * @Given /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
+     * @Then /^I am shown the details of an LPA$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         // Not needed for this context
     }
@@ -1184,7 +1186,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
@@ -1222,7 +1224,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA not found', $ex->getMessage());
@@ -1258,7 +1260,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA details do not match', $ex->getMessage());
@@ -1933,7 +1935,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+        $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
     }
 
     /**

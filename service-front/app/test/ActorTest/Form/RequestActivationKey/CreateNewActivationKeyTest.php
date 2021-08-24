@@ -10,7 +10,6 @@ use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Hidden};
 
 class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
 {
@@ -32,12 +31,7 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'reference_number'      => Hidden::class,
-            'first_names'           => Hidden::class,
-            'last_name'             => Hidden::class,
-            'dob'                   => Hidden::class,
-            'postcode'              => Hidden::class,
+            '__csrf'    => Csrf::class
         ];
     }
 

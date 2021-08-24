@@ -1,0 +1,92 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Check we've found the right LPA{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+
+        {{ include('@partials/account-bar.html.twig') }}
+
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Check we've found the right LPA{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}Using the information you gave us, we found these details.{% endtrans %}</p>
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Your name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(actor) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Your role on the LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if actorRole|lower == "donor" %}
+                                    {% trans %}Donor{% endtrans %}
+                                {% else %}
+                                    {% trans %}Attorney{% endtrans %}
+                                {% endif %}
+                            </dd>
+
+                        </div>
+                        {% if actorRole|lower != "donor" %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}The donor's name{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ actor_name(donor) }}
+                                </dd>
+                            </div>
+                        {% endif %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Type of LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if lpaType|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-grid-row">
+                        {{ govuk_form_open(form) }}
+                        <div class="govuk-grid-column-three-quarters">
+                            {{ govuk_form_element(form.get('__csrf')) }}
+
+                            <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                            <a href="{{ path('lpa.add') }}" role="button" class="govuk-button govuk-button--secondary">
+                                {% trans %}This is not the correct LPA{% endtrans %}
+                            </a>
+                        </div>
+                        {{ govuk_form_close() }}
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}

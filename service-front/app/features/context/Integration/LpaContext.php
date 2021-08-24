@@ -17,6 +17,7 @@ use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\OlderLpaMatchResponse;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Common\Service\Lpa\ViewerCodeService;
@@ -124,38 +125,33 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @When /^I request for a new activation key again$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NO_CONTENT,
                     [],
-                    ''
+                    json_encode([])
                 )
             );
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        try {
-            $addOlderLpa(
-                $this->userIdentity,
-                intval($this->referenceNo),
-                $this->userFirstname,
-                $this->userSurname,
-                DateTime::createFromFormat('Y-m-d', $this->userDob),
-                $this->userPostCode,
-                false
-            );
-        } catch (ApiException $e) {
-            throw new Exception(
-                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
+        $result = $addOlderLpa->confirm(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            true
+        );
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        assertEquals($response, $result);
     }
 
     /**
@@ -191,7 +187,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NOT_FOUND,
@@ -202,7 +198,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
+        $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
             $this->userFirstname,
@@ -239,7 +235,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldThatICannotRequestAnActivationKey()
     {
         // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -256,7 +252,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
+        $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
             $this->userFirstname,
@@ -793,9 +789,10 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I confirm that those details are correct$/
+     * @When /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         // Not needed for this context
     }
@@ -1298,6 +1295,8 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
+
+
         assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $response->getResponse());
     }
 
@@ -1318,6 +1317,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I receive an email confirming activation key request$/
+     * @Then /^I am told a new activation key is posted to the provided postcode$/
      */
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
@@ -1333,60 +1333,12 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request for a new activation key again$/
-     */
-    public function iRequestForANewActivationKeyAgain()
-    {
-        // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    [],
-                    ''
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        try {
-            $result = $addOlderLpa(
-                $this->userIdentity,
-                intval($this->referenceNo),
-                $this->userFirstname,
-                $this->userSurname,
-                DateTime::createFromFormat('Y-m-d', $this->userDob),
-                $this->userPostCode,
-                true
-            );
-        } catch (ApiException $e) {
-            throw new Exception(
-                'Failed to correctly approve older LPA addition request: ' . $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
-
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
-
-        assertEquals($response, $result);
-    }
-
-    /**
-     * @Then /^I am told a new activation key is posted to the provided postcode$/
-     */
-    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
         // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -1411,7 +1363,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
+        $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
             $this->userFirstname,
@@ -1445,7 +1397,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
         // API call for requesting activation code
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -1471,7 +1423,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        $result = $addOlderLpa(
+        $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
             $this->userFirstname,
@@ -1559,5 +1511,58 @@ class LpaContext extends BaseIntegrationContext
 
         assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $response->getResponse());
         assertEquals($alreadyAddedDTO, $response->getData());
+    }
+
+    /**
+     * @Then /^I am shown the details of an LPA$/
+     */
+    public function iAmShownTheDetailsOfAnLPA()
+    {
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
+                            ],
+                            'caseSubtype' => $this->lpa['caseSubtype'],
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $foundMatchLpaDTO = new OlderLpaMatchResponse();
+        $foundMatchLpaDTO->setDonor($donor);
+        $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::FOUND,
+            $foundMatchLpaDTO
+        );
+        assertEquals($response, $result);
     }
 }

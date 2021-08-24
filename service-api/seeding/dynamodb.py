@@ -5,6 +5,7 @@ from passlib.hash import sha256_crypt
 import time
 import datetime
 import pytz
+from decimal import Decimal
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -49,7 +50,8 @@ endOfToday = timezone.localize(now.replace(hour=23, minute=59, second=59, micros
 lastWeek = endOfToday - datetime.timedelta(days=7)
 nextWeek = endOfToday + datetime.timedelta(days=7)
 nextYear = endOfToday + datetime.timedelta(days=365)
-activateBy = int(time.mktime(nextYear.timetuple()))
+
+activateBy = Decimal(nextYear.timestamp())
 
 viewerCodes = [
     {
