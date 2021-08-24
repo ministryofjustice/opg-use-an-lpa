@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
-use Common\Filter\ToDateTime;
 use Common\Form\AbstractForm;
-use Laminas\Filter\Boolean;
-use Laminas\Filter\ToInt;
-use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
