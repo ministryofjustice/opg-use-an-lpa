@@ -108,6 +108,23 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         return $this->getData($response);
     }
 
+    public function removeActivateBy(string $lpaActorToken): array
+    {
+        $response = $this->client->updateItem([
+          'TableName' => $this->userLpaActorTable,
+          'Key' => [
+              'Id' => [
+                  'S' => $lpaActorToken,
+              ],
+          ],
+          'UpdateExpression' => 'remove ActivateBy',
+          'ReturnValues' => 'ALL_OLD'
+          ]);
+
+        return $this->getData($response);
+    }
+
+
     /**
      * @inheritDoc
      */

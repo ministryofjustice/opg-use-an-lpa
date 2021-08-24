@@ -46,6 +46,23 @@ class ActorCodeService
         $this->resolveActor = $resolveActor;
     }
 
+    public function removeTTLFromRequest($userId, $lpaId)
+    {
+        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+
+        $lpaUids = array_column($lpas, 'Id', 'SiriusUid');
+
+        if (in_array($lpaId, $lpaUids)) {
+            return;
+        }
+
+        $this->logger->info($lpaUids[$lpaId]);
+
+        $this->userLpaActorMapRepository->removeTTL($lpaUids[$lpaId]);
+
+        return $lpaUids[$lpaId];
+    }
+
     /**
      * @param string $code
      * @param string $uid
