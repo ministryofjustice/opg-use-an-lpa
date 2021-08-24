@@ -37,9 +37,6 @@ class OlderLpaServiceTest extends TestCase
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapProphecy;
 
-    /** @var ObjectProphecy|AddOlderLpa */
-    private $addOlderLpaProphecy;
-
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
@@ -49,7 +46,6 @@ class OlderLpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy = $this->prophesize(LpasInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
-        $this->addOlderLpaProphecy = $this->prophesize(AddOlderLpa::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
 
@@ -208,68 +204,6 @@ class OlderLpaServiceTest extends TestCase
     /**
      * @test
      */
-    public function thows_exception_when_lpa_match_found_but_activation_key_already_exists()
-    {
-        $createdDate = (new DateTime('-2 weeks'))->format('Y-m-d');
-
-        $dataToMatch = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => '1980-03-01',
-            'first_names'           => 'Test Tester',
-            'last_name'             => 'Testing',
-            'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => false,
-        ];
-
-        $lpaMatchResponse = [
-            'caseSubtype' => 'pfa',
-            'donor' => [
-                'uId' => '700000001111',
-                'firstname' => 'Donor',
-                'middlenames' => 'Example',
-                'surname' => 'Person'
-            ],
-        ];
-
-        $service = $this->getOlderLpaService();
-
-        $lpa = $this->older_lpa_get_by_uid_response();
-
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
-        $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
-            ->willReturn($lpa);
-
-        $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
-            ->willReturn(true);
-
-        $this->actorCodesProphecy
-            ->checkActorHasCode($this->lpaUid, $this->actorUid)
-            ->willReturn(
-                new ActorCode(
-                    [
-                        'Created' => $createdDate,
-                    ],
-                    new DateTime()
-                )
-            );
-
-        try {
-            $service->validateOlderLpaRequest($this->userId, $dataToMatch);
-        } catch (BadRequestException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertEquals('LPA has an activation key already', $ex->getMessage());
-            $this->assertEquals($lpaMatchResponse, $ex->getAdditionalData());
-        }
-    }
-
-    /**
-     * @test
-     */
     public function older_lpa_request_is_saved_with_a_TTL()
     {
         $this->userLpaActorMapProphecy->create(
@@ -319,70 +253,5 @@ class OlderLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
-    }
-
-    /**
-     * @test
-     */
-    public function allow_user_to_continue_request_for_activation_key_if_lpa_match_found()
-    {
-        $dataToMatch = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => '1980-03-01',
-            'first_names'           => 'Test Tester',
-            'last_name'             => 'Testing',
-            'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => false,
-        ];
-
-        $lpaMatchResponse = [
-            'actor-id' => '700000055554',
-            'lpa-id' => '700000012345',
-            'attorney' => [
-                'uId' => null,
-                'firstname' => null,
-                'middlenames' => null,
-                'surname' => null
-            ],
-            'caseSubtype' => 'pfa',
-            'donor' => [
-                'uId' => '700000001111',
-                'firstname' => 'Donor',
-                'middlenames' => 'Example',
-                'surname' => 'Person'
-            ],
-        ];
-
-        $service = $this->getOlderLpaService();
-
-        $lpa = $this->older_lpa_get_by_uid_response();
-
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
-        $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
-            ->willReturn($lpa);
-
-        $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
-            ->willReturn(true);
-
-        $this->actorCodesProphecy
-            ->checkActorHasCode($this->lpaUid, $this->actorUid)
-            ->willReturn(
-                new ActorCode(
-                    [
-                        'Created' => null,
-                    ],
-                    new DateTime()
-                )
-            );
-
-       $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
-       $this->assertIsArray($response);
-
-       $this->assertEquals($lpaMatchResponse, $response);
     }
 }

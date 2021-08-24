@@ -65,8 +65,6 @@ class OlderLpaService
         return $createdDate;
     }
 
-
-
     private function removeLpa(string $requestId)
     {
         $this->userLpaActorMap->delete($requestId);
