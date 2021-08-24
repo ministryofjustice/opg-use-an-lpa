@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
 use PHPUnit\Framework\TestCase;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Hidden};
 
 class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
 {
@@ -32,12 +31,7 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'reference_number'      => Hidden::class,
-            'first_names'           => Hidden::class,
-            'last_name'             => Hidden::class,
-            'dob'                   => Hidden::class,
-            'postcode'              => Hidden::class,
+            '__csrf'    => Csrf::class
         ];
     }
 

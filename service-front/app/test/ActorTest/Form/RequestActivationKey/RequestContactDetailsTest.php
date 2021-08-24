@@ -1,8 +1,8 @@
 <?php
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\RequestContactDetails;
+use Actor\Form\RequestActivationKey\RequestContactDetails;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Laminas\Form\Element\Checkbox;

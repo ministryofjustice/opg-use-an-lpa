@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\ActorRole;
-use Actor\Form\CheckYourAnswers;
-use Actor\Form\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\ActorRole;
+use Actor\Form\RequestActivationKey\CheckYourAnswers;
+use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -133,7 +133,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            $result = ($this->addOlderLpa)(
+            $result = $this->addOlderLpa->validate(
                 $this->identity,
                 $this->data['reference_number'],
                 $this->data['first_names'],
@@ -164,9 +164,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
-
-                    $form->setData($this->data);
-
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
@@ -184,7 +181,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $form = new ActorRole($this->getCsrfGuard($request));
                         $form->setAttribute('action', $this->urlHelper->generate('lpa.add.actor-role'));
                         return new HtmlResponse($this->renderer->render(
-                            'actor::actor-role',
+                            'actor::request-activation-key/actor-role',
                             [
                                 'user'  => $this->user,
                                 'form'  => $form
@@ -201,22 +198,23 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'actor::cannot-find-lpa',
                         ['user'  => $this->user]
                     ));
-                case OlderLpaApiResponse::SUCCESS:
-                    $letterExpectedDate = (new Carbon())->addWeeks(2);
+                case OlderLpaApiResponse::FOUND:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
+                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
 
-                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-                        $this->user->getDetails()['Email'],
-                        (string)$this->data['reference_number'],
-                        $this->data['postcode'],
-                        ($this->localisedDate)($letterExpectedDate)
-                    );
+                    $lpaData = $result->getData();
+                    $actor = is_null($lpaData->getAttorney()) ? $lpaData->getDonor() : $lpaData->getAttorney();
 
                     return new HtmlResponse(
                         $this->renderer->render(
-                            'actor::send-activation-key-confirmation',
+                            'actor::confirm-lpa-for-key-request',
                             [
-                                'date' => $letterExpectedDate,
-                                'user'  => $this->user
+                                'form'      => $form,
+                                'user'      => $this->user,
+                                'actor'     => $actor,
+                                'actorRole' => (is_null($lpaData->getAttorney()) ? 'Donor' : 'Attorney'),
+                                'donor'     => $lpaData->getDonor(),
+                                'lpaType'   => $lpaData->getCaseSubtype()
                             ]
                         )
                     );

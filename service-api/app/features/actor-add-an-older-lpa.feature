@@ -12,7 +12,9 @@ Feature: Add an older LPA
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
+    Then I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
     Then A record of the LPA requested is saved to the database
     And a letter is requested containing a one time use code
 
@@ -20,14 +22,14 @@ Feature: Add an older LPA
   Scenario: The user cannot add an older LPA to their account that does not exist
     Given I am on the add an older LPA page
     When I provide details of an LPA that does not exist
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
   @integration @acceptance @pact
   Scenario Outline: The user cannot add an older LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
     Examples:
@@ -42,14 +44,14 @@ Feature: Add an older LPA
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
     When I provide details from an LPA registered before Sept 2019
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I cannot request an activation key
 
   @integration @acceptance @pact
   Scenario: The user is informed if they have an activation key
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document that already has an activation key
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
   @acceptance
@@ -72,5 +74,19 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I have added an LPA to my account
     When I provide the details from a valid paper LPA which I have already added to my account
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
+
+  @acceptance
+  Scenario: The user is not shown the attorney details being a donor on the lpa
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper LPA document
+    And I confirm the details I provided are correct
+    Then I being the donor on the LPA I am not shown the attorney details
+
+  @acceptance
+  Scenario: The user is not shown the donor details being an attorney on the lpa
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper LPA document
+    And I confirm the details I provided are correct
+    Then I being the attorney on the LPA I am shown the donor details

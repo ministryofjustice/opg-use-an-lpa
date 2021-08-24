@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Actor\Form;
+namespace Actor\Form\RequestActivationKey;
 
 use Common\Form\AbstractForm;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class CheckYourAnswers extends AbstractForm
+/**
+ * Class CreateNewActivationKey
+ * @package Actor\Form
+ */
+class CreateNewActivationKey extends AbstractForm
 {
-    const FORM_NAME = 'check_answers';
+    public const FORM_NAME = 'create_new_activation_key';
 
     /**
-     * CheckYourAnswers constructor.
+     * CreateNewActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)

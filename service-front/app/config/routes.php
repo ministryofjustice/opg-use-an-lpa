@@ -164,6 +164,23 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\ChangeLpaDetailsHandler::class
     ], 'lpa.change-lpa-details');
 
+    // Access for All Journey
+    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
+        $app->route('/lpa/add/contact-details', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\RequestActivationKey\ContactDetailsHandler::class
+        ], ['GET', 'POST'], 'lpa.add.contact-details');
+
+        $app->route('/lpa/add/actor-role', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            \Actor\Handler\RequestActivationKey\ActorRoleHandler::class
+        ], ['GET', 'POST'], 'lpa.add.actor-role');
+
+        $app->route('/lpa/add/donor-details', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
+        ], ['GET', 'POST'],'lpa.add.donor-details');
+    }
     // Older LPA journey
     if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {
         // if flag true, send user to triage page as entry point
@@ -204,12 +221,12 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
         $app->route('/lpa/request-code/check-answers', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\CheckYourAnswersHandler::class
+            Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class
         ], ['GET', 'POST'], 'lpa.check-answers');
 
         $app->post('/lpa/confirm-activation-key-generation', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\CreateActivationKeyHandler::class
+            Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
         ], 'lpa.confirm-activation-key-generation');
     } else {
         $app->route('/lpa/add-details', [
@@ -223,23 +240,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RemoveLpaHandler::class
         ], ['GET', 'POST'], 'lpa.remove-lpa');
-    }
-
-    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
-        $app->route('/lpa/add/actor-role', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\ActorRoleHandler::class
-        ], ['GET', 'POST'], 'lpa.add.actor-role');
-
-        $app->route(
-            '/lpa/add/contact-details',
-            [
-                Mezzio\Authentication\AuthenticationMiddleware::class,
-                Actor\Handler\ContactDetailsHandler::class
-            ],
-            ['GET', 'POST'],
-            'lpa.add.contact-details'
-        );
     }
 };
 

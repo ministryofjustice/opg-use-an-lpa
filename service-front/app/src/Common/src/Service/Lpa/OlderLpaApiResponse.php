@@ -6,11 +6,14 @@ namespace Common\Service\Lpa;
 
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\OlderLpaMatchResponse;
 
 class OlderLpaApiResponse
 {
     /** @var string The LPA was successfully added */
     public const SUCCESS            = 'SUCCESS';
+    /** @var string A match was found for the LPA */
+    public const FOUND              = 'FOUND';
     /** @var string The LPA reference number was not found */
     public const NOT_FOUND          = 'NOT_FOUND';
     /** @var string The LPA is not eligible to be added */
@@ -22,7 +25,7 @@ class OlderLpaApiResponse
     /** @var string The LPA has already been added to the account */
     public const LPA_ALREADY_ADDED  = 'LPA_ALREADY_ADDED';
 
-    /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse */
+    /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse */
     private $data;
     private string $response;
 
@@ -30,7 +33,7 @@ class OlderLpaApiResponse
      * OlderLpaApiResponse constructor.
      *
      * @param string $response
-     * @param array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse $data
+     * @param array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse $data
      */
     public function __construct(string $response, $data)
     {
@@ -47,7 +50,7 @@ class OlderLpaApiResponse
     }
 
     /**
-     * @return array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse
+     * @return array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse
      */
     public function getData()
     {
@@ -66,6 +69,7 @@ class OlderLpaApiResponse
     {
         $allowedResponses = [
             self::SUCCESS,
+            self::FOUND,
             self::NOT_FOUND,
             self::DOES_NOT_MATCH,
             self::NOT_ELIGIBLE,
@@ -85,6 +89,7 @@ class OlderLpaApiResponse
         $allowedDataTypes = [
             ActivationKeyExistsResponse::class,
             LpaAlreadyAddedResponse::class,
+            OlderLpaMatchResponse::class
         ];
 
         if (is_array($data)) {

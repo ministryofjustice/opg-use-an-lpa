@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Form\RequestContactDetails;
-use Actor\Validator\OptionSelectedValidator;
-use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -130,7 +127,6 @@ class LpaContext implements Context
 
         $this->ui->pressButton('Yes, remove LPA');
     }
-
 
     /**
      * @Then /^I receive an email confirming activation key request$/
@@ -281,8 +277,6 @@ class LpaContext implements Context
         $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
         $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
     }
-
-
 
     /**
      * @Then /^I am shown a not found error$/
@@ -1802,9 +1796,7 @@ class LpaContext implements Context
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
     }
-
-
-
+    
     /**
      * @Given /^I request to go back and try again$/
      */

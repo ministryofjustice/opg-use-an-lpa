@@ -8,8 +8,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\KeyCollisionException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTimeImmutable;
 use Exception;
-use Ramsey\Uuid\Uuid;
 
 class UserLpaActorMap implements UserLpaActorMapInterface
 {
@@ -53,19 +53,24 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @inheritDoc
      * @throws Exception
      */
-    public function create(string $uuid, string $lpaId, string $userId, string $actorId, string $expiryInterval = null)
-    {
-        $added = new \DateTime();
+    public function create(
+        string $lpaActorToken,
+        string $userId,
+        string $siriusUid,
+        string $actorId,
+        string $expiryInterval = null
+    ) {
+        $added = new DateTimeImmutable();
         $array = [
-            'Id'        => ['S' => $uuid],
+            'Id'        => ['S' => $lpaActorToken],
             'UserId'    => ['S' => $userId],
-            'SiriusUid' => ['S' => $lpaId],
+            'SiriusUid' => ['S' => $siriusUid],
             'ActorId'   => ['N' => $actorId],
             'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
         ];
 
         //Add ActivateBy field to array if expiry interval is present
-        if ($expiryInterval != null) {
+        if ($expiryInterval !== null) {
             $expiry = $added->add(new \DateInterval($expiryInterval));
             $array['ActivateBy'] = ['N' => $expiry->getTimestamp()];
         }

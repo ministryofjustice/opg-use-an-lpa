@@ -104,7 +104,7 @@ class ActorCodeService
      * @param string $uid
      * @param string $dob
      * @param string $userId
-     * @return array|null
+     * @return string|null
      * @throws \Exception
      */
     public function confirmDetails(string $code, string $uid, string $dob, string $userId): ?string
@@ -128,8 +128,8 @@ class ActorCodeService
             try {
                 $this->userLpaActorMapRepository->create(
                     $id,
-                    $details['lpa']['uId'],
                     $userId,
+                    $details['lpa']['uId'],
                     (string)$details['actor']['details']['id']
                 );
 

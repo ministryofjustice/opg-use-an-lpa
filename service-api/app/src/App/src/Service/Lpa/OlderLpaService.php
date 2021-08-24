@@ -14,6 +14,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
 use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -21,6 +22,7 @@ use Ramsey\Uuid\Uuid;
 
 class OlderLpaService
 {
+    private FeatureEnabled $featureEnabled;
     private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
     private LpasInterface $lpaRepository;
@@ -29,6 +31,7 @@ class OlderLpaService
     private GetAttorneyStatus $getAttorneyStatus;
     private ValidateOlderLpaRequirements $validateLpaRequirements;
     private UserLpaActorMapInterface $userLpaActorMap;
+    private ResolveActor $resolveActor;
 
     public function __construct(
         LpaAlreadyAdded $lpaAlreadyAdded,
@@ -38,7 +41,9 @@ class OlderLpaService
         ActorCodes $actorCodes,
         GetAttorneyStatus $getAttorneyStatus,
         ValidateOlderLpaRequirements $validateLpaRequirements,
-        UserLpaActorMapInterface $userLpaActorMap
+        UserLpaActorMapInterface $userLpaActorMap,
+        FeatureEnabled $featureEnabled,
+        ResolveActor $resolveActor
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -48,6 +53,34 @@ class OlderLpaService
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->validateLpaRequirements = $validateLpaRequirements;
         $this->userLpaActorMap = $userLpaActorMap;
+        $this->featureEnabled = $featureEnabled;
+        $this->resolveActor = $resolveActor;
+    }
+
+    public function validateOlderLpaRequest(string $userId, array $requestData): array
+    {
+        // Check LPA with user provided reference number
+        $lpaMatchResponse = $this->checkLPAMatchAndGetActorDetails($userId, $requestData);
+
+        // Checks if the actor already has an active activation key. If forced ignore
+        if (!$requestData['force_activation_key']) {
+            $hasActivationCode = $this->hasActivationCode(
+                $lpaMatchResponse['lpa-id'],
+                $lpaMatchResponse['actor-id']
+            );
+
+            if ($hasActivationCode instanceof DateTime) {
+                throw new BadRequestException(
+                    'LPA has an activation key already',
+                    [
+                        'donor'         => $lpaMatchResponse['donor'],
+                        'caseSubtype'   => $lpaMatchResponse['caseSubtype']
+                    ]
+                );
+            }
+        }
+
+        return $lpaMatchResponse;
     }
 
     /**
@@ -165,7 +198,7 @@ class OlderLpaService
 
         return [
             'actor-id' => $actorId,
-            'lpa-id' => $lpaId,
+            'lpa-id' => $lpaId
         ];
     }
 
@@ -262,6 +295,17 @@ class OlderLpaService
             throw new BadRequestException('LPA details do not match');
         }
 
+        $actor = ($this->resolveActor)($lpa, $actorMatch['actor-id']);
+
+        if ($actor['type'] !== 'donor') {
+            $actorMatch['attorney'] = [
+                'uId'           => $actor['details']['uId'],
+                'firstname'     => $actor['details']['firstname'],
+                'middlenames'   => $actor['details']['middlenames'],
+                'surname'       => $actor['details']['surname'],
+            ];
+        }
+
         $actorMatch['caseSubtype'] = $lpa['caseSubtype'];
         $actorMatch['donor'] = [
             'uId'           => $lpa['donor']['uId'],
@@ -297,9 +341,16 @@ class OlderLpaService
         return $this->lookupActorInLpa($lpaMatch->getData(), $dataToMatch);
     }
 
-    public function removeLpaRequest(string $requestId)
+    private function removeLpa(string $requestId)
     {
         $this->userLpaActorMap->delete($requestId);
+
+        $this->logger->notice(
+            'Removing request from UserLPAActorMap {id}',
+            [
+                'id' => $requestId
+            ]
+        );
     }
 
     /**
@@ -309,9 +360,19 @@ class OlderLpaService
      *
      * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
+     * @param string $userId
      */
-    public function requestAccessByLetter(string $uid, string $actorUid): void
+    public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
+        $requestId = null;
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            $requestId = $this->storeLPARequest(
+                $uid,
+                $userId,
+                $actorUid
+            );
+        }
+
         $uidInt = (int)$uid;
         $actorUidInt = (int)$actorUid;
 
@@ -329,11 +390,13 @@ class OlderLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
                 [
-                    'attorney'  => $actorUidInt,
-                    'lpa'       => $uidInt,
+                    'attorney' => $actorUidInt,
+                    'lpa' => $uidInt,
                 ]
             );
-
+            if ($requestId !== null) {
+                $this->removeLpa($requestId);
+            }
             throw $apiException;
         }
     }
@@ -352,7 +415,7 @@ class OlderLpaService
         do {
             $id = Uuid::uuid4()->toString();
             try {
-                $this->userLpaActorMap->create($id, $lpaId, $userId, $actorId, 'P1Y');
+                $this->userLpaActorMap->create($id, $userId, $lpaId, $actorId, 'P1Y');
                 return $id;
             } catch (KeyCollisionException $e) {
                 // Allows the loop to repeat with a new ID.

@@ -68,6 +68,11 @@ class EventCodes
     /**
      * Older LPA match
      */
+    public const OLDER_LPA_FOUND = 'OLDER_LPA_FOUND';
+
+    /**
+     * Older LPA match and letter requested
+     */
     public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
 
     /**

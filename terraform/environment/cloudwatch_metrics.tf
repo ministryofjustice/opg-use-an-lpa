@@ -20,7 +20,8 @@ locals {
     "ADD_LPA_ALREADY_ADDED",
     "ADD_LPA_SUCCESS",
     "ADD_LPA_FAILURE",
-    "LPA_REMOVED"
+    "LPA_REMOVED",
+    "OLDER_LPA_FOUND"
   ]
 }
 

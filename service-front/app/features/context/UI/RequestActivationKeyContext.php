@@ -9,6 +9,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -38,9 +39,7 @@ class RequestActivationKeyContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-
-        $this->ui->assertElementContainsText('h1', 'We\'re posting you an activation key');
+        $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
     }
 
     /**
@@ -63,6 +62,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am asked for my contact details$/
+     */
+    public function iAmAskedForMyContactDetails()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/contact-details');
+            $this->ui->assertPageContainsText('Your contact details');
+        }
+    }
+
+    /**
      * @Then /^I am asked to check my answers before requesting an activation key$/
      */
     public function iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey()
@@ -76,11 +86,32 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am asked to provide the donor's details to verify that I am the attorney$/
+     */
+    public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+            $this->ui->assertPageContainsText('The donor\'s details');
+        }
+    }
+
+    /**
+     * @Given /^I am asked for my role on the LPA$/
+     */
+    public function iAmAskedForMyRoleOnTheLPA()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->assertPageContainsText('What is your role on the LPA?');
+        }
+    }
+
+    /**
      * @Then I am informed that an LPA could not be found with these details
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
             $this->ui->assertPageContainsText('What is your role on the LPA?');
         } else {
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
@@ -113,6 +144,18 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->fillField('opg_reference_number', '700000000001');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am on the donor details page$/
+     */
+    public function iAmOnTheDonorDetailsPage()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+            $this->iConfirmThatIAmTheAttorney();
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+        }
     }
 
     /**
@@ -215,9 +258,33 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I confirm that those details are correct$/
+     * @When /^I confirm that I am the attorney$/
      */
-    public function iConfirmThatThoseDetailsAreCorrect()
+    public function iConfirmThatIAmTheAttorney()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('actor_role_radio', 'Attorney');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @When /^I confirm that I am the donor on the LPA$/
+     */
+    public function iConfirmThatIAmTheDonorOnTheLPA()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('actor_role_radio', 'Donor');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @When /^I confirm that those details are correct$/
+     * @When /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
+     */
+    public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
@@ -317,7 +384,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -341,7 +408,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -369,17 +436,27 @@ class RequestActivationKeyContext implements Context
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response
-            $this->apiFixtures->patch('/v1/lpas/request-letter')
+            $this->apiFixtures->post('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
-                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        StatusCodeInterface::STATUS_OK,
                         [],
-                        ''
+                        json_encode(
+                            [
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                            ]
+                        )
                     )
                 );
         } else {
             // Setup fixture for activation key already existing
-            $this->apiFixtures->patch('/v1/lpas/request-letter')
+            $this->apiFixtures->post('/v1/older-lpa/validate')
                 ->respondWith(
                     new Response(
                         StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -389,14 +466,14 @@ class RequestActivationKeyContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA has an activation key already',
                                 'data' => [
-                                    'donor' => [
-                                        'uId' => $this->lpa->donor->uId,
-                                        'firstname' => $this->lpa->donor->firstname,
-                                        'middlenames' => $this->lpa->donor->middlenames,
-                                        'surname' => $this->lpa->donor->surname,
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
                                     ],
                                     'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken,
+                                    'lpaActorToken' => $this->userLpaActorToken
                                 ],
                             ]
                         )
@@ -424,7 +501,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->fillAndSubmitOlderLpaForm();
 
-        $this->apiFixtures->patch('/v1/lpas/request-letter')
+        $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -434,19 +511,34 @@ class RequestActivationKeyContext implements Context
                             'title' => 'Bad request',
                             'details' => 'LPA already added',
                             'data' => [
-                                'donor' => [
-                                    'uId' => $this->lpa->donor->uId,
-                                    'firstname' => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname' => $this->lpa->donor->surname,
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken,
+                                'lpaActorToken' => $this->userLpaActorToken
                             ],
                         ]
                     )
                 )
             );
+    }
+
+    /**
+     * @When /^I provide the donor's details$/
+     */
+    public function iProvideTheDonorSDetails()
+    {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
+            $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
+            $this->ui->fillField('donor_dob[day]', '09');
+            $this->ui->fillField('donor_dob[month]', '02');
+            $this->ui->fillField('donor_dob[year]', '1998');
+            $this->ui->pressButton('Continue');
+        }
     }
 
     /**
@@ -535,7 +627,7 @@ class RequestActivationKeyContext implements Context
     public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
     {
         $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmThatThoseDetailsAreCorrect();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
         $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
@@ -574,6 +666,16 @@ class RequestActivationKeyContext implements Context
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
             $this->ui->fillField('telephone', '0123456789');
         }
+    }
+
+    /**
+     * @Given /^My LPA has been found but my details did not match$/
+     */
+    public function myLPAHasBeenFoundButMyDetailsDidNotMatch()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideDetailsThatDoNotMatchAValidPaperDocument();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
     }
 
     protected function fillAndSubmitOlderLpaForm()
@@ -615,5 +717,44 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->fillField('postcode', $array['postcode']);
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I am on the check LPA details page$/
+     */
+    public function iAmOnTheCheckLPADetailsPage()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmShownTheDetailsOfAnLPA();
+    }
+
+    /**
+     * @Then /^I am shown the details of an LPA$/
+     * @Then /^I being the donor on the LPA I am not shown the donor name back again$/
+     */
+    public function iAmShownTheDetailsOfAnLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check we\'ve found the right LPA');
+        $this->ui->assertPageNotContainsText('The donor\'s name');
+    }
+
+    /**
+     * @When /^I realise this is not the correct LPA$/
+     */
+    public function iRealiseThisIsNotTheCorrectLPA()
+    {
+        $this->ui->assertPageContainsText('This is not the correct LPA');
+        $this->ui->clickLink('This is not the correct LPA');
+    }
+
+    /**
+     * @Then /^I am taken back to the start of the (.*) process$/
+     */
+    public function iAmTakenBackToTheStartOfRequestAnActivationKeyProcess()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
     }
 }

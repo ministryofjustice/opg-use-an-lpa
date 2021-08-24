@@ -13,7 +13,9 @@ Feature: Add an older LPA
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
+    Then I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
@@ -21,14 +23,14 @@ Feature: Add an older LPA
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
   @ui @integration
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
     When I provide details from an LPA registered before Sept 2019
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I cannot request an activation key
 
   @ui @integration
@@ -36,7 +38,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
     When I provide the details from a valid paper document
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
   @ui
@@ -59,8 +61,37 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I have added an LPA to my account
     When I provide the details from a valid paper LPA which I have already added to my account
-    And I confirm that those details are correct
+    And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
+
+  # Older Older LPA Journey
+
+  @ui
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    When I provide details that do not match a valid paper document
+    And I confirm that those details are correct
+    Then I am asked for my role on the LPA
+
+  @ui
+  Scenario: The user is asked for the donor's details if they are the attorney on the LPA
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    When I confirm that I am the attorney
+    Then I am asked to provide the donor's details to verify that I am the attorney
+
+  @ui
+  Scenario: The attorney is asked for their contact details after providing donor details
+    Given I am on the donor details page
+    When I provide the donor's details
+    Then I am asked for my contact details
+
+  @ui
+  Scenario: The user is asked for their contact details if they are the donor on the LPA
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    When I confirm that I am the donor on the LPA
+    Then I am asked for my contact details
 
   #TODO : Change test to use actual previous page rather than just the dashboard
   @ui
@@ -75,3 +106,15 @@ Feature: Add an older LPA
     When I enter nothing
     Then I am told that I must enter a phone number
 
+  @ui
+  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
+    Given I am on the check LPA details page
+    When  I realise this is not the correct LPA
+    Then I am taken back to the start of the "request an activation key" process
+
+  @ui
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    Then I being the donor on the LPA I am not shown the donor name back again

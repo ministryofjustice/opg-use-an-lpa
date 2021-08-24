@@ -9,6 +9,7 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -34,10 +35,9 @@ class AddOlderLpa
     private ApiClient $apiClient;
     /** @var LoggerInterface */
     private LoggerInterface $logger;
-    /** @var ParseLpaAlreadyAddedResponse */
     private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
-    /** @var ParseActivationKeyExistsResponse */
     private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse;
+    private ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse;
 
     /**
      * AddOlderLpa constructor.
@@ -51,22 +51,23 @@ class AddOlderLpa
         ApiClient $apiClient,
         LoggerInterface $logger,
         ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
-        ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse
+        ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse,
+        ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
         $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
         $this->parseActivationKeyExistsResponse = $parseActivationKeyExistsResponse;
+        $this->parseOlderLpaMatchResponse = $parseOlderLpaMatchResponse;
     }
 
-    public function __invoke(
+    public function validate(
         string $userToken,
         int $lpaUid,
         string $firstnames,
         string $lastname,
         DateTimeInterface $dob,
-        string $postcode,
-        bool $forceActivationKey = false
+        string $postcode
     ): OlderLpaApiResponse {
         $data = [
             'reference_number'      => $lpaUid,
@@ -74,13 +75,13 @@ class AddOlderLpa
             'last_name'             => $lastname,
             'dob'                   => $dob->format('Y-m-d'),
             'postcode'              => $postcode,
-            'force_activation_key'  => $forceActivationKey
+            'force_activation_key'  => false
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
 
         try {
-            $this->apiClient->httpPatch('/v1/lpas/request-letter', $data);
+            $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
@@ -100,10 +101,44 @@ class AddOlderLpa
             }
         }
 
+        $this->logger->notice(
+            'Successfully matched LPA {uId} for account with Id {id} ',
+            [
+                'event_code' => EventCodes::OLDER_LPA_FOUND,
+                'id'  => $data['identity'],
+                'uId' => $data['reference_number']
+            ]
+        );
+
+        return new OlderLpaApiResponse(OlderLpaApiResponse::FOUND, ($this->parseOlderLpaMatchResponse)($response));
+    }
+
+    public function confirm(
+        string $userToken,
+        int $lpaUid,
+        string $firstnames,
+        string $lastname,
+        DateTimeInterface $dob,
+        string $postcode,
+        bool $forceActivationKey
+    ): OlderLpaApiResponse {
+        $data = [
+            'reference_number'      => $lpaUid,
+            'first_names'           => $firstnames,
+            'last_name'             => $lastname,
+            'dob'                   => $dob->format('Y-m-d'),
+            'postcode'              => $postcode,
+            'force_activation_key'  => $forceActivationKey
+        ];
+
+        $this->apiClient->setUserTokenHeader($userToken);
+
+        $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
+
         $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 
         $this->logger->notice(
-            'Successfully matched LPA {uId} and sending activation letter for account with Id {id} ',
+            'Successfully matched LPA {uId} and requested letter for account with Id {id} ',
             [
                 'event_code' => $eventCode,
                 'id'  => $data['identity'],
@@ -111,7 +146,7 @@ class AddOlderLpa
             ]
         );
 
-        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, $response);
     }
 
     /**
