@@ -128,7 +128,6 @@ class LpaContext implements Context
         $this->ui->pressButton('Yes, remove LPA');
     }
 
-
     /**
      * @Then /^I receive an email confirming activation key request$/
      */
@@ -278,8 +277,6 @@ class LpaContext implements Context
         $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
         $this->iAmNavigatedToTheInstructionsAndPreferencesPage();
     }
-
-
 
     /**
      * @Then /^I am shown a not found error$/
@@ -1799,9 +1796,7 @@ class LpaContext implements Context
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
     }
-
-
-
+    
     /**
      * @Given /^I request to go back and try again$/
      */

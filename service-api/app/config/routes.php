@@ -36,10 +36,15 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
+    $app->post(
+        '/v1/older-lpa/validate',
+        App\Handler\OlderLpaValidationHandler::class,
+        'lpa.older.validate'
+    );
     $app->patch(
-        '/v1/lpas/request-letter',
-        App\Handler\LpasActionsHandler::class,
-        'lpa.request-letter'
+        '/v1/older-lpa/confirm',
+        App\Handler\OlderLpaConfirmationHandler::class,
+        'lpa.older.confirm'
     );
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
