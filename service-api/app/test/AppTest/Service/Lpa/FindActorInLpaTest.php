@@ -101,67 +101,71 @@ class FindActorInLpaTest extends TestCase
         ];
 
         $this->getAttorneyStatusProphecy
-            ->__invoke([
-                           'uId'       => '700000002222',
-                           'dob'       => '1977-11-21',
-                           'firstname' => 'Attorneyone',
-                           'surname'   => 'Person',
-                           'addresses' => [
-                               [
-                                   'postcode' => 'Gg1 2ff'
-                               ]
-                           ],
-                           'systemStatus' => false, // inactive attorney
-                       ])
-            ->willReturn(2);
+            ->__invoke(
+                [
+                    'uId'       => '700000002222',
+                    'dob'       => '1977-11-21',
+                    'firstname' => 'Attorneyone',
+                    'surname'   => 'Person',
+                    'addresses' => [
+                        [
+                            'postcode' => 'Gg1 2ff'
+                        ]
+                    ],
+                    'systemStatus' => false, // inactive attorney
+                ]
+            )->willReturn(2);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke([
-                           'uId'       => '700000003333',
-                           'dob'       => '1960-05-05',
-                           'firstname' => '', // ghost attorney
-                           'surname'   => '',
-                           'addresses' => [
-                               [
-                                   'postcode' => 'BB1 9ee'
-                               ]
-                           ],
-                           'systemStatus' => true,
-                       ])
-            ->willReturn(1);
+            ->__invoke(
+                [
+                    'uId'       => '700000003333',
+                    'dob'       => '1960-05-05',
+                    'firstname' => '', // ghost attorney
+                    'surname'   => '',
+                    'addresses' => [
+                        [
+                            'postcode' => 'BB1 9ee'
+                        ]
+                    ],
+                    'systemStatus' => true,
+                ]
+            )->willReturn(1);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke([
-                           'uId'       => '700000004444',
-                           'dob'       => '1980-03-01',
-                           'firstname' => 'Attorneythree',
-                           'surname'   => 'Person',
-                           'addresses' => [ // multiple addresses
-                               [
-                                   'postcode' => 'Ab1 2Cd'
-                               ],
-                               [
-                                   'postcode' => 'Bc2 3Df'
-                               ]
-                           ],
-                           'systemStatus' => true,
-                       ])
-            ->willReturn(0);
+            ->__invoke(
+                [
+                    'uId'       => '700000004444',
+                    'dob'       => '1980-03-01',
+                    'firstname' => 'Attorneythree',
+                    'surname'   => 'Person',
+                    'addresses' => [ // multiple addresses
+                        [
+                            'postcode' => 'Ab1 2Cd'
+                        ],
+                        [
+                            'postcode' => 'Bc2 3Df'
+                        ]
+                    ],
+                    'systemStatus' => true,
+                ]
+            )->willReturn(0);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke([
-                           'uId'       => '700000001234',
-                           'dob'       => '1980-03-01',
-                           'firstname' => 'Test',
-                           'surname'   => 'Testing',
-                           'addresses' => [
-                               [
-                                   'postcode' => 'Ab1 2Cd'
-                               ]
-                           ],
-                           'systemStatus' => true,
-                       ])
-            ->willReturn(0); // active attorney
+            ->__invoke(
+                [
+                    'uId'       => '700000001234',
+                    'dob'       => '1980-03-01',
+                    'firstname' => 'Test',
+                    'surname'   => 'Testing',
+                    'addresses' => [
+                        [
+                            'postcode' => 'Ab1 2Cd'
+                        ]
+                    ],
+                    'systemStatus' => true,
+                ]
+            )->willReturn(0); // active attorney
 
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
@@ -177,8 +181,20 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 [
-                    'actor-id' => '700000001234', // successful match for attorney
-                    'lpa-id'   => '700000012345'
+                    'actor'     => [
+                        'uId'       => '700000001234',
+                        'dob'       => '1980-03-01',
+                        'firstname' => 'Test',
+                        'surname'   => 'Testing',
+                        'addresses' => [
+                            [
+                                'postcode' => 'Ab1 2Cd'
+                            ]
+                        ],
+                        'systemStatus' => true,
+                    ],
+                    'role' => 'attorney', // successful match for attorney
+                    'lpa-id'    => '700000012345'
                 ],
                 [
                     'dob'         => '1980-03-01',
@@ -189,8 +205,19 @@ class FindActorInLpaTest extends TestCase
             ],
             [
                 [
-                    'actor-id' => '700000001111', // successful match for donor
-                    'lpa-id'   => '700000012345'
+                    'actor'     => [
+                        'uId'       => '700000001111',
+                        'dob'       => '1975-10-05',
+                        'firstname' => 'Donor',
+                        'surname'   => 'Person',
+                        'addresses' => [
+                            [
+                                'postcode' => 'PY1 3Kd'
+                            ]
+                        ]
+                    ],
+                    'role' => 'donor', // successful match for donor
+                    'lpa-id'    => '700000012345'
                 ],
                 [
                     'dob'         => '1975-10-05',

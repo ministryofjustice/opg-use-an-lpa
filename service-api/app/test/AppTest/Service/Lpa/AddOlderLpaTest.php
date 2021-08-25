@@ -11,6 +11,7 @@ use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
@@ -35,21 +36,58 @@ class AddOlderLpaTest extends TestCase
     /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
 
+    /** @var ObjectProphecy|OlderLpaService */
+    private $olderLpaServiceProphecy;
+
     private string $userId;
     private string $lpaUid;
-    private string $actorUid;
+    private array $dataToMatch;
+    private array $resolvedActor;
+    private Lpa $lpa;
+    private array $lpaData;
 
     public function setUp(): void
     {
         $this->findActorInLpaProphecy = $this->prophesize(FindActorInLpa::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->lpaAlreadyAddedProphecy = $this->prophesize(LpaAlreadyAdded::class);
+        $this->olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
         $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
-        $this->actorUid = '700000055554';
+
+        $this->lpa = $this->older_lpa_get_by_uid_response();
+        $this->lpaData = $this->lpa->getData();
+
+        $this->dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester', // lpa attorney
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
+        ];
+
+        $this->resolvedActor = [
+            'lpa-id'     => $this->lpaUid,
+            'caseSubtype' => 'pfa',
+            'actor'     => $this->lpaData['attorneys'][1],
+            'role'      => 'attorney',
+            'attorney'       => [
+                'uId'         => $this->lpaData['attorneys'][1]['uId'],
+                'firstname'   => $this->lpaData['attorneys'][1]['firstname'],
+                'middlenames' => $this->lpaData['attorneys'][1]['middlenames'],
+                'surname'     => $this->lpaData['attorneys'][1]['surname'],
+            ],
+            'donor'       => [
+                'uId'         => $this->lpaData['donor']['uId'],
+                'firstname'   => 'Donor',
+                'middlenames' => 'Example',
+                'surname'     => 'Person',
+            ]
+        ];
     }
 
     protected function getSut(): AddOlderLpa
@@ -58,15 +96,75 @@ class AddOlderLpaTest extends TestCase
             $this->findActorInLpaProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
             $this->lpaAlreadyAddedProphecy->reveal(),
+            $this->olderLpaServiceProphecy->reveal(),
             $this->validateOlderLpaRequirementsProphecy->reveal(),
             $this->loggerProphecy->reveal()
         );
     }
 
     /** @test */
-    public function checks_if_lpa_already_added_and_throws_exception_if_yes()
+    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
-        $responseData = [
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpaData)
+            ->willReturn(true);
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($this->resolvedActor);
+
+        $this->olderLpaServiceProphecy
+            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->willReturn(null);
+
+        $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+
+        $this->assertEquals($this->lpaUid, $result['lpa-id']);
+        $this->assertEquals($this->lpaData['donor']['uId'], $result['donor']['uId']);
+        $this->assertEquals($this->lpaData['donor']['firstname'], $result['donor']['firstname']);
+        $this->assertEquals($this->lpaData['donor']['middlenames'], $result['donor']['middlenames']);
+        $this->assertEquals($this->lpaData['donor']['surname'], $result['donor']['surname']);
+        $this->assertEquals($this->lpaData['caseSubtype'], $result['caseSubtype']);
+        $this->assertEquals($this->lpaData['attorneys'][1], $result['actor']);
+        $this->assertEquals('attorney', $result['role']);
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_already_added()
+    {
+        $alreadyAddedData = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'qwerty-54321'
+        ];
+
+        $expectedException = new BadRequestException('LPA already added', $alreadyAddedData);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn($alreadyAddedData);
+
+        $this->expectExceptionObject($expectedException);
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested()
+    {
+        $alreadyAddedData = [
             'donor'         => [
                 'uId'           => '12345',
                 'firstname'     => 'Example',
@@ -75,116 +173,84 @@ class AddOlderLpaTest extends TestCase
             ],
             'caseSubtype' => 'hw',
             'lpaActorToken' => 'qwerty-54321',
+            'notActivated'  => true
         ];
-
-        $expectedException = new BadRequestException('LPA already added', $responseData);
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn($responseData);
-
-        $this->expectExceptionObject($expectedException);
-
-        $this->getSut()->validateRequest($this->userId, ['reference_number' => $this->lpaUid]);
-    }
-
-    /** @test */
-    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
-    {
-        $dataToMatch = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => '1980-03-01',
-            'first_names'           => 'Test Tester',
-            'last_name'             => 'Testing',
-            'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => false,
-        ];
-
-        $lpa = $this->older_lpa_get_by_uid_response();
-
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn();
+            ->willReturn($alreadyAddedData);
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
-            ->willReturn($lpa);
+            ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->__invoke($this->lpaData)
             ->willReturn(true);
 
         $this->findActorInLpaProphecy
-            ->__invoke($lpa->getData(), $dataToMatch)
-            ->willReturn(
-                [
-                    'actor-id'    => $this->actorUid,
-                    'lpa-id'     => $this->lpaUid,
-                    'donor'       => [
-                        'uId'         => '700000001111',
-                        'firstname'   => 'Donor',
-                        'middlenames' => 'Example',
-                        'surname'     => 'Person',
-                    ],
-                    'caseSubtype' => 'pfa'
-                ]
-            );
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($this->resolvedActor);
 
-        $result = $this->getSut()->validateRequest($this->userId, $dataToMatch);
+        $expectedException = new BadRequestException('LPA already requested', $alreadyAddedData);
 
-        $this->assertEquals($this->actorUid, $result['actor-id']);
-        $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals($lpa->getData()['donor']['uId'], $result['donor']['uId']);
-        $this->assertEquals($lpa->getData()['donor']['firstname'], $result['donor']['firstname']);
-        $this->assertEquals($lpa->getData()['donor']['middlenames'], $result['donor']['middlenames']);
-        $this->assertEquals($lpa->getData()['donor']['surname'], $result['donor']['surname']);
-        $this->assertEquals($lpa->getData()['caseSubtype'], $result['caseSubtype']);
+        $this->expectExceptionObject($expectedException);
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_already_added()
+    public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true()
     {
-        $dataToMatch = [
-            'reference_number' => $this->lpaUid,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd'
+        $this->dataToMatch['force_activation_key'] = true;
+
+        $alreadyAddedData = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+            'lpaActorToken' => 'qwerty-54321',
+            'notActivated'  => true
         ];
 
-        $expectedException = new BadRequestException(
-            'Lpa already added',
-            [
-                'donor'         => [
-                    'uId'           => '12345',
-                    'firstname'     => 'Example',
-                    'middlenames'   => 'Donor',
-                    'surname'       => 'Person',
-                ],
-                'caseSubtype' => 'hw',
-                'lpaActorToken' => 'qwerty-54321'
+        $expectedResponse = [
+            'lpa-id'     => $this->lpaUid,
+            'caseSubtype' => 'pfa',
+            'actor'     => $this->lpaData['donor'],
+            'role'      => 'donor',
+            'donor'       => [
+                'uId'         => $this->lpaData['donor']['uId'],
+                'firstname'   => 'Donor',
+                'middlenames' => 'Example',
+                'surname'     => 'Person',
             ]
-        );
+        ];
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
-            ->willThrow($expectedException);
+            ->willReturn($alreadyAddedData);
 
-        $this->expectExceptionObject($expectedException);
-        $this->getSut()->validateRequest($this->userId, $dataToMatch);
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpaData)
+            ->willReturn(true);
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($expectedResponse);
+
+        $response = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_lpa_not_found()
     {
-        $dataToMatch = [
-            'reference_number' => $this->lpaUid,
-            'dob'              => '1980-03-01',
-            'first_names'      => 'Test Tester',
-            'last_name'        => 'Testing',
-            'postcode'         => 'Ab1 2Cd'
-        ];
-
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->shouldBeCalled()
@@ -198,13 +264,13 @@ class AddOlderLpaTest extends TestCase
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
         $this->expectExceptionMessage('LPA not found');
 
-        $this->getSut()->validateRequest($this->userId, $dataToMatch);
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
     {
-        $lpa = new Lpa(
+        $invalidLpa = new Lpa(
             [
                 'uId'               => $this->lpaUid,
                 'registrationDate'  => '2019-08-31',
@@ -213,15 +279,6 @@ class AddOlderLpaTest extends TestCase
             new DateTime()
         );
 
-        $dataToMatch = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => '1980-03-01',
-            'first_names'           => 'Test Tester',
-            'last_name'             => 'Testing',
-            'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => false,
-        ];
-
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->shouldBeCalled()
@@ -229,17 +286,17 @@ class AddOlderLpaTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
-            ->willReturn($lpa);
+            ->willReturn($invalidLpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->__invoke($invalidLpa->getData())
             ->willReturn(false);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA not eligible due to registration date');
 
-        $this->getSut()->validateRequest($this->userId, $dataToMatch);
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
     /** @test */
@@ -254,8 +311,6 @@ class AddOlderLpaTest extends TestCase
             'force_activation_key'  => false,
         ];
 
-        $lpa = $this->older_lpa_get_by_uid_response();
-
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->shouldBeCalled()
@@ -263,10 +318,10 @@ class AddOlderLpaTest extends TestCase
 
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
-            ->willReturn($lpa);
+            ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->__invoke($this->lpaData)
             ->willReturn(true);
 
         $this->expectException(BadRequestException::class);
@@ -274,6 +329,74 @@ class AddOlderLpaTest extends TestCase
         $this->expectExceptionMessage('LPA details do not match');
 
         $this->getSut()->validateRequest($this->userId, $dataToMatch);
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key()
+    {
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpaData)
+            ->willReturn(true);
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($this->resolvedActor);
+
+        $this->olderLpaServiceProphecy
+            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->willReturn(new DateTime());
+
+        $expectedException = new BadRequestException(
+            'LPA has an activation key already',
+            [
+                'donor'         => $this->resolvedActor['donor'],
+                'caseSubtype'   => $this->resolvedActor['caseSubtype']
+            ]
+        );
+
+        $this->expectExceptionObject($expectedException);
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true()
+    {
+        $this->dataToMatch['force_activation_key'] = true;
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpaData)
+            ->willReturn(true);
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($this->resolvedActor);
+
+        $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+
+        $this->assertEquals($this->lpaUid, $result['lpa-id']);
+        $this->assertEquals($this->lpaData['donor']['uId'], $result['donor']['uId']);
+        $this->assertEquals($this->lpaData['donor']['firstname'], $result['donor']['firstname']);
+        $this->assertEquals($this->lpaData['donor']['middlenames'], $result['donor']['middlenames']);
+        $this->assertEquals($this->lpaData['donor']['surname'], $result['donor']['surname']);
+        $this->assertEquals($this->lpaData['caseSubtype'], $result['caseSubtype']);
+        $this->assertEquals($this->lpaData['attorneys'][1], $result['actor']);
+        $this->assertEquals('attorney', $result['role']);
     }
 
     /**
@@ -297,7 +420,7 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $attorney2 = [
-            'uId'       => $this->actorUid,
+            'uId'       => '700000055554',
             'dob'       => '1980-03-01',
             'firstname' => 'Test',
             'surname'   => 'Testing',
