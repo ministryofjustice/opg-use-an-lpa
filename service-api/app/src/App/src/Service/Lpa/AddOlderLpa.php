@@ -60,6 +60,19 @@ class AddOlderLpa
     {
         // Check if it's been added to the users account already
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number'])) {
+            if (array_key_exists('notActivated', $lpaAddedData)) {
+                $this->logger->notice(
+                    'User {id} attempted to request a key for the LPA {uId} which they have already requested',
+                    [
+                        'id' => $userId,
+                        'uId' => $matchData['reference_number'],
+                    ]
+                );
+                throw new BadRequestException('LPA already requested', [
+                    'donor'         => $lpaAddedData['donor'],
+                    'caseSubtype'   => $lpaAddedData['caseSubtype']
+                ]); // create new event code
+            }
             $this->logger->notice(
                 'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                 [
