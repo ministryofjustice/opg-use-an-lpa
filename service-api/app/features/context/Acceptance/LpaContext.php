@@ -2455,9 +2455,7 @@ class LpaContext implements Context
     public function iRequestForANewActivationKeyAgain()
     {
         //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
+        $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2615,6 +2613,68 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I provide the attorney details from a valid paper LPA document$/
+     */
+    public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument()
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(new Result([]));
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa->uId)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'  => $this->lpa->uId,
+                'first_names'       => $this->lpa->attorneys[0]->firstname,
+                'last_name'         => $this->lpa->attorneys[0]->surname,
+                'dob'               => $this->lpa->attorneys[0]->dob,
+                'postcode'          => $this->lpa->attorneys[0]->addresses[0]->postcode,
+                'force_activation_key' => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $expectedResponse = [
+            'actor'     => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'role'      => 'attorney',
+            'lpa-id'    => $this->lpa->uId,
+            'caseSubtype'   => $this->lpa->caseSubtype,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
+            'attorney'         => [
+                'uId'           => $this->lpa->attorneys[0]->uId,
+                'firstname'     => $this->lpa->attorneys[0]->firstname,
+                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
+                'surname'       => $this->lpa->attorneys[0]->surname
+            ]
+        ];
+
+        assertEquals($expectedResponse, $this->getResponseAsJson());
+    }
+
+    /**
      * @Then /^I am shown the details of an LPA$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      */
@@ -2630,12 +2690,7 @@ class LpaContext implements Context
         $this->actorId = '700000000799';
 
         //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result(
-                [
-                ]
-            )
-        );
+        $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2668,15 +2723,16 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
+            'actor'     => json_decode(json_encode($this->lpa->donor), true),
+            'role'      => 'donor',
             'lpa-id'    => $this->lpaUid,
-            'actor-id'  => $this->actorId,
+            'caseSubtype'    => $this->lpa->caseSubtype,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype'    => $this->lpa->caseSubtype,
+            ]
         ];
 
         assertArrayNotHasKey('attorney', $this->getResponseAsJson());
@@ -2688,76 +2744,6 @@ class LpaContext implements Context
      */
     public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        $this->lpaUid = '700000000047';
-        $this->userFirstnames = 'jean';
-        $this->userSurname = 'Sanderson';
-        $this->userDob = '1990-05-04';
-        $this->userPostCode = 'DN37 5SH';
-        $this->actorId = '700000000815';
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result(
-                [
-                ]
-            )
-        );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
-
-        // API call to request an activation key
-        $this->apiPost(
-            '/v1/older-lpa/validate',
-            [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
-            ],
-            [
-                'user-token' => $this->userId,
-            ]
-        );
-
-        $expectedResponse = [
-            'lpa-id'    => $this->lpaUid,
-            'actor-id'  => $this->actorId,
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'attorney'         => [
-                'uId'           => $this->lpa->attorneys[0]->uId,
-                'firstname'     => $this->lpa->attorneys[0]->firstname,
-                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
-                'surname'       => $this->lpa->attorneys[0]->surname,
-            ],
-            'caseSubtype'    => $this->lpa->caseSubtype,
-        ];
-
-        assertArrayHasKey('lpa-id', $this->getResponseAsJson());
-        assertArrayHasKey('actor-id', $this->getResponseAsJson());
-        assertArrayHasKey('caseSubtype', $this->getResponseAsJson());
-        assertArrayHasKey('donor', $this->getResponseAsJson());
-        assertArrayHasKey('attorney', $this->getResponseAsJson());
-        assertEquals($expectedResponse, $this->getResponseAsJson());
+        // Not needed for this context
     }
 }

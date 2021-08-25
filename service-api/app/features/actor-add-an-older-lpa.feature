@@ -77,16 +77,16 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance @integration @ff:allow_older_lpas:true
   Scenario: The user is not shown the attorney details being a donor on the lpa
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the attorney details
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance @integration @ff:allow_older_lpas:true
   Scenario: The user is not shown the donor details being an attorney on the lpa
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper LPA document
+    When I provide the attorney details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the attorney on the LPA I am shown the donor details
