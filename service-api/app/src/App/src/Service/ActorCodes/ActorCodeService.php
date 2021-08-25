@@ -46,19 +46,46 @@ class ActorCodeService
         $this->resolveActor = $resolveActor;
     }
 
-    public function removeTTLFromRequest($userId, $lpaId)
+    /**
+     * @param string $userId
+     * @param array  $details
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function addLpaRecord(string $userId, array $details): string
+    {
+        do {
+            $added = false;
+
+            $id = Uuid::uuid4()->toString();
+
+            try {
+                $this->userLpaActorMapRepository->create(
+                    $id,
+                    $userId,
+                    $details['lpa']['uId'],
+                    (string)$details['actor']['details']['id']
+                );
+
+                $added = true;
+            } catch (KeyCollisionException $e) {
+                // Allows the loop to repeat with a new ID.
+            }
+        } while (!$added);
+        return $id;
+    }
+
+    public function removeTTLFromRequest($userId, $lpaId): ?string
     {
         $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
         $lpaUids = array_column($lpas, 'Id', 'SiriusUid');
 
-        if (in_array($lpaId, $lpaUids)) {
-            return;
+        if (!array_key_exists($lpaId, $lpaUids)) {
+            return null;
         }
-
-        $this->logger->info($lpaUids[$lpaId]);
-
-        $this->userLpaActorMapRepository->removeTTL($lpaUids[$lpaId]);
+        $this->userLpaActorMapRepository->removeActivateBy($lpaUids[$lpaId]);
 
         return $lpaUids[$lpaId];
     }
@@ -117,36 +144,29 @@ class ActorCodeService
         }
 
         //---
-
         $id = null;
+        $lpaId = $details['lpa']['uId'];
 
-        do {
-            $added = false;
-
-            $id = Uuid::uuid4()->toString();
-
+        if ($this->lpaAlreadyInAccount($userId, $lpaId)) {
+            $id = $this->removeTTLFromRequest($userId, $lpaId);
+        } else {
+            $id = $this->addLpaRecord($userId, $details);
             try {
-                $this->userLpaActorMapRepository->create(
-                    $id,
-                    $userId,
-                    $details['lpa']['uId'],
-                    (string)$details['actor']['details']['id']
-                );
-
-                $added = true;
-            } catch (KeyCollisionException $e) {
-                // Allows the loop to repeat with a new ID.
+                $this->codeValidator->flagCodeAsUsed($code);
+            } catch (ActorCodeMarkAsUsedException $e) {
+                $this->userLpaActorMapRepository->delete($id);
             }
-        } while (!$added);
-
-        //----
-
-        try {
-            $this->codeValidator->flagCodeAsUsed($code);
-        } catch (ActorCodeMarkAsUsedException $e) {
-            $this->userLpaActorMapRepository->delete($id);
         }
 
         return $id;
+    }
+
+    private function lpaAlreadyInAccount(string $userId, $lpaId): bool
+    {
+        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+
+        $lpaIds = array_column($lpas, 'SiriusUid');
+
+        return in_array($lpaId, $lpaIds);
     }
 }
