@@ -148,6 +148,10 @@ class LpaService
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
+            if (array_key_exists('ActivateBy', $item)) {
+                continue;
+            }
+
             $lpa = $lpas[$item['SiriusUid']];
             $lpaData = $lpa->getData();
             $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
