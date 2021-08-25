@@ -411,7 +411,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActivatedLpasForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
@@ -444,7 +444,7 @@ class LpaServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn([]);
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActivatedLpasForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(0, $result);
@@ -541,7 +541,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActivatedLpasForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);

@@ -45,57 +45,7 @@ class LpaAlreadyAdded
      */
     public function __invoke(string $userId, string $lpaUid): ?array
     {
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-
-            $savedLpaRecords = $this->userLpaActorMapRepository->getUsersLpas($userId);
-
-            foreach($savedLpaRecords as $record) {
-                if ($record['SiriusUid'] === $lpaUid && !array_key_exists('ActivateBy', $record)) {
-                    $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
-
-                    // a count of a null array will be 0
-                    if (count($lpa) === 0) {
-                        return null;
-                    }
-
-                    $this->logger->info(
-                        'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
-                        [
-                            'id' => $userId,
-                            'uId' => $lpaUid
-                        ]
-                    );
-
-                    return [
-                        'donor' => [
-                            'uId'         => $lpa['lpa']['donor']['uId'],
-                            'firstname'   => $lpa['lpa']['donor']['firstname'],
-                            'middlenames' => $lpa['lpa']['donor']['middlenames'],
-                            'surname'     => $lpa['lpa']['donor']['surname'],
-                        ],
-                        'caseSubtype'   => $lpa['lpa']['caseSubtype'],
-                        'lpaActorToken' => $record['Id']
-                    ];
-                }
-            }
-
-            return null;
-
-        } else {
-            return $this->preSaveOfRequestFeature($userId, $lpaUid);
-        }
-    }
-
-
-    /**
-     * @param string $userId
-     * @param string $lpaUid
-     *
-     * @return array|null
-     */
-    private function preSaveOfRequestFeature(string $userId, string $lpaUid): ?array
-    {
-        $lpasAdded = $this->lpaService->getAllForUser($userId);
+        $lpasAdded = $this->lpaService->getAllActivatedLpasForUser($userId);
 
         foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
             if ($lpaData['lpa']['uId'] === $lpaUid) {
@@ -107,18 +57,17 @@ class LpaAlreadyAdded
                     ]
                 );
                 return [
-                    'donor'         => [
-                        'uId'           => $lpaData['lpa']['donor']['uId'],
-                        'firstname'     => $lpaData['lpa']['donor']['firstname'],
-                        'middlenames'   => $lpaData['lpa']['donor']['middlenames'],
-                        'surname'       => $lpaData['lpa']['donor']['surname'],
+                    'donor' => [
+                        'uId' => $lpaData['lpa']['donor']['uId'],
+                        'firstname' => $lpaData['lpa']['donor']['firstname'],
+                        'middlenames' => $lpaData['lpa']['donor']['middlenames'],
+                        'surname' => $lpaData['lpa']['donor']['surname'],
                     ],
-                    'caseSubtype'   => $lpaData['lpa']['caseSubtype'],
+                    'caseSubtype' => $lpaData['lpa']['caseSubtype'],
                     'lpaActorToken' => $userLpaActorToken
                 ];
             }
         }
-
         return null;
     }
 }

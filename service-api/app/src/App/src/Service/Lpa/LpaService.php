@@ -131,7 +131,7 @@ class LpaService
      * @param string $userId User account ID to fetch LPAs for
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllForUser(string $userId): array
+    public function getAllActivatedLpasForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
@@ -148,7 +148,7 @@ class LpaService
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
-            if (array_key_exists('ActivateBy', $item)) {
+            if (array_key_exists('ActivateBy', $item) ) {
                 continue;
             }
 

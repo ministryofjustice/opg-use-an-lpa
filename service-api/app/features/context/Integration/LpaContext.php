@@ -390,7 +390,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActivatedLpasForUser($this->userId);
 
         assertArrayHasKey($this->userLpaActorToken, $lpa);
         assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -527,7 +527,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActivatedLpasForUser($this->userId);
 
         assertArrayHasKey($this->userLpaActorToken, $lpa);
         assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -1598,7 +1598,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAHasNotBeenAdded()
     {
-        $lpas = $this->lpaService->getAllForUser($this->userId);
+        $lpas = $this->lpaService->getAllActivatedLpasForUser($this->userId);
 
         assertEmpty($lpas);
     }
@@ -1840,7 +1840,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActivatedLpasForUser($this->userId);
 
         assertEmpty($lpa);
     }
