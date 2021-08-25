@@ -45,6 +45,11 @@ class EventCodes
     public const OLDER_LPA_ALREADY_ADDED = 'OLDER_LPA_ALREADY_ADDED';
 
     /**
+     * An activation key has already been requested for this LPA
+     */
+    public const OLDER_LPA_ALREADY_REQUESTED = 'OLDER_LPA_ALREADY_REQUESTED';
+
+    /**
      * LPA not found
      */
     public const OLDER_LPA_NOT_FOUND = 'OLDER_LPA_NOT_FOUND';
@@ -74,6 +79,11 @@ class EventCodes
      * Older LPA match and letter requested
      */
     public const OLDER_LPA_SUCCESS = 'OLDER_LPA_SUCCESS';
+
+    /**
+     * An LPA force requesting another activation key again
+     */
+    public const OLDER_LPA_FORCE_ACTIVATION_KEY = 'OLDER_LPA_FORCE_ACTIVATION_KEY';
 
     /**
      * Lpa summary has been downloaded
@@ -114,9 +124,4 @@ class EventCodes
      * An LPA was removed from a users account
      */
     public const LPA_REMOVED = 'LPA_REMOVED';
-
-    /**
-     * An LPA force requesting another activation key again
-     */
-    public const OLDER_LPA_FORCE_ACTIVATION_KEY = 'OLDER_LPA_FORCE_ACTIVATION_KEY';
 }
