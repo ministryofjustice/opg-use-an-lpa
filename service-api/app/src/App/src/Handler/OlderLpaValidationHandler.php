@@ -46,6 +46,7 @@ class OlderLpaValidationHandler implements RequestHandlerInterface
         }
 
         $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
+
         return new JsonResponse($lpaMatchResponse, 200);
     }
 }

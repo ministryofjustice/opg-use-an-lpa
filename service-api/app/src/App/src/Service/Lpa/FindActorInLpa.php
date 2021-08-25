@@ -19,7 +19,7 @@ class FindActorInLpa
 
     public function __invoke(array $lpa, array $matchData): ?array
     {
-        $actorId = null;
+        $actor = null;
         $lpaId = $lpa['uId'];
 
         if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
@@ -28,7 +28,8 @@ class FindActorInLpa
                     $actorMatchResponse = $this->checkForActorMatch($attorney, $matchData);
                     // if not null, an actor match has been found
                     if ($actorMatchResponse !== null) {
-                        $actorId = $actorMatchResponse['uId'];
+                        $actor = $actorMatchResponse;
+                        $role = 'attorney';
                         break;
                     }
                 } else {
@@ -44,20 +45,22 @@ class FindActorInLpa
         }
 
         // If not an attorney, check if they're the donor.
-        if ($actorId === null && isset($lpa['donor']) && is_array($lpa['donor'])) {
+        if ($actor === null && isset($lpa['donor']) && is_array($lpa['donor'])) {
             $donorMatchResponse = $this->checkForActorMatch($lpa['donor'], $matchData);
 
             if ($donorMatchResponse !== null) {
-                $actorId = $donorMatchResponse['uId'];
+                $actor = $donorMatchResponse;
+                $role = 'donor';
             }
         }
 
-        if (is_null($actorId)) {
+        if (is_null($actor)) {
             return null;
         }
 
         return [
-            'actor-id' => $actorId,
+            'actor' => $actor,
+            'role'  => $role,
             'lpa-id' => $lpaId,
         ];
     }

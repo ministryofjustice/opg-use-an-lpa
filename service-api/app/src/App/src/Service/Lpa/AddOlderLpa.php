@@ -7,6 +7,7 @@ namespace App\Service\Lpa;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use Psr\Log\LoggerInterface;
+use DateTime;
 
 class AddOlderLpa
 {
@@ -15,6 +16,7 @@ class AddOlderLpa
     private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
     private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
+    private OlderLpaService $olderLpaService;
 
     /**
      * @param FindActorInLpa               $findActorInLpa
@@ -22,6 +24,7 @@ class AddOlderLpa
      * @param LpaAlreadyAdded              $lpaAlreadyAdded
      * @param ValidateOlderLpaRequirements $validateOlderLpaRequirements
      * @param LoggerInterface              $logger
+     * @param OlderLpaService              $olderLpaService
      *
      * @codeCoverageIgnore
      */
@@ -29,12 +32,14 @@ class AddOlderLpa
         FindActorInLpa $findActorInLpa,
         LpaService $lpaService,
         LpaAlreadyAdded $lpaAlreadyAdded,
+        OlderLpaService $olderLpaService,
         ValidateOlderLpaRequirements $validateOlderLpaRequirements,
         LoggerInterface $logger
     ) {
         $this->findActorInLpa = $findActorInLpa;
         $this->lpaService = $lpaService;
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
+        $this->olderLpaService = $olderLpaService;
         $this->validateOlderLpaRequirements = $validateOlderLpaRequirements;
         $this->logger = $logger;
     }
@@ -96,6 +101,16 @@ class AddOlderLpa
             throw new BadRequestException('LPA details do not match');
         }
 
+        // Attach donor/attorney data to be used by the front
+        if ($resolvedActor['role'] === 'attorney') {
+            $resolvedActor['attorney'] = [
+                'uId'           => $resolvedActor['actor']['uId'],
+                'firstname'     => $resolvedActor['actor']['firstname'],
+                'middlenames'   => $resolvedActor['actor']['middlenames'],
+                'surname'       => $resolvedActor['actor']['surname']
+            ];
+        }
+
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
         $resolvedActor['donor'] = [
             'uId'           => $lpaData['donor']['uId'],
@@ -103,6 +118,24 @@ class AddOlderLpa
             'middlenames'   => $lpaData['donor']['middlenames'],
             'surname'       => $lpaData['donor']['surname'],
         ];
+
+        // Checks if the actor already has an active activation key. If forced ignore
+        if (!$matchData['force_activation_key']) {
+            $hasActivationCode = $this->olderLpaService->hasActivationCode(
+                $resolvedActor['lpa-id'],
+                $resolvedActor['actor']['uId']
+            );
+
+            if ($hasActivationCode instanceof DateTime) {
+                throw new BadRequestException(
+                    'LPA has an activation key already',
+                    [
+                        'donor'         => $resolvedActor['donor'],
+                        'caseSubtype'   => $resolvedActor['caseSubtype']
+                    ]
+                );
+            }
+        }
 
         return $resolvedActor;
     }
