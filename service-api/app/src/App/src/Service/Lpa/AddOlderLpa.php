@@ -60,27 +60,16 @@ class AddOlderLpa
     {
         // Check if it's been added to the users account already
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number'])) {
-            if (array_key_exists('notActivated', $lpaAddedData)) {
+            if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
-                    'User {id} attempted to request a key for the LPA {uId} which they have already requested',
+                    'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                     [
                         'id' => $userId,
                         'uId' => $matchData['reference_number'],
                     ]
                 );
-                throw new BadRequestException('LPA already requested', [
-                    'donor'         => $lpaAddedData['donor'],
-                    'caseSubtype'   => $lpaAddedData['caseSubtype']
-                ]); // create new event code
+                throw new BadRequestException('LPA already added', $lpaAddedData);
             }
-            $this->logger->notice(
-                'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
-                [
-                    'id' => $userId,
-                    'uId' => $matchData['reference_number'],
-                ]
-            );
-            throw new BadRequestException('LPA already added', $lpaAddedData);
         }
 
         // Fetch the LPA from the LpaService
@@ -132,8 +121,25 @@ class AddOlderLpa
             'surname'       => $lpaData['donor']['surname'],
         ];
 
-        // Checks if the actor already has an active activation key. If forced ignore
+        // Checks if the actor already has an active activation key or has requested one. If forced ignore
         if (!$matchData['force_activation_key']) {
+            if (isset($lpaAddedData['notActivated'])) { // array_key_exists breaks if $lpaAddedData is null
+                $this->logger->notice(
+                    'User {id} attempted to request a key for the LPA {uId} which they have already requested',
+                    [
+                        'id' => $userId,
+                        'uId' => $matchData['reference_number'],
+                    ]
+                );
+                throw new BadRequestException(
+                    'LPA already requested',
+                    [
+                        'donor'         => $lpaAddedData['donor'],
+                        'caseSubtype'   => $lpaAddedData['caseSubtype']
+                    ]
+                );
+            }
+
             $hasActivationCode = $this->olderLpaService->hasActivationCode(
                 $resolvedActor['lpa-id'],
                 $resolvedActor['actor']['uId']
