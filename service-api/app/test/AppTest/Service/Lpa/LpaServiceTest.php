@@ -9,16 +9,13 @@ use App\DataAccess\{ApiGateway\ActorCodes,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{ActorCode, Lpa};
-use App\Exception\ApiException;
-use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -353,7 +350,7 @@ class LpaServiceTest extends TestCase
     }
 
     //-------------------------------------------------------------------------
-    // Test getAllForUser()
+    // Test getAllActivatedLpasForUser()
 
     private function init_valid_get_all_users()
     {
@@ -373,6 +370,13 @@ class LpaServiceTest extends TestCase
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
                 'Added'   => new DateTime('now')
+            ],
+            [
+                'Id' => 'token-3',
+                'SiriusUid' => 'uid-3',
+                'ActorId' => 3,
+                'Added' => new DateTimeImmutable('now'),
+                'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp()
             ]
         ];
 
