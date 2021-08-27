@@ -47,25 +47,27 @@ class LpaAlreadyAdded
     {
         $lpasAdded = $this->lpaService->getAllActivatedLpasForUser($userId);
 
-        foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
-            if ($lpaData['lpa']['uId'] === $lpaUid) {
-                $this->logger->info(
-                    'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
-                    [
-                        'id' => $userId,
-                        'uId' => $lpaUid
-                    ]
-                );
-                return [
-                    'donor' => [
-                        'uId' => $lpaData['lpa']['donor']['uId'],
-                        'firstname' => $lpaData['lpa']['donor']['firstname'],
-                        'middlenames' => $lpaData['lpa']['donor']['middlenames'],
-                        'surname' => $lpaData['lpa']['donor']['surname'],
-                    ],
-                    'caseSubtype' => $lpaData['lpa']['caseSubtype'],
-                    'lpaActorToken' => $userLpaActorToken
-                ];
+        if ($lpasAdded !== null) {
+            foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
+                if ($lpaData['lpa']['uId'] === $lpaUid) {
+                    $this->logger->info(
+                        'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
+                        [
+                            'id' => $userId,
+                            'uId' => $lpaUid
+                        ]
+                    );
+                    return [
+                        'donor' => [
+                            'uId' => $lpaData['lpa']['donor']['uId'],
+                            'firstname' => $lpaData['lpa']['donor']['firstname'],
+                            'middlenames' => $lpaData['lpa']['donor']['middlenames'],
+                            'surname' => $lpaData['lpa']['donor']['surname'],
+                        ],
+                        'caseSubtype' => $lpaData['lpa']['caseSubtype'],
+                        'lpaActorToken' => $userLpaActorToken
+                    ];
+                }
             }
         }
         return null;

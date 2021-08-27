@@ -138,7 +138,7 @@ class LpaAlreadyAddedTest extends TestCase
             );
 
         $this->lpaServiceProphecy
-            ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
+            ->getAllActivatedLpasForUser($this->userId)
             ->willReturn([]);
 
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
@@ -198,58 +198,5 @@ class LpaAlreadyAddedTest extends TestCase
             'caseSubtype' => 'hw',
             'lpaActorToken' => $this->userLpaActorToken
         ], $lpaAddedData);
-    }
-
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function returns_lpa_data_if_lpa_is_already_added()
-    {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
-        $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
-            ->willReturn(
-                [
-                    [
-                        'Id' => $this->userLpaActorToken,
-                        'SiriusUid' => $this->lpaUid,
-                    ],
-                ]
-            );
-
-        $this->lpaServiceProphecy
-            ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
-            ->willReturn(
-                [
-                    'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa' => [
-                        'uId' => $this->lpaUid,
-                        'caseSubtype' => 'hw',
-                        'donor' => [
-                            'uId' => '700000000444',
-                            'firstname'     => 'Another',
-                            'middlenames'   => '',
-                            'surname'       => 'Person',
-                        ],
-                    ],
-                ]
-            );
-
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
-        $this->assertEquals(
-            [
-                'donor' => [
-                    'uId'         => '700000000444',
-                    'firstname'   => 'Another',
-                    'middlenames' => '',
-                    'surname'     => 'Person',
-                ],
-                'caseSubtype' => 'hw',
-                'lpaActorToken' => $this->userLpaActorToken
-            ],
-            $lpaAddedData
-        );
     }
 }
