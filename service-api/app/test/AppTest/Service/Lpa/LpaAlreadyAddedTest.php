@@ -56,12 +56,9 @@ class LpaAlreadyAddedTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
-     * @covers ::preSaveOfRequestFeature
      */
-    public function returns_null_if_lpa_not_already_added_pre_feature()
+    public function returns_null_if_lpa_not_already_added_with_other_lpas_in_account()
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
-
         $this->lpaServiceProphecy
             ->getAllActivatedLpasForUser('12345')
             ->willReturn(
@@ -85,10 +82,8 @@ class LpaAlreadyAddedTest extends TestCase
      */
     public function returns_null_if_lpa_not_already_added()
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
-        $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
+        $this->lpaServiceProphecy
+            ->getAllActivatedLpasForUser($this->userId)
             ->willReturn([]);
 
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '700000000321');
@@ -99,33 +94,8 @@ class LpaAlreadyAddedTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function returns_null_if_lpa_added_but_not_active()
-    {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
-        $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
-            ->willReturn(
-                [
-                    [
-                        'SiriusUid' => $this->lpaUid,
-                        'ActivateBy' => (new \DateTimeImmutable('now'))->format('Y-m-d H:i:s'),
-                    ],
-                ]
-            );
-
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
-        $this->assertNull($lpaAddedData);
-    }
-
-    /**
-     * @test
-     * @covers ::__invoke
-     */
     public function returns_null_if_lpa_added_but_not_usable_found_in_api()
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy
             ->getUsersLpas($this->userId)
             ->willReturn(
@@ -148,12 +118,9 @@ class LpaAlreadyAddedTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
-     * @covers ::preSaveOfRequestFeature
      */
-    public function returns_lpa_data_if_lpa_is_already_added_pre_feature()
+    public function returns_lpa_data_if_lpa_is_already_added()
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
-
         $this->lpaServiceProphecy
             ->getAllActivatedLpasForUser($this->userId)
             ->willReturn(
