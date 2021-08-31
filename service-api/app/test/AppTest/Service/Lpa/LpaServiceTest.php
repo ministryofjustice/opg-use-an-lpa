@@ -431,6 +431,8 @@ class LpaServiceTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
 
         $lpa = array_pop($t->lpaResults);
+
+        array_pop($t->mapResults); //this is the request and should not be returned by the result of getActivatedLpas
         $map = array_pop($t->mapResults);
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
