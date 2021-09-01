@@ -95,7 +95,7 @@ class LpaAlreadyAdded
      */
     private function preSaveOfRequestFeature(string $userId, string $lpaUid): ?array
     {
-        $lpasAdded = $this->lpaService->getAllForUser($userId);
+        $lpasAdded = $this->lpaService->getAllForUser($userId, false);
 
         foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
             if ($lpaData['lpa']['uId'] === $lpaUid) {

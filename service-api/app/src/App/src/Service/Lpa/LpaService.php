@@ -128,13 +128,22 @@ class LpaService
     /**
      * Return all LPAs for the given user_id
      *
-     * @param string $userId User account ID to fetch LPAs for
+     * @param string $userId             User account ID to fetch LPAs for
+     * @param bool   $filterNotActivated Optional variable to filter LPAs if they are not activated. Defaults to true
+     *
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllForUser(string $userId): array
+    public function getAllForUser(string $userId, bool $filterNotActivated = true): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+
+        if ($filterNotActivated) {
+            $lpaActorMaps = array_filter($lpaActorMaps, function ($item) {
+                return !array_key_exists('ActivateBy', $item);
+            });
+        }
+
         $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
 
         if (empty($lpaUids)) {
