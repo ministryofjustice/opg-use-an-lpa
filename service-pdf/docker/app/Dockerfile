@@ -31,8 +31,11 @@ CMD ["google-chrome-stable"]
 WORKDIR /src/app
 
 COPY service-pdf/app .
+
 ENV PUPPETEER_SKIP_DOWNLOAD = true
 CMD [ "node", "-r", "esm", "src/server.js"]
+
+EXPOSE 80
 
 FROM production AS development
 
