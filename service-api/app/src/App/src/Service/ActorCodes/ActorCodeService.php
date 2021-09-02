@@ -151,12 +151,14 @@ class ActorCodeService
             $id = $this->removeTTLFromRequest($userId, $lpaId);
         } else {
             $id = $this->addLpaRecord($userId, $details);
-            try {
-                $this->codeValidator->flagCodeAsUsed($code);
-            } catch (ActorCodeMarkAsUsedException $e) {
-                $this->userLpaActorMapRepository->delete($id);
-            }
         }
+
+        try {
+            $this->codeValidator->flagCodeAsUsed($code);
+        } catch (ActorCodeMarkAsUsedException $e) {
+            $this->userLpaActorMapRepository->delete($id);
+        }
+
 
         return $id;
     }

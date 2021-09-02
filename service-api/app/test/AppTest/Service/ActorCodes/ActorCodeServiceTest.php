@@ -15,6 +15,7 @@ use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -91,12 +92,47 @@ class ActorCodeServiceTest extends TestCase
             '1'
         )->shouldBeCalled();
 
+
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
+
+
         $service = $this->getActorCodeService();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
 
         // We expect a uuid4 back.
         $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $result);
+    }
+
+    /** @test */
+    public function confirmation_succeeds_with_valid_details_ttl_removed(): void
+    {
+        $this->initValidParameterSet();
+
+        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+            ->willReturn('id-of-db-row')
+            ->shouldBeCalled();
+
+        $this->userLpaActorMapInterfaceProphecy->removeActivateBy('token-3')->shouldBeCalled();
+
+        $mapResults = [
+            [
+                'Id' => 'token-3',
+                'SiriusUid' => 'test-uid',
+                'ActorId' => 3,
+                'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
+                'Added'   => new DateTime('now')
+            ]
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn($mapResults)->shouldBeCalled();
+
+        $service = $this->getActorCodeService();
+
+        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+
+        // We expect a uuid4 back.
+        $this->assertEquals('token-3', $result);
     }
 
     /** @test */
@@ -132,6 +168,8 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
+
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
     }
 
@@ -166,6 +204,8 @@ class ActorCodeServiceTest extends TestCase
         });
 
         $service = $this->getActorCodeService();
+
+        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
 
