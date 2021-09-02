@@ -1480,6 +1480,8 @@ class LpaContext implements Context
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(new Result([]));
         // UserLpaActorMap::create
         $this->awsFixtures->append(
             new Result(
