@@ -322,7 +322,7 @@ class UserLpaActorMapTest extends TestCase
                    'S' => $userId
                ],
            ]
-       ]));
+        ]));
 
         $userLpaActorMaprepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
