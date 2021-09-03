@@ -95,7 +95,6 @@ class ActorCodeServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
 
-
         $service = $this->getActorCodeService();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');

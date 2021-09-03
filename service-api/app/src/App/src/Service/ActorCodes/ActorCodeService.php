@@ -76,18 +76,18 @@ class ActorCodeService
         return $id;
     }
 
-    public function removeTTLFromRequest($userId, $lpaId): ?string
+    /**
+     * Removes TTL from entry that is already inside the database
+     * @param array $lpaIds the LPA sirius IDs paired to their UID in the database
+     * @param string $lpaId the LPA id to remove the TTL from
+     *
+     * @return string|null returns the database ID of the LPA that has had it's TTL removed
+     */
+    private function removeTTLFromRequest(array $lpaIds, string $lpaId): ?string
     {
-        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $this->userLpaActorMapRepository->removeActivateBy($lpaIds[$lpaId]);
 
-        $lpaUids = array_column($lpas, 'Id', 'SiriusUid');
-
-        if (!array_key_exists($lpaId, $lpaUids)) {
-            return null;
-        }
-        $this->userLpaActorMapRepository->removeActivateBy($lpaUids[$lpaId]);
-
-        return $lpaUids[$lpaId];
+        return $lpaIds[$lpaId];
     }
 
     /**
@@ -147,8 +147,10 @@ class ActorCodeService
         $id = null;
         $lpaId = $details['lpa']['uId'];
 
-        if ($this->lpaAlreadyInAccount($userId, $lpaId)) {
-            $id = $this->removeTTLFromRequest($userId, $lpaId);
+        $lpas = $this->lpasInAccount($userId);
+
+        if (array_key_exists($lpaId, $lpas)) {
+            $id = $this->removeTTLFromRequest($lpas, $lpaId);
         } else {
             $id = $this->addLpaRecord($userId, $details);
         }
@@ -159,16 +161,18 @@ class ActorCodeService
             $this->userLpaActorMapRepository->delete($id);
         }
 
-
         return $id;
     }
 
-    private function lpaAlreadyInAccount(string $userId, $lpaId): bool
+    /**
+     * Gets all users LPAs Ids in account
+     * @param string $userId  Identification number of the user
+     *
+     * @return array an array with LPAUid as keys to database UUID values
+     */
+    private function lpasInAccount(string $userId): array
     {
         $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
-
-        $lpaIds = array_column($lpas, 'SiriusUid');
-
-        return in_array($lpaId, $lpaIds);
+        return array_column($lpas, 'Id', 'SiriusUid');
     }
 }
