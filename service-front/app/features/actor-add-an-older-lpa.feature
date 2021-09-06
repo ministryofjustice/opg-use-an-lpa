@@ -61,6 +61,15 @@ Feature: Add an older LPA
 
   # Older Older LPA Journey
 
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper LPA which I have already requested an activation key for
+    And I confirm the details I provided are correct
+    And I am told that I have an activation key for this LPA and where to find it
+    When I request for a new activation key again
+    Then I am told a new activation key is posted to the provided postcode
+
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
