@@ -110,3 +110,7 @@ resource "aws_route" "private" {
   nat_gateway_id         = element(aws_nat_gateway.nat.*.id, count.index)
 }
 
+
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_default_vpc.default.id
+}
