@@ -128,54 +128,33 @@ class LpaService
     /**
      * Return all LPAs for the given user_id
      *
-     * @param string $userId             User account ID to fetch LPAs for
-     * @param bool   $filterNotActivated Optional variable to filter LPAs if they are not activated. Defaults to true
-     *
+     * @param string $userId User account ID to fetch LPAs for
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllForUser(string $userId, bool $filterNotActivated = true): array
+    public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
-        if ($filterNotActivated) {
-            $lpaActorMaps = array_filter($lpaActorMaps, function ($item) {
-                return !array_key_exists('ActivateBy', $item);
-            });
-        }
+        $lpaActorMaps = array_filter($lpaActorMaps, function ($item) {
+            return !array_key_exists('ActivateBy', $item);
+        });
 
-        $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
+        return $this->lookupAndFormatLpas($lpaActorMaps);
+    }
 
-        if (empty($lpaUids)) {
-            return [];
-        }
+    /**
+     * Return all LPAs for the given user_id
+     *
+     * @param string $userId User account ID to fetch LPA and Requests for
+     * @return array An array of LPA data structures containing processed LPA data and metadata
+     */
+    public function getAllLpasAndRequestsForUser(string $userId): array
+    {
+        // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
+        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
-        // Return all the LPA details based on the Sirius Ids.
-        $lpas = $this->lpaRepository->lookup($lpaUids);
-
-        $result = [];
-
-        // Map the results...
-        foreach ($lpaActorMaps as $item) {
-            $lpa = $lpas[$item['SiriusUid']];
-            $lpaData = $lpa->getData();
-            $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
-
-            $added = $item['Added']->format('Y-m-d H:i:s');
-            unset($lpaData['original_attorneys']);
-
-            //Extract and return only LPA's where status is Registered or Cancelled
-            if (($this->isValidLpa)($lpaData)) {
-                $result[$item['Id']] = [
-                    'user-lpa-actor-token' => $item['Id'],
-                    'date' => $lpa->getLookupTime()->format('c'),
-                    'actor' => $actor,
-                    'lpa' => $lpaData,
-                    'added' => $added
-                ];
-            }
-        }
-        return $result;
+        return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
     /**
@@ -256,4 +235,45 @@ class LpaService
 
         return $lpaData;
     }
+
+    /**
+     * @param $lpaActorMaps Map of LPAs from Dynamo
+     *
+     * @return array an array with formatted LPA results
+     */
+    private function lookupAndFormatLpas($lpaActorMaps): array
+    {
+        $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
+
+        if (empty($lpaUids)) {
+            return [];
+        }
+
+        // Return all the LPA details based on the Sirius Ids.
+        $lpas = $this->lpaRepository->lookup($lpaUids);
+
+        $result = [];
+
+        // Map the results...
+        foreach ($lpaActorMaps as $item) {
+            $lpa = $lpas[$item['SiriusUid']];
+            $lpaData = $lpa->getData();
+            $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+
+            $added = $item['Added']->format('Y-m-d H:i:s');
+            unset($lpaData['original_attorneys']);
+
+            //Extract and return only LPA's where status is Registered or Cancelled
+            if (($this->isValidLpa)($lpaData)) {
+                $result[$item['Id']] = [
+                    'user-lpa-actor-token' => $item['Id'],
+                    'date' => $lpa->getLookupTime()->format('c'),
+                    'actor' => $actor,
+                    'lpa' => $lpaData,
+                    'added' => $added
+                ];
+            }
+        }
+        return $result;
+}
 }

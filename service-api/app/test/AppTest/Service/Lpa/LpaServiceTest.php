@@ -463,7 +463,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllForUser($t->UserId, false);
+        $result = $service->getAllLpasAndRequestsForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
