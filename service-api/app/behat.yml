@@ -31,6 +31,7 @@ integration:
         - BehatTest\Context\Integration\AccountContext
         - BehatTest\Context\Integration\LpaContext
         - BehatTest\Context\Integration\ViewerContext
+        - BehatTest\Context\Integration\FeatureContext
       filters:
         tags: "@integration"
 
@@ -46,6 +47,7 @@ acceptance:
         - BehatTest\Context\Acceptance\AccountContext
         - BehatTest\Context\Acceptance\CommonContext
         - BehatTest\Context\Acceptance\LpaContext
+        - BehatTest\Context\Acceptance\FeatureContext
       filters:
         tags: "@actor&&@acceptance"
     viewer:
