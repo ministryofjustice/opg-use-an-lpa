@@ -2103,5 +2103,4 @@ class LpaContext extends BaseIntegrationContext
 
         throw new ExpectationFailedException('LPA registration date should not have been eligible');
     }
-
 }

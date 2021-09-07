@@ -1065,12 +1065,12 @@ class OlderLpaServiceTest extends TestCase
     public function allow_user_to_continue_request_for_activation_key_if_lpa_match_found()
     {
         $dataToMatch = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => '1980-03-01',
-            'first_names'           => 'Test Tester',
-            'last_name'             => 'Testing',
-            'postcode'              => 'Ab1 2Cd',
-            'force_activation_key'  => false,
+            'reference_number' => $this->lpaUid,
+            'dob' => '1980-03-01',
+            'first_names' => 'Test Tester',
+            'last_name' => 'Testing',
+            'postcode' => 'Ab1 2Cd',
+            'force_activation_key' => false,
         ];
 
         $lpaMatchResponse = [
@@ -1080,14 +1080,14 @@ class OlderLpaServiceTest extends TestCase
                 'uId' => null,
                 'firstname' => null,
                 'middlenames' => null,
-                'surname' => null
+                'surname' => null,
             ],
             'caseSubtype' => 'pfa',
             'donor' => [
                 'uId' => '700000001111',
                 'firstname' => 'Donor',
                 'middlenames' => 'Example',
-                'surname' => 'Person'
+                'surname' => 'Person',
             ],
         ];
 
@@ -1125,9 +1125,9 @@ class OlderLpaServiceTest extends TestCase
                 )
             );
 
-       $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
-       $this->assertIsArray($response);
+        $response = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
+        $this->assertIsArray($response);
 
-       $this->assertEquals($lpaMatchResponse, $response);
+        $this->assertEquals($lpaMatchResponse, $response);
     }
 }
