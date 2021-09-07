@@ -9,7 +9,6 @@ use App\DataAccess\DynamoDb\ViewerCodeActivity;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\RemoveLpa;
