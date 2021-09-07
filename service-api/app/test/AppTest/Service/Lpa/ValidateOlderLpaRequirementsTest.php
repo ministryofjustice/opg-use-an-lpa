@@ -32,7 +32,8 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $logger = $this->prophesize(LoggerInterface::class);
         $service = new ValidateOlderLpaRequirements($logger->reveal());
 
-        $registrationValid = $service($lpa);
+        $registrationValid = $service->checkValidRegistrationDate($lpa);
+
         $this->assertEquals($isValid, $registrationValid);
     }
 
@@ -48,10 +49,10 @@ class ValidateOlderLpaRequirementsTest extends TestCase
             ],
             [
                 [
-                    'status' => 'Cancelled',
+                    'status' => 'Pending',
                     'registrationDate' => '2021-01-01'
                 ],
-                false
+                true
             ],
             [
                 [
@@ -69,7 +70,68 @@ class ValidateOlderLpaRequirementsTest extends TestCase
             ],
             [
                 [
-                    'status' => 'Cancelled',
+                    'status' => 'Pending',
+                    'registrationDate' => '2019-08-31'
+                ],
+                false
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @covers ::__invoke
+     * @dataProvider lpaStatusProvider
+     *
+     * @param array $lpa
+     * @param bool $isValid
+     *
+     * @throws Exception
+     */
+    public function checks_the_lpa_is_lpa_status_registered(array $lpa, bool $isValid)
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $service = new ValidateOlderLpaRequirements($logger->reveal());
+
+        $registrationValid = $service->ifLpaRegistered($lpa);
+
+        $this->assertEquals($isValid, $registrationValid);
+    }
+
+    public function lpaStatusProvider(): array
+    {
+        return [
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2021-01-01'
+                ],
+                true
+            ],
+            [
+                [
+                    'status' => 'Pending',
+                    'registrationDate' => '2021-01-01'
+                ],
+                false
+            ],
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2019-09-01'
+                ],
+                true
+            ],
+            [
+                [
+                    'status' => 'Registered',
+                    'registrationDate' => '2019-08-31'
+                ],
+                true
+            ],
+            [
+                [
+                    'status' => 'Pending',
                     'registrationDate' => '2019-08-31'
                 ],
                 false

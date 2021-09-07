@@ -194,6 +194,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
+     * @Then /^I am informed that an LPA could not be found$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -253,9 +254,9 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'title'     => 'Bad Request',
-                            'details'   => 'LPA not eligible due to registration date',
-                            'data'      => [],
+                            'title' => 'Bad Request',
+                            'details' => 'LPA not eligible due to registration date',
+                            'data' => [],
                         ]
                     )
                 )
@@ -1567,5 +1568,21 @@ class LpaContext extends BaseIntegrationContext
             $foundMatchLpaDTO
         );
         assertEquals($response, $result);
+    }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When I provide details of an LPA that is registered prior Sep 2019
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsRegisteredPriorSep2019()
+    {
+        // Not needed for this context
     }
 }

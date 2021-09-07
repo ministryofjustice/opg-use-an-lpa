@@ -9,6 +9,7 @@ use App\DataAccess\DynamoDb\ViewerCodeActivity;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\RemoveLpa;
@@ -2013,6 +2014,14 @@ class LpaContext extends BaseIntegrationContext
             'force_activation_key'  => false
         ];
 
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -2030,14 +2039,6 @@ class LpaContext extends BaseIntegrationContext
                     ],
                 ]
             )
-        );
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
         );
 
         $expectedResponse = [
@@ -2064,4 +2065,43 @@ class LpaContext extends BaseIntegrationContext
 
         throw new ExpectationFailedException('LPA already added exception should have been thrown');
     }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        $this->lpa->status = 'Pending';
+
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        try {
+            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
+        } catch (NotFoundException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            assertEquals('LPA status invalid', $ex->getMessage());
+            return;
+        }
+
+        throw new ExpectationFailedException('LPA registration date should not have been eligible');
+    }
+
 }

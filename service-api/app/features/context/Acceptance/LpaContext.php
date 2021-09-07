@@ -2175,40 +2175,44 @@ class LpaContext implements Context
      */
     public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
     {
-        $this->lpa->registrationDate = '2019-08-31';
+        if (!($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
+            $this->lpa->registrationDate = '2019-08-31';
 
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
+            //UserLpaActorMap: getAllForUser
+            $this->awsFixtures->append(
+                new Result([])
             );
 
-        // API call to request an activation key
-        $this->apiPost(
-            '/v1/older-lpa/validate',
-            [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key'  => false
-            ],
-            [
-                'user-token' => $this->userId,
-            ]
-        );
+            // LpaRepository::get
+            $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode($this->lpa)
+                    )
+                );
 
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+            // API call to request an activation key
+            $this->apiPost(
+                '/v1/older-lpa/validate',
+                [
+                    'reference_number' => $this->lpaUid,
+                    'first_names' => $this->userFirstnames,
+                    'last_name' => $this->userSurname,
+                    'dob' => $this->userDob,
+                    'postcode' => $this->userPostCode,
+                    'force_activation_key' => false,
+                ],
+                [
+                    'user-token' => $this->userId,
+                ]
+            );
+
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        } else {
+            $this->iAmShownDetailsOfAnLpa();
+        }
     }
 
     /**
@@ -2732,5 +2736,46 @@ class LpaContext implements Context
         assertArrayHasKey('donor', $this->getResponseAsJson());
         assertArrayHasKey('attorney', $this->getResponseAsJson());
         assertEquals($expectedResponse, $this->getResponseAsJson());
+    }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        $this->lpa->status = 'Pending';
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key'  => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 }

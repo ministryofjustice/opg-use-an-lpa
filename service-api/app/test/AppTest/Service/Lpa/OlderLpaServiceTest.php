@@ -548,6 +548,22 @@ class OlderLpaServiceTest extends TestCase
             ]
         );
 
+        $lpa = $this->older_lpa_get_by_uid_response();
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->ifLpaRegistered($lpa->getData())
+            ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->willThrow($expectedException);
@@ -614,17 +630,23 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
+            ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
             ->willReturn(false);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -652,17 +674,23 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -702,17 +730,23 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $this->actorCodesProphecy
             ->checkActorHasCode($this->lpaUid, $this->actorUid)
@@ -749,17 +783,23 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $result = $service->validateOlderLpaRequest($this->userId, $dataToMatch);
 
@@ -791,17 +831,23 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $this->actorCodesProphecy
             ->checkActorHasCode($this->lpaUid, $this->actorUid)
@@ -921,17 +967,23 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
 
         $this->actorCodesProphecy
             ->checkActorHasCode($this->lpaUid, $this->actorUid)
@@ -1043,17 +1095,24 @@ class OlderLpaServiceTest extends TestCase
 
         $lpa = $this->older_lpa_get_by_uid_response();
 
-        $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
-            ->willReturn(null);
-
         $this->lpaServiceProphecy
             ->getByUid($this->lpaUid)
             ->willReturn($lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($lpa->getData())
+            ->ifLpaRegistered($lpa->getData())
             ->willReturn(true);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
 
         $this->actorCodesProphecy
             ->checkActorHasCode($this->lpaUid, $this->actorUid)
