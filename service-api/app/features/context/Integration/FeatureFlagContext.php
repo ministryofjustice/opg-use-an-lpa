@@ -8,6 +8,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Features\FeatureEnabledFactory;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use DI\Definition\Helper\FactoryDefinitionHelper;
+use Exception;
 
 class FeatureFlagContext extends BaseIntegrationContext
 {
@@ -22,12 +23,12 @@ class FeatureFlagContext extends BaseIntegrationContext
                 $tagParts = explode(':', $tag);
 
                 if (!preg_match('/^[a-z_]+$/', $tagParts[1], $matches)) {
-                    throw new \Exception('Bad tag name. All tags must be in snake case');
+                    throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 
                 $flagValue = filter_var($tagParts[2], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
                 if (is_null($flagValue)) {
-                    throw new \Exception('Feature flag values must be boolean');
+                    throw new Exception('Feature flag values must be boolean');
                 }
 
                 $container = $scope->getEnvironment()->getContext(LpaContext::class)->container;
@@ -44,6 +45,6 @@ class FeatureFlagContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-
+        // TODO: Implement prepareContext() method.
     }
 }

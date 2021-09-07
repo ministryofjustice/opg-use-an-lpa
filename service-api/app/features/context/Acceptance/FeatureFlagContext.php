@@ -10,6 +10,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use DI\Definition\Helper\FactoryDefinitionHelper;
+use Exception;
 
 class FeatureFlagContext implements Context
 {
@@ -27,12 +28,12 @@ class FeatureFlagContext implements Context
                 $tagParts = explode(':', $tag);
 
                 if (!preg_match('/^[a-z_]+$/', $tagParts[1], $matches)) {
-                    throw new \Exception('Bad tag name. All tags must be in snake case');
+                    throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 
                 $flagValue = filter_var($tagParts[2], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
                 if (is_null($flagValue)) {
-                    throw new \Exception('Feature flag values must be boolean');
+                    throw new Exception('Feature flag values must be boolean');
                 }
 
                 $config = $this->base->container->get('config');
