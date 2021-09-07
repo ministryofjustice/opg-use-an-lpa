@@ -10,7 +10,7 @@ COPY service-api/app /app
 
 RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 
-FROM php:7-fpm-alpine3.12 AS production
+FROM php:7-fpm-alpine3.14 AS production
 
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
   && apk upgrade curl \
