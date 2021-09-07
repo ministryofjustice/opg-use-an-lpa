@@ -23,6 +23,9 @@
                     <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
+                        {% if feature_enabled('allow_older_lpas') %}
+                            <li>{% trans %}the LPA was registered on or after 1 January 2016{% endtrans %}</li>
+                        {% endif %}
                         <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
                         <li>{% trans %}you live in the UK{% endtrans %}</li>
                         <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
