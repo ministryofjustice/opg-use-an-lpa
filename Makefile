@@ -77,7 +77,7 @@ seed:
 	$(COMPOSE) up -d api-seeding
 .PHONY: seed
 
-unit_test_all: | up unit_test_viewer_app unit_test_actor_app unit_test_api_app
+unit_test_all: | unit_test_viewer_app unit_test_actor_app unit_test_api_app
 .PHONY: unit_test_all
 
 unit_test_viewer_app:
