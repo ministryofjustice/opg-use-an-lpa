@@ -17,6 +17,7 @@ use RuntimeException;
 
 /**
  * Class LpaService
+ *
  * @package App\Service\Lpa
  */
 class LpaService
@@ -59,6 +60,7 @@ class LpaService
      * Get an LPA using the ID value
      *
      * @param string $uid Sirius uId of LPA to fetch
+     *
      * @return ?LpaInterface A processed LPA data transfer object
      */
     public function getByUid(string $uid): ?LpaInterface
@@ -72,9 +74,11 @@ class LpaService
 
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['attorneys'] = array_values(array_filter($lpaData['attorneys'], function ($attorney) {
-                return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
-            }));
+            $lpaData['attorneys'] = array_values(
+                array_filter($lpaData['attorneys'], function ($attorney) {
+                    return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
+                })
+            );
         }
 
         return new Lpa($lpaData, $lpa->getLookupTime());
@@ -83,8 +87,9 @@ class LpaService
     /**
      * Given a user token and a user id (who should own the token), return the actor and LPA details
      *
-     * @param string $token UserLpaActorToken that map an LPA to a user account
+     * @param string $token  UserLpaActorToken that map an LPA to a user account
      * @param string $userId The user account ID that must correlate to the $token
+     *
      * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByUserLpaActorToken(string $token, string $userId): ?array
@@ -129,6 +134,7 @@ class LpaService
      * Return all LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPAs for
+     *
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
     public function getAllForUser(string $userId): array
@@ -147,6 +153,7 @@ class LpaService
      * Return all LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPA and Requests for
+     *
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
     public function getAllLpasAndRequestsForUser(string $userId): array
@@ -160,9 +167,10 @@ class LpaService
     /**
      * Get an LPA using the share code.
      *
-     * @param string $viewerCode A code that directly maps to an LPA
-     * @param string $donorSurname The surname of the donor that must correlate to the $viewerCode
+     * @param string  $viewerCode   A code that directly maps to an LPA
+     * @param string  $donorSurname The surname of the donor that must correlate to the $viewerCode
      * @param ?string $organisation An organisation name that will be recorded as used against the $viewerCode
+     *
      * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
@@ -270,10 +278,10 @@ class LpaService
                     'date' => $lpa->getLookupTime()->format('c'),
                     'actor' => $actor,
                     'lpa' => $lpaData,
-                    'added' => $added
+                    'added' => $added,
                 ];
             }
         }
         return $result;
-}
+    }
 }
