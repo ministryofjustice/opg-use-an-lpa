@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact
+  @integration @acceptance @pact @ff:save_older_lpa_requests:false
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
@@ -24,7 +24,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
-  @integration @acceptance @pact
+  @integration @acceptance @pact @ff:allow_older_lpas:false
   Scenario Outline: The user cannot add an older LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
@@ -68,7 +68,7 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     Then I am told a new activation key is posted to the provided postcode
 
-  @acceptance @integration
+  @acceptance @integration @ff:save_older_lpa_requests:false
   Scenario: The user is unable to request key for an LPA that they have already added
     Given I am on the add an older LPA page
     And I have added an LPA to my account
@@ -76,14 +76,14 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
-  @acceptance
+  @acceptance @ff:allow_older_lpas:true
   Scenario: The user is not shown the attorney details being a donor on the lpa
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the attorney details
 
-  @acceptance
+  @acceptance @ff:allow_older_lpas:true
   Scenario: The user is not shown the donor details being an attorney on the lpa
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
