@@ -1182,4 +1182,3 @@ class OlderLpaServiceTest extends TestCase
         $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
     }
 }
-
