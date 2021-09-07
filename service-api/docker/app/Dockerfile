@@ -2,13 +2,13 @@ FROM composer:2.0.14 AS composer
 
 COPY service-api/app /app
 
-RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
 
 FROM composer:2.0.14 AS composer-dev
 
 COPY service-api/app /app
 
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 
 FROM php:7-fpm-alpine3.14 AS production
 
