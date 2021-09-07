@@ -59,7 +59,6 @@ class LpaContext extends BaseIntegrationContext
     private string $codesApiPactProvider;
     private RemoveLpa $deleteLpa;
     private LpaService $lpaService;
-    private OlderLpaService $olderLpaService;
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
@@ -77,7 +76,8 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        $this->olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
     }
 
     /**
@@ -1185,8 +1185,10 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
         try {
-            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
@@ -1223,8 +1225,10 @@ class LpaContext extends BaseIntegrationContext
             []
         );
 
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
         try {
-            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA not found', $ex->getMessage());
@@ -1259,8 +1263,10 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
         try {
-            $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA details do not match', $ex->getMessage());
@@ -1299,7 +1305,8 @@ class LpaContext extends BaseIntegrationContext
         $codeExists = new stdClass();
         $codeExists->Created = null;
 
-        $lpaMatchResponse = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $lpaMatchResponse = $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
         assertEquals($lpaMatchResponse['lpa-id'], $this->lpaUid);
         assertEquals($lpaMatchResponse['actor-id'], $this->actorLpaId);
@@ -1315,7 +1322,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $hasActivationCodeResponse = $this->olderLpaService->hasActivationCode(
+        $hasActivationCodeResponse = $olderLpaService->hasActivationCode(
             $lpaMatchResponse['lpa-id'],
             $lpaMatchResponse['actor-id']
         );
@@ -1351,7 +1358,8 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
         $codeExists->Created = $createdDate;
 
-        $result = $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $result = $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1363,7 +1371,8 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $codeExists
         );
-        $hasActivationCodeResult = $this->olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id']);
+
+        $hasActivationCodeResult = $olderLpaService->hasActivationCode($result['lpa-id'], $result['actor-id']);
     }
 
     /**
@@ -1790,7 +1799,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-        $this->olderLpaService = $this->container->get(OlderLpaService::class);
         $this->lpaService = $this->container->get(LpaService::class);
         $this->deleteLpa = $this->container->get(RemoveLpa::class);
 
@@ -1935,7 +1943,15 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $this->olderLpaService->validateOlderLpaRequest($this->userId, $data);
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
+        $result = $olderLpaService->validateOlderLpaRequest($this->userId, $data);
+
+        assertEquals($result['actor-id'], $this->actorLpaId);
+        assertEquals($result['lpa-id'], $this->lpaUid);
+        assertEquals($result['caseSubtype'], $this->lpa->caseSubtype);
+        assertArrayHasKey('donor', $result);
+        assertArrayHasKey('attorney', $result);
     }
 
     /**
@@ -1999,8 +2015,10 @@ class LpaContext extends BaseIntegrationContext
             'lpaActorToken' => $this->userLpaActorToken
         ];
 
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
         try {
-            $this->olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA already added', $ex->getMessage());

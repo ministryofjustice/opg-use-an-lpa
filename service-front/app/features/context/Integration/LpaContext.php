@@ -1322,7 +1322,6 @@ class LpaContext extends BaseIntegrationContext
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
-        // remove 3
         $this->lpaService = $this->container->get(LpaService::class);
         $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
@@ -1338,28 +1337,6 @@ class LpaContext extends BaseIntegrationContext
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^The allow older LPAs flag is on$/
-     */
-    public function theAllowOlderLPAsFlagIsOn()
-    {
-        $config = $this->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = true;
-        $this->container->set('config', $config);
-        $this->setContainer($this->container);
-    }
-
-    /**
-     * @Given /^The allow older LPAs flag is off$/
-     */
-    public function theAllowOlderLPAsFlagIsOff()
-    {
-        $config = $this->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = false;
-        $this->container->set('config', $config);
-        $this->setContainer($this->container);
     }
 
     /**
@@ -1592,63 +1569,6 @@ class LpaContext extends BaseIntegrationContext
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::FOUND,
             $foundMatchLpaDTO
-        );
-        assertEquals($response, $result);
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
-    {
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'LPA already requested',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa['donor']['uId'],
-                                    'firstname'     => $this->lpa['donor']['firstname'],
-                                    'middlenames'   => $this->lpa['donor']['middlenames'],
-                                    'surname'       => $this->lpa['donor']['surname'],
-                                ],
-                                'caseSubtype' => $this->lpa['caseSubtype']
-                            ],
-                        ]
-                    )
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $result = $addOlderLpa->validate(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-            false
-        );
-
-        $donor = new CaseActor();
-        $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname($this->lpa['donor']['firstname']);
-        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
-        $donor->setSurname($this->lpa['donor']['surname']);
-
-        $alreadyHasKeyDTO = new ActivationKeyExistsResponse();
-        $alreadyHasKeyDTO->setDonor($donor);
-        $alreadyHasKeyDTO->setCaseSubtype($this->lpa['caseSubtype']);
-
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::LPA_ALREADY_REQUESTED,
-            $alreadyHasKeyDTO
         );
         assertEquals($response, $result);
     }

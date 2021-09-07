@@ -11,7 +11,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 
-class FeatureContext implements Context
+class FeatureFlagContext implements Context
 {
     use BaseAcceptanceContextTrait;
 
