@@ -608,7 +608,7 @@ class OlderLpaServiceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid()
     {
         $lpa = new Lpa(
             [
@@ -1130,4 +1130,56 @@ class OlderLpaServiceTest extends TestCase
 
         $this->assertEquals($lpaMatchResponse, $response);
     }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_status_not_valid()
+    {
+        $lpa = new Lpa(
+            [
+                'uId'               => $this->lpaUid,
+                'registrationDate'  => '2019-10-31',
+                'status'            => 'Pending',
+            ],
+            new DateTime()
+        );
+
+        $dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
+        ];
+
+        $service = $this->getOlderLpaService();
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->ifLpaRegistered($lpa->getData())
+            ->willReturn(false);
+
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->checkValidRegistrationDate($lpa->getData())
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('LPA status invalid');
+
+        $service->checkLPAMatchAndGetActorDetails($this->userId, $dataToMatch);
+    }
 }
+
