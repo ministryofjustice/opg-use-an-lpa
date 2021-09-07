@@ -258,9 +258,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account \(save flag off\)$/
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccountSaveFlagOff()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -292,71 +292,12 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $differentLpa->uId)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($differentLpa)
-                )
-            );
-
-        // API call to request an activation key
-        $this->apiPost(
-            '/v1/older-lpa/validate',
-            [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
-            ],
-            [
-                'user-token' => $this->userId,
-            ]
-        );
-
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
-        ];
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('LPA already added');
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account \(save flag on\)$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccountSaveFlagOn()
-    {
-        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        // UserLpaActorMap::getAllForUser / getUsersLpas
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
+        if (($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            // LpaService::getByUserLpaActorToken
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
@@ -365,35 +306,10 @@ class LpaContext implements Context
                                 'UserId' => $this->userId,
                             ]
                         ),
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $differentLpa->uId,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => 'abcd-12345-efgh',
-                                'ActorId' => $this->actorId,
-                                'UserId' => $this->userId,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
+                    ]
+                )
+            );
+        }
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -404,6 +320,18 @@ class LpaContext implements Context
                     json_encode($this->lpa)
                 )
             );
+
+        if (!($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            // LpaRepository::get
+            $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $differentLpa->uId)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode($differentLpa)
+                    )
+                );
+        }
 
         // API call to request an activation key
         $this->apiPost(

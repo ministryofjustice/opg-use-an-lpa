@@ -79,7 +79,6 @@ Feature: Add an older LPA
     And I lost the letter containing my activation key
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
-    And I am told a new activation key is posted to the provided postcode
 
   @acceptance @integration @pact @ff:save_older_lpa_requests:true
   Scenario: The user is able to generate a new key even if an activation key already exists and the record is saved
@@ -88,13 +87,12 @@ Feature: Add an older LPA
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
     And A record of my activation key request is saved
-    And I am told a new activation key is posted to the provided postcode
 
   @acceptance @integration @ff:save_older_lpa_requests:false
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests disabled)
     Given I am on the add an older LPA page
     And I have added an LPA to my account
-    When I provide the details from a valid paper LPA which I have already added to my account (save flag off)
+    When I provide the details from a valid paper LPA which I have already added to my account
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
@@ -102,7 +100,7 @@ Feature: Add an older LPA
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests enabled)
     Given I am on the add an older LPA page
     And I have added an LPA to my account
-    When I provide the details from a valid paper LPA which I have already added to my account (save flag on)
+    When I provide the details from a valid paper LPA which I have already added to my account
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 

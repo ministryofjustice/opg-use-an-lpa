@@ -2198,9 +2198,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account \(save flag off\)$/
+     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccountSaveFlagOff()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -2241,108 +2241,25 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $differentLpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $differentLpa
-        );
-
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
-        ];
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        try {
-            $addOlderLpa->validateRequest($this->userId, $data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA already added', $ex->getMessage());
-            assertEquals($expectedResponse, $ex->getAdditionalData());
-            return;
+        if (($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            // LpaService::getByUserLpaActorToken
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ]
+                )
+            );
         }
 
-        throw new ExpectationFailedException('LPA already added exception should have been thrown');
-    }
-
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account \(save flag on\)$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccountSaveFlagOn()
-    {
-        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
-        ];
-
-        // UserLpaActorMap::getAllForUser / getUsersLpas
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId,
-                            ]
-                        ),
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $differentLpa->uId,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => 'abcd-12345-efgh',
-                                'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        // LpaService::getByUserLpaActorToken
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
         // LpaRepository::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
@@ -2350,6 +2267,16 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $this->lpa
         );
+
+        if (!($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            // LpaRepository::get
+            $this->pactGetInteraction(
+                $this->apiGatewayPactProvider,
+                '/v1/use-an-lpa/lpas/' . $differentLpa->uId,
+                StatusCodeInterface::STATUS_OK,
+                $differentLpa
+            );
+        }
 
         $expectedResponse = [
             'donor'         => [
