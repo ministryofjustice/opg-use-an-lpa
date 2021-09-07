@@ -1,5 +1,4 @@
-NOTIFY ?= $(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
-
+NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
 COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
@@ -71,8 +70,7 @@ up_dependencies:
 .PHONY: up_dependencies
 
 up_services:
-	@export NOTIFY_API_KEY=${NOTIFY}; \
-	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	$(NOTIFY); $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
 seed:
