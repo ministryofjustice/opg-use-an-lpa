@@ -60,13 +60,13 @@ Feature: Add an older LPA
     And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
 
-  @acceptance @integration
+  @acceptance @integration @ff:save_older_lpa_requests:false
   Scenario: The user is able to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I lost the letter received having the activation key
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
-    Then I am told a new activation key is posted to the provided postcode
+    And I am told a new activation key is posted to the provided postcode
 
   @acceptance @integration @ff:save_older_lpa_requests:false
   Scenario: The user is unable to request key for an LPA that they have already added

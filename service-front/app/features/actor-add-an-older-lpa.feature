@@ -19,7 +19,7 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
-  @ui @integration @allowOlderLpasOff
+  @ui @integration @ff:allow_older_lpas:false
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
@@ -61,43 +61,34 @@ Feature: Add an older LPA
 
   # Older Older LPA Journey
 
-  @ui @integration @saveOlderLpaRequestsOn
-  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper LPA which I have already requested an activation key for
-    And I confirm the details I provided are correct
-    And I am told that I have an activation key for this LPA and where to find it
-    When I request for a new activation key again
-    Then I am told a new activation key is posted to the provided postcode
-
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
     And I confirm that those details are correct
     Then I am asked for my role on the LPA
 
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
     When I confirm that I am the attorney
     Then I am asked to provide the donor's details to verify that I am the attorney
 
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The attorney is asked for their contact details after providing donor details
     Given I am on the donor details page
     When I provide the donor's details
     Then I am asked for my contact details
 
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
     When I confirm that I am the donor on the LPA
     Then I am asked for my contact details
 
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The user must enter a telephone number or click the no phone box
     And I have reached the contact details page
     When I enter nothing
@@ -109,7 +100,7 @@ Feature: Add an older LPA
     When I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
 
-  @ui @allowOlderLpasOn
+  @ui @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document

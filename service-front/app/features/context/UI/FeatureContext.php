@@ -18,62 +18,33 @@ class FeatureContext implements Context
     use BaseUiContextTrait;
 
     /**
-     * @BeforeScenario @allowOlderLpasOn
+     * @BeforeScenario
      */
-    public function allowOlderLpasOn(BeforeScenarioScope $scope)
+    public function setFeatureFlag(BeforeScenarioScope $scope)
     {
         $this->gatherContexts($scope);
-        $config = $this->base->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = true;
-        $this->base->container->set('config', $config);
-        $this->base->container->set(
-            FeatureEnabled::class,
-            new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
-        );
-    }
+        $tags = $scope->getScenario()->getTags();
+        foreach ($tags as $tag) {
+            if (str_contains($tag, 'ff:')) {
+                $tagParts = explode(':', $tag);
 
-    /**
-     * @BeforeScenario @allowOlderLpasOff
-     */
-    public function allowOlderLpasOff(BeforeScenarioScope $scope)
-    {
-        $this->gatherContexts($scope);
-        $config = $this->base->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = "test";
-        $this->base->container->set('config', $config);
-        $this->base->container->set(
-            FeatureEnabled::class,
-            new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
-        );
-    }
+                if (!preg_match('/^[a-z_]+$/', $tagParts[1], $matches)) {
+                    throw new \Exception('Bad tag name. All tags must be in snake case');
+                }
 
-    /**
-     * @BeforeScenario @saveOlderLpaRequestsOn
-     */
-    public function saveOlderLpaRequestsOn(BeforeScenarioScope $scope)
-    {
-        $this->gatherContexts($scope);
-        $config = $this->base->container->get('config');
-        $config['feature_flags']['save_older_lpa_requests'] = true;
-        $this->base->container->set('config', $config);
-        $this->base->container->set(
-            FeatureEnabled::class,
-            new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
-        );
-    }
+                $flagValue = filter_var($tagParts[2], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+                if (is_null($flagValue)) {
+                    throw new \Exception('Feature flag values must be boolean');
+                }
 
-    /**
-     * @BeforeScenario @saveOlderLpaRequestsOff
-     */
-    public function saveOlderLpaRequestsOff(BeforeScenarioScope $scope)
-    {
-        $this->gatherContexts($scope);
-        $config = $this->base->container->get('config');
-        $config['feature_flags']['save_older_lpa_requests'] = false;
-        $this->base->container->set('config', $config);
-        $this->base->container->set(
-            FeatureEnabled::class,
-            new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
-        );
+                $config = $this->base->container->get('config');
+                $config['feature_flags'][$tagParts[1]] = $flagValue;
+                $this->base->container->set('config', $config);
+                $this->base->container->set(
+                    FeatureEnabled::class,
+                    new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
+                );
+            }
+        }
     }
 }
