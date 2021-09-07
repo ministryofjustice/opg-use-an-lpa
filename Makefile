@@ -1,8 +1,4 @@
-SHELL := '/bin/bash'
-
-# Used for emails sent by service-api's account cleanup CLI script.
 NOTIFY ?= $(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
-
 
 COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
