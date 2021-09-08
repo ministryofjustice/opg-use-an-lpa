@@ -55,10 +55,10 @@ provider "aws" {
 
 provider "aws" {
   region = "eu-west-1"
-  alias  = "shared-development"
+  alias  = "shared"
 
   assume_role {
-    role_arn     = "arn:aws:iam::679638075911:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.shared_account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
