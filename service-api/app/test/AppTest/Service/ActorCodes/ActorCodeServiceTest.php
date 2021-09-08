@@ -260,7 +260,6 @@ class ActorCodeServiceTest extends TestCase
             $this->codeValidatorProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
             $this->resolveActorProphecy->reveal()
         );
     }
