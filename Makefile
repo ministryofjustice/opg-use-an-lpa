@@ -110,7 +110,7 @@ run_front_composer_update:
 .PHONY: run_front_composer_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer composer update --ignore-platform-reqs
+	$(COMPOSE) run api-composer composer update
 .PHONY: run_api_composer_update
 
 clear_config_cache:
