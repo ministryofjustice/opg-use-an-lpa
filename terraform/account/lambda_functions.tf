@@ -27,11 +27,11 @@ module "clsf_to_sqs" {
 
 data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
   secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key.id
-  provider = aws.shared-development
+  provider  = aws.shared-development
 }
 
 data "aws_secretsmanager_secret" "opg_metrics_api_key" {
-  name = "demo"
+  name     = "demo"
   provider = aws.shared-development
 }
 
