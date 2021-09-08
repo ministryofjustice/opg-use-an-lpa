@@ -8,7 +8,6 @@ use App\DataAccess\{Repository\KeyCollisionException, Repository\UserLpaActorMap
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
-use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
@@ -19,8 +18,6 @@ class ActorCodeService
 
     private LpaService $lpaService;
 
-    private LoggerInterface $logger;
-
     private ResolveActor $resolveActor;
 
     /**
@@ -29,20 +26,17 @@ class ActorCodeService
      * @param CodeValidationStrategyInterface $codeValidator
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
-     * @param LoggerInterface $logger
      * @param ResolveActor $resolveActor
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
-        LoggerInterface $logger,
         ResolveActor $resolveActor
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->logger = $logger;
         $this->resolveActor = $resolveActor;
     }
 
@@ -78,16 +72,16 @@ class ActorCodeService
 
     /**
      * Removes TTL from entry that is already inside the database
-     * @param array $lpaIds the LPA sirius IDs paired to their UID in the database
-     * @param string $lpaId the LPA id to remove the TTL from
+     *
+     * @param string $userLpaActorMapId the database id to remove the TTL from
      *
      * @return string|null returns the database ID of the LPA that has had it's TTL removed
      */
-    private function removeTTLFromRequest(array $lpaIds, string $lpaId): ?string
+    private function removeTTLFromRequest(string $userLpaActorMapId): ?string
     {
-        $this->userLpaActorMapRepository->removeActivateBy($lpaIds[$lpaId]);
+        $this->userLpaActorMapRepository->removeActivateBy($userLpaActorMapId);
 
-        return $lpaIds[$lpaId];
+        return $userLpaActorMapId;
     }
 
     /**
@@ -144,13 +138,13 @@ class ActorCodeService
         }
 
         //---
-        $id = null;
         $lpaId = $details['lpa']['uId'];
 
-        $lpas = $this->lpasInAccount($userId);
+        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
-        if (array_key_exists($lpaId, $lpas)) {
-            $id = $this->removeTTLFromRequest($lpas, $lpaId);
+        if (array_key_exists($lpaId, $idToLpaMap)) {
+            $id = $this->removeTTLFromRequest($idToLpaMap[$lpaId]);
         } else {
             $id = $this->addLpaRecord($userId, $details);
         }
@@ -162,17 +156,5 @@ class ActorCodeService
         }
 
         return $id;
-    }
-
-    /**
-     * Gets all users LPAs Ids in account
-     * @param string $userId  Identification number of the user
-     *
-     * @return array an array with LPAUid as keys to database UUID values
-     */
-    private function lpasInAccount(string $userId): array
-    {
-        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
-        return array_column($lpas, 'Id', 'SiriusUid');
     }
 }
