@@ -53,6 +53,16 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "shared"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.shared_account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
 provider "pagerduty" {
   token = var.pagerduty_token
 }

@@ -5,8 +5,11 @@
     "homepage": "https://github.com/ministryofjustice/opg-use-my-lpa",
     "license": "MIT",
     "config": {
-        "sort-packages": true
-    },
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4"
+            }
+        },
     "extra": {
         "zf": {
             "component-whitelist": [
