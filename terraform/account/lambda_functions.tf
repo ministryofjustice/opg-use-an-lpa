@@ -25,6 +25,18 @@ module "clsf_to_sqs" {
   tags                        = local.default_tags
 }
 
+data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
+  count     = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
+  provider  = aws.shared
+}
+
+data "aws_secretsmanager_secret" "opg_metrics_api_key" {
+  count    = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  name     = local.account.api_key_secrets_manager_name
+  provider = aws.shared
+}
+
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
   count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
   statement {
@@ -47,7 +59,7 @@ module "ship_to_opg_metrics" {
   working_directory = "/var/task"
   environment_variables = {
     "OPG_METRICS_URL" : "https://${local.dns_namespace_env}api.metrics.opg.service.justice.gov.uk"
-    "API_KEY" : ""
+    "API_KEY" : data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].secret_string
   }
   image_uri                   = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
   ecr_arn                     = data.aws_ecr_repository.ship_to_opg_metrics.arn
