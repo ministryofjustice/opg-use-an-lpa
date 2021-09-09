@@ -1575,14 +1575,32 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
     {
-        // Not needed for this context
-    }
+        $this->lpa->status = 'Pending';
 
-    /**
-     * @When I provide details of an LPA that is registered prior Sep 2019
-     */
-    public function iProvideDetailsDetailsOfAnLpaThatIsRegisteredPriorSep2019()
-    {
-        // Not needed for this context
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    ''
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
+
+        assertEquals($response, $result);
     }
 }

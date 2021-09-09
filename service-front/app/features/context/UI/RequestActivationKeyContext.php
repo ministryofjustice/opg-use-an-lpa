@@ -740,6 +740,7 @@ class RequestActivationKeyContext implements Context
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
     {
         $this->fillAndSubmitOlderLpaForm();
+        $this->lpa->status = 'Pending';
 
         // Setup fixture for success response
         $this->apiFixtures->post('/v1/older-lpa/validate')
@@ -748,30 +749,6 @@ class RequestActivationKeyContext implements Context
                     StatusCodeInterface::STATUS_NOT_FOUND,
                     [],
                     json_encode([])
-                )
-            );
-    }
-
-    /**
-     * @When I provide details of an LPA that is registered prior Sep 2019
-     */
-    public function iProvideDetailsDetailsOfAnLpaThatIsRegisteredPriorSep2019()
-    {
-        $this->fillAndSubmitOlderLpaForm();
-
-        // Setup fixture for success response
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA not eligible due to registration date',
-                            'data' => [],
-                        ]
-                    )
                 )
             );
     }
