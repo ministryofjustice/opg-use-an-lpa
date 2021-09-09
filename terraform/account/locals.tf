@@ -12,11 +12,16 @@ variable "lambda_container_version" {
 variable "accounts" {
   type = map(
     object({
-      account_id                 = string
-      is_production              = bool
-      retention_in_days          = number
-      pagerduty_service_name     = string
-      ship_metrics_queue_enabled = bool
+      account_id             = string
+      shared_account_id      = number
+      is_production          = bool
+      retention_in_days      = number
+      pagerduty_service_name = string
+      opg_metrics = object({
+        enabled                     = bool
+        api_key_secretsmanager_name = string
+        endpoint_url                = string
+      })
     })
   )
 }
