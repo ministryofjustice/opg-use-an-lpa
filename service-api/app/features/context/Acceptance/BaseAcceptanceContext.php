@@ -10,6 +10,7 @@ use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
+use DI\Container;
 use JSHayes\FakeRequests\MockHandler;
 use JSHayes\FakeRequests\RequestHandler;
 use Psr\Container\ContainerInterface;
@@ -31,7 +32,10 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
 {
     use RuntimeMinkContext;
 
-    public ContainerInterface $container;
+    /**
+     * @var ContainerInterface|Container
+     */
+    public $container;
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
     public MinkContext $ui;

@@ -29,7 +29,7 @@ Feature: Add an LPA
     Then I am taken back to the dashboard page
     And The LPA has not been added
 
-  @integration @acceptance @pact
+  @integration @acceptance @pact @ff:save_older_lpa_requests:false
   Scenario: The user is told when attempting to add the same LPA twice
     Given I have added an LPA to my account
     When I attempt to add the same LPA again
