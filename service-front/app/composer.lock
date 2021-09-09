@@ -64,20 +64,71 @@
             "time": "2020-08-11T07:44:45+00:00"
         },
         {
-            "name": "aws/aws-sdk-php",
-            "version": "3.185.6",
+            "name": "aws/aws-crt-php",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "35310302912fdc3b4a0e829b84424c41e3fd9727"
+                "url": "https://github.com/awslabs/aws-crt-php.git",
+                "reference": "3942776a8c99209908ee0b287746263725685732"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/35310302912fdc3b4a0e829b84424c41e3fd9727",
-                "reference": "35310302912fdc3b4a0e829b84424c41e3fd9727",
+                "url": "https://api.github.com/repos/awslabs/aws-crt-php/zipball/3942776a8c99209908ee0b287746263725685732",
+                "reference": "3942776a8c99209908ee0b287746263725685732",
                 "shasum": ""
             },
             "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "AWS SDK Common Runtime Team",
+                    "email": "aws-sdk-common-runtime@amazon.com"
+                }
+            ],
+            "description": "AWS Common Runtime for PHP",
+            "homepage": "http://aws.amazon.com/sdkforphp",
+            "keywords": [
+                "amazon",
+                "aws",
+                "crt",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/awslabs/aws-crt-php/issues",
+                "source": "https://github.com/awslabs/aws-crt-php/tree/v1.0.2"
+            },
+            "time": "2021-09-03T22:57:30+00:00"
+        },
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.192.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "60b618429c040b4a1f567cf9ee56b3d2d14fe54b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/60b618429c040b4a1f567cf9ee56b3d2d14fe54b",
+                "reference": "60b618429c040b4a1f567cf9ee56b3d2d14fe54b",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-crt-php": "^1.0.2",
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
@@ -149,9 +200,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.185.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.192.1"
             },
-            "time": "2021-07-02T18:13:18+00:00"
+            "time": "2021-09-07T18:32:31+00:00"
         },
         {
             "name": "brick/varexporter",
@@ -3312,16 +3363,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.1",
+            "version": "2.53.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
+                "reference": "f4655858a784988f880c1b8c7feabbf02dfdf045"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/f4655858a784988f880c1b8c7feabbf02dfdf045",
+                "reference": "f4655858a784988f880c1b8c7feabbf02dfdf045",
                 "shasum": ""
             },
             "require": {
@@ -3333,7 +3384,7 @@
             },
             "require-dev": {
                 "doctrine/orm": "^2.7",
-                "friendsofphp/php-cs-fixer": "^2.14 || ^3.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
                 "kylekatarnls/multi-tester": "^2.0",
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
@@ -3402,7 +3453,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T13:16:28+00:00"
+            "time": "2021-09-06T09:29:23+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -5395,16 +5446,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v5.3.4",
+            "version": "v5.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "d89ad7292932c2699cbe4af98d72c5c6bbc504c1"
+                "reference": "4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/d89ad7292932c2699cbe4af98d72c5c6bbc504c1",
-                "reference": "d89ad7292932c2699cbe4af98d72c5c6bbc504c1",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6",
+                "reference": "4d595a6d15fd3a2c67f6f31d14d15d3b7356d7a6",
                 "shasum": ""
             },
             "require": {
@@ -5470,7 +5521,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v5.3.4"
+                "source": "https://github.com/symfony/translation/tree/v5.3.7"
             },
             "funding": [
                 {
@@ -5486,7 +5537,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-25T09:39:16+00:00"
+            "time": "2021-08-26T08:22:53+00:00"
         },
         {
             "name": "symfony/translation-contracts",
