@@ -67,8 +67,5 @@ return [
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
 
-    'feature_flags' => [
-        'use_legacy_codes_service' => 'false',
-        'save_older_lpa_requests' => false
-    ],
+    'feature_flags' => [],
 ];
