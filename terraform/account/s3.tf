@@ -9,7 +9,6 @@ resource "aws_s3_account_public_access_block" "block_all" {
   restrict_public_buckets = true
 }
 
-
 data "aws_iam_policy_document" "viewer_loadbalancer" {
   statement {
     sid = "accessLogBucketAccess"
