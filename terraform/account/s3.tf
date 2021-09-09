@@ -2,7 +2,7 @@ data "aws_elb_service_account" "main" {
   region = "eu-west-1"
 }
 
-data "aws_iam_policy_document" "viewer_loadbalancer" {
+data "aws_iam_policy_document" "access_log" {
   statement {
     sid = "accessLogBucketAccess"
 
@@ -18,6 +18,27 @@ data "aws_iam_policy_document" "viewer_loadbalancer" {
       identifiers = [data.aws_elb_service_account.main.id]
 
       type = "AWS"
+    }
+  }
+
+  statement {
+    sid     = "AllowSSLRequestsOnly"
+    effect  = "Deny"
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.access_log.arn,
+      "${aws_s3_bucket.access_log.arn}/*",
+    ]
+
+    condition {
+      test     = "Bool"
+      values   = ["false"]
+      variable = "aws:SecureTransport"
+    }
+
+    principals {
+      identifiers = ["*"]
+      type        = "AWS"
     }
   }
 }
@@ -41,7 +62,7 @@ resource "aws_s3_bucket" "access_log" {
 
 resource "aws_s3_bucket_policy" "access_log" {
   bucket = aws_s3_bucket.access_log.id
-  policy = data.aws_iam_policy_document.viewer_loadbalancer.json
+  policy = data.aws_iam_policy_document.access_log.json
 }
 
 resource "aws_s3_bucket_public_access_block" "access_log" {
