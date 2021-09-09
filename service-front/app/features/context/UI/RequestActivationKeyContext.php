@@ -738,7 +738,7 @@ class RequestActivationKeyContext implements Context
                     json_encode(
                         [
                             'title' => 'Bad request',
-                            'details' => 'LPA already requested',
+                            'details' => 'LPA has an activation key already',
                             'data' => [
                                 'donor'         => [
                                     'uId'           => $this->lpa->donor->uId,

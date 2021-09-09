@@ -161,7 +161,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'actor::cannot-send-activation-key',
                         ['user'  => $this->user]
                     ));
-                case OlderLpaApiResponse::LPA_ALREADY_REQUESTED:
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));

@@ -30,7 +30,6 @@ class AddOlderLpa
     private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
     private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
     private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
-    private const OLDER_LPA_ALREADY_REQUESTED   = 'LPA already requested';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -169,14 +168,6 @@ class AddOlderLpa
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::LPA_ALREADY_ADDED,
                     ($this->parseLpaAlreadyAddedResponse)($additionalData)
-                );
-                break;
-
-            case self::OLDER_LPA_ALREADY_REQUESTED:
-                $code = EventCodes::OLDER_LPA_ALREADY_REQUESTED;
-                $response = new OlderLpaApiResponse(
-                    OlderLpaApiResponse::LPA_ALREADY_REQUESTED,
-                    ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
                 break;
 

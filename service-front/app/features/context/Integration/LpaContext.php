@@ -1582,7 +1582,7 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'title' => 'Bad request',
-                            'details' => 'LPA already requested',
+                            'details' => 'LPA has an activation key already',
                             'data' => [
                                 'donor'         => [
                                     'uId'           => $this->lpa['donor']['uId'],
@@ -1620,7 +1620,7 @@ class LpaContext extends BaseIntegrationContext
         $alreadyHasKeyDTO->setCaseSubtype($this->lpa['caseSubtype']);
 
         $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::LPA_ALREADY_REQUESTED,
+            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             $alreadyHasKeyDTO
         );
         assertEquals($response, $result);

@@ -45,11 +45,6 @@ class EventCodes
     public const OLDER_LPA_ALREADY_ADDED = 'OLDER_LPA_ALREADY_ADDED';
 
     /**
-     * An activation key has already been requested for this LPA
-     */
-    public const OLDER_LPA_ALREADY_REQUESTED = 'OLDER_LPA_ALREADY_REQUESTED';
-
-    /**
      * LPA not found
      */
     public const OLDER_LPA_NOT_FOUND = 'OLDER_LPA_NOT_FOUND';

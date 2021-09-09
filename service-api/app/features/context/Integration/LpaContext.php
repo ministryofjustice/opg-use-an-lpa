@@ -2379,11 +2379,11 @@ class LpaContext extends BaseIntegrationContext
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA already requested', $ex->getMessage());
+            assertEquals('LPA has an activation key already', $ex->getMessage());
             assertEquals($expectedResponse, $ex->getAdditionalData());
             return;
         }
 
-        throw new ExpectationFailedException('LPA already requested exception should have been thrown');
+        throw new ExpectationFailedException('LPA has an activation key already exception should have been thrown');
     }
 }

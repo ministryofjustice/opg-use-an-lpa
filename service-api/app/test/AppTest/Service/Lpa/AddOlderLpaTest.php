@@ -192,7 +192,7 @@ class AddOlderLpaTest extends TestCase
             ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $expectedException = new BadRequestException('LPA already requested', $alreadyAddedData);
+        $expectedException = new BadRequestException('LPA has an activation key already', $alreadyAddedData);
 
         $this->expectExceptionObject($expectedException);
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
