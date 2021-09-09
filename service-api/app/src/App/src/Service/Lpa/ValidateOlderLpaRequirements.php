@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\BadRequestException;
+use App\Exception\NotFoundException;
 use App\Service\Log\EventCodes;
 use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
+use App\Service\Features\FeatureEnabled;
 
 /**
  * Class ValidateOlderLpaRequirements
@@ -23,6 +26,7 @@ class ValidateOlderLpaRequirements
 
     private DateTimeImmutable $earliestDate;
     private LoggerInterface $logger;
+    private FeatureEnabled $featureEnabled;
 
     /**
      * ValidateOlderLpaRequirements constructor.
@@ -30,21 +34,20 @@ class ValidateOlderLpaRequirements
      * @param LoggerInterface $logger
      * @codeCoverageIgnore
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, FeatureEnabled $featureEnabled)
     {
         $this->logger = $logger;
         $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
      * @param array $lpa An LPA data structure
-     *
-     * @return bool The LPA has valid requirements
      * @throws Exception Thrown when unable to parse LPA registration date as a date
      */
-    public function ifLpaRegistered(array $lpa): bool
+    public function __invoke(array $lpa): void
     {
-        if ($lpa['status'] !== self::NECESSARY_STATUS) {
+        if (!($this->ifLpaRegistered($lpa))) {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
                 [
@@ -52,29 +55,38 @@ class ValidateOlderLpaRequirements
                     'uId' => $lpa['uId'],
                 ]
             );
-            return false;
+            throw new NotFoundException('LPA status invalid');
         }
-        return true;
+
+        if (!(($this->featureEnabled)('allow_older_lpas'))) {
+            if (!$this->checkValidRegistrationDate($lpa)) {
+                $this->logger->notice(
+                    'User entered LPA {uId} has a registration date before 1 September 2019',
+                    [
+                        'event_code' => EventCodes::OLDER_LPA_TOO_OLD,
+                        'uId' => $lpa['uId'],
+                    ]
+                );
+                throw new BadRequestException('LPA not eligible due to registration date');
+            }
+        }
     }
 
     /**
      * @param array $lpa An LPA data structure
-     *
      * @return bool The LPA has valid requirements
-     * @throws Exception Thrown when unable to parse LPA registration date as a date
+     */
+    public function ifLpaRegistered(array $lpa): bool
+    {
+        return ($lpa['status'] === self::NECESSARY_STATUS) ? true : false;
+    }
+
+    /**
+     * @param array $lpa An LPA data structure
+     * @return bool The LPA has valid requirements
      */
     public function checkValidRegistrationDate(array $lpa): bool
     {
-        if (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate) {
-            $this->logger->notice(
-                'User entered LPA {uId} has a registration date before 1 September 2019',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_TOO_OLD,
-                    'uId' => $lpa['uId'],
-                ]
-            );
-            return false;
-        }
-        return true;
+        return new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate ? false : true;
     }
 }

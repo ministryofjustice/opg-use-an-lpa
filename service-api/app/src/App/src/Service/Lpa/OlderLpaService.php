@@ -334,15 +334,7 @@ class OlderLpaService
 
         $lpaMatch = $this->getLpaByUid((string) $dataToMatch['reference_number']);
 
-        if (!($this->validateLpaRequirements)->ifLpaRegistered($lpaMatch->getData())) {
-            throw new NotFoundException('LPA status invalid');
-        }
-
-        if (!(($this->featureEnabled)('allow_older_lpas'))) {
-            if (!($this->validateLpaRequirements)->checkValidRegistrationDate($lpaMatch->getData())) {
-                throw new BadRequestException('LPA not eligible due to registration date');
-            }
-        }
+        ($this->validateLpaRequirements)($lpaMatch->getData());
 
         return $this->lookupActorInLpa($lpaMatch->getData(), $dataToMatch);
     }

@@ -1222,7 +1222,7 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(OlderLpaService::class);
 
         try {
-            $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
@@ -2093,7 +2093,7 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(OlderLpaService::class);
 
         try {
-            $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA status invalid', $ex->getMessage());
