@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
 use Common\Entity\CaseActor;
-use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
@@ -18,14 +18,12 @@ use Common\Service\Lpa\RemoveLpa;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\OlderLpaMatchResponse;
-use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
-use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * A behat context that encapsulates user account steps
@@ -136,6 +134,19 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode([])
                 )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
             );
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
@@ -1320,14 +1331,6 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      */
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Given /^I lost the letter received having the activation key$/
-     */
-    public function iLostTheLetterReceivedHavingTheActivationKey()
     {
         // Not needed for this context
     }
