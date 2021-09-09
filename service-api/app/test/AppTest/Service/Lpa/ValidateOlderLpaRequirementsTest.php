@@ -8,6 +8,7 @@ use App\Service\Lpa\ValidateOlderLpaRequirements;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use App\Service\Features\FeatureEnabled;
 
 /**
  * Class ValidateOlderLpaRequirementsTest
@@ -30,7 +31,8 @@ class ValidateOlderLpaRequirementsTest extends TestCase
     public function checks_the_lpa_is_registered_and_was_after_sep_2019(array $lpa, bool $isValid)
     {
         $logger = $this->prophesize(LoggerInterface::class);
-        $service = new ValidateOlderLpaRequirements($logger->reveal());
+        $featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
+        $service = new ValidateOlderLpaRequirements($logger->reveal(), $featureEnabledProphecy->reveal());
 
         $registrationValid = $service->checkValidRegistrationDate($lpa);
 
@@ -91,7 +93,8 @@ class ValidateOlderLpaRequirementsTest extends TestCase
     public function checks_the_lpa_is_lpa_status_registered(array $lpa, bool $isValid)
     {
         $logger = $this->prophesize(LoggerInterface::class);
-        $service = new ValidateOlderLpaRequirements($logger->reveal());
+        $featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
+        $service = new ValidateOlderLpaRequirements($logger->reveal(), $featureEnabledProphecy->reveal());
 
         $registrationValid = $service->ifLpaRegistered($lpa);
 
