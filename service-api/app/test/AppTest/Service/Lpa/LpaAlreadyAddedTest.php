@@ -110,7 +110,7 @@ class LpaAlreadyAddedTest extends TestCase
                     [
                         'Id' => $this->userLpaActorToken,
                         'SiriusUid' => $this->lpaUid,
-                        'ActivateBy' => 12345
+                        'ActivateBy' => (new \DateTimeImmutable('now'))->format('Y-m-d H:i:s'),
                     ],
                 ]
             );

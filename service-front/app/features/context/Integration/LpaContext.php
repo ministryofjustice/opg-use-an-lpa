@@ -1318,7 +1318,6 @@ class LpaContext extends BaseIntegrationContext
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
-        // remove 3
         $this->lpaService = $this->container->get(LpaService::class);
         $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
@@ -1337,31 +1336,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * @Given /^The allow older LPAs flag is on$/
-     */
-    public function theAllowOlderLPAsFlagIsOn()
-    {
-        $config = $this->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = true;
-        $this->container->set('config', $config);
-        $this->setContainer($this->container);
-    }
-
-    /**
-     * @Given /^The allow older LPAs flag is off$/
-     */
-    public function theAllowOlderLPAsFlagIsOff()
-    {
-        $config = $this->container->get('config');
-        $config['feature_flags']['allow_older_lpas'] = false;
-        $this->container->set('config', $config);
-        $this->setContainer($this->container);
-    }
-
-    /**
->>>>>>> implemented before step for all behat contexts. Also fixed up some tests and added missing scenarios
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
