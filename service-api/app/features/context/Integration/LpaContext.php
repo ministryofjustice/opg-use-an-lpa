@@ -1207,16 +1207,16 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $this->userSurname,
         ];
 
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
             StatusCodeInterface::STATUS_OK,
             $this->lpa
+        );
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
         );
 
         $olderLpaService = $this->container->get(OlderLpaService::class);
@@ -1228,8 +1228,6 @@ class LpaContext extends BaseIntegrationContext
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
             return;
         }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
     }
 
     /**
@@ -2101,7 +2099,5 @@ class LpaContext extends BaseIntegrationContext
             assertEquals('LPA status invalid', $ex->getMessage());
             return;
         }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
     }
 }
