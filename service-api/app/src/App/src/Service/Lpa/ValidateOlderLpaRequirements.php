@@ -47,7 +47,7 @@ class ValidateOlderLpaRequirements
      */
     public function __invoke(array $lpa): void
     {
-        if (!($this->ifLpaRegistered($lpa))) {
+        if (!($lpa['status'] === self::NECESSARY_STATUS)) {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
                 [
@@ -59,7 +59,7 @@ class ValidateOlderLpaRequirements
         }
 
         if (!(($this->featureEnabled)('allow_older_lpas'))) {
-            if (!$this->checkValidRegistrationDate($lpa)) {
+            if (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate) {
                 $this->logger->notice(
                     'User entered LPA {uId} has a registration date before 1 September 2019',
                     [
@@ -70,23 +70,5 @@ class ValidateOlderLpaRequirements
                 throw new BadRequestException('LPA not eligible due to registration date');
             }
         }
-    }
-
-    /**
-     * @param array $lpa An LPA data structure
-     * @return bool The LPA has valid requirements
-     */
-    public function ifLpaRegistered(array $lpa): bool
-    {
-        return ($lpa['status'] === self::NECESSARY_STATUS) ? true : false;
-    }
-
-    /**
-     * @param array $lpa An LPA data structure
-     * @return bool The LPA has valid requirements
-     */
-    public function checkValidRegistrationDate(array $lpa): bool
-    {
-        return new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate ? false : true;
     }
 }
