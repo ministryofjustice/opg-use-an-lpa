@@ -1575,8 +1575,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
     {
-        $this->lpa->status = 'Pending';
-
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
