@@ -15,7 +15,8 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am shown the details of an LPA
     And I confirm details shown to me of the found LPA are correct
-    Then a letter is requested containing a one time use code
+    Then A record of the LPA requested is saved to the database
+    And a letter is requested containing a one time use code
 
   @integration @acceptance @pact
   Scenario: The user cannot add an older LPA to their account that does not exist
