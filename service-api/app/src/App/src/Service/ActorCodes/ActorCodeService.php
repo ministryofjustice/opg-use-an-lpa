@@ -8,7 +8,6 @@ use App\DataAccess\{Repository\KeyCollisionException, Repository\UserLpaActorMap
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
-use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
@@ -19,8 +18,6 @@ class ActorCodeService
 
     private LpaService $lpaService;
 
-    private LoggerInterface $logger;
-
     private ResolveActor $resolveActor;
 
     /**
@@ -29,21 +26,62 @@ class ActorCodeService
      * @param CodeValidationStrategyInterface $codeValidator
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      * @param LpaService $lpaService
-     * @param LoggerInterface $logger
      * @param ResolveActor $resolveActor
      */
     public function __construct(
         CodeValidationStrategyInterface $codeValidator,
         UserLpaActorMapInterface $userLpaActorMapRepository,
         LpaService $lpaService,
-        LoggerInterface $logger,
         ResolveActor $resolveActor
     ) {
         $this->codeValidator = $codeValidator;
         $this->lpaService = $lpaService;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->logger = $logger;
         $this->resolveActor = $resolveActor;
+    }
+
+    /**
+     * @param string $userId
+     * @param array  $details
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function addLpaRecord(string $userId, array $details): string
+    {
+        do {
+            $added = false;
+
+            $id = Uuid::uuid4()->toString();
+
+            try {
+                $this->userLpaActorMapRepository->create(
+                    $id,
+                    $userId,
+                    $details['lpa']['uId'],
+                    (string)$details['actor']['details']['id']
+                );
+
+                $added = true;
+            } catch (KeyCollisionException $e) {
+                // Allows the loop to repeat with a new ID.
+            }
+        } while (!$added);
+        return $id;
+    }
+
+    /**
+     * Removes TTL from entry that is already inside the database
+     *
+     * @param string $userLpaActorMapId the database id to remove the TTL from
+     *
+     * @return string|null returns the database ID of the LPA that has had it's TTL removed
+     */
+    private function removeTTLFromRequest(string $userLpaActorMapId): ?string
+    {
+        $this->userLpaActorMapRepository->removeActivateBy($userLpaActorMapId);
+
+        return $userLpaActorMapId;
     }
 
     /**
@@ -100,29 +138,16 @@ class ActorCodeService
         }
 
         //---
+        $lpaId = $details['lpa']['uId'];
 
-        $id = null;
+        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
-        do {
-            $added = false;
-
-            $id = Uuid::uuid4()->toString();
-
-            try {
-                $this->userLpaActorMapRepository->create(
-                    $id,
-                    $userId,
-                    $details['lpa']['uId'],
-                    (string)$details['actor']['details']['id']
-                );
-
-                $added = true;
-            } catch (KeyCollisionException $e) {
-                // Allows the loop to repeat with a new ID.
-            }
-        } while (!$added);
-
-        //----
+        if (array_key_exists($lpaId, $idToLpaMap)) {
+            $id = $this->removeTTLFromRequest($idToLpaMap[$lpaId]);
+        } else {
+            $id = $this->addLpaRecord($userId, $details);
+        }
 
         try {
             $this->codeValidator->flagCodeAsUsed($code);
