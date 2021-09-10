@@ -2071,11 +2071,11 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number' => $this->lpaUid,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
         ];
 
         $this->pactGetInteraction(

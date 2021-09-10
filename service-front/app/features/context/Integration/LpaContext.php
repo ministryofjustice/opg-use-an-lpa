@@ -254,9 +254,9 @@ class LpaContext extends BaseIntegrationContext
                     [],
                     json_encode(
                         [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA not eligible due to registration date',
-                            'data' => [],
+                            'title'     => 'Bad Request',
+                            'details'   => 'LPA not eligible due to registration date',
+                            'data'      => [],
                         ]
                     )
                 )

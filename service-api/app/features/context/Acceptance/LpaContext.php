@@ -2194,12 +2194,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => false,
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => false,
             ],
             [
                 'user-token' => $this->userId,
