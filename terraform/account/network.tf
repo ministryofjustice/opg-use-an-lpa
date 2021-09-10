@@ -11,8 +11,9 @@ data "aws_availability_zones" "default" {
 }
 
 resource "aws_default_subnet" "public" {
-  count             = 3
-  availability_zone = element(data.aws_availability_zones.default.names, count.index)
+  count                   = 3
+  availability_zone       = element(data.aws_availability_zones.default.names, count.index)
+  map_public_ip_on_launch = false
 
   tags = merge(
     local.default_tags,
@@ -23,11 +24,11 @@ resource "aws_default_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-  count      = 3
-  cidr_block = cidrsubnet(aws_default_vpc.default.cidr_block, 4, count.index + 3)
-  vpc_id     = aws_default_vpc.default.id
-
-  availability_zone = element(data.aws_availability_zones.default.names, count.index)
+  count                   = 3
+  cidr_block              = cidrsubnet(aws_default_vpc.default.cidr_block, 4, count.index + 3)
+  vpc_id                  = aws_default_vpc.default.id
+  availability_zone       = element(data.aws_availability_zones.default.names, count.index)
+  map_public_ip_on_launch = false
 
   tags = merge(
     local.default_tags,
