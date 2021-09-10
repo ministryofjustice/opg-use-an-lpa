@@ -290,6 +290,46 @@ class UserLpaActorMapTest extends TestCase
         $this->assertEquals($id, $removeActorMap['Id']);
     }
 
+    //Remove ActivateBy
+
+    /** @test */
+    public function can_remove_activate_by()
+    {
+        $testToken = 'test-token';
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
+            $this->assertIsArray($data);
+
+            $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+            $this->assertStringContainsString($testToken, serialize($data));
+
+            return true;
+        }))->willReturn($this->createAWSResult([
+           'Item' => [
+               'Id' => [
+                   'S' => $id,
+               ],
+               'SiriusUid' => [
+                   'S' => $siriusUid,
+               ],
+               'Added' => [
+                   'S' => $added,
+               ],
+               'ActorId' => [
+                   'S' => $actorId
+               ],
+               'UserId' => [
+                   'S' => $userId
+               ],
+           ]
+        ]));
+
+        $userLpaActorMaprepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $removeActorMap = $userLpaActorMaprepo->removeActivateBy($testToken);
+        $this->assertEquals($id, $removeActorMap['Id']);
+    }
+
     //--------------------------------------------------------------------------------
     // Get All
 
