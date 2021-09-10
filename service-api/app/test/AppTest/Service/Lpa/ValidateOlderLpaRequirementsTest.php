@@ -116,4 +116,3 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         ($this->validateLpaRequirements()($lpa));
     }
 }
-
