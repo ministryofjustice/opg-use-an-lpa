@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  @integration @acceptance @pact @ff:save_older_lpa_requests:false
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
