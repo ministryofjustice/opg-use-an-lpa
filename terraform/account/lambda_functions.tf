@@ -8,7 +8,7 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
 
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
-  count             = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  count             = local.account.opg_metrics.enabled == true ? 1 : 0
   lambda_name       = "clsf-to-sqs"
   description       = "Function to take Cloudwatch Logs Subscription Filters and send them to SQS"
   working_directory = "/var/task"
@@ -25,8 +25,20 @@ module "clsf_to_sqs" {
   tags                        = local.default_tags
 }
 
+data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
+  count     = local.account.opg_metrics.enabled == true ? 1 : 0
+  secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
+  provider  = aws.shared
+}
+
+data "aws_secretsmanager_secret" "opg_metrics_api_key" {
+  count    = local.account.opg_metrics.enabled == true ? 1 : 0
+  name     = local.account.opg_metrics.api_key_secretsmanager_name
+  provider = aws.shared
+}
+
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
-  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  count = local.account.opg_metrics.enabled == true ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
@@ -41,13 +53,13 @@ data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
 
 module "ship_to_opg_metrics" {
   source            = "./modules/lambda_function"
-  count             = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  count             = local.account.opg_metrics.enabled == true ? 1 : 0
   lambda_name       = "ship-to-opg-metrics"
   description       = "Function to take metrics from SQS and PUT them to OPG Metrics"
   working_directory = "/var/task"
   environment_variables = {
-    "OPG_METRICS_URL" : "https://${local.dns_namespace_env}api.metrics.opg.service.justice.gov.uk"
-    "API_KEY" : ""
+    "OPG_METRICS_URL" : local.account.opg_metrics.endpoint_url
+    "API_KEY" : data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].secret_string
   }
   image_uri                   = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
   ecr_arn                     = data.aws_ecr_repository.ship_to_opg_metrics.arn
@@ -56,7 +68,7 @@ module "ship_to_opg_metrics" {
 }
 
 data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
-  count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  count = local.account.opg_metrics.enabled == true ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"

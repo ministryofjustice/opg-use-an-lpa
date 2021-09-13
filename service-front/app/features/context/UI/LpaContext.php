@@ -1796,7 +1796,7 @@ class LpaContext implements Context
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
     }
-    
+
     /**
      * @Given /^I request to go back and try again$/
      */
@@ -2324,14 +2324,6 @@ class LpaContext implements Context
                     )
                 )
             );
-    }
-
-    /**
-     * @Given /^I lost the letter received having the activation key$/
-     */
-    public function iLostTheLetterReceivedHavingTheActivationKey()
-    {
-        // Not needed for this context
     }
 
     /**

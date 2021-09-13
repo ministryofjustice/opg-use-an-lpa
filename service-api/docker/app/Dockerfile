@@ -1,10 +1,10 @@
-FROM composer:2.0.8 AS composer
+FROM composer:2.0.14 AS composer
 
 COPY service-api/app /app
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
 
-FROM composer:2.0.8 AS composer-dev
+FROM composer:2.0.14 AS composer-dev
 
 COPY service-api/app /app
 

@@ -33,7 +33,6 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-
     /**
      * @Then /^a letter is requested containing a one time use code$/
      */
@@ -43,13 +42,11 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I have navigated to the contact-details page$/
+     * @Given /^I have reached the contact details page$/
      */
-    public function givenIHaveNavigatedToTheContactDetailsPage()
+    public function givenIHaveReachedTheContactDetailsPage()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
-            $this->ui->visit('/lpa/add/contact-details');
-        }
+        $this->ui->visit('/lpa/add/contact-details');
     }
 
     /**
@@ -66,10 +63,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmAskedForMyContactDetails()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->assertPageAddress('/lpa/add/contact-details');
-            $this->ui->assertPageContainsText('Your contact details');
-        }
+        $this->ui->assertPageAddress('/lpa/add/contact-details');
+        $this->ui->assertPageContainsText('Your contact details');
     }
 
     /**
@@ -90,10 +85,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->assertPageAddress('/lpa/add/donor-details');
-            $this->ui->assertPageContainsText('The donor\'s details');
-        }
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
+        $this->ui->assertPageContainsText('The donor\'s details');
     }
 
     /**
@@ -101,9 +94,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmAskedForMyRoleOnTheLPA()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->assertPageContainsText('What is your role on the LPA?');
-        }
+        $this->ui->assertPageContainsText('What is your role on the LPA?');
     }
 
     /**
@@ -111,12 +102,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->assertPageContainsText('What is your role on the LPA?');
-        } else {
-            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-            $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
-        }
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
     }
 
     /**
@@ -151,11 +138,9 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmOnTheDonorDetailsPage()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
-            $this->iConfirmThatIAmTheAttorney();
-            $this->ui->assertPageAddress('/lpa/add/donor-details');
-        }
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iConfirmThatIAmTheAttorney();
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
     }
 
     /**
@@ -221,21 +206,7 @@ class RequestActivationKeyContext implements Context
     public function iAmToldThatICannotRequestAnActivationKey()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-
         $this->ui->assertElementContainsText('h1', 'We cannot send an activation key for that LPA');
-
-        $dashboardButton = $this->ui->getSession()->getPage()->findAll(
-            'css',
-            'main a.govuk-button[href^="/lpa/dashboard"]'
-        );
-        if (count($dashboardButton) !== 1) {
-            throw new AssertionFailedError('Did not find button to navigate to dashboard');
-        }
-
-        $logoutButton = $this->ui->getSession()->getPage()->findAll('css', 'main a.govuk-button[href^="/logout"]');
-        if (count($logoutButton) !== 1) {
-            throw new AssertionFailedError('Did not find button to logout');
-        }
     }
 
     /**
@@ -252,9 +223,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmToldThatIMustEnterAPhoneNumber()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
-            $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
-        }
+        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
     }
 
     /**
@@ -262,10 +231,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmThatIAmTheAttorney()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->fillField('actor_role_radio', 'Attorney');
-            $this->ui->pressButton('Continue');
-        }
+        $this->ui->fillField('actor_role_radio', 'Attorney');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -273,16 +240,44 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmThatIAmTheDonorOnTheLPA()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->fillField('actor_role_radio', 'Donor');
-            $this->ui->pressButton('Continue');
-        }
+        $this->ui->fillField('actor_role_radio', 'Donor');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
+     */
+    public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
+    {
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
+            );
+
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->pressButton('Continue');
     }
 
     /**
      * @When /^I confirm that those details are correct$/
      * @When /^I confirm the details I provided are correct$/
-     * @Then /^I confirm details shown to me of the found LPA are correct$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -291,23 +286,11 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I do not see any errors$/
-     */
-    public function iDoNotSeeAnyErrors()
-    {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
-            $this->ui->assertElementNotOnPage('govuk-error-summary');
-        }
-    }
-
-    /**
      * @When /^I enter nothing$/
      */
     public function iEnterNothing()
     {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
-            $this->ui->pressButton('Continue');
-        }
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -480,18 +463,6 @@ class RequestActivationKeyContext implements Context
                     )
                 );
         }
-        // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
-            );
     }
 
     /**
@@ -531,14 +502,12 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDonorSDetails()
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
-            $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
-            $this->ui->fillField('donor_dob[day]', '09');
-            $this->ui->fillField('donor_dob[month]', '02');
-            $this->ui->fillField('donor_dob[year]', '1998');
-            $this->ui->pressButton('Continue');
-        }
+        $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
+        $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
+        $this->ui->fillField('donor_dob[day]', '09');
+        $this->ui->fillField('donor_dob[month]', '02');
+        $this->ui->fillField('donor_dob[year]', '1998');
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -585,7 +554,28 @@ class RequestActivationKeyContext implements Context
      */
     public function iRequestForANewActivationKeyAgain()
     {
-        $this->iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd();
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
+            );
+
         $this->ui->pressButton('Continue and ask for a new key');
     }
 
@@ -622,19 +612,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
-     */
-    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
-    {
-        $this->iProvideTheDetailsFromAValidPaperDocument();
-        $this->iConfirmTheDetailsIProvidedAreCorrect();
-        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
-
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertPageContainsText('Continue and ask for a new key');
-    }
-
-    /**
      * @When /^I visit the Date of Birth page without filling out the form$/
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
@@ -656,16 +633,6 @@ class RequestActivationKeyContext implements Context
     public function iVisitTheYourNamePageWithoutFillingOutTheForm()
     {
         $this->ui->visit('lpa/request-code/your-name');
-    }
-
-    /**
-     * @When /^I enter my contact details$/
-     */
-    public function whenIEnterMyContactDetails()
-    {
-        if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
-            $this->ui->fillField('telephone', '0123456789');
-        }
     }
 
     /**
