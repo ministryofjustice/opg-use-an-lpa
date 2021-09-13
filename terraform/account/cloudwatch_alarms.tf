@@ -41,3 +41,36 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_swap_utilization" {
     CacheClusterId = each.value
   }
 }
+
+data "aws_cloudwatch_log_group" "cloudtrail" {
+  name = "opg_use_an_lpa_cloudtrail_${local.account_name}"
+}
+
+resource "aws_cloudwatch_log_metric_filter" "root_account_usage" {
+  name           = "RootConsoleLogin"
+  pattern        = "{$.userIdentity.type=\"Root\" && $.userIdentity.invokedBy NOT EXISTS && $.eventType !=\"AwsServiceEvent\"}"
+  log_group_name = data.aws_cloudwatch_log_group.cloudtrail.name
+  metric_transformation {
+    name      = "EventCount"
+    namespace = "use-an-lpa/Cloudtrail"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "root_account_usage" {
+  actions_enabled     = true
+  alarm_name          = "${local.account_name} root console login check"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_description   = "root login usage count"
+  namespace           = "use-an-lpa/Cloudtrail"
+  metric_name         = "EventCount"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  period              = 60
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
+  statistic           = "Sum"
+  tags                = local.default_tags
+  threshold           = 1
+  treat_missing_data  = "notBreaching"
+}
