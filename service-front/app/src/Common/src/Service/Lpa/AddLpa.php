@@ -76,6 +76,7 @@ class AddLpa
         $this->logger->notice(
             'User {id} has found their LPA with Id {uId} using their activation key',
             [
+                'event_code' => EventCodes::ADD_LPA_FOUND,
                 'id'  => $userToken,
                 'uId' => $lpaUid
             ]
@@ -104,6 +105,7 @@ class AddLpa
             $this->logger->notice(
                 'Account with Id {id} added LPA with Id {uId} to their account',
                 [
+                    'event_code' => EventCodes::ADD_LPA_SUCCESS,
                     'id'  => $userToken,
                     'uId' => $lpaUid
                 ]
@@ -111,6 +113,15 @@ class AddLpa
 
             return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_SUCCESS, []);
         }
+
+        $this->logger->notice(
+            'An error occured when account with Id {id} confirmed adding their LPA with Id {uId} to their account',
+            [
+                'event_code' => EventCodes::ADD_LPA_FAILURE,
+                'id'  => $userToken,
+                'uId' => $lpaUid
+            ]
+        );
 
         return new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_FAILURE, []);
     }
