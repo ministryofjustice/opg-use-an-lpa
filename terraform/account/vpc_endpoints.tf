@@ -43,3 +43,23 @@ resource "aws_vpc_endpoint" "private" {
   subnet_ids          = aws_subnet.private[*].id
   tags                = { Name = "${each.value}-private-${data.aws_region.current.name}" }
 }
+
+
+# data "aws_iam_policy_document" "enforce_endpoint_access" {
+#   statement {
+#     effect    = "Deny"
+#     actions   = ["*"]
+#     resources = ["*"]
+#     condition {
+#       test     = "StringNotEquals"
+#       variable = "aws:sourceVpc"
+#       values   = [aws_default_vpc.default.id]
+#     }
+#   }
+# }
+
+# resource "aws_iam_policy" "enforce_vpc_endpoint_access" {
+#   name        = "restrict-to-vpc-endpoints"
+#   description = "Forces traffic to originate from the default VPC"
+#   policy      = data.aws_iam_policy_document.enforce_endpoint_access.json
+# }
