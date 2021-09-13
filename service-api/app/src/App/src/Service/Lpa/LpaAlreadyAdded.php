@@ -46,10 +46,9 @@ class LpaAlreadyAdded
     public function __invoke(string $userId, string $lpaUid): ?array
     {
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-
             $savedLpaRecords = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
-            foreach($savedLpaRecords as $record) {
+            foreach ($savedLpaRecords as $record) {
                 if ($record['SiriusUid'] === $lpaUid && !array_key_exists('ActivateBy', $record)) {
                     $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
 
@@ -80,7 +79,6 @@ class LpaAlreadyAdded
             }
 
             return null;
-
         } else {
             return $this->preSaveOfRequestFeature($userId, $lpaUid);
         }
@@ -95,7 +93,7 @@ class LpaAlreadyAdded
      */
     private function preSaveOfRequestFeature(string $userId, string $lpaUid): ?array
     {
-        $lpasAdded = $this->lpaService->getAllForUser($userId);
+        $lpasAdded = $this->lpaService->getAllLpasAndRequestsForUser($userId);
 
         foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
             if ($lpaData['lpa']['uId'] === $lpaUid) {

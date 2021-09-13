@@ -355,7 +355,7 @@ class LpaServiceTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getAllForUser()
 
-    private function init_valid_get_all_users()
+    private function init_valid_get_all_users(bool $includeActivated)
     {
         $t = new stdClass();
 
@@ -373,6 +373,13 @@ class LpaServiceTest extends TestCase
                 'SiriusUid' => 'uid-2',
                 'ActorId' => 2,
                 'Added'   => new DateTime('now')
+            ],
+            [
+                'Id' => 'token-3',
+                'SiriusUid' => 'uid-3',
+                'ActorId' => 3,
+                'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
+                'Added'   => new DateTime('now')
             ]
         ];
 
@@ -384,12 +391,12 @@ class LpaServiceTest extends TestCase
             'uid-2' => new Lpa([
                 'uId'       => 'uid-2',
                 'status'    => 'Registered',
-            ], new DateTime()),
+            ], new DateTime())
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
 
-        $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
+        $this->lpasInterfaceProphecy->lookup(['uid-1', 'uid-2'])->willReturn($t->lpaResults);
 
         // check valid lpa
         $this->isValidLpaProphecy->__invoke(
@@ -401,13 +408,26 @@ class LpaServiceTest extends TestCase
             $t->lpaResults['uid-2']->getData()
         )->willReturn(true);
 
+        if ($includeActivated) {
+            $t->lpaResults['uid-3'] = new Lpa([
+                                                  'uId' => 'uid-3',
+                                                  'status' => 'Registered'
+                                              ], new DateTime());
+            $this->lpasInterfaceProphecy->lookup(['uid-1', 'uid-2', 'uid-3'])->willReturn($t->lpaResults);
+
+            // check valid lpa
+            $this->isValidLpaProphecy->__invoke(
+                $t->lpaResults['uid-3']->getData()
+            )->willReturn(true);
+        }
+
         return $t;
     }
 
     /** @test */
     public function can_get_all_lpas_for_user()
     {
-        $t = $this->init_valid_get_all_users();
+        $t = $this->init_valid_get_all_users(false);
 
         $service = $this->getLpaService();
 
@@ -415,6 +435,38 @@ class LpaServiceTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
+
+        $result = array_pop($result);
+
+        //---
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user-lpa-actor-token', $result);
+        $this->assertArrayHasKey('date', $result);
+        $this->assertArrayHasKey('actor', $result);
+        $this->assertArrayHasKey('lpa', $result);
+
+        $lpa = array_pop($t->lpaResults);
+        array_pop($t->mapResults); //discard the first lpa with TTL
+        $map = array_pop($t->mapResults);
+
+        $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
+        $this->assertEquals($lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
+        $this->assertEquals(null, $result['actor']);    // We're expecting no actor to have been found
+        $this->assertEquals($lpa->getData(), $result['lpa']);
+    }
+
+    /** @test */
+    public function can_get_all_lpas_for_user_including_not_activated()
+    {
+        $t = $this->init_valid_get_all_users(true);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getAllLpasAndRequestsForUser($t->UserId);
+
+        $this->assertIsArray($result);
+        $this->assertCount(3, $result);
 
         $result = array_pop($result);
 
@@ -438,7 +490,7 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function cannot_get_all_lpas_for_user_when_no_maps_found()
     {
-        $t = $this->init_valid_get_all_users();
+        $t = $this->init_valid_get_all_users(false);
 
         $service = $this->getLpaService();
 
