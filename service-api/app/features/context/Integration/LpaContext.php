@@ -1207,16 +1207,16 @@ class LpaContext extends BaseIntegrationContext
             'last_name' => $this->userSurname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
             StatusCodeInterface::STATUS_OK,
             $this->lpa
-        );
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
         );
 
         $olderLpaService = $this->container->get(OlderLpaService::class);
@@ -2011,14 +2011,6 @@ class LpaContext extends BaseIntegrationContext
             'force_activation_key'  => false
         ];
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -2036,6 +2028,14 @@ class LpaContext extends BaseIntegrationContext
                     ],
                 ]
             )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
         );
 
         $expectedResponse = [
@@ -2078,16 +2078,16 @@ class LpaContext extends BaseIntegrationContext
             'last_name'         => $this->userSurname,
         ];
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpaUid,
             StatusCodeInterface::STATUS_OK,
             $this->lpa
-        );
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
         );
 
         $olderLpaService = $this->container->get(OlderLpaService::class);

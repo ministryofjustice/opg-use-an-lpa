@@ -101,7 +101,7 @@ class ValidateOlderLpaRequirementsTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function when_allow_older_lpa_flag_on_ignores_checking_registration_date_but_only_status()
+    public function when_allow_older_lpa_flag_on_throws_exception_when_status_is_not_registered()
     {
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
 
@@ -114,5 +114,22 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->expectExceptionMessage('LPA status invalid');
 
         ($this->validateLpaRequirements()($lpa));
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function when_allow_older_lpa_flag_on_throws_no_exception_when_status_is_registered()
+    {
+        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
+
+        $lpa = [
+            'status'            => 'Registered',
+            'registrationDate'  => '2019-08-31',
+        ];
+
+        $response = ($this->validateLpaRequirements()($lpa));
+        $this->assertNull($response);
     }
 }

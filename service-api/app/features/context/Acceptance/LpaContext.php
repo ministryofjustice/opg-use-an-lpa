@@ -2739,6 +2739,11 @@ class LpaContext implements Context
     {
         $this->lpa->status = 'Pending';
 
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(
@@ -2748,11 +2753,6 @@ class LpaContext implements Context
                     json_encode($this->lpa)
                 )
             );
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
 
         // API call to request an activation key
         $this->apiPost(

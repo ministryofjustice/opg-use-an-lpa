@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @ff:allow_older_lpas:true
+  @integration @acceptance @ff:allow_older_lpas:false
   Scenario: The user cannot add an old LPA which does not have a registered status
     Given I am on the add an older LPA page
     When I provide details of an LPA that is not registered
