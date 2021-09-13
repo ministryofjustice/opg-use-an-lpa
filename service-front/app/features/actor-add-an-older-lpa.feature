@@ -12,14 +12,14 @@ Feature: Add an older LPA
   @ui @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
+    And I provide the details from a valid paper document
     And I confirm the details I provided are correct
-    Then I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the found LPA are correct
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
-  @ui @integration
+  @ui @integration @ff:allow_older_lpas:false
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
@@ -34,25 +34,20 @@ Feature: Add an older LPA
     Then I am told that I cannot request an activation key
 
   @ui @integration
-  Scenario: The user is informed when trying to add an older LPA to their account and it has an activation key
+  Scenario: The user is informed when trying to add an older LPA to their account if an activation key already exists
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
     When I provide the details from a valid paper document
     And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
-  @ui
-  Scenario: The user is given an option to generate a new key even if an activation key already exists
-    Given I am on the add an older LPA page
-    And I already have a valid activation key for my LPA
-    And I lost the letter received having the activation key
-    Then I should have an option to regenerate an activation key for the old LPA I want to add
-
   @ui @integration
   Scenario: The user is able to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I already have a valid activation key for my LPA
-    And I lost the letter received having the activation key
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am told that I have an activation key for this LPA and where to find it
     When I request for a new activation key again
     Then I am told a new activation key is posted to the provided postcode
 
@@ -66,53 +61,46 @@ Feature: Add an older LPA
 
   # Older Older LPA Journey
 
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
     And I confirm that those details are correct
     Then I am asked for my role on the LPA
 
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
     When I confirm that I am the attorney
     Then I am asked to provide the donor's details to verify that I am the attorney
 
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The attorney is asked for their contact details after providing donor details
     Given I am on the donor details page
     When I provide the donor's details
     Then I am asked for my contact details
 
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
     When I confirm that I am the donor on the LPA
     Then I am asked for my contact details
 
-  #TODO : Change test to use actual previous page rather than just the dashboard
-  @ui
-  Scenario: The user can access the contact-details page
-    Given I have navigated to the contact-details page
-    When I enter my contact details
-    Then I do not see any errors
-
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The user must enter a telephone number or click the no phone box
-    Given I have navigated to the contact-details page
+    And I have reached the contact details page
     When I enter nothing
     Then I am told that I must enter a phone number
 
   @ui
   Scenario: The user is taken back to start of activation request if the found LPA is incorrect
     Given I am on the check LPA details page
-    When  I realise this is not the correct LPA
+    When I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
 
-  @ui
+  @ui @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
