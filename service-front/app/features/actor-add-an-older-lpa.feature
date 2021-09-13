@@ -9,64 +9,64 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-#  @ui @integration
-#  Scenario: The user can add an older LPA to their account
-#    Given I am on the add an older LPA page
-#    And I provide the details from a valid paper document
-#    And I confirm the details I provided are correct
-#    And I am shown the details of an LPA
-#    When I confirm details shown to me of the found LPA are correct
-#    Then a letter is requested containing a one time use code
-#    And I receive an email confirming activation key request
-#
-#  @ui @integration @ff:allow_older_lpas:false
-#  Scenario: The user cannot add an old LPA to their account as the data does not match
-#    Given I am on the add an older LPA page
-#    When I provide details that do not match a valid paper document
-#    And I confirm the details I provided are correct
-#    Then I am informed that an LPA could not be found with these details
-#
-#  @ui @integration
-#  Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
-#    Given I am on the add an older LPA page
-#    When I provide details from an LPA registered before Sept 2019
-#    And I confirm the details I provided are correct
-#    Then I am told that I cannot request an activation key
-#
-#  @ui @integration
-#  Scenario: The user is informed when trying to add an older LPA to their account if an activation key already exists
-#    Given I am on the add an older LPA page
-#    And I already have a valid activation key for my LPA
-#    When I provide the details from a valid paper document
-#    And I confirm the details I provided are correct
-#    Then I am told that I have an activation key for this LPA and where to find it
-#
-#  @ui @integration
-#  Scenario: The user is able to generate a new key even if an activation key already exists
-#    Given I am on the add an older LPA page
-#    And I already have a valid activation key for my LPA
-#    And I provide the details from a valid paper document
-#    And I confirm the details I provided are correct
-#    And I am told that I have an activation key for this LPA and where to find it
-#    When I request for a new activation key again
-#    Then I am told a new activation key is posted to the provided postcode
-#
-#  @ui @integration
-#  Scenario: The user is unable to request key for an LPA that they have already added
-#    Given I am on the add an older LPA page
-#    And I have added an LPA to my account
-#    When I provide the details from a valid paper LPA which I have already added to my account
-#    And I confirm the details I provided are correct
-#    Then I should be told that I have already added this LPA
-#
-#  # Older Older LPA Journey
-#
-#  @ui @ff:allow_older_lpas:true
-#  Scenario: The user is asked for their role on the LPA if the data does not match
-#    Given I am on the add an older LPA page
-#    When I provide details that do not match a valid paper document
-#    And I confirm that those details are correct
-#    Then I am asked for my role on the LPA
+  @ui @integration
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the found LPA are correct
+    Then a letter is requested containing a one time use code
+    And I receive an email confirming activation key request
+
+  @ui @integration @ff:allow_older_lpas:false
+  Scenario: The user cannot add an old LPA to their account as the data does not match
+    Given I am on the add an older LPA page
+    When I provide details that do not match a valid paper document
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with these details
+
+  @ui @integration
+  Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
+    Given I am on the add an older LPA page
+    When I provide details from an LPA registered before Sept 2019
+    And I confirm the details I provided are correct
+    Then I am told that I cannot request an activation key
+
+  @ui @integration
+  Scenario: The user is informed when trying to add an older LPA to their account if an activation key already exists
+    Given I am on the add an older LPA page
+    And I already have a valid activation key for my LPA
+    When I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    Then I am told that I have an activation key for this LPA and where to find it
+
+  @ui @integration
+  Scenario: The user is able to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I already have a valid activation key for my LPA
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am told that I have an activation key for this LPA and where to find it
+    When I request for a new activation key again
+    Then I am told a new activation key is posted to the provided postcode
+
+  @ui @integration
+  Scenario: The user is unable to request key for an LPA that they have already added
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm the details I provided are correct
+    Then I should be told that I have already added this LPA
+
+  # Older Older LPA Journey
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    When I provide details that do not match a valid paper document
+    And I confirm that those details are correct
+    Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
