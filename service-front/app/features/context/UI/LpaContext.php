@@ -300,7 +300,8 @@ class LpaContext implements Context
     public function iAmTakenToRequestAnActivationKeyForm()
     {
         $this->ui->pressButton('Continue');
-        $this->ui->assertPageContainsText('Ask for an activation key');
+        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageContainsText('What is the LPA reference number?');
     }
 
     /**
