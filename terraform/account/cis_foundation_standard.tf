@@ -1,6 +1,6 @@
 
 resource "aws_sns_topic" "cis_aws_foundations_standard" {
-  name              = "CIS AWS Foundations standard"
+  name              = "cis_aws_foundations_standard"
   kms_master_key_id = "alias/aws/sns"
 }
 resource "aws_sns_topic_subscription" "cis_aws_foundations_standard" {
