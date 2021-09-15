@@ -2696,12 +2696,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2717,13 +2717,13 @@ class LpaContext implements Context
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'attorney'         => [
+            'attorney'      => [
                 'uId'           => $this->lpa->attorneys[0]->uId,
                 'firstname'     => $this->lpa->attorneys[0]->firstname,
                 'middlenames'   => $this->lpa->attorneys[0]->middlenames,
                 'surname'       => $this->lpa->attorneys[0]->surname,
             ],
-            'caseSubtype'    => $this->lpa->caseSubtype,
+            'caseSubtype' => $this->lpa->caseSubtype,
         ];
 
         assertArrayHasKey('lpa-id', $this->getResponseAsJson());

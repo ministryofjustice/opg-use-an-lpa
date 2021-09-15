@@ -5929,6 +5929,91 @@ msgstr ""
 msgid "Check we've found the right LPA"
 msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 
+#: src/Actor/templates/actor/contact-details.html.twig:31
+msgid "Your telephone number"
+msgstr ""
+
+#: src/Actor/templates/actor/contact-details.html.twig:37
+msgid "or"
+msgstr ""
+
+#: src/Actor/templates/actor/contact-details.html.twig:40
+msgid "I do not have a phone or cannot use a phone to take calls"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:80
+msgid "This is not the correct LPA"
+msgstr "Nid dyma’r atwrneiaeth arhosol gywir"
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:27
+msgid "the LPA was registered on or after 1 January 2016"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
+msgctxt "error"
+msgid "Enter your phone number or check the box to say you cannot take calls"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
+msgid "Before you begin"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:28
+msgid "the LPA was made for use in England and Wales"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:31
+msgid "You cannot ask for a key for:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:34
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:35
+msgid "LPAs registered by the Office of the Public Guardian Scotland"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:38
+msgid "What you'll need"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:40
+msgid "To ask for a key, you'll need to give us:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:43
+msgid "your name, date of birth and UK postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:44
+msgid ""
+"the LPA reference number - you'll find this on the paper LPA and on letters "
+"from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:51
+msgid "I do not know the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:55
+msgid ""
+"If you do not have the paper LPA or any letters from OPG, check with other "
+"people named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:56
+msgid ""
+"On the LPA, the donor told us who they wanted the registered paper LPA sent "
+"to. This may have been the donor or an attorney. If a professional, such as a "
+"solicitor, helped to make the LPA, it may have been sent to them."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
+
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
 msgid "Using the information you gave us, we found these details."
 msgstr ""
@@ -5943,7 +6028,7 @@ msgstr "Eich swyddogaeth yn yr LPA hon"
 msgid "The donor's name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:80
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
 msgid "This is not the correct LPA"
 msgstr "Nid dyma’r atwrneiaeth arhosol gywir"
 

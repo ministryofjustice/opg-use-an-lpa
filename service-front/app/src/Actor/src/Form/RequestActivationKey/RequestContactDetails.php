@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
-use Actor\Validator\OptionSelectedValidator;
+use Common\Validator\OptionSelectedValidator;
 use Common\Form\AbstractForm;
 use Laminas\Filter\Digits;
+use Laminas\Filter\StringTrim;
 use Laminas\Form\Fieldset;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -61,6 +62,7 @@ class RequestContactDetails extends AbstractForm implements InputFilterProviderI
             'telephone' => [
                 'required' => false,
                 'filters'  => [
+                    ['name' => StringTrim::class],
                     ['name' => Digits::class],
                 ],
             ],
