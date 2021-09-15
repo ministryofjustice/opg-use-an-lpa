@@ -12,6 +12,7 @@ class LpaCodesSeeder:
     aws_iam_session = ''
     lpa_codes_table = ''
     dynamodb = ''
+    expires = ''
 
     def __init__(self, input_json, environment, docker_mode, iam_role_name):
         self.input_json_path = input_json
@@ -25,6 +26,7 @@ class LpaCodesSeeder:
 
         self.lpa_codes_table = self.dynamodb.Table(
             'lpa-codes-{}'.format(self.environment))
+
 
     def set_account_id(self):
         aws_account_ids = {
@@ -74,10 +76,17 @@ class LpaCodesSeeder:
         )
 
     def put_actor_codes(self):
+        today = datetime.datetime.now()
+        next_week = today + datetime.timedelta(days=7)
+        last_week = today - datetime.timedelta(days=7)
         with open(self.input_json_path) as f:
             actorLpaCodes = json.load(f)
 
         for actorLpaCode in actorLpaCodes:
+            if actorLpaCode['expiry_date'] == "valid":
+                actorLpaCode['expiry_date'] = int(next_week.timestamp())
+            else:
+                actorLpaCode['expiry_date'] = int(last_week.timestamp())
             self.lpa_codes_table.put_item(
                 Item=actorLpaCode,
             )
