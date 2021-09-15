@@ -88,12 +88,6 @@ Feature: Add an older LPA
     When I confirm that I am the Donor
     Then I am asked for my contact details
 
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user must enter a telephone number or click the no phone box
-    And I have reached the contact details page
-    When I enter nothing
-    Then I am told that I must enter a phone number or select that I cannot take calls
-
   @ui
   Scenario: The user is taken back to start of activation request if the found LPA is incorrect
     Given I am on the check LPA details page
