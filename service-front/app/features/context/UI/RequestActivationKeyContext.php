@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Validator\OptionSelectedValidator;
+use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -46,7 +46,9 @@ class RequestActivationKeyContext implements Context
      */
     public function givenIHaveReachedTheContactDetailsPage()
     {
-        $this->ui->visit('/lpa/add/contact-details');
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iAmAskedForMyRoleOnTheLPA();
+        $this->iConfirmThatIAmThe('Donor');
     }
 
     /**
@@ -148,7 +150,7 @@ class RequestActivationKeyContext implements Context
     public function iAmOnTheDonorDetailsPage()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
-        $this->iConfirmThatIAmTheAttorney();
+        $this->iConfirmThatIAmThe('Attorney');
         $this->ui->assertPageAddress('/lpa/add/donor-details');
     }
 
@@ -168,6 +170,14 @@ class RequestActivationKeyContext implements Context
     public function iAmRedirectedToTheActivationKeyPage()
     {
         $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+    }
+
+    /**
+     * @Then /^I am taken back to the consent and check details page$/
+     */
+    public function iAmTakenBackToTheConsentAndCheckDetailsPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
     }
 
     /**
@@ -228,28 +238,120 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am told that I must enter a phone number$/
+     * @Then /^I am told that I must enter a phone number or select that I cannot take calls$/
      */
-    public function iAmToldThatIMustEnterAPhoneNumber()
+    public function iAmToldThatIMustEnterAPhoneNumberOrSelectThatICannotTakeCalls()
     {
-        $this->ui->assertPageContainsText(OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE);
+        $this->ui->assertPageContainsText(
+            'Either enter your phone number or check the box to say you cannot take calls'
+        );
     }
 
     /**
-     * @When /^I confirm that I am the attorney$/
+     * @Then /^I am asked to consent and confirm my details$/
      */
-    public function iConfirmThatIAmTheAttorney()
+    public function iAmAskedToConsentAndConfirmMyDetails()
     {
-        $this->ui->fillField('actor_role_radio', 'Attorney');
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+    }
+
+    /**
+     * @Given /^I can see my attorney role, donor details and telephone number$/
+     */
+    public function iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('Attorney');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('0123456789');
+    }
+
+    /**
+     * @Given /^I can see my attorney role, donor details and that I have not provided a telephone number$/
+     */
+    public function iCanSeeMyAttorneyRoleDonorDetailsAndThatIHaveNotProvidedATelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('Attorney');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('Not provided');
+    }
+
+    /**
+     * @Given /^I can see my donor role and telephone number$/
+     */
+    public function iCanSeeMyDonorRoleAndTelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('Donor');
+        $this->ui->assertPageContainsText('0123456789');
+    }
+
+    /**
+     * @Given /^I can see my donor role and that I have not provided a telephone number$/
+     */
+    public function iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('Donor');
+        $this->ui->assertPageContainsText('Not provided');
+    }
+
+    /**
+     * @Given /^I can see my role is now correctly set as the Attorney$/
+     */
+    public function iCanSeeMyRoleIsNowCorrectlySetAsTheAttorney()
+    {
+        $this->ui->assertPageContainsText('Donor');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('Not provided');
+    }
+
+    /**
+     * @Given /^I can see my role is now correctly set as the Donor$/
+     */
+    public function iCanSeeMyRoleIsNowCorrectlySetAsTheDonor()
+    {
+        $this->ui->assertPageContainsText('Donor');
+        $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . ' ' . 'Different');
+        $this->ui->assertPageNotContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('0123456789');
+    }
+
+    /**
+     * @Then /^I asked to consent and confirm my details$/
+     */
+    public function iAskedToConsentAndConfirmMyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+    }
+
+    /**
+     * @Given /^I can see the donors name is now correct$/
+     */
+    public function iCanSeeTheDonorsNameIsNowCorrect()
+    {
+        $this->ui->assertPageContainsText('Attorney');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . 'Different');
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('0123456789');
+    }
+
+    /**
+     * @When /^I change the donors name$/
+     */
+    public function iChangeTheDonorsName()
+    {
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
+        $this->ui->fillField('donor_last_name', 'Different');
         $this->ui->pressButton('Continue');
     }
 
     /**
-     * @When /^I confirm that I am the donor on the LPA$/
+     * @Given /^I confirm that I am the (.*)$/
      */
-    public function iConfirmThatIAmTheDonorOnTheLPA()
+    public function iConfirmThatIAmThe($role)
     {
-        $this->ui->fillField('actor_role_radio', 'Donor');
+        $this->ui->fillField('actor_role_radio', $role);
         $this->ui->pressButton('Continue');
     }
 
@@ -291,6 +393,16 @@ class RequestActivationKeyContext implements Context
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @When /^I enter both a telephone number and select that I cannot take calls$/
+     */
+    public function iEnterBothATelephoneNumberAndSelectThatICannotTakeCalls()
+    {
+        $this->ui->fillField('telephone', '0123456789');
+        $this->ui->fillField('telephone_option[no_phone]', 'yes');
         $this->ui->pressButton('Continue');
     }
 
@@ -347,6 +459,31 @@ class RequestActivationKeyContext implements Context
             'applicationHasGuidance' => false,
             'lpa' => $this->lpa,
         ];
+    }
+
+    /**
+     * @Given /^I have reached the check details and consent page as the Attorney$/
+     */
+    public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorney()
+    {
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iConfirmThatIAmThe('Attorney');
+        $this->iProvideTheDonorSDetails();
+        $this->whenIEnterMyTelephoneNumber();
+        $this->iAmAskedToConsentAndConfirmMyDetails();
+        $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
+    }
+
+    /**
+     * @Given /^I have reached the check details and consent page as the Donor$/
+     */
+    public function iHaveReachedTheCheckDetailsAndConsentPageAsTheDonor()
+    {
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iConfirmThatIAmThe('Donor');
+        $this->iSelectThatICannotTakeCalls();
+        $this->iAmAskedToConsentAndConfirmMyDetails();
+        $this->iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber();
     }
 
     /**
@@ -511,11 +648,13 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDonorSDetails()
     {
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
         $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
         $this->ui->fillField('donor_last_name', $this->lpa->donor->surname);
-        $this->ui->fillField('donor_dob[day]', '09');
-        $this->ui->fillField('donor_dob[month]', '02');
-        $this->ui->fillField('donor_dob[year]', '1998');
+        $donorDob = new DateTime($this->lpa->donor->dob);
+        $this->ui->fillField('donor_dob[day]', $donorDob->format('d'));
+        $this->ui->fillField('donor_dob[month]', $donorDob->format('m'));
+        $this->ui->fillField('donor_dob[year]', $donorDob->format('Y'));
         $this->ui->pressButton('Continue');
     }
 
@@ -589,6 +728,22 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I request to change my role$/
+     */
+    public function iRequestToChangeMyRole()
+    {
+        $this->ui->clickLink('Change role');
+    }
+
+    /**
+     * @Given /^I request to change the donors name$/
+     */
+    public function iRequestToChangeTheDonorsName()
+    {
+        $this->ui->clickLink('Change donor\'s name');
+    }
+
+    /**
      * @When /^I request to go back and change my date of birth/
      */
     public function iRequestToGoBackAndChangeMyDateOfBirth()
@@ -621,6 +776,29 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I select that I cannot take calls$/
+     */
+    public function iSelectThatICannotTakeCalls()
+    {
+        $this->ui->assertPageAddress('/lpa/add/contact-details');
+        $this->ui->fillField('telephone_option[no_phone]', 'yes');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
+     */
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    {
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Continue and ask for a new key');
+    }
+
+    /**
      * @When /^I visit the Date of Birth page without filling out the form$/
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
@@ -642,6 +820,16 @@ class RequestActivationKeyContext implements Context
     public function iVisitTheYourNamePageWithoutFillingOutTheForm()
     {
         $this->ui->visit('lpa/request-code/your-name');
+    }
+
+    /**
+     * @When /^I enter my telephone number$/
+     */
+    public function whenIEnterMyTelephoneNumber()
+    {
+        $this->ui->assertPageAddress('/lpa/add/contact-details');
+        $this->ui->fillField('telephone', '0123456789');
+        $this->ui->pressButton('Continue');
     }
 
     /**
