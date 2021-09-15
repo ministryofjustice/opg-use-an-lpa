@@ -10,6 +10,13 @@ Feature: Add an older LPA
     And I am currently signed in
 
   @ui @integration
+  Scenario: The user cannot add an old LPA which does not have a registered status
+    Given I am on the add an older LPA page
+    When I provide details of an LPA that is not registered
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found
+
+  @ui @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
     And I provide the details from a valid paper document
@@ -26,7 +33,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
-  @ui @integration
+  @ui @integration @ff:allow_older_lpas:false
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
     When I provide details from an LPA registered before Sept 2019

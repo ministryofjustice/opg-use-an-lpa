@@ -109,6 +109,15 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then I am informed that an LPA could not be found
+     */
+    public function iAmInformedThatAnLPACouldNotBeFound()
+    {
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+    }
+
+    /**
      * @Given /^I am on the ask for your date of birth page$/
      */
     public function iAmOnTheAskForYourDateOfBirth()
@@ -911,5 +920,24 @@ class RequestActivationKeyContext implements Context
     public function iAmTakenBackToTheStartOfRequestAnActivationKeyProcess()
     {
         $this->ui->assertPageAddress('/lpa/add');
+    }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+        $this->lpa->status = 'Pending';
+
+        // Setup fixture for success response
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode([])
+                )
+            );
     }
 }
