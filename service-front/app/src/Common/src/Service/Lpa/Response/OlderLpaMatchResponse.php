@@ -12,6 +12,7 @@ class OlderLpaMatchResponse
     /** @var CaseActor|null */
     protected $attorney = null;
     protected string $caseSubtype;
+    protected bool $lpaIsCleansed;
 
     public function getDonor(): ?CaseActor
     {
@@ -41,5 +42,10 @@ class OlderLpaMatchResponse
     public function setCaseSubtype(string $caseSubtype): void
     {
         $this->caseSubtype = $caseSubtype;
+    }
+
+    public function setIfLpaCleansed(bool $lpaIsCleansed): void
+    {
+        $this->lpaIsCleansed = $lpaIsCleansed;
     }
 }

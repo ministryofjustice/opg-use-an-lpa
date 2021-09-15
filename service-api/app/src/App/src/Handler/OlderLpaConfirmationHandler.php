@@ -11,6 +11,7 @@ use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use App\Service\Features\FeatureEnabled;
 
 /**
  * Class OlderLpaConfirmationHandler
@@ -21,13 +22,16 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
 {
     private AddOlderLpa $addOlderLpa;
     private OlderLpaService $olderLpaService;
+    private FeatureEnabled $featureEnabled;
 
     public function __construct(
         AddOlderLpa $addOlderLpa,
-        OlderLpaService $olderLpaService
+        OlderLpaService $olderLpaService,
+        FeatureEnabled $featureEnabled
     ) {
         $this->addOlderLpa = $addOlderLpa;
         $this->olderLpaService = $olderLpaService;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -51,6 +55,10 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         }
 
         $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
+
+        if (($this->featureEnabled)('allow_older_lpas')) {
+            $this->olderLpaService->checkIfLpaIsCleansed($lpaMatchResponse);
+        }
 
         $this->olderLpaService->requestAccessByLetter(
             (string) $requestData['reference_number'],

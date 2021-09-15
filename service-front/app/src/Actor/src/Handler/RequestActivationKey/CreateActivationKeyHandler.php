@@ -92,25 +92,39 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 $form->getData()['force_activation'] === 'yes'
             );
 
-            $letterExpectedDate = (new Carbon())->addWeeks(2);
+            switch ($result->getResponse()) {
+                case OlderLpaApiResponse::SUCCESS:
+                    $letterExpectedDate = (new Carbon())->addWeeks(2);
 
-            if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
-                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-                    $user->getDetails()['Email'],
-                    $session->get('opg_reference_number'),
-                    strtoupper($session->get('postcode')),
-                    ($this->localisedDate)($letterExpectedDate)
-                );
+                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                        $user->getDetails()['Email'],
+                        $session->get('opg_reference_number'),
+                        strtoupper($session->get('postcode')),
+                        ($this->localisedDate)($letterExpectedDate)
+                    );
 
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::send-activation-key-confirmation',
-                        [
-                            'date' => $letterExpectedDate,
-                            'user' => $user,
-                        ]
-                    )
-                );
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::send-activation-key-confirmation',
+                            [
+                                'date' => $letterExpectedDate,
+                                'user' => $user,
+                            ]
+                        )
+                    );
+                case OlderLpaApiResponse::LPA_NOT_CLEANSED:
+
+                    $session->set('is_lpa_cleansed', 'LPA_NOT_CLEANSED');
+
+                    $actorRole = ($result->getData()['actor']['actorType'] === 'donor') ? 'donor' : 'attorney';
+
+                    $session->set('actor_role', $actorRole);
+                    if ($actorRole === 'attorney') {
+                        $session->set('donor_first_names', $result->getData()['actor']['donor']['firstname']);
+                        $session->set('donor_last_name', $result->getData()['actor']['donor']['surname']);
+                        $session->set('donor_dob', new DateTime($result->getData()['actor']['donor']['dob']));
+                    }
+                    return $this->redirectToRoute('lpa.add.contact-details');
             }
         }
 

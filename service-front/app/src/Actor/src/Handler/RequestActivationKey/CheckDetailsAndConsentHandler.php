@@ -74,16 +74,22 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $this->data['no_phone'] = true;
         }
 
-        $this->data['actor_role'] = $this->session->get('actor_role');
+        if (empty($this->session->get('is_lpa_cleansed'))) {
+            if (!empty($actor_role = $this->session->get('actor_role'))) {
+                $this->data['actor_role'] = $actor_role;
+            }
 
-        if (strtolower($this->data['actor_role']) === 'attorney') {
-            $this->data['donor_first_names'] = $this->session->get('donor_first_names');
-            $this->data['donor_last_name'] = $this->session->get('donor_last_name');
-            $this->data['donor_dob'] = Carbon::create(
-                $this->session->get('donor_dob')['year'],
-                $this->session->get('donor_dob')['month'],
-                $this->session->get('donor_dob')['day']
-            )->toImmutable();
+            $this->data['actor_role'] = $this->session->get('actor_role');
+
+            if (strtolower($this->data['actor_role']) === 'attorney') {
+                $this->data['donor_first_names'] = $this->session->get('donor_first_names');
+                $this->data['donor_last_name'] = $this->session->get('donor_last_name');
+                $this->data['donor_dob'] = Carbon::create(
+                    $this->session->get('donor_dob')['year'],
+                    $this->session->get('donor_dob')['month'],
+                    $this->session->get('donor_dob')['day']
+                )->toImmutable();
+            }
         }
 
         switch ($request->getMethod()) {
