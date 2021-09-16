@@ -527,4 +527,68 @@ class AddOlderLpaTest extends TestCase
             false
         );
     }
+
+    /**
+     * @test
+     * @covers ::validate
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
+    {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+        ];
+
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA is not cleansed',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    $response
+                )
+            );
+
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new OlderLpaMatchResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+
+        $this->parseOlderLpaMatchProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            false
+        );
+        
+        $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
+    }
 }
