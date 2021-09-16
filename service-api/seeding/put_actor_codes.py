@@ -77,8 +77,6 @@ class LpaCodesSeeder:
     def put_actor_codes(self):
         today = datetime.datetime.now()
         next_week = today + datetime.timedelta(days=7)
-        last_week = today - datetime.timedelta(days=7)
-        print(int(last_week.timestamp()))
         with open(self.input_json_path) as seeding_file:
             actor_lpa_codes = json.load(seeding_file)
 
