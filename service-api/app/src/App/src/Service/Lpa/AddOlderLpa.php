@@ -87,9 +87,7 @@ class AddOlderLpa
         $lpaData = $lpa->getData();
 
         // Ensure LPA meets our registration requirements
-        if (!($this->validateOlderLpaRequirements)($lpaData)) {
-            throw new BadRequestException('LPA not eligible due to registration date');
-        }
+        ($this->validateOlderLpaRequirements)($lpaData);
 
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);

@@ -114,8 +114,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -185,8 +184,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -237,8 +235,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -268,7 +265,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_not_valid()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid()
     {
         $invalidLpa = new Lpa(
             [
@@ -290,11 +287,43 @@ class AddOlderLpaTest extends TestCase
 
         $this->validateOlderLpaRequirementsProphecy
             ->__invoke($invalidLpa->getData())
-            ->willReturn(false);
+            ->willThrow(new BadRequestException('LPA not eligible due to registration date'));
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA not eligible due to registration date');
+
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_status_not_registered()
+    {
+        $invalidLpa = new Lpa(
+            [
+                'uId'               => $this->lpaUid,
+                'registrationDate'  => '2019-08-31',
+                'status'            => 'Registered',
+            ],
+            new DateTime()
+        );
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($invalidLpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($invalidLpa->getData())
+            ->willThrow(new NotFoundException('LPA status invalid'));
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('LPA status invalid');
 
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
@@ -321,8 +350,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -343,8 +371,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -380,8 +407,7 @@ class AddOlderLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateOlderLpaRequirementsProphecy
-            ->__invoke($this->lpaData)
-            ->willReturn(true);
+            ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -435,7 +461,7 @@ class AddOlderLpaTest extends TestCase
         return new Lpa(
             [
                 'uId'               => $this->lpaUid,
-                'registrationDate'  => '2021-01-01',
+                'registrationDate'  => '2016-01-01',
                 'status'            => 'Registered',
                 'caseSubtype'       => 'pfa',
                 'donor' => [

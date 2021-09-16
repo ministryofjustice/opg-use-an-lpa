@@ -106,7 +106,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^A record of my activation key request is not saved$/
+     * @Then /^A record of my activation key request is not saved$/
      */
     public function aRecordOfMyActivationKeyRequestIsNotSaved()
     {
@@ -119,8 +119,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
     {
-        // LpaService:getLpas
-
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -1810,22 +1808,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^The save older requests flag is on$/
-     */
-    public function theSaveOlderRequestsFlagIsOn()
-    {
-        // not needed for this context
-    }
-
-    /**
-     * @Given /^The save older requests flag is off$/
-     */
-    public function theSaveOlderRequestsFlagIsOff()
-    {
-        // not needed for this context
-    }
-
-    /**
      * @Then /^The full LPA is displayed with the correct (.*)$/
      */
     public function theFullLPAIsDisplayedWithTheCorrect($message)
@@ -2412,10 +2394,10 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
         try {
-            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA status invalid', $ex->getMessage());

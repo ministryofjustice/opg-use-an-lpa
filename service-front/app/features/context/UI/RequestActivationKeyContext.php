@@ -923,7 +923,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-<<<<<<< HEAD
      * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
@@ -938,11 +937,11 @@ class RequestActivationKeyContext implements Context
                             'title' => 'Bad request',
                             'details' => 'LPA has an activation key already',
                             'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype' => $this->lpa->caseSubtype
                             ],
@@ -952,7 +951,9 @@ class RequestActivationKeyContext implements Context
             );
 
         $this->fillAndSubmitOlderLpaForm();
-=======
+    }
+
+    /**
      * @When I provide details of an LPA that is not registered
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
@@ -969,6 +970,5 @@ class RequestActivationKeyContext implements Context
                     json_encode([])
                 )
             );
->>>>>>> master
     }
 }

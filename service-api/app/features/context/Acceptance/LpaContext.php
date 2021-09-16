@@ -2813,12 +2813,7 @@ class LpaContext implements Context
         $this->actorId = '700000000815';
 
         //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result(
-                [
-                ]
-            )
-        );
+        $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
@@ -2851,14 +2846,9 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
+            'actor' => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'role' => 'attorney',
             'lpa-id'    => $this->lpaUid,
-            'actor-id'  => $this->actorId,
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
             'attorney'      => [
                 'uId'           => $this->lpa->attorneys[0]->uId,
                 'firstname'     => $this->lpa->attorneys[0]->firstname,
@@ -2866,13 +2856,14 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->attorneys[0]->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
+            ],
         ];
 
-        assertArrayHasKey('lpa-id', $this->getResponseAsJson());
-        assertArrayHasKey('actor-id', $this->getResponseAsJson());
-        assertArrayHasKey('caseSubtype', $this->getResponseAsJson());
-        assertArrayHasKey('donor', $this->getResponseAsJson());
-        assertArrayHasKey('attorney', $this->getResponseAsJson());
         assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 

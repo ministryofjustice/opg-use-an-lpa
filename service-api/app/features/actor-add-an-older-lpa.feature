@@ -22,8 +22,8 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am shown the details of an LPA
     And I confirm details shown to me of the found LPA are correct
-    Then A record of the LPA requested is saved to the database
     And a letter is requested containing a one time use code
+    And A record of my activation key request is not saved
 
   @integration @acceptance @pact @ff:save_older_lpa_requests:true
   Scenario: The user can add an older LPA to their account and we store the record in our DB
