@@ -194,6 +194,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
+     * @Then /^I am informed that an LPA could not be found$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -1623,6 +1624,38 @@ class LpaContext extends BaseIntegrationContext
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             $alreadyHasKeyDTO
         );
+
+        assertEquals($response, $result);
+    }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    ''
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
         assertEquals($response, $result);
     }
 }

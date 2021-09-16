@@ -62,8 +62,27 @@ class EventCodes
     /**
      * LPA has activation key
      */
-
     public const OLDER_LPA_HAS_ACTIVATION_KEY = 'OLDER_LPA_HAS_ACTIVATION_KEY';
+
+    /**
+     * Activation key requested for the Donor on an older older LPA
+     */
+    public const OOLPA_KEY_REQUESTED_FOR_DONOR = 'OOLPA_KEY_REQUESTED_FOR_DONOR';
+
+    /**
+     * Activation key requested for an Attorney on an older older LPA
+     */
+    public const OOLPA_KEY_REQUESTED_FOR_ATTORNEY = 'OOLPA_KEY_REQUESTED_FOR_ATTORNEY';
+
+    /**
+     * A phone number was provided as part of an older older LPA activation key request
+     */
+    public const OOLPA_PHONE_NUMBER_PROVIDED = 'OOLPA_PHONE_NUMBER_PROVIDED';
+
+    /**
+     * A phone number was NOT provided as part of an older older LPA activation key request
+     */
+    public const OOLPA_PHONE_NUMBER_NOT_PROVIDED = 'OOLPA_PHONE_NUMBER_NOT_PROVIDED';
 
     /**
      * Older LPA match

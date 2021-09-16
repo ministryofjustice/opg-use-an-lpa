@@ -1381,8 +1381,6 @@ class LpaContext extends BaseIntegrationContext
             assertEquals('LPA not eligible due to registration date', $ex->getMessage());
             return;
         }
-
-        throw new ExpectationFailedException('LPA registration date should not have been eligible');
     }
 
     /**
@@ -2309,12 +2307,12 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+            'force_activation_key' => false
         ];
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
@@ -2385,5 +2383,43 @@ class LpaContext extends BaseIntegrationContext
         }
 
         throw new ExpectationFailedException('LPA has an activation key already exception should have been thrown');
+    }
+
+    /**
+     * @When I provide details of an LPA that is not registered
+     */
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    {
+        $this->lpa->status = 'Pending';
+
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
+        try {
+            $olderLpaService->validateOlderLpaRequest($this->userId, $data);
+        } catch (NotFoundException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            assertEquals('LPA status invalid', $ex->getMessage());
+            return;
+        }
     }
 }

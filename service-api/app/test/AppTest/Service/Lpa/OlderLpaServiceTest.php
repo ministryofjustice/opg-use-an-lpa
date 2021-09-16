@@ -40,6 +40,7 @@ class OlderLpaServiceTest extends TestCase
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
+    public array $dataToMatch;
 
     public function setUp()
     {
@@ -52,6 +53,15 @@ class OlderLpaServiceTest extends TestCase
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
         $this->actorUid = '700000055554';
+
+        $this->dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
+        ];
     }
 
     private function getOlderLpaService(): OlderLpaService
@@ -241,14 +251,16 @@ class OlderLpaServiceTest extends TestCase
             $this->lpaUid,
             $this->actorUid,
             'P1Y'
-        )->will(function () use (&$createCalls) {
-            if ($createCalls > 0) {
-                return;
-            }
+        )->will(
+            function () use (&$createCalls) {
+                if ($createCalls > 0) {
+                    return;
+                }
 
-            $createCalls++;
-            throw new KeyCollisionException();
-        });
+                $createCalls++;
+                throw new KeyCollisionException();
+            }
+        );
 
         $service = $this->getOlderLpaService();
 
