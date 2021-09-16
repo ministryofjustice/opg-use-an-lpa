@@ -85,8 +85,6 @@ class LpaCodesSeeder:
         for actor_lpa_code in actor_lpa_codes:
             if actor_lpa_code['expiry_date'] == "valid":
                 actor_lpa_code['expiry_date'] = int(next_week.timestamp())
-            # else:
-            #     actor_lpa_code['expiry_date'] = int(last_week.timestamp())
             self.lpa_codes_table.put_item(
                 Item=actor_lpa_code,
             )
