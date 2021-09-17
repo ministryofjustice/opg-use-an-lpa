@@ -307,6 +307,14 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I can see my telephone number$/
+     */
+    public function iCanSeeMyTelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('0123456789');
+    }
+
+    /**
      * @Given /^I can see my donor role and that I have not provided a telephone number$/
      */
     public function iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber()
@@ -377,6 +385,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I confirm details shown to me of the found LPA are correct$/
+     * @When /^System recognises the Lpa is cleansed$/
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
@@ -414,6 +423,14 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I confirm details of the found LPA are correct$/
+     */
+    public function iConfirmTheDetailsOfTheFoundLpaAreCorrect()
+    {
+       //Not needed for this context
     }
 
     /**
@@ -1049,14 +1066,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I confirm details of the found LPA are correct$/
-     */
-    public function iConfirmDetailsOfTheFoundLPAAreCorrect()
-    {
-        //Not needed for this context
-    }
-
-    /**
      * @Then /^System recognises the Lpa is not cleansed$/
      */
     public function systemRecognisesTheLpaIsNotCleansed()
@@ -1090,7 +1099,7 @@ class RequestActivationKeyContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->pressButton('Continue');
+       $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+       $this->ui->pressButton('Continue');
     }
 }

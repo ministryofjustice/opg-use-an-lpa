@@ -535,16 +535,6 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
-        $response = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
-            ],
-            'caseSubtype' => 'hw',
-        ];
-
         $this->apiClientProphecy
             ->httpPatch(
                 '/v1/older-lpa/confirm',
@@ -559,25 +549,9 @@ class AddOlderLpaTest extends TestCase
             )->willThrow(
                 new ApiException(
                     'LPA is not cleansed',
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    null,
-                    $response
+                    StatusCodeInterface::STATUS_BAD_REQUEST
                 )
             );
-
-        $donor = new CaseActor();
-        $donor->setUId($response['donor']['uId']);
-        $donor->setFirstname($response['donor']['firstname']);
-        $donor->setMiddlenames($response['donor']['middlenames']);
-        $donor->setSurname($response['donor']['surname']);
-
-        $dto = new OlderLpaMatchResponse();
-        $dto->setDonor($donor);
-        $dto->setCaseSubtype($response['caseSubtype']);
-
-        $this->parseOlderLpaMatchProphecy
-            ->__invoke($response)
-            ->willReturn($dto);
 
         $result = $this->sut->confirm(
             '12-1-1-1-1234',
@@ -588,6 +562,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode'],
             false
         );
+        
         $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
     }
 }

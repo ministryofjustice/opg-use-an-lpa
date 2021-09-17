@@ -92,6 +92,9 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 $form->getData()['force_activation'] === 'yes'
             );
 
+            var_dump("I am here...");
+
+
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::SUCCESS:
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
@@ -114,13 +117,13 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     );
                 case OlderLpaApiResponse::LPA_NOT_CLEANSED:
                     $session->set('is_lpa_cleansed', 'LPA_NOT_CLEANSED');
-                    $actorRole = ($result->getData()['actor']['actorType'] === 'donor') ? 'donor' : 'attorney';
+                    $actorRole = ($result->getData()['actorType'] === 'donor') ? 'donor' : 'attorney';
                     $session->set('actor_role', $actorRole);
 
                     if ($actorRole === 'attorney') {
-                        $session->set('donor_first_names', $result->getData()['actor']['donor']['firstname']);
-                        $session->set('donor_last_name', $result->getData()['actor']['donor']['surname']);
-                        $session->set('donor_dob', new DateTime($result->getData()['actor']['donor']['dob']));
+                        $session->set('donor_first_names', $result->getData()['donor']['firstname']);
+                        $session->set('donor_last_name', $result->getData()['donor']['surname']);
+                        $session->set('donor_dob', new DateTime($result->getData()['donor']['dob']));
                     }
 
                     return $this->redirectToRoute('lpa.add.contact-details');

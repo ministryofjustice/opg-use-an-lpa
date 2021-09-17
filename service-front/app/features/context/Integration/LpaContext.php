@@ -794,6 +794,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I confirm the details I provided are correct$/
      * @Then /^I confirm details shown to me of the found LPA are correct$/
+     * @Then /^I confirm details of the found LPA are correct$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -1500,7 +1501,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
-     * @When /^I confirm details shown to me of the found LPA are correct and is cleansed$/
+     * @When /^System recognises the Lpa as cleansed$/
      */
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
@@ -1692,9 +1693,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I confirm details shown to me of the found LPA are correct but not cleansed$/
+     * @Then /^System recognises the Lpa is not cleansed$/
      */
-    public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrectButNotCleansed()
+    public function systemRecognisesTheLpaIsNotCleansed()
     {
         $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
