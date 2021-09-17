@@ -37,6 +37,7 @@
   "applicationType": "Classic",
   "caseSubtype": "hw",
   "status": "Registered",
+  "lpaIsCleansed": true,
   "caseAttorneySingular": false,
   "caseAttorneyJointlyAndSeverally": true,
   "caseAttorneyJointly": false,

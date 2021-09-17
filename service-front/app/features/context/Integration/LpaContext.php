@@ -1371,6 +1371,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I receive an email confirming activation key request$/
      * @Then /^I am told a new activation key is posted to the provided postcode$/
+     * @Then /^I am asked for my contact details$/
      */
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
@@ -1499,6 +1500,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
+     * @When /^I confirm details shown to me of the found LPA are correct and is cleansed$/
      */
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
@@ -1577,6 +1579,8 @@ class LpaContext extends BaseIntegrationContext
                                 'surname' => $this->lpa['donor']['surname'],
                             ],
                             'caseSubtype' => $this->lpa['caseSubtype'],
+                            'lpaIsCleansed' => false,
+                            'actorType' => 'donor'
                         ]
                     )
                 )
@@ -1594,6 +1598,7 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
+        $this->lpa['lpaIsCleansed'] = false;
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
         $donor->setFirstname($this->lpa['donor']['firstname']);
@@ -1603,6 +1608,7 @@ class LpaContext extends BaseIntegrationContext
         $foundMatchLpaDTO = new OlderLpaMatchResponse();
         $foundMatchLpaDTO->setDonor($donor);
         $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $foundMatchLpaDTO->setIfLpaCleansed($this->lpa['lpaIsCleansed']);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::FOUND,
@@ -1683,5 +1689,52 @@ class LpaContext extends BaseIntegrationContext
                     ''
                 )
             );
+    }
+
+    /**
+     * @Then /^I confirm details shown to me of the found LPA are correct but not cleansed$/
+     */
+    public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrectButNotCleansed()
+    {
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA is not cleansed',
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken,
+                                'lpaIsCleansed' => false,
+                                'actorType' => 'donor'
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa->confirm(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            true
+        );
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::LPA_NOT_CLEANSED, []);
+        assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $response->getResponse());
     }
 }

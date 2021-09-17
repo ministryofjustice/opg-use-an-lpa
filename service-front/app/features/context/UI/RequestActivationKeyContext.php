@@ -641,7 +641,11 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
+                                'actor-id' => '',
+                                'lpa-id' => $this->lpa->uId,
                                 'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpaIsCleansed' => true,
+                                'actorType' => 'donor',
                             ]
                         )
                     )
@@ -1033,5 +1037,60 @@ class RequestActivationKeyContext implements Context
                     json_encode([])
                 )
             );
+    }
+
+    /**
+     * @Given /^I have provided details to add an LPA$/
+     */
+    public function iHaveProvidedDetailsToAddAnLpa()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+    }
+
+    /**
+     * @Then /^I confirm details of the found LPA are correct$/
+     */
+    public function iConfirmDetailsOfTheFoundLPAAreCorrect()
+    {
+        //Not needed for this context
+    }
+
+    /**
+     * @Then /^System recognises the Lpa is not cleansed$/
+     */
+    public function systemRecognisesTheLpaIsNotCleansed()
+    {
+        $this->lpa->lpaIsCleansed = false;
+
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA is not cleansed',
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                    'dob'           => '1948-11-01'
+                                ],
+                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'lpaActorToken' => $this->userLpaActorToken,
+                                'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
+                                'actorType'     => 'donor'
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->pressButton('Continue');
     }
 }

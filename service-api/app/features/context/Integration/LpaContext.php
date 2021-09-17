@@ -1400,7 +1400,10 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm the details I provided are correct$/
+     * @Then /^I confirm details shown to me of the found LPA are correct$/
+     * @Given /^I provide the details from a valid paper document$/
      * @Then /^I am shown the details of an LPA$/
+     * @Then /^I am asked for my contact details$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      */
     public function iAmShownTheDetailsOfAnLPA()
@@ -2526,11 +2529,11 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number' => $this->lpaUid,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -2554,5 +2557,143 @@ class LpaContext extends BaseIntegrationContext
             assertEquals('LPA status invalid', $ex->getMessage());
             return;
         }
+    }
+
+    /**
+     * @When /^System recognises the Lpa is not cleansed$/
+     */
+    public function systemRecognisesTheLpaIsNotCleansed()
+    {
+        $data = [
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists = new stdClass();
+        $codeExists->Created = null;
+
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $lpaMatchResponse = $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa'   => $lpaMatchResponse['lpa-id'],
+                'actor' => $lpaMatchResponse['actor-id'],
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        $hasActivationCodeResponse = $olderLpaService->hasActivationCode(
+            $lpaMatchResponse['lpa-id'],
+            $lpaMatchResponse['actor-id']
+        );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        try {
+            //TO CHANGE
+            $olderLpaService->checkIfLpaIsCleansed($lpaMatchResponse);
+        } catch (BadRequestException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            assertEquals('LPA is not cleansed', $ex->getMessage());
+            return;
+        }
+
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'actor_uid' => (int)$this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_NO_CONTENT
+        );
+
+        $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
+    }
+
+    /**
+     * @When /^System recognises the Lpa is cleansed$/
+     */
+    public function systemRecognisesTheLpaIsCleansed()
+    {
+        $data = [
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists = new stdClass();
+        $codeExists->Created = null;
+
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $lpaMatchResponse = $olderLpaService->checkLPAMatchAndGetActorDetails($this->userId, $data);
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa'   => $lpaMatchResponse['lpa-id'],
+                'actor' => $lpaMatchResponse['actor-id'],
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        $hasActivationCodeResponse = $olderLpaService->hasActivationCode(
+            $lpaMatchResponse['lpa-id'],
+            $lpaMatchResponse['actor-id']
+        );
+
+        $lpaMatchResponse['lpaIsCleansed'] = true;
+        $olderLpaService->checkIfLpaIsCleansed($lpaMatchResponse);
+
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'actor_uid' => (int)$this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_NO_CONTENT
+        );
+
+        $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
     }
 }

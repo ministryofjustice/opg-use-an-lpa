@@ -91,12 +91,41 @@ Feature: Add an older LPA
     When I request for a new activation key again
     Then I am told a new activation key is posted to the provided postcode
 
+  @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the found LPA are correct but not cleansed
+    Then I am asked for my contact details
+
+  @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the found LPA are correct and is cleansed
+    Then a letter is requested containing a one time use code
+    And I receive an email confirming activation key request
+
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
     And I confirm that those details are correct
     Then I am asked for my role on the LPA
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    And System recognises the Lpa is not cleansed
+    #And I confirm that those details are correct
+    # Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
