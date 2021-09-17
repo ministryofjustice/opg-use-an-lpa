@@ -10,8 +10,14 @@ use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
+use Common\View\Twig\FeatureFlagExtension;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use Exception;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Twig\TwigEnvironmentFactory;
+use Mezzio\Twig\TwigRenderer;
+use Mezzio\Twig\TwigRendererFactory;
+use Twig\Environment;
 
 class FeatureFlagContext implements Context
 {
@@ -41,11 +47,37 @@ class FeatureFlagContext implements Context
                 $config = $this->base->container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
                 $this->base->container->set('config', $config);
+
                 $this->base->container->set(
                     FeatureEnabled::class,
                     new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
                 );
+
+                $this->base->container->set(
+                    FeatureFlagExtension::class,
+                    new FeatureFlagExtension($this->base->container->get(FeatureEnabled::class))
+                );
+
+                $this->resetTwigEnvironments();
             }
         }
+    }
+
+    private function resetTwigEnvironments(): void
+    {
+        $this->base->container->set(
+            Environment::class,
+            $this->base->container->get(TwigEnvironmentFactory::class)($this->base->container)
+        );
+
+        $this->base->container->set(
+            TwigRenderer::class,
+            $this->base->container->get(TwigRendererFactory::class)($this->base->container)
+        );
+
+        $this->base->container->set(
+            TemplateRendererInterface::class,
+            $this->base->container->get(TwigRendererFactory::class)($this->base->container)
+        );
     }
 }
