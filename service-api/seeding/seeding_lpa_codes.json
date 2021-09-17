@@ -6,7 +6,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000526",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -17,7 +17,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000138",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "expired",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -28,7 +28,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000526",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -39,7 +39,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000435",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -50,7 +50,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000617",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -61,7 +61,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000138",
     "dob": "1990-03-17",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -72,7 +72,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000047",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -83,7 +83,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000047",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -94,7 +94,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000617",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -105,7 +105,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000138",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -116,7 +116,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000047",
     "dob": "1990-05-04",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -127,7 +127,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000344",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -138,7 +138,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000252",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -149,7 +149,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000435",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -160,7 +160,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000252",
     "dob": "1948-11-01",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   },
@@ -171,7 +171,7 @@
     "last_updated_date": "2020-06-22",
     "lpa": "700000000344",
     "dob": "1975-10-05",
-    "expiry_date": 1624406399,
+    "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported"
   }

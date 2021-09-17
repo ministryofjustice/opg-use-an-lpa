@@ -246,6 +246,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:68
 #: src/Actor/templates/actor/check-your-answers.html.twig:78
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:90
 #: src/Viewer/templates/viewer/check-code-found.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
@@ -1787,11 +1788,13 @@ msgid "Your role on this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:31
 #: src/Actor/templates/actor/check-lpa.html.twig:57
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:27
 #: src/Actor/templates/actor/check-lpa.html.twig:59
 msgid "Donor"
 msgstr ""
@@ -4098,12 +4101,6 @@ msgstr ""
 msgid "This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href=\"%link%\" class=\"govuk-link\">Let us know if you have moved.</a>"
 msgstr ""
 
-#. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:54
-msgctxt "error"
-msgid "Enter your phone number or check the box to say you cannot take calls"
-msgstr ""
-
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
 msgid "Before you begin"
 msgstr ""
@@ -4168,6 +4165,7 @@ msgstr ""
 msgid "The donor's details"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:56
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 msgid "Donor's date of birth"
 msgstr ""
@@ -4194,6 +4192,174 @@ msgstr ""
 
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:27
 msgid "the LPA was registered on or after 1 January 2016"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
+msgid "Check your details"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:23
+msgid "Your role"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
+msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:43
+msgid "Donor's name"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:70
+msgid "Telephone number"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
+msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
+msgid "I understand that the information I've given will be stored securely and used to process my activation key request."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+msgid "Confirm and submit request"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
+msgctxt "error"
+msgid "Either enter your phone number or check the box to say you cannot take calls"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:76
+msgid "Not provided"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:21
+msgid "Before you begin"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:28
+msgid "the LPA was made for use in England and Wales"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:31
+msgid "You cannot ask for a key for:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:34
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:35
+msgid "LPAs registered by the Office of the Public Guardian Scotland"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:38
+msgid "What you'll need"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:40
+msgid "To ask for a key, you'll need to give us:"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:43
+msgid "your name, date of birth and UK postcode"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:44
+msgid "the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:51
+msgid "I do not know the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:55
+msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:56
+msgid "On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:22
+msgid "Check we've found the right LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+msgid "Using the information you gave us, we found these details."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:37
+msgid "Your role on the LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
+msgid "The donor's name"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:87
+msgid "This is not the correct LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
+msgid "Check your details"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:23
+msgid "Your role"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
+msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:43
+msgid "Donor's name"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:70
+msgid "Telephone number"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
+msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
+msgid "I understand that the information I've given will be stored securely and used to process my activation key request."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+msgid "Confirm and submit request"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
+msgctxt "error"
+msgid "Either enter your phone number or check the box to say you cannot take calls"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:76
+msgid "Not provided"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:21

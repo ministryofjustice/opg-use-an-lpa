@@ -179,7 +179,12 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         $app->route('/lpa/add/donor-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
-        ], ['GET', 'POST'],'lpa.add.donor-details');
+        ], ['GET', 'POST'], 'lpa.add.donor-details');
+
+        $app->route('/lpa/add/check-details-and-consent', [
+            Mezzio\Authentication\AuthenticationMiddleware::class,
+            \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
+        ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
     }
     // Older LPA journey
     if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {
