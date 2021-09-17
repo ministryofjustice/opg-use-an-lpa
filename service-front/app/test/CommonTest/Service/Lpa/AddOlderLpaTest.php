@@ -588,7 +588,6 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode'],
             false
         );
-        
         $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
     }
 }
