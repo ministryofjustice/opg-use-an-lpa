@@ -39,7 +39,7 @@ Feature: Triage
   @ui @ff:allow_older_lpas:false
   Scenario: The user sees a banner about the fact that only LPAs issued after a certain date can be used on this service
     Given I am on the triage page
-    Then I can see banner about existing LPAs pre 2019
+    Then I can see banner about existing LPAs before 2019
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user sees a banner about the fact that only LPAs issued after a certain date can be used on this service

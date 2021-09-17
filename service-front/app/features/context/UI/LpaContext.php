@@ -506,13 +506,13 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I can see banner about existing LPAs pre 2019$/
+     * @Then /^I can see banner about existing LPAs before 2019$/
      */
 
-    public function iCanSeeBannerAboutExistingLPAsPre2019()
+    public function iCanSeeBannerAboutExistingLPAsBefore2019()
     {
-        $this->ui->assertElementOnPage(".moj-banner__message");
-        $this->ui->assertElementContainsText(".moj-banner__message", "2019");
+        $this->ui->assertElementOnPage('.moj-banner__message');
+        $this->ui->assertElementContainsText('.moj-banner__message', '2019');
     }
 
     /**
@@ -521,8 +521,8 @@ class LpaContext implements Context
 
     public function iCanSeeBannerAboutExistingLPAsAfter2016()
     {
-        $this->ui->assertElementOnPage(".moj-banner__message");
-        $this->ui->assertElementContainsText(".moj-banner__message", "2016");
+        $this->ui->assertElementOnPage('.moj-banner__message');
+        $this->ui->assertElementContainsText('.moj-banner__message', '2016');
     }
 
 
