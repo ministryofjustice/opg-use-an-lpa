@@ -2633,9 +2633,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^System recognises the Lpa is cleansed$/
+     * @When /^System recognises the Lpa as cleansed$/
      */
-    public function systemRecognisesTheLpaIsCleansed()
+    public function systemRecognisesTheLpaAsCleansed()
     {
         $data = [
             'reference_number'  => $this->lpaUid,

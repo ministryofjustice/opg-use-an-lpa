@@ -149,11 +149,11 @@ Feature: Add an older LPA
     Then I am asked for my contact details
 
   @acceptance @integration @ff:allow_older_lpas:true
-  Scenario: The user cannot add an older LPA to their account that is not cleansed
+  Scenario: The user can add an older LPA to their account that is cleansed
     Given I am on the add an older LPA page
     And I provide the details from a valid paper document
     And I confirm the details I provided are correct
     And I am shown the details of an LPA
     When I confirm details shown to me of the found LPA are correct
-    And System recognises the Lpa is cleansed
+    And System recognises the Lpa as cleansed
     Then I am asked for my contact details

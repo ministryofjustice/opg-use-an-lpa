@@ -56,6 +56,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^A record of the LPA requested is saved to the database$/
+     * @Given /^I provide the details from a valid paper document$/
      */
     public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
     {
@@ -2821,7 +2822,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I request for a new activation key again$/
-     * @Then /^I confirm details shown to me of the found LPA are correct and is cleansed$/
+     * @When /^System recognises the Lpa as cleansed$/
      */
     public function iRequestForANewActivationKeyAgain()
     {
