@@ -49,7 +49,7 @@ class LpaAlreadyAdded
             $savedLpaRecords = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
             foreach ($savedLpaRecords as $record) {
-                if ($record['SiriusUid'] === $lpaUid && !array_key_exists('ActivateBy', $record)) {
+                if ($record['SiriusUid'] === $lpaUid) {
                     $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
 
                     // a count of a null array will be 0
@@ -57,15 +57,7 @@ class LpaAlreadyAdded
                         return null;
                     }
 
-                    $this->logger->info(
-                        'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
-                        [
-                            'id' => $userId,
-                            'uId' => $lpaUid
-                        ]
-                    );
-
-                    return [
+                    $response = [
                         'donor' => [
                             'uId'         => $lpa['lpa']['donor']['uId'],
                             'firstname'   => $lpa['lpa']['donor']['firstname'],
@@ -75,6 +67,12 @@ class LpaAlreadyAdded
                         'caseSubtype'   => $lpa['lpa']['caseSubtype'],
                         'lpaActorToken' => $record['Id']
                     ];
+
+                    if (array_key_exists('ActivateBy', $record)) {
+                        $response['notActivated'] = true;
+                    }
+
+                    return $response;
                 }
             }
 

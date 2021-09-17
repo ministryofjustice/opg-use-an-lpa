@@ -244,6 +244,104 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I request to add an LPA that I have requested an activation key for$/
+     */
+    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor()
+    {
+        //UserLpaActorMap: getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        //LpaService: getByUserLpaActorToken
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
+                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // lpaService: getByUserLpaActorToken
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        // codes api service call
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa'   => $this->lpaUid,
+                'dob'   => $this->userDob,
+                'code'  => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        // lpaService: getByUid
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        // lpaService: getByUid
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addLpaService = $this->container->get(AddLpa::class);
+
+        $validatedLpa = $addLpaService->validateAddLpaData(
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->userDob,
+            ],
+            $this->userId
+        );
+
+        assertArrayHasKey('actor', $validatedLpa);
+        assertArrayHasKey('lpa', $validatedLpa);
+        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+    }
+
+    /**
      * @When /^I request to add an LPA which has a status other than registered$/
      */
     public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered()
@@ -1616,6 +1714,106 @@ class LpaContext extends BaseIntegrationContext
     public function oneOfTheGeneratedAccessCodeHasExpired()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @Given /^The activateBy TTL is removed from the record in the DB$/
+     */
+    public function theActivateByTTLIsRemovedFromTheRecordInTheDB()
+    {
+        // codes api service call
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/validate',
+            [
+                'lpa'   => $this->lpaUid,
+                'dob'   => $this->userDob,
+                'code'  => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [
+                'actor' => $this->actorLpaId,
+            ],
+        );
+
+        // lpaService: getByUid
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        // lpaService: getByUid
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        //UserLpaActorMapRepository: getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // UserLpaActorMap:: removeActivateBy
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/revoke',
+            [
+                'code' => $this->oneTimeCode,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [],
+        );
+
+        $actorCodeService = $this->container->get(ActorCodeService::class);
+
+        try {
+            $response = $actorCodeService->confirmDetails(
+                $this->oneTimeCode,
+                $this->lpaUid,
+                $this->userDob,
+                (string)$this->actorLpaId
+            );
+        } catch (Exception $ex) {
+            throw new Exception('Lpa confirmation unsuccessful');
+        }
+
+        assertNotNull($response);
     }
 
     /**
