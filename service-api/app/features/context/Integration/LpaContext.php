@@ -1781,7 +1781,7 @@ class LpaContext extends BaseIntegrationContext
                             'SiriusUid' => $this->lpaUid,
                             'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorId,
+                            'ActorId' => $this->actorLpaId,
                             'UserId' => $this->userId,
                             'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
                         ]
@@ -1813,7 +1813,7 @@ class LpaContext extends BaseIntegrationContext
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
-        assertNotNull($response);
+        assertEquals($this->userLpaActorToken, $response);
     }
 
     /**
