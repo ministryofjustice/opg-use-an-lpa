@@ -1099,7 +1099,7 @@ class RequestActivationKeyContext implements Context
                 )
             );
 
-       $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-       $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->pressButton('Continue');
     }
 }
