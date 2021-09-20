@@ -7,7 +7,13 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Handler\{AbstractHandler,
+    CsrfGuardAware,
+    Traits\CsrfGuard,
+    Traits\Session,
+    Traits\User,
+    UserAware};
+use DateTime;
 use Common\Service\{Lpa\AddOlderLpa};
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LocalisedDate;
@@ -92,9 +98,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 $form->getData()['force_activation'] === 'yes'
             );
 
-            var_dump("I am here...");
-
-
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::SUCCESS:
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
@@ -121,11 +124,10 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     $session->set('actor_role', $actorRole);
 
                     if ($actorRole === 'attorney') {
-                        $session->set('donor_first_names', $result->getData()['donor']['firstname']);
-                        $session->set('donor_last_name', $result->getData()['donor']['surname']);
-                        $session->set('donor_dob', new DateTime($result->getData()['donor']['dob']));
+                        $session->set('donor_first_names', $result->getData()['actor']['donor']['firstname']);
+                        $session->set('donor_last_name', $result->getData()['actor']['donor']['surname']);
+                        $session->set('donor_dob', new DateTime($result->getData()['actor']['donor']['dob']));
                     }
-
                     return $this->redirectToRoute('lpa.add.contact-details');
             }
         }

@@ -535,6 +535,24 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
+        $response = [
+            'title' => 'Bad request',
+            'details' => 'LPA is not cleansed',
+            'data' => [
+                'donor' => [
+                    'uId'           => '12345',
+                    'firstname'     => 'Example',
+                    'middlenames'   => 'Donor',
+                    'surname'       => 'Person',
+                    'dob'           => '1948-11-01',
+                ],
+                'caseSubtype'       => 'hw',
+                'lpaActorToken'     => 'wxyz-4321',
+                'lpaIsCleansed'     => false,
+                'actorType'         => 'donor',
+            ],
+        ];
+
         $this->apiClientProphecy
             ->httpPatch(
                 '/v1/older-lpa/confirm',
@@ -549,7 +567,9 @@ class AddOlderLpaTest extends TestCase
             )->willThrow(
                 new ApiException(
                     'LPA is not cleansed',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    $response
                 )
             );
 
@@ -562,7 +582,8 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode'],
             false
         );
-        
+
+        $this->assertEquals($response, $result->getData());
         $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
     }
 }
