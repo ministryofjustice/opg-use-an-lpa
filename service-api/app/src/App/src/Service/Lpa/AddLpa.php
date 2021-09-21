@@ -38,7 +38,7 @@ class AddLpa
     public function validateAddLpaData(array $data, string $userId): array
     {
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
-            if (!isset($lpaAddedData['notActivated'])) {
+            if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
                     'User {id} attempted to add an LPA {uId} which already exists in their account',
                     [
