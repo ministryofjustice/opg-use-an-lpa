@@ -184,7 +184,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::request-activation-key/actor-role',
                             [
                                 'user'  => $this->user,
-                                'form'  => $form
+                                'form'  => $form,
+                                'back'  => 'lpa.check-answers'
                             ]
                         ));
                     } else {

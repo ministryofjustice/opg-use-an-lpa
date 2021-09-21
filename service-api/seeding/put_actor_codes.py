@@ -1,8 +1,7 @@
 import argparse
-import os
-import boto3
 import json
 import datetime
+import boto3
 
 
 class LpaCodesSeeder:
@@ -12,6 +11,7 @@ class LpaCodesSeeder:
     aws_iam_session = ''
     lpa_codes_table = ''
     dynamodb = ''
+    expires = ''
 
     def __init__(self, input_json, environment, docker_mode, iam_role_name):
         self.input_json_path = input_json
@@ -25,6 +25,7 @@ class LpaCodesSeeder:
 
         self.lpa_codes_table = self.dynamodb.Table(
             'lpa-codes-{}'.format(self.environment))
+
 
     def set_account_id(self):
         aws_account_ids = {
@@ -74,15 +75,19 @@ class LpaCodesSeeder:
         )
 
     def put_actor_codes(self):
-        with open(self.input_json_path) as f:
-            actorLpaCodes = json.load(f)
+        today = datetime.datetime.now()
+        next_week = today + datetime.timedelta(days=7)
+        with open(self.input_json_path) as seeding_file:
+            actor_lpa_codes = json.load(seeding_file)
 
-        for actorLpaCode in actorLpaCodes:
+        for actor_lpa_code in actor_lpa_codes:
+            if actor_lpa_code['expiry_date'] == "valid":
+                actor_lpa_code['expiry_date'] = int(next_week.timestamp())
             self.lpa_codes_table.put_item(
-                Item=actorLpaCode,
+                Item=actor_lpa_code,
             )
             response = self.lpa_codes_table.get_item(
-                Key={'code': actorLpaCode['code']}
+                Key={'code': actor_lpa_code['code']}
             )
             print(response)
 
@@ -99,6 +104,11 @@ def main():
     parser.add_argument("-d", action='store_true', default=False,
                         help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
+
+    if args.e =="production":
+        print("this script will not run on production unless modified.")
+        print("exiting...")
+        exit()
 
     work = LpaCodesSeeder(args.f, args.e, args.d, args.r)
     work.put_actor_codes()

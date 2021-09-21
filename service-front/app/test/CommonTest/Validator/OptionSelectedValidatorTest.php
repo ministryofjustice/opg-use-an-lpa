@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
-use Actor\Validator\OptionSelectedValidator;
+use Common\Validator\OptionSelectedValidator;
 use PHPUnit\Framework\TestCase;
-use DateTime;
 
 class OptionSelectedValidatorTest extends TestCase
 {
-
     private OptionSelectedValidator $validator;
 
     public function setUp()
@@ -19,29 +17,63 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /** @test */
-    public function testOptionIsPresent()
+    public function isValidWhenOnlyTelephoneNumberPresent()
     {
-        $value = [
-            'telephone' => '0123456789',
-            'no_phone' => 'true'
-        ];
-
-        $isValid = $this->validator->isValid($value);
+        $isValid = $this->validator->isValid(
+            [
+                'telephone' => '0123456789'
+            ]
+        );
 
         $this->assertTrue($isValid);
     }
 
     /** @test */
-    public function testErrorWhenNotPresent()
+    public function isValidWhenOnlyNoPhoneCheckboxPresent()
     {
-        $value = [];
+        $isValid = $this->validator->isValid(
+            [
+                'telephone' => '',
+                'no_phone'  => 'yes'
+            ]
+        );
 
-        $isValid = $this->validator->isValid($value);
+        $this->assertTrue($isValid);
+    }
 
-        $this->assertEquals([
-            OptionSelectedValidator::OPTION_MUST_BE_SELECTED =>
-                OptionSelectedValidator::OPTION_MUST_BE_SELECTED_MESSAGE
-                            ], $this->validator->getMessages());
+    /** @test */
+    public function isNotValidWhenNeitherValuesArePresent()
+    {
+        $isValid = $this->validator->isValid([]);
+
+        $this->assertEquals(
+            [
+                OptionSelectedValidator::OPTION_MUST_BE_SELECTED =>
+                    'Either enter your phone number or check the box to say you cannot take calls'
+            ],
+            $this->validator->getMessages()
+        );
+
+        $this->assertFalse($isValid);
+    }
+
+    /** @test */
+    public function isNotValidWhenBothValuesArePresent()
+    {
+        $isValid = $this->validator->isValid(
+            [
+                'telephone' => '0123456789',
+                'no_phone' => 'yes'
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                OptionSelectedValidator::OPTION_MUST_BE_SELECTED =>
+                    'Either enter your phone number or check the box to say you cannot take calls'
+            ],
+            $this->validator->getMessages()
+        );
 
         $this->assertFalse($isValid);
     }
