@@ -1571,6 +1571,64 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
+    {
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA has an activation key already',
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa['donor']['uId'],
+                                    'firstname'     => $this->lpa['donor']['firstname'],
+                                    'middlenames'   => $this->lpa['donor']['middlenames'],
+                                    'surname'       => $this->lpa['donor']['surname'],
+                                ],
+                                'caseSubtype' => $this->lpa['caseSubtype']
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode,
+            false
+        );
+
+        $donor = new CaseActor();
+        $donor->setUId($this->lpa['donor']['uId']);
+        $donor->setFirstname($this->lpa['donor']['firstname']);
+        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setSurname($this->lpa['donor']['surname']);
+
+        $alreadyHasKeyDTO = new ActivationKeyExistsResponse();
+        $alreadyHasKeyDTO->setDonor($donor);
+        $alreadyHasKeyDTO->setCaseSubtype($this->lpa['caseSubtype']);
+
+        $response = new OlderLpaApiResponse(
+            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+            $alreadyHasKeyDTO
+        );
+
+        assertEquals($response, $result);
+    }
+
+    /**
      * @When I provide details of an LPA that is not registered
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
@@ -1598,7 +1656,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
-
         assertEquals($response, $result);
     }
 }

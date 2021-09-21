@@ -48,7 +48,7 @@ class LpaAlreadyAdded
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             $savedLpaRecords = $this->userLpaActorMapRepository->getUsersLpas($userId);
 
-            foreach ($savedLpaRecords as $record) {
+            foreach($savedLpaRecords as $record) {
                 if ($record['SiriusUid'] === $lpaUid) {
                     $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
 

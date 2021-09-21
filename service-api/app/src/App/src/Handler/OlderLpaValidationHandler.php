@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Lpa\OlderLpaService;
-use Laminas\Diactoros\Response\EmptyResponse;
+use App\Service\Lpa\AddOlderLpa;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
-use DateTime;
 use Exception;
 
 /**
@@ -20,11 +18,11 @@ use Exception;
  */
 class OlderLpaValidationHandler implements RequestHandlerInterface
 {
-    private OlderLpaService $olderLpaService;
+    private AddOlderLpa $addOlderLpa;
 
-    public function __construct(OlderLpaService $olderLpaService)
+    public function __construct(AddOlderLpa $addOlderLpa)
     {
-        $this->olderLpaService = $olderLpaService;
+        $this->addOlderLpa = $addOlderLpa;
     }
 
     /**
@@ -47,7 +45,8 @@ class OlderLpaValidationHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an activation key');
         }
 
-        $lpaMatchResponse = $this->olderLpaService->validateOlderLpaRequest($userId, $requestData);
+        $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
+
         return new JsonResponse($lpaMatchResponse, 200);
     }
 }
