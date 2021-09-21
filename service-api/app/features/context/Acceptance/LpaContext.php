@@ -364,6 +364,162 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to add an LPA that I have requested an activation key for$/
+     */
+    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor()
+    {
+        //UserLpaActorMap: getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        //LpaService: getByUserLpaActorToken
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // lpaService: getByUserLpaActorToken
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // codes api service call
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $this->apiPost(
+            '/v1/add-lpa/validate',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+        assertArrayHasKey('actor', $response);
+        assertArrayHasKey('lpa', $response);
+        assertEquals($this->lpaUid, $response['lpa']['uId']);
+    }
+
+    /**
+     * @Given /^The activateBy TTL is removed from the record in the DB$/
+     */
+    public function theActivateByTTLIsRemovedFromTheRecordInTheDB()
+    {
+        // codes api service call
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        //UserLpaActorMapRepository: getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorId,
+                                'UserId' => $this->userId,
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // UserLpaActorMap:: removeActivateBy
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // codes api service call
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/revoke')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->apiPost(
+            '/v1/add-lpa/confirm',
+            [
+                'actor-code' => $this->oneTimeCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
+            ],
+            [
+                'user-token' => $this->userLpaActorToken,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CREATED);
+
+        $response = $this->getResponseAsJson();
+        assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+    }
+
+    /**
      * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
