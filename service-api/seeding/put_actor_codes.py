@@ -77,15 +77,12 @@ class LpaCodesSeeder:
     def put_actor_codes(self):
         today = datetime.datetime.now()
         next_week = today + datetime.timedelta(days=7)
-        last_week = today - datetime.timedelta(days=7)
         with open(self.input_json_path) as seeding_file:
             actor_lpa_codes = json.load(seeding_file)
 
         for actor_lpa_code in actor_lpa_codes:
             if actor_lpa_code['expiry_date'] == "valid":
                 actor_lpa_code['expiry_date'] = int(next_week.timestamp())
-            else:
-                actor_lpa_code['expiry_date'] = int(last_week.timestamp())
             self.lpa_codes_table.put_item(
                 Item=actor_lpa_code,
             )
@@ -107,6 +104,11 @@ def main():
     parser.add_argument("-d", action='store_true', default=False,
                         help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
+
+    if args.e =="production":
+        print("this script will not run on production unless modified.")
+        print("exiting...")
+        exit()
 
     work = LpaCodesSeeder(args.f, args.e, args.d, args.r)
     work.put_actor_codes()
