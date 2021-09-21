@@ -923,6 +923,37 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
+     */
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
+    {
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA has an activation key already',
+                            'data' => [
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $this->fillAndSubmitOlderLpaForm();
+    }
+
+    /**
      * @When I provide details of an LPA that is not registered
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
