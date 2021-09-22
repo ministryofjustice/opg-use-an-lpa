@@ -208,3 +208,18 @@ Feature: Add an older LPA
     Given I have reached the contact details page
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
+
+  @ui @ff:allow_older_lpas:true
+  Scenario Outline: The user is shown an error message when entering invalid donor details
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    And I confirm that I am the Attorney
+    When I provide invalid donor details of <firstnames> <surname> <dob>
+    Then I am told that my input is invalid because <reason>
+
+    Examples:
+      | firstnames | surname | dob        | reason                            |
+      | Donor      | Person  |            | Enter the donor's date of birth   |
+      |            | Person  | 01-01-1980 | Enter the donor's first names     |
+      | Donor      |         | 01-01-1980 | Enter the donor's last name       |
+      | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |

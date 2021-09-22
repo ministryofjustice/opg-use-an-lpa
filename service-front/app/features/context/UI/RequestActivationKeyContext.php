@@ -554,6 +554,25 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I provide invalid donor details of (.*) (.*) (.*)$/
+     */
+    public function iProvideInvalidDonorDetailsOf($firstnames, $surname, $dob)
+    {
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
+        $this->ui->fillField('donor_first_names', $firstnames);
+        $this->ui->fillField('donor_last_name', $surname);
+
+        if (!empty($dob)) {
+            $dobParts = explode('-', $dob);
+            $this->ui->fillField('donor_dob[day]', $dobParts[0]);
+            $this->ui->fillField('donor_dob[month]', $dobParts[1]);
+            $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+        }
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @When I provide the details from a valid paper document
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
