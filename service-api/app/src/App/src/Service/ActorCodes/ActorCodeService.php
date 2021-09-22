@@ -115,7 +115,11 @@ class ActorCodeService
         if (array_key_exists($lpaId, $idToLpaMap)) {
             $id = $this->removeTTLFromRequest($idToLpaMap[$lpaId]);
         } else {
-            $id = $this->addLpaRecord($userId, $details);
+            $id = $this->userLpaActorMapRepository->create(
+                $userId,
+                $lpaId,
+                (string)$details['actor']['details']['id']
+            );
         }
 
         try {

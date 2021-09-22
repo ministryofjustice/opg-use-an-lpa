@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\DataAccess\Repository\KeyCollisionException;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use DateTime;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class UserLpaActorMapTest extends TestCase
 {
@@ -18,7 +18,14 @@ class UserLpaActorMapTest extends TestCase
 
     public const TABLE_NAME = 'test-table-name';
 
+    /** @var ObjectProphecy|DynamoDbClient */
     private $dynamoDbClientProphecy;
+
+    public function assertIsValidUuid($uuid, string $message = '')
+    {
+        $pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+        self::assertRegExp($pattern, $uuid, $message);
+    }
 
     protected function setUp()
     {
@@ -119,13 +126,11 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function add_unique_token()
     {
-        $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
         $testActorId = 1;
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
-            $testToken,
             $testSiriusUid,
             $testUserId,
             $testActorId
@@ -142,8 +147,7 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
 
-            $this->assertEquals(['S' => $testToken], $data['Item']['Id']);
-            $this->assertIsString($data['Item']['Id']['S']);
+            $this->assertIsValidUuid($data['Item']['Id']['S']);
             $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
             $this->assertIsString($data['Item']['UserId']['S']);
             $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
@@ -159,21 +163,19 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId);
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId);
     }
 
     /** @test */
     public function add_unique_token_with_TTL()
     {
         $yearInEpoch = 31536000;
-        $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
         $testActorId = 1;
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $yearInEpoch,
-            $testToken,
             $testSiriusUid,
             $testUserId,
             $testActorId
@@ -189,8 +191,7 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
 
-            $this->assertEquals(['S' => $testToken], $data['Item']['Id']);
-            $this->assertIsString($data['Item']['Id']['S']);
+            $this->assertIsValidUuid($data['Item']['Id']['S']);
             $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
             $this->assertIsString($data['Item']['UserId']['S']);
             $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
@@ -198,7 +199,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['N' => $testActorId], $data['Item']['ActorId']);
             $this->assertIsString($data['Item']['ActorId']['N']);
 
-            // Checks 'now' is correct, we a little bit of leeway
+            // Checks 'now' is correct, with a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
 
             $this->assertEqualsWithDelta(time() + $yearInEpoch, $data['Item']['ActivateBy']['N'], 5);
@@ -208,28 +209,40 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testToken, $testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
     }
 
     /** @test */
     public function add_conflicting_code()
     {
-        $this->dynamoDbClientProphecy->putItem(Argument::any())
-            ->willThrow(new DynamoDbException(
-                'exception',
-                $this->prophesize(\Aws\CommandInterface::class)->reveal(),
-                ['code' => 'ConditionalCheckFailedException']
-            ))
-            ->shouldBeCalled();
+        /** @var DynamoDbClient $dDBMock */
+        $dDBMock = $this->getMockBuilder(DynamoDbClient::class)
+            ->setMethods(['putItem'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $dDBMock
+            ->expects($this->exactly(2))
+            ->method('putItem')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(
+                $this->throwException(
+                    new DynamoDbException(
+                        'exception',
+                        $this->prophesize(\Aws\CommandInterface::class)->reveal(),
+                        ['code' => 'ConditionalCheckFailedException']
+                    )
+                ),
+                $this->returnValue('')
+            );
 
         //---
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap($dDBMock, self::TABLE_NAME);
 
-        // We expect our own KeyCollisionException
-        $this->expectException(KeyCollisionException::class);
+        $id = $repo->create('test-val', 'test-val', 'test-val');
 
-        $repo->create('test-val', 'test-val', 'test-val', 'test-val');
+        $this->assertIsValidUuid($id);
     }
 
     /** @test */
@@ -246,7 +259,7 @@ class UserLpaActorMapTest extends TestCase
         // We should now expect a DynamoDbException
         $this->expectException(DynamoDbException::class);
 
-        $repo->create('test-val', 'test-val', 'test-val', 'test-val');
+        $repo->create('test-val', 'test-val', 'test-val');
     }
 
     //--------------------------------------------------------------------------------

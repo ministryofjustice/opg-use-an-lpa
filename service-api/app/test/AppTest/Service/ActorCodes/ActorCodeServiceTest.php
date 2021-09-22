@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository;
-use App\DataAccess\Repository\ActorCodesInterface;
-use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
@@ -23,29 +20,19 @@ use Psr\Log\LoggerInterface;
 
 class ActorCodeServiceTest extends TestCase
 {
-    /**
-     * @var CodeValidationStrategyInterface|ObjectProphecy
-     */
+    /** @var CodeValidationStrategyInterface|ObjectProphecy */
     private $codeValidatorProphecy;
 
-    /**
-     * @var LpaService|ObjectProphecy
-     */
+    /** @var LpaService|ObjectProphecy */
     private $lpaServiceProphecy;
 
-    /**
-     * @var UserLpaActorMapInterface|ObjectProphecy
-     */
+    /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapInterfaceProphecy;
 
-    /**
-     * @var LoggerInterface|ObjectProphecy
-     */
+    /** @var LoggerInterface|ObjectProphecy */
     private $loggerProphecy;
 
-    /**
-     * @var ResolveActor|ObjectProphecy
-     */
+    /** @var ResolveActor|ObjectProphecy */
     private $resolveActorProphecy;
 
     public function setUp(): void
@@ -81,26 +68,20 @@ class ActorCodeServiceTest extends TestCase
             ->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->create(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            ),
             'test-user',
             'test-uid',
             '1'
-        )->shouldBeCalled();
+        )
+            ->willReturn('00000000-0000-4000-A000-000000000000')
+            ->shouldBeCalled();
 
-
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
         $service = $this->getActorCodeService();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
 
-        // We expect a uuid4 back.
-        $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $result);
+        $this->assertEquals('00000000-0000-4000-A000-000000000000', $result);
     }
 
     /** @test */
@@ -124,7 +105,7 @@ class ActorCodeServiceTest extends TestCase
             ]
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn($mapResults)->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn($mapResults)->shouldBeCalled();
 
         $service = $this->getActorCodeService();
 
@@ -143,25 +124,13 @@ class ActorCodeServiceTest extends TestCase
             ->willThrow(new ActorCodeMarkAsUsedException());
 
         $this->userLpaActorMapInterfaceProphecy->create(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            ),
             'test-user',
             'test-uid',
             '1'
-        )->shouldBeCalled();
+        )->willReturn('00000000-0000-4000-A000-000000000000');
 
-        $this->userLpaActorMapInterfaceProphecy->delete(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            )
-        )->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')
+            ->shouldBeCalled();
 
         //---
 
@@ -170,9 +139,6 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
-
-        // We expect a uuid4 back.
-        $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $result);
     }
 
     /** @test */
