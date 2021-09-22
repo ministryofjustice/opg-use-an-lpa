@@ -167,44 +167,7 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
-
-        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
-    }
-
-    /** @test */
-    public function confirmation_with_vaild_details_has_key_collision(): void
-    {
-        $this->initValidParameterSet();
-
-        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
-            ->willReturn('id-of-db-row')
-            ->shouldBeCalled();
-
-        // We call the create function multiple times till it works.
-        $createCalls = 0;
-        $this->userLpaActorMapInterfaceProphecy->create(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            ),
-            'test-user',
-            'test-uid',
-            '1'
-        )->will(function () use (&$createCalls) {
-            if ($createCalls > 0) {
-                return;
-            }
-
-            $createCalls++;
-            throw new KeyCollisionException();
-        });
-
-        $service = $this->getActorCodeService();
-
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas('test-user')->willReturn([])->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
 

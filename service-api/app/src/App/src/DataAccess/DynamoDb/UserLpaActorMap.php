@@ -133,7 +133,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function getUsersLpas(string $userId): ?array
+    public function getByUserId(string $userId): ?array
     {
         $result = $this->client->query([
             'TableName' => $this->userLpaActorTable,

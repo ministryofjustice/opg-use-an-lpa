@@ -384,7 +384,7 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->getUsersLpas($testUserId);
+        $result = $repo->getByUserId($testUserId);
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);

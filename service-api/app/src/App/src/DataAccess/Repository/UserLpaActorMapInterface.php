@@ -46,7 +46,7 @@ interface UserLpaActorMapInterface
      * @param $userId
      * @return mixed
      */
-    public function getUsersLpas(string $userId): ?array;
+    public function getByUserId(string $userId): ?array;
 
     /**
      * Deletes an relation. Should only be called if a rollback is needed.
