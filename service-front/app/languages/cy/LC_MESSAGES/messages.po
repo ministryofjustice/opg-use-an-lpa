@@ -5964,45 +5964,48 @@ msgstr "cofrestrwyd yr atwrneiaeth arhosol ar 1 Ionawr 2016 neu ar ôl hynny"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Check your details"
-msgstr ""
+msgstr "Gwiriwch eich manylion"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:23
 msgid "Your role"
-msgstr ""
+msgstr "Eich rôl"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
-msgstr ""
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rôl</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:43
 msgid "Donor's name"
-msgstr ""
+msgstr "Enw’r rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
-msgstr ""
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgstr ""
+"Newid<span class=\"govuk-visually-hidden\"> dyddiad geni’r rhoddwr</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:70
 msgid "Telephone number"
-msgstr ""
+msgstr "Rhif ffôn"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
-msgstr ""
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
 msgid ""
 "I understand that the information I've given will be stored securely and used "
 "to process my activation key request."
 msgstr ""
+"Rwy’n deall y bydd y wybodaeth a roddais yn cael ei storio’n ddiogel a’i "
+"defnyddio i brosesu fy nghais am allwedd cadarnhau cyfrif."
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
 msgid "Confirm and submit request"
-msgstr ""
+msgstr "Cadarnhau a chyflwyno’r cais"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:54
@@ -6010,10 +6013,11 @@ msgctxt "error"
 msgid ""
 "Either enter your phone number or check the box to say you cannot take calls"
 msgstr ""
+"Rhowch eich rhif ffôn neu ticiwch y blwch i ddweud na allwch dderbyn galwadau"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:76
 msgid "Not provided"
-msgstr ""
+msgstr "Heb ei ddarparu"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:21
 msgid "What is the LPA reference number?"
