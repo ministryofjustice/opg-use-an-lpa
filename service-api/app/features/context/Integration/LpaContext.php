@@ -1737,7 +1737,7 @@ class LpaContext extends BaseIntegrationContext
                         'firstname'     => $this->lpa->donor->firstname,
                         'middlenames'   => $this->lpa->donor->middlenames,
                         'surname'       => $this->lpa->donor->surname,
-                       // 'dob'           => $this->lpa->donor->dob
+                        'dob'           => $this->lpa->donor->dob
                     ],
                     'caseSubtype'   => $this->lpa->caseSubtype
                 ],
