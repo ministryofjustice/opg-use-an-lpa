@@ -21,12 +21,16 @@
                 </div>
                 <div class="govuk-grid-column-two-thirds">
 
-                    <p class="govuk-body">{% trans %}We'll send you a letter with the activation key. We'll post it to the address we have for you. You'll then be able to use the key to add the LPA to your account.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}We’ll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it’s more secure.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}Once you've got the activation key, you'll be able to use it to add the LPA to your account.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}We've sent you an email to confirm all these details.{% endtrans %}</p>
                     <p class="govuk-body"><strong>{% trans with {'%date%': lpa_date(date)} %}You should get the letter by %date%{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call.{% endtrans %}</p>
 
                     {{ include('@partials/contact-details/telephone.html.twig') }}
+
+                    <h2 class="govuk-heading-m">{% trans %}Have more than one LPA?{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}You'll need an activation key for each LPA that you'd like to add to your account.{% endtrans %}</p>
 
                     <a href="{{ path('lpa.add-by-paper') }}" draggable="false" class="govuk-button">{% trans %}Request another activation key{% endtrans %}</a>
                     <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('lpa.dashboard') }}">
