@@ -120,7 +120,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     );
                 case OlderLpaApiResponse::LPA_NOT_CLEANSED:
                     $session->set('is_lpa_cleansed', 'LPA_NOT_CLEANSED');
-                    $actorRole = ($result->getData()['actorType'] === 'donor') ? 'donor' : 'attorney';
+                    $actorRole = $result->getData()['actor']['role'];
                     $session->set('actor_role', $actorRole);
 
                     if ($actorRole === 'attorney') {

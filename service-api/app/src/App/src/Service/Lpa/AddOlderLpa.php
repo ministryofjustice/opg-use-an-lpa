@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;
 use DateTime;
 
@@ -112,11 +113,13 @@ class AddOlderLpa
         }
 
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
+        $resolvedActor['lpaIsCleansed'] = $lpaData['lpaIsCleansed'];
         $resolvedActor['donor'] = [
             'uId'           => $lpaData['donor']['uId'],
             'firstname'     => $lpaData['donor']['firstname'],
             'middlenames'   => $lpaData['donor']['middlenames'],
             'surname'       => $lpaData['donor']['surname'],
+            'dob'           => $lpaData['donor']['dob']
         ];
 
         // Checks if the actor already has an active activation key or has requested one. If forced ignore
@@ -155,5 +158,28 @@ class AddOlderLpa
         }
 
         return $resolvedActor;
+    }
+
+    /**
+     * @param array $actorDetailsMatch
+     * @throws Exception Thrown when LPA is not cleansed
+     */
+    public function checkIfLpaIsCleansed(array $actorDetailsMatch): void
+    {
+        if ($actorDetailsMatch['lpaIsCleansed'] !== true) {
+            $this->logger->notice(
+                'User entered LPA {uId} is not cleansed',
+                [
+                    'event_code' => EventCodes::OLDER_LPA_NOT_CLEANSED,
+                    'uId' => $actorDetailsMatch['donor']['uId'],
+                ]
+            );
+            throw new BadRequestException(
+                'LPA is not cleansed',
+                [
+                    'actor' => $actorDetailsMatch
+                ]
+            );
+        }
     }
 }

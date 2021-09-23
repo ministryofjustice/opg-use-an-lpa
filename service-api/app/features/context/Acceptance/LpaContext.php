@@ -2935,15 +2935,17 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'     => json_decode(json_encode($this->lpa->attorneys[0]), true),
-            'role'      => 'attorney',
-            'lpa-id'    => $this->lpa->uId,
+            'actor'         => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'role'          => 'attorney',
+            'lpa-id'        => $this->lpa->uId,
             'caseSubtype'   => $this->lpa->caseSubtype,
+            'lpaIsCleansed' => true,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
+                'dob'           => $this->lpa->donor->dob,
             ],
             'attorney'         => [
                 'uId'           => $this->lpa->attorneys[0]->uId,
@@ -2952,7 +2954,6 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->attorneys[0]->surname
             ]
         ];
-
         assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
@@ -3017,7 +3018,6 @@ class LpaContext implements Context
                 'dob'           => $this->userDob
             ],
             'lpaIsCleansed' => true,
-            'actorType' => 'donor'
         ];
 
         assertArrayNotHasKey('attorney', $this->getResponseAsJson());
@@ -3085,13 +3085,12 @@ class LpaContext implements Context
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
             'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
-            'actorType'     => $actorType,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
- 'dob'           => $this->lpa->donor->dob
+                'dob'           => $this->lpa->donor->dob
             ],
         ];
 

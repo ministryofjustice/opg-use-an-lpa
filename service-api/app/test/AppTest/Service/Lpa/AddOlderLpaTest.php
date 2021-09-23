@@ -214,15 +214,17 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $expectedResponse = [
-            'lpa-id'     => $this->lpaUid,
-            'caseSubtype' => 'pfa',
-            'actor'     => $this->lpaData['donor'],
-            'role'      => 'donor',
+            'lpa-id'        => $this->lpaUid,
+            'caseSubtype'   => 'pfa',
+            'actor'         => $this->lpaData['donor'],
+            'role'          => 'donor',
+            'lpaIsCleansed' => false,
             'donor'       => [
                 'uId'         => $this->lpaData['donor']['uId'],
                 'firstname'   => 'Donor',
                 'middlenames' => 'Example',
                 'surname'     => 'Person',
+                'dob'         => $this->lpaData['donor']['dob']
             ]
         ];
 
@@ -463,6 +465,7 @@ class AddOlderLpaTest extends TestCase
                 'uId'               => $this->lpaUid,
                 'registrationDate'  => '2016-01-01',
                 'status'            => 'Registered',
+                'lpaIsCleansed'     => false,
                 'caseSubtype'       => 'pfa',
                 'donor' => [
                     'uId'           => '700000001111',
@@ -483,5 +486,43 @@ class AddOlderLpaTest extends TestCase
             ],
             new DateTime()
         );
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_an_exception_if_lpa_not_cleansed()
+    {
+        $dataToMatch = [
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Wrong Name',
+            'last_name'             => 'Incorrect',
+            'postcode'              => 'wR0 nG1',
+            'force_activation_key'  => false,
+        ];
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpa->getData());
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpa->getData(), $this->dataToMatch)
+            ->willReturn($this->resolvedActor);
+
+        $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+
+        try {
+            $this->getSut()->checkIfLpaIsCleansed($result);
+        } catch (BadRequestException $ex) {
+            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            $this->assertEquals('LPA is not cleansed', $ex->getMessage());
+        }
     }
 }
