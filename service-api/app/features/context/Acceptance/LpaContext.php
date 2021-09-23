@@ -2440,6 +2440,7 @@ class LpaContext implements Context
     /**
      * @Given /^I confirm the details I provided are correct$/
      * @When /^I confirm details shown to me of the found LPA are correct$/
+     * @Then /^I confirm details shown to me of the LPA are correct$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -3139,7 +3140,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^System recognises the Lpa is not cleansed$/
+     * @When /^System recognises the Lpa is not cleansed and not eligible to be added$/
      */
     public function systemRecognisesTheLpaIsNotCleansed()
     {
