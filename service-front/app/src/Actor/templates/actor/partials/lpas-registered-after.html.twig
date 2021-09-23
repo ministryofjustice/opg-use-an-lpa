@@ -5,6 +5,10 @@
       C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
         </svg>
 
-         <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 September 2019.{% endtrans %}</span>
+        {% if feature_enabled('allow_older_lpas') %}
+            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 January 2016.{% endtrans %}</span>
+        {% else %}
+            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 September 2019.{% endtrans %}</span>
+        {%  endif %}
     </div>
 </div>

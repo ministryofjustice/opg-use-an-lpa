@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-09-09T13:59:30+00:00\n"
+"POT-Creation-Date: 2021-09-15T08:56:16+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -2158,6 +2158,7 @@ msgstr ""
 msgid "Add a lasting power of attorney"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:23
 #: src/Actor/templates/actor/lpa-add.html.twig:57
 #: src/Common/templates/partials/full-lpa-display.html.twig:253
@@ -3740,7 +3741,7 @@ msgstr ""
 msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:8
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:11
 msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
 msgstr ""
 
@@ -4386,4 +4387,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:42
 msgid "We are working to open up the service to more LPAs. Please try again in a few weeks time."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
+msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
 msgstr ""
