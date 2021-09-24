@@ -648,8 +648,9 @@ class AddOlderLpaTest extends TestCase
             );
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('A bad request was made to add an older lpa and the reason for rejection is not understood');
-        $test = $this->sut->confirm(
+        $this->expectExceptionMessage(
+            'A bad request was made to add an older lpa and the reason for rejection is not understood');
+        $this->sut->confirm(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
