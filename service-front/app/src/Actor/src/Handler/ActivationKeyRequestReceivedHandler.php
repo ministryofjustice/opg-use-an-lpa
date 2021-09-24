@@ -44,7 +44,7 @@ class ActivationKeyRequestReceivedHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $date = (new Carbon())->addWeeks(2);
+        $date = (new Carbon())->addWeeks(6);
 
         ($this->localisedDate)($date);
 
