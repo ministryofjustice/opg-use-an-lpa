@@ -85,9 +85,9 @@ class OlderLpaService
      */
     public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
-        $requestId = null;
+        $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
+            $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
         }
 
         $uidInt = (int)$uid;
@@ -111,8 +111,8 @@ class OlderLpaService
                     'lpa' => $uidInt,
                 ]
             );
-            if ($requestId !== null) {
-                $this->removeLpa($requestId);
+            if ($recordId !== null) {
+                $this->removeLpa($recordId);
             }
             throw $apiException;
         }

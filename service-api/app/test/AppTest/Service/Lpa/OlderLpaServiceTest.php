@@ -129,6 +129,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy
             ->delete('00000000-0000-4000-A000-000000000000')
+            ->shouldBeCalled()
             ->willReturn([]);
 
         $service = $this->getOlderLpaService();
