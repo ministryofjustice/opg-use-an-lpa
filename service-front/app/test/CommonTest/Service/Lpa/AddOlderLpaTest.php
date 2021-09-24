@@ -493,8 +493,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
+     * @covers ::confirm
      */
     public function it_will_fail_sent_keys_for_an_ineligible_lpa(): void
     {
@@ -569,14 +568,12 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::validate
+     * @covers ::confirm
      * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
         $response = [
-            'title' => 'Bad request',
-            'details' => 'LPA is not cleansed',
             'data' => [
                 'donor' => [
                     'uId'           => '12345',
@@ -586,9 +583,8 @@ class AddOlderLpaTest extends TestCase
                     'dob'           => '1948-11-01',
                 ],
                 'caseSubtype'       => 'hw',
-                'lpaActorToken'     => 'wxyz-4321',
                 'lpaIsCleansed'     => false,
-                'actorType'         => 'donor',
+                'role'              => 'donor',
             ],
         ];
 
@@ -628,7 +624,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::validate
+     * @covers ::confirm
      * @covers ::badRequestReturned
      */
     public function it_will_fail_to_add_lpa_due_to_an_unknown_request_exception(): void

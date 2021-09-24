@@ -94,6 +94,10 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
         if ($this->session->get('actor_role') === 'attorney') {
                 return 'lpa.add.donor-details';
         }
+
+        if ($this->session->has('is_lpa_cleansed')) {
+            return 'lpa.check-answers';
+        }
         return 'lpa.add.actor-role';
     }
 }
