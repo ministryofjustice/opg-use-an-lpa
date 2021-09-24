@@ -1718,7 +1718,7 @@ class LpaContext extends BaseIntegrationContext
                                 'caseSubtype' => $this->lpa->caseSubtype,
                                 'lpaActorToken' => $this->userLpaActorToken,
                                 'lpaIsCleansed' => false,
-                                'actorType' => 'donor'
+                                'role'          => 'donor'
                             ],
                         ]
                     )
