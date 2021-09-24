@@ -6184,15 +6184,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
 msgid ""
-"We'll send you a letter with your activation key for this LPA. We'll post it "
-"to the address we have for you. We send it by post because it's more secure."
+"We’ll send you a letter with your activation key for this LPA. We'll post it "
+"to the address we have for you. We send it by post because it’s more secure."
 msgstr ""
-"Byddwn yn anfon llythyr atoch gyda’ch allwedd cadarnhau cyfrif ar gyfer "
-"yr atwrneiaeth arhosol hon. Byddwn yn ei phostio i’r cyfeiriad sydd gennym ar "
-"eich cyfer chi. Byddwn yn ei hanfon drwy’r post oherwydd bod hynny’n fwy diogel."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:25
-msgid "We'll contact you if we need any more information."
+msgid "We’ll contact you if we need any more information."
 msgstr "Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:28
@@ -6202,8 +6199,7 @@ msgstr ""
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:29
 msgid ""
 "You should hear from us or get the activation key letter by %date%. If you "
-"don't, please contact us. You'll need to give the LPA reference number when "
+"don’t, please contact us. You'll need to give the LPA reference number when "
 "you get in touch."
-msgstr ""
-"Fe ddylech chi glywed gennym ni neu dylai’r llythyr sy’n cynnwys yr allwedd cadarnhau "
+msgstr "Fe ddylech chi glywed gennym ni neu dylai’r llythyr sy’n cynnwys yr allwedd cadarnhau "
 "cyfrif eich cyrraedd erbyn %date%. Os na fydd hynny wedi digwydd, cysylltwch â ni."
