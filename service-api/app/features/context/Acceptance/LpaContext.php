@@ -3031,7 +3031,6 @@ class LpaContext implements Context
     public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails()
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-        $actorType = 'primary-attorney';
 
         $this->lpa->lpaIsCleansed = true;
         $this->lpaUid = '700000000047';
@@ -3140,9 +3139,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^System recognises the Lpa is not cleansed and not eligible to be added$/
+     * @When /^My LPA is not marked as clean$/
      */
-    public function systemRecognisesTheLpaIsNotCleansed()
+    public function myLPAIsNotMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = 'false';
 
@@ -3220,9 +3219,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^System recognises the Lpa as cleansed$/
+     * @When /^My LPA is marked as clean$/
      */
-    public function systemRecognisesTheLpaAsCleansed()
+    public function myLPAIsMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = true;
         //UserLpaActorMap: getAllForUser

@@ -107,17 +107,17 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     And I am shown the details of an LPA
     When I confirm details of the found LPA are correct
-    And System recognises the Lpa is not cleansed
+    And My LPA is not marked as clean
     Then I am asked for my contact details
 
   @ui @integration @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account when LPA is cleansed
     Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
+    When I provide the details from a valid paper document
     And I confirm the details I provided are correct
     And I am shown the details of an LPA
     When I confirm details of the found LPA are correct
-    And System recognises the Lpa as cleansed
+    And My LPA is marked as clean
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
@@ -128,22 +128,11 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     And I am shown the details of an LPA
     When I confirm details of the found LPA are correct
-    And System recognises the Lpa is not cleansed
+    And My LPA is not marked as clean
     Then I am asked for my contact details
     When I enter my telephone number
     Then I am asked to consent and confirm my details
     And I can see my telephone number
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user can add an older LPA to their account when LPA is cleansed
-    Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    When I confirm details of the found LPA are correct
-    And System recognises the Lpa is cleansed
-    Then a letter is requested containing a one time use code
-    And I receive an email confirming activation key request
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
@@ -310,3 +299,14 @@ Feature: Add an older LPA
       |            | Person  | 01-01-1980 | Enter the donor's first names     |
       | Donor      |         | 01-01-1980 | Enter the donor's last name       |
       | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper LPA which I have already requested an activation key for
+    And I confirm the details I provided are correct
+    And I am told that I have an activation key for this LPA and where to find it
+    When I request for a new activation key again and lpa is not cleansed
+    And I am asked for my contact details
+    When I click the Back link on the page
+    Then I am taken back to the check answers page

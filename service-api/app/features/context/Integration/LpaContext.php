@@ -2569,9 +2569,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^System recognises the Lpa is not cleansed and not eligible to be added$/
+     * @When /^My LPA is not marked as clean$/
      */
-    public function systemRecognisesTheLpaIsNotCleansed()
+    public function myLPAIsNotMarkedAsClean()
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -2615,9 +2615,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^System recognises the Lpa as cleansed$/
+     * @When /^My LPA is marked as clean$/
      */
-    public function systemRecognisesTheLpaAsCleansed()
+    public function myLPAIsMarkedAsClean()
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 

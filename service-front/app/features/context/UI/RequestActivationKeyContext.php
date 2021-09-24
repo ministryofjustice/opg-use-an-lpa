@@ -418,6 +418,7 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I confirm that those details are correct$/
      * @When /^I confirm the details I provided are correct$/
+     * @Then /^I am taken back to the check answers page$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -1066,10 +1067,10 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^System recognises the Lpa is not cleansed$/
+     * @Then /^My LPA is not marked as clean$/
      * @Then /^I request for a new activation key again and lpa is not cleansed$/
      */
-    public function systemRecognisesTheLpaIsNotCleansed()
+    public function myLpaIsNotMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = false;
 
@@ -1105,9 +1106,9 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^System recognises the Lpa as cleansed$/
+     * @When /^My LPA is marked as clean$/
      */
-    public function systemRecognisesTheLpaAsCleansed()
+    public function myLPAIsMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = true;
 

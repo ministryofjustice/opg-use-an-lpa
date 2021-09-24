@@ -145,7 +145,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am shown the details of an LPA
     And I confirm details shown to me of the LPA are correct
-    And System recognises the Lpa is not cleansed and not eligible to be added
+    And My LPA is not marked as clean
     Then I am asked for my contact details
 
   @acceptance @ff:allow_older_lpas:true
@@ -155,5 +155,5 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     And I am shown the details of an LPA
     When I confirm details shown to me of the LPA are correct
-    And System recognises the Lpa as cleansed
+    And My LPA is marked as clean
     Then I am asked for my contact details

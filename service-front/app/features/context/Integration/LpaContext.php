@@ -1502,7 +1502,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
-     * @When /^System recognises the Lpa as cleansed$/
+     * @When /^My LPA is marked as clean$/
      */
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
@@ -1575,14 +1575,14 @@ class LpaContext extends BaseIntegrationContext
                     json_encode(
                         [
                             'donor' => [
-                                'uId' => $this->lpa['donor']['uId'],
-                                'firstname' => $this->lpa['donor']['firstname'],
-                                'middlenames' => $this->lpa['donor']['middlenames'],
-                                'surname' => $this->lpa['donor']['surname'],
+                                'uId'           => $this->lpa['donor']['uId'],
+                                'firstname'     => $this->lpa['donor']['firstname'],
+                                'middlenames'   => $this->lpa['donor']['middlenames'],
+                                'surname'       => $this->lpa['donor']['surname'],
                             ],
-                            'caseSubtype' => $this->lpa['caseSubtype'],
+                            'caseSubtype'   => $this->lpa['caseSubtype'],
                             'lpaIsCleansed' => false,
-                            'actorType' => 'donor'
+                            'role'          => 'donor'
                         ]
                     )
                 )
@@ -1694,10 +1694,10 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^System recognises the Lpa is not cleansed$/
+     * @Then /^My LPA is not marked as clean$/
      * @When /^I request for a new activation key again and lpa is not cleansed$/
      */
-    public function systemRecognisesTheLpaIsNotCleansed()
+    public function myLpaIsNotMarkedAsClean()
     {
         $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
