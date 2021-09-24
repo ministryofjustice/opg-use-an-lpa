@@ -22,14 +22,16 @@
                 <div class="govuk-grid-column-two-thirds">
 
                     <p class="govuk-body">{% trans %}Once we’ve checked all the details, we’ll post you a letter with your activation key for this LPA. We send it by post because it’s more secure.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}We’ll contact you if we need any more information.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}Once you've got the activation key, you'll be able to use it to add the LPA to your account.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}We've sent you an email to confirm all these details.{% endtrans %}</p>
-                    <p class="govuk-body"><strong>{% trans with {'%date%': lpa_date(date)} %}You should get the letter by %date%{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call.{% endtrans %}</p>
+                    <h2 class="govuk-heading-l">{% trans with {'%date%': lpa_date(date)} %}We'll contact you by %date%{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans with {'%date%': lpa_date(date)} %}You should hear from us or get the activation key letter by %date%. If you don’t, please contact us. You'll need to give the LPA reference number when you get in touch.{% endtrans %}</p>
 
+                    {{ include('@partials/contact-details/email.html.twig') }}
                     {{ include('@partials/contact-details/telephone.html.twig') }}
 
-                    <h2 class="govuk-heading-m">{% trans %}Have more than one LPA?{% endtrans %}</h2>
+                    <h2 class="govuk-heading-l">{% trans %}Have more than one LPA?{% endtrans %}</h2>
                     <p class="govuk-body">{% trans %}You'll need an activation key for each LPA that you'd like to add to your account.{% endtrans %}</p>
 
                     <a href="{{ path('lpa.add-by-paper') }}" draggable="false" class="govuk-button">{% trans %}Request another activation key{% endtrans %}</a>
