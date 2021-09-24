@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -22,9 +22,9 @@ msgstr "Eich cod mynediad yr LPA newydd"
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
+#: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:37
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
@@ -33,11 +33,13 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:64
+#: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:33
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
+#: src/Actor/templates/actor/check-lpa.html.twig:29
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
 #: src/Viewer/templates/viewer/check-code-found.html.twig:29
 msgid "Property and finance"
@@ -48,11 +50,13 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:66
+#: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:35
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:73
+#: src/Actor/templates/actor/check-lpa.html.twig:31
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
 #: src/Viewer/templates/viewer/check-code-found.html.twig:29
 msgid "Health and welfare"
@@ -175,38 +179,38 @@ msgstr ""
 msgid "Confirm your new email address"
 msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 
-#: src/Actor/templates/actor/activate-account.html.twig:12
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:14
-#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:14
-#: src/Actor/templates/actor/change-details.html.twig:20
-#: src/Actor/templates/actor/change-email.html.twig:12
-#: src/Actor/templates/actor/change-lpa-details.html.twig:20
-#: src/Actor/templates/actor/check-lpa.html.twig:12
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:13
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
-#: src/Actor/templates/actor/contact-details.html.twig:14
-#: src/Actor/templates/actor/create-account-success.html.twig:12
-#: src/Actor/templates/actor/create-account.html.twig:12
-#: src/Actor/templates/actor/death-notification.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:12
-#: src/Actor/templates/actor/lpa-add.html.twig:14
+#: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:14
+#: src/Actor/templates/actor/request-email-change-success.html.twig:14
 #: src/Actor/templates/actor/lpa-already-added.html.twig:14
-#: src/Actor/templates/actor/lpa-removed.html.twig:15
-#: src/Actor/templates/actor/password-change.html.twig:13
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:12
-#: src/Actor/templates/actor/password-reset-request-done.html.twig:12
-#: src/Actor/templates/actor/password-reset-request.html.twig:12
+#: src/Actor/templates/actor/activate-account.html.twig:12
+#: src/Actor/templates/actor/create-account.html.twig:12
 #: src/Actor/templates/actor/password-reset.html.twig:12
+#: src/Actor/templates/actor/password-change.html.twig:13
+#: src/Actor/templates/actor/create-account-success.html.twig:12
+#: src/Actor/templates/actor/change-email.html.twig:12
+#: src/Actor/templates/actor/password-reset-request.html.twig:12
+#: src/Actor/templates/actor/contact-details.html.twig:14
+#: src/Actor/templates/actor/death-notification.html.twig:20
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:14
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:14
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:14
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:14
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:14
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:14
-#: src/Actor/templates/actor/request-activation-key/info.html.twig:14
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:14
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:14
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:14
-#: src/Actor/templates/actor/request-email-change-success.html.twig:14
-#: src/Common/templates/partials/contact-us.html.twig:17
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:14
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:13
+#: src/Actor/templates/actor/login.html.twig:12
+#: src/Actor/templates/actor/lpa-removed.html.twig:15
+#: src/Actor/templates/actor/check-lpa.html.twig:12
+#: src/Actor/templates/actor/change-lpa-details.html.twig:20
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:12
+#: src/Actor/templates/actor/change-details.html.twig:20
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:12
+#: src/Actor/templates/actor/lpa-add.html.twig:14
 #: src/Common/templates/partials/cookies.html.twig:19
+#: src/Common/templates/partials/contact-us.html.twig:17
 #: src/Viewer/templates/viewer/check-code-found.html.twig:12
 #: src/Viewer/templates/viewer/enter-code.html.twig:12
 msgid "Back"
@@ -298,21 +302,22 @@ msgstr ""
 msgid "Confirm your password"
 msgstr "Cadarnhau eich cyfrinair"
 
+#: src/Actor/templates/actor/create-account.html.twig:57
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:249
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:90
 #: src/Actor/templates/actor/check-lpa.html.twig:68
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Actor/templates/actor/create-account.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:90
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:249
 #: src/Viewer/templates/viewer/check-code-found.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:45
 msgid "Warning"
 msgstr "Rhybudd"
 
 #: src/Actor/templates/actor/create-account.html.twig:58
-#: src/Actor/templates/actor/password-change.html.twig:38
 #: src/Actor/templates/actor/password-reset.html.twig:47
+#: src/Actor/templates/actor/password-change.html.twig:38
 msgid "Never share your password with anyone."
 msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 
@@ -320,39 +325,39 @@ msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 msgid "Create account"
 msgstr "Creu cyfrif"
 
-#: src/Actor/templates/actor/password-change.html.twig:25
 #: src/Actor/templates/actor/password-reset.html.twig:29
+#: src/Actor/templates/actor/password-change.html.twig:25
 msgid "Change your password"
 msgstr "Newid eich cyfrinair"
 
-#: src/Actor/templates/actor/password-change.html.twig:32
 #: src/Actor/templates/actor/password-reset.html.twig:39
+#: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
 
-#: src/Actor/templates/actor/password-change.html.twig:34
 #: src/Actor/templates/actor/password-reset.html.twig:42
+#: src/Actor/templates/actor/password-change.html.twig:34
 msgid "at least 8 characters"
 msgstr "o leiaf 8 o nodau"
 
-#: src/Actor/templates/actor/password-change.html.twig:35
 #: src/Actor/templates/actor/password-reset.html.twig:43
+#: src/Actor/templates/actor/password-change.html.twig:35
 msgid "at least one lower-case and one capital letter"
 msgstr "o leiaf un llythyren fach ac un briflythyren"
 
-#: src/Actor/templates/actor/password-change.html.twig:36
 #: src/Actor/templates/actor/password-reset.html.twig:44
+#: src/Actor/templates/actor/password-change.html.twig:36
 msgid "at least one number"
 msgstr "o leiaf un rhif"
 
-#: src/Actor/templates/actor/login.html.twig:46
 #: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
+#: src/Actor/templates/actor/login.html.twig:46
 msgid "Password"
 msgstr "Cyfrinair"
 
-#: src/Actor/templates/actor/password-change.html.twig:51
 #: src/Actor/templates/actor/password-reset.html.twig:55
+#: src/Actor/templates/actor/password-change.html.twig:51
 msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
@@ -898,21 +903,21 @@ msgstr ""
 msgid "The donor"
 msgstr "Y rhoddwr"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:36
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:135
+#: src/Actor/templates/actor/check-your-answers.html.twig:36
 #: src/Common/templates/partials/full-lpa-display.html.twig:162
 msgid "Name"
 msgstr "Enw"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:49
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:139
+#: src/Actor/templates/actor/check-your-answers.html.twig:49
 #: src/Common/templates/partials/full-lpa-display.html.twig:166
 msgid "Date of birth"
 msgstr "Dyddiad geni"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:143
-#: src/Common/templates/partials/contact-details/address.html.twig:1
 #: src/Common/templates/partials/full-lpa-display.html.twig:170
+#: src/Common/templates/partials/contact-details/address.html.twig:1
 msgid "Address"
 msgstr "Cyfeiriad"
 
@@ -1099,10 +1104,10 @@ msgstr ""
 "\">LPA</abbr> yn lle’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> papur "
 "gwreiddiol neu yn lle rhoi cod mynediad i rywun."
 
-#: src/Actor/templates/actor/home-page.html.twig:5
 #: src/Actor/templates/actor/layout.html.twig:5
-#: src/Common/templates/partials/contact-us.html.twig:7
+#: src/Actor/templates/actor/home-page.html.twig:5
 #: src/Common/templates/partials/cookies.html.twig:7
+#: src/Common/templates/partials/contact-us.html.twig:7
 msgid "Use a lasting power of attorney"
 msgstr "Defnyddio atwrneiaeth arhosol"
 
@@ -1769,9 +1774,9 @@ msgstr ""
 "Nodwch eich cyfeiriad e-bost isod. Os oes yna gyfrif ar gyfer y cyfeiriad e-"
 "bost hwn, byddwn yn anfon dolen atoch i ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/login.html.twig:43
 #: src/Actor/templates/actor/password-reset-request.html.twig:34
 #: src/Actor/templates/actor/your-details.html.twig:24
+#: src/Actor/templates/actor/login.html.twig:43
 msgid "Email address"
 msgstr "Cyfeiriad e-bost"
 
@@ -1842,8 +1847,8 @@ msgstr ""
 "wnaethoch ei ddefnyddio am 20 munud."
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
-#: src/Actor/templates/actor/email-reset-not-found.html.twig:22
 #: src/Actor/templates/actor/login.html.twig:50
+#: src/Actor/templates/actor/email-reset-not-found.html.twig:22
 msgid "Sign in"
 msgstr "Mewngofnodi"
 
@@ -1851,8 +1856,8 @@ msgstr "Mewngofnodi"
 msgid "Death Notification"
 msgstr "Hysbysiad o Farwolaeth"
 
-#: src/Actor/templates/actor/change-details.html.twig:65
 #: src/Actor/templates/actor/death-notification.html.twig:28
+#: src/Actor/templates/actor/change-details.html.twig:65
 msgid "Let us know if a donor or attorney dies"
 msgstr "Rhowch wybod i ni os bydd rhoddwr neu atwrnai yn marw"
 
@@ -1871,6 +1876,8 @@ msgstr ""
 #: src/Actor/templates/actor/change-details.html.twig:34
 #: src/Actor/templates/actor/change-lpa-details.html.twig:32
 #: src/Actor/templates/actor/death-notification.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:32
+#: src/Actor/templates/actor/change-details.html.twig:34
 msgid "You should contact us if:"
 msgstr "Dylech gysylltu â ni os bydd:"
 
@@ -1937,6 +1944,8 @@ msgstr "oes atwrneiod i gymryd eu lle"
 #: src/Actor/templates/actor/change-details.html.twig:57
 #: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/death-notification.html.twig:60
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
+#: src/Actor/templates/actor/change-details.html.twig:57
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
 
@@ -1975,8 +1984,8 @@ msgstr ""
 "                            Birmingham<br>\n"
 "                            B2 2WH"
 
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:21
 #: src/Actor/templates/actor/your-details.html.twig:18
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:21
 #: src/Common/templates/partials/account-bar.html.twig:11
 msgid "Your details"
 msgstr "Eich manylion"
@@ -2223,8 +2232,8 @@ msgctxt "error"
 msgid "The emails did not match"
 msgstr "Nid oedd y cyfeiriadau e-bost yn cyfateb"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:19
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:21
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:19
 msgid "Your lasting powers of attorney"
 msgstr "Eich atwrneiaethau arhosol"
 
@@ -2317,8 +2326,8 @@ msgid ""
 "We could not find a lasting power of attorney with the information you entered."
 msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol gyda’r wybodaeth a roesoch."
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:18
 #: src/Actor/templates/actor/lpa-not-found.html.twig:22
+#: src/Actor/templates/actor/check-your-answers.html.twig:18
 msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
@@ -2444,22 +2453,22 @@ msgstr "mae’r rhoddwr wedi eich dileu fel atwrnai"
 msgid "Is this the LPA you want to add?"
 msgstr "Ai hon yw’r LPA yr ydych eisiau ei hychwanegu?"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:25
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:60
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
+#: src/Actor/templates/actor/check-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:28
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
+#: src/Actor/templates/actor/lpa-already-added.html.twig:27
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:21
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:21
 #: src/Actor/templates/actor/check-lpa.html.twig:37
-#: src/Actor/templates/actor/lpa-already-added.html.twig:27
 msgid "Donor name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:45
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:29
+#: src/Actor/templates/actor/check-lpa.html.twig:45
 msgid "Your name"
 msgstr "Eich enw"
 
@@ -2467,15 +2476,15 @@ msgstr "Eich enw"
 msgid "Your role on this LPA"
 msgstr "Eich swyddogaeth yn yr LPA hon"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:57
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:31
+#: src/Actor/templates/actor/check-lpa.html.twig:57
 msgid "Attorney"
 msgstr "Atwrnai"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:59
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:27
+#: src/Actor/templates/actor/check-lpa.html.twig:59
 msgid "Donor"
 msgstr "Rhoddwr"
 
@@ -2509,26 +2518,29 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:89
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:78
 #: src/Actor/templates/actor/contact-details.html.twig:45
-#: src/Actor/templates/actor/home-page.html.twig:46
-#: src/Actor/templates/actor/lpa-add.html.twig:79
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:67
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/info.html.twig:67
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:61
+#: src/Actor/templates/actor/check-lpa.html.twig:91
+#: src/Actor/templates/actor/check-your-answers.html.twig:87
+#: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
+#: src/Actor/templates/actor/lpa-add.html.twig:79
 #: src/Viewer/templates/viewer/enter-code.html.twig:60
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:64
-#: src/Actor/templates/actor/check-lpa.html.twig:94
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
-#: src/Actor/templates/actor/lpa-add.html.twig:81
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:69
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
+#: src/Actor/templates/actor/check-lpa.html.twig:94
+#: src/Actor/templates/actor/lpa-add.html.twig:81
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -2764,8 +2776,8 @@ msgstr "os yw dyddiad geni rhywun yn anghywir"
 msgid "the donor or an attorney dies"
 msgstr "rhoddwr neu atwrnai yn marw"
 
-#: src/Actor/templates/actor/change-details.html.twig:48
 #: src/Actor/templates/actor/change-lpa-details.html.twig:40
+#: src/Actor/templates/actor/change-details.html.twig:48
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary and our records."
@@ -2773,8 +2785,8 @@ msgstr ""
 "Byddwn yn diweddaru’r crynodeb o’r <abbr title=\"atwrneiaethau arhosol\">LPA</"
 "abbr> ar-lein a’n cofnodion."
 
-#: src/Actor/templates/actor/change-details.html.twig:50
 #: src/Actor/templates/actor/change-lpa-details.html.twig:42
+#: src/Actor/templates/actor/change-details.html.twig:50
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney"
 "\">LPA</abbr> yourself.\n"
@@ -2809,6 +2821,7 @@ msgstr "Ffonio"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:52
 #: src/Actor/templates/actor/change-details.html.twig:59
 #: src/Actor/templates/actor/change-lpa-details.html.twig:47
+#: src/Actor/templates/actor/change-details.html.twig:59
 msgid "When you get in touch, quote the LPA reference number."
 msgstr "Pan fyddwch yn cysylltu â ni, cofiwch ddyfynnu eich cyfeirnod LPA."
 
@@ -2917,8 +2930,8 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
 msgid ""
 "give organisations access to an online summary of an <abbr title=\"lasting "
 "power of attorney\">LPA</abbr> by making a secure access code"
@@ -2926,8 +2939,8 @@ msgstr ""
 "roi mynediad i sefydliadau at grynodeb ar-lein o <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> drwy greu cod diogel"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
 msgid ""
 "keep track of the organisations that have online access to an <abbr title="
 "\"lasting power of attorney\">LPA</abbr>"
@@ -2935,8 +2948,8 @@ msgstr ""
 "cadw golwg ar y sefydliadau sydd â mynediad ar-lein at <abbr title="
 "\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
@@ -2948,9 +2961,9 @@ msgstr "Ychwanegu eich LPA cyntaf"
 msgid "Add a lasting power of attorney"
 msgstr "Ychwanegu atwrneiaeth arhosol"
 
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:23
 #: src/Actor/templates/actor/lpa-add.html.twig:57
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:53
 #: src/Common/templates/partials/full-lpa-display.html.twig:253
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
@@ -3032,9 +3045,9 @@ msgstr ""
 msgid "What is your date of birth?"
 msgstr "Beth yw eich dyddiad geni?"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:53
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:39
+#: src/Actor/templates/actor/lpa-add.html.twig:53
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -3248,8 +3261,8 @@ msgstr "Gwall:"
 msgid "Cookies"
 msgstr "Cwcis"
 
-#: src/Common/templates/partials/contact-us.html.twig:9
 #: src/Common/templates/partials/cookies.html.twig:9
+#: src/Common/templates/partials/contact-us.html.twig:9
 #: src/Viewer/templates/viewer/layout.html.twig:5
 msgid "View a lasting power of attorney"
 msgstr "Gweld atwrneiaeth arhosol"
@@ -4765,8 +4778,8 @@ msgstr ""
 msgid "Back to GOV.UK"
 msgstr "Yn ôl i GOV.UK"
 
-#: src/Actor/templates/actor/change-email.html.twig:32
 #: src/Actor/templates/actor/create-account.html.twig:43
+#: src/Actor/templates/actor/change-email.html.twig:32
 msgid "Check that your email address is spelt correctly"
 msgstr "Gwiriwch bod eich cyfeiriad e-bost wedi’i sillafu’n gywir"
 
@@ -4849,8 +4862,8 @@ msgid "Enter your organisation name"
 msgstr "Nodwch enw eich sefydliad"
 
 # Some translated content missing
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:27
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:29
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:27
 msgid ""
 "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" "
 "class=\"govuk-link\">the role of an attorney</a> and how to support the donor "
@@ -4860,13 +4873,13 @@ msgstr ""
 "Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
 "link\">rôl atwrnai</a>."
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
 msgid "What can I do with this service?"
 msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:38
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
 msgid "Use this service to:"
 msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
 
@@ -5038,9 +5051,9 @@ msgctxt "error"
 msgid "The activation key you entered is too short"
 msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy fyr"
 
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:3
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:3
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:3
 msgid "Ask for an activation key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
 
@@ -5061,18 +5074,18 @@ msgstr ""
 "Beth i’w wneud os ydych <a href=\"%link%\" class=\"govuk-link\">wedi newid "
 "cyfeiriad ac nad ydych wedi dweud wrthym</a>."
 
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:30
 msgid "First names"
 msgstr "Enwau cyntaf"
 
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
 msgid "Last name"
 msgstr "Enw olaf"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:21
+#: src/Actor/templates/actor/check-your-answers.html.twig:62
 msgid "Postcode"
 msgstr "Cod post"
 
@@ -5278,6 +5291,7 @@ msgstr ""
 "anfon y allwedd cadarnhau cyfrif trwy’r post i’r cyfeiriad sydd gennym ar eich "
 "cyfer yn ein cofnodion."
 
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:3
 msgid "Sending an activation key"
 msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
@@ -5323,7 +5337,8 @@ msgstr ""
 "Pan fydd gennych allwedd cadarnhau cyfrif, gallwch ei ddefnyddio i ychwanegu "
 "LPA at eich cyfrif ar-lein. Yna gellir ddefnyddio’r LPA ar-lein pan fydd angen."
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:31
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
 msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
@@ -5503,15 +5518,18 @@ msgstr ""
 "i’r cyfeiriad sydd gennym ar eich cyfer. Yna fe allwch ddefnyddio’r allwedd i "
 "ychwanegu’r LPA at eich cyfrif."
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:25
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:26
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:26
 msgid "We've sent you an email to confirm all these details."
 msgstr "Rydym wedi anfon e-bost atoch yn cadarnhau’r holl fanylion hyn."
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:26
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:27
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
 msgid "You should get the letter by %date%"
 msgstr "Dylech gael y llythyr erbyn %date%"
 
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:28
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:28
 msgid ""
 "If you do not get it by this date, please contact us. You'll need to give us "
 "the LPA reference number when you call."
@@ -5783,8 +5801,8 @@ msgstr ""
 "        Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
 msgid "ask for an activation key if you have not been given one"
 msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
 
@@ -6128,3 +6146,37 @@ msgstr ""
 "Bydd y llythyr yn cael ei anfon i’r cyfeiriad sydd gennym ar eich cyfer yn ein "
 "cofnodion. Rydym yn anfon yr allwedd drwy’r post oherwydd bod hynny’n fwy "
 "diogel."
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgid "We've got your activation key request"
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:24
+msgid ""
+"Once we’ve checked all the details, we’ll post you a letter with your "
+"activation key for this LPA. We send it by post because it’s more secure."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:25
+msgid ""
+"Once you've got the activation key, you'll be able to use it to add the LPA to "
+"your account."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:32
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
+msgid "Have more than one LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:33
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
+msgid ""
+"You'll need an activation key for each LPA that you'd like to add to your "
+"account."
+msgstr ""
+
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
+msgid ""
+"We’ll send you a letter with your activation key for this LPA. We'll post it "
+"to the address we have for you. We send it by post because it’s more secure."
+msgstr ""
