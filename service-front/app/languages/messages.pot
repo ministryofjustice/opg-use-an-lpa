@@ -3686,6 +3686,7 @@ msgstr ""
 msgid "To add an LPA to your account, you need an activation key. We'll send an activation key by post to the address we have for you on our records."
 msgstr ""
 
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:3
 msgid "Sending an activation key"
 msgstr ""
@@ -4390,5 +4391,5 @@ msgid "You'll need an activation key for each LPA that you'd like to add to your
 msgstr ""
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
-msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
+msgid "We’ll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it’s more secure."
 msgstr ""

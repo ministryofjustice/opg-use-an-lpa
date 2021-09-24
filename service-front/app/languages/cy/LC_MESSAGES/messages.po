@@ -5292,6 +5292,7 @@ msgstr ""
 "anfon y allwedd cadarnhau cyfrif trwy’r post i’r cyfeiriad sydd gennym ar eich "
 "cyfer yn ein cofnodion."
 
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:3
 msgid "Sending an activation key"
 msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
