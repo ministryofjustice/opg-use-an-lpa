@@ -77,6 +77,41 @@ class AddLpaTest extends TestCase
     }
 
     /** @test */
+    public function it_accepts_lpas_that_have_been_requested_to_be_added_but_not_activated()
+    {
+        $expectedResponse = [
+            'some' => 'other data',
+            'lpa' => [
+                'status' => 'Registered'
+            ]
+        ];
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(
+                [
+                    'lpaAddedData' => 'data',
+                    'notActivated' => true
+                ]
+            );
+
+        $this->actorCodeServiceProphecy
+            ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
+            ->willReturn($expectedResponse);
+
+        $lpaData = $this->addLpa()->validateAddLpaData(
+            [
+                'actor-code' => $this->actorCode,
+                'uid' => $this->lpaUid,
+                'dob' => $this->dob
+            ],
+            $this->userId
+        );
+
+        $this->assertEquals($expectedResponse, $lpaData);
+    }
+
+    /** @test */
     public function it_throws_a_bad_request_if_code_validation_fails()
     {
         $this->lpaAlreadyAddedProphecy

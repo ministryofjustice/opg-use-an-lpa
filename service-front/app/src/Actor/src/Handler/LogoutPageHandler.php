@@ -11,15 +11,14 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Common\Middleware\Security\UserIdentificationMiddleware;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 
 /**
  * Class CreateAccountHandler
@@ -53,7 +52,12 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
         $user = $this->getUser($request);
 
         $session = $this->getSession($request, 'session');
-        $session->unset(UserInterface::class);
+
+        // TODO UML-1758 session clearing hack till we figure out a better way.
+        $id = $session->get(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE);
+        $session->clear();
+        $session->set(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE, $id);
+
         $session->regenerate();
 
         $this->getLogger()->info(

@@ -79,3 +79,10 @@ Feature: Add an LPA
     Given I am on the add an LPA page
     When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
+
+  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  Scenario: The user can complete adding an LPA to their account that they have requested an activation key for
+    Given I am on the add an LPA page
+    When I request to add an LPA that I have requested an activation key for
+    Then The correct LPA is found and I can confirm to add it
+    And The activateBy TTL is removed from the record in the DB
