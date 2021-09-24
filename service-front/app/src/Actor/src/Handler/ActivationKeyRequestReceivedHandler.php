@@ -52,8 +52,6 @@ class ActivationKeyRequestReceivedHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $activationToken = $request->getAttribute('token');
-
         $date = (new Carbon())->addWeeks(2);
 
         ($this->localisedDate)($date);
