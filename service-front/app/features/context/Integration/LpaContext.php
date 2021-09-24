@@ -123,6 +123,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @When /^I request for a new activation key again and lpa is cleansed$/
      * @When /^I request for a new activation key again$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
@@ -1694,6 +1695,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^System recognises the Lpa is not cleansed$/
+     * @When /^I request for a new activation key again and lpa is not cleansed$/
      */
     public function systemRecognisesTheLpaIsNotCleansed()
     {

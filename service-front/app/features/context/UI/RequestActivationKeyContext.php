@@ -658,11 +658,10 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
-                                'actor-id' => '',
                                 'lpa-id' => $this->lpa->uId,
                                 'caseSubtype' => $this->lpa->caseSubtype,
                                 'lpaIsCleansed' => true,
-                                'actorType' => 'donor',
+                                'role' => 'donor',
                             ]
                         )
                     )
@@ -783,6 +782,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I request for a new activation key again$/
+     * @Then /^I request for a new activation key again and lpa is cleansed$/
      */
     public function iRequestForANewActivationKeyAgain()
     {
@@ -1067,6 +1067,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^System recognises the Lpa is not cleansed$/
+     * @Then /^I request for a new activation key again and lpa is not cleansed$/
      */
     public function systemRecognisesTheLpaIsNotCleansed()
     {
@@ -1089,10 +1090,46 @@ class RequestActivationKeyContext implements Context
                                     'surname'       => $this->lpa->donor->surname,
                                     'dob'           => '1948-11-01'
                                 ],
+                                'lpa-id'        => $this->lpa->uId,
                                 'caseSubtype'   => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken,
                                 'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
-                                'actorType'     => 'donor'
+                                'role'          => 'donor'
+                            ],
+                        ]
+                    )
+                )
+            );
+
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^System recognises the Lpa as cleansed$/
+     */
+    public function systemRecognisesTheLpaAsCleansed()
+    {
+        $this->lpa->lpaIsCleansed = true;
+
+        $this->apiFixtures->patch('/v1/older-lpa/confirm')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'data' => [
+                                'donor'         => [
+                                    'uId'           => $this->lpa->donor->uId,
+                                    'firstname'     => $this->lpa->donor->firstname,
+                                    'middlenames'   => $this->lpa->donor->middlenames,
+                                    'surname'       => $this->lpa->donor->surname,
+                                    'dob'           => '1948-11-01'
+                                ],
+                                'caseSubtype'   => $this->lpa->caseSubtype,
+                                'lpa-id'        => $this->lpa->uId,
+                                'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
+                                'role'          => 'donor'
                             ],
                         ]
                     )

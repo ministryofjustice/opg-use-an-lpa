@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use App\Exception\BadRequestException;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -492,6 +493,44 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
+     * @covers ::validate
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_sent_keys_for_an_ineligible_lpa(): void
+    {
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number' => (string)$this->olderLpa['reference_number'],
+                    'first_names' => $this->olderLpa['first_names'],
+                    'last_name' => $this->olderLpa['last_name'],
+                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode' => $this->olderLpa['postcode'],
+                    'force_activation_key' => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA is not cleansed',
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $result = $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            false
+        );
+
+        $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
+    }
+
+    /**
+     * @test
      * @covers ::confirm
      */
     public function it_will_fail_to_confirm_due_to_an_api_exception(): void
@@ -585,5 +624,43 @@ class AddOlderLpaTest extends TestCase
 
         $this->assertEquals($response, $result->getData());
         $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
+    }
+
+    /**
+     * @test
+     * @covers ::validate
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_to_add_lpa_due_to_an_unknown_request_exception(): void
+    {
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'This message will not be recognised',
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('A bad request was made to add an older lpa and the reason for rejection is not understood');
+        $test = $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            false
+        );
     }
 }
