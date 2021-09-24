@@ -24,23 +24,16 @@ class ActivationKeyRequestReceivedHandler extends AbstractHandler
      *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper                 $urlHelper
-     * @param UserService               $userService
-     * @param EmailClient               $emailClient
-     * @param ServerUrlHelper           $serverUrlHelper
+     * @param LocalisedDate             $localisedDate
+     *
+     * @codeCoverageIgnore
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper,
         LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->emailClient = $emailClient;
-        $this->serverUrlHelper = $serverUrlHelper;
         $this->localisedDate = $localisedDate;
     }
 
@@ -48,7 +41,6 @@ class ActivationKeyRequestReceivedHandler extends AbstractHandler
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
