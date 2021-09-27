@@ -195,20 +195,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ));
                     }
                 case OlderLpaApiResponse::NOT_FOUND:
-                    if (($this->featureEnabled)('allow_older_lpas')) {
-                        return new HtmlResponse(
-                            $this->renderer->render(
-                                'actor::request-activation-key/lpa-not-found-with-reference-number',
-                                [
-                                    'user' => $this->user,
-                                    'lpa_reference_number' => $this->data['reference_number']
-                                ]
-                            )
-                        );
-                    }
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
-                        ['user'  => $this->user]
+                        [
+                            'user'  => $this->user,
+                            'lpa_reference_number' => $this->data['reference_number']
+                        ],
+
                     ));
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
