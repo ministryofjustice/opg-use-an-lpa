@@ -17,6 +17,8 @@ resource "aws_lb" "viewer" {
   subnets                    = data.aws_subnet_ids.public.ids
   tags                       = local.default_tags
 
+  enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
+
   security_groups = [
     aws_security_group.viewer_loadbalancer.id,
     aws_security_group.viewer_loadbalancer_route53.id,
