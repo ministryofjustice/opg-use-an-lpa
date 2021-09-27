@@ -100,7 +100,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then I am informed that an LPA could not be found with these details
+     * @Then /^I am informed that an LPA could not be found with these details$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -109,7 +109,16 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then I am informed that an LPA could not be found
+     * @Then /^I am informed that an LPA could not be found with this reference number$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with that reference number');
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found$/
      */
     public function iAmInformedThatAnLPACouldNotBeFound()
     {
@@ -546,6 +555,30 @@ class RequestActivationKeyContext implements Context
                         [
                             'title' => 'LPA details do not match',
                             'details' => 'LPA details do not match',
+                            'data' => [],
+                        ]
+                    )
+                )
+            );
+    }
+
+    /**
+     * @When I provide an LPA number that does not exist
+     */
+    public function iProvideAnLPANumberThatDoesNotExist()
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        // Setup fixture for success response
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'LPA not found',
+                            'details' => 'LPA not found',
                             'data' => [],
                         ]
                     )

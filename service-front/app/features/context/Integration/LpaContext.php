@@ -945,6 +945,22 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I provide an LPA number that does not exist$/
+     */
+    public function iProvideAnLPANumberThatDoesNotExist()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I am informed that an LPA could not be found with this reference number$/
+     */
+    public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber()
+    {
+        // Not needed for this context
+    }
+
+    /**
      * @When /^I provide the details from a valid paper document$/
      */
     public function iProvideTheDetailsFromAValidPaperDocument()

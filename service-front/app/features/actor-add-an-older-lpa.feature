@@ -34,6 +34,13 @@ Feature: Add an older LPA
     Then I am informed that an LPA could not be found with these details
 
   @ui @integration @ff:allow_older_lpas:false
+  Scenario: The user cannot add an old LPA to their account when the LPA number does not exist
+    Given I am on the add an older LPA page
+    When I provide an LPA number that does not exist
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with these details
+
+  @ui @integration @ff:allow_older_lpas:false
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
     When I provide details from an LPA registered before Sept 2019
@@ -162,6 +169,13 @@ Feature: Add an older LPA
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
     And I can see my attorney role, donor details and that I have not provided a telephone number
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user cannot add an old LPA to their account as the data does not match
+    Given I am on the add an older LPA page
+    When I provide an LPA number that does not exist
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with this reference number
 
   # The following scenarios are for testing navigation of the OOL partial match journey
 
