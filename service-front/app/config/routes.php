@@ -233,7 +233,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
         ], 'lpa.confirm-activation-key-generation');
-        $app->get('/request-received',\Actor\Handler\ActivationKeyRequestReceivedHandler::class,'request-received');
     } else {
         $app->route('/lpa/add-details', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
