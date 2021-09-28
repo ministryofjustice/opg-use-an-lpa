@@ -385,7 +385,6 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I confirm details shown to me of the found LPA are correct$/
-     * @When /^System recognises the Lpa is cleansed$/
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
@@ -1067,7 +1066,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^My LPA is not marked as clean$/
+     * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      * @Then /^I request for a new activation key again and lpa is not cleansed$/
      */
     public function myLpaIsNotMarkedAsClean()
@@ -1106,7 +1105,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^My LPA is marked as clean$/
+     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
      */
     public function myLPAIsMarkedAsClean()
     {

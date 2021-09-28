@@ -44,7 +44,7 @@ class ParseOlderLpaMatchResponse
         }
         $response->setDonor($this->lpaFactory->createCaseActorFromData($data['donor']));
         $response->setCaseSubtype($data['caseSubtype']);
-        $response->setifLpaCleansed($data['lpaIsCleansed']);
+        $response->setLpaCleansed($data['lpaIsCleansed']);
 
         return $response;
     }

@@ -173,7 +173,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
-     * @Then /^I confirm details shown to me of the LPA are correct$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -1351,6 +1350,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm details shown to me of the found LPA are correct$/
+     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
@@ -2569,7 +2569,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^My LPA is not marked as clean$/
+     * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      */
     public function myLPAIsNotMarkedAsClean()
     {
@@ -2612,58 +2612,5 @@ class LpaContext extends BaseIntegrationContext
             assertEquals('LPA is not cleansed', $ex->getMessage());
             return;
         }
-    }
-
-    /**
-     * @When /^My LPA is marked as clean$/
-     */
-    public function myLPAIsMarkedAsClean()
-    {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        $data = [
-            'reference_number'  => $this->lpa->uId,
-            'dob'               => $this->lpa->donor->dob,
-            'postcode'          => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'       => $this->lpa->donor->firstname,
-            'last_name'         => $this->lpa->donor->surname,
-            'force_activation_key' => true
-        ];
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
-        // pact interaction failed so had to use apiFixtures
-        $this->apiFixtures
-            ->get('/v1/use-an-lpa/lpas/' . $this->lpa->uId)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
-
-        $lpaMatchResponse['lpaIsCleansed'] = true;
-        $addOlderLpa->checkIfLpaIsCleansed($lpaMatchResponse);
-
-        // Lpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid' => (int)$this->lpaUid,
-                'actor_uid' => (int)$this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_NO_CONTENT
-        );
-
-        $$addOlderLpa->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
     }
 }

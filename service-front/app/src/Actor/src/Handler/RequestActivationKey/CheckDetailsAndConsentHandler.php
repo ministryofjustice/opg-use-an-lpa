@@ -74,7 +74,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $this->data['no_phone'] = true;
         }
 
-        if (empty($this->session->get('is_lpa_cleansed'))) {
+        if (empty($this->session->get('lpa_full_match_but_not_cleansed'))) {
             if (!empty($actor_role = $this->session->get('actor_role'))) {
                 $this->data['actor_role'] = $actor_role;
             }
@@ -113,6 +113,11 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
+
+            $testPh  =  array_key_exists('telephone', $this->data) ?
+                EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
+                EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED;
+
             // TODO: UML-1577
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .

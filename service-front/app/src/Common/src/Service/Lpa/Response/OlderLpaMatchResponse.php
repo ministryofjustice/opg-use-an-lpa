@@ -44,8 +44,8 @@ class OlderLpaMatchResponse
         $this->caseSubtype = $caseSubtype;
     }
 
-    public function setIfLpaCleansed(bool $lpaIsCleansed): void
+    public function setLpaCleansed(bool $isLpaCleansed): void
     {
-        $this->lpaIsCleansed = $lpaIsCleansed;
+        $this->lpaIsCleansed = $isLpaCleansed;
     }
 }

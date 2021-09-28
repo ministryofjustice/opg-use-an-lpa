@@ -88,57 +88,35 @@ Feature: Add an older LPA
     And I provide the details from a valid paper LPA which I have already requested an activation key for
     And I confirm the details I provided are correct
     And I am told that I have an activation key for this LPA and where to find it
-    When I request for a new activation key again and lpa is not cleansed
-    Then I am asked for my contact details
-
-  @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper LPA which I have already requested an activation key for
-    And I confirm the details I provided are correct
-    And I am told that I have an activation key for this LPA and where to find it
     When I request for a new activation key again and lpa is cleansed
     Then I am told a new activation key is posted to the provided postcode
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user cannot add an older LPA to their account as LPA is not cleansed
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    When I confirm details of the found LPA are correct
-    And My LPA is not marked as clean
+  Scenario: The user cannot add an older LPA to their account when LPA is not cleansed
+    Given I am on the check LPA details page
+    When I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
     Then I am asked for my contact details
 
   @ui @integration @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account when LPA is cleansed
-    Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    When I confirm details of the found LPA are correct
-    And My LPA is marked as clean
+    Given I am on the check LPA details page
+    When I confirm details shown to me of the LPA are correct and my LPA is marked as clean
     Then a letter is requested containing a one time use code
-    And I receive an email confirming activation key request
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is taken to Check Answers page and only shown contact details
-    Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    When I confirm details of the found LPA are correct
-    And My LPA is not marked as clean
-    Then I am asked for my contact details
-    When I enter my telephone number
-    Then I am asked to consent and confirm my details
-    And I can see my telephone number
+  Scenario: The user is taken to Check details and consent page and only shown contact details
+    Given I am on the check LPA details page
+    And I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
+    And I am asked for my contact details
+    And I enter my telephone number
+    When I am asked to consent and confirm my details
+    Then I can see my telephone number
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
-    When I provide details that do not match a valid paper document
-    And I confirm that those details are correct
+    And I provide details that do not match a valid paper document
+    When I confirm that those details are correct
     Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
@@ -182,8 +160,8 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
-    And I confirm the details I provided are correct
+    And I provide the details from a valid paper document
+    When I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the donor name back again
 
   @ui @ff:allow_older_lpas:true
@@ -286,6 +264,7 @@ Feature: Add an older LPA
     Then I am told that I must enter a phone number or select that I cannot take calls
 
   @ui @ff:allow_older_lpas:true
+<<<<<<< HEAD
   Scenario Outline: The user is shown an error message when entering invalid donor details
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
@@ -307,6 +286,14 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     And I am told that I have an activation key for this LPA and where to find it
     When I request for a new activation key again and lpa is not cleansed
+    And I am asked for my contact details
+    When I click the Back link on the page
+    Then I am taken back to the check answers page
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed
+    Given I am on the check LPA details page
+    And I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
     And I am asked for my contact details
     When I click the Back link on the page
     Then I am taken back to the check answers page

@@ -159,27 +159,4 @@ class AddOlderLpa
 
         return $resolvedActor;
     }
-
-    /**
-     * @param array $actorDetailsMatch
-     * @throws Exception Thrown when LPA is not cleansed
-     */
-    public function checkIfLpaIsCleansed(array $actorDetailsMatch): void
-    {
-        if ($actorDetailsMatch['lpaIsCleansed'] !== true) {
-            $this->logger->notice(
-                'User entered LPA {uId} is not cleansed',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_NOT_CLEANSED,
-                    'uId' => $actorDetailsMatch['donor']['uId'],
-                ]
-            );
-            throw new BadRequestException(
-                'LPA is not cleansed',
-                [
-                    'actor' => $actorDetailsMatch
-                ]
-            );
-        }
-    }
 }

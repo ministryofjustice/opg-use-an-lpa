@@ -56,7 +56,6 @@ class LpaContext implements Context
 
     /**
      * @Then /^A record of the LPA requested is saved to the database$/
-     * @Given /^I provide the details from a valid paper document$/
      */
     public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
     {
@@ -2440,7 +2439,6 @@ class LpaContext implements Context
     /**
      * @Given /^I confirm the details I provided are correct$/
      * @When /^I confirm details shown to me of the found LPA are correct$/
-     * @Then /^I confirm details shown to me of the LPA are correct$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -3139,7 +3137,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^My LPA is not marked as clean$/
+     * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      */
     public function myLPAIsNotMarkedAsClean()
     {
@@ -3219,7 +3217,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^My LPA is marked as clean$/
+     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
      */
     public function myLPAIsMarkedAsClean()
     {

@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Lpa\AddOlderLpa;
+use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -23,15 +24,19 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
     private AddOlderLpa $addOlderLpa;
     private OlderLpaService $olderLpaService;
     private FeatureEnabled $featureEnabled;
+    private CheckLpaCleansed $checkLpaCleansed;
+
 
     public function __construct(
         AddOlderLpa $addOlderLpa,
         OlderLpaService $olderLpaService,
-        FeatureEnabled $featureEnabled
+        FeatureEnabled $featureEnabled,
+        CheckLpaCleansed $checkLpaCleansed
     ) {
         $this->addOlderLpa = $addOlderLpa;
         $this->olderLpaService = $olderLpaService;
         $this->featureEnabled = $featureEnabled;
+        $this->checkLpaCleansed   = $checkLpaCleansed;
     }
 
     /**
@@ -57,7 +62,7 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
 
         if (($this->featureEnabled)('allow_older_lpas')) {
-            $this->addOlderLpa->checkIfLpaIsCleansed($lpaMatchResponse);
+            ($this->checkLpaCleansed)($lpaMatchResponse);
         }
 
         $this->olderLpaService->requestAccessByLetter(
