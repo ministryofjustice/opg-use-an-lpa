@@ -117,7 +117,7 @@ Feature: Add an older LPA
     Then I am not shown a warning that my details must match the information on record
 
   @ui @ff:allow_older_lpas:false
-  Scenario: The user is shown warning on the check answers page if allow older lpas flag is on
+  Scenario: The user is shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
     Then I am shown a warning that my details must match the information on record
