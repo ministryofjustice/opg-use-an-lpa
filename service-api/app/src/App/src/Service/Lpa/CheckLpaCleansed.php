@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Service\Lpa;
+
 use App\Exception\BadRequestException;
 use App\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;

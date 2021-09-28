@@ -113,8 +113,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-
-            $testPh  =  array_key_exists('telephone', $this->data) ?
+            array_key_exists('telephone', $this->data) ?
                 EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
                 EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED;
 
