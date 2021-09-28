@@ -201,7 +201,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'user'  => $this->user,
                             'lpa_reference_number' => $this->data['reference_number']
                         ],
-
                     ));
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
