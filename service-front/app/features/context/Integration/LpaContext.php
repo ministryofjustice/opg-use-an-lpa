@@ -1600,7 +1600,6 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
-        $this->lpa['lpaIsCleansed'] = false;
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
         $donor->setFirstname($this->lpa['donor']['firstname']);

@@ -78,7 +78,6 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And A record of my activation key request is not saved
 
-
   @acceptance @integration @pact @ff:save_older_lpa_requests:false
   Scenario: The user is able to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
@@ -137,7 +136,16 @@ Feature: Add an older LPA
     When I provide the attorney details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the attorney on the LPA I am shown the donor details
-    
+
+  @acceptance @integration @ff:allow_older_lpas:true
+  Scenario: The user cannot add an older LPA to their account that is not cleansed
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper LPA document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
+    Then I am asked for my contact details
+
   @acceptance @integration @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account where LPA is cleansed
     Given I am on the add an older LPA page

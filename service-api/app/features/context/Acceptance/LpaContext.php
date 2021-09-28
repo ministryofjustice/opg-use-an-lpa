@@ -2963,6 +2963,7 @@ class LpaContext implements Context
     public function iAmShownDetailsOfAnLpa()
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa->lpaIsCleansed = true;
 
         $this->lpaUid = '700000000047';
         $this->userFirstnames = 'Rachel';

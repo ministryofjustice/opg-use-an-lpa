@@ -14,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\AddOlderLpa;
+use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
@@ -1354,7 +1355,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
             'reference_number'  => $this->lpa->uId,
@@ -1377,7 +1378,7 @@ class LpaContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode($this->lpa)
+                    json_encode($lpa)
                 )
             );
 
@@ -1386,17 +1387,17 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'         => json_decode(json_encode($this->lpa->donor), true),
+            'actor'         => json_decode(json_encode($lpa->donor), true),
             'role'          => 'donor',
-            'lpa-id'        => $this->lpa->uId,
-            'caseSubtype'   => $this->lpa->caseSubtype,
+            'lpa-id'        => $lpa->uId,
+            'caseSubtype'   => $lpa->caseSubtype,
             'lpaIsCleansed' => true,
             'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-                'dob'           => $this->lpa->donor->dob,
+                'uId'           => $lpa->donor->uId,
+                'firstname'     => $lpa->donor->firstname,
+                'middlenames'   => $lpa->donor->middlenames,
+                'surname'       => $lpa->donor->surname,
+                'dob'           => $lpa->donor->dob,
             ]
         ];
 
@@ -2573,15 +2574,15 @@ class LpaContext extends BaseIntegrationContext
      */
     public function myLPAIsNotMarkedAsClean()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'  => $this->lpa->uId,
-            'dob'               => $this->lpa->donor->dob,
-            'postcode'          => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'       => $this->lpa->donor->firstname,
-            'last_name'         => $this->lpa->donor->surname,
-            'force_activation_key' => true
+            'reference_number'  => $lpa->uId,
+            'dob'               => $lpa->donor->dob,
+            'postcode'          => $lpa->donor->addresses[0]->postcode,
+            'first_names'       => $lpa->donor->firstname,
+            'last_name'         => $lpa->donor->surname,
+            'force_activation_key' => false
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -2591,22 +2592,21 @@ class LpaContext extends BaseIntegrationContext
 
         // pact interaction failed so had to use apiFixtures
         $this->apiFixtures
-            ->get('/v1/use-an-lpa/lpas/' . $this->lpa->uId)
+            ->get('/v1/use-an-lpa/lpas/' . $lpa->uId)
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode($this->lpa)
+                    json_encode($lpa)
                 )
             );
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $lpaMatchResponse['lpaIsCleansed'] = false;
+        $checkLpaCleansed = $this->container->get(CheckLpaCleansed::class);
         try {
-            $addOlderLpa->checkIfLpaIsCleansed($lpaMatchResponse);
+            $checkLpaCleansed->__invoke($lpaMatchResponse);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             assertEquals('LPA is not cleansed', $ex->getMessage());
