@@ -88,7 +88,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
+            ->getByUserId($this->userId)
             ->willReturn([]);
 
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '700000000321');
@@ -104,7 +104,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
+            ->getByUserId($this->userId)
             ->willReturn(
                 [
                     [
@@ -157,7 +157,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
+            ->getByUserId($this->userId)
             ->willReturn(
                 [
                     [
@@ -239,7 +239,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy
-            ->getUsersLpas($this->userId)
+            ->getByUserId($this->userId)
             ->willReturn(
                 [
                     [

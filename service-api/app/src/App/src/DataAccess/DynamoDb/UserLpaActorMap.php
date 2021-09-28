@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\DataAccess\Repository\KeyCollisionException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTimeImmutable;
 use Exception;
+use Ramsey\Uuid\Uuid;
 
 class UserLpaActorMap implements UserLpaActorMapInterface
 {
@@ -54,39 +54,44 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      */
     public function create(
-        string $lpaActorToken,
         string $userId,
         string $siriusUid,
         string $actorId,
         string $expiryInterval = null
-    ) {
+    ): string {
         $added = new DateTimeImmutable();
         $array = [
-            'Id'        => ['S' => $lpaActorToken],
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
             'ActorId'   => ['N' => $actorId],
             'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
         ];
 
-        //Add ActivateBy field to array if expiry interval is present
+        // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
             $expiry = $added->add(new \DateInterval($expiryInterval));
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
         }
 
-        try {
-            $this->client->putItem([
-                'TableName' => $this->userLpaActorTable,
-                'Item' => $array,
-                'ConditionExpression' => 'attribute_not_exists(Id)'
-            ]);
-        } catch (DynamoDbException $e) {
-            if ($e->getAwsErrorCode() === 'ConditionalCheckFailedException') {
-                throw new KeyCollisionException();
+        do {
+            $id = Uuid::uuid4()->toString();
+            $array['Id'] = ['S' => $id];
+
+            try {
+                $this->client->putItem([
+                    'TableName' => $this->userLpaActorTable,
+                    'Item' => $array,
+                    'ConditionExpression' => 'attribute_not_exists(Id)'
+                ]);
+
+                return $id;
+            } catch (DynamoDbException $e) {
+                if ($e->getAwsErrorCode() === 'ConditionalCheckFailedException') {
+                    continue;
+                }
+                throw $e;
             }
-            throw $e;
-        }
+        } while (true);
     }
 
     /**
@@ -133,7 +138,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      */
-    public function getUsersLpas(string $userId): ?array
+    public function getByUserId(string $userId): ?array
     {
         $result = $this->client->query([
             'TableName' => $this->userLpaActorTable,

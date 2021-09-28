@@ -8,17 +8,13 @@ use App\DataAccess\{ApiGateway\ActorCodes,
     Repository,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
-use App\DataAccess\Repository\Response\{ActorCode, Lpa};
-use App\Exception\ApiException;
-use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
+use App\DataAccess\Repository\Response\{Lpa};
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -394,7 +390,7 @@ class LpaServiceTest extends TestCase
             ], new DateTime())
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
+        $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn($t->mapResults);
 
         $this->lpasInterfaceProphecy->lookup(['uid-1', 'uid-2'])->willReturn($t->lpaResults);
 
@@ -494,7 +490,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn([]);
+        $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn([]);
 
         $result = $service->getAllForUser($t->UserId);
 
@@ -544,7 +540,7 @@ class LpaServiceTest extends TestCase
             'uid-2' => $lpa2
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
+        $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn($t->mapResults);
 
         $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
 
@@ -587,7 +583,7 @@ class LpaServiceTest extends TestCase
     {
         $t = $this->init_valid_get_all_users_with_linked();
 
-        $this->userLpaActorMapInterfaceProphecy->getUsersLpas($t->UserId)->willReturn($t->mapResults);
+        $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn($t->mapResults);
 
         $this->lpasInterfaceProphecy->lookup(array_column($t->mapResults, 'SiriusUid'))->willReturn($t->lpaResults);
 
