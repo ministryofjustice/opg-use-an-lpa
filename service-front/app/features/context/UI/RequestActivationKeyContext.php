@@ -118,15 +118,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am informed that an LPA could not be found$/
-     */
-    public function iAmInformedThatAnLPACouldNotBeFound()
-    {
-            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-            $this->ui->assertElementContainsText('h1', 'We could not find an LPA with that reference number');
-    }
-
-    /**
      * @Then /^I am not shown a warning that my details must match the information on record$/
      */
     public function iAmNotShownAWarningThatMyDetailsMustMatchTheInformationOnRecord()
