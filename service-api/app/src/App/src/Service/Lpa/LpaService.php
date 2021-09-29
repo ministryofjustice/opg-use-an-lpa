@@ -8,8 +8,7 @@ use App\DataAccess\Repository\{LpasInterface,
     Response\LpaInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
-    ViewerCodesInterface
-};
+    ViewerCodesInterface};
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -140,7 +139,7 @@ class LpaService
     public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
-        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
 
         $lpaActorMaps = array_filter($lpaActorMaps, function ($item) {
             return !array_key_exists('ActivateBy', $item);
@@ -159,7 +158,7 @@ class LpaService
     public function getAllLpasAndRequestsForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
-        $lpaActorMaps = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
 
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
