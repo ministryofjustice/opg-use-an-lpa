@@ -264,7 +264,6 @@ Feature: Add an older LPA
     Then I am told that I must enter a phone number or select that I cannot take calls
 
   @ui @ff:allow_older_lpas:true
-<<<<<<< HEAD
   Scenario Outline: The user is shown an error message when entering invalid donor details
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA

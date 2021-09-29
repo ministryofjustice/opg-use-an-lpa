@@ -2805,6 +2805,7 @@ class LpaContext implements Context
 
     /**
      * @Given /^I already have a valid activation key for my LPA$/
+     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
      */
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
     {
@@ -3215,70 +3216,5 @@ class LpaContext implements Context
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-    }
-
-    /**
-     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
-     */
-    public function myLPAIsMarkedAsClean()
-    {
-        $this->lpa->lpaIsCleansed = true;
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
-        // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
-
-        // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
-
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'Id' => $this->userLpaActorToken,
-                            'UserId' => $this->base->userAccountId,
-                            'SiriusUid' => $this->lpaUid,
-                            'ActorId' => $this->actorId,
-                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        // API call to request an activation key
-        $this->apiPatch(
-            '/v1/older-lpa/confirm',
-            [
-                'reference_number'  => $this->lpaUid,
-                'first_names'       => $this->userFirstnames,
-                'last_name'         => $this->userSurname,
-                'dob'               => $this->userDob,
-                'postcode'          => $this->userPostCode,
-                'force_activation_key' => true,
-            ],
-            [
-                'user-token' => $this->userId,
-            ]
-        );
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 }
