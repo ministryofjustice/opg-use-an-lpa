@@ -605,7 +605,7 @@ class RequestActivationKeyContext implements Context
                 )
             );
     }
-  
+
     /**
      * @When /^I provide invalid donor details of (.*) (.*) (.*)$/
      */
