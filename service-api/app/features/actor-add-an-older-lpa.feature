@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @ff:allow_older_lpas:false
+  @integration @acceptance @pact @ff:allow_older_lpas:false
   Scenario: The user cannot add an old LPA which does not have a registered status
     Given I am on the add an older LPA page
     When I provide details of an LPA that is not registered
@@ -80,7 +80,7 @@ Feature: Add an older LPA
     And A record of my activation key request is not saved
 
 
-  @acceptance @integration @ff:save_older_lpa_requests:false
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
   Scenario: The user is able to generate a new key even if an activation key already exists
     Given I am on the add an older LPA page
     And I lost the letter containing my activation key
@@ -95,7 +95,7 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @acceptance @integration @ff:save_older_lpa_requests:false
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests disabled)
     Given I am on the add an older LPA page
     And I have added an LPA to my account
@@ -103,7 +103,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
-  @acceptance @integration @ff:save_older_lpa_requests:true
+  @acceptance @integration @pact @ff:save_older_lpa_requests:true
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests enabled)
     Given I am on the add an older LPA page
     And I have added an LPA to my account

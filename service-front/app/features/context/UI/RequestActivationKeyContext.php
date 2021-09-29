@@ -127,6 +127,16 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am not shown a warning that my details must match the information on record$/
+     */
+    public function iAmNotShownAWarningThatMyDetailsMustMatchTheInformationOnRecord()
+    {
+        $this->ui->assertPageNotContainsText(
+            'These details must match the information we have about you on our records.'
+        );
+    }
+
+    /**
      * @Given /^I am on the ask for your date of birth page$/
      */
     public function iAmOnTheAskForYourDateOfBirth()
@@ -179,6 +189,16 @@ class RequestActivationKeyContext implements Context
     public function iAmRedirectedToTheActivationKeyPage()
     {
         $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+    }
+
+    /**
+     * @Then /^I am shown a warning that my details must match the information on record$/
+     */
+    public function iAmShownAWarningThatMyDetailsMustMatchTheInformationOnRecord()
+    {
+        $this->ui->assertPageContainsText(
+            'These details must match the information we have about you on our records.'
+        );
     }
 
     /**
@@ -584,6 +604,26 @@ class RequestActivationKeyContext implements Context
                     )
                 )
             );
+    }
+  
+    /**
+     * @When /^I provide invalid donor details of (.*) (.*) (.*)$/
+     */
+    public function iProvideInvalidDonorDetailsOf($firstnames, $surname, $dob)
+    {
+        $this->ui->assertPageAddress('/lpa/add/donor-details');
+        $this->ui->fillField('donor_first_names', $firstnames);
+        $this->ui->fillField('donor_last_name', $surname);
+
+        if (!empty($dob)) {
+            $dobParts = explode('-', $dob);
+            $this->ui->fillField('donor_dob[day]', $dobParts[0]);
+            $this->ui->fillField('donor_dob[month]', $dobParts[1]);
+            $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+        }
+
+        $this->ui->pressButton('Continue');
+
     }
 
     /**
