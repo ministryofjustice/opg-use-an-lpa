@@ -4,17 +4,13 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
-use App\Exception\BadRequestException;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\OlderLpaService;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -85,12 +81,11 @@ class OlderLpaServiceTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy->create(
-            Argument::type('string'),
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
             'P1Y'
-        )->shouldBeCalled();
+        )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
@@ -106,7 +101,6 @@ class OlderLpaServiceTest extends TestCase
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
         $this->userLpaActorMapProphecy->create(
-            Argument::type('string'),
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
@@ -124,21 +118,23 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
             ->willThrow(ApiException::create('bad api call'));
 
-        $service = $this->getOlderLpaService();
-
-        $this->expectException(ApiException::class);
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy->create(
-            Argument::type('string'),
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
             'P1Y'
-        )->shouldBeCalled();
+        )->willReturn('00000000-0000-4000-A000-000000000000');
 
-        $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldBeCalled();
+        $this->userLpaActorMapProphecy
+            ->delete('00000000-0000-4000-A000-000000000000')
+            ->shouldBeCalled()
+            ->willReturn([]);
 
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+        $service = $this->getOlderLpaService();
+
+        $this->expectException(ApiException::class);
 
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
@@ -209,61 +205,5 @@ class OlderLpaServiceTest extends TestCase
 
         $codeExists = $service->hasActivationCode($this->lpaUid, $this->actorUid);
         $this->assertNull($codeExists);
-    }
-
-    /**
-     * @test
-     */
-    public function older_lpa_request_is_saved_with_a_TTL()
-    {
-        $this->userLpaActorMapProphecy->create(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            ),
-            $this->userId,
-            $this->lpaUid,
-            $this->actorUid,
-            'P1Y'
-        )->shouldBeCalled();
-
-        $service = $this->getOlderLpaService();
-
-        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
-    }
-
-    /**
-     * @test
-     */
-    public function older_lpa_request_is_looped_until_no_id_collision()
-    {
-        $createCalls = 0;
-        $this->userLpaActorMapProphecy->create(
-            Argument::that(
-                function (string $id) {
-                    $this->assertRegExp('|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|', $id);
-                    return true;
-                }
-            ),
-            $this->userId,
-            $this->lpaUid,
-            $this->actorUid,
-            'P1Y'
-        )->will(
-            function () use (&$createCalls) {
-                if ($createCalls > 0) {
-                    return;
-                }
-
-                $createCalls++;
-                throw new KeyCollisionException();
-            }
-        );
-
-        $service = $this->getOlderLpaService();
-
-        $service->storeLPARequest($this->lpaUid, $this->userId, $this->actorUid);
     }
 }

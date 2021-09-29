@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes;
 
-use App\DataAccess\{Repository\KeyCollisionException, Repository\UserLpaActorMapInterface};
+use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
-use Ramsey\Uuid\Uuid;
 
 class ActorCodeService
 {
@@ -38,36 +37,6 @@ class ActorCodeService
         $this->lpaService = $lpaService;
         $this->userLpaActorMapRepository = $userLpaActorMapRepository;
         $this->resolveActor = $resolveActor;
-    }
-
-    /**
-     * @param string $userId
-     * @param array  $details
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function addLpaRecord(string $userId, array $details): string
-    {
-        do {
-            $added = false;
-
-            $id = Uuid::uuid4()->toString();
-
-            try {
-                $this->userLpaActorMapRepository->create(
-                    $id,
-                    $userId,
-                    $details['lpa']['uId'],
-                    (string)$details['actor']['details']['id']
-                );
-
-                $added = true;
-            } catch (KeyCollisionException $e) {
-                // Allows the loop to repeat with a new ID.
-            }
-        } while (!$added);
-        return $id;
     }
 
     /**
@@ -140,13 +109,17 @@ class ActorCodeService
         //---
         $lpaId = $details['lpa']['uId'];
 
-        $lpas = $this->userLpaActorMapRepository->getUsersLpas($userId);
+        $lpas = $this->userLpaActorMapRepository->getByUserId($userId);
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
             $id = $this->removeTTLFromRequest($idToLpaMap[$lpaId]);
         } else {
-            $id = $this->addLpaRecord($userId, $details);
+            $id = $this->userLpaActorMapRepository->create(
+                $userId,
+                $lpaId,
+                (string)$details['actor']['details']['id']
+            );
         }
 
         try {

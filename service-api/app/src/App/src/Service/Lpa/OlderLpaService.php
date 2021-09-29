@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use DateTime;
-use Exception;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 
 class OlderLpaService
 {
@@ -88,13 +85,9 @@ class OlderLpaService
      */
     public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
-        $requestId = null;
+        $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $requestId = $this->storeLPARequest(
-                $uid,
-                $userId,
-                $actorUid
-            );
+            $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
         }
 
         $uidInt = (int)$uid;
@@ -118,32 +111,10 @@ class OlderLpaService
                     'lpa' => $uidInt,
                 ]
             );
-            if ($requestId !== null) {
-                $this->removeLpa($requestId);
+            if ($recordId !== null) {
+                $this->removeLpa($recordId);
             }
             throw $apiException;
         }
-    }
-
-    /**
-     * Stores an Entry in UserLPAActorMap for the request of an older lpa
-     * @param string $lpaId
-     * @param string $userId
-     * @param string $actorId
-     *
-     * @return string       The lpaActorToken
-     * @throws Exception    throws an ApiException
-     */
-    public function storeLPARequest(string $lpaId, string $userId, string $actorId): string
-    {
-        do {
-            $id = Uuid::uuid4()->toString();
-            try {
-                $this->userLpaActorMap->create($id, $userId, $lpaId, $actorId, 'P1Y');
-                return $id;
-            } catch (KeyCollisionException $e) {
-                // Allows the loop to repeat with a new ID.
-            }
-        } while (true);
     }
 }

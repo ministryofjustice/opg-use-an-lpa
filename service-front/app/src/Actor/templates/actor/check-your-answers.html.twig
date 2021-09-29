@@ -72,13 +72,15 @@
                         </div>
                     </dl>
 
-                    <div class="govuk-warning-text">
-                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                        <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                            {% trans %}These details must match the information we have about you on our records.{% endtrans %}
-                        </strong>
-                    </div>
+                    {% if not feature_enabled('allow_older_lpas') %}
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                                {% trans %}These details must match the information we have about you on our records.{% endtrans %}
+                            </strong>
+                        </div>
+                    {% endif %}
 
                     {{ govuk_form_open(form) }}
 
