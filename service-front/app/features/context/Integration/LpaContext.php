@@ -198,7 +198,11 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        $allowedErrorMessages = [OlderLpaApiResponse::DOES_NOT_MATCH, OlderLpaApiResponse::NOT_FOUND, OlderLpaApiResponse::NOT_ELIGIBLE];
+        $allowedErrorMessages = [
+            OlderLpaApiResponse::DOES_NOT_MATCH,
+            OlderLpaApiResponse::NOT_FOUND,
+            OlderLpaApiResponse::NOT_ELIGIBLE
+        ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
         $result = $addOlderLpa->validate(
