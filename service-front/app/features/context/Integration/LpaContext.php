@@ -198,19 +198,19 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $allowedErrorMessages = [OlderLpaApiResponse::DOES_NOT_MATCH, OlderLpaApiResponse::NOT_FOUND, OlderLpaApiResponse::NOT_ELIGIBLE];
 
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
         $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-            false
+            $this->userPostCode
         );
 
-        assertNotEquals($result->getResponse(), OlderLpaApiResponse::SUCCESS);
+        assertTrue(in_array($result->getResponse(), $allowedErrorMessages));
     }
 
     /**
@@ -258,8 +258,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-            false
+            $this->userPostCode
         );
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
@@ -967,7 +966,19 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber()
     {
-        // Not needed for this context
+        $allowedErrorMessages = [OlderLpaApiResponse::NOT_FOUND, OlderLpaApiResponse::NOT_ELIGIBLE];
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $result = $addOlderLpa->validate(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            $this->userFirstname,
+            $this->userSurname,
+            DateTime::createFromFormat('Y-m-d', $this->userDob),
+            $this->userPostCode
+        );
+
+        assertTrue(in_array($result->getResponse(), $allowedErrorMessages));
     }
 
     /**
