@@ -198,16 +198,6 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
-        // API call for getLpaById call happens inside of the check access codes handler
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    ''
-                )
-            );
-
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
         $result = $addOlderLpa->validate(
@@ -220,9 +210,7 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
-
-        assertEquals($response, $result);
+        assertNotEquals($result->getResponse(), OlderLpaApiResponse::SUCCESS);
     }
 
     /**
@@ -941,7 +929,21 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
     {
-        // Not needed for this context
+        // Setup fixture for success response
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    [],
+                    json_encode(
+                        [
+                            'title' => 'LPA details do not match',
+                            'details' => 'LPA details do not match',
+                            'data' => [],
+                        ]
+                    )
+                )
+            );
     }
 
     /**
@@ -949,7 +951,15 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideAnLPANumberThatDoesNotExist()
     {
-        // Not needed for this context
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->post('/v1/older-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND,
+                    [],
+                    ''
+                )
+            );
     }
 
     /**
@@ -1658,20 +1668,5 @@ class LpaContext extends BaseIntegrationContext
                     ''
                 )
             );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $result = $addOlderLpa->validate(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-            false
-        );
-
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, []);
-        assertEquals($response, $result);
     }
 }
