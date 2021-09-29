@@ -1739,4 +1739,16 @@ class LpaContext extends BaseIntegrationContext
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::LPA_NOT_CLEANSED, []);
         assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $response->getResponse());
     }
+
+    /**
+     * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
+     */
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
+    {
+        $this->iAmOnTheAddAnOlderLPAPage();
+        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt();
+    }
 }
+

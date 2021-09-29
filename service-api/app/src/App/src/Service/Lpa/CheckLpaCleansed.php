@@ -9,9 +9,9 @@ use Psr\Log\LoggerInterface;
 class CheckLpaCleansed
 {
     private LoggerInterface $logger;
-    public function __construct(
-        LoggerInterface $logger
-    ) {
+
+    public function __construct(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -23,10 +23,10 @@ class CheckLpaCleansed
     {
         if ($actorDetailsMatch['lpaIsCleansed'] !== true) {
             $this->logger->notice(
-                'User entered LPA {uId} is not cleansed',
+                'User entered LPA {lpaId} is not cleansed',
                 [
                     'event_code' => EventCodes::OLDER_LPA_NOT_CLEANSED,
-                    'uId' => $actorDetailsMatch['donor']['uId'],
+                    'lpaId' => $actorDetailsMatch['lpa-id'],
                 ]
             );
             throw new BadRequestException(

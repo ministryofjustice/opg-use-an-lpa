@@ -1139,4 +1139,16 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
+     */
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+    }
 }
+

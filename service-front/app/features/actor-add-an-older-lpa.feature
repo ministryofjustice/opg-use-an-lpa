@@ -83,13 +83,16 @@ Feature: Add an older LPA
   # Older Older LPA Journey
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper LPA which I have already requested an activation key for
-    And I confirm the details I provided are correct
-    And I am told that I have an activation key for this LPA and where to find it
+  Scenario: The user is able to request a new key after requesting access previously, when LPA is cleansed
+    Given I have confirmed the details of an older paper LPA after requesting access previously
     When I request for a new activation key again and lpa is cleansed
     Then I am told a new activation key is posted to the provided postcode
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user is not able to request a new key after requesting access previously, when LPA is not cleansed
+    Given I have confirmed the details of an older paper LPA after requesting access previously
+    When I request for a new activation key again and lpa is not cleansed
+    And I am asked for my contact details
 
   @ui @integration @ff:allow_older_lpas:true
   Scenario: The user cannot add an older LPA to their account when LPA is not cleansed
@@ -277,17 +280,6 @@ Feature: Add an older LPA
       |            | Person  | 01-01-1980 | Enter the donor's first names     |
       | Donor      |         | 01-01-1980 | Enter the donor's last name       |
       | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper LPA which I have already requested an activation key for
-    And I confirm the details I provided are correct
-    And I am told that I have an activation key for this LPA and where to find it
-    When I request for a new activation key again and lpa is not cleansed
-    And I am asked for my contact details
-    When I click the Back link on the page
-    Then I am taken back to the check answers page
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed
