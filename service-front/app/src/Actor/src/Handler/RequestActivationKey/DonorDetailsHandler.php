@@ -63,9 +63,16 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler implements Use
                     'year' => $postData['donor_dob']['year']
                 ]
             );
+
+            $nextPageName = $this->getRouteNameFromAnswersInSession();
+            return $this->redirectToRoute($nextPageName);
         }
-        $nextPageName = $this->getRouteNameFromAnswersInSession();
-        return $this->redirectToRoute($nextPageName);
+
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/donor-details', [
+            'user' => $this->user,
+            'form' => $this->form->prepare(),
+            'back' => $this->getRouteNameFromAnswersInSession(true)
+        ]));
     }
 
     public function isMissingPrerequisite(): bool
