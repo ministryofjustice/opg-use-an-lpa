@@ -1751,4 +1751,3 @@ class LpaContext extends BaseIntegrationContext
         $this->iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt();
     }
 }
-

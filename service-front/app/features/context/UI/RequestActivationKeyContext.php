@@ -1151,4 +1151,3 @@ class RequestActivationKeyContext implements Context
         $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
     }
 }
-
