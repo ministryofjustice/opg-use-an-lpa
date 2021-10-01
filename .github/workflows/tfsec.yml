@@ -18,14 +18,11 @@ permissions:
 
 jobs:
   tfsec:
-    strategy:
-      matrix:
-        terraform_path: [ 'environment', 'account' ]
     name: TFSec Static analysis
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        terraform_path: [ 'terraform/${{ matrix.terraform_path }}' ]
+        terraform_path: [ 'terraform/environment', 'terraform/account' ]
     steps:
       - name: checkout
         uses: actions/checkout@v2
