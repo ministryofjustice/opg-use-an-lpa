@@ -496,7 +496,7 @@ orbs:
         steps:
           - run:
               name: Install AWS CLI
-              command: sudo pip3 install awscli --upgrade
+              command: sudo pip install awscli --upgrade
       install_python:
         steps:
           - run:
