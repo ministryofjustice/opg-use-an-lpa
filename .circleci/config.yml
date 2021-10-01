@@ -560,14 +560,14 @@ orbs:
         resource_class: small
       php:
         docker:
-          - image: circleci/php:7-cli
+          - image: cimg/php:7.4
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php-browsers:
         docker:
-          - image: circleci/php:7-cli-browsers
+          - image: cimg/php:7.4-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -581,7 +581,7 @@ orbs:
         resource_class: small
       python:
         docker:
-          - image: circleci/python
+          - image: cimg/python:3.7
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
