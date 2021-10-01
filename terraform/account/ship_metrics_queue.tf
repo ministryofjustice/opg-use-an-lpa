@@ -1,11 +1,13 @@
 resource "aws_sqs_queue" "ship_to_opg_metrics" {
-  count                     = local.account.opg_metrics.enabled == true ? 1 : 0
-  name                      = "${local.environment}-ship-to-opg-metrics"
-  delay_seconds             = 90
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
-  tags                      = local.default_tags
+  count                             = local.account.opg_metrics.enabled == true ? 1 : 0
+  name                              = "${local.environment}-ship-to-opg-metrics"
+  delay_seconds                     = 90
+  max_message_size                  = 2048
+  message_retention_seconds         = 86400
+  receive_wait_time_seconds         = 10
+  kms_master_key_id                 = "alias/aws/sqs"
+  kms_data_key_reuse_period_seconds = 300
+  tags                              = local.default_tags
 }
 
 resource "aws_sqs_queue_policy" "ship_to_opg_metrics" {
