@@ -1277,7 +1277,7 @@ orbs:
           - run:
               name: Seed DynamoDB
               command: |
-                sudo pip3 install -r service-api/seeding/requirements.txt
+                pip install -r service-api/seeding/requirements.txt
                 export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
                 export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
