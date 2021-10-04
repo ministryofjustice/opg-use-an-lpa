@@ -3,6 +3,7 @@ import datetime
 import json
 import os
 import boto3
+import datetime
 from dateutil.relativedelta import relativedelta
 
 
@@ -192,8 +193,8 @@ def main():
                         default="production",
                         help="The environment to provide stats for")
     parser.add_argument("--startdate",
-                        default="2020-07-17",
-                        help="Where to start metric summing, defaults to launch of service")
+                        default="",
+                        help="Where to start metric summing, defaults to launch of 90 days ago")
     parser.add_argument("--enddate",
                         default="",
                         help="Where to end metric summing, defaults to today")
@@ -202,6 +203,12 @@ def main():
                         help="Output stats as a plaintext statement")
 
     args = parser.parse_args()
+
+    if args.startdate == "":
+        today = datetime.datetime.now()
+        start_date = today - datetime.timedelta(days=90)
+        args.startdate = str(start_date.date())
+
     work = StatisticsCollector(
         args.environment, args.startdate, args.enddate)
 
