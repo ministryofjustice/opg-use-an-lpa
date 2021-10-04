@@ -234,7 +234,8 @@ class Lpas implements LpasInterface
             throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
         }
 
-        if ($response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
+        if (
+            $response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
             $response->getStatusCode() === StatusCodeInterface::STATUS_OK
         ) {
             return $response;
