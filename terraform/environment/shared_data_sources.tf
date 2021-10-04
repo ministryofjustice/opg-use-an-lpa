@@ -101,7 +101,10 @@ data "aws_ip_ranges" "route53_healthchecks" {
 }
 
 data "aws_security_group" "brute_force_cache_service" {
-  name = "brute-force-cache-service"
+  filter {
+    name   = "group-name"
+    values = ["brute-force-cache-service*"]
+  }
 }
 
 data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
