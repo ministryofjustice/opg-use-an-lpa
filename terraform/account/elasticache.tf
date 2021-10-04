@@ -1,8 +1,11 @@
 resource "aws_security_group" "brute_force_cache_service" {
-  name        = "brute-force-cache-service"
+  name_prefix = "brute-force-cache-service"
   description = "brute force cache sg"
   vpc_id      = aws_default_vpc.default.id
   tags        = local.default_tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elasticache_subnet_group" "private_subnets" {

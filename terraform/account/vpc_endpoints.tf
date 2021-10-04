@@ -1,10 +1,13 @@
 data "aws_region" "current" {}
 
 resource "aws_security_group" "vpc_endpoints_private" {
-  name        = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}"
+  name_prefix = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}"
   description = "vpc endpoint private sg"
   vpc_id      = aws_default_vpc.default.id
   tags        = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}" }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "vpc_endpoints_private_subnet_ingress" {
