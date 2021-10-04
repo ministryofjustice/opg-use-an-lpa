@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 return [
     Laminas\ConfigAggregator\ConfigAggregator::ENABLE_CACHE => false,
+    'debug' => false,
 
     'dependencies' => [
         'factories' => [
             \Http\Adapter\Guzzle6\Client::class => \BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
 
             \Aws\Sdk::class => \BehatTest\Common\Service\Aws\SdkFactory::class,
+
+            \Mezzio\Middleware\ErrorResponseGenerator::class => \Mezzio\Container\ErrorResponseGeneratorFactory::class,
         ],
     ],
 
@@ -123,5 +126,7 @@ return [
                 'requests_per_interval' => 4
             ]
         ]
-    ]
+    ],
+
+    'whoops' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
 ];

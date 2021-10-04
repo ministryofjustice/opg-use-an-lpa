@@ -68,6 +68,15 @@ Feature: Add an older LPA
 
   # Older Older LPA Journey
 
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper LPA which I have already requested an activation key for
+    And I confirm the details I provided are correct
+    And I am told that I have an activation key for this LPA and where to find it
+    When I request for a new activation key again
+    Then I am told a new activation key is posted to the provided postcode
+
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
@@ -100,6 +109,18 @@ Feature: Add an older LPA
     Given I am on the check LPA details page
     When I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    Then I am not shown a warning that my details must match the information on record
+
+  @ui @ff:allow_older_lpas:false
+  Scenario: The user is shown a warning on the check answers page if allow older lpas flag is on
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper document
+    Then I am shown a warning that my details must match the information on record
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account
@@ -199,3 +220,18 @@ Feature: Add an older LPA
     Given I have reached the contact details page
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
+
+  @ui @ff:allow_older_lpas:true
+  Scenario Outline: The user is shown an error message when entering invalid donor details
+    Given My LPA has been found but my details did not match
+    And I am asked for my role on the LPA
+    And I confirm that I am the Attorney
+    When I provide invalid donor details of <firstnames> <surname> <dob>
+    Then I am told that my input is invalid because <reason>
+
+    Examples:
+      | firstnames | surname | dob        | reason                            |
+      | Donor      | Person  |            | Enter the donor's date of birth   |
+      |            | Person  | 01-01-1980 | Enter the donor's first names     |
+      | Donor      |         | 01-01-1980 | Enter the donor's last name       |
+      | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |

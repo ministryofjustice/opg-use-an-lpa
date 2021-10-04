@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @ff:allow_older_lpas:false
+  @integration @acceptance @pact @ff:allow_older_lpas:false
   Scenario: The user cannot add an old LPA which does not have a registered status
     Given I am on the add an older LPA page
     When I provide details of an LPA that is not registered
@@ -22,8 +22,18 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am shown the details of an LPA
     And I confirm details shown to me of the found LPA are correct
-    Then A record of the LPA requested is saved to the database
     And a letter is requested containing a one time use code
+    And A record of my activation key request is not saved
+
+  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  Scenario: The user can add an older LPA to their account and we store the record in our DB
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper LPA document
+    And I confirm the details I provided are correct
+    Then I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
+    And a letter is requested containing a one time use code
+    And A record of my activation key request is saved
 
   @integration @acceptance @pact
   Scenario: The user cannot add an older LPA to their account that does not exist
@@ -61,6 +71,53 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
+  Scenario: The user is able to generate a new key even if an activation key already exists and the record is not saved
+    Given I am on the add an older LPA page
+    And I lost the letter containing my activation key
+    When I request for a new activation key again
+    Then a letter is requested containing a one time use code
+    And A record of my activation key request is not saved
+
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
+  Scenario: The user is able to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I lost the letter containing my activation key
+    When I request for a new activation key again
+    Then a letter is requested containing a one time use code
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:true
+  Scenario: The user is able to generate a new key even if an activation key already exists and the record is saved
+    Given I am on the add an older LPA page
+    And I lost the letter containing my activation key
+    When I request for a new activation key again
+    Then a letter is requested containing a one time use code
+    And A record of my activation key request is saved
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
+  Scenario: The user is unable to request a key for an LPA that they have already added (save requests disabled)
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm the details I provided are correct
+    Then I should be told that I have already added this LPA
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:true
+  Scenario: The user is unable to request a key for an LPA that they have already added (save requests enabled)
+    Given I am on the add an older LPA page
+    And I have added an LPA to my account
+    When I provide the details from a valid paper LPA which I have already added to my account
+    And I confirm the details I provided are correct
+    Then I should be told that I have already added this LPA
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:true
+  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
+    Given I am on the add an older LPA page
+    When I provide the details from a valid paper LPA which I have already requested an activation key for
+    And I confirm the details I provided are correct
+    Then I am told that I have an activation key for this LPA and where to find it
+
   @acceptance
   Scenario: The user cannot add an older LPA to their account due to missing data in request
     Given I am on the add an older LPA page
@@ -68,32 +125,16 @@ Feature: Add an older LPA
     And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
 
-  @acceptance @integration @ff:save_older_lpa_requests:false
-  Scenario: The user is able to generate a new key even if an activation key already exists
-    Given I am on the add an older LPA page
-    And I lost the letter received having the activation key
-    When I request for a new activation key again
-    Then a letter is requested containing a one time use code
-    And I am told a new activation key is posted to the provided postcode
-
-  @acceptance @integration @ff:save_older_lpa_requests:false
-  Scenario: The user is unable to request key for an LPA that they have already added
-    Given I am on the add an older LPA page
-    And I have added an LPA to my account
-    When I provide the details from a valid paper LPA which I have already added to my account
-    And I confirm the details I provided are correct
-    Then I should be told that I have already added this LPA
-
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance @integration @pact
   Scenario: The user is not shown the attorney details being a donor on the lpa
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the attorney details
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance @integration @pact
   Scenario: The user is not shown the donor details being an attorney on the lpa
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper LPA document
+    When I provide the attorney details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the attorney on the LPA I am shown the donor details
