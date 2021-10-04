@@ -790,7 +790,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
@@ -830,7 +830,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
@@ -916,7 +916,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
@@ -953,7 +953,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
@@ -991,7 +991,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
@@ -1034,7 +1034,7 @@ orbs:
                 docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push ${ECR_URL}
+                  docker push --all-tags ${ECR_URL}
                 else
                   docker push ${ECR_URL}:${IMAGE_TAG}
                 fi
@@ -1090,7 +1090,7 @@ orbs:
 
                 if [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
-                  docker push << parameters.container_repo_url >>
+                  docker push --all-tags << parameters.container_repo_url >>
                 else
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
