@@ -491,12 +491,13 @@ orbs:
   use-my-lpa:
     orbs:
       docker: circleci/docker@1.4.0
+      browser-tools: circleci/browser-tools@1.2.2
     commands:
       install_aws_cli:
         steps:
           - run:
               name: Install AWS CLI
-              command: sudo pip3 install awscli --upgrade
+              command: pip install awscli --upgrade
       install_python:
         steps:
           - run:
@@ -546,7 +547,7 @@ orbs:
     executors:
       golang:
         docker:
-          - image: circleci/golang:1.16
+          - image: cimg/go:1.16
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -560,28 +561,28 @@ orbs:
         resource_class: small
       php:
         docker:
-          - image: circleci/php:7-cli
+          - image: cimg/php:7.4
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php-browsers:
         docker:
-          - image: circleci/php:7-cli-browsers
+          - image: cimg/php:7.4-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       node-browsers:
         docker:
-          - image: circleci/node:14.15.5-browsers
+          - image: cimg/node:14.18-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       python:
         docker:
-          - image: circleci/python
+          - image: cimg/python:3.7
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -1277,7 +1278,7 @@ orbs:
           - run:
               name: Seed DynamoDB
               command: |
-                sudo pip3 install -r service-api/seeding/requirements.txt
+                pip install -r service-api/seeding/requirements.txt
                 export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
                 export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
@@ -1298,6 +1299,12 @@ orbs:
         steps:
           - checkout
           - install_python
+          - browser-tools/install-chrome
+          - browser-tools/install-chromedriver
+          - run:
+              command: |
+                google-chrome --version
+                chromedriver --version
           - attach_workspace:
               at: /tmp
           - run:
