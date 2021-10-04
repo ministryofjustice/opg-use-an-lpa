@@ -73,6 +73,7 @@
                         {{ govuk_form_open(form) }}
                         <div class="govuk-grid-column-three-quarters">
                             {{ govuk_form_element(form.get('__csrf')) }}
+                            {{ govuk_form_element(form.get('force_activation')) }}
 
                             <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
