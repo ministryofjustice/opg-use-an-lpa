@@ -156,7 +156,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                 $additionalInfo
             );
 
-            $letterExpectedDate = (new Carbon())->addWeeks(2);
+            $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
 //                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
@@ -166,7 +166,15 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 //                    ($this->localisedDate)($letterExpectedDate)
 //                );
                 //TODO: Setup emailing on completion
-                return new HtmlResponse("<h1> Success! </h1>");
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::activation-key-request-received',
+                        [
+                            'user' => $this->user,
+                            'date' => $letterExpectedDate
+                        ]
+                    )
+                );
             }
         }
     }
