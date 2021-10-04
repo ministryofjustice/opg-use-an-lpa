@@ -2,7 +2,7 @@
 
 Returns json data from DynamoDB and Cloudwatch Metric Statistics about the use of the Use a Lasting Power of Attorney service.
 
-Without specifying arguments, this script will assume a role into the production account and print statistics for every month from the launch of the service until today.
+Without specifying arguments, this script will assume a role into the production account and print statistics for the last 3 months.
 
 ```bash
 aws-vault exec identity -- python ./get_accounts_created_metric.py | jq
