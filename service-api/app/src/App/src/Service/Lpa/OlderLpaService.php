@@ -17,6 +17,7 @@ use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
 use DateTime;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -44,6 +45,7 @@ class OlderLpaService
         UserLpaActorMapInterface $userLpaActorMap,
         FeatureEnabled $featureEnabled,
         ResolveActor $resolveActor
+
     ) {
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->lpaService = $lpaService;
@@ -73,8 +75,8 @@ class OlderLpaService
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'donor'         => $lpaMatchResponse['donor'],
-                        'caseSubtype'   => $lpaMatchResponse['caseSubtype']
+                        'donor' => $lpaMatchResponse['donor'],
+                        'caseSubtype' => $lpaMatchResponse['caseSubtype'],
                     ]
                 );
             }
@@ -125,18 +127,18 @@ class OlderLpaService
 
         $actorData = $this->cleanseUserData(
             [
-                'first_names'   => $actor['firstname'],
-                'last_name'     => $actor['surname'],
-                'postcode'      => $actor['addresses'][0]['postcode'],
+                'first_names' => $actor['firstname'],
+                'last_name' => $actor['surname'],
+                'postcode' => $actor['addresses'][0]['postcode'],
             ]
         );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'      => $actor['uId'],
-                'to_match'      => $userDataToMatch,
-                'actor_data'    => array_merge($actorData, ['dob' => $actor['dob']]),
+                'actor_id' => $actor['uId'],
+                'to_match' => $userDataToMatch,
+                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
             ]
         );
 
@@ -198,7 +200,7 @@ class OlderLpaService
 
         return [
             'actor-id' => $actorId,
-            'lpa-id' => $lpaId
+            'lpa-id' => $lpaId,
         ];
     }
 
@@ -222,8 +224,8 @@ class OlderLpaService
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
-                'actorId'   => $lpaId,
-                'lpaId'     => $actorId,
+                'actorId' => $lpaId,
+                'lpaId' => $actorId,
             ]
         );
 
@@ -299,19 +301,19 @@ class OlderLpaService
 
         if ($actor['type'] !== 'donor') {
             $actorMatch['attorney'] = [
-                'uId'           => $actor['details']['uId'],
-                'firstname'     => $actor['details']['firstname'],
-                'middlenames'   => $actor['details']['middlenames'],
-                'surname'       => $actor['details']['surname'],
+                'uId' => $actor['details']['uId'],
+                'firstname' => $actor['details']['firstname'],
+                'middlenames' => $actor['details']['middlenames'],
+                'surname' => $actor['details']['surname'],
             ];
         }
 
         $actorMatch['caseSubtype'] = $lpa['caseSubtype'];
         $actorMatch['donor'] = [
-            'uId'           => $lpa['donor']['uId'],
-            'firstname'     => $lpa['donor']['firstname'],
-            'middlenames'   => $lpa['donor']['middlenames'],
-            'surname'       => $lpa['donor']['surname'],
+            'uId' => $lpa['donor']['uId'],
+            'firstname' => $lpa['donor']['firstname'],
+            'middlenames' => $lpa['donor']['middlenames'],
+            'surname' => $lpa['donor']['surname'],
         ];
 
         return $actorMatch;
@@ -328,11 +330,11 @@ class OlderLpaService
      */
     public function checkLPAMatchAndGetActorDetails(string $userId, array $dataToMatch): array
     {
-        $this->checkIfLpaAlreadyAdded($userId, (string) $dataToMatch['reference_number']);
+        $this->checkIfLpaAlreadyAdded($userId, (string)$dataToMatch['reference_number']);
 
         $dataToMatch = $this->cleanseUserData($dataToMatch);
 
-        $lpaMatch = $this->getLpaByUid((string) $dataToMatch['reference_number']);
+        $lpaMatch = $this->getLpaByUid((string)$dataToMatch['reference_number']);
 
         ($this->validateLpaRequirements)($lpaMatch->getData());
 
@@ -346,7 +348,7 @@ class OlderLpaService
         $this->logger->notice(
             'Removing request from UserLPAActorMap {id}',
             [
-                'id' => $requestId
+                'id' => $requestId,
             ]
         );
     }
@@ -359,6 +361,8 @@ class OlderLpaService
      * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
      * @param string $userId
+     *
+     * @throws Exception
      */
     public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
@@ -400,10 +404,50 @@ class OlderLpaService
     }
 
     /**
-     * Stores an Entry in UserLPAActorMap for the request of an older lpa
-     * @param string $lpaId
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
+     *
+     * @param string $uid Sirius uId for an LPA
      * @param string $userId
      * @param string $actorId
+     * @param string $additionalInfo
+     *
+     * @throws Exception
+     */
+    public function requestAccessAndCleanseByLetter(
+        string $uid,
+        string $userId,
+        string $additionalInfo
+    ): void {
+        $uidInt = (int)$uid;
+        $this->logger->info(
+            'Requesting cleanse and an access code letter on LPA {lpa}',
+            [
+                'lpa' => $uidInt,
+            ]
+        );
+
+        try {
+            $this->lpaRepository->requestLetterAndCleanse($uidInt, $additionalInfo);
+
+            //TODO: needs to save the request once merged with changes from 1643
+        } catch (ApiException $apiException) {
+            $this->logger->notice(
+                'Failed to request access code letter and cleanse for LPA {lpa}',
+                [
+                    'lpa' => $uidInt,
+                ]
+            );
+            throw $apiException;
+        }
+    }
+
+    /**
+     * Stores an Entry in UserLPAActorMap for the request of an older lpa
+     *
+     * @param string      $lpaId
+     * @param string      $userId
      *
      * @return string       The lpaActorToken
      * @throws Exception    throws an ApiException
