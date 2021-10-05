@@ -25,6 +25,7 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda_function" {
-  name = "/aws/lambda/${var.lambda_name}"
-  tags = var.tags
+  name       = "/aws/lambda/${var.lambda_name}"
+  kms_key_id = var.aws_cloudwatch_log_group_kms_key_id
+  tags       = var.tags
 }
