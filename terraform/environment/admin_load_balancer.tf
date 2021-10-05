@@ -19,6 +19,8 @@ resource "aws_lb" "admin" {
   subnets                    = data.aws_subnet_ids.public.ids
   tags                       = local.default_tags
 
+  enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
+
   security_groups = [
     aws_security_group.admin_loadbalancer[0].id,
   ]
