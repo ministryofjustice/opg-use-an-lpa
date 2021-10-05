@@ -190,7 +190,7 @@ Feature: Add an older LPA
     And I can see my attorney role, donor details and that I have not provided a telephone number
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user cannot add an old LPA to their account as the data does not match
+  Scenario: The user cannot add an old LPA to their account as the LPA reference number could not be found
     Given I am on the add an older LPA page
     When I provide an LPA number that does not exist
     And I confirm the details I provided are correct
