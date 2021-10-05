@@ -222,8 +222,7 @@ class AddOlderLpaTest extends TestCase
                 'uId'         => $this->lpaData['donor']['uId'],
                 'firstname'   => 'Donor',
                 'middlenames' => 'Example',
-                'surname'     => 'Person',
-                'dob'         => $this->lpaData['donor']['dob']
+                'surname'     => 'Person'
             ]
         ];
 

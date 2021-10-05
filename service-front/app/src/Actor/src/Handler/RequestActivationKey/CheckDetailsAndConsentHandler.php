@@ -138,7 +138,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         if (
             $this->session->has('lpa_full_match_but_not_cleansed') &&
-            $this->session->has('actor_role')
+            $this->session->has('actor_id')
         ) {
             return true;
         }

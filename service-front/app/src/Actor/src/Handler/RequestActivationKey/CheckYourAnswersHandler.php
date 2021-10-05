@@ -132,6 +132,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $this->session->unset('actor_id');
         $this->session->unset('actor_role');
         $this->session->unset('donor_first_names');
         $this->session->unset('donor_last_name');

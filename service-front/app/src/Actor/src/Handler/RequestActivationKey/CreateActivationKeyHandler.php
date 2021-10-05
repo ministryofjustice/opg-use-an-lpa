@@ -120,7 +120,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     );
                 case OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING:
                     $session->set('lpa_full_match_but_not_cleansed', true);
-                    $session->set('actor_role', $result->getData()['actor-role']);
+                    $session->set('actor_id', $result->getData()['actor_id']);
 
                     return $this->redirectToRoute('lpa.add.contact-details');
             }
