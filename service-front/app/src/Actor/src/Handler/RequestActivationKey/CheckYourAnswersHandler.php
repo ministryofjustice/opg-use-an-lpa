@@ -131,6 +131,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $this->session->unset('actor_role');
+        $this->session->unset('donor_first_names');
+        $this->session->unset('donor_last_name');
+        $this->session->unset('donor_dob');
+        $this->session->unset('telephone_option');
+        $this->session->unset('lpa_full_match_but_not_cleansed');
+
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
             $result = $this->addOlderLpa->validate(
