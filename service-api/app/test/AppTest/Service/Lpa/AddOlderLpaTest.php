@@ -218,7 +218,6 @@ class AddOlderLpaTest extends TestCase
             'caseSubtype'   => 'pfa',
             'actor'         => $this->lpaData['donor'],
             'role'          => 'donor',
-            'lpaIsCleansed' => false,
             'donor'       => [
                 'uId'         => $this->lpaData['donor']['uId'],
                 'firstname'   => 'Donor',

@@ -30,7 +30,7 @@ class AddOlderLpa
     private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
     private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
     private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
-    private const OLDER_LPA_NOT_CLEANSED        = 'LPA is not cleansed';
+    private const OLDER_LPA_NEEDS_CLEANSING     = 'LPA needs cleansing';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -137,17 +137,10 @@ class AddOlderLpa
         try {
             $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
         } catch (ApiException $apiEx) {
-            switch ($apiEx->getCode()) {
-                case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned(
-                        $data['reference_number'],
-                        $apiEx->getMessage(),
-                        $apiEx->getAdditionalData()
-                    );
-                default:
-                    // An API exception that we don't want to handle has been caught, pass it up the stack
-                    throw $apiEx;
+            if ($apiEx->getMessage() === self::OLDER_LPA_NEEDS_CLEANSING) {
+                return new OlderLpaApiResponse(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $apiEx->getAdditionalData());
             }
+            throw $apiEx;
         }
         $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 
@@ -201,11 +194,6 @@ class AddOlderLpa
                     OlderLpaApiResponse::HAS_ACTIVATION_KEY,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
-                break;
-
-            case self::OLDER_LPA_NOT_CLEANSED:
-                $code = EventCodes::OLDER_LPA_NOT_CLEANSED;
-                $response = new OlderLpaApiResponse(OlderLpaApiResponse::LPA_NOT_CLEANSED, $additionalData);
                 break;
 
             default:

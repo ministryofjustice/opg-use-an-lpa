@@ -74,11 +74,10 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $this->data['no_phone'] = true;
         }
 
-        if (empty($this->session->get('lpa_full_match_but_not_cleansed'))) {
-            if (!empty($actor_role = $this->session->get('actor_role'))) {
-                $this->data['actor_role'] = $actor_role;
-            }
-
+        if (
+            !($this->session->has('lpa_full_match_but_not_cleansed')) &&
+            !($this->session->has('actor_id'))
+        ) {
             $this->data['actor_role'] = $this->session->get('actor_role');
 
             if (strtolower($this->data['actor_role']) === 'attorney') {
@@ -113,10 +112,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            array_key_exists('telephone', $this->data) ?
-                EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
-                EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED;
-
             // TODO: UML-1577
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
@@ -141,6 +136,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
     private function hasRequiredSessionValues(): bool
     {
+        if (
+            $this->session->has('lpa_full_match_but_not_cleansed') &&
+            $this->session->has('actor_role')
+        ) {
+            return true;
+        }
         $required = $this->session->has('opg_reference_number')
             || $this->session->has('first_names')
             || $this->session->has('last_name')

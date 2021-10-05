@@ -326,7 +326,6 @@ class LpaContext extends BaseIntegrationContext
             'role'      => 'attorney',
             'lpa-id'    => $this->lpa->uId,
             'caseSubtype'    => $this->lpa->caseSubtype,
-            'lpaIsCleansed'     => true,
             'donor'          => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
@@ -1391,7 +1390,6 @@ class LpaContext extends BaseIntegrationContext
             'role'          => 'donor',
             'lpa-id'        => $lpa->uId,
             'caseSubtype'   => $lpa->caseSubtype,
-            'lpaIsCleansed' => true,
             'donor'         => [
                 'uId'           => $lpa->donor->uId,
                 'firstname'     => $lpa->donor->firstname,
@@ -1670,7 +1668,6 @@ class LpaContext extends BaseIntegrationContext
             'role'      => 'donor',
             'lpa-id'    => $this->lpa->uId,
             'caseSubtype'    => $this->lpa->caseSubtype,
-            'lpaIsCleansed'     => true,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
@@ -2328,7 +2325,6 @@ class LpaContext extends BaseIntegrationContext
             'role'      => 'donor',
             'lpa-id'    => $this->lpa->uId,
             'caseSubtype'    => $this->lpa->caseSubtype,
-            'lpaIsCleansed'     => false,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
@@ -2572,7 +2568,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      */
-    public function myLPAIsNotMarkedAsClean()
+    public function iConfirmDetailsShownToMeOfTheLPAAreCorrectButMyLPAIsNotMarkedAsClean()
     {
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -2606,10 +2602,10 @@ class LpaContext extends BaseIntegrationContext
 
         $checkLpaCleansed = $this->container->get(CheckLpaCleansed::class);
         try {
-            $checkLpaCleansed->__invoke($lpaMatchResponse);
+            $checkLpaCleansed->__invoke($this->userId, $lpaMatchResponse);
         } catch (BadRequestException $ex) {
             assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA is not cleansed', $ex->getMessage());
+            assertEquals('LPA needs cleansing', $ex->getMessage());
             return;
         }
     }

@@ -62,7 +62,7 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
 
         if (($this->featureEnabled)('allow_older_lpas')) {
-            ($this->checkLpaCleansed)($lpaMatchResponse);
+            ($this->checkLpaCleansed)($userId, $lpaMatchResponse);
         }
 
         $this->olderLpaService->requestAccessByLetter(

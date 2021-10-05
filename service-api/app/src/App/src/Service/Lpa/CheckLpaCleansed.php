@@ -3,36 +3,48 @@
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
-use App\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;
+use DateTimeImmutable;
 
 class CheckLpaCleansed
 {
-    private LoggerInterface $logger;
+    public const EARLIEST_REG_DATE = '2019-09-01';
 
-    public function __construct(LoggerInterface $logger)
+    private LoggerInterface $logger;
+    private LpaService $lpaService;
+    private DateTimeImmutable $earliestDate;
+
+    public function __construct(LoggerInterface $logger, LpaService $lpaService)
     {
         $this->logger = $logger;
+        $this->lpaService = $lpaService;
+        $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
     }
 
     /**
      * @param array $actorDetailsMatch An LPA data structure
-     * @throws Exception Thrown when LPA is not cleansed
+     * @param string $userId
+     * @throws Exception Thrown when LPA needs cleansed
      */
-    public function __invoke(array $actorDetailsMatch): void
+    public function __invoke(string $userId, array $actorDetailsMatch): void
     {
-        if ($actorDetailsMatch['lpaIsCleansed'] !== true) {
+        $lpa = $this->lpaService->getByUid((string) $actorDetailsMatch['lpa-id'])->getData();
+
+        if (
+            !$actorDetailsMatch['lpaIsCleansed']
+            && (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
+        ) {
             $this->logger->notice(
-                'User entered LPA {lpaId} is not cleansed',
+                'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
                 [
-                    'event_code' => EventCodes::OLDER_LPA_NOT_CLEANSED,
+                    'userId' => $userId,
                     'lpaId' => $actorDetailsMatch['lpa-id'],
                 ]
             );
             throw new BadRequestException(
-                'LPA is not cleansed',
+                'LPA needs cleansing',
                 [
-                    'actor' => $actorDetailsMatch
+                    'actor-id'      => $actorDetailsMatch['actor']['uId']
                 ]
             );
         }

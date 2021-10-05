@@ -34,7 +34,6 @@ class ParseOlderLpaMatchResponseTest extends TestCase
                 'surname'       => 'Person',
             ],
             'caseSubtype' => 'hw',
-            'lpaIsCleansed' => false
         ];
 
         $this->donor = new CaseActor();

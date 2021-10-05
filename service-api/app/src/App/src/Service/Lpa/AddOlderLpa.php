@@ -113,13 +113,11 @@ class AddOlderLpa
         }
 
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
-        $resolvedActor['lpaIsCleansed'] = $lpaData['lpaIsCleansed'];
         $resolvedActor['donor'] = [
             'uId'           => $lpaData['donor']['uId'],
             'firstname'     => $lpaData['donor']['firstname'],
             'middlenames'   => $lpaData['donor']['middlenames'],
             'surname'       => $lpaData['donor']['surname'],
-            'dob'           => $lpaData['donor']['dob']
         ];
 
         // Checks if the actor already has an active activation key or has requested one. If forced ignore

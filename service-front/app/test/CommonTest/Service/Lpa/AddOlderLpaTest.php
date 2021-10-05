@@ -510,7 +510,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             )->willThrow(
                 new ApiException(
-                    'LPA is not cleansed',
+                    'LPA needs cleansing',
                     StatusCodeInterface::STATUS_BAD_REQUEST
                 )
             );
@@ -525,7 +525,7 @@ class AddOlderLpaTest extends TestCase
             false
         );
 
-        $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
+        $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
     /**
@@ -583,7 +583,6 @@ class AddOlderLpaTest extends TestCase
                     'dob'           => '1948-11-01',
                 ],
                 'caseSubtype'       => 'hw',
-                'lpaIsCleansed'     => false,
                 'role'              => 'donor',
             ],
         ];
@@ -601,7 +600,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             )->willThrow(
                 new ApiException(
-                    'LPA is not cleansed',
+                    'LPA needs cleansing',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
                     $response
@@ -619,7 +618,7 @@ class AddOlderLpaTest extends TestCase
         );
 
         $this->assertEquals($response, $result->getData());
-        $this->assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $result->getResponse());
+        $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
     /**

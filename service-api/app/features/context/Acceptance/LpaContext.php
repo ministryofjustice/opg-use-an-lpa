@@ -2939,7 +2939,6 @@ class LpaContext implements Context
             'role'          => 'attorney',
             'lpa-id'        => $this->lpa->uId,
             'caseSubtype'   => $this->lpa->caseSubtype,
-            'lpaIsCleansed' => true,
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
@@ -3018,7 +3017,6 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname,
                 'dob'           => $this->userDob
             ],
-            'lpaIsCleansed' => true,
         ];
 
         assertArrayNotHasKey('attorney', $this->getResponseAsJson());
@@ -3141,7 +3139,7 @@ class LpaContext implements Context
     /**
      * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      */
-    public function myLPAIsNotMarkedAsClean()
+    public function iConfirmDetailsShownToMeOfTheLPAAreCorrectButMyLPAIsNotMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = 'false';
 

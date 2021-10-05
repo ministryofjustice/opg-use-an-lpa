@@ -5,7 +5,6 @@ namespace AppTest\Service\Lpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
 use PHPUnit\Framework\TestCase;
-use App\Service\Lpa\IsValidLpa;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -36,24 +35,26 @@ class CheckLpaCleansedTest extends TestCase
     /** @test */
     public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed()
     {
+        $userId = '1234';
         $actorDetailsMatch = [
             'lpaIsCleansed' => false,
         ];
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('LPA is not cleansed');
+        $this->expectExceptionMessage('LPA needs cleansing');
 
-        ($this->checkLpaCleansed()($actorDetailsMatch));
+        ($this->checkLpaCleansed()($userId, $actorDetailsMatch));
     }
 
     /** @test */
     public function older_lpa_add_confirmation_returns_void_when_lpa_is_cleansed()
     {
+        $userId = '1234';
         $actorDetailsMatch = [
             'lpaIsCleansed' => true,
         ];
 
-        $result = ($this->checkLpaCleansed()($actorDetailsMatch));
+        $result = ($this->checkLpaCleansed()($userId, $actorDetailsMatch));
         $this->assertNull($result);
     }
 }

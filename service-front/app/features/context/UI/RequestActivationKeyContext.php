@@ -660,7 +660,6 @@ class RequestActivationKeyContext implements Context
                                 ],
                                 'lpa-id' => $this->lpa->uId,
                                 'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaIsCleansed' => true,
                                 'role' => 'donor',
                             ]
                         )
@@ -1069,7 +1068,7 @@ class RequestActivationKeyContext implements Context
      * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      * @Then /^I request for a new activation key again and lpa is not cleansed$/
      */
-    public function myLpaIsNotMarkedAsClean()
+    public function iConfirmDetailsShownToMeOfTheLPAAreCorrectButMyLPAIsNotMarkedAsClean()
     {
         $this->lpa->lpaIsCleansed = false;
 
@@ -1081,7 +1080,7 @@ class RequestActivationKeyContext implements Context
                     json_encode(
                         [
                             'title' => 'Bad request',
-                            'details' => 'LPA is not cleansed',
+                            'details' => 'LPA needs cleansing',
                             'data' => [
                                 'donor'         => [
                                     'uId'           => $this->lpa->donor->uId,
@@ -1092,7 +1091,6 @@ class RequestActivationKeyContext implements Context
                                 ],
                                 'lpa-id'        => $this->lpa->uId,
                                 'caseSubtype'   => $this->lpa->caseSubtype,
-                                'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
                                 'role'          => 'donor'
                             ],
                         ]
@@ -1128,7 +1126,6 @@ class RequestActivationKeyContext implements Context
                                 ],
                                 'caseSubtype'   => $this->lpa->caseSubtype,
                                 'lpa-id'        => $this->lpa->uId,
-                                'lpaIsCleansed' => $this->lpa->lpaIsCleansed,
                                 'role'          => 'donor'
                             ],
                         ]

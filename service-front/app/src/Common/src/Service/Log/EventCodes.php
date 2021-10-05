@@ -142,5 +142,5 @@ class EventCodes
     /**
      * An LPA that is not clean
      */
-    public const OLDER_LPA_NOT_CLEANSED = 'OLDER_LPA_NOT_CLEANSED';
+    public const OLDER_LPA_NEEDS_CLEANSING = 'OLDER_LPA_NEEDS_CLEANSING';
 }
