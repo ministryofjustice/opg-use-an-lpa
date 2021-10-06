@@ -5,7 +5,7 @@ resource "aws_secretsmanager_secret" "notify_api_key" {
 }
 
 resource "aws_kms_key" "secrets_manager" {
-  description             = "Secrets Manager App Secrets encryption ${local.environment}"
+  description             = "Secrets Manager encryption ${local.environment}"
   deletion_window_in_days = 10
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.secrets_manager_kms.json
