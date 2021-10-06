@@ -112,7 +112,7 @@ class AddOlderLpa
             ];
         }
 
-        $resolvedActor['lpaActorToken'] = $lpaAddedData['lpaActorToken'];
+        $resolvedActor['lpaActorToken'] = $lpaAddedData['lpaActorToken'] ?? null;
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
         $resolvedActor['donor'] = [
             'uId'           => $lpaData['donor']['uId'],
