@@ -16,6 +16,7 @@ resource "aws_cloudwatch_log_group" "use-an-lpa" {
 resource "aws_kms_key" "cloudwatch" {
   description             = "Cloudwatch encryption ${local.environment}"
   deletion_window_in_days = 10
+  enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.cloudwatch_kms.json
 }
 
