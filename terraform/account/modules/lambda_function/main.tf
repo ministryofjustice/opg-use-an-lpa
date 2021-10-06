@@ -11,6 +11,10 @@ resource "aws_lambda_function" "lambda_function" {
     working_directory = var.working_directory
   }
 
+  tracing_config {
+    mode = "Active"
+  }
+
   dynamic "environment" {
     for_each = length(keys(var.environment_variables)) == 0 ? [] : [true]
     content {
