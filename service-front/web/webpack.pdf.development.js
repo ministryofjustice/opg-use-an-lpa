@@ -1,6 +1,6 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.pdf.common.js');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "development",
@@ -13,6 +13,6 @@ module.exports = merge(common, {
     modules: [__dirname, 'node_modules'],
   },
   optimization: {
-    minimizer: [new OptimizeCSSAssetsPlugin({})],
+    minimizer: [new CssMinimizerPlugin()],
   },
 });
