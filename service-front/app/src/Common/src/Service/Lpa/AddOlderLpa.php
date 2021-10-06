@@ -153,12 +153,13 @@ class AddOlderLpa
             }
             throw $apiEx;
         }
-        $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 
         $this->logger->notice(
             'Successfully matched LPA {uId} and requested letter for account with Id {id} ',
             [
-                'event_code' => $eventCode,
+                'event_code' => $forceActivationKey
+                    ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY
+                    : EventCodes::OLDER_LPA_SUCCESS,
                 'id'  => $data['identity'],
                 'uId' => $data['reference_number']
             ]
