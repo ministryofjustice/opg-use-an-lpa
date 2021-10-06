@@ -30,13 +30,9 @@ class CheckLpaCleansed
     {
         $lpa = $this->lpaService->getByUid((string) $actorDetailsMatch['lpa-id'])->getData();
 
-        var_dump($actorDetailsMatch['lpaIsCleansed']);
-        var_dump(new DateTimeImmutable($lpa['registrationDate']));
-        die;
-
         if (
-            (!$actorDetailsMatch['lpaIsCleansed']) && //true
-            (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate) //true
+            !$lpa['lpaIsCleansed'] &&
+            (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
         ) {
             $this->logger->notice(
                 'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
@@ -45,6 +41,7 @@ class CheckLpaCleansed
                     'lpaId' => $actorDetailsMatch['lpa-id'],
                 ]
             );
+
             throw new BadRequestException(
                 'LPA needs cleansing',
                 [

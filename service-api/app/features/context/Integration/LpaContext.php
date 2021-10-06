@@ -330,8 +330,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-                'dob'           => $this->lpa->donor->dob,
+                'surname'       => $this->lpa->donor->surname
             ],
             'attorney' => [
                 'uId'           => $this->lpa->attorneys[0]->uId,
@@ -1350,7 +1349,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm details shown to me of the found LPA are correct$/
-     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
@@ -1394,8 +1392,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $lpa->donor->uId,
                 'firstname'     => $lpa->donor->firstname,
                 'middlenames'   => $lpa->donor->middlenames,
-                'surname'       => $lpa->donor->surname,
-                'dob'           => $lpa->donor->dob,
+                'surname'       => $lpa->donor->surname
             ]
         ];
 
@@ -1672,8 +1669,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-                'dob'           => $this->lpa->donor->dob,
+                'surname'       => $this->lpa->donor->surname
             ]
         ];
 
@@ -2329,8 +2325,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-                'dob'           => $this->lpa->donor->dob,
+                'surname'       => $this->lpa->donor->surname
             ]
         ];
 
@@ -2565,6 +2560,7 @@ class LpaContext extends BaseIntegrationContext
         }
     }
 
+    /*** CHECK IF INTEGRATION TEST NEEDED FOR THIS HANDLER FUNCTION
     /**
      * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
      */

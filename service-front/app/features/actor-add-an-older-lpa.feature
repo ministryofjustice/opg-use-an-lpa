@@ -83,37 +83,42 @@ Feature: Add an older LPA
   # Older Older LPA Journey
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user is able to request a new key after requesting access previously, when LPA is cleansed
-    Given I have confirmed the details of an older paper LPA after requesting access previously
-    When I request for a new activation key again and lpa is cleansed
-    Then I am told a new activation key is posted to the provided postcode
-
-  @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user is not able to request a new key after requesting access previously, when LPA is not cleansed
-    Given I have confirmed the details of an older paper LPA after requesting access previously
-    When I request for a new activation key again and lpa is not cleansed
-    And I am asked for my contact details
-
-  @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user cannot add an older LPA to their account when LPA is not cleansed
-    Given I am on the check LPA details page
-    When I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
+  Scenario: The user cannot add an older LPA to their account that is not cleansed and reg date before Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm details of the found LPA are correct
     Then I am asked for my contact details
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user can add an older LPA to their account when LPA is cleansed
-    Given I am on the check LPA details page
-    When I confirm details shown to me of the LPA are correct and my LPA is marked as clean
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date before Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm details of the found LPA are correct
+    Then a letter is requested containing a one time use code
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is not cleansed but reg date on or after Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm details of the found LPA are correct
+    Then a letter is requested containing a one time use code
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date on or after Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm details of the found LPA are correct
     Then a letter is requested containing a one time use code
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is taken to Check details and consent page and only shown contact details
-    Given I am on the check LPA details page
-    And I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I confirm details of the found LPA are correct
     And I am asked for my contact details
     And I enter my telephone number
     When I am asked to consent and confirm my details
-    Then I can see my telephone number
+    Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
@@ -283,8 +288,9 @@ Feature: Add an older LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed
-    Given I am on the check LPA details page
-    And I confirm details shown to me of the LPA are correct but my LPA is not marked as clean
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I confirm details of the found LPA are correct
     And I am asked for my contact details
     When I click the Back link on the page
     Then I am taken back to the check answers page

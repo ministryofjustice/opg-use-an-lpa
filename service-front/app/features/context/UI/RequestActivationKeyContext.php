@@ -307,11 +307,14 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I can see my telephone number$/
+     * @Then /^I can only see my telephone number$/
      */
-    public function iCanSeeMyTelephoneNumber()
+    public function iCanOnlySeeMyTelephoneNumber()
     {
         $this->ui->assertPageContainsText('0123456789');
+        $this->ui->assertPageNotContainsText('Your role');
+        $this->ui->assertPageNotContainsText('Donor\'s name');
+        $this->ui->assertPageNotContainsText('Donor\'s date of birth');
     }
 
     /**
@@ -968,6 +971,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I am on the check LPA details page$/
+     * @Then /^I am on the Check we've found the right LPA page$/
      */
     public function iAmOnTheCheckLPADetailsPage()
     {
@@ -1065,86 +1069,68 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I confirm details shown to me of the LPA are correct but my LPA is not marked as clean$/
-     * @Then /^I request for a new activation key again and lpa is not cleansed$/
+     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
      */
-    public function iConfirmDetailsShownToMeOfTheLPAAreCorrectButMyLPAIsNotMarkedAsClean()
+    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus)
     {
-        $this->lpa->lpaIsCleansed = false;
+        if ($cleanseStatus == 'not marked') {
+            $this->lpa->lpaIsCleansed = false;
+        } else {
+            $this->lpa->lpaIsCleansed = true;
+        }
 
-        $this->apiFixtures->patch('/v1/older-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'LPA needs cleansing',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                    'dob'           => '1948-11-01'
+        if ($regDate == 'before') {
+            $this->lpa->registrationDate = '2019-08-31';
+        } else {
+            $this->lpa->registrationDate = '2019-09-01';
+        }
+
+        if (!$this->lpa->lpaIsCleansed && $regDate == 'before') {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_BAD_REQUEST,
+                        [],
+                        json_encode(
+                            [
+                                'title' => 'Bad request',
+                                'details' => 'LPA needs cleansing',
+                                'data' => [
+                                    'actor_id' => $this->actorId
                                 ],
-                                'lpa-id'        => $this->lpa->uId,
-                                'caseSubtype'   => $this->lpa->caseSubtype,
-                                'role'          => 'donor'
-                            ],
-                        ]
+                            ]
+                        )
                     )
-                )
-            );
+                );
 
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I confirm details shown to me of the LPA are correct and my LPA is marked as clean$/
-     */
-    public function myLPAIsMarkedAsClean()
-    {
-        $this->lpa->lpaIsCleansed = true;
-
-        $this->apiFixtures->patch('/v1/older-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                    'dob'           => '1948-11-01'
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Continue');
+        } else {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'data' => [
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
+                                    ],
+                                    'caseSubtype'   => $this->lpa->caseSubtype,
+                                    'lpa-id'        => $this->lpa->uId,
+                                    'role'          => 'donor'
                                 ],
-                                'caseSubtype'   => $this->lpa->caseSubtype,
-                                'lpa-id'        => $this->lpa->uId,
-                                'role'          => 'donor'
-                            ],
-                        ]
+                            ]
+                        )
                     )
-                )
-            );
+                );
 
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
-     */
-    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
-    {
-        $this->iAmOnTheRequestAnActivationKeyPage();
-        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
-        $this->iConfirmTheDetailsIProvidedAreCorrect();
-        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Continue');
+        }
     }
 }

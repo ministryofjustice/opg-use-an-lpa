@@ -122,8 +122,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::FOUND, $result->getResponse());
@@ -160,8 +159,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
@@ -199,8 +197,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::DOES_NOT_MATCH, $result->getResponse());
@@ -263,8 +260,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
@@ -330,8 +326,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::LPA_ALREADY_ADDED, $result->getResponse());
@@ -369,8 +364,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
 
         $this->assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
@@ -409,8 +403,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
     }
 
@@ -446,8 +439,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
+            $this->olderLpa['postcode']
         );
     }
 
@@ -469,7 +461,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => false,
+                    'force_activation_key'  => true,
                 ]
             )->willReturn($response);
 
@@ -485,47 +477,10 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
         );
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
-    }
-
-    /**
-     * @test
-     * @covers ::confirm
-     */
-    public function it_will_fail_sent_keys_for_an_ineligible_lpa(): void
-    {
-        $this->apiClientProphecy
-            ->httpPatch(
-                '/v1/older-lpa/confirm',
-                [
-                    'reference_number' => (string)$this->olderLpa['reference_number'],
-                    'first_names' => $this->olderLpa['first_names'],
-                    'last_name' => $this->olderLpa['last_name'],
-                    'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
-                    'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => false
-                ]
-            )->willThrow(
-                new ApiException(
-                    'LPA needs cleansing',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            );
-
-        $result = $this->sut->confirm(
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode'],
-            false
-        );
-
-        $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
     /**
@@ -543,7 +498,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name' => $this->olderLpa['last_name'],
                     'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => false
+                    'force_activation_key' => true
                 ]
             )->willThrow(
                 new ApiException(
@@ -562,7 +517,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
         );
     }
 
@@ -573,20 +528,6 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
-        $response = [
-            'data' => [
-                'donor' => [
-                    'uId'           => '12345',
-                    'firstname'     => 'Example',
-                    'middlenames'   => 'Donor',
-                    'surname'       => 'Person',
-                    'dob'           => '1948-11-01',
-                ],
-                'caseSubtype'       => 'hw',
-                'role'              => 'donor',
-            ],
-        ];
-
         $this->apiClientProphecy
             ->httpPatch(
                 '/v1/older-lpa/confirm',
@@ -596,14 +537,14 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => false
+                    'force_activation_key'  => true
                 ]
             )->willThrow(
                 new ApiException(
                     'LPA needs cleansing',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     null,
-                    $response
+                    ['actor_id' => '1234'],
                 )
             );
 
@@ -614,10 +555,10 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
         );
 
-        $this->assertEquals($response, $result->getData());
+        $this->assertEquals('1234', $result->getData()['actor_id']);
         $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
@@ -637,7 +578,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => false,
+                    'force_activation_key'  => true,
                 ]
             )->willThrow(
                 new ApiException(
@@ -654,7 +595,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
         );
     }
 }
