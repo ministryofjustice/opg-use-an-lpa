@@ -73,7 +73,10 @@ data "aws_iam_policy_document" "execution_role" {
 
     actions = [
       "kms:Decrypt",
-      "kms:GenerateDataKey*",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKeyPair",
+      "kms:GenerateDataKeyPairWithoutPlaintext",
+      "kms:GenerateDataKeyWithoutPlaintext",
       "kms:DescribeKey",
     ]
   }
