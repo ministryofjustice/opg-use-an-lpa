@@ -138,7 +138,10 @@ class AddOlderLpa
             $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
         } catch (ApiException $apiEx) {
             if ($apiEx->getMessage() === self::OLDER_LPA_NEEDS_CLEANSING) {
-                return new OlderLpaApiResponse(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $apiEx->getAdditionalData());
+                return new OlderLpaApiResponse(
+                    OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING,
+                    $apiEx->getAdditionalData()
+                );
             }
             throw $apiEx;
         }
