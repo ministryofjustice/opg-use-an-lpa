@@ -123,7 +123,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
-     * @When /^I request for a new activation key again and lpa is cleansed$/
      * @When /^I request for a new activation key again$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
@@ -1502,7 +1501,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
-     * @When /^My LPA is marked as clean$/
      */
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
     {
@@ -1564,6 +1562,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am shown the details of an LPA$/
+     * @Given /^I am on the check LPA details page$/
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
@@ -1581,7 +1580,6 @@ class LpaContext extends BaseIntegrationContext
                                 'surname'       => $this->lpa['donor']['surname'],
                             ],
                             'caseSubtype'   => $this->lpa['caseSubtype'],
-                            'lpaIsCleansed' => false,
                             'role'          => 'donor'
                         ]
                     )
@@ -1609,7 +1607,6 @@ class LpaContext extends BaseIntegrationContext
         $foundMatchLpaDTO = new OlderLpaMatchResponse();
         $foundMatchLpaDTO->setDonor($donor);
         $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
-        $foundMatchLpaDTO->setIfLpaCleansed($this->lpa['lpaIsCleansed']);
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::FOUND,
@@ -1693,54 +1690,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^My LPA is not marked as clean$/
-     * @When /^I request for a new activation key again and lpa is not cleansed$/
-     */
-    public function myLpaIsNotMarkedAsClean()
-    {
-        $this->apiFixtures->patch('/v1/older-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'LPA is not cleansed',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken,
-                                'lpaIsCleansed' => false,
-                                'role'          => 'donor'
-                            ],
-                        ]
-                    )
-                )
-            );
-
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
-
-        $result = $addOlderLpa->confirm(
-            $this->userIdentity,
-            intval($this->referenceNo),
-            $this->userFirstname,
-            $this->userSurname,
-            DateTime::createFromFormat('Y-m-d', $this->userDob),
-            $this->userPostCode,
-            true
-        );
-
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::LPA_NOT_CLEANSED, []);
-        assertEquals(OlderLpaApiResponse::LPA_NOT_CLEANSED, $response->getResponse());
-    }
-
-    /**
      * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
      */
     public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
@@ -1749,5 +1698,101 @@ class LpaContext extends BaseIntegrationContext
         $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
         $this->iConfirmTheDetailsIProvidedAreCorrect();
         $this->iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt();
+    }
+
+    /**
+     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
+     */
+    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus)
+    {
+        if ($cleanseStatus == 'not marked') {
+            $this->lpa['lpaIsCleansed'] = false;
+        } else {
+            $this->lpa['lpaIsCleansed'] = true;
+        }
+
+        if ($regDate == 'before') {
+            $this->lpa['registrationDate'] = '2019-08-31';
+        } else {
+            $this->lpa['registrationDate'] = '2019-09-01';
+        }
+
+        if (!$this->lpa['lpaIsCleansed'] && $regDate == 'before') {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_BAD_REQUEST,
+                        [],
+                        json_encode(
+                            [
+                                'title' => 'Bad request',
+                                'details' => 'LPA needs cleansing',
+                                'data' => [
+                                    'actor_id' => $this->actorId
+                                ],
+                            ]
+                        )
+                    )
+                );
+
+            $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+            $result = $addOlderLpa->confirm(
+                $this->userIdentity,
+                intval($this->referenceNo),
+                $this->userFirstname,
+                $this->userSurname,
+                DateTime::createFromFormat('Y-m-d', $this->userDob),
+                $this->userPostCode,
+                true
+            );
+
+            assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
+        } else {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        [],
+                        json_encode([])
+                    )
+                );
+
+            // API call for Notify
+            $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+                ->inspectRequest(
+                    function (RequestInterface $request) {
+                        $params = json_decode($request->getBody()->getContents(), true);
+
+                        assertInternalType('array', $params);
+                        assertArrayHasKey('template_id', $params);
+                        assertArrayHasKey('personalisation', $params);
+                    }
+                );
+
+            $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+            $result = $addOlderLpa->confirm(
+                $this->userIdentity,
+                intval($this->referenceNo),
+                $this->userFirstname,
+                $this->userSurname,
+                DateTime::createFromFormat('Y-m-d', $this->userDob),
+                $this->userPostCode,
+                true
+            );
+
+            $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+            assertEquals($response, $result);
+        }
+    }
+
+    /**
+     * @Given /^I am on the Check we've found the right LPA page$/
+     */
+    public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()
+    {
+        // Not needed for this context
     }
 }
