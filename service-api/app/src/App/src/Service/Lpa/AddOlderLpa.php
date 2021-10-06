@@ -6,8 +6,8 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use Psr\Log\LoggerInterface;
 use DateTime;
+use Psr\Log\LoggerInterface;
 
 class AddOlderLpa
 {
@@ -59,7 +59,8 @@ class AddOlderLpa
     public function validateRequest(string $userId, array $matchData): array
     {
         // Check if it's been added to the users account already
-        if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number'])) {
+        $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number']);
+        if (null !== $lpaAddedData) {
             if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
                     'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
@@ -111,6 +112,7 @@ class AddOlderLpa
             ];
         }
 
+        $resolvedActor['lpaActorToken'] = $lpaAddedData['lpaActorToken'];
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
         $resolvedActor['donor'] = [
             'uId'           => $lpaData['donor']['uId'],
