@@ -9,12 +9,19 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @ui @integration
+  @ui @integration @ff:allow_older_lpas:true
   Scenario: The user cannot add an old LPA which does not have a registered status
     Given I am on the add an older LPA page
     When I provide details of an LPA that is not registered
     And I confirm the details I provided are correct
-    Then I am informed that an LPA could not be found
+    Then I am informed that an LPA could not be found with this reference number
+
+  @ui @integration @ff:allow_older_lpas:false
+  Scenario: The user cannot add an old LPA which does not have a registered status
+    Given I am on the add an older LPA page
+    When I provide details of an LPA that is not registered
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with these details
 
   @ui @integration
   Scenario: The user can add an older LPA to their account
@@ -30,6 +37,13 @@ Feature: Add an older LPA
   Scenario: The user cannot add an old LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details that do not match a valid paper document
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with these details
+
+  @ui @integration @ff:allow_older_lpas:false
+  Scenario: The user cannot add an old LPA to their account when the LPA number does not exist
+    Given I am on the add an older LPA page
+    When I provide an LPA number that does not exist
     And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
@@ -174,6 +188,13 @@ Feature: Add an older LPA
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
     And I can see my attorney role, donor details and that I have not provided a telephone number
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user cannot add an old LPA to their account as the LPA reference number could not be found
+    Given I am on the add an older LPA page
+    When I provide an LPA number that does not exist
+    And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with this reference number
 
   # The following scenarios are for testing navigation of the OOL partial match journey
 
