@@ -16,8 +16,6 @@ resource "aws_kms_alias" "secrets_manager_alias" {
   target_key_id = aws_kms_key.secrets_manager.key_id
 }
 
-# See the following link for further information
-# https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html
 data "aws_iam_policy_document" "secrets_manager_kms" {
   statement {
     sid       = "Enable Root account permissions on Key"
