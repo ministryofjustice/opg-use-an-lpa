@@ -54,6 +54,10 @@ data "aws_kms_alias" "sessions_actor" {
   name = "alias/sessions-actor"
 }
 
+data "aws_kms_alias" "secrets_manager" {
+  name = "alias/secrets_manager_encryption"
+}
+
 //--------------------
 // ECR Repos
 
