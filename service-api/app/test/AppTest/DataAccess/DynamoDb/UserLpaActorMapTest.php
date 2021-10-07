@@ -7,7 +7,10 @@ namespace AppTest\DataAccess\DynamoDb;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -215,7 +218,7 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function add_conflicting_code()
     {
-        /** @var DynamoDbClient $dDBMock */
+        /** @var MockObject|DynamoDbClient $dDBMock */
         $dDBMock = $this->getMockBuilder(DynamoDbClient::class)
             ->setMethods(['putItem'])
             ->disableOriginalConstructor()
@@ -269,78 +272,93 @@ class UserLpaActorMapTest extends TestCase
     public function can_delete_map()
     {
         $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+        $testAdded = gmdate('c');
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($testToken) {
-            $this->assertIsArray($data);
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-            $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
-            $this->assertStringContainsString($testToken, serialize($data));
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
                 'Id' => [
-                    'S' => $id,
+                    'S' => $testToken,
                 ],
                 'SiriusUid' => [
-                    'S' => $siriusUid,
+                    'S' => $testSiriusUid,
                 ],
                 'Added' => [
-                    'S' => $added,
+                    'S' => $testAdded,
                 ],
                 'ActorId' => [
-                    'S' => $actorId
+                    'S' => (string) $testActorId
                 ],
                 'UserId' => [
-                    'S' => $userId
+                    'S' => $testUserId
                 ],
             ]
         ]));
 
-        $userLpaActorMaprepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $userLpaActorMapRepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $removeActorMap = $userLpaActorMaprepo->delete($testToken);
-        $this->assertEquals($id, $removeActorMap['Id']);
+        $removeActorMap = $userLpaActorMapRepo->delete($testToken);
+
+        $this->assertEquals($testToken, $removeActorMap['Id']);
     }
 
-    //Remove ActivateBy
+    //--------------------------------------------------------------------------------
+    // Activate record
 
     /** @test */
-    public function can_remove_activate_by()
+    public function can_activate_record()
     {
         $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+        $testAdded = gmdate('c');
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
-            $this->assertIsArray($data);
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-            $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
-            $this->assertStringContainsString($testToken, serialize($data));
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals('remove ActivateBy', $data['UpdateExpression']);
 
             return true;
         }))->willReturn($this->createAWSResult([
-           'Item' => [
-               'Id' => [
-                   'S' => $id,
-               ],
-               'SiriusUid' => [
-                   'S' => $siriusUid,
-               ],
-               'Added' => [
-                   'S' => $added,
-               ],
-               'ActorId' => [
-                   'S' => $actorId
-               ],
-               'UserId' => [
-                   'S' => $userId
-               ],
-           ]
+            'Item' => [
+                'Id' => [
+                    'S' => $testToken,
+                ],
+                'SiriusUid' => [
+                    'S' => $testSiriusUid,
+                ],
+                'Added' => [
+                    'S' => $testAdded,
+                ],
+                'ActorId' => [
+                    'S' => (string) $testActorId
+                ],
+                'UserId' => [
+                    'S' => $testUserId
+                ],
+            ]
         ]));
 
-        $userLpaActorMaprepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $userLpaActorMapRepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $removeActorMap = $userLpaActorMaprepo->removeActivateBy($testToken);
-        $this->assertEquals($id, $removeActorMap['Id']);
+        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken);
+        $this->assertEquals($testToken, $removeActorMap['Id']);
     }
 
     //--------------------------------------------------------------------------------
@@ -367,7 +385,6 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertEquals('UserIndex', $data['IndexName']);
             $this->assertEquals('UserId = :user_id', $data['KeyConditionExpression']);
-
 
             $this->assertArrayHasKey(':user_id', $data['ExpressionAttributeValues']);
             $this->assertEquals(['S' => $testUserId], $data['ExpressionAttributeValues'][':user_id']);
@@ -411,5 +428,69 @@ class UserLpaActorMapTest extends TestCase
 
         $this->assertInstanceOf(DateTime::class, $item['Added']);
         $this->assertEquals($testAdded, $item['Added']->format('c'));
+    }
+
+    //--------------------------------------------------------------------------------
+    // Renew Activation Period
+
+    /** @test */
+    public function can_renew_activation_period()
+    {
+        $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+        $testAdded = gmdate('c');
+
+        $now = new DateTimeImmutable();
+        $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals('set ActivateBy = :a', $data['UpdateExpression']);
+
+            $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
+            $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
+            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+
+            return true;
+        }))->willReturn($this->createAWSResult(
+            [
+                'Item' => [
+                    'Id' => [
+                        'S' => $testToken,
+                    ],
+                    'SiriusUid' => [
+                        'S' => $testSiriusUid,
+                    ],
+                    'Added' => [
+                        'S' => $testAdded,
+                    ],
+                    'ActorId' => [
+                        'S' => (string)$testActorId,
+                    ],
+                    'UserId' => [
+                        'S' => $testUserId,
+                    ],
+                    'ActivateBy' => [
+                        'N' => $expiry,
+                    ]
+                ],
+            ]
+        ));
+
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME
+        );
+
+        $renew = $userLpaActorMapRepo->renewActivationPeriod($testToken, 'P1Y');
+        $this->assertEquals($testToken, $renew['Id']);
     }
 }

@@ -46,9 +46,9 @@ class ActorCodeService
      *
      * @return string|null returns the database ID of the LPA that has had it's TTL removed
      */
-    private function removeTTLFromRequest(string $userLpaActorMapId): ?string
+    private function activateRecord(string $userLpaActorMapId): ?string
     {
-        $this->userLpaActorMapRepository->removeActivateBy($userLpaActorMapId);
+        $this->userLpaActorMapRepository->activateRecord($userLpaActorMapId);
 
         return $userLpaActorMapId;
     }
@@ -113,7 +113,7 @@ class ActorCodeService
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
-            $id = $this->removeTTLFromRequest($idToLpaMap[$lpaId]);
+            $id = $this->activateRecord($idToLpaMap[$lpaId]);
         } else {
             $id = $this->userLpaActorMapRepository->create(
                 $userId,

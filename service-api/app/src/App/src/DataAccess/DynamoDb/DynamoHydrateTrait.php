@@ -2,9 +2,11 @@
 
 namespace App\DataAccess\DynamoDb;
 
+use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use DateTime;
-use Aws\DynamoDb\Marshaler;
+use Exception;
+use UnexpectedValueException;
 
 /**
  * Trait DynamoHydrateTrait
@@ -14,10 +16,13 @@ trait DynamoHydrateTrait
 {
     /**
      * @param Result $result
-     * @param array $dateFields
+     * @param array  $dateFields
+     *
      * @return array
+     * @throws Exception
+     * @throws UnexpectedValueException
      */
-    private function getData(Result $result, array $dateFields = [])
+    private function getData(Result $result, array $dateFields = []): array
     {
         if (isset($result['Item'])) {
             return $this->extractData($result['Item'], $dateFields);
@@ -33,10 +38,13 @@ trait DynamoHydrateTrait
 
     /**
      * @param Result $result
-     * @param array $dateFields
+     * @param array  $dateFields
+     *
      * @return array
+     * @throws Exception
+     * @throws UnexpectedValueException
      */
-    private function getDataCollection(Result $result, array $dateFields = [])
+    private function getDataCollection(Result $result, array $dateFields = []): array
     {
         $items = [];
 
@@ -52,7 +60,10 @@ trait DynamoHydrateTrait
     /**
      * @param array $resultItem
      * @param array $dateFields
+     *
      * @return array
+     * @throws Exception
+     * @throws UnexpectedValueException
      */
     private function extractData(array $resultItem, array $dateFields = []): array
     {
