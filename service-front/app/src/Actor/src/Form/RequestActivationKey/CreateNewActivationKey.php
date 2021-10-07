@@ -19,8 +19,18 @@ class CreateNewActivationKey extends AbstractForm
      * CreateNewActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
      */
-    public function __construct(CsrfGuardInterface $csrfGuard)
+    public function __construct(CsrfGuardInterface $csrfGuard, bool $forceActivation = false)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
+
+        $this->add(
+            [
+                'name'  => 'force_activation',
+                'type'  => 'Hidden',
+                'attributes' => [
+                    'value' => $forceActivation ? 'yes' : 'no'
+                ]
+            ]
+        );
     }
 }

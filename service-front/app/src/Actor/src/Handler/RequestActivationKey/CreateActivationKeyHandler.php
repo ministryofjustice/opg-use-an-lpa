@@ -7,12 +7,7 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler,
-    CsrfGuardAware,
-    Traits\CsrfGuard,
-    Traits\Session,
-    Traits\User,
-    UserAware};
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\AddOlderLpa};
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LocalisedDate;
@@ -94,7 +89,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     $session->get('dob')['day']
                 )->toImmutable(),
                 $session->get('postcode'),
-                true,
+                $form->getData()['force_activation'] === 'yes'
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(2);
