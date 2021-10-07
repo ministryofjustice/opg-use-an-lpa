@@ -784,7 +784,6 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I request for a new activation key again$/
-     * @Then /^I request for a new activation key again and lpa is cleansed$/
      */
     public function iRequestForANewActivationKeyAgain()
     {
@@ -970,7 +969,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am on the check LPA details page$/
      * @Then /^I am on the Check we've found the right LPA page$/
      */
     public function iAmOnTheCheckLPADetailsPage()

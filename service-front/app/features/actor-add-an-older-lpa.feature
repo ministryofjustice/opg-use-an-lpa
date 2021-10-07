@@ -147,12 +147,6 @@ Feature: Add an older LPA
     When I confirm that I am the Donor
     Then I am asked for my contact details
 
-  @ui
-  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
-    Given I am on the check LPA details page
-    When I realise this is not the correct LPA
-    Then I am taken back to the start of the "request an activation key" process
-
   @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
@@ -254,7 +248,7 @@ Feature: Add an older LPA
 
   @ui
   Scenario: The user is taken back to start of activation request if the found LPA is incorrect
-    Given I am on the check LPA details page
+    Given I am on the Check we've found the right LPA page
     When  I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
 
