@@ -7,9 +7,10 @@ namespace ActorTest\Form\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
 {
@@ -31,7 +32,8 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'    => Csrf::class
+            '__csrf'           => Csrf::class,
+            'force_activation' => Hidden::class
         ];
     }
 
@@ -39,5 +41,11 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new CreateNewActivationKey($guardProphecy->reveal());
+    }
+
+    /** @test */
+    public function it_defaults_to_false()
+    {
+        $this->assertEquals('no', $this->form->get('force_activation')->getValue());
     }
 }

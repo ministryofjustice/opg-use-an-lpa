@@ -93,7 +93,7 @@ class ActorCodeServiceTest extends TestCase
             ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        $this->userLpaActorMapInterfaceProphecy->removeActivateBy('token-3')->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->activateRecord('token-3')->shouldBeCalled();
 
         $mapResults = [
             [

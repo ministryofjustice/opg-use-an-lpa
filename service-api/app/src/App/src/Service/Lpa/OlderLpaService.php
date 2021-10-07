@@ -66,8 +66,8 @@ class OlderLpaService
     {
         $this->userLpaActorMap->delete($requestId);
 
-        $this->logger->notice(
-            'Removing request from UserLPAActorMap {id}',
+        $this->logger->info(
+            'Removal request from UserLpaActorMap {id}',
             [
                 'id' => $requestId
             ]
