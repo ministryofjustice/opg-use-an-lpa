@@ -194,7 +194,8 @@ class AddOlderLpa
                 $code = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
-                    ($this->parseActivationKeyExistsResponse)($additionalData)); // is it bad to use this parser for a different thing?
+                    ($this->parseActivationKeyExistsResponse)($additionalData)
+                );
                 break;
 
             default:
