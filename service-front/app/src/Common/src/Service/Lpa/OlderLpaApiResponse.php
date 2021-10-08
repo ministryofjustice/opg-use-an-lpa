@@ -24,6 +24,8 @@ class OlderLpaApiResponse
     public const HAS_ACTIVATION_KEY = 'HAS_ACTIVATION_KEY';
     /** @var string The LPA has already been added to the account */
     public const LPA_ALREADY_ADDED  = 'LPA_ALREADY_ADDED';
+    /** @var string An activation key has already been requested for this LPA but not activated */
+    public const KEY_ALREADY_REQUESTED  = 'KEY_ALREADY_REQUESTED';
 
     /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse */
     private $data;
@@ -74,7 +76,8 @@ class OlderLpaApiResponse
             self::DOES_NOT_MATCH,
             self::NOT_ELIGIBLE,
             self::HAS_ACTIVATION_KEY,
-            self::LPA_ALREADY_ADDED
+            self::LPA_ALREADY_ADDED,
+            self::KEY_ALREADY_REQUESTED
         ];
 
         if (in_array($response, $allowedResponses)) {

@@ -26,10 +26,11 @@ use RuntimeException;
 class AddOlderLpa
 {
     // Exception messages returned from the API layer
-    private const OLDER_LPA_NOT_ELIGIBLE        = 'LPA not eligible due to registration date';
-    private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
-    private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
+    private const OLDER_LPA_NOT_ELIGIBLE            = 'LPA not eligible due to registration date';
+    private const OLDER_LPA_DOES_NOT_MATCH          = 'LPA details do not match';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY      = 'LPA has an activation key already';
+    private const OLDER_LPA_ALREADY_ADDED           = 'LPA already added';
+    private const OLDER_LPA_KEY_ALREADY_REQUESTED   = 'Activation key already requested for LPA';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -187,6 +188,13 @@ class AddOlderLpa
                     OlderLpaApiResponse::HAS_ACTIVATION_KEY,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
+                break;
+
+            case self::OLDER_LPA_KEY_ALREADY_REQUESTED:
+                $code = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
+                $response = new OlderLpaApiResponse(
+                    OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
+                    ($this->parseActivationKeyExistsResponse)($additionalData)); // is it bad to use this parser for a different thing?
                 break;
 
             default:
