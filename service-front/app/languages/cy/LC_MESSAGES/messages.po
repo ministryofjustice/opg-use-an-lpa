@@ -6055,6 +6055,8 @@ msgid ""
 "You can only use this service if your LPA was registered on or after 1 January "
 "2016."
 msgstr ""
+"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
+"neu ar 1 Ionawr 2016."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:19
 msgid "We could not find an LPA with that reference number"
