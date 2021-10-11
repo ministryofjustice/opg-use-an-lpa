@@ -372,7 +372,17 @@ class OlderLpaService
         );
 
         try {
-            $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+            $response = $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
+
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
+                $data = json_decode((string)$response->getBody());
+                if ($data['queuedForCleansing']) {
+                    throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+                }
+            } elseif ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
+                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+            }
+
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
@@ -426,8 +436,20 @@ class OlderLpaService
         );
 
         try {
-            $this->lpaRepository->requestLetterAndCleanse($uidInt, $additionalInfo);
+            $response = $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
+                //TODO: Why do I need to decode this json twice before it works?
+                $data = json_decode((string)$response->getBody(), true);
+                $data = json_decode($data, true);
 
+                if (!$data['queuedForCleansing']) {
+                    throw new ApiException(
+                        'Unexpected response received from Api Gateway when cleanse requested for Lpa'
+                    );
+                }
+            } else {
+                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+            }
             //TODO: needs to save the request once merged with changes from 1643
         } catch (ApiException $apiException) {
             $this->logger->notice(

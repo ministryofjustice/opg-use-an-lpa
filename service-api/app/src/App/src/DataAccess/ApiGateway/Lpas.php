@@ -144,82 +144,12 @@ class Lpas implements LpasInterface
      * @param int $actorId The uId of an actor as found attached to an LPA
      * @throws Exception An error was encountered whilst enqueing a letter for delivery
      */
-    public function requestLetter(int $caseId, int $actorId): void
+    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): ResponseInterface
     {
-        $payloadContent = [
-                'case_uid' => $caseId,
-                'actor_uid' => $actorId
-        ];
+        $payloadContent = ['case_uid' => $caseId];
 
-        $response = $this->sendRequest($payloadContent);
+        $actorId === null ? $payloadContent['notes'] = $additionalInfo : $payloadContent['actor_uid'] = $actorId;
 
-        if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-            $data = json_decode((string)$response->getBody());
-            if ($data['queuedForCleansing']) {
-                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-            }
-        } elseif ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
-            throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-        }
-    }
-
-    /**
-     * Contacts the api gateway and requests that Sirius send a new actor-code letter to the
-     * $actorId that is attached to the LPA $caseId
-     *
-     * @link //Replace with correct line number of open api
-     *
-     * @param int      $caseId  The Sirius uId of an LPA
-     * @param string   $additionalInfo
-     * @throws ApiException An error was encountered whilst enqueing a request for an LPA cleanse
-
-     */
-    public function requestLetterAndCleanse(int $caseId, string $additionalInfo): void
-    {
-        $payloadContent = [
-            'case_uid' => $caseId,
-            'notes' => $additionalInfo
-        ];
-
-        $response =  $this->sendRequest($payloadContent);
-
-        if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-            //TODO: Why do I need to decode this json twice before it works?
-            $data = json_decode((string)$response->getBody(), true);
-            $data = json_decode($data, true);
-
-            if (!$data['queuedForCleansing']) {
-               throw new ApiException(
-                   'Unexpected response received from Api Gateway when cleanse requested for Lpa'
-               );
-            }
-        } else {
-            throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-        }
-    }
-
-    private function buildHeaders(): array
-    {
-        $headerLines = [
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
-        ];
-
-        if (!empty($this->traceId)) {
-            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
-
-        return $headerLines;
-    }
-
-    /**
-     * @param $body
-     * @param $credentials
-     *
-     * @return ResponseInterface response returned from the API Gateway
-     */
-    private function sendRequest(array $payloadContent): ResponseInterface
-    {
         $provider = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
 
@@ -244,5 +174,19 @@ class Lpas implements LpasInterface
             return $response;
         }
         throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
+    }
+
+    private function buildHeaders(): array
+    {
+        $headerLines = [
+            'Accept'        => 'application/json',
+            'Content-Type'  => 'application/json',
+        ];
+
+        if (!empty($this->traceId)) {
+            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
+        }
+
+        return $headerLines;
     }
 }
