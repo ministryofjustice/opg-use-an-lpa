@@ -445,7 +445,7 @@ class LpaContext implements Context
     /**
      * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
      */
-    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus)
+    public function myLPAWasRegistered1stSeptember2019AndLPAIsAsClean($regDate, $cleanseStatus)
     {
         if ($cleanseStatus == 'not marked') {
             $this->lpa->lpaIsCleansed = false;
@@ -2516,7 +2516,7 @@ class LpaContext implements Context
                 'last_name'         => $this->userSurname,
                 'dob'               => $this->userDob,
                 'postcode'          => $this->userPostCode,
-                'force_activation_key' => true
+                'force_activation_key' => false
             ],
             [
                 'user-token' => $this->userId,

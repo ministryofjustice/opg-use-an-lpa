@@ -523,8 +523,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::confirm
-     * @covers ::badRequestReturned
+     * @covers ::confir
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
@@ -587,7 +586,7 @@ class AddOlderLpaTest extends TestCase
                 )
             );
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ApiException::class);
         $this->sut->confirm(
             '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
