@@ -156,35 +156,16 @@ class Lpas implements LpasInterface
         // request payload
         $body = json_encode($payloadContent);
 
-        $response = $this->sendRequest($payloadContent);
+        // construct request for API gateway
+        $url = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
+        $request = new Request('POST', $url, $this->buildHeaders(), $body);
+        $request = $this->awsSignature->signRequest($request, $credentials);
 
-        if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-            $data = json_decode((string)$response->getBody());
-            if ($data['queuedForCleansing']) {
-                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-            }
-        } elseif ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
-            throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+        try {
+            $response = $this->httpClient->send($request);
+        } catch (GuzzleException $ge) {
+            throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
         }
-    }
-
-    /**
-     * Contacts the api gateway and requests that Sirius send a new actor-code letter to the
-     * $actorId that is attached to the LPA $caseId
-     *
-     * @link //Replace with correct line number of open api
-     *
-     * @param int      $caseId  The Sirius uId of an LPA
-     * @param string   $additionalInfo
-     * @throws ApiException An error was encountered whilst enqueing a request for an LPA cleanse
-
-     */
-    public function requestLetterAndCleanse(int $caseId, string $additionalInfo): void
-    {
-        $payloadContent = [
-            'case_uid' => $caseId,
-            'notes' => $additionalInfo
-        ];
 
         if (
             $response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
@@ -207,39 +188,5 @@ class Lpas implements LpasInterface
         }
 
         return $headerLines;
-    }
-
-    /**
-     * @param $body
-     * @param $credentials
-     *
-     * @return ResponseInterface response returned from the API Gateway
-     */
-    private function sendRequest(array $payloadContent): ResponseInterface
-    {
-        $provider = AwsCredentialProvider::defaultProvider();
-        $credentials = $provider()->wait();
-
-        // request payload
-        $body = json_encode($payloadContent);
-
-        // construct request for API gateway
-        $url = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
-        $request = new Request('POST', $url, $this->buildHeaders(), $body);
-        $request = $this->awsSignature->signRequest($request, $credentials);
-
-        try {
-            $response = $this->httpClient->send($request);
-        } catch (GuzzleException $ge) {
-            throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
-        }
-
-        if (
-            $response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
-            $response->getStatusCode() === StatusCodeInterface::STATUS_OK
-        ) {
-            return $response;
-        }
-        throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
     }
 }
