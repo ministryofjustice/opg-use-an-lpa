@@ -19,10 +19,11 @@ module "clsf_to_sqs" {
     "METRIC_SUBCATEGORY" : "service",
     "METRIC_ENVIRONMENT" : local.environment
   }
-  image_uri                   = "${data.aws_ecr_repository.clsf_to_sqs.repository_url}:${var.lambda_container_version}"
-  ecr_arn                     = data.aws_ecr_repository.clsf_to_sqs.arn
-  lambda_role_policy_document = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy[0].json
-  tags                        = local.default_tags
+  image_uri                           = "${data.aws_ecr_repository.clsf_to_sqs.repository_url}:${var.lambda_container_version}"
+  ecr_arn                             = data.aws_ecr_repository.clsf_to_sqs.arn
+  lambda_role_policy_document         = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy[0].json
+  aws_cloudwatch_log_group_kms_key_id = aws_kms_key.cloudwatch.arn
+  tags                                = local.default_tags
 }
 
 data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
@@ -61,10 +62,11 @@ module "ship_to_opg_metrics" {
     "OPG_METRICS_URL" : local.account.opg_metrics.endpoint_url
     "API_KEY" : data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].secret_string
   }
-  image_uri                   = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
-  ecr_arn                     = data.aws_ecr_repository.ship_to_opg_metrics.arn
-  lambda_role_policy_document = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy[0].json
-  tags                        = local.default_tags
+  image_uri                           = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
+  ecr_arn                             = data.aws_ecr_repository.ship_to_opg_metrics.arn
+  lambda_role_policy_document         = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy[0].json
+  aws_cloudwatch_log_group_kms_key_id = aws_kms_key.cloudwatch.arn
+  tags                                = local.default_tags
 }
 
 data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {

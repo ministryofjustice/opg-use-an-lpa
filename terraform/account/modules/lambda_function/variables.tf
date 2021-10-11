@@ -67,3 +67,8 @@ variable "working_directory" {
   type        = string
   default     = null
 }
+
+variable "aws_cloudwatch_log_group_kms_key_id" {
+  type        = string
+  description = "The ARN of the KMS Key to use when encrypting log data."
+}

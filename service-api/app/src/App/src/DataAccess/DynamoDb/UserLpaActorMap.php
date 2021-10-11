@@ -7,6 +7,7 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use DateInterval;
 use DateTimeImmutable;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -19,11 +20,6 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
     private string $userLpaActorTable;
 
-    /**
-     * ViewerCodeActivity constructor.
-     * @param DynamoDbClient $client
-     * @param string $userLpaActorTable
-     */
     public function __construct(DynamoDbClient $client, string $userLpaActorTable)
     {
         $this->client = $client;
@@ -32,6 +28,8 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
     /**
      * @inheritDoc
+     * @throws Exception
+     * @throws DynamoDbException
      */
     public function get(string $lpaActorToken): ?array
     {
@@ -52,6 +50,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     /**
      * @inheritDoc
      * @throws Exception
+     * @throws DynamoDbException
      */
     public function create(
         string $userId,
@@ -69,7 +68,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
-            $expiry = $added->add(new \DateInterval($expiryInterval));
+            $expiry = $added->add(new DateInterval($expiryInterval));
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
         }
 
@@ -96,6 +95,8 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
     /**
      * @inheritDoc
+     * @throws Exception
+     * @throws DynamoDbException
      */
     public function delete(string $lpaActorToken): array
     {
@@ -118,7 +119,12 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         return $this->getData($response);
     }
 
-    public function removeActivateBy(string $lpaActorToken): array
+    /**
+     * @inheritDoc
+     * @throws Exception
+     * @throws DynamoDbException
+     */
+    public function activateRecord(string $lpaActorToken): array
     {
         $response = $this->client->updateItem([
           'TableName' => $this->userLpaActorTable,
@@ -128,7 +134,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
               ],
           ],
           'UpdateExpression' => 'remove ActivateBy',
-          'ReturnValues' => 'ALL_OLD'
+          'ReturnValues' => 'ALL_NEW'
           ]);
 
         return $this->getData($response);
@@ -137,6 +143,8 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
     /**
      * @inheritDoc
+     * @throws Exception
+     * @throws DynamoDbException
      */
     public function getByUserId(string $userId): ?array
     {
@@ -152,5 +160,34 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         ]);
 
         return $this->getDataCollection($result, ['Added']);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Exception
+     * @throws DynamoDbException
+     */
+    public function renewActivationPeriod(string $lpaActorToken, string $expiryInterval): array
+    {
+        $now = new DateTimeImmutable();
+        $expiry = $now->add(new DateInterval($expiryInterval));
+
+        $response = $this->client->updateItem(
+            [
+                'TableName' => $this->userLpaActorTable,
+                'Key' => [
+                    'Id' => [
+                        'S' => $lpaActorToken,
+                    ],
+                ],
+                'UpdateExpression' => 'set ActivateBy = :a',
+                'ExpressionAttributeValues' => [
+                    ':a' => ['N' => (string) $expiry->getTimestamp()]
+                ],
+                'ReturnValues' => 'ALL_NEW',
+            ]
+        );
+
+        return $this->getData($response);
     }
 }

@@ -54,6 +54,10 @@ data "aws_kms_alias" "sessions_actor" {
   name = "alias/sessions-actor"
 }
 
+data "aws_kms_alias" "secrets_manager" {
+  name = "alias/secrets_manager_encryption"
+}
+
 //--------------------
 // ECR Repos
 
@@ -101,7 +105,10 @@ data "aws_ip_ranges" "route53_healthchecks" {
 }
 
 data "aws_security_group" "brute_force_cache_service" {
-  name = "brute-force-cache-service"
+  filter {
+    name   = "group-name"
+    values = ["brute-force-cache-service*"]
+  }
 }
 
 data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {

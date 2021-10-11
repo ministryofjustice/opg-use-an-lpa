@@ -50,7 +50,7 @@ class KmsEncryptedCookie implements EncryptInterface
         }
 
         // Separate out the key ID and the data
-        [$keyId, $payload] = explode('.', $data, 2);
+        [$keyId, $payload] = explode('.', trim($data, '"'), 2);
 
         try {
             $key = $this->keyManager->getDecryptionKey($keyId);

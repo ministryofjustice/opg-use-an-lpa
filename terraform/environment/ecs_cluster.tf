@@ -66,4 +66,18 @@ data "aws_iam_policy_document" "execution_role" {
       "secretsmanager:GetSecretValue",
     ]
   }
+  statement {
+    effect = "Allow"
+
+    resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
+
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKeyPair",
+      "kms:GenerateDataKeyPairWithoutPlaintext",
+      "kms:GenerateDataKeyWithoutPlaintext",
+      "kms:DescribeKey",
+    ]
+  }
 }

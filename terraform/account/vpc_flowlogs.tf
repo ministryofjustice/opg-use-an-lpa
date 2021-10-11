@@ -6,8 +6,9 @@ resource "aws_flow_log" "vpc_flow_logs" {
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
-  name = "vpc_flow_logs"
-  tags = local.default_tags
+  name       = "vpc_flow_logs"
+  kms_key_id = aws_kms_key.cloudwatch.arn
+  tags       = local.default_tags
 }
 
 resource "aws_iam_role" "vpc_flow_logs" {

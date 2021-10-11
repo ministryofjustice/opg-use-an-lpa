@@ -169,6 +169,7 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/dnoegel/php-xdg-base-dir" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/gettext/gettext" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/gettext/languages" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/aws/aws-crt-php" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -451,7 +452,9 @@
       </server>
     </servers>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
   <component name="PhpRuntimeConfiguration">
     <extensions>
       <extension name="Ev" enabled="false" />

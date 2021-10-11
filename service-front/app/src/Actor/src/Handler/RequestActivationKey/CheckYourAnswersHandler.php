@@ -20,6 +20,7 @@ use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
@@ -28,7 +29,6 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
-use Common\Service\Lpa\LocalisedDate;
 
 /**
  * Class CheckYourAnswersHandler
@@ -169,7 +169,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ['user'  => $this->user]
                     ));
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
-                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
                     return new HtmlResponse(
                         $this->renderer->render(
@@ -204,7 +204,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
-                        ['user'  => $this->user]
+                        [
+                            'user'  => $this->user,
+                            'lpa_reference_number' => $this->data['reference_number']
+                        ],
                     ));
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
