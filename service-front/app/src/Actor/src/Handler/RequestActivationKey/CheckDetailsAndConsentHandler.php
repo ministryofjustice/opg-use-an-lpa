@@ -131,7 +131,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
             $additionalInfo = ($this->cleanseDataFormatter)($this->data);
-            $this->logger->info(htmlspecialchars($additionalInfo));
 
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
@@ -153,7 +152,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                 $identity,
                 (int) $this->session->get('opg_reference_number'),
                 $this->session->get('actor_id'),
-                $additionalInfo
+                htmlspecialchars($additionalInfo)
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(6);
