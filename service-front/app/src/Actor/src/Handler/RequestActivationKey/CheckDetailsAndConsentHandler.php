@@ -15,9 +15,11 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\CleanseDataFormatter;
 use Common\Service\Lpa\CleanseLpa;
+use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -43,7 +45,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
     private CleanseDataFormatter $cleanseDataFormatter;
     private CleanseLpa $cleanseLPA;
+    private EmailClient $emailClient;
     private CheckDetailsAndConsent $form;
+    private LocalisedDate $localisedDate;
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
@@ -55,13 +59,17 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
-        CleanseDataFormatter $cleanseDataFormatter
+        CleanseDataFormatter $cleanseDataFormatter,
+        EmailClient $emailClient,
+        LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
         $this->cleanseDataFormatter = $cleanseDataFormatter;
+        $this->emailClient = $emailClient;
+        $this->localisedDate = $localisedDate;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -86,7 +94,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $this->data['telephone'] = $telephone;
         }
 
-        if ($this->session->get('telephone_option')['no_phone'] === "yes") {
+        if ($this->session->get('telephone_option')['no_phone'] === 'yes') {
             $this->data['no_phone'] = true;
         }
 
@@ -146,20 +154,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $result = $this->cleanseLPA->cleanse(
                 $identity,
                 (int) $this->session->get('opg_reference_number'),
-                $this->session->get('actor_id'),
                 htmlspecialchars($additionalInfo)
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
-//                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
-//                    $user->getDetails()['Email'],
-//                    $this->session->get('opg_reference_number'),
-//                    strtoupper($this->session->get('postcode')),
-//                    ($this->localisedDate)($letterExpectedDate)
-//                );
-                //TODO: Setup emailing on completion
+                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                    $user->getDetails()['Email'],
+                    $this->session->get('opg_reference_number'),
+                    strtoupper($this->session->get('postcode')),
+                    ($this->localisedDate)($letterExpectedDate)
+                );
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::activation-key-request-received',
