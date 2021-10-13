@@ -100,6 +100,11 @@ class EventCodes
     public const OLDER_LPA_FORCE_ACTIVATION_KEY = 'OLDER_LPA_FORCE_ACTIVATION_KEY';
 
     /**
+     * An activation key has already been requested for this LPA but not activated
+     */
+    public const OLDER_LPA_KEY_ALREADY_REQUESTED = 'OLDER_LPA_KEY_ALREADY_REQUESTED';
+
+    /**
      * Lpa summary has been downloaded
      */
     public const DOWNLOAD_SUMMARY = 'DOWNLOAD_SUMMARY';

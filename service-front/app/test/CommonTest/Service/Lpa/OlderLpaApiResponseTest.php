@@ -81,6 +81,7 @@ class OlderLpaApiResponseTest extends TestCase
         return [
             [OlderLpaApiResponse::LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
             [OlderLpaApiResponse::HAS_ACTIVATION_KEY, $this->createActivationKeyExistsDTO()],
+            [OlderLpaApiResponse::KEY_ALREADY_REQUESTED, $this->createActivationKeyExistsDTO()],
             [OlderLpaApiResponse::DOES_NOT_MATCH, []],
             [OlderLpaApiResponse::NOT_ELIGIBLE, []],
             [OlderLpaApiResponse::NOT_FOUND, []],

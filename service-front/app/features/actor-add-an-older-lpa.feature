@@ -87,7 +87,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I provide the details from a valid paper LPA which I have already requested an activation key for
     And I confirm the details I provided are correct
-    And I am told that I have an activation key for this LPA and where to find it
+    And I am told that I have already requested an activation key for this LPA
     When I request for a new activation key again
     Then I am told a new activation key is posted to the provided postcode
 

@@ -79,14 +79,6 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And A record of my activation key request is not saved
 
-
-  @acceptance @integration @pact @ff:save_older_lpa_requests:false
-  Scenario: The user is able to generate a new key even if an activation key already exists
-    Given I am on the add an older LPA page
-    And I lost the letter containing my activation key
-    When I request for a new activation key again
-    Then a letter is requested containing a one time use code
-
   @acceptance @integration @pact @ff:save_older_lpa_requests:true
   Scenario: The user is able to generate a new key even if an activation key already exists and the record is saved
     Given I am on the add an older LPA page
