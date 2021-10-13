@@ -87,7 +87,7 @@ class LpasTest extends TestCase
             ->willReturn($responseProphecy->reveal());
 
         $service = $this->getLpas();
-        $service->requestLetter($caseUid, $actorUid);
+        $service->requestLetter($caseUid, $actorUid, null);
     }
 
     /** @test */
@@ -129,7 +129,7 @@ class LpasTest extends TestCase
         $service = $this->getLpas();
 
         $this->expectException(ApiException::class);
-        $service->requestLetter($caseUid, $actorUid);
+        $service->requestLetter($caseUid, $actorUid, null);
     }
 
     /** @test */
@@ -155,6 +155,6 @@ class LpasTest extends TestCase
         $service = $this->getLpas();
 
         $this->expectException(ApiException::class);
-        $service->requestLetter($caseUid, $actorUid);
+        $service->requestLetter($caseUid, $actorUid, null);
     }
 }
