@@ -1151,6 +1151,6 @@ class RequestActivationKeyContext implements Context
         $this->iAmOnTheRequestAnActivationKeyPage();
         $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
         $this->iConfirmTheDetailsIProvidedAreCorrect();
-        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
+        $this->iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA();
     }
 }
