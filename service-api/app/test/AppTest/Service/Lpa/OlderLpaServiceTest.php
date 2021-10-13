@@ -101,8 +101,8 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter_record_exists(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
-            ->shouldBeCalled();
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->willReturn(new EmptyResponse());
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
