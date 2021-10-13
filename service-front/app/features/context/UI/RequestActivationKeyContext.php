@@ -439,6 +439,8 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I confirm details of the found LPA are correct$/
+     * @When /^I request a new activation key$/
+     * @Given /^The activation key not been received or was lost$/
      */
     public function iConfirmTheDetailsOfTheFoundLpaAreCorrect()
     {
@@ -1139,5 +1141,16 @@ class RequestActivationKeyContext implements Context
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->pressButton('Continue');
         }
+    }
+
+    /**
+     * @Given  /^I have already requested an activation key previously$/
+     */
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAnActivationKeyForThisLpaAndWhereToFindIt();
     }
 }

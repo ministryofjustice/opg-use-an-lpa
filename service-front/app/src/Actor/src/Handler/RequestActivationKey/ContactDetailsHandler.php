@@ -71,12 +71,11 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
 
     public function isMissingPrerequisite(): bool
     {
-        if (
-            $this->session->has('lpa_full_match_but_not_cleansed') &&
-            $this->session->has('actor_id')
-        ) {
-            return false;
+        // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
+        if ($this->session->has('lpa_full_match_but_not_cleansed')) {
+            return !$this->session->has('actor_id');
         }
+
         $required = parent::isMissingPrerequisite()
             || !$this->session->has('actor_role');
 
