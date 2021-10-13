@@ -161,7 +161,6 @@ class OlderLpaService
             if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 //TODO: Why do I need to decode this json twice before it works?
                 $data = json_decode((string)$response->getBody(), true);
-                $data = json_decode($data, true);
 
                 if (!$data['queuedForCleansing']) {
                     throw new ApiException(
