@@ -627,7 +627,7 @@ class LpaContext implements Context
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('LPA has an activation key already');
+        $this->ui->assertSession()->responseContains('Activation key already requested for LPA');
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 

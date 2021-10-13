@@ -272,6 +272,70 @@ class AddOlderLpaTest extends TestCase
      * @covers ::validate
      * @covers ::badRequestReturned
      */
+    public function it_will_let_know_user_they_have_already_requested_an_activation_key_for_an_LPA(): void
+    {
+        $response = [
+            'donor'         => [
+                'uId'           => '12345',
+                'firstname'     => 'Example',
+                'middlenames'   => 'Donor',
+                'surname'       => 'Person',
+            ],
+            'caseSubtype' => 'hw',
+        ];
+
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/older-lpa/validate',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => false
+                ]
+            )->willThrow(
+                new ApiException(
+                    'Activation key already requested for LPA',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    $response
+                )
+            );
+
+        $donor = new CaseActor();
+        $donor->setUId($response['donor']['uId']);
+        $donor->setFirstname($response['donor']['firstname']);
+        $donor->setMiddlenames($response['donor']['middlenames']);
+        $donor->setSurname($response['donor']['surname']);
+
+        $dto = new ActivationKeyExistsResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype($response['caseSubtype']);
+
+        $this->parseKeyExistsProphecy
+            ->__invoke($response)
+            ->willReturn($dto);
+
+        $result = $this->sut->validate(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode']
+        );
+
+        $this->assertEquals(OlderLpaApiResponse::KEY_ALREADY_REQUESTED, $result->getResponse());
+        $this->assertEquals($dto, $result->getData());
+    }
+
+    /**
+     * @test
+     * @covers ::validate
+     * @covers ::badRequestReturned
+     */
     public function it_will_fail_if_they_have_already_added_the_LPA(): void
     {
         $response = [

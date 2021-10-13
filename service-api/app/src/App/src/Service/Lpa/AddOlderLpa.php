@@ -131,7 +131,7 @@ class AddOlderLpa
                     ]
                 );
                 throw new BadRequestException(
-                    'LPA has an activation key already',
+                    'Activation key already requested for LPA',
                     [
                         'donor'         => $lpaAddedData['donor'],
                         'caseSubtype'   => $lpaAddedData['caseSubtype']

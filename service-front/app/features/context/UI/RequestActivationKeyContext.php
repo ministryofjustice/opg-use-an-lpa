@@ -34,6 +34,15 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Given /^I am told that I have already requested an activation key for this LPA$/
+     */
+    public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertElementContainsText('h1', 'You\'ve already asked for an activation key for this LPA');
+    }
+
+    /**
      * @Then /^a letter is requested containing a one time use code$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
@@ -1022,7 +1031,7 @@ class RequestActivationKeyContext implements Context
                     json_encode(
                         [
                             'title' => 'Bad request',
-                            'details' => 'LPA has an activation key already',
+                            'details' => 'Activation key already requested for LPA',
                             'data' => [
                                 'donor' => [
                                     'uId' => $this->lpa->donor->uId,

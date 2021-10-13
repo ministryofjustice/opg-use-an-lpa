@@ -31,6 +31,7 @@ class AddOlderLpa
     private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
     private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
     private const OLDER_LPA_NEEDS_CLEANSING     = 'LPA needs cleansing';
+    private const OLDER_LPA_KEY_ALREADY_REQUESTED   = 'Activation key already requested for LPA';
 
     /** @var ApiClient */
     private ApiClient $apiClient;
@@ -206,6 +207,14 @@ class AddOlderLpa
                 );
                 break;
 
+            case self::OLDER_LPA_KEY_ALREADY_REQUESTED:
+                $code = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
+                $response = new OlderLpaApiResponse(
+                    OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
+                    ($this->parseActivationKeyExistsResponse)($additionalData)
+                );
+                break;
+
             default:
                 throw new RuntimeException(
                     'A bad request was made to add an older lpa and the reason for rejection is '
@@ -221,6 +230,7 @@ class AddOlderLpa
                 'reason' => $message,
             ]
         );
+
         return $response;
     }
 

@@ -186,6 +186,20 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
+                case OlderLpaApiResponse::KEY_ALREADY_REQUESTED:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
+                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::already-requested-activation-key',
+                            [
+                                'user'      => $this->user,
+                                'donor'     => $result->getData()->getDonor(),
+                                'lpaType'   => $result->getData()->getCaseSubtype(),
+                                'form'      => $form
+                            ]
+                        )
+                    );
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {
