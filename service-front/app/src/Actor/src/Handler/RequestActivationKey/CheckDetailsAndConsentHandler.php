@@ -134,9 +134,14 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         ]));
     }
 
-    // TODO: This function needs to be revisited as a potential bug : UML-1822
     private function hasRequiredSessionValues(): bool
     {
+        if (
+            $this->session->has('lpa_full_match_but_not_cleansed') &&
+            $this->session->has('actor_id')
+        ) {
+            return true;
+        }
         $required = $this->session->has('opg_reference_number')
             || $this->session->has('first_names')
             || $this->session->has('last_name')

@@ -288,19 +288,3 @@ Feature: Add an older LPA
     And I am asked for my contact details
     When I click the Back link on the page
     Then I am taken back to the check answers page
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is not able to request a new key after requesting activation key previously, when LPA is not cleansed
-    Given I have already requested an activation key previously
-    And The activation key not been received or was lost
-    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
-    When I request a new activation key
-    Then I am asked for my contact details
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is not able to request a new key after requesting activation key previously, when LPA is not cleansed
-    Given I have already requested an activation key previously
-    And The activation key not been received or was lost
-    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
-    When I request a new activation key
-    Then a letter is requested containing a one time use code

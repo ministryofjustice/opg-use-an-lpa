@@ -1430,6 +1430,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I receive an email confirming activation key request$/
      * @Then /^I am told a new activation key is posted to the provided postcode$/
+     * @Then /^I am asked for my contact details$/
      */
     public function iReceiveAnEmailConfirmingActivationKeyRequest()
     {
@@ -1722,24 +1723,8 @@ class LpaContext extends BaseIntegrationContext
         } else {
             $this->lpa['registrationDate'] = '2019-09-01';
         }
-    }
 
-    /**
-     * @Given /^I am on the Check we've found the right LPA page$/
-     */
-    public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I am asked for my contact details$/
-     */
-    public function iAmAskedForMyContactDetails()
-    {
-        $earliestRegDate = '2019-09-01';
-
-        if (!$this->lpa['lpaIsCleansed'] && $this->lpa['registrationDate'] < $earliestRegDate) {
+        if (!$this->lpa['lpaIsCleansed'] && $regDate == 'before') {
             $this->apiFixtures->patch('/v1/older-lpa/confirm')
                 ->respondWith(
                     new Response(
@@ -1808,5 +1793,13 @@ class LpaContext extends BaseIntegrationContext
             $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
             assertEquals($response, $result);
         }
+    }
+
+    /**
+     * @Given /^I am on the Check we've found the right LPA page$/
+     */
+    public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()
+    {
+        // Not needed for this context
     }
 }
