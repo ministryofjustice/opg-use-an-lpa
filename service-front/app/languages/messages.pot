@@ -4393,3 +4393,42 @@ msgstr ""
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:29
 msgid "You should hear from us or get the activation key letter by %date%. If you don’t, please contact us. You'll need to give the LPA reference number when you get in touch."
 msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgid "We've got your activation key request"
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:24
+msgid "Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:25
+msgid "We'll contact you if we need any more information."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:26
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:25
+msgid "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:28
+msgid "We'll contact you by %date%"
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:29
+msgid "You should hear from us or get the activation key letter by %date%. If you don't, please contact us. You'll need to give the LPA reference number when you get in touch."
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:34
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
+msgid "Have more than one LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
+msgid "You'll need an activation key for each LPA that you'd like to add to your account."
+msgstr ""
+
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
+msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
+msgstr ""
