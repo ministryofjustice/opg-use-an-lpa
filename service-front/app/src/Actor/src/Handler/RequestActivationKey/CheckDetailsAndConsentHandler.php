@@ -17,7 +17,6 @@ use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
-use Common\Service\Lpa\CleanseDataFormatter;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
@@ -45,7 +44,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     use SessionTrait;
     use Logger;
 
-    private CleanseDataFormatter $cleanseDataFormatter;
     private CleanseLpa $cleanseLPA;
     private EmailClient $emailClient;
     private Environment $environment;
@@ -62,7 +60,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
-        CleanseDataFormatter $cleanseDataFormatter,
         EmailClient $emailClient,
         LocalisedDate $localisedDate,
         Environment $environment
@@ -71,7 +68,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
         $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
-        $this->cleanseDataFormatter = $cleanseDataFormatter;
         $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
         $this->environment = $environment;
