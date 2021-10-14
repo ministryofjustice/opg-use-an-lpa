@@ -98,7 +98,105 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function request_access_code_letter_record_exists(): void
+    public function request_access_code_letter_allows_json_response(): void
+    {
+        $data = [
+            'queuedForCleansing' => false
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+
+    /** @test */
+    public function request_cleanse_and_access_code_letter(): void
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+
+    /** @test */
+    public function request_access_code_letter_fails_on_queued_for_cleansing_true(): void
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+
+        $this->userLpaActorMapProphecy
+            ->delete($this->lpaActorToken)
+            ->shouldBeCalled()
+            ->willReturn([]);
+
+
+        $service = $this->getOlderLpaService();
+        $this->expectException(ApiException::class);
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+    /** @test */
+    public function request_cleanse_and_access_code_letter_fails_on_queued_for_cleansing_false(): void
+    {
+        $data = [
+            'queuedForCleansing' => false
+        ];
+        $service = $this->getOlderLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->expectException(ApiException::class);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+
+    /** @test */
+    public function request_cleanse_and_access_code_letter_fails_on_empty_response(): void
+    {
+        $service = $this->getOlderLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new EmptyResponse());
+
+        $this->expectException(ApiException::class);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+
+    /** @test */
+    public function request_access_code_letter_without_flag(): void
     {
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
@@ -114,6 +212,8 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+    }
+
     public function request_access_code_letter_allows_json_response(): void
     {
         $data = [
