@@ -88,7 +88,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->data['dob'] = $this->session->get('dob');
         $this->data['postcode'] = $this->session->get('postcode');
 
-
+        if (!empty($actorId = $this->session->get('actor_id'))) {
+            $this->data['actor_id'] = $actorId;
+        }
+        if (!empty($fullMatchNotCleansed = $this->session->get('lpa_full_match_but_not_cleansed'))) {
+            $this->data['lpa_full_match_but_not_cleansed'] = $fullMatchNotCleansed;
+        }
 
         if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
             $this->data['telephone'] = $telephone;
@@ -165,12 +170,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
-                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                $this->emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
                     $user->getDetails()['Email'],
                     $this->session->get('opg_reference_number'),
-                    strtoupper($this->session->get('postcode')),
                     ($this->localisedDate)($letterExpectedDate)
                 );
+
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::activation-key-request-received',
