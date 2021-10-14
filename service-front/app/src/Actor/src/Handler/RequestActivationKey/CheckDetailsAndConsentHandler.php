@@ -17,7 +17,6 @@ use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
-use Common\Service\Lpa\CleanseDataFormatter;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
@@ -27,9 +26,11 @@ use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Twig\TwigRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Twig\Environment;
 
 /**
  * Class CheckDetailsAndConsentHandler
@@ -43,9 +44,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     use SessionTrait;
     use Logger;
 
-    private CleanseDataFormatter $cleanseDataFormatter;
     private CleanseLpa $cleanseLPA;
     private EmailClient $emailClient;
+    private Environment $environment;
     private CheckDetailsAndConsent $form;
     private LocalisedDate $localisedDate;
     private ?SessionInterface $session;
@@ -59,17 +60,17 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
-        CleanseDataFormatter $cleanseDataFormatter,
         EmailClient $emailClient,
-        LocalisedDate $localisedDate
+        LocalisedDate $localisedDate,
+        Environment $environment
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
-        $this->cleanseDataFormatter = $cleanseDataFormatter;
         $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
+        $this->environment = $environment;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -143,7 +144,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            $additionalInfo = ($this->cleanseDataFormatter)($this->data);
+            $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
+            $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
@@ -164,7 +166,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $result = $this->cleanseLPA->cleanse(
                 $identity,
                 (int) $this->session->get('opg_reference_number'),
-                htmlspecialchars($additionalInfo)
+                $additionalInfo
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(6);
