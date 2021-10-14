@@ -12,6 +12,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\OlderLpaService;
 use DateTime;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -37,6 +38,8 @@ class OlderLpaServiceTest extends TestCase
     public string $userId;
     public string $lpaUid;
     public string $actorUid;
+    public string $additionalInfo;
+    public string $lpaActorToken;
     public array $dataToMatch;
 
     public function setUp()
@@ -50,6 +53,8 @@ class OlderLpaServiceTest extends TestCase
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
         $this->actorUid = '700000055554';
+        $this->lpaActorToken = '00000000-0000-4000-A000-000000000000';
+        $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
 
         $this->dataToMatch = [
             'reference_number'      => $this->lpaUid,
@@ -86,7 +91,7 @@ class OlderLpaServiceTest extends TestCase
             $this->lpaUid,
             $this->actorUid,
             'P1Y'
-        )->willReturn('00000000-0000-4000-A000-000000000000');
+        )->willReturn($this->lpaActorToken);
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
@@ -109,6 +114,101 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+    public function request_access_code_letter_allows_json_response(): void
+    {
+        $data = [
+            'queuedForCleansing' => false
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+
+    /** @test */
+    public function request_cleanse_and_access_code_letter(): void
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+
+    /** @test */
+    public function request_access_code_letter_fails_on_queued_for_cleansing_true(): void
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            $this->actorUid,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+
+        $this->userLpaActorMapProphecy
+            ->delete($this->lpaActorToken)
+            ->shouldBeCalled()
+            ->willReturn([]);
+
+
+        $service = $this->getOlderLpaService();
+        $this->expectException(ApiException::class);
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+    /** @test */
+    public function request_cleanse_and_access_code_letter_fails_on_queued_for_cleansing_false(): void
+    {
+        $data = [
+            'queuedForCleansing' => false
+        ];
+        $service = $this->getOlderLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+
+        $this->expectException(ApiException::class);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+
+    /** @test */
+    public function request_cleanse_and_access_code_letter_fails_on_empty_response(): void
+    {
+        $service = $this->getOlderLpaService();
+
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled()->willReturn(new EmptyResponse());
+
+        $this->expectException(ApiException::class);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
 
     /** @test */
@@ -141,10 +241,10 @@ class OlderLpaServiceTest extends TestCase
             $this->lpaUid,
             $this->actorUid,
             'P1Y'
-        )->willReturn('00000000-0000-4000-A000-000000000000');
+        )->willReturn($this->lpaActorToken);
 
         $this->userLpaActorMapProphecy
-            ->delete('00000000-0000-4000-A000-000000000000')
+            ->delete($this->lpaActorToken)
             ->shouldBeCalled()
             ->willReturn([]);
 
@@ -167,7 +267,6 @@ class OlderLpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
 
         $this->userLpaActorMapProphecy->create(
-            Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),
             Argument::type('string'),

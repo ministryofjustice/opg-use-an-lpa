@@ -375,7 +375,7 @@ class OlderLpaService
             $response = $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
 
             if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-                $data = json_decode((string)$response->getBody());
+                $data = json_decode((string)$response->getBody(), true);
                 if ($data['queuedForCleansing']) {
                     throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
                 }
