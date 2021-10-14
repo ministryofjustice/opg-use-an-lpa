@@ -10,6 +10,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use DateTime;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
@@ -54,8 +55,8 @@ class OlderLpaService
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
-                'actorId'   => $lpaId,
-                'lpaId'     => $actorId,
+                'actorId' => $lpaId,
+                'lpaId' => $actorId,
             ]
         );
 
@@ -69,7 +70,7 @@ class OlderLpaService
         $this->logger->info(
             'Removal request from UserLpaActorMap {id}',
             [
-                'id' => $requestId
+                'id' => $requestId,
             ]
         );
     }
@@ -82,6 +83,8 @@ class OlderLpaService
      * @param string $uid      Sirius uId for an LPA
      * @param string $actorUid uId of an actor on that LPA
      * @param string $userId
+     *
+     * @throws Exception
      */
     public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
     {
@@ -102,7 +105,17 @@ class OlderLpaService
         );
 
         try {
-            $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+            $response = $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
+
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
+                $data = json_decode((string)$response->getBody());
+                if ($data['queuedForCleansing']) {
+                    throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+                }
+            } elseif ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
+                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+            }
+
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
@@ -114,6 +127,55 @@ class OlderLpaService
             if ($recordId !== null) {
                 $this->removeLpa($recordId);
             }
+            throw $apiException;
+        }
+    }
+
+    /**
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
+     *
+     * @param string $uid Sirius uId for an LPA
+     * @param string $userId
+     * @param string $actorId
+     * @param string $additionalInfo
+     *
+     * @throws Exception
+     */
+    public function requestAccessAndCleanseByLetter(
+        string $uid,
+        string $userId,
+        string $additionalInfo
+    ): void {
+        $uidInt = (int)$uid;
+        $this->logger->info(
+            'Requesting cleanse and an access code letter on LPA {lpa}',
+            [
+                'lpa' => $uidInt,
+            ]
+        );
+
+        try {
+            $response = $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
+            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
+                $data = json_decode((string)$response->getBody(), true);
+                if (!$data['queuedForCleansing']) {
+                    throw new ApiException(
+                        'Unexpected response received from Api Gateway when cleanse requested for Lpa'
+                    );
+                }
+            } else {
+                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
+            }
+            //TODO: needs to save the request once merged with changes from 1643
+        } catch (ApiException $apiException) {
+            $this->logger->notice(
+                'Failed to request access code letter and cleanse for LPA {lpa}',
+                [
+                    'lpa' => $uidInt,
+                ]
+            );
             throw $apiException;
         }
     }

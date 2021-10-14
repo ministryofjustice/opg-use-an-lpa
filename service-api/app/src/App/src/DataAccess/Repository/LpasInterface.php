@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\Repository;
 
 use App\DataAccess\Repository\Response\LpaInterface;
+use Psr\Http\Message\ResponseInterface;
 
 interface LpasInterface
 {
@@ -25,5 +26,5 @@ interface LpasInterface
      * @param int $caseId The Sirius uId of an LPA
      * @param int $actorId The uId of an actor as found attached to an LPA
      */
-    public function requestLetter(int $caseId, int $actorId): void;
+    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): ResponseInterface;
 }

@@ -15,7 +15,12 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\CleanseDataFormatter;
+use Common\Service\Lpa\CleanseLpa;
+use Common\Service\Lpa\LocalisedDate;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -38,7 +43,11 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     use SessionTrait;
     use Logger;
 
+    private CleanseDataFormatter $cleanseDataFormatter;
+    private CleanseLpa $cleanseLPA;
+    private EmailClient $emailClient;
     private CheckDetailsAndConsent $form;
+    private LocalisedDate $localisedDate;
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
@@ -48,11 +57,19 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CleanseLpa $cleanseLpa,
+        CleanseDataFormatter $cleanseDataFormatter,
+        EmailClient $emailClient,
+        LocalisedDate $localisedDate
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
+        $this->cleanseLPA = $cleanseLpa;
+        $this->cleanseDataFormatter = $cleanseDataFormatter;
+        $this->emailClient = $emailClient;
+        $this->localisedDate = $localisedDate;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -66,11 +83,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             throw new SessionTimeoutException();
         }
 
+        $this->data['first_names'] = $this->session->get('first_names');
+        $this->data['last_name'] = $this->session->get('last_name');
+        $this->data['dob'] = $this->session->get('dob');
+        $this->data['postcode'] = $this->session->get('postcode');
+
+
+
         if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
             $this->data['telephone'] = $telephone;
         }
 
-        if ($this->session->get('telephone_option')['no_phone'] === "yes") {
+        if ($this->session->get('telephone_option')['no_phone'] === 'yes') {
             $this->data['no_phone'] = true;
         }
 
@@ -90,6 +114,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                 )->toImmutable();
             }
         }
+
+        $this->data['email'] = $this->user->getDetail('email');
 
         switch ($request->getMethod()) {
             case 'POST':
@@ -112,7 +138,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-            // TODO: UML-1577
+            $additionalInfo = ($this->cleanseDataFormatter)($this->data);
+
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
@@ -126,12 +153,35 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                         EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED
                 ]
             );
+            $user = $this->getUser($request);
+            $identity = (!is_null($user)) ? $user->getIdentity() : null;
+
+            $result = $this->cleanseLPA->cleanse(
+                $identity,
+                (int) $this->session->get('opg_reference_number'),
+                htmlspecialchars($additionalInfo)
+            );
+
+            $letterExpectedDate = (new Carbon())->addWeeks(6);
+
+            if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
+                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                    $user->getDetails()['Email'],
+                    $this->session->get('opg_reference_number'),
+                    strtoupper($this->session->get('postcode')),
+                    ($this->localisedDate)($letterExpectedDate)
+                );
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::activation-key-request-received',
+                        [
+                            'user' => $this->user,
+                            'date' => $letterExpectedDate
+                        ]
+                    )
+                );
+            }
         }
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
-            'user'  => $this->user,
-            'form'  => $this->form,
-            'data'  => $this->data
-        ]));
     }
 
     // TODO: This function needs to be revisited as a potential bug : UML-1822

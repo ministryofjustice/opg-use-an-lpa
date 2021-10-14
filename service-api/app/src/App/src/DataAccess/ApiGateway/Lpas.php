@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use Amp\Http\Status;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
@@ -18,6 +19,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -142,18 +144,17 @@ class Lpas implements LpasInterface
      * @param int $actorId The uId of an actor as found attached to an LPA
      * @throws Exception An error was encountered whilst enqueing a letter for delivery
      */
-    public function requestLetter(int $caseId, int $actorId): void
+    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): ResponseInterface
     {
+        $payloadContent = ['case_uid' => $caseId];
+
+        $actorId === null ? $payloadContent['notes'] = $additionalInfo : $payloadContent['actor_uid'] = $actorId;
+
         $provider = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
 
         // request payload
-        $body = json_encode(
-            [
-                'case_uid' => $caseId,
-                'actor_uid' => $actorId
-            ]
-        );
+        $body = json_encode($payloadContent);
 
         // construct request for API gateway
         $url = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
@@ -166,9 +167,13 @@ class Lpas implements LpasInterface
             throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
         }
 
-        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
-            throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
+        if (
+            $response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
+            $response->getStatusCode() === StatusCodeInterface::STATUS_OK
+        ) {
+            return $response;
         }
+        throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
     }
 
     private function buildHeaders(): array

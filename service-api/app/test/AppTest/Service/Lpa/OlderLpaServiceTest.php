@@ -11,6 +11,7 @@ use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\OlderLpaService;
 use DateTime;
+use Laminas\Diactoros\Response\EmptyResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -75,8 +76,8 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
-            ->shouldBeCalled();
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->shouldBeCalled()->willReturn(new EmptyResponse());
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -95,8 +96,8 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter_without_flag(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
-            ->shouldBeCalled();
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->willReturn(new EmptyResponse());
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
@@ -115,7 +116,7 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter_api_call_fails(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->willThrow(ApiException::create('bad api call'));
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
@@ -143,7 +144,7 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter_api_call_fails_without_flag(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->willThrow(ApiException::create('bad api call'));
 
         $service = $this->getOlderLpaService();

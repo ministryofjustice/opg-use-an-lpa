@@ -66,6 +66,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
     $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmationHandler::class, 'lpa.add.confirm');
+    $app->post('/v1/add-lpa/cleanse', App\Handler\RequestCleanseHandler::class, 'lpa.add.cleanse');
 
     $app->post('/v1/viewer-codes/summary', App\Handler\ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
     $app->post('/v1/viewer-codes/full', App\Handler\ViewerCodeFullHandler::class, 'lpa.viewer-code.full');
