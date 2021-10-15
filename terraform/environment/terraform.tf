@@ -37,12 +37,10 @@ variable "management_role" {
 }
 
 provider "aws" {
+  region = "eu-west-1"
   default_tags {
     tags = local.default_tags
   }
-
-  region = "eu-west-1"
-
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
@@ -50,12 +48,11 @@ provider "aws" {
 }
 
 provider "aws" {
-  default_tags {
-    tags = local.default_tags
-  }
   region = "us-east-1"
   alias  = "us-east-1"
-
+  default_tags {
+    tags = local.default_tags
+  }
   assume_role {
     role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
@@ -63,12 +60,11 @@ provider "aws" {
 }
 
 provider "aws" {
+  region = "eu-west-1"
+  alias  = "management"
   default_tags {
     tags = local.default_tags
   }
-  region = "eu-west-1"
-  alias  = "management"
-
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.management_role}"
     session_name = "terraform-session"
@@ -76,12 +72,11 @@ provider "aws" {
 }
 
 provider "aws" {
+  region = "eu-west-1"
+  alias  = "identity"
   default_tags {
     tags = local.default_tags
   }
-  region = "eu-west-1"
-  alias  = "identity"
-
   assume_role {
     role_arn     = "arn:aws:iam::631181914621:role/${var.default_role}"
     session_name = "terraform-session"
