@@ -38,13 +38,7 @@ variable "management_role" {
 
 provider "aws" {
   default_tags {
-    tags = {
-      business-unit    = "OPG"
-      application      = "use-an-lpa"
-      environment-name = local.environment
-      owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-      is-production    = local.account.is_production
-    }
+    tags = local.default_tags
   }
 
   region = "eu-west-1"
@@ -57,13 +51,7 @@ provider "aws" {
 
 provider "aws" {
   default_tags {
-    tags = {
-      business-unit    = "OPG"
-      application      = "use-an-lpa"
-      environment-name = local.environment
-      owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-      is-production    = local.account.is_production
-    }
+    tags = local.default_tags
   }
   region = "us-east-1"
   alias  = "us-east-1"
@@ -76,13 +64,7 @@ provider "aws" {
 
 provider "aws" {
   default_tags {
-    tags = {
-      business-unit    = "OPG"
-      application      = "use-an-lpa"
-      environment-name = local.environment
-      owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-      is-production    = local.account.is_production
-    }
+    tags = local.default_tags
   }
   region = "eu-west-1"
   alias  = "management"
@@ -95,13 +77,7 @@ provider "aws" {
 
 provider "aws" {
   default_tags {
-    tags = {
-      business-unit    = "OPG"
-      application      = "use-an-lpa"
-      environment-name = local.environment
-      owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-      is-production    = local.account.is_production
-    }
+    tags = local.default_tags
   }
   region = "eu-west-1"
   alias  = "identity"
