@@ -3,9 +3,9 @@ name: Psalm Static analysis - Service API
 on:
   pull_request:
     branches: [ master ]
-    # paths:
-    # # only run when service-api is changed
-    #   - 'service-api/app/**'
+    paths:
+    # only run when service-api is changed
+      - 'service-api/app/**'
 
 permissions:
   actions: read
