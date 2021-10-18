@@ -458,26 +458,4 @@ class OlderLpaService
             throw $apiException;
         }
     }
-
-    /**
-     * Stores an Entry in UserLPAActorMap for the request of an older lpa
-     *
-     * @param string      $lpaId
-     * @param string      $userId
-     *
-     * @return string       The lpaActorToken
-     * @throws Exception    throws an ApiException
-     */
-    public function storeLPARequest(string $lpaId, string $userId, string $actorId): string
-    {
-        do {
-            $id = Uuid::uuid4()->toString();
-            try {
-                $this->userLpaActorMap->create($id, $userId, $lpaId, $actorId, 'P1Y');
-                return $id;
-            } catch (KeyCollisionException $e) {
-                // Allows the loop to repeat with a new ID.
-            }
-        }
-    }
 }
