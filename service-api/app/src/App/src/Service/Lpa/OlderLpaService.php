@@ -408,12 +408,16 @@ class OlderLpaService
             }
         }
     }
-
+    
     /**
-     * Stores an Entry in UserLPAActorMap for the request of an older lpa
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string      $lpaId
-     * @param string      $userId
+     * @param string $uid Sirius uId for an LPA
+     * @param string $userId
+     * @param string $actorId
+     * @param string $additionalInfo
      *
      * @throws Exception
      */
