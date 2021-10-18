@@ -37,7 +37,22 @@ class EventCodes
     /**
      * A share code has been attempted and not found
      */
-    public const SHARE_CODE_NOT_FOUND = 'SHARE_CODE_NOT_FOUND';
+    public const VIEW_LPA_SHARE_CODE_NOT_FOUND = 'VIEW_LPA_SHARE_CODE_NOT_FOUND';
+
+    /**
+     * A share code has been attempted to be used but was cancelled
+     */
+    public const VIEW_LPA_SHARE_CODE_CANCELLED = 'VIEW_LPA_SHARE_CODE_CANCELLED';
+
+    /**
+     * A share code has been attempted to be used but had expired
+     */
+    public const VIEW_LPA_SHARE_CODE_EXPIRED = 'VIEW_LPA_SHARE_CODE_EXPIRED';
+
+    /**
+     * An LPA has been found using a share code
+     */
+    public const VIEW_LPA_SHARE_CODE_SUCCESS = 'VIEW_LPA_SHARE_CODE_SUCCESS';
 
     /**
      * Request for an activation key failed as the LPA has already been added
