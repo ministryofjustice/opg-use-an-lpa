@@ -6,7 +6,6 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;
 use DateTime;
 
