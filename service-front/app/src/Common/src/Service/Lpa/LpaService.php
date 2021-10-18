@@ -169,6 +169,7 @@ class LpaService
                         $this->logger->notice(
                             'Share code {code} cancelled when attempting to fetch {type}',
                             [
+                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
                                 'code' => $shareCode,
                                 'type' => $trackRoute
                             ]
@@ -177,8 +178,9 @@ class LpaService
                         $this->logger->notice(
                             'Share code {code} expired when attempting to fetch {type}',
                             [
-                            'code' => $shareCode,
-                            'type' => $trackRoute
+                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
+                                'code' => $shareCode,
+                                'type' => $trackRoute
                             ]
                         );
                     }
@@ -189,7 +191,7 @@ class LpaService
                         'Share code not found when attempting to fetch {type}',
                         [
                             // attach an code for brute force checking
-                            'event_code' => EventCodes::SHARE_CODE_NOT_FOUND,
+                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
                             'type' => $trackRoute
                         ]
                     );
@@ -202,12 +204,17 @@ class LpaService
         if (is_array($lpaData)) {
             $lpaData = ($this->parseLpaData)($lpaData);
 
-            $this->logger->info(
-                'LPA with Id {uId} retrieved by share code',
-                [
-                    'uId' => ($lpaData->lpa)->getUId()
-                ]
-            );
+            if ($trackRoute === 'summary') {
+                // this getLpaByCode function is called to fetch the LPA for both the summary page and the
+                // full lpa page, so we will just log the message once to avoid duplicate logs & incorrect stats
+                $this->logger->notice(
+                    'LPA found with Id {uId} retrieved by share code',
+                    [
+                        'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_SUCCESS,
+                        'uId' => ($lpaData->lpa)->getUId()
+                    ]
+                );
+            }
         }
 
         return $lpaData;
