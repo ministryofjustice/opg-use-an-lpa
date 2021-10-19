@@ -65,6 +65,14 @@ class LpaContext extends BaseIntegrationContext
     private LpaService $lpaService;
 
     /**
+     * @Given I have previously requested the addition of a paper LPA to my account
+     */
+    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount()
+    {
+        // Not necessary for this context
+    }
+
+    /**
      * @Then /^a letter is requested containing a one time use code$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
@@ -95,6 +103,36 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Then /^a repeat request for a letter containing a one time use code is made$/
+     */
+    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade()
+    {
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'actor_uid' => (int)$this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_NO_CONTENT
+        );
+
+        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
+            // Update activation key request in the DB
+            $this->awsFixtures->append(new Result([]));
+        }
+
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
+        try {
+            $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId, '00-0-0-0-00');
+        } catch (ApiException $exception) {
+            throw new Exception('Failed to request access code letter');
+        }
+    }
+
+    /**
      * @Then /^A record of my activation key request is saved$/
      */
     public function aRecordOfMyActivationKeyRequestIsSaved()
@@ -104,6 +142,25 @@ class LpaContext extends BaseIntegrationContext
         assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
         assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
         assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
+    }
+
+    /**
+     * @Then /^a record of my activation key request is updated/
+     */
+    public function aRecordOfMyActivationKeyRequestIsUpdated()
+    {
+        $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
+
+        $lastCommand = $this->awsFixtures->getLastCommand();
+        assertEquals($lastCommand->getName(), 'UpdateItem');
+        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '00-0-0-0-00']);
+        assertEquals(
+            intval($lastCommand->toArray()['ExpressionAttributeValues'][':a']['N']),
+            $dt->getTimestamp(),
+            '',
+            5
+        );
     }
 
     /**
@@ -2288,6 +2345,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I request for a new activation key again$/
+     * @When /^I repeat my request for an activation key$/
      */
     public function iRequestForANewActivationKeyAgain()
     {
@@ -2529,11 +2587,11 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number'  => $this->lpaUid,
-            'dob'               => $this->userDob,
-            'postcode'          => $this->userPostCode,
-            'first_names'       => $this->userFirstname,
-            'last_name'         => $this->userSurname,
+            'reference_number' => $this->lpaUid,
+            'dob'              => $this->userDob,
+            'postcode'         => $this->userPostCode,
+            'first_names'      => $this->userFirstname,
+            'last_name'        => $this->userSurname,
         ];
 
         //UserLpaActorMap: getAllForUser
