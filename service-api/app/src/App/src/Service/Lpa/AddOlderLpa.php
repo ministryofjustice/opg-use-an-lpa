@@ -60,7 +60,7 @@ class AddOlderLpa
     {
         // Check if it's been added to the users account already
         $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number']);
-        if (null !== $lpaAddedData) {
+        if ($lpaAddedData !== null) {
             if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
                     'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
