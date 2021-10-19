@@ -34,6 +34,14 @@ class LpaContext implements Context
     use SetupEnv;
 
     /**
+     * @Given I have previously requested the addition of a paper LPA to my account
+     */
+    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount()
+    {
+        // Not necessary for this context
+    }
+
+    /**
      * @Given /^A record of my activation key request is not saved$/
      */
     public function aRecordOfMyActivationKeyRequestIsNotSaved()
@@ -52,6 +60,25 @@ class LpaContext implements Context
         assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
         assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
         assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
+    }
+
+    /**
+     * @Then /^a record of my activation key request is updated/
+     */
+    public function aRecordOfMyActivationKeyRequestIsUpdated()
+    {
+        $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
+
+        $lastCommand = $this->awsFixtures->getLastCommand();
+        assertEquals($lastCommand->getName(), 'UpdateItem');
+        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '111222333444']);
+        assertEquals(
+            intval($lastCommand->toArray()['ExpressionAttributeValues'][':a']['N']),
+            $dt->getTimestamp(),
+            '',
+            5
+        );
     }
 
     /**
@@ -2379,6 +2406,114 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^a repeat request for a letter containing a one time use code is made$/
+     */
+    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade()
+    {
+        //UserLpaActorMap: getByUserId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id' => $this->userLpaActorToken,
+                                'UserId' => $this->base->userAccountId,
+                                'SiriusUid' => $this->lpaUid,
+                                'ActorId' => $this->actorId,
+                                'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                                'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp()
+                            ]
+                        ),
+                    ]
+                ]
+            )
+        );
+
+        //UserLpaActorMap: get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp()
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // Done twice due to our codes interdependencies
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to request an activation key
+        $this->apiPatch(
+            '/v1/older-lpa/confirm',
+            [
+                'reference_number'     => $this->lpaUid,
+                'first_names'          => $this->userFirstnames,
+                'last_name'            => $this->userSurname,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
+                'force_activation_key' => true
+            ],
+            [
+                'user-token' => $this->base->userAccountId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
      * @Then /^a letter is requested containing a one time use code$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
@@ -2844,6 +2979,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I request for a new activation key again$/
+     * @When /^I repeat my request for an activation key$/
      */
     public function iRequestForANewActivationKeyAgain()
     {

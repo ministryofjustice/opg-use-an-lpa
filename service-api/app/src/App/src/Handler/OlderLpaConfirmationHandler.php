@@ -68,7 +68,8 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $this->olderLpaService->requestAccessByLetter(
             (string) $requestData['reference_number'],
             $lpaMatchResponse['actor']['uId'],
-            $userId
+            $userId,
+            $lpaMatchResponse['lpaActorToken'] ?? null
         );
 
         return new EmptyResponse();
