@@ -14,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\AddOlderLpa;
+use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
@@ -329,7 +330,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+                'surname'       => $this->lpa->donor->surname
             ],
             'attorney' => [
                 'uId'           => $this->lpa->attorneys[0]->uId,
@@ -1351,7 +1352,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
             'reference_number'  => $this->lpa->uId,
@@ -1374,7 +1375,7 @@ class LpaContext extends BaseIntegrationContext
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
-                    json_encode($this->lpa)
+                    json_encode($lpa)
                 )
             );
 
@@ -1383,15 +1384,15 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'     => json_decode(json_encode($this->lpa->donor), true),
-            'role'      => 'donor',
-            'lpa-id'    => $this->lpa->uId,
-            'caseSubtype'    => $this->lpa->caseSubtype,
+            'actor'         => json_decode(json_encode($lpa->donor), true),
+            'role'          => 'donor',
+            'lpa-id'        => $lpa->uId,
+            'caseSubtype'   => $lpa->caseSubtype,
             'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+                'uId'           => $lpa->donor->uId,
+                'firstname'     => $lpa->donor->firstname,
+                'middlenames'   => $lpa->donor->middlenames,
+                'surname'       => $lpa->donor->surname
             ]
         ];
 
@@ -1400,7 +1401,9 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm the details I provided are correct$/
+     * @Given /^I provide the details from a valid paper document$/
      * @Then /^I am shown the details of an LPA$/
+     * @Then /^I am asked for my contact details$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      */
     public function iAmShownTheDetailsOfAnLPA()
@@ -1666,7 +1669,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+                'surname'       => $this->lpa->donor->surname
             ]
         ];
 
@@ -1727,7 +1730,7 @@ class LpaContext extends BaseIntegrationContext
                         'uId'           => $this->lpa->donor->uId,
                         'firstname'     => $this->lpa->donor->firstname,
                         'middlenames'   => $this->lpa->donor->middlenames,
-                        'surname'       => $this->lpa->donor->surname,
+                        'surname'       => $this->lpa->donor->surname
                     ],
                     'caseSubtype'   => $this->lpa->caseSubtype
                 ],
@@ -2321,7 +2324,7 @@ class LpaContext extends BaseIntegrationContext
                 'uId'           => $this->lpa->donor->uId,
                 'firstname'     => $this->lpa->donor->firstname,
                 'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+                'surname'       => $this->lpa->donor->surname
             ]
         ];
 
@@ -2526,11 +2529,11 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number' => $this->lpaUid,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'first_names' => $this->userFirstname,
-            'last_name' => $this->userSurname,
+            'reference_number'  => $this->lpaUid,
+            'dob'               => $this->userDob,
+            'postcode'          => $this->userPostCode,
+            'first_names'       => $this->userFirstname,
+            'last_name'         => $this->userSurname,
         ];
 
         //UserLpaActorMap: getAllForUser

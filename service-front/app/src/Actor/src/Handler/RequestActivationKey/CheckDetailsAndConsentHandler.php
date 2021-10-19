@@ -74,16 +74,21 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $this->data['no_phone'] = true;
         }
 
-        $this->data['actor_role'] = $this->session->get('actor_role');
+        if (
+            !($this->session->has('lpa_full_match_but_not_cleansed')) &&
+            !($this->session->has('actor_id'))
+        ) {
+            $this->data['actor_role'] = $this->session->get('actor_role');
 
-        if (strtolower($this->data['actor_role']) === 'attorney') {
-            $this->data['donor_first_names'] = $this->session->get('donor_first_names');
-            $this->data['donor_last_name'] = $this->session->get('donor_last_name');
-            $this->data['donor_dob'] = Carbon::create(
-                $this->session->get('donor_dob')['year'],
-                $this->session->get('donor_dob')['month'],
-                $this->session->get('donor_dob')['day']
-            )->toImmutable();
+            if (strtolower($this->data['actor_role']) === 'attorney') {
+                $this->data['donor_first_names'] = $this->session->get('donor_first_names');
+                $this->data['donor_last_name'] = $this->session->get('donor_last_name');
+                $this->data['donor_dob'] = Carbon::create(
+                    $this->session->get('donor_dob')['year'],
+                    $this->session->get('donor_dob')['month'],
+                    $this->session->get('donor_dob')['day']
+                )->toImmutable();
+            }
         }
 
         switch ($request->getMethod()) {
@@ -129,6 +134,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         ]));
     }
 
+    // TODO: This function needs to be revisited as a potential bug : UML-1822
     private function hasRequiredSessionValues(): bool
     {
         $required = $this->session->has('opg_reference_number')

@@ -26,10 +26,11 @@ use RuntimeException;
 class AddOlderLpa
 {
     // Exception messages returned from the API layer
-    private const OLDER_LPA_NOT_ELIGIBLE            = 'LPA not eligible due to registration date';
-    private const OLDER_LPA_DOES_NOT_MATCH          = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY      = 'LPA has an activation key already';
-    private const OLDER_LPA_ALREADY_ADDED           = 'LPA already added';
+    private const OLDER_LPA_NOT_ELIGIBLE        = 'LPA not eligible due to registration date';
+    private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
+    private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
+    private const OLDER_LPA_NEEDS_CLEANSING     = 'LPA needs cleansing';
     private const OLDER_LPA_KEY_ALREADY_REQUESTED   = 'Activation key already requested for LPA';
 
     /** @var ApiClient */
@@ -134,8 +135,24 @@ class AddOlderLpa
 
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
-
+        try {
+            $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
+        } catch (ApiException $apiEx) {
+            if ($apiEx->getMessage() === self::OLDER_LPA_NEEDS_CLEANSING) {
+                $this->logger->notice(
+                    'Older LPA with id {uId} requires cleansing',
+                    [
+                        'event_code' => EventCodes::OLDER_LPA_NEEDS_CLEANSING,
+                        'uId' => $data['reference_number'],
+                    ]
+                );
+                return new OlderLpaApiResponse(
+                    OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING,
+                    $apiEx->getAdditionalData()
+                );
+            }
+            throw $apiEx;
+        }
         $eventCode = ($forceActivationKey) ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY : EventCodes::OLDER_LPA_SUCCESS;
 
         $this->logger->notice(

@@ -56,7 +56,6 @@ Feature: Add an older LPA
       | Wrong name  | Deputy    |  string  | 10/10/1980  |
       | Ian Deputy  | Incorrect |  string  | 10/10/1980  |
 
-
   @integration @acceptance @pact @ff:allow_older_lpas:false
   Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
     Given I am on the add an older LPA page
@@ -78,6 +77,13 @@ Feature: Add an older LPA
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
     And A record of my activation key request is not saved
+
+  @acceptance @integration @pact @ff:save_older_lpa_requests:false
+  Scenario: The user is able to generate a new key even if an activation key already exists
+    Given I am on the add an older LPA page
+    And I lost the letter containing my activation key
+    When I request for a new activation key again
+    Then a letter is requested containing a one time use code
 
   @acceptance @integration @pact @ff:save_older_lpa_requests:true
   Scenario: The user is able to generate a new key even if an activation key already exists and the record is saved
@@ -130,3 +136,31 @@ Feature: Add an older LPA
     When I provide the attorney details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the attorney on the LPA I am shown the donor details
+
+  @acceptance @ff:allow_older_lpas:true
+  Scenario: The user cannot add an older LPA to their account that is not cleansed and reg date before Sep 2019
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I am on the Check we've found the right LPA page
+    When I confirm details of the found LPA are correct
+    Then I am asked for my contact details
+
+  @acceptance @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date before Sep 2019
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    And I am on the Check we've found the right LPA page
+    When I confirm details of the found LPA are correct
+    Then I am told an activation key is being sent
+
+  @acceptance @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is not cleansed but reg date on or after Sep 2019
+    Given My LPA was registered 'on or after' 1st September 2019 and LPA is 'not marked' as clean
+    And I am on the Check we've found the right LPA page
+    When I confirm details of the found LPA are correct
+    Then I am told an activation key is being sent
+
+  @acceptance @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date on or after Sep 2019
+    Given My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
+    And I am on the Check we've found the right LPA page
+    When I confirm details of the found LPA are correct
+    Then I am told an activation key is being sent
