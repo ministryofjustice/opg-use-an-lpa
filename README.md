@@ -3,8 +3,8 @@
 OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa)
-[![Coverage Status](https://coveralls.io/repos/github/ministryofjustice/opg-use-an-lpa/badge.svg?branch=master)](https://coveralls.io/github/ministryofjustice/opg-use-an-lpa?branch=master)
-[![codecov coverage status](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa/branch/master/graph/badge.svg)](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa)
+[![Coverage Status](https://coveralls.io/repos/github/ministryofjustice/opg-use-an-lpa/badge.svg?branch=main)](https://coveralls.io/github/ministryofjustice/opg-use-an-lpa?branch=main)
+[![codecov coverage status](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa/branch/main/graph/badge.svg)](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa)
 ## Setup
 
 Clone the following two repositories into the same base directory:
