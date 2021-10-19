@@ -202,11 +202,30 @@ class OlderLpaServiceTest extends TestCase
             ->willReturn([]);
 
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->requestLetter((int)$this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled()->willReturn(new EmptyResponse());
 
         $this->expectException(ApiException::class);
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+    }
+    
+    /** @test */
+    public function request_access_code_letter_record_exists(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->shouldBeCalled();
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
+
+        $this->userLpaActorMapProphecy
+            ->renewActivationPeriod('token-12345', 'P1Y')
+            ->shouldBeCalled();
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
     }
 
     /** @test */
@@ -228,6 +247,7 @@ class OlderLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
     }
 
+    /** @test */
     public function request_access_code_letter_allows_json_response(): void
     {
         $data = [
@@ -246,6 +266,8 @@ class OlderLpaServiceTest extends TestCase
             $this->actorUid,
             'P1Y'
         )->willReturn($this->lpaActorToken);
+
+        $this->userLpaActorMapProphecy->renewActivationPeriod(Argument::cetera())->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
