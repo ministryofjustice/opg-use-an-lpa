@@ -9,6 +9,7 @@ workflows:
             branches:
               only:
                 - main
+                - master
     jobs:
       - use-my-lpa/apply_environment_terraform:
           name: demo_apply_environment_terraform
@@ -31,6 +32,7 @@ workflows:
             branches:
               only:
                 - main
+                - master
     jobs:
       - workspace_cleanup:
           name: workspace_cleanup
@@ -43,6 +45,7 @@ workflows:
             branches:
               only:
                 - main
+                - master
     jobs:
       - slack_notify_stats:
           name: slack_notify_stats
@@ -124,6 +127,7 @@ workflows:
             name: cancel_previous_jobs
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -131,6 +135,7 @@ workflows:
             name: lint_terraform
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -138,6 +143,7 @@ workflows:
             name: test_web
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -148,6 +154,7 @@ workflows:
             lambda_name: clsf-to-sqs
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -158,6 +165,7 @@ workflows:
             lambda_name: ship-to-opg-metrics
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -165,6 +173,7 @@ workflows:
             name: build_web
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [test_web]
@@ -173,6 +182,7 @@ workflows:
             name: test_pdf
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -180,6 +190,7 @@ workflows:
             name: app_front_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [build_web]
@@ -188,6 +199,7 @@ workflows:
             name: web_front_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [build_web]
@@ -196,6 +208,7 @@ workflows:
             name: app_api_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -203,6 +216,7 @@ workflows:
             name: web_api_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -210,6 +224,7 @@ workflows:
             name: admin_app_test
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -217,6 +232,7 @@ workflows:
             name: admin_app_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
 
@@ -224,6 +240,7 @@ workflows:
             name: pdf_build
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [test_pdf]
@@ -232,6 +249,7 @@ workflows:
             name: codecov_upload
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires:
@@ -248,6 +266,7 @@ workflows:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
@@ -256,6 +275,7 @@ workflows:
             name: dev_apply_environment_terraform
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires:
@@ -274,6 +294,7 @@ workflows:
             name: ecr_scan_results
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires:
@@ -291,6 +312,7 @@ workflows:
             name: dev_seed_database
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [dev_apply_environment_terraform]
@@ -299,6 +321,7 @@ workflows:
             name: dev_run_behat_tests
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [dev_seed_database]
@@ -309,6 +332,7 @@ workflows:
             template: successful_dev_build.txt
             filters: { branches: { ignore: [
               main,
+              master,
               /dependabot\/.*/,
               ] } }
             requires: [dev_run_behat_tests]
@@ -326,62 +350,62 @@ workflows:
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: clsf-to-sqs
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/docker_build_lambda_image:
             name: build_ship_to_opg_metrics_lambda_image
             account_id: "367815980639"
             container_repo_account: development
             lambda_name: ship-to-opg-metrics
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/node_test_web:
             name: test_web
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/node_build_web:
             name: build_web
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [test_pdf]
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 app_front_build,
@@ -395,7 +419,7 @@ workflows:
         - use-my-lpa/apply_shared_terraform:
             name: dev_apply_shared_terraform
             workspace: development
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 build_clsf_to_sqs_lambda_image,
@@ -405,7 +429,7 @@ workflows:
         - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
             workspace: preproduction
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 dev_apply_shared_terraform,
@@ -414,7 +438,7 @@ workflows:
         - use-my-lpa/apply_environment_terraform:
             name: preprod_apply_environment_terraform
             workspace: preproduction
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 preprod_apply_shared_terraform,
@@ -428,7 +452,7 @@ workflows:
 
         - ecr_scan_results:
             name: ecr_scan_results
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 app_front_build,
@@ -442,26 +466,26 @@ workflows:
 
         - use-my-lpa/seed_database:
             name: preprod_seed_database
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [preprod_apply_environment_terraform]
 
         - use-my-lpa/run_behat_suite:
             name: preprod_run_behat_tests
             workspace: preproduction
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [preprod_seed_database]
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
             name: production_apply_shared_terraform
             workspace: production
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [preprod_run_behat_tests]
 
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
             workspace: production
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires:
               [
                 production_apply_shared_terraform,
@@ -475,14 +499,14 @@ workflows:
 
         - use-my-lpa/run_healthcheck_test:
             name: prod_run_healthcheck_test
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [production_apply_environment_terraform]
 
         - python_templated_slack_notify:
             name: post_production_release_message
             template: production_release.txt
             webhook: $PROD_RELEASE_SLACK_WEBHOOK
-            filters: { branches: { only: [main] } }
+            filters: { branches: { only: [main, master] } }
             requires: [prod_run_healthcheck_test]
 
 
@@ -788,7 +812,7 @@ orbs:
                 docker tag front-app:latest << parameters.container_repo_url >>:latest
                 docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
@@ -828,7 +852,7 @@ orbs:
                 docker tag front-web:latest << parameters.container_repo_url >>:latest
                 docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
@@ -914,7 +938,7 @@ orbs:
                 docker tag api-app:latest << parameters.container_repo_url >>:latest
                 docker tag api-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
@@ -951,7 +975,7 @@ orbs:
                 docker tag api-web:latest << parameters.container_repo_url >>:latest
                 docker tag api-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
@@ -989,7 +1013,7 @@ orbs:
                 docker tag pdf:latest << parameters.container_repo_url >>:latest
                 docker tag pdf:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
@@ -1032,7 +1056,7 @@ orbs:
                 echo $IMAGE_TAG
                 echo $ECR_URL
                 docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags ${ECR_URL}
                 else
@@ -1088,7 +1112,7 @@ orbs:
                 docker tag admin_app:latest << parameters.container_repo_url >>:latest
                 docker tag admin_app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
                   # We want all of the tags pushed
                   docker push --all-tags << parameters.container_repo_url >>
                 else
