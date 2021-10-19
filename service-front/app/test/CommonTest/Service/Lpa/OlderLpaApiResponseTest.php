@@ -86,6 +86,7 @@ class OlderLpaApiResponseTest extends TestCase
             [OlderLpaApiResponse::NOT_ELIGIBLE, []],
             [OlderLpaApiResponse::NOT_FOUND, []],
             [OlderLpaApiResponse::SUCCESS,[]],
+            [OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING,[]],
         ];
     }
 

@@ -158,4 +158,9 @@ class EventCodes
      * An LPA was removed from a users account
      */
     public const LPA_REMOVED = 'LPA_REMOVED';
+
+    /**
+     * An LPA that is not clean
+     */
+    public const OLDER_LPA_NEEDS_CLEANSING = 'OLDER_LPA_NEEDS_CLEANSING';
 }
