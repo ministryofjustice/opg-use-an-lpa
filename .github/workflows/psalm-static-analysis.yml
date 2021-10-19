@@ -2,7 +2,7 @@ name: Psalm Static analysis - Service Front
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main, master ]
     paths:
     # only run when service-front is changed
       - 'service-front/app/**'
