@@ -7,6 +7,7 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\ActorRole;
 use Actor\Form\RequestActivationKey\CheckYourAnswers;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
+use Actor\Form\RequestActivationKey\RequestContactDetails;
 use Carbon\Carbon;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
@@ -131,6 +132,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $this->session->unset('actor_id');
         $this->session->unset('actor_role');
         $this->session->unset('donor_first_names');
         $this->session->unset('donor_last_name');
@@ -163,11 +165,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
+
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
                         ['user'  => $this->user]
                     ));
+
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
@@ -215,6 +219,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ['user'  => $this->user]
                         ));
                     }
+
                 case OlderLpaApiResponse::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
@@ -223,6 +228,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'lpa_reference_number' => $this->data['reference_number']
                         ],
                     ));
+
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));

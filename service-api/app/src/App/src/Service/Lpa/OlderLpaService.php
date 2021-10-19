@@ -79,15 +79,26 @@ class OlderLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string $uid      Sirius uId for an LPA
-     * @param string $actorUid uId of an actor on that LPA
-     * @param string $userId
+     * In order to preserve some semblance of atomicity to the required steps they're
+     * carried out in a reverse order, with the one item we cannot revert carried out
+     * last.
+     *
+     * @param string      $uid              Sirius uId for an LPA
+     * @param string      $actorUid         uId of an actor on that LPA
+     * @param string      $userId           The user ID of an actor in the ualpa database
+     * @param string|null $existingRecordId If an existing LPA record has been stored this is the ID
      */
-    public function requestAccessByLetter(string $uid, string $actorUid, string $userId): void
-    {
+    public function requestAccessByLetter(
+        string $uid,
+        string $actorUid,
+        string $userId,
+        ?string $existingRecordId = null
+    ): void {
         $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
+            if ($existingRecordId === null) {
+                $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
+            }
         }
 
         $uidInt = (int)$uid;
@@ -115,6 +126,18 @@ class OlderLpaService
                 $this->removeLpa($recordId);
             }
             throw $apiException;
+        }
+
+        /**
+         * This is the exception to the method documentation. We cannot easily roll this alteration
+         * back so we'll do it last. The potential is that this operation could fail even though
+         * the API request worked. That being the case the users record will not have
+         * an up to date ActivateBy column. This isn't the end of the world.
+         */
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            if ($existingRecordId !== null) {
+                $this->userLpaActorMap->renewActivationPeriod($existingRecordId, 'P1Y');
+            }
         }
     }
 }

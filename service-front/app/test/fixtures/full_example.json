@@ -8,6 +8,7 @@
   "registrationDate": "2018-06-30",
   "cancellationDate" : null,
   "status": "Registered",
+  "lpaIsCleansed": false,
   "caseAttorneySingular": true,
   "caseAttorneyJointlyAndSeverally": true,
   "caseAttorneyJointly": true,
