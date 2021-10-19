@@ -110,6 +110,14 @@ class OlderLpaServiceTest extends TestCase
             'queuedForCleansing' => true
         ];
 
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            null,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled()->willReturn(new JsonResponse($data));
@@ -156,6 +164,18 @@ class OlderLpaServiceTest extends TestCase
         ];
         $service = $this->getOlderLpaService();
 
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            null,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+        $this->userLpaActorMapProphecy
+            ->delete($this->lpaActorToken)
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled()->willReturn(new JsonResponse($data));
@@ -168,6 +188,18 @@ class OlderLpaServiceTest extends TestCase
     public function request_cleanse_and_access_code_letter_fails_on_empty_response(): void
     {
         $service = $this->getOlderLpaService();
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            null,
+            'P1Y'
+        )->willReturn($this->lpaActorToken);
+        $this->userLpaActorMapProphecy
+            ->delete($this->lpaActorToken)
+            ->shouldBeCalled()
+            ->willReturn([]);
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)

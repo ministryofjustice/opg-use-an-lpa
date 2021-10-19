@@ -408,7 +408,7 @@ class OlderLpaService
             }
         }
     }
-    
+
     /**
      * Provides the capability to request a letter be sent to the registered
      * address of the specified actor with a new one-time-use registration code.
@@ -424,8 +424,18 @@ class OlderLpaService
     public function requestAccessAndCleanseByLetter(
         string $uid,
         string $userId,
-        string $additionalInfo
+        string $additionalInfo,
+        ?string $actorId = null,
+        ?string $existingRecordId = null
     ): void {
+
+        $recordId = null;
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            if ($existingRecordId === null) {
+                $recordId = $this->userLpaActorMap->create($userId, $uid, null, 'P1Y');
+            }
+        }
+
         $uidInt = (int)$uid;
         $this->logger->info(
             'Requesting cleanse and an access code letter on LPA {lpa}',
@@ -446,7 +456,7 @@ class OlderLpaService
             } else {
                 throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
             }
-            //TODO: needs to save the request once merged with changes from 1643
+
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter and cleanse for LPA {lpa}',
@@ -454,6 +464,11 @@ class OlderLpaService
                     'lpa' => $uidInt,
                 ]
             );
+
+            if ($recordId !== null) {
+                $this->removeLpa($recordId);
+            }
+
             throw $apiException;
         }
     }

@@ -55,16 +55,19 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     public function create(
         string $userId,
         string $siriusUid,
-        string $actorId,
+        ?string $actorId,
         string $expiryInterval = null
     ): string {
         $added = new DateTimeImmutable();
         $array = [
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
-            'ActorId'   => ['N' => $actorId],
             'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
         ];
+
+        if ($actorId !== null) {
+            $array['ActorId'] = ['N' => $actorId];
+        }
 
         // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
