@@ -214,15 +214,16 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $expectedResponse = [
-            'lpa-id'     => $this->lpaUid,
-            'caseSubtype' => 'pfa',
-            'actor'     => $this->lpaData['donor'],
-            'role'      => 'donor',
+            'lpa-id'        => $this->lpaUid,
+            'caseSubtype'   => 'pfa',
+            'actor'         => $this->lpaData['donor'],
+            'role'          => 'donor',
+            'lpaActorToken' => 'qwerty-54321',
             'donor'       => [
                 'uId'         => $this->lpaData['donor']['uId'],
                 'firstname'   => 'Donor',
                 'middlenames' => 'Example',
-                'surname'     => 'Person',
+                'surname'     => 'Person'
             ]
         ];
 
@@ -463,6 +464,7 @@ class AddOlderLpaTest extends TestCase
                 'uId'               => $this->lpaUid,
                 'registrationDate'  => '2016-01-01',
                 'status'            => 'Registered',
+                'lpaIsCleansed'     => false,
                 'caseSubtype'       => 'pfa',
                 'donor' => [
                     'uId'           => '700000001111',

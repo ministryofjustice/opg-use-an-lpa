@@ -316,6 +316,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I can only see my telephone number$/
+     */
+    public function iCanOnlySeeMyTelephoneNumber()
+    {
+        $this->ui->assertPageContainsText('0123456789');
+        $this->ui->assertPageNotContainsText('Your role');
+        $this->ui->assertPageNotContainsText('Donor\'s name');
+        $this->ui->assertPageNotContainsText('Donor\'s date of birth');
+    }
+
+    /**
      * @Given /^I can see my donor role and that I have not provided a telephone number$/
      */
     public function iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber()
@@ -418,11 +429,22 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I confirm that those details are correct$/
      * @When /^I confirm the details I provided are correct$/
+     * @Then /^I am taken back to the check answers page$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^I confirm details of the found LPA are correct$/
+     * @When /^I request a new activation key$/
+     * @Given /^The activation key not been received or was lost$/
+     */
+    public function iConfirmTheDetailsOfTheFoundLpaAreCorrect()
+    {
+       //Not needed for this context
     }
 
     /**
@@ -650,7 +672,9 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
+                                'lpa-id' => $this->lpa->uId,
                                 'caseSubtype' => $this->lpa->caseSubtype,
+                                'role' => 'donor',
                             ]
                         )
                     )
@@ -956,7 +980,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am on the check LPA details page$/
+     * @Then /^I am on the Check we've found the right LPA page$/
      */
     public function iAmOnTheCheckLPADetailsPage()
     {
@@ -1042,5 +1066,91 @@ class RequestActivationKeyContext implements Context
                     json_encode([])
                 )
             );
+    }
+
+    /**
+     * @Given /^I have provided details to add an LPA$/
+     */
+    public function iHaveProvidedDetailsToAddAnLpa()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperDocument();
+    }
+
+    /**
+     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
+     */
+    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus)
+    {
+        if ($cleanseStatus == 'not marked') {
+            $this->lpa->lpaIsCleansed = false;
+        } else {
+            $this->lpa->lpaIsCleansed = true;
+        }
+
+        if ($regDate == 'before') {
+            $this->lpa->registrationDate = '2019-08-31';
+        } else {
+            $this->lpa->registrationDate = '2019-09-01';
+        }
+
+        if (!$this->lpa->lpaIsCleansed && $regDate == 'before') {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_BAD_REQUEST,
+                        [],
+                        json_encode(
+                            [
+                                'title' => 'Bad request',
+                                'details' => 'LPA needs cleansing',
+                                'data' => [
+                                    'actor_id' => $this->actorId
+                                ],
+                            ]
+                        )
+                    )
+                );
+
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Continue');
+        } else {
+            $this->apiFixtures->patch('/v1/older-lpa/confirm')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'data' => [
+                                    'donor'         => [
+                                        'uId'           => $this->lpa->donor->uId,
+                                        'firstname'     => $this->lpa->donor->firstname,
+                                        'middlenames'   => $this->lpa->donor->middlenames,
+                                        'surname'       => $this->lpa->donor->surname,
+                                    ],
+                                    'caseSubtype'   => $this->lpa->caseSubtype,
+                                    'lpa-id'        => $this->lpa->uId,
+                                    'role'          => 'donor'
+                                ],
+                            ]
+                        )
+                    )
+                );
+
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @Given  /^I have already requested an activation key previously$/
+     */
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA();
     }
 }

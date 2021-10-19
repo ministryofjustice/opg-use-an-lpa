@@ -50,7 +50,9 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
                     {{ govuk_form_element(form.get('force_activation')) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">
+
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button">{% trans %}Back to your LPAs{% endtrans %}</a>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--secondary">
                         {% trans %}Continue and ask for a new key{% endtrans %}
                     </button>
 
