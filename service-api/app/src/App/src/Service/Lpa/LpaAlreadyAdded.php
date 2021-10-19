@@ -52,8 +52,7 @@ class LpaAlreadyAdded
                 if ($record['SiriusUid'] === $lpaUid) {
                     $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
 
-                    // a count of a null array will be 0
-                    if (count($lpa) === 0) {
+                    if ($lpa === null || count($lpa) === 0) {
                         return null;
                     }
 

@@ -107,26 +107,35 @@ class LpaService
         }
 
         $lpaData = $lpa->getData();
-        $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
+
+        $actor = null;
+
+        if ($map['ActorId'] !== null) {
+            $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
+            // If an active attorney is not found then we should not return an lpa
+            if (is_null($actor)) {
+                return null;
+            }
+        }
 
         unset($lpaData['original_attorneys']);
 
-        // If an active attorney is not found then we should not return an lpa
-        if (is_null($actor)) {
-            return null;
+        $resultLpas = [
+        'user-lpa-actor-token' => $map['Id'],
+        'date' => $lpa->getLookupTime()->format('c'),
+        'lpa' => $lpaData,
+        ];
+
+        if ($actor !== null) {
+            $resultLpas['actor'] = $actor;
         }
 
         //Extract and return only LPA's where status is Registered or Cancelled
         if (($this->isValidLpa)($lpaData)) {
-            return [
-                'user-lpa-actor-token' => $map['Id'],
-                'date' => $lpa->getLookupTime()->format('c'),
-                'actor' => $actor,
-                'lpa' => $lpaData,
-            ];
+            return $resultLpas;
         }
 
-        return [];
+        return null;
     }
 
     /**
