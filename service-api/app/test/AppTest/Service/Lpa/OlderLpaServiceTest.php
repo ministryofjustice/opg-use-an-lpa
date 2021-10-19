@@ -92,6 +92,25 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
+    public function request_access_code_letter_record_exists(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid)
+            ->shouldBeCalled();
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
+
+        $this->userLpaActorMapProphecy
+            ->renewActivationPeriod('token-12345', 'P1Y')
+            ->shouldBeCalled();
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+    }
+
+    /** @test */
     public function request_access_code_letter_without_flag(): void
     {
         $this->lpasInterfaceProphecy
@@ -100,12 +119,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
-        $this->userLpaActorMapProphecy->create(
-            $this->userId,
-            $this->lpaUid,
-            $this->actorUid,
-            'P1Y'
-        )->shouldNotBeCalled();
+        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
+        $this->userLpaActorMapProphecy->renewActivationPeriod(Argument::cetera())->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);

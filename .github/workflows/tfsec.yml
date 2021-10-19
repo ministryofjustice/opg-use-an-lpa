@@ -2,7 +2,7 @@ name: TFSec Static analysis
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main, master ]
     paths:
       - "**.tf"
 

@@ -83,19 +83,48 @@ Feature: Add an older LPA
   # Older Older LPA Journey
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: The user is able to request a new key for an LPA that they have already requested a key for
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper LPA which I have already requested an activation key for
-    And I confirm the details I provided are correct
-    And I am told that I have already requested an activation key for this LPA
-    When I request for a new activation key again
-    Then I am told a new activation key is posted to the provided postcode
+  Scenario: The user cannot add an older LPA to their account that is not cleansed and reg date before Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm details of the found LPA are correct
+    Then I am asked for my contact details
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date before Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm details of the found LPA are correct
+    Then a letter is requested containing a one time use code
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is not cleansed but reg date on or after Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm details of the found LPA are correct
+    Then a letter is requested containing a one time use code
+
+  @ui @integration @ff:allow_older_lpas:true
+  Scenario: The user can add an older LPA to their account that is cleansed and reg date on or after Sep 2019
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm details of the found LPA are correct
+    Then a letter is requested containing a one time use code
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is taken to Check details and consent page and only shown contact details
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I confirm details of the found LPA are correct
+    And I am asked for my contact details
+    And I enter my telephone number
+    When I am asked to consent and confirm my details
+    Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
-    When I provide details that do not match a valid paper document
-    And I confirm that those details are correct
+    And I provide details that do not match a valid paper document
+    When I confirm that those details are correct
     Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
@@ -118,12 +147,6 @@ Feature: Add an older LPA
     When I confirm that I am the Donor
     Then I am asked for my contact details
 
-  @ui
-  Scenario: The user is taken back to start of activation request if the found LPA is incorrect
-    Given I am on the check LPA details page
-    When I realise this is not the correct LPA
-    Then I am taken back to the start of the "request an activation key" process
-
   @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
@@ -139,8 +162,8 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
-    When I provide the details from a valid paper document
-    And I confirm the details I provided are correct
+    And I provide the details from a valid paper document
+    When I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the donor name back again
 
   @ui @ff:allow_older_lpas:true
@@ -225,7 +248,7 @@ Feature: Add an older LPA
 
   @ui
   Scenario: The user is taken back to start of activation request if the found LPA is incorrect
-    Given I am on the check LPA details page
+    Given I am on the Check we've found the right LPA page
     When  I realise this is not the correct LPA
     Then I am taken back to the start of the "request an activation key" process
 
@@ -256,3 +279,28 @@ Feature: Add an older LPA
       |            | Person  | 01-01-1980 | Enter the donor's first names     |
       | Donor      |         | 01-01-1980 | Enter the donor's last name       |
       | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed
+    Given I am on the Check we've found the right LPA page
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I confirm details of the found LPA are correct
+    And I am asked for my contact details
+    When I click the Back link on the page
+    Then I am taken back to the check answers page
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user taken to contact details page, when LPA is not cleansed even though a key was requested previously
+    Given I have already requested an activation key previously
+    And The activation key not been received or was lost
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    When I request a new activation key
+    Then I am asked for my contact details
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is  generated an activation key again, when LPA is cleansed
+    Given I have already requested an activation key previously
+    And The activation key not been received or was lost
+    And My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
+    When I request a new activation key
+    Then a letter is requested containing a one time use code

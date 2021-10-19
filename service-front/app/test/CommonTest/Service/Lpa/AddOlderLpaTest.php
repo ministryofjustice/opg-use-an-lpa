@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use App\Exception\BadRequestException;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -524,7 +525,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name'             => $this->olderLpa['last_name'],
                     'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode'              => $this->olderLpa['postcode'],
-                    'force_activation_key'  => false,
+                    'force_activation_key'  => true,
                 ]
             )->willReturn($response);
 
@@ -540,7 +541,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
         );
 
         $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
@@ -561,7 +562,7 @@ class AddOlderLpaTest extends TestCase
                     'last_name' => $this->olderLpa['last_name'],
                     'dob' => ($this->olderLpa['dob'])->format('Y-m-d'),
                     'postcode' => $this->olderLpa['postcode'],
-                    'force_activation_key' => false
+                    'force_activation_key' => true
                 ]
             )->willThrow(
                 new ApiException(
@@ -580,7 +581,84 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['last_name'],
             $this->olderLpa['dob'],
             $this->olderLpa['postcode'],
-            false
+            true
+        );
+    }
+
+    /**
+     * @test
+     * @covers ::confir
+     */
+    public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
+    {
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number'      => (string) $this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => true
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA needs cleansing',
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    null,
+                    ['actor_id' => '1234'],
+                )
+            );
+
+        $result = $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            true
+        );
+
+        $this->assertEquals('1234', $result->getData()['actor_id']);
+        $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
+    }
+
+    /**
+     * @test
+     * @covers ::confirm
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_to_add_lpa_due_to_an_unknown_request_exception(): void
+    {
+        $this->apiClientProphecy
+            ->httpPatch(
+                '/v1/older-lpa/confirm',
+                [
+                    'reference_number'      => (string)$this->olderLpa['reference_number'],
+                    'first_names'           => $this->olderLpa['first_names'],
+                    'last_name'             => $this->olderLpa['last_name'],
+                    'dob'                   => ($this->olderLpa['dob'])->format('Y-m-d'),
+                    'postcode'              => $this->olderLpa['postcode'],
+                    'force_activation_key'  => true,
+                ]
+            )->willThrow(
+                new ApiException(
+                    'This message will not be recognised',
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $this->expectException(ApiException::class);
+        $this->sut->confirm(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode'],
+            true
         );
     }
 }
