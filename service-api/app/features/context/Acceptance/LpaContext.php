@@ -2463,6 +2463,7 @@ class LpaContext implements Context
     /**
      * @Given /^I confirm the details I provided are correct$/
      * @When /^I confirm details shown to me of the found LPA are correct$/
+     * @Given /^I have provided valid details that match the Lpa$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
@@ -2479,6 +2480,8 @@ class LpaContext implements Context
 
     /**
      * @When /^I provide details of an LPA that does not exist$/
+     * @Then /^I should expect it within 2 weeks time$/
+     * @Then /^I will receive an email confirming this information$/
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist()
     {
@@ -2828,6 +2831,8 @@ class LpaContext implements Context
 
     /**
      * @Given /^I already have a valid activation key for my LPA$/
+     * @Given /^I provide the additional details asked$/
+     * @Given /^I am asked to consent and confirm my details$/
      */
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
     {
@@ -2914,10 +2919,81 @@ class LpaContext implements Context
     /**
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      * @Then /^I am asked for my contact details$/
+     * @Then /^I should expect it within 6 weeks time$/
      */
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I confirm that the data is correct and click the confirm and submit button$/
+     */
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // request a code to be generated and letter to be sent
+        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($data)
+                )
+            );
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId' => $this->actorId,
+                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/add-lpa/cleanse',
+            [
+                'reference_number' => $this->lpaUid,
+                'user-token' => $this->userId,
+                'notes' => 'Notes'
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
     /**
@@ -3160,6 +3236,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I confirm details of the found LPA are correct$/
+     * @Then /^I am told my activation key is being sent$/
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrect()
     {
@@ -3229,5 +3306,13 @@ class LpaContext implements Context
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
         }
+    }
+
+    /**
+     * @When  /^I am told my activation key request has been received$/
+     */
+    public function iAmToldMyActivationKeyRequestHasBeenReceived()
+    {
+        //Not  needed for this  context
     }
 }

@@ -11,6 +11,7 @@ use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\OlderLpaApiResponse;
@@ -182,6 +183,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^a letter is requested containing a one time use code$/
      * @When /^I request for a new activation key again$/
+     * @Then  /^I am told my activation key is being sent$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -277,6 +279,8 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I am on the add an LPA page$/
+     * @Given /^I provide the additional details asked$/
+     * @Given /^I am asked to consent and confirm my details$/
      */
     public function iAmOnTheAddAnLPAPage()
     {
@@ -988,6 +992,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I provide details that do not match a valid paper document$/
+     * @Given /^My LPA has been found but my details did not match$/
      */
     public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
     {
@@ -1726,6 +1731,12 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I am on the Check we've found the right LPA page$/
+     * @Given /^I have provided valid details that match the Lpa$/
+     * @Then /^I should expect it within 2 weeks time$/
+     * @Then /^I will receive an email confirming this information$/
+     * @Then /^I am told my activation key request has been received$/
+     * @Then /^I should expect it within 6 weeks time$/
+     * @Given /^I provide my contact details$/
      */
     public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()
     {
@@ -1808,5 +1819,44 @@ class LpaContext extends BaseIntegrationContext
             $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
             assertEquals($response, $result);
         }
+    }
+
+    /**
+    * @Given /^I confirm that the data is correct and click the confirm and submit button$/
+    */
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    {
+        $this->apiFixtures->post('/v1/add-lpa/cleanse')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    [],
+                    json_encode([])
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
+            );
+
+        $cleanseLpa = $this->container->get(CleanseLpa::class);
+
+        $result = $cleanseLpa->cleanse(
+            $this->userIdentity,
+            intval($this->referenceNo),
+            'Notes'
+        );
+
+        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        assertEquals($response, $result);
     }
 }
