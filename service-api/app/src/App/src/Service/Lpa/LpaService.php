@@ -135,7 +135,7 @@ class LpaService
             return $resultLpas;
         }
 
-        return null;
+        return [];
     }
 
     /**
