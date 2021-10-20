@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.196.2",
+            "version": "3.198.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3bccf77507f23207c8adbb524cc6da333dc25e47"
+                "reference": "d235e1ed93a34f0e290589c85cf97dd963a721c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3bccf77507f23207c8adbb524cc6da333dc25e47",
-                "reference": "3bccf77507f23207c8adbb524cc6da333dc25e47",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d235e1ed93a34f0e290589c85cf97dd963a721c9",
+                "reference": "d235e1ed93a34f0e290589c85cf97dd963a721c9",
                 "shasum": ""
             },
             "require": {
@@ -143,9 +143,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.196.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.198.8"
             },
-            "time": "2021-10-04T18:14:13+00:00"
+            "time": "2021-10-19T18:15:41+00:00"
         },
         {
             "name": "brick/varexporter",
@@ -418,16 +418,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.4.1",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d"
+                "reference": "136a635e2b4a49b9d79e9c8fee267ffb257fdba0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/8e7d04f1f6450fef59366c399cfad4b9383aa30d",
-                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/136a635e2b4a49b9d79e9c8fee267ffb257fdba0",
+                "reference": "136a635e2b4a49b9d79e9c8fee267ffb257fdba0",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +439,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -456,9 +456,24 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
+                    "homepage": "https://github.com/Tobion"
                 }
             ],
             "description": "Guzzle promises library",
@@ -467,9 +482,23 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/1.4.1"
+                "source": "https://github.com/guzzle/promises/tree/1.5.0"
             },
-            "time": "2021-03-07T09:25:29+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/promises",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-10-07T13:05:22+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1349,34 +1378,32 @@
         },
         {
             "name": "mezzio/mezzio-helpers",
-            "version": "5.6.0",
+            "version": "5.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-helpers.git",
-                "reference": "d0dfb5f447faf7e019436976adec5128a0379132"
+                "reference": "8ba1bcf38689db21e2ccac699d99b66ded700162"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/d0dfb5f447faf7e019436976adec5128a0379132",
-                "reference": "d0dfb5f447faf7e019436976adec5128a0379132",
+                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/8ba1bcf38689db21e2ccac699d99b66ded700162",
+                "reference": "8ba1bcf38689db21e2ccac699d99b66ded700162",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
                 "mezzio/mezzio-router": "^3.0",
-                "php": "^7.3 || ~8.0.0",
+                "php": "^7.3 || ~8.0.0 || ~8.1.0",
                 "psr/container": "^1.0",
                 "psr/http-message": "^1.0.1",
                 "psr/http-server-middleware": "^1.0"
             },
-            "replace": {
-                "zendframework/zend-expressive-helpers": "^5.3.0"
+            "conflict": {
+                "zendframework/zend-expressive-helpers": "*"
             },
             "require-dev": {
                 "ext-json": "*",
-                "laminas/laminas-coding-standard": "~2.1.0",
-                "laminas/laminas-diactoros": "^1.7.1",
-                "malukenho/docheader": "^0.1.8",
+                "laminas/laminas-coding-standard": "~2.2.0",
+                "laminas/laminas-diactoros": "^2.5.0",
                 "mockery/mockery": "^1.4.2",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.4.2",
@@ -1425,7 +1452,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-04-23T14:12:21+00:00"
+            "time": "2021-10-13T17:13:37+00:00"
         },
         {
             "name": "mezzio/mezzio-router",
@@ -1508,29 +1535,30 @@
         },
         {
             "name": "mezzio/mezzio-template",
-            "version": "2.1.1",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-template.git",
-                "reference": "8f36e80b3ac6d794cf324134b368ec00bb4cfdbe"
+                "reference": "82aa87190b2d20cfdd4fec1e8068833df07ca27e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-template/zipball/8f36e80b3ac6d794cf324134b368ec00bb4cfdbe",
-                "reference": "8f36e80b3ac6d794cf324134b368ec00bb4cfdbe",
+                "url": "https://api.github.com/repos/mezzio/mezzio-template/zipball/82aa87190b2d20cfdd4fec1e8068833df07ca27e",
+                "reference": "82aa87190b2d20cfdd4fec1e8068833df07ca27e",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0"
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
             "replace": {
                 "zendframework/zend-expressive-template": "^2.0.1"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~2.1.0",
-                "malukenho/docheader": "^0.1.6",
-                "phpunit/phpunit": "^9.3"
+                "laminas/laminas-coding-standard": "~2.2.0",
+                "phpunit/phpunit": "^9.4",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "vimeo/psalm": "^4.8"
             },
             "suggest": {
                 "mezzio/mezzio-laminasviewrenderer": "^2.0 to use the laminas-view PhpRenderer template renderer",
@@ -1568,7 +1596,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-01-23T03:51:53+00:00"
+            "time": "2021-10-11T12:45:14+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4573,16 +4601,16 @@
         },
         {
             "name": "amphp/process",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/process.git",
-                "reference": "b88c6aef75c0b22f6f021141dd2d5e7c5db4c124"
+                "reference": "3d36327bf9b4c158cf3010f8f65c00854ec3a8b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/process/zipball/b88c6aef75c0b22f6f021141dd2d5e7c5db4c124",
-                "reference": "b88c6aef75c0b22f6f021141dd2d5e7c5db4c124",
+                "url": "https://api.github.com/repos/amphp/process/zipball/3d36327bf9b4c158cf3010f8f65c00854ec3a8b7",
+                "reference": "3d36327bf9b4c158cf3010f8f65c00854ec3a8b7",
                 "shasum": ""
             },
             "require": {
@@ -4626,7 +4654,7 @@
             "homepage": "https://github.com/amphp/process",
             "support": {
                 "issues": "https://github.com/amphp/process/issues",
-                "source": "https://github.com/amphp/process/tree/v1.1.1"
+                "source": "https://github.com/amphp/process/tree/v1.1.2"
             },
             "funding": [
                 {
@@ -4634,7 +4662,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-30T20:04:22+00:00"
+            "time": "2021-10-08T15:55:53+00:00"
         },
         {
             "name": "amphp/serialization",
@@ -4894,36 +4922,37 @@
         },
         {
             "name": "behat/behat",
-            "version": "v3.8.1",
+            "version": "v3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Behat.git",
-                "reference": "fbb065457d523d9856d4b50775b4151a7598b510"
+                "reference": "3c5eb5cc6ebd946714bec977136250e961a891f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Behat/zipball/fbb065457d523d9856d4b50775b4151a7598b510",
-                "reference": "fbb065457d523d9856d4b50775b4151a7598b510",
+                "url": "https://api.github.com/repos/Behat/Behat/zipball/3c5eb5cc6ebd946714bec977136250e961a891f4",
+                "reference": "3c5eb5cc6ebd946714bec977136250e961a891f4",
                 "shasum": ""
             },
             "require": {
-                "behat/gherkin": "^4.6.0",
+                "behat/gherkin": "^4.9.0",
                 "behat/transliterator": "^1.2",
                 "ext-mbstring": "*",
                 "php": "^7.2 || ^8.0",
                 "psr/container": "^1.0",
-                "symfony/config": "^4.4 || ^5.0",
-                "symfony/console": "^4.4 || ^5.0",
-                "symfony/dependency-injection": "^4.4 || ^5.0",
-                "symfony/event-dispatcher": "^4.4 || ^5.0",
-                "symfony/translation": "^4.4 || ^5.0",
-                "symfony/yaml": "^4.4 || ^5.0"
+                "symfony/config": "^4.4 || ^5.0 || ^6.0",
+                "symfony/console": "^4.4 || ^5.0 || ^6.0",
+                "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
+                "symfony/event-dispatcher": "^4.4 || ^5.0 || ^6.0",
+                "symfony/translation": "^4.4 || ^5.0 || ^6.0",
+                "symfony/yaml": "^4.4 || ^5.0 || ^6.0"
             },
             "require-dev": {
                 "container-interop/container-interop": "^1.2",
                 "herrera-io/box": "~1.6.1",
                 "phpunit/phpunit": "^8.5 || ^9.0",
-                "symfony/process": "^4.4 || ^5.0"
+                "symfony/process": "^4.4 || ^5.0 || ^6.0",
+                "vimeo/psalm": "^4.8"
             },
             "suggest": {
                 "ext-dom": "Needed to output test results in JUnit format."
@@ -4940,7 +4969,8 @@
             "autoload": {
                 "psr-4": {
                     "Behat\\Behat\\": "src/Behat/Behat/",
-                    "Behat\\Testwork\\": "src/Behat/Testwork/"
+                    "Behat\\Testwork\\": "src/Behat/Testwork/",
+                    "Behat\\Step\\": "src/Behat/Step/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -4972,31 +5002,30 @@
             ],
             "support": {
                 "issues": "https://github.com/Behat/Behat/issues",
-                "source": "https://github.com/Behat/Behat/tree/v3.8.1"
+                "source": "https://github.com/Behat/Behat/tree/v3.9.0"
             },
-            "time": "2020-11-07T15:55:18+00:00"
+            "time": "2021-10-18T07:38:29+00:00"
         },
         {
             "name": "behat/gherkin",
-            "version": "v4.8.0",
+            "version": "v4.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "2391482cd003dfdc36b679b27e9f5326bd656acd"
+                "reference": "0bc8d1e30e96183e4f36db9dc79caead300beff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/2391482cd003dfdc36b679b27e9f5326bd656acd",
-                "reference": "2391482cd003dfdc36b679b27e9f5326bd656acd",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/0bc8d1e30e96183e4f36db9dc79caead300beff4",
+                "reference": "0bc8d1e30e96183e4f36db9dc79caead300beff4",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.2|~8.0"
             },
             "require-dev": {
-                "cucumber/cucumber": "dev-gherkin-16.0.0",
+                "cucumber/cucumber": "dev-gherkin-22.0.0",
                 "phpunit/phpunit": "~8|~9",
-                "symfony/phpunit-bridge": "~3|~4|~5",
                 "symfony/yaml": "~3|~4|~5"
             },
             "suggest": {
@@ -5005,7 +5034,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.4-dev"
+                    "dev-master": "4.x-dev"
                 }
             },
             "autoload": {
@@ -5036,32 +5065,33 @@
             ],
             "support": {
                 "issues": "https://github.com/Behat/Gherkin/issues",
-                "source": "https://github.com/Behat/Gherkin/tree/v4.8.0"
+                "source": "https://github.com/Behat/Gherkin/tree/v4.9.0"
             },
-            "time": "2021-02-04T12:44:21+00:00"
+            "time": "2021-10-12T13:05:09+00:00"
         },
         {
             "name": "behat/mink",
-            "version": "v1.8.1",
+            "version": "v1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "07c6a9fe3fa98c2de074b25d9ed26c22904e3887"
+                "reference": "e35f4695de8800fc776af34ebf665ad58ebdd996"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/07c6a9fe3fa98c2de074b25d9ed26c22904e3887",
-                "reference": "07c6a9fe3fa98c2de074b25d9ed26c22904e3887",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/e35f4695de8800fc776af34ebf665ad58ebdd996",
+                "reference": "e35f4695de8800fc776af34ebf665ad58ebdd996",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.1",
+                "php": ">=5.4",
                 "symfony/css-selector": "^2.7|^3.0|^4.0|^5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20",
-                "symfony/debug": "^2.7|^3.0|^4.0",
-                "symfony/phpunit-bridge": "^3.4.38 || ^5.0.5"
+                "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5 || ^9.5",
+                "symfony/debug": "^2.7|^3.0|^4.0|^5.0",
+                "symfony/phpunit-bridge": "^3.4.38 || ^4.4 || ^5.0.5",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
@@ -5073,7 +5103,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -5093,7 +5123,7 @@
                 }
             ],
             "description": "Browser controller/emulator abstraction for PHP",
-            "homepage": "http://mink.behat.org/",
+            "homepage": "https://mink.behat.org/",
             "keywords": [
                 "browser",
                 "testing",
@@ -5101,9 +5131,9 @@
             ],
             "support": {
                 "issues": "https://github.com/minkphp/Mink/issues",
-                "source": "https://github.com/minkphp/Mink/tree/v1.8.1"
+                "source": "https://github.com/minkphp/Mink/tree/v1.9.0"
             },
-            "time": "2020-03-11T15:45:53+00:00"
+            "time": "2021-10-11T11:58:47+00:00"
         },
         {
             "name": "behat/mink-browserkit-driver",
@@ -6367,28 +6397,28 @@
         },
         {
             "name": "laminas/laminas-development-mode",
-            "version": "3.3.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-development-mode.git",
-                "reference": "11b2adc8837e4419a5b31e2a7ae59f06636d4096"
+                "reference": "7218e3ca62cf87d4206817d37de86f8bd4c9d56a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/11b2adc8837e4419a5b31e2a7ae59f06636d4096",
-                "reference": "11b2adc8837e4419a5b31e2a7ae59f06636d4096",
+                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/7218e3ca62cf87d4206817d37de86f8bd4c9d56a",
+                "reference": "7218e3ca62cf87d4206817d37de86f8bd4c9d56a",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0"
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
             "replace": {
                 "zfcampus/zf-development-mode": "^3.2.0"
             },
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
-                "mikey179/vfsstream": "^1.6.5",
+                "mikey179/vfsstream": "^1.6.10",
                 "phpunit/phpunit": "^9.3"
             },
             "bin": [
@@ -6423,7 +6453,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-12-16T22:26:52+00:00"
+            "time": "2021-10-05T09:59:45+00:00"
         },
         {
             "name": "laminas/laminas-eventmanager",
@@ -7306,16 +7336,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.2.2",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556"
+                "reference": "622548b623e81ca6d78b721c5e029f4ce664f170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/069a785b2141f5bcf49f3e353548dc1cce6df556",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/622548b623e81ca6d78b721c5e029f4ce664f170",
+                "reference": "622548b623e81ca6d78b721c5e029f4ce664f170",
                 "shasum": ""
             },
             "require": {
@@ -7326,7 +7356,8 @@
                 "webmozart/assert": "^1.9.1"
             },
             "require-dev": {
-                "mockery/mockery": "~1.3.2"
+                "mockery/mockery": "~1.3.2",
+                "psalm/phar": "^4.8"
             },
             "type": "library",
             "extra": {
@@ -7356,9 +7387,9 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/master"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.3.0"
             },
-            "time": "2020-09-03T19:13:55+00:00"
+            "time": "2021-10-19T17:43:47+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -8927,6 +8958,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
@@ -9035,16 +9067,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.6.0",
+            "version": "3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "ffced0d2c8fa8e6cdc4d695a743271fab6c38625"
+                "reference": "f268ca40d54617c6e06757f83f699775c9b3ff2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ffced0d2c8fa8e6cdc4d695a743271fab6c38625",
-                "reference": "ffced0d2c8fa8e6cdc4d695a743271fab6c38625",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f268ca40d54617c6e06757f83f699775c9b3ff2e",
+                "reference": "f268ca40d54617c6e06757f83f699775c9b3ff2e",
                 "shasum": ""
             },
             "require": {
@@ -9087,7 +9119,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2021-04-09T00:54:41+00:00"
+            "time": "2021-10-11T04:00:11+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -10914,16 +10946,16 @@
         },
         {
             "name": "webmozart/glob",
-            "version": "4.3.0",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/glob.git",
-                "reference": "06358fafde0f32edb4513f4fd88fe113a40c90ee"
+                "reference": "539b5dbc10021d3f9242e7a9e9b6b37843179e83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/glob/zipball/06358fafde0f32edb4513f4fd88fe113a40c90ee",
-                "reference": "06358fafde0f32edb4513f4fd88fe113a40c90ee",
+                "url": "https://api.github.com/repos/webmozarts/glob/zipball/539b5dbc10021d3f9242e7a9e9b6b37843179e83",
+                "reference": "539b5dbc10021d3f9242e7a9e9b6b37843179e83",
                 "shasum": ""
             },
             "require": {
@@ -10931,8 +10963,8 @@
                 "webmozart/path-util": "^2.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.0",
-                "symfony/filesystem": "^5.1"
+                "phpunit/phpunit": "^9.5",
+                "symfony/filesystem": "^5.3"
             },
             "type": "library",
             "extra": {
@@ -10958,9 +10990,9 @@
             "description": "A PHP implementation of Ant's glob.",
             "support": {
                 "issues": "https://github.com/webmozarts/glob/issues",
-                "source": "https://github.com/webmozarts/glob/tree/4.3.0"
+                "source": "https://github.com/webmozarts/glob/tree/4.4.0"
             },
-            "time": "2021-01-21T06:17:15+00:00"
+            "time": "2021-10-07T16:13:08+00:00"
         },
         {
             "name": "webmozart/path-util",
