@@ -27,9 +27,9 @@ interface UserLpaActorMapInterface
     public function create(
         string $userId,
         string $siriusUid,
-        string $actorId,
-        string $expiryInterval = null,
-        string $intervalTillDue = null
+        ?string $actorId,
+        ?string $expiryInterval = null,
+        ?string $intervalTillDue = null
     ): string;
 
     /**

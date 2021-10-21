@@ -212,7 +212,7 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, 'P365D', 'P2W');
     }
 
     /** @test */
@@ -332,7 +332,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('remove ActivateBy', $data['UpdateExpression']);
+            $this->assertEquals('remove ActivateBy, DueBy', $data['UpdateExpression']);
 
             return true;
         }))->willReturn($this->createAWSResult([
@@ -453,7 +453,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a', $data['UpdateExpression']);
+            $this->assertEquals('set ActivateBy = :a, DueBy = :b, ActorId = :c', $data['UpdateExpression']);
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
@@ -480,6 +480,9 @@ class UserLpaActorMapTest extends TestCase
                     ],
                     'ActivateBy' => [
                         'N' => $expiry,
+                    ],
+                    'DueBy' => [
+                        'S' => 'P2W'
                     ]
                 ],
             ]
@@ -490,7 +493,7 @@ class UserLpaActorMapTest extends TestCase
             self::TABLE_NAME
         );
 
-        $renew = $userLpaActorMapRepo->renewActivationPeriod($testToken, 'P1Y');
+        $renew = $userLpaActorMapRepo->updateRecord($testToken, 'P1Y', 'P2W', (string)$testActorId);
         $this->assertEquals($testToken, $renew['Id']);
     }
 }
