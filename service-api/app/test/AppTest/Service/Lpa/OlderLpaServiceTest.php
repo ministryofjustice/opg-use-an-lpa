@@ -96,7 +96,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y'
+            'P1Y',
+            'P2W'
         )->willReturn($this->lpaActorToken);
 
         $service = $this->getOlderLpaService();
@@ -115,15 +116,19 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             null,
-            'P1Y'
+            'P1Y',
+            'P6W'
         )->willReturn($this->lpaActorToken);
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled()->willReturn(new JsonResponse($data));
 
+        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, 'P1Y', 'P6W', null)->shouldBeCalled();
+
+
         $service = $this->getOlderLpaService();
-        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo, null, $this->lpaActorToken);
     }
 
     /** @test */
@@ -143,7 +148,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y'
+            'P1Y',
+            'P2W'
         )->willReturn($this->lpaActorToken);
 
         $this->userLpaActorMapProphecy
@@ -169,7 +175,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             null,
-            'P1Y'
+            'P1Y',
+            'P6W'
         )->willReturn($this->lpaActorToken);
         $this->userLpaActorMapProphecy
             ->delete($this->lpaActorToken)
@@ -194,7 +201,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             null,
-            'P1Y'
+            'P1Y',
+            'P6W'
         )->willReturn($this->lpaActorToken);
         $this->userLpaActorMapProphecy
             ->delete($this->lpaActorToken)
@@ -221,9 +229,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy
-            ->renewActivationPeriod('token-12345', 'P1Y')
-            ->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord('token-12345', 'P1Y', 'P2W', $this->actorUid)->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
@@ -240,9 +246,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy
-            ->renewActivationPeriod('token-12345', 'P1Y')
-            ->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord('token-12345', 'P1Y', 'P2W', $this->actorUid)->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
@@ -265,10 +269,11 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y'
+            'P1Y',
+            'P2W'
         )->willReturn($this->lpaActorToken);
 
-        $this->userLpaActorMapProphecy->renewActivationPeriod(Argument::cetera())->shouldNotBeCalled();
+        //$this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, 'P1Y', 'P2W', $this->actorUid)->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
@@ -287,7 +292,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y'
+            'P1Y',
+            'P2W'
         )->willReturn($this->lpaActorToken);
 
         $this->userLpaActorMapProphecy
@@ -313,12 +319,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $this->userLpaActorMapProphecy->create(
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string'),
-            Argument::type('string')
-        )->shouldNotBeCalled();
+        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
         $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldNotBeCalled();
 

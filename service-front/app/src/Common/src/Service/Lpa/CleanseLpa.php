@@ -42,12 +42,17 @@ class CleanseLpa
     public function cleanse(
         string $userToken,
         int $lpaUid,
-        string $additionalInformation
+        string $additionalInformation,
+        ?string $actorId
     ): OlderLpaApiResponse {
         $data = [
             'reference_number' => $lpaUid,
             'notes' => $additionalInformation
         ];
+
+        if ($actorId !== null) {
+            $data['actor_id'] = $actorId;
+        }
 
         $this->apiClient->setUserTokenHeader($userToken);
 

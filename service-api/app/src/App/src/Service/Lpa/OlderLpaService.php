@@ -15,6 +15,10 @@ use Psr\Log\LoggerInterface;
 
 class OlderLpaService
 {
+    private const CLEANSE_DUE_BY = 'P6W';
+    private const EXPIRY_INTERVAL = 'P1Y';
+    private const SEND_LETTER_DUE_BY = 'P2W';
+
     private ActorCodes $actorCodes;
     private LoggerInterface $logger;
     private LpasInterface $lpaRepository;
@@ -98,7 +102,13 @@ class OlderLpaService
         $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
+                $recordId = $this->userLpaActorMap->create(
+                    $userId,
+                    $uid,
+                    $actorUid,
+                    self::EXPIRY_INTERVAL,
+                    self::SEND_LETTER_DUE_BY
+                );
             }
         }
 
@@ -147,7 +157,12 @@ class OlderLpaService
          */
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             if ($existingRecordId !== null) {
-                $this->userLpaActorMap->renewActivationPeriod($existingRecordId, 'P1Y');
+                $this->userLpaActorMap->updateRecord(
+                    $existingRecordId,
+                    self::EXPIRY_INTERVAL,
+                    self::SEND_LETTER_DUE_BY,
+                    $actorUid
+                );
             }
         }
     }
@@ -175,7 +190,13 @@ class OlderLpaService
         $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create($userId, $uid, null, 'P1Y');
+                $recordId = $this->userLpaActorMap->create(
+                    $userId,
+                    $uid,
+                    $actorId,
+                    self::EXPIRY_INTERVAL,
+                    self::CLEANSE_DUE_BY
+                );
             }
         }
 
@@ -213,6 +234,21 @@ class OlderLpaService
             }
 
             throw $apiException;
+        }
+
+        /**
+         * This is the exception to the method documentation. We cannot easily roll this alteration
+         * back so we'll do it last. The potential is that this operation could fail even though
+         * the API request worked. That being the case the users record will not have
+         * an up to date ActivateBy column. This isn't the end of the world.
+         */
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            $this->userLpaActorMap->updateRecord(
+                $existingRecordId,
+                self::EXPIRY_INTERVAL,
+                self::CLEANSE_DUE_BY,
+                $actorId
+            );
         }
     }
 }

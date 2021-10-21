@@ -56,9 +56,11 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $userId,
         string $siriusUid,
         ?string $actorId,
-        string $expiryInterval = null
+        ?string $expiryInterval = null,
+        string $intervalTillDue = null
     ): string {
         $added = new DateTimeImmutable();
+
         $array = [
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
@@ -73,6 +75,9 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         if ($expiryInterval !== null) {
             $expiry = $added->add(new DateInterval($expiryInterval));
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
+
+            $dueBy = $added->add(new DateInterval($intervalTillDue));
+            $array['DueBy'] = ['S' => $dueBy->format('Y-m-d\TH:i:s.u\Z')];
         }
 
         do {
@@ -136,7 +141,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                   'S' => $lpaActorToken,
               ],
           ],
-          'UpdateExpression' => 'remove ActivateBy',
+          'UpdateExpression' => 'remove ActivateBy, DueBy',
           'ReturnValues' => 'ALL_NEW'
           ]);
 
@@ -170,27 +175,38 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function renewActivationPeriod(string $lpaActorToken, string $expiryInterval): array
+    public function updateRecord(
+        string $lpaActorToken,
+        string $expiryInterval,
+        string $intervalTillDue,
+        ?string $actorId
+    ): array
     {
         $now = new DateTimeImmutable();
         $expiry = $now->add(new DateInterval($expiryInterval));
+        $dueBy = $now->add(new DateInterval($intervalTillDue));
 
-        $response = $this->client->updateItem(
-            [
-                'TableName' => $this->userLpaActorTable,
-                'Key' => [
-                    'Id' => [
-                        'S' => $lpaActorToken,
-                    ],
+        $updateRequest = [
+            'TableName' => $this->userLpaActorTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $lpaActorToken,
                 ],
-                'UpdateExpression' => 'set ActivateBy = :a',
-                'ExpressionAttributeValues' => [
-                    ':a' => ['N' => (string) $expiry->getTimestamp()]
-                ],
-                'ReturnValues' => 'ALL_NEW',
-            ]
-        );
+            ],
+            'UpdateExpression' => 'set ActivateBy = :a, DueBy = :b',
+            'ExpressionAttributeValues' => [
+                ':a' => ['N' => (string) $expiry->getTimestamp()],
+                ':b' => ['S' => $dueBy->format('Y-m-d\TH:i:s.u\Z')]
+            ],
+            'ReturnValues' => 'ALL_NEW',
+        ];
 
+        if ($actorId !== null) {
+            $updateRequest['UpdateExpression'] = $updateRequest['UpdateExpression'] . ', ActorId = :c';
+            $updateRequest['ExpressionAttributeValues'][':c'] = ['N' => $actorId];
+        }
+
+        $response = $this->client->updateItem($updateRequest);
         return $this->getData($response);
     }
 }

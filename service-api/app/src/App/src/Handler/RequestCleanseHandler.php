@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -20,14 +21,17 @@ use Psr\Log\LoggerInterface;
 class RequestCleanseHandler implements RequestHandlerInterface
 {
     private LoggerInterface $logger;
+    private LpaAlreadyAdded $lpaAlreadyAdded;
     private OlderLpaService $olderLpaService;
 
     public function __construct(
         OlderLpaService $olderLpaService,
+        LpaAlreadyAdded $lpaAlreadyAdded,
         LoggerInterface $logger
     ) {
         $this->olderLpaService = $olderLpaService;
         $this->logger = $logger;
+        $this->lpaAlreadyAdded = $lpaAlreadyAdded;
     }
 
     /**
@@ -41,10 +45,14 @@ class RequestCleanseHandler implements RequestHandlerInterface
         $requestData = $request->getParsedBody();
         $userId = $request->getHeader('user-token')[0];
 
+        $addedData = ($this->lpaAlreadyAdded)($userId, (string)$requestData['reference_number']);
+
         $this->olderLpaService->requestAccessAndCleanseByLetter(
             (string)$requestData['reference_number'],
             $userId,
             $requestData['notes'],
+            $requestData['actor_id'],
+            $addedData['lpaActorToken'] ?? null
         );
 
         return new EmptyResponse();
