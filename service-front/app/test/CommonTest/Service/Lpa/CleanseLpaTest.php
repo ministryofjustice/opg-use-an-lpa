@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 
 class CleanseLpaTest extends TestCase
 {
+    private string $actorId;
     private string $additionalInfo;
     private $apiClientProphecy;
     private $loggerProphecy;
@@ -29,6 +30,7 @@ class CleanseLpaTest extends TestCase
         $this->lpaUid = 70000000013;
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
         $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
+        $this->actorId = '1';
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
     }
@@ -47,7 +49,27 @@ class CleanseLpaTest extends TestCase
                 ]
             )->willReturn([]);
 
-        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo);
+        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
+
+        self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
+    }
+
+    /**
+     * @test
+     */
+    public function submit_cleanse_request_successfully_with_actorId(): void
+    {
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/add-lpa/cleanse',
+                [
+                    'reference_number'  => (string) $this->lpaUid,
+                    'notes'             => $this->additionalInfo,
+                    'actor_id'          => $this->actorId
+                ]
+            )->willReturn([]);
+
+        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo,  $this->actorId);
 
         self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
     }
@@ -67,6 +89,6 @@ class CleanseLpaTest extends TestCase
             )->willThrow(new ApiException(''));
 
         $this->expectException(ApiException::class);
-        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo);
+        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
     }
 }
