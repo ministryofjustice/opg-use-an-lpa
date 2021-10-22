@@ -485,6 +485,31 @@ class LpaContext implements Context
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
+
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        if($cleanseStatus == 'not marked' && $regDate == 'before') {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode($data)
+                    )
+                );
+        } else {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        []
+                    )
+                );
+        }
     }
 
     /**
@@ -2469,6 +2494,10 @@ class LpaContext implements Context
                 )
             );
 
+        // CheckLpaCleansed: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
         // request a code to be generated and letter to be sent
         $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
             ->respondWith(
@@ -2498,11 +2527,11 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'     => $this->lpaUid,
+                'first_names'          => $this->userFirstnames,
+                'last_name'            => $this->userSurname,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
                 'force_activation_key' => true
             ],
             [
@@ -2512,6 +2541,7 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
+
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
@@ -3376,10 +3406,6 @@ class LpaContext implements Context
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
-        $data = [
-            'queuedForCleansing' => true
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -3399,14 +3425,7 @@ class LpaContext implements Context
         $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+        // AWS Request letter response in Given steps
 
         $this->awsFixtures->append(
             new Result(
@@ -3430,7 +3449,8 @@ class LpaContext implements Context
             [
                 'reference_number' => $this->lpaUid,
                 'user-token' => $this->userId,
-                'notes' => 'Notes'
+                'notes' => 'Notes',
+                'actor_id' => $this->actorId
             ],
             [
                 'user-token' => $this->userId,

@@ -35,7 +35,7 @@ Feature: Add an older LPA
     And a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  @integration @acceptance @pact @ff:save_older_lpa_requests:true @ff:allow_older_lpas:true
   Scenario: The user can re-request an older LPA be added to their account and we update the record in our DB
     Given I have previously requested the addition of a paper LPA to my account
     When I repeat my request for an activation key
