@@ -2,7 +2,7 @@
 // Actor ECS Service level config
 
 resource "aws_ecs_service" "actor" {
-  name             = "actor"
+  name             = "actor-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
   desired_count    = local.account.autoscaling.use.minimum
@@ -23,6 +23,10 @@ resource "aws_ecs_service" "actor" {
 
   wait_for_steady_state = true
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [aws_lb.actor]
 }
 
@@ -33,7 +37,6 @@ resource "aws_security_group" "actor_ecs_service" {
   name_prefix = "${local.environment}-actor-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -92,7 +95,6 @@ resource "aws_ecs_task_definition" "actor" {
   container_definitions    = "[${local.actor_web}, ${local.actor_app}]"
   task_role_arn            = aws_iam_role.actor_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = local.default_tags
 }
 
 //----------------
@@ -101,7 +103,6 @@ resource "aws_ecs_task_definition" "actor" {
 resource "aws_iam_role" "actor_task_role" {
   name               = "${local.environment}-actor-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "actor_permissions_role" {

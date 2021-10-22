@@ -7,7 +7,6 @@ resource "aws_lb_target_group" "admin" {
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
   depends_on           = [aws_lb.admin[0]]
-  tags                 = local.default_tags
 }
 
 resource "aws_lb" "admin" {
@@ -17,8 +16,6 @@ resource "aws_lb" "admin" {
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
-  tags                       = local.default_tags
-
   enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
 
   security_groups = [
@@ -93,7 +90,6 @@ resource "aws_security_group" "admin_loadbalancer" {
   name_prefix = "${local.environment}-admin-loadbalancer"
   description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }

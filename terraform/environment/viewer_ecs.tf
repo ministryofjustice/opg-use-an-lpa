@@ -2,7 +2,7 @@
 // Viewer ECS Service level config
 
 resource "aws_ecs_service" "viewer" {
-  name             = "viewer"
+  name             = "viewer-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
   desired_count    = local.account.autoscaling.view.minimum
@@ -23,6 +23,10 @@ resource "aws_ecs_service" "viewer" {
 
   wait_for_steady_state = true
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [aws_lb.viewer]
 }
 
@@ -33,7 +37,6 @@ resource "aws_security_group" "viewer_ecs_service" {
   name_prefix = "${local.environment}-viewer-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -92,7 +95,6 @@ resource "aws_ecs_task_definition" "viewer" {
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
   task_role_arn            = aws_iam_role.viewer_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = local.default_tags
 }
 
 //----------------
@@ -101,7 +103,6 @@ resource "aws_ecs_task_definition" "viewer" {
 resource "aws_iam_role" "viewer_task_role" {
   name               = "${local.environment}-viewer-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "viewer_permissions_role" {

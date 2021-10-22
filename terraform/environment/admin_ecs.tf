@@ -3,7 +3,7 @@
 
 resource "aws_ecs_service" "admin" {
   count            = local.account.build_admin == true ? 1 : 0
-  name             = "admin"
+  name             = "admin-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
@@ -24,6 +24,10 @@ resource "aws_ecs_service" "admin" {
 
   wait_for_steady_state = true
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [aws_lb.admin]
 }
 
@@ -35,7 +39,6 @@ resource "aws_security_group" "admin_ecs_service" {
   name_prefix = "${local.environment}-admin-ecs-service"
   description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -84,7 +87,6 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_app}]"
   task_role_arn            = aws_iam_role.admin_task_role[0].arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = local.default_tags
 }
 
 //----------------
@@ -94,7 +96,6 @@ resource "aws_iam_role" "admin_task_role" {
   count              = local.account.build_admin == true ? 1 : 0
   name               = "${local.environment}-admin-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {

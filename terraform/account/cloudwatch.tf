@@ -4,13 +4,9 @@ resource "aws_cloudwatch_log_group" "use-an-lpa" {
   name              = "use-an-lpa"
   retention_in_days = local.account.retention_in_days
   kms_key_id        = aws_kms_key.cloudwatch.arn
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "use-an-lpa"
-    },
-  )
+  tags = {
+    "Name" = "use-an-lpa"
+  }
 }
 
 resource "aws_kms_key" "cloudwatch" {

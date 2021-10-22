@@ -2,7 +2,7 @@
 // Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
-  name             = "api"
+  name             = "api-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.api.arn
   desired_count    = local.account.autoscaling.api.minimum
@@ -20,6 +20,10 @@ resource "aws_ecs_service" "api" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //-----------------------------------------------
@@ -56,7 +60,6 @@ resource "aws_security_group" "api_ecs_service" {
   name_prefix = "${local.environment}-api-ecs-service"
   description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -121,8 +124,6 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = "[${local.api_web}, ${local.api_app}]"
   task_role_arn            = aws_iam_role.api_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = local.default_tags
-
 }
 
 //----------------
@@ -131,7 +132,6 @@ resource "aws_ecs_task_definition" "api" {
 resource "aws_iam_role" "api_task_role" {
   name               = "${local.environment}-api-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "api_permissions_role" {

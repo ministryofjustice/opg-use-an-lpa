@@ -6,7 +6,6 @@ resource "aws_lb_target_group" "actor" {
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
   depends_on           = [aws_lb.actor]
-  tags                 = local.default_tags
 }
 
 resource "aws_lb" "actor" {
@@ -15,7 +14,6 @@ resource "aws_lb" "actor" {
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
-  tags                       = local.default_tags
 
   enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
 
@@ -187,7 +185,6 @@ resource "aws_security_group" "actor_loadbalancer" {
   name_prefix = "${local.environment}-actor-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
@@ -235,7 +232,6 @@ resource "aws_security_group" "actor_loadbalancer_route53" {
   name_prefix = "${local.environment}-actor-loadbalancer-route53"
   description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthchecks" {
