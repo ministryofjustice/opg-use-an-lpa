@@ -76,7 +76,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             $expiry = $added->add(new DateInterval($expiryInterval));
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
 
-            $dueBy = $added->add(new DateInterval($intervalTillDue));
+            $dueBy = $added->add(new DateInterval($dueByInterval));
             $array['DueBy'] = ['S' => $dueBy->format('Y-m-d\TH:i:s.u\Z')];
         }
 
