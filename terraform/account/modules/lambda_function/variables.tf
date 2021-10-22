@@ -56,12 +56,6 @@ variable "timeout" {
   default     = 3
 }
 
-variable "tags" {
-  description = "A map of tags to assign to resources."
-  type        = map(string)
-  default     = {}
-}
-
 variable "working_directory" {
   description = "The working directory for the docker image."
   type        = string

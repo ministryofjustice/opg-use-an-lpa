@@ -1,12 +1,10 @@
 resource "aws_backup_vault" "main" {
   name = "${local.environment}_main_backup_vault"
-  tags = local.default_tags
 }
 
 resource "aws_iam_role" "aws_backup_role" {
   name               = "aws_backup_role"
   assume_role_policy = data.aws_iam_policy_document.aws_backup_assume_policy.json
-  tags               = local.default_tags
 }
 
 data "aws_iam_policy_document" "aws_backup_assume_policy" {
