@@ -3,7 +3,7 @@
 
 resource "aws_ecs_service" "admin" {
   count            = local.account.build_admin == true ? 1 : 0
-  name             = "admin"
+  name             = "admin-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
@@ -23,6 +23,10 @@ resource "aws_ecs_service" "admin" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   depends_on = [aws_lb.admin]
 }
