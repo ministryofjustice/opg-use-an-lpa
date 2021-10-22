@@ -243,12 +243,14 @@ class OlderLpaService
          * an up to date ActivateBy column. This isn't the end of the world.
          */
         if (($this->featureEnabled)('save_older_lpa_requests')) {
-            $this->userLpaActorMap->updateRecord(
-                $existingRecordId,
-                self::EXPIRY_INTERVAL,
-                self::CLEANSE_DUE_BY,
-                $actorId
-            );
+            if ($existingRecordId !== null) {
+                $this->userLpaActorMap->updateRecord(
+                    $existingRecordId,
+                    self::EXPIRY_INTERVAL,
+                    self::CLEANSE_DUE_BY,
+                    $actorId
+                );
+            }
         }
     }
 }
