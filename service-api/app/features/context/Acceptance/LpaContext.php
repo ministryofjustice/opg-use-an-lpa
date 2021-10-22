@@ -362,11 +362,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -375,11 +375,11 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken
@@ -656,11 +656,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -669,11 +669,11 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype
         ];
@@ -2542,7 +2542,6 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-
     /**
      * @Then /^a letter is requested containing a one time use code$/
      */
@@ -2610,11 +2609,11 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -2666,12 +2665,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => '700000004321',
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'  => '700000004321',
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key'  => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2705,12 +2704,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $firstnames,
-                'last_name' => $lastname,
-                'dob' => $dob,
-                'postcode' => $postcode,
-                'force_activation_key' => false
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $firstnames,
+                'last_name'         => $lastname,
+                'dob'               => $dob,
+                'postcode'          => $postcode,
+                'force_activation_key'  => false
             ],
             [
                 'user-token' => $this->userId,
@@ -2754,12 +2753,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => false,
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => false,
             ],
             [
                 'user-token' => $this->userId,
@@ -2807,11 +2806,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -2820,11 +2819,11 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
         ];
@@ -2848,12 +2847,12 @@ class LpaContext implements Context
     public function aMalformedRequestIsSentWhichIsMissingADataAttribute()
     {
         $dataAttributes = [
-            'reference_number' => $this->lpaUid,
-            'first_names' => $this->userFirstnames,
-            'last_name' => $this->userSurname,
-            'dob' => $this->userDob,
-            'postcode' => $this->userPostCode,
-            'force_activation_key' => false
+            'reference_number'      => $this->lpaUid,
+            'first_names'           => $this->userFirstnames,
+            'last_name'             => $this->userSurname,
+            'dob'                   => $this->userDob,
+            'postcode'              => $this->userPostCode,
+            'force_activation_key'  => false
         ];
 
         foreach ($dataAttributes as $name => $value) {
@@ -3064,11 +3063,11 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => true,
             ],
             [
@@ -3117,11 +3116,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpa->uId,
-                'first_names' => $this->lpa->attorneys[0]->firstname,
-                'last_name' => $this->lpa->attorneys[0]->surname,
-                'dob' => $this->lpa->attorneys[0]->dob,
-                'postcode' => $this->lpa->attorneys[0]->addresses[0]->postcode,
+                'reference_number'  => $this->lpa->uId,
+                'first_names'       => $this->lpa->attorneys[0]->firstname,
+                'last_name'         => $this->lpa->attorneys[0]->surname,
+                'dob'               => $this->lpa->attorneys[0]->dob,
+                'postcode'          => $this->lpa->attorneys[0]->addresses[0]->postcode,
                 'force_activation_key' => false
             ],
             [
@@ -3130,21 +3129,21 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor' => json_decode(json_encode($this->lpa->attorneys[0]), true),
-            'role' => 'attorney',
-            'lpa-id' => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname
+            'actor'         => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'role'          => 'attorney',
+            'lpa-id'        => $this->lpa->uId,
+            'caseSubtype'   => $this->lpa->caseSubtype,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname
             ],
-            'attorney' => [
-                'uId' => $this->lpa->attorneys[0]->uId,
-                'firstname' => $this->lpa->attorneys[0]->firstname,
-                'middlenames' => $this->lpa->attorneys[0]->middlenames,
-                'surname' => $this->lpa->attorneys[0]->surname
+            'attorney'         => [
+                'uId'           => $this->lpa->attorneys[0]->uId,
+                'firstname'     => $this->lpa->attorneys[0]->firstname,
+                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
+                'surname'       => $this->lpa->attorneys[0]->surname
             ]
         ];
         assertEquals($expectedResponse, $this->getResponseAsJson());
@@ -3187,11 +3186,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
                 'force_activation_key' => false
             ],
             [
@@ -3200,15 +3199,15 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor' => json_decode(json_encode($this->lpa->donor), true),
-            'role' => 'donor',
-            'lpa-id' => $this->lpaUid,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname
+            'actor'     => json_decode(json_encode($this->lpa->donor), true),
+            'role'      => 'donor',
+            'lpa-id'    => $this->lpaUid,
+            'caseSubtype'    => $this->lpa->caseSubtype,
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname
             ],
         ];
 
@@ -3252,12 +3251,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => false
             ],
             [
                 'user-token' => $this->userId,
@@ -3267,19 +3266,19 @@ class LpaContext implements Context
         $expectedResponse = [
             'actor' => json_decode(json_encode($this->lpa->attorneys[0]), true),
             'role' => 'attorney',
-            'lpa-id' => $this->lpaUid,
-            'attorney' => [
-                'uId' => $this->lpa->attorneys[0]->uId,
-                'firstname' => $this->lpa->attorneys[0]->firstname,
-                'middlenames' => $this->lpa->attorneys[0]->middlenames,
-                'surname' => $this->lpa->attorneys[0]->surname,
+            'lpa-id'    => $this->lpaUid,
+            'attorney'      => [
+                'uId'           => $this->lpa->attorneys[0]->uId,
+                'firstname'     => $this->lpa->attorneys[0]->firstname,
+                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
+                'surname'       => $this->lpa->attorneys[0]->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'donor' => [
-                'uId' => $this->lpa->donor->uId,
-                'firstname' => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname' => $this->lpa->donor->surname
+            'donor'         => [
+                'uId'           => $this->lpa->donor->uId,
+                'firstname'     => $this->lpa->donor->firstname,
+                'middlenames'   => $this->lpa->donor->middlenames,
+                'surname'       => $this->lpa->donor->surname
             ],
         ];
 
@@ -3312,12 +3311,12 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => false
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => $this->userPostCode,
+                'force_activation_key'  => false
             ],
             [
                 'user-token' => $this->userId,
@@ -3368,11 +3367,11 @@ class LpaContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userLpaActorToken,
-                            'UserId' => $this->base->userAccountId,
+                            'Id'        => $this->userLpaActorToken,
+                            'UserId'    => $this->base->userAccountId,
                             'SiriusUid' => $this->lpaUid,
-                            'ActorId' => $this->actorId,
-                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            'ActorId'   => $this->actorId,
+                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
                         ]
                     ),
                 ]
@@ -3383,12 +3382,12 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => true,
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => true,
             ],
             [
                 'user-token' => $this->userId,
@@ -3432,11 +3431,11 @@ class LpaContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userLpaActorToken,
-                            'UserId' => $this->base->userAccountId,
+                            'Id'        => $this->userLpaActorToken,
+                            'UserId'    => $this->base->userAccountId,
                             'SiriusUid' => $this->lpaUid,
-                            'ActorId' => $this->actorId,
-                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            'ActorId'   => $this->actorId,
+                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
                         ]
                     ),
                 ]
@@ -3447,10 +3446,10 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/add-lpa/cleanse',
             [
-                'reference_number' => $this->lpaUid,
-                'user-token' => $this->userId,
-                'notes' => 'Notes',
-                'actor_id' => $this->actorId
+                'reference_number'  => $this->lpaUid,
+                'user-token'        => $this->userId,
+                'notes'             => 'Notes',
+                'actor_id'          => $this->actorId
             ],
             [
                 'user-token' => $this->userId,
