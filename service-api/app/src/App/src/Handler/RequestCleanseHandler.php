@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\OlderLpaService;
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -55,6 +56,15 @@ class RequestCleanseHandler implements RequestHandlerInterface
             $addedData['lpaActorToken'] ?? null
         );
 
+
+        $this->logger->notice(
+            'Successfully submitted cleanse for LPA {uId} for account {id} ',
+            [
+                'event_code' => EventCodes::OLDER_LPA_CLEANSE_SUCCESS,
+                'id'  => $userId,
+                'uId' => (string)$requestData['reference_number']
+            ]
+        );
         return new EmptyResponse();
     }
 }
