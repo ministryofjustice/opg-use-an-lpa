@@ -31,10 +31,8 @@ class CleanseLpa
      *
      * @codeCoverageIgnore
      */
-    public function __construct(
-        ApiClient $apiClient,
-        LoggerInterface $logger
-    ) {
+    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
+    {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
     }
@@ -51,7 +49,7 @@ class CleanseLpa
         ];
 
         if ($actorId !== null) {
-            $data['actor_id'] = $actorId;
+            $data['actor_id'] = (string) $actorId;
         }
 
         $this->apiClient->setUserTokenHeader($userToken);

@@ -29,7 +29,6 @@ class CleanseLpaTest extends TestCase
         $this->userToken = '00000000-0000-4000-A000-000000000000';
         $this->lpaUid = 70000000013;
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
-        $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $this->actorId = '1';
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
@@ -49,6 +48,7 @@ class CleanseLpaTest extends TestCase
                 ]
             )->willReturn([]);
 
+        $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
 
         self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
@@ -69,6 +69,7 @@ class CleanseLpaTest extends TestCase
                 ]
             )->willReturn([]);
 
+        $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, $this->actorId);
 
         self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
@@ -89,6 +90,8 @@ class CleanseLpaTest extends TestCase
             )->willThrow(new ApiException(''));
 
         $this->expectException(ApiException::class);
+
+        $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
     }
 }
