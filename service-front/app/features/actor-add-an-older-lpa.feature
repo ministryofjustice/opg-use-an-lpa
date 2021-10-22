@@ -291,7 +291,7 @@ Feature: Add an older LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user taken to contact details page, when LPA is not cleansed even though a key was requested previously
-    Given I have already requested an activation key previously
+    Given I have previously requested an activation key
     And The activation key not been received or was lost
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     When I request a new activation key
@@ -299,7 +299,7 @@ Feature: Add an older LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is  generated an activation key again, when LPA is cleansed
-    Given I have already requested an activation key previously
+    Given I have previously requested an activation key
     And The activation key not been received or was lost
     And My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
     When I request a new activation key

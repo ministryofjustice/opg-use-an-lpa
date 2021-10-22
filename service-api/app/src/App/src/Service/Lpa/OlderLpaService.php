@@ -15,9 +15,9 @@ use Psr\Log\LoggerInterface;
 
 class OlderLpaService
 {
-    private const CLEANSE_DUE_BY = 'P6W';
+    private const CLEANSE_INTERVAL = 'P6W';
     private const EXPIRY_INTERVAL = 'P1Y';
-    private const SEND_LETTER_DUE_BY = 'P2W';
+    private const SEND_LETTER_INTERVAL = 'P2W';
 
     private ActorCodes $actorCodes;
     private LoggerInterface $logger;
@@ -107,7 +107,7 @@ class OlderLpaService
                     $uid,
                     $actorUid,
                     self::EXPIRY_INTERVAL,
-                    self::SEND_LETTER_DUE_BY
+                    self::SEND_LETTER_INTERVAL
                 );
             }
         }
@@ -150,7 +150,7 @@ class OlderLpaService
                 $this->userLpaActorMap->updateRecord(
                     $existingRecordId,
                     self::EXPIRY_INTERVAL,
-                    self::SEND_LETTER_DUE_BY,
+                    self::SEND_LETTER_INTERVAL,
                     $actorUid
                 );
             }
@@ -185,7 +185,7 @@ class OlderLpaService
                     $uid,
                     $actorId,
                     self::EXPIRY_INTERVAL,
-                    self::CLEANSE_DUE_BY
+                    self::CLEANSE_INTERVAL
                 );
             }
         }
@@ -226,7 +226,7 @@ class OlderLpaService
                 $this->userLpaActorMap->updateRecord(
                     $existingRecordId,
                     self::EXPIRY_INTERVAL,
-                    self::CLEANSE_DUE_BY,
+                    self::CLEANSE_INTERVAL,
                     $actorId
                 );
             }

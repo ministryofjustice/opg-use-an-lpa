@@ -69,7 +69,8 @@ interface UserLpaActorMapInterface
     public function activateRecord(string $lpaActorToken): array;
 
     /**
-     * Updates the LPA relation record
+     * Renews the LPA relation records activation period and due by date using the supplied intervals.
+     * Optionally allows the actors Sirius UID to be changed.
      *
      * @see https://www.php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
      *

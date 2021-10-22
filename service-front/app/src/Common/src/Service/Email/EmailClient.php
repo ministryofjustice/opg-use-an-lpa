@@ -24,7 +24,8 @@ class EmailClient
     public const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED        = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
     public const TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION          = 'c23501a2-4893-426b-85e6-8a8e3731ddd7';
     public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '4674b106-c9eb-4314-a68c-ea4ba78808c5';
-    public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING = 'e88d7f4d-a6fb-4dfb-a8a0-8f1c3df52744';
+    public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING
+                                                                     = 'e88d7f4d-a6fb-4dfb-a8a0-8f1c3df52744';
 
     /**
      * Welsh template IDs for the notify client
@@ -234,8 +235,8 @@ class EmailClient
                 $recipient,
                 self::WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
                 [
-                    'reference_number' => $referenceNumber,
-                    'date' => $letterExpectedDate,
+                    'reference_number'  => $referenceNumber,
+                    'date'              => $letterExpectedDate,
                 ]
             );
         } else {
@@ -243,8 +244,8 @@ class EmailClient
                 $recipient,
                 self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
                 [
-                    'reference_number' => $referenceNumber,
-                    'date' => $letterExpectedDate,
+                    'reference_number'  => $referenceNumber,
+                    'date'              => $letterExpectedDate,
                 ]
             );
         }

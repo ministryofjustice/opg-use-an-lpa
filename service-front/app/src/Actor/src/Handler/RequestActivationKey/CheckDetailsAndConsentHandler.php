@@ -170,7 +170,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                 $this->emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
                     $user->getDetails()['Email'],
                     $this->session->get('opg_reference_number'),
-                    //strtoupper($this->session->get('postcode')),
                     ($this->localisedDate)($letterExpectedDate)
                 );
                 return new HtmlResponse(

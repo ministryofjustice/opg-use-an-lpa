@@ -1090,7 +1090,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given  /^I have already requested an activation key previously$/
+     * @Given  /^I have previously requested an activation key$/
      */
     public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
     {
