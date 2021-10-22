@@ -2663,7 +2663,6 @@ class LpaContext extends BaseIntegrationContext
             $data
         );
 
-        //TODO: Add in save feature after merging
         if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
             // Save activation key request in the DB
             $this->awsFixtures->append(new Result([]));
