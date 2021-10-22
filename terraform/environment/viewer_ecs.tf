@@ -2,7 +2,7 @@
 // Viewer ECS Service level config
 
 resource "aws_ecs_service" "viewer" {
-  name             = "viewer"
+  name             = "viewer-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
   desired_count    = local.account.autoscaling.view.minimum
@@ -22,6 +22,10 @@ resource "aws_ecs_service" "viewer" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   depends_on = [aws_lb.viewer]
 }
