@@ -2,7 +2,7 @@
 // Actor ECS Service level config
 
 resource "aws_ecs_service" "actor" {
-  name             = "actor"
+  name             = "actor-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
   desired_count    = local.account.autoscaling.use.minimum
@@ -22,6 +22,10 @@ resource "aws_ecs_service" "actor" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   depends_on = [aws_lb.actor]
 }
