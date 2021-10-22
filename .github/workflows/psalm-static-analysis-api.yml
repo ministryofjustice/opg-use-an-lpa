@@ -1,0 +1,51 @@
+name: Psalm Static analysis - Service API
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+    # only run when service-api is changed
+      - 'service-api/app/**'
+
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  deployments: read
+  issues: read
+  packages: read
+  pull-requests: read
+  repository-projects: read
+  security-events: read
+  statuses: read
+
+env:
+  SERVICE-PATH: service-api
+
+jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.SERVICE-PATH }}/app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: vimeo/psalm
+
+      - name: Composer install
+        run: composer install
+
+      - name: Run psalm
+        run: psalm --output-format=github --taint-analysis --report=results.sarif
+
+      - name: Upload Security Analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ./${{ env.SERVICE-PATH }}/app/results.sarif
