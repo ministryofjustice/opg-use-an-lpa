@@ -57,7 +57,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $siriusUid,
         ?string $actorId,
         ?string $expiryInterval = null,
-        ?string $intervalTillDue = null
+        ?string $dueByInterval = null
     ): string {
         $added = new DateTimeImmutable();
 
