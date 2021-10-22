@@ -69,7 +69,7 @@ class CleanseLpaTest extends TestCase
                 ]
             )->willReturn([]);
 
-        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo,  $this->actorId);
+        $response = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, $this->actorId);
 
         self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
     }
