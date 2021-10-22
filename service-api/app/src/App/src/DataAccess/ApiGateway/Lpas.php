@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
-use Amp\Http\Status;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
@@ -140,11 +139,13 @@ class Lpas implements LpasInterface
      *
      * @link https://github.com/ministryofjustice/opg-data-lpa/blob/master/lambda_functions/v1/openapi/lpa-openapi.yml#L334
      *
-     * @param int $caseId The Sirius uId of an LPA
-     * @param int $actorId The uId of an actor as found attached to an LPA
-     * @throws Exception An error was encountered whilst enqueing a letter for delivery
+     * @param int         $caseId  The Sirius uId of an LPA
+     * @param int|null    $actorId The uId of an actor as found attached to an LPA
+     * @param string|null $additionalInfo
+     *
+     * @return ResponseInterface
      */
-    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): ResponseInterface
+    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
         $payloadContent = ['case_uid' => $caseId];
 
@@ -171,7 +172,7 @@ class Lpas implements LpasInterface
             $response->getStatusCode() === StatusCodeInterface::STATUS_NO_CONTENT ||
             $response->getStatusCode() === StatusCodeInterface::STATUS_OK
         ) {
-            return $response;
+            return;
         }
         throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
     }

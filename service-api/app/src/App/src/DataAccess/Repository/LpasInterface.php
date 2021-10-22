@@ -26,5 +26,5 @@ interface LpasInterface
      * @param int $caseId The Sirius uId of an LPA
      * @param int $actorId The uId of an actor as found attached to an LPA
      */
-    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): ResponseInterface;
+    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void;
 }

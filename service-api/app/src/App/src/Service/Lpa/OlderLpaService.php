@@ -124,17 +124,7 @@ class OlderLpaService
         );
 
         try {
-            $response = $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
-
-            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-                $data = json_decode((string)$response->getBody(), true);
-                if ($data['queuedForCleansing']) {
-                    throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-                }
-            } elseif ($response->getStatusCode() !== StatusCodeInterface::STATUS_NO_CONTENT) {
-                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-            }
-
+            $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
@@ -209,18 +199,7 @@ class OlderLpaService
         );
 
         try {
-            $response = $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
-            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-                $data = json_decode((string)$response->getBody(), true);
-                if (!$data['queuedForCleansing']) {
-                    throw new ApiException(
-                        'Unexpected response received from Api Gateway when cleanse requested for Lpa'
-                    );
-                }
-            } else {
-                throw new ApiException('Unexpected response received from Api Gateway when cleanse requested for Lpa');
-            }
-
+            $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter and cleanse for LPA {lpa}',
