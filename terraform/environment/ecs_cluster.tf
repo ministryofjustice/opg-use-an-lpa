@@ -1,6 +1,5 @@
 resource "aws_ecs_cluster" "use-an-lpa" {
   name = "${local.environment}-use-an-lpa"
-  tags = local.default_tags
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -22,7 +21,6 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 resource "aws_iam_role" "execution_role" {
   name               = "${local.environment}-execution-role-ecs-cluster"
   assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role_assume_policy" {

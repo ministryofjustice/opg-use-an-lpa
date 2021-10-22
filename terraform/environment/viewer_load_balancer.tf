@@ -6,7 +6,6 @@ resource "aws_lb_target_group" "viewer" {
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
   depends_on           = [aws_lb.viewer]
-  tags                 = local.default_tags
 }
 
 resource "aws_lb" "viewer" {
@@ -15,8 +14,6 @@ resource "aws_lb" "viewer" {
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
-  tags                       = local.default_tags
-
   enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
 
   security_groups = [
@@ -187,7 +184,6 @@ resource "aws_security_group" "viewer_loadbalancer" {
   name_prefix = "${local.environment}-viewer-loadbalancer"
   description = "View service application load balancer"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -242,7 +238,6 @@ resource "aws_security_group" "viewer_loadbalancer_route53" {
   name_prefix = "${local.environment}-viewer-loadbalancer-route53"
   description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthchecks" {
