@@ -90,7 +90,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->data['postcode'] = $this->session->get('postcode');
 
 
-
         if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
             $this->data['telephone'] = $telephone;
         }
@@ -168,10 +167,10 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
-                $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                $this->emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
                     $user->getDetails()['Email'],
                     $this->session->get('opg_reference_number'),
-                    strtoupper($this->session->get('postcode')),
+                    //strtoupper($this->session->get('postcode')),
                     ($this->localisedDate)($letterExpectedDate)
                 );
                 return new HtmlResponse(

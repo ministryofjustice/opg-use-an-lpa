@@ -171,3 +171,34 @@ Feature: Add an older LPA
     And I am on the Check we've found the right LPA page
     When I confirm details of the found LPA are correct
     Then I am told an activation key is being sent
+
+  @acceptance @integration @pact @ff:allow_older_lpas:true
+  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is a full match
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I provide the details from a valid paper LPA document
+    And I am asked for my contact details
+    And I am asked to consent and confirm my details
+    When I confirm that the data is correct and click the confirm and submit button
+    Then I am told my activation key request has been received
+    And I should expect it within 6 weeks time
+    And I will receive an email confirming this information
+
+  @acceptance @integration @pact @ff:allow_older_lpas:true
+  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is partial match
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
+    And I provide the additional details asked
+    And I am asked to consent and confirm my details
+    When I confirm that the data is correct and click the confirm and submit button
+    Then I am told my activation key request has been received
+    And I should expect it within 6 weeks time
+    And I will receive an email confirming this information
+
+  @acceptance @integration @pact @ff:allow_older_lpas:true
+  Scenario: User receives a confirmation that key will be sent in 2 weeks, when lpa trying to be added is cleansed and full match
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    And I provide the details from a valid paper LPA document
+    When I confirm details shown to me of the found LPA are correct
+    Then I am told my activation key is being sent
+    And I should expect it within 2 weeks time
+    And I will receive an email confirming this information
