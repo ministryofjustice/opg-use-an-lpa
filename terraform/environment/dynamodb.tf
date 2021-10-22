@@ -15,8 +15,6 @@ resource "aws_dynamodb_table" "actor_codes_table" {
     enabled = true
   }
 
-  tags = local.default_tags
-
   lifecycle {
     prevent_destroy = false
   }
@@ -90,7 +88,6 @@ resource "aws_dynamodb_table" "actor_users_table" {
     enabled = true
   }
 
-  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -131,7 +128,6 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     enabled = true
   }
 
-  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -160,7 +156,6 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     enabled = true
   }
 
-  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false
@@ -200,7 +195,6 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     enabled = true
   }
 
-  tags = local.default_tags
 
   lifecycle {
     prevent_destroy = false

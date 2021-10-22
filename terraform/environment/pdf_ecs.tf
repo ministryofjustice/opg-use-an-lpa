@@ -56,7 +56,6 @@ resource "aws_security_group" "pdf_ecs_service" {
   name_prefix = "${local.environment}-pdf-ecs-service"
   description = "PDF generator service security group"
   vpc_id      = data.aws_vpc.default.id
-  tags        = local.default_tags
   lifecycle {
     create_before_destroy = true
   }
@@ -105,7 +104,6 @@ resource "aws_ecs_task_definition" "pdf" {
   container_definitions    = "[${local.pdf_app}]"
   task_role_arn            = aws_iam_role.pdf_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = local.default_tags
 }
 
 //----------------
@@ -114,7 +112,6 @@ resource "aws_ecs_task_definition" "pdf" {
 resource "aws_iam_role" "pdf_task_role" {
   name               = "${local.environment}-pdf-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  tags               = local.default_tags
 }
 
 //-----------------------------------------------

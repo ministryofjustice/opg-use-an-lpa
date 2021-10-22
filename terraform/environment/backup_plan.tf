@@ -28,7 +28,6 @@ resource "aws_backup_plan" "main" {
       delete_after       = 365
     }
   }
-  tags = local.default_tags
 }
 
 data "aws_backup_vault" "main" {
