@@ -221,14 +221,6 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => true
                     ]
-                ],
-                'original_attorneys' => [
-                    [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
                 ]
             ], (string) $t->ActorId)
             ->willReturn([
