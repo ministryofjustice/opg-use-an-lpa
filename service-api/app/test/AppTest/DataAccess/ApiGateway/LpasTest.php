@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -75,18 +76,32 @@ class LpasTest extends TestCase
                 return $request;
             });
 
-        $responseProphecy = $this->prophesize(Response::class);
-        $responseProphecy
-            ->getStatusCode()
-            ->shouldBeCalled()
-            ->willReturn(StatusCodeInterface::STATUS_NO_CONTENT);
+        /** @var MockObject|Response $dDBMock */
+        $responseMock = $this->getMockBuilder(Response::class)
+            ->setMethods(['getStatusCode'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $responseMock
+            ->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(
+                $this->returnValue(StatusCodeInterface::STATUS_NO_CONTENT),
+                $this->returnValue(StatusCodeInterface::STATUS_OK)
+            );
 
         $this->httpClientProphecy
             ->send(Argument::type(Request::class))
             ->shouldBeCalled()
-            ->willReturn($responseProphecy->reveal());
+            ->willReturn($responseMock);
 
         $service = $this->getLpas();
+
+        //Test 204 No Content response
+        $service->requestLetter($caseUid, $actorUid, null);
+
+        // Test 200 OK response
         $service->requestLetter($caseUid, $actorUid, null);
     }
 
