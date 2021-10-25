@@ -139,7 +139,10 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
-            $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
+            $additionalInfo = $txtRenderer->render(
+                'actor::request-cleanse-note',
+                ['data' => $this->data, 'actor_id' => $this->session->get('actor_id')]
+            );
 
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .

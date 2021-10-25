@@ -1,5 +1,5 @@
-{% if data.actor_id is defined %}
-Full Match ({{ data.actor_id }}) - cleanse and send activation key
+{% if actor_id != null %}
+Full Match ({{ actor_id }}) - cleanse and send activation key
 {% else %}
 Part Match - cleanse and send activation key
 {% endif %}
