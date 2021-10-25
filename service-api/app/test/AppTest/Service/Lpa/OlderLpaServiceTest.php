@@ -88,7 +88,8 @@ class OlderLpaServiceTest extends TestCase
     {
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->shouldBeCalled()->willReturn(new EmptyResponse());
+            ->shouldBeCalled();
+        //->willReturn(new EmptyResponse());
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -122,7 +123,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
-            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+            ->shouldBeCalled();
+        //->willReturn(new JsonResponse($data));
 
         $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, 'P1Y', 'P6W', null)->shouldBeCalled();
 
@@ -140,7 +142,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+            ->shouldBeCalled();
+        //->willReturn(new JsonResponse($data));
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -185,7 +188,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
-            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+            ->shouldBeCalled();
+            //->willReturn(new JsonResponse($data));
 
         $this->expectException(ApiException::class);
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
@@ -211,7 +215,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int)$this->lpaUid, null, $this->additionalInfo)
-            ->shouldBeCalled()->willReturn(new EmptyResponse());
+            ->shouldBeCalled()
+            ->willReturn(new EmptyResponse());
 
         $this->expectException(ApiException::class);
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
@@ -222,8 +227,7 @@ class OlderLpaServiceTest extends TestCase
     {
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->shouldBeCalled()
-            ->willReturn(new EmptyResponse());
+            ->shouldBeCalled();
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -239,8 +243,8 @@ class OlderLpaServiceTest extends TestCase
     public function request_access_code_letter_without_flag(): void
     {
         $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->willReturn(new EmptyResponse());
+            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null);
+           // ->willReturn(new EmptyResponse());
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -261,7 +265,8 @@ class OlderLpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->shouldBeCalled()->willReturn(new JsonResponse($data));
+            ->shouldBeCalled();
+        //->willReturn(new JsonResponse($data));
 
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
