@@ -162,18 +162,18 @@ class OlderLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string $uid Sirius uId for an LPA
-     * @param string $userId
-     * @param string $actorId
-     * @param string $additionalInfo
+     * @param string      $uid Sirius uId for an LPA
+     * @param string      $userId
+     * @param string      $additionalInfo
      *
-     * @throws Exception
+     * @param string|null $actorId
+     * @param string|null $existingRecordId
      */
     public function requestAccessAndCleanseByLetter(
         string $uid,
         string $userId,
         string $additionalInfo,
-        ?string $actorId = null,
+        ?int $actorId = null,
         ?string $existingRecordId = null
     ): void {
 
@@ -183,7 +183,7 @@ class OlderLpaService
                 $recordId = $this->userLpaActorMap->create(
                     $userId,
                     $uid,
-                    $actorId,
+                    (string)$actorId,
                     new DateInterval(self::EXPIRY_INTERVAL),
                     new DateInterval(self::CLEANSE_INTERVAL)
                 );
