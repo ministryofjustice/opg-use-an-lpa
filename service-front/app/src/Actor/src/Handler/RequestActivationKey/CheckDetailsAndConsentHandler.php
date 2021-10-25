@@ -159,9 +159,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
 
             $result = $this->cleanseLPA->cleanse(
                 $identity,
-                (int) $this->session->get('opg_reference_number'),
+                (int)$this->session->get('opg_reference_number'),
                 $additionalInfo,
-                (string)$this->session->get('actor_id')
+                (int)$this->session->get('actor_id')
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(6);

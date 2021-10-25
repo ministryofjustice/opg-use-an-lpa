@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 class CleanseLpaTest extends TestCase
 {
-    private string $actorId;
+    private int $actorId;
     private string $additionalInfo;
     private $apiClientProphecy;
     private $loggerProphecy;
@@ -29,7 +29,7 @@ class CleanseLpaTest extends TestCase
         $this->userToken = '00000000-0000-4000-A000-000000000000';
         $this->lpaUid = 70000000013;
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
-        $this->actorId = '1';
+        $this->actorId = 1;
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
     }

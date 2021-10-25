@@ -41,7 +41,7 @@ class CleanseLpa
         string $userToken,
         int $lpaUid,
         string $additionalInformation,
-        ?string $actorId
+        ?int $actorId
     ): OlderLpaApiResponse {
         $data = [
             'reference_number' => $lpaUid,
@@ -49,7 +49,7 @@ class CleanseLpa
         ];
 
         if ($actorId !== null) {
-            $data['actor_id'] = (string) $actorId;
+            $data['actor_id'] = $actorId;
         }
 
         $this->apiClient->setUserTokenHeader($userToken);
