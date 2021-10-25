@@ -44,7 +44,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
-        $userId = $request->getHeader('user-token')[0];
+        $userId = $request->getAttribute('actor-id');
 
         $addedData = ($this->lpaAlreadyAdded)($userId, (string)$requestData['reference_number']);
 
