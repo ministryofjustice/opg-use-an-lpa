@@ -1826,7 +1826,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
-        $this->apiFixtures->post('/v1/add-lpa/cleanse')
+        $this->apiFixtures->post('/v1/older-lpa/cleanse')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_NO_CONTENT,

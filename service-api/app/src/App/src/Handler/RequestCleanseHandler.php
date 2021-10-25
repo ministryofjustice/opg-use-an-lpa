@@ -56,7 +56,6 @@ class RequestCleanseHandler implements RequestHandlerInterface
             $addedData['lpaActorToken'] ?? null
         );
 
-
         $this->logger->notice(
             'Successfully submitted cleanse for LPA {uId} for account {id} ',
             [
@@ -65,6 +64,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
                 'uId' => (string)$requestData['reference_number']
             ]
         );
+        
         return new EmptyResponse();
     }
 }

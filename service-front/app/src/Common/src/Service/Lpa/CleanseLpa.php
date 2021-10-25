@@ -54,7 +54,7 @@ class CleanseLpa
 
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $response = $this->apiClient->httpPost('/v1/add-lpa/cleanse', $data);
+        $response = $this->apiClient->httpPost('/v1/older-lpa/cleanse', $data);
 
         return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, $response);
     }

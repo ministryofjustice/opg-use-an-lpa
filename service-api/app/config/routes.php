@@ -46,6 +46,13 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         App\Handler\OlderLpaConfirmationHandler::class,
         'lpa.older.confirm'
     );
+
+    $app->post(
+        '/v1/older-lpa/cleanse',
+        App\Handler\RequestCleanseHandler::class,
+        'lpa.older.cleanse'
+    );
+
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
     $app->post(
@@ -66,7 +73,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
     $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmationHandler::class, 'lpa.add.confirm');
-    $app->post('/v1/add-lpa/cleanse', App\Handler\RequestCleanseHandler::class, 'lpa.add.cleanse');
 
     $app->post('/v1/viewer-codes/summary', App\Handler\ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
     $app->post('/v1/viewer-codes/full', App\Handler\ViewerCodeFullHandler::class, 'lpa.viewer-code.full');

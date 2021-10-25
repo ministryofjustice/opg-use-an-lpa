@@ -3444,7 +3444,7 @@ class LpaContext implements Context
 
         // API call to request an activation key
         $this->apiPost(
-            '/v1/add-lpa/cleanse',
+            '/v1/older-lpa/cleanse',
             [
                 'reference_number'  => $this->lpaUid,
                 'user-token'        => $this->userId,

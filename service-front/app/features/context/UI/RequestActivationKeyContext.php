@@ -1179,7 +1179,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageContainsText('Check your details');
         $this->ui->assertPageContainsText('Confirm and submit request');
 
-        $this->apiFixtures->post('/v1/add-lpa/cleanse')
+        $this->apiFixtures->post('/v1/older-lpa/cleanse')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,

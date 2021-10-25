@@ -41,7 +41,7 @@ class CleanseLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPost(
-                '/v1/add-lpa/cleanse',
+                '/v1/older-lpa/cleanse',
                 [
                     'reference_number'  => (string) $this->lpaUid,
                     'notes'             => $this->additionalInfo
@@ -61,7 +61,7 @@ class CleanseLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPost(
-                '/v1/add-lpa/cleanse',
+                '/v1/older-lpa/cleanse',
                 [
                     'reference_number'  => (string) $this->lpaUid,
                     'notes'             => $this->additionalInfo,
@@ -82,7 +82,7 @@ class CleanseLpaTest extends TestCase
     {
         $this->apiClientProphecy
             ->httpPost(
-                '/v1/add-lpa/cleanse',
+                '/v1/older-lpa/cleanse',
                 [
                     'reference_number'  => (string) $this->lpaUid,
                     'notes'             => $this->additionalInfo
