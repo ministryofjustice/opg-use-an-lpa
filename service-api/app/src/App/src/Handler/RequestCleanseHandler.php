@@ -52,7 +52,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
             (string)$requestData['reference_number'],
             $userId,
             $requestData['notes'],
-            $requestData['actor_id'],
+            (int)$requestData['actor_id'],
             $addedData['lpaActorToken'] ?? null
         );
 
@@ -64,7 +64,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
                 'uId' => (string)$requestData['reference_number']
             ]
         );
-        
+
         return new EmptyResponse();
     }
 }
