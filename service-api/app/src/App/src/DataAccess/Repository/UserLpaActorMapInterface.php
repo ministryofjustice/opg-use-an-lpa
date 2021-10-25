@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use DateInterval;
+
 /**
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
@@ -16,11 +18,13 @@ interface UserLpaActorMapInterface
     /**
      * Creates a new mapping in the DB
      *
-     * @param string $userId    The UserID of the actors account
-     * @param string $siriusUid The Sirius formatted UID that is associated with an LPA in the system
-     * @param string $actorId   The Sirius formatted UID that is associated with an actor in the system
-     * @param string|null $expiryInterval The interval of when this record should expire.
-     *                                    If null the record will not expire
+     * @param string            $userId          The UserID of the actors account
+     * @param string            $siriusUid       The Sirius formatted UID that is associated with an LPA in the system
+     * @param string|null       $actorId         The Sirius formatted UID that is associated with an actor in the system
+     * @param DateInterval|null $expiryInterval  The interval of when this record should expire.
+     *                                           If null the record will not expire
+     * @param DateInterval|null $intervalTillDue The interval specifying the expected delivery date of correspondence
+     *                                           about the LPA
      *
      * @return string The lpaActorToken of the newly created mapping
      */
@@ -28,8 +32,8 @@ interface UserLpaActorMapInterface
         string $userId,
         string $siriusUid,
         ?string $actorId,
-        ?string $expiryInterval = null,
-        ?string $intervalTillDue = null
+        ?DateInterval $expiryInterval = null,
+        ?DateInterval $intervalTillDue = null
     ): string;
 
     /**
@@ -75,9 +79,9 @@ interface UserLpaActorMapInterface
      * @see https://www.php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
      *
      * @param string      $lpaActorToken
-     * @param string      $expiryInterval The interval of when this record should expire
+     * @param string      $expiryInterval  The interval of when this record should expire
      * @param string      $intervalTillDue The interval of when an action will be due on the LPA
-     * @param string|null $actorId The actor related to the record if users details have matched
+     * @param string|null $actorId         The actor related to the record if users details have matched
      *
      * @return array The record that was renewed
      */

@@ -9,6 +9,8 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -56,15 +58,15 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $userId,
         string $siriusUid,
         ?string $actorId,
-        ?string $expiryInterval = null,
-        ?string $dueByInterval = null
+        ?DateInterval $expiryInterval = null,
+        ?DateInterval $dueByInterval = null
     ): string {
-        $added = new DateTimeImmutable();
+        $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
         $array = [
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
-            'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
+            'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)]
         ];
 
         if ($actorId !== null) {
@@ -73,11 +75,11 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
-            $expiry = $added->add(new DateInterval($expiryInterval));
+            $expiry = $added->add($expiryInterval);
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
 
-            $dueBy = $added->add(new DateInterval($dueByInterval));
-            $array['DueBy'] = ['S' => $dueBy->format('Y-m-d\TH:i:s.u\Z')];
+            $dueBy = $added->add($dueByInterval);
+            $array['DueBy'] = ['S' => $dueBy->format(DateTimeInterface::ATOM)];
         }
 
         do {

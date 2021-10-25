@@ -9,8 +9,8 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
+use DateInterval;
 use DateTime;
-use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
@@ -106,8 +106,8 @@ class OlderLpaService
                     $userId,
                     $uid,
                     $actorUid,
-                    self::EXPIRY_INTERVAL,
-                    self::SEND_LETTER_INTERVAL
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::SEND_LETTER_INTERVAL)
                 );
             }
         }
@@ -184,8 +184,8 @@ class OlderLpaService
                     $userId,
                     $uid,
                     $actorId,
-                    self::EXPIRY_INTERVAL,
-                    self::CLEANSE_INTERVAL
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::CLEANSE_INTERVAL)
                 );
             }
         }

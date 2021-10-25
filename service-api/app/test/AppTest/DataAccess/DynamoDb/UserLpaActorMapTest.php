@@ -212,7 +212,13 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, 'P365D', 'P2W');
+        $repo->create(
+            $testUserId,
+            $testSiriusUid,
+            (string)$testActorId,
+            new DateInterval('P365D'),
+            new DateInterval('P2W')
+        );
     }
 
     /** @test */

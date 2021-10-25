@@ -11,6 +11,7 @@ use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ResolveActor;
+use DateInterval;
 use DateTime;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -95,8 +96,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y',
-            'P2W'
+            new DateInterval('P1Y'),
+            new DateInterval('P2W')
         )->willReturn($this->lpaActorToken);
 
         $service = $this->getOlderLpaService();
@@ -172,8 +173,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            'P1Y',
-            'P2W'
+            new DateInterval('P1Y'),
+            new DateInterval('P2W')
         )->willReturn($this->lpaActorToken);
 
         $this->userLpaActorMapProphecy
