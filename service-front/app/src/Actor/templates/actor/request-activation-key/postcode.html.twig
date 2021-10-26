@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Postcode{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}What is your UK postcode?{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -21,14 +21,18 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}Postcode{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}What is your UK postcode?{% endtrans %}</h1>
+
+                    <p class="govuk-body">{% trans %}This must be your current postcode. Your activation key will be posted to this address.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}If your current postcode does not match the address we have for you on our records, we’ll contact you to confirm your correct address.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}You can only ask for an activation key if you live in the UK.{% endtrans %}</p>
 
                     {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('postcode'), {
-                            'hint': 'This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href="%link%" class="govuk-link">Let us know if you have moved.</a>'| trans({'%link%': path('lpa.change-details')}),
+                            'label': 'Your postcode' | trans,
                             'label_attr': {'class': 'govuk-!-font-weight-bold'},
                             'aria_labelledby': 'postcode_heading',
                             'attr' : {'class': 'govuk-input--width-10', 'label_class': 'govuk-!-font-weight-bold'}
