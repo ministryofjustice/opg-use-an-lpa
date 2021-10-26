@@ -149,7 +149,11 @@ class Lpas implements LpasInterface
     {
         $payloadContent = ['case_uid' => $caseId];
 
-        $actorId === null ? $payloadContent['notes'] = $additionalInfo : $payloadContent['actor_uid'] = $actorId;
+        if ($actorId === null) {
+            $payloadContent['notes'] = $additionalInfo;
+        } else {
+            $payloadContent['actor_uid'] = $actorId;
+        }
 
         $provider = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
