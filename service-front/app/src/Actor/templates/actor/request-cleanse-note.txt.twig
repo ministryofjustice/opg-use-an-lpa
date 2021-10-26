@@ -12,6 +12,6 @@ Requester: {{ data.first_names }} {{ data.last_name }}
 {{ data.telephone }}
 {% endif %}
 {{ data.email }}
-{% if data.actor_role is defined and data.actor_role is 'attorney' %}
+{% if data.actor_role is defined and data.actor_role == 'attorney' %}
 Donor: {{ data.donor_first_names }} {{ data.donor_last_name }} {{ data.donor_dob.format('d/m/Y') }}
 {% endif %}
