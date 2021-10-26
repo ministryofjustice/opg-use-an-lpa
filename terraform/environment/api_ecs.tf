@@ -2,7 +2,7 @@
 // Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
-  name             = "api"
+  name             = "api-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.api.arn
   desired_count    = local.account.autoscaling.api.minimum
@@ -20,6 +20,10 @@ resource "aws_ecs_service" "api" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //-----------------------------------------------

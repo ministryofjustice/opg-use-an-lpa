@@ -7,7 +7,6 @@ resource "aws_sqs_queue" "ship_to_opg_metrics" {
   receive_wait_time_seconds         = 10
   kms_master_key_id                 = "alias/aws/sqs"
   kms_data_key_reuse_period_seconds = 300
-  tags                              = local.default_tags
 }
 
 resource "aws_sqs_queue_policy" "ship_to_opg_metrics" {

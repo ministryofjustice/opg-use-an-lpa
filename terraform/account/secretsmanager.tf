@@ -1,7 +1,6 @@
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"
   kms_key_id = aws_kms_key.secrets_manager.key_id
-  tags       = local.default_tags
 }
 
 resource "aws_kms_key" "secrets_manager" {

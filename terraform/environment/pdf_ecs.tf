@@ -2,7 +2,7 @@
 // pdf ECS Service level config
 
 resource "aws_ecs_service" "pdf" {
-  name             = "pdf"
+  name             = "pdf-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
   desired_count    = local.account.autoscaling.pdf.minimum
@@ -20,6 +20,10 @@ resource "aws_ecs_service" "pdf" {
   }
 
   wait_for_steady_state = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //-----------------------------------------------

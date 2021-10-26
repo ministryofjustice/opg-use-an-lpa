@@ -1,10 +1,5 @@
 resource "aws_default_vpc" "default" {
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "default"
-    },
-  )
+  tags = { "Name" = "default" }
 }
 
 data "aws_availability_zones" "default" {
@@ -14,13 +9,7 @@ resource "aws_default_subnet" "public" {
   count                   = 3
   availability_zone       = element(data.aws_availability_zones.default.names, count.index)
   map_public_ip_on_launch = false
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "public"
-    },
-  )
+  tags                    = { "Name" = "public" }
 }
 
 resource "aws_subnet" "private" {
@@ -29,24 +18,12 @@ resource "aws_subnet" "private" {
   vpc_id                  = aws_default_vpc.default.id
   availability_zone       = element(data.aws_availability_zones.default.names, count.index)
   map_public_ip_on_launch = false
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "private"
-    },
-  )
+  tags                    = { "Name" = "private" }
 }
 
 resource "aws_eip" "nat" {
   count = 3
-
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "nat"
-    },
-  )
+  tags  = { "Name" = "nat" }
 }
 
 data "aws_internet_gateway" "default" {
@@ -67,35 +44,20 @@ resource "aws_nat_gateway" "nat" {
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = element(aws_default_subnet.public.*.id, count.index)
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "nat"
-    },
-  )
+  tags = { "Name" = "nat" }
 }
 
 resource "aws_default_route_table" "default" {
   default_route_table_id = aws_default_vpc.default.default_route_table_id
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "default"
-    },
-  )
+  tags = { "Name" = "default" }
 }
 
 resource "aws_route_table" "private" {
   count  = 3
   vpc_id = aws_default_vpc.default.id
 
-  tags = merge(
-    local.default_tags,
-    {
-      "Name" = "private"
-    },
-  )
+  tags = { "Name" = "private" }
 }
 
 resource "aws_route" "default" {
