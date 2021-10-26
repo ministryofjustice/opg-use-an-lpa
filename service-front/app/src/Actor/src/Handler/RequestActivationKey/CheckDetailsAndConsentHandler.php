@@ -84,12 +84,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
             throw new SessionTimeoutException();
         }
 
-        $this->data['first_names'] = $this->session->get('first_names');
-        $this->data['last_name'] = $this->session->get('last_name');
-        $this->data['dob'] = $this->session->get('dob');
-        $this->data['postcode'] = $this->session->get('postcode');
-
-
         if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
             $this->data['telephone'] = $telephone;
         }
@@ -138,11 +132,19 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
+
+            $this->data['first_names'] = $this->session->get('first_names');
+            $this->data['last_name'] = $this->session->get('last_name');
+            $this->data['dob'] = Carbon::create(
+                $this->session->get('dob')['year'],
+                $this->session->get('dob')['month'],
+                $this->session->get('dob')['day']
+            )->toImmutable();
+            $this->data['postcode'] = $this->session->get('postcode');
+            $this->data['actor_id'] = $this->session->get('actor_id');
+
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
-            $additionalInfo = $txtRenderer->render(
-                'actor::request-cleanse-note',
-                ['data' => $this->data, 'actor_id' => $this->session->get('actor_id')]
-            );
+            $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
             $this->logger->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
@@ -192,8 +194,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     private function hasRequiredSessionValues(): bool
     {
         $required = $this->session->has('opg_reference_number')
-            || $this->session->has('first_names')
-            || $this->session->has('last_name')
+            || $this->session->has('first_names')            || $this->session->has('last_name')
             || $this->session->has('dob')
             || $this->session->has('postcode')
             || $this->session->has('actor_role')
