@@ -20,13 +20,23 @@
             {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
-            {% if activeCodeCount >= 1 %}
-                <span class="moj-badge moj-badge--blue">
+            {% if lpa.status|lower != 'cancelled' %}
+                {% if activeCodeCount >= 1 %}
+                    <span class="moj-badge moj-badge--blue">
                     {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
-                </span>
-            {% elseif actorActive %}
-                <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
+                    </span>
+                {% elseif actorActive %}
+                    <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
+                {% endif %}
+            {% else %}
+                <span class="moj-badge moj-badge--red">{% trans %}cancelled{% endtrans %}</span><br><br>
+                {% if activeCodeCount >= 1 %}
+                    <span class="moj-badge moj-badge--grey">{% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}</span>
+                {% elseif actorActive %}
+                    <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
+                {% endif %}
             {% endif %}
+
             {% if feature_enabled('delete_lpa_feature') %}
                 <a class="govuk-body lpa-account-delete govuk-!-display-block govuk-!-padding-top-4" href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}">{% trans %}Remove LPA{% endtrans %}</a>
             {% endif %}
