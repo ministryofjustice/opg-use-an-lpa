@@ -56,16 +56,5 @@
   "jest-junit": {
     "outputDirectory": "./test-results/junit",
     "outputName": "results.xml"
-  },
-  "jest": {
-    "resetMocks": true,
-    "testMatch": [
-      "**/?(*.)+(test).js"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!**/node_modules/**",
-      "!**/vendor/**"
-    ]
   }
 }
