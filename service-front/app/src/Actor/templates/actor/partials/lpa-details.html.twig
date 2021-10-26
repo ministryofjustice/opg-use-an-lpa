@@ -28,7 +28,7 @@
                 {% elseif actorActive %}
                     <span class="moj-badge moj-badge--grey">{% trans %}No organisations have access{% endtrans %}</span>
                 {% endif %}
-            {% else %}
+            {% elseif lpa.status|lower == 'cancelled' %}
                 <span class="moj-badge moj-badge--red">{% trans %}cancelled{% endtrans %}</span><br><br>
                 {% if activeCodeCount >= 1 %}
                     <span class="moj-badge moj-badge--grey">{% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}</span>
