@@ -5988,7 +5988,7 @@ msgstr "Eich rôl"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
-msgstr "Newid<span class=“govuk-visually-hidden”> rôl</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rôl</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:43
 msgid "Donor's name"
@@ -5996,11 +5996,11 @@ msgstr "Enw’r rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
-msgstr "Newid<span class=“govuk-visually-hidden”> enw’r rhoddwr</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
-msgstr "Newid<span class=“govuk-visually-hidden”> donor’s date of birth</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:70
 msgid "Telephone number"
@@ -6008,7 +6008,7 @@ msgstr "Rhif ffôn"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
-msgstr "Newid<span class=“govuk-visually-hidden”> rhif ffôn</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
 msgid ""
@@ -6194,7 +6194,7 @@ msgstr "Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:28
 msgid "We'll contact you by %date%"
-msgstr ""
+msgstr "Byddwn yn cysylltu â chi erbyn %date%"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:29
 msgid ""
