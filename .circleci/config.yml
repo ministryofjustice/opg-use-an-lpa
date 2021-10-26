@@ -1259,10 +1259,10 @@ orbs:
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api --region eu-west-1
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf --region eu-west-1
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor --region eu-west-1
-                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer-service --region eu-west-1
       #----------------------------------------------------
       # Seeding
 
