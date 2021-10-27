@@ -83,11 +83,12 @@ class LpasTest extends TestCase
             ->getMock();
 
         $responseMock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('getStatusCode')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
                 $this->returnValue(StatusCodeInterface::STATUS_NO_CONTENT),
+                $this->returnValue(StatusCodeInterface::STATUS_OK),
                 $this->returnValue(StatusCodeInterface::STATUS_OK)
             );
 
@@ -103,6 +104,9 @@ class LpasTest extends TestCase
 
         // Test 200 OK response
         $service->requestLetter($caseUid, $actorUid, null);
+
+        // Test with null actor id
+        $service->requestLetter($caseUid, null, "Some random string");
     }
 
     /** @test */
