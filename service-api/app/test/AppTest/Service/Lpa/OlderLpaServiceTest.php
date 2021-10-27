@@ -132,7 +132,7 @@ class OlderLpaServiceTest extends TestCase
 
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo, null, $this->lpaActorToken);
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
     
     /** @test */
@@ -150,6 +150,23 @@ class OlderLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+    }
+
+    /** @test */
+    public function request_access_code_letter_and_cleanse_record_exists(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->shouldBeCalled();
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
+
+        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->sixWeekInterval, null)->shouldBeCalled();
+
+        $service = $this->getOlderLpaService();
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo, null, 'token-12345');
     }
 
     /** @test */
@@ -181,8 +198,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            new DateInterval('P1Y'),
-            new DateInterval('P2W')
+            $this->oneYearInterval,
+            $this->twoWeekInterval
         )->willReturn($this->lpaActorToken);
 
         $this->userLpaActorMapProphecy
@@ -195,6 +212,35 @@ class OlderLpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
 
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+    }
+
+    /** @test */
+    public function request_access_code_letter_and_cleanse_api_call_fails(): void
+    {
+        $this->lpasInterfaceProphecy
+            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->willThrow(ApiException::create('bad api call'));
+
+        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
+
+        $this->userLpaActorMapProphecy->create(
+            $this->userId,
+            $this->lpaUid,
+            '',
+            $this->oneYearInterval,
+            $this->sixWeekInterval
+        )->willReturn($this->lpaActorToken);
+
+        $this->userLpaActorMapProphecy
+            ->delete($this->lpaActorToken)
+            ->shouldBeCalled()
+            ->willReturn([]);
+
+        $service = $this->getOlderLpaService();
+
+        $this->expectException(ApiException::class);
+
+        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
 
     /** @test */

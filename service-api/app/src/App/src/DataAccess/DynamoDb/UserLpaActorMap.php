@@ -70,7 +70,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)]
         ];
 
-        if ($actorId !== null) {
+        if ($actorId !== '') {
             $array['ActorId'] = ['N' => $actorId];
         }
 
