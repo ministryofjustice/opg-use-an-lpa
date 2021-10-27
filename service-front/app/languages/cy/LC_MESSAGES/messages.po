@@ -4775,7 +4775,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:10
 msgid "Access code created %date%"
-msgstr ""
+msgstr "Cod mynediad wedi’i greu ar %date%"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:22
 msgid "Do you have an activation key to add an LPA?"
@@ -5155,7 +5155,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "%organisation% on %date%"
-msgstr ""
+msgstr "%organisation% ar %date%"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:61
 msgid "You have %count% LPA in your account"
