@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-10-14T10:36:40+00:00\n"
+"POT-Creation-Date: 2021-10-26T16:19:05+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -11,8 +11,10 @@ msgstr ""
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:14
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:50
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:54
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:37
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:14
@@ -247,7 +249,7 @@ msgstr ""
 #: src/Actor/templates/actor/create-account.html.twig:57
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:249
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:90
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
 #: src/Actor/templates/actor/check-lpa.html.twig:68
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
@@ -1378,7 +1380,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/your-details.html.twig:18
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:24
 #: src/Common/templates/partials/account-bar.html.twig:11
 msgid "Your details"
 msgstr ""
@@ -1789,13 +1791,13 @@ msgid "Your role on this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:32
 #: src/Actor/templates/actor/check-lpa.html.twig:57
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:41
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:27
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:28
 #: src/Actor/templates/actor/check-lpa.html.twig:59
 msgid "Donor"
 msgstr ""
@@ -1819,14 +1821,14 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:78
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:63
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:45
-#: src/Actor/templates/actor/contact-details.html.twig:45
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
+#: src/Actor/templates/actor/contact-details.html.twig:46
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:40
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:67
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:63
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:39
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:44
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:64
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:89
@@ -2155,7 +2157,7 @@ msgstr ""
 msgid "Add a lasting power of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:53
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
 #: src/Actor/templates/actor/check-your-answers.html.twig:23
 #: src/Actor/templates/actor/lpa-add.html.twig:57
 #: src/Common/templates/partials/full-lpa-display.html.twig:253
@@ -2206,12 +2208,12 @@ msgid ""
 "                                Monday to Friday, 9:30 to 5pm, except Wednesdays 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:24
 msgid "What is your date of birth?"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:30
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:39
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:40
 #: src/Actor/templates/actor/lpa-add.html.twig:53
 msgid "For example, 31 03 1980"
 msgstr ""
@@ -2458,7 +2460,6 @@ msgstr ""
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:25
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/account-bar.html.twig:13
@@ -3533,17 +3534,16 @@ msgstr ""
 msgid "Find out what to do if you've <a href=\"%link%\" class=\"govuk-link\">changed address and not told us</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:30
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:31
 msgid "First names"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:36
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:35
 msgid "Last name"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:21
 #: src/Actor/templates/actor/check-your-answers.html.twig:62
 msgid "Postcode"
 msgstr ""
@@ -3686,7 +3686,6 @@ msgstr ""
 msgid "To add an LPA to your account, you need an activation key. We'll send an activation key by post to the address we have for you on our records."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:3
 msgid "Sending an activation key"
 msgstr ""
@@ -4053,15 +4052,15 @@ msgstr ""
 msgid "ask for an activation key if you have not been given one"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:24
 msgid "What is your role on the LPA?"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:36
 msgid "The donor - the person who made the LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:40
 msgid "An attorney - a person appointed to make decisions on the donor's behalf"
 msgstr ""
 
@@ -4070,7 +4069,7 @@ msgid "You've already added this LPA to your account"
 msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:54
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:54
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:56
 msgid "Continue and ask for a new key"
 msgstr ""
 
@@ -4080,23 +4079,23 @@ msgctxt "error"
 msgid "Select whether you are the donor or an attorney on the LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/contact-details.html.twig:21
+#: src/Actor/templates/actor/contact-details.html.twig:24
 msgid "Your contact details"
 msgstr ""
 
-#: src/Actor/templates/actor/contact-details.html.twig:31
+#: src/Actor/templates/actor/contact-details.html.twig:32
 msgid "Your telephone number"
 msgstr ""
 
-#: src/Actor/templates/actor/contact-details.html.twig:37
+#: src/Actor/templates/actor/contact-details.html.twig:38
 msgid "or"
 msgstr ""
 
-#: src/Actor/templates/actor/contact-details.html.twig:40
+#: src/Actor/templates/actor/contact-details.html.twig:41
 msgid "I do not have a phone or cannot use a phone to take calls"
 msgstr ""
 
-#: src/Actor/templates/actor/contact-details.html.twig:43
+#: src/Actor/templates/actor/contact-details.html.twig:44
 msgid "We may also contact you by email on"
 msgstr ""
 
@@ -4164,12 +4163,12 @@ msgctxt "error"
 msgid "Enter the donor's date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:24
 msgid "The donor's details"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:56
-#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:57
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:39
 msgid "Donor's date of birth"
 msgstr ""
 
@@ -4201,39 +4200,39 @@ msgstr ""
 msgid "Check your details"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:23
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:24
 msgid "Your role"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:43
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:44
 msgid "Donor's name"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:51
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:64
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:70
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
 msgid "Telephone number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:83
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:93
 msgid "I understand that the information I've given will be stored securely and used to process my activation key request."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:101
 msgid "Confirm and submit request"
 msgstr ""
 
@@ -4243,34 +4242,34 @@ msgctxt "error"
 msgid "Either enter your phone number or check the box to say you cannot take calls"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:76
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:78
 msgid "Not provided"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:24
 msgid "What is the LPA reference number?"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:24
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:27
 msgid ""
 "The LPA reference number (also called 'OPG reference number' or 'Our ref')\n"
 "                            is on the first page of the paper LPA and on any letter you get from\n"
 "                            the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:34
 msgid "It will be 12 numbers long and start with a 7."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:37
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 msgid "My reference number is not 12 numbers long"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:44
 msgid "If an LPA's reference number is not 12 numbers long, you cannot currently add that LPA to the service."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:42
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:45
 msgid "We are working to open up the service to more LPAs. Please try again in a few weeks time."
 msgstr ""
 
@@ -4357,72 +4356,38 @@ msgstr ""
 msgid "You should hear from us or get the activation key letter by %date%. If you don't, please contact us. You'll need to give the LPA reference number when you get in touch."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
-msgid "We've got your activation key request"
-msgstr ""
-
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:24
-msgid "Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure."
-msgstr ""
-
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:26
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:25
-msgid "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
-msgstr ""
-
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:34
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
-msgid "Have more than one LPA?"
-msgstr ""
-
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
-msgid "You'll need an activation key for each LPA that you'd like to add to your account."
-msgstr ""
-
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
 msgid "We’ll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it’s more secure."
-msgstr ""
-
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:28
-msgid "We'll contact you by %date%"
 msgstr ""
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:29
 msgid "You should hear from us or get the activation key letter by %date%. If you don’t, please contact us. You'll need to give the LPA reference number when you get in touch."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
-msgid "We've got your activation key request"
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:25
+msgid "We'll contact you if we need any more information."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:24
-msgid "Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure."
+#: src/Actor/templates/actor/contact-details.html.twig:25
+msgid "We may need to contact you to ask for more information"
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:26
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:25
-msgid "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:24
+msgid "What is your UK postcode?"
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:28
-msgid "We'll contact you by %date%"
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:26
+msgid "This must be your current postcode. Your activation key will be posted to this address."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:29
-msgid "You should hear from us or get the activation key letter by %date%. If you don't, please contact us. You'll need to give the LPA reference number when you get in touch."
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:27
+msgid "If your current postcode does not match the address we have for you on our records, we’ll contact you to confirm your correct address."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:34
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:32
-msgid "Have more than one LPA?"
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:28
+msgid "You can only ask for an activation key if you live in the UK."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:33
-msgid "You'll need an activation key for each LPA that you'd like to add to your account."
-msgstr ""
-
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:24
-msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
+msgid "Your postcode"
 msgstr ""
