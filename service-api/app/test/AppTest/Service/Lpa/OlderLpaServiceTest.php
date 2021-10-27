@@ -46,6 +46,10 @@ class OlderLpaServiceTest extends TestCase
     public string $additionalInfo;
     public string $lpaActorToken;
     public array $dataToMatch;
+    private DateInterval $oneYearInterval;
+    private DateInterval $sixWeekInterval;
+    private DateInterval $twoWeekInterval;
+
 
     public function setUp()
     {
@@ -61,6 +65,10 @@ class OlderLpaServiceTest extends TestCase
         $this->actorUid = '700000055554';
         $this->lpaActorToken = '00000000-0000-4000-A000-000000000000';
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
+
+        $this->twoWeekInterval = new DateInterval('P2W');
+        $this->sixWeekInterval = new DateInterval('P6W');
+        $this->oneYearInterval = new DateInterval('P1Y');
 
         $this->dataToMatch = [
             'reference_number'      => $this->lpaUid,
@@ -96,8 +104,8 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             $this->actorUid,
-            new DateInterval('P1Y'),
-            new DateInterval('P2W')
+            $this->oneYearInterval,
+            $this->twoWeekInterval,
         )->willReturn($this->lpaActorToken);
 
         $service = $this->getOlderLpaService();
@@ -112,15 +120,15 @@ class OlderLpaServiceTest extends TestCase
             $this->userId,
             $this->lpaUid,
             null,
-            'P1Y',
-            'P6W'
+            $this->oneYearInterval,
+            $this->sixWeekInterval
         )->willReturn($this->lpaActorToken);
 
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, 'P1Y', 'P6W', null)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, $this->oneYearInterval, $this->sixWeekInterval, null)->shouldBeCalled();
 
 
         $service = $this->getOlderLpaService();
@@ -138,7 +146,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord('token-12345', 'P1Y', 'P2W', $this->actorUid)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->twoWeekInterval, $this->actorUid)->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
@@ -154,7 +162,7 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord('token-12345', 'P1Y', 'P2W', $this->actorUid)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->twoWeekInterval, $this->actorUid)->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');

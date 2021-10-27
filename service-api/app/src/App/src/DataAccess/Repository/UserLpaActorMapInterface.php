@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use Common\Form\Fieldset\Date;
 use DateInterval;
 
 /**
@@ -87,8 +88,8 @@ interface UserLpaActorMapInterface
      */
     public function updateRecord(
         string $lpaActorToken,
-        string $expiryInterval,
-        string $intervalTillDue,
+        DateInterval $expiryInterval,
+        DateInterval $intervalTillDue,
         ?string $actorId
     ): array;
 }

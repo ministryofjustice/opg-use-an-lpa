@@ -9,6 +9,7 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
+use Cassandra\Date;
 use DateInterval;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -149,8 +150,8 @@ class OlderLpaService
             if ($existingRecordId !== null) {
                 $this->userLpaActorMap->updateRecord(
                     $existingRecordId,
-                    self::EXPIRY_INTERVAL,
-                    self::SEND_LETTER_INTERVAL,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::SEND_LETTER_INTERVAL),
                     $actorUid
                 );
             }
@@ -225,8 +226,8 @@ class OlderLpaService
             if ($existingRecordId !== null) {
                 $this->userLpaActorMap->updateRecord(
                     $existingRecordId,
-                    self::EXPIRY_INTERVAL,
-                    self::CLEANSE_INTERVAL,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::CLEANSE_INTERVAL),
                     $actorId
                 );
             }

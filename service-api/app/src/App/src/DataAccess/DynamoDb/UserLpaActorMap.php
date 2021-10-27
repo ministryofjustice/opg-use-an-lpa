@@ -7,6 +7,7 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Common\Form\Fieldset\Date;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -179,14 +180,14 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function updateRecord(
         string $lpaActorToken,
-        string $expiryInterval,
-        string $intervalTillDue,
+        DateInterval $expiryInterval,
+        DateInterval $intervalTillDue,
         ?string $actorId
     ): array
     {
         $now = new DateTimeImmutable();
-        $expiry = $now->add(new DateInterval($expiryInterval));
-        $dueBy = $now->add(new DateInterval($intervalTillDue));
+        $expiry = $now->add($expiryInterval);
+        $dueBy = $now->add($intervalTillDue);
 
         $updateRequest = [
             'TableName' => $this->userLpaActorTable,
