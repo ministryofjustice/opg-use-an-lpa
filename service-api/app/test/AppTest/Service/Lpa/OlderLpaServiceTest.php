@@ -128,8 +128,7 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, $this->oneYearInterval, $this->sixWeekInterval, null)->shouldBeCalled();
-
+        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, $this->oneYearInterval, $this->sixWeekInterval, null)->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
