@@ -119,7 +119,7 @@ class OlderLpaServiceTest extends TestCase
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
-            null,
+            '',
             $this->oneYearInterval,
             $this->sixWeekInterval
         )->willReturn($this->lpaActorToken);
