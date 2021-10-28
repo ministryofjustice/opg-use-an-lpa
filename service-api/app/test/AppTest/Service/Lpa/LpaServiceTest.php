@@ -176,7 +176,7 @@ class LpaServiceTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getByUserLpaActorToken()
 
-    private function init_valid_user_token_test(): stdClass
+    private function init_valid_user_token_test($validState = true): stdClass
     {
         $t = new stdClass();
 
@@ -236,7 +236,7 @@ class LpaServiceTest extends TestCase
         // check valid lpa
         $this->isValidLpaProphecy->__invoke(
             $t->Lpa->getData()
-        )->willReturn(true);
+        )->willReturn($validState);
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
@@ -385,9 +385,21 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
         $this->assertNull($result);
+    }
+
+    /** @test */
+    public function cannot_get_by_user_token_when_not_valid_lpa()
+    {
+        $t = $this->init_valid_user_token_test(false);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+
+        $this->assertEmpty($result);
     }
 
     //-------------------------------------------------------------------------
