@@ -194,7 +194,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     private function hasRequiredSessionValues(): bool
     {
         $required = $this->session->has('opg_reference_number')
-            || $this->session->has('first_names')            || $this->session->has('last_name')
+            || $this->session->has('first_names')
+            || $this->session->has('last_name')
             || $this->session->has('dob')
             || $this->session->has('postcode')
             || $this->session->has('actor_role')
