@@ -117,8 +117,9 @@ class OlderLpaService
         $actorUidInt = (int)$actorUid;
 
         $this->logger->info(
-            'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
+            'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
+                'user_id' => $userId,
                 'attorney' => $actorUidInt,
                 'lpa' => $uidInt,
             ]
@@ -128,8 +129,9 @@ class OlderLpaService
             $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
         } catch (ApiException $apiException) {
             $this->logger->notice(
-                'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
+                'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
+                    'user_id' => $userId,
                     'attorney' => $actorUidInt,
                     'lpa' => $uidInt,
                 ]
@@ -193,8 +195,9 @@ class OlderLpaService
 
         $uidInt = (int)$uid;
         $this->logger->info(
-            'Requesting cleanse and an access code letter on LPA {lpa}',
+            'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
+                'user_id' => user_id,
                 'lpa' => $uidInt,
             ]
         );
@@ -203,8 +206,9 @@ class OlderLpaService
             $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
         } catch (ApiException $apiException) {
             $this->logger->notice(
-                'Failed to request access code letter and cleanse for LPA {lpa}',
+                'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
                 [
+                    'user_id' => $userId,
                     'lpa' => $uidInt,
                 ]
             );
