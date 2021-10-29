@@ -183,8 +183,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         DateInterval $expiryInterval,
         DateInterval $intervalTillDue,
         ?string $actorId
-    ): array
-    {
+    ): array {
         $now = new DateTimeImmutable();
         $expiry = $now->add($expiryInterval);
         $dueBy = $now->add($intervalTillDue);
@@ -199,7 +198,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'UpdateExpression' => 'set ActivateBy = :a, DueBy = :b',
             'ExpressionAttributeValues' => [
                 ':a' => ['N' => (string) $expiry->getTimestamp()],
-                ':b' => ['S' => $dueBy->format('Y-m-d\TH:i:s.u\Z')]
+                ':b' => ['S' => $dueBy->format(DateTimeInterface::ATOM)]
             ],
             'ReturnValues' => 'ALL_NEW',
         ];
