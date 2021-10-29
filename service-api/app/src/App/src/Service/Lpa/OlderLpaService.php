@@ -197,7 +197,7 @@ class OlderLpaService
         $this->logger->info(
             'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
-                'user_id' => user_id,
+                'user_id' => $userId,
                 'lpa' => $uidInt,
             ]
         );
