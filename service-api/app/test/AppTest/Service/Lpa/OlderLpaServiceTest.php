@@ -128,12 +128,17 @@ class OlderLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord($this->lpaActorToken, $this->oneYearInterval, $this->sixWeekInterval, null)->shouldNotBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord(
+            $this->lpaActorToken,
+            $this->oneYearInterval,
+            $this->sixWeekInterval,
+            null
+        )->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
-    
+
     /** @test */
     public function request_access_code_letter_record_exists(): void
     {
@@ -145,7 +150,12 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->twoWeekInterval, $this->actorUid)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord(
+            'token-12345',
+            $this->oneYearInterval,
+            $this->twoWeekInterval,
+            $this->actorUid
+        )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
@@ -162,10 +172,21 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->sixWeekInterval, null)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord(
+            'token-12345',
+            $this->oneYearInterval,
+            $this->sixWeekInterval,
+            null
+        )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo, null, 'token-12345');
+        $service->requestAccessAndCleanseByLetter(
+            $this->lpaUid,
+            $this->userId,
+            $this->additionalInfo,
+            null,
+            'token-12345'
+        );
     }
 
     /** @test */
@@ -178,7 +199,12 @@ class OlderLpaServiceTest extends TestCase
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
-        $this->userLpaActorMapProphecy->updateRecord('token-12345', $this->oneYearInterval, $this->twoWeekInterval, $this->actorUid)->shouldBeCalled();
+        $this->userLpaActorMapProphecy->updateRecord(
+            'token-12345',
+            $this->oneYearInterval,
+            $this->twoWeekInterval,
+            $this->actorUid
+        )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
