@@ -22,6 +22,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Actor\Form\RemoveLpa as RemoveLpaForm;
+use Common\Service\Lpa\LpaService;
 
 /**
  * Class RemoveLpaHandler
@@ -40,19 +41,22 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     private TranslatorInterface $translator;
     private RemoveLpaForm $form;
     private ?UserInterface $user;
+    private LpaService $lpaService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         RemoveLpa $removeLpa,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LpaService $lpaService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->removeLpa = $removeLpa;
         $this->translator = $translator;
+        $this->lpaService = $lpaService;
     }
 
     /**
@@ -88,12 +92,23 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
+        $user = $this->getUser($request);
+        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+
+        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+
+        var_dump("am in RemoveLpa Handler.......");
+       // var_dump($lpaData->lpa);
+        var_dump($lpaData->actor); die;
+
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'user' => $this->user,
             'actorToken' => $actorLpaToken,
-            'form' => $this->form
+            'form' => $this->form,
+            'lpa' => $lpaData->lpa,
+            'actor' => $lpaData->actor,
         ]));
     }
 
