@@ -23,6 +23,7 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -45,6 +46,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     private AddOlderLpa $addOlderLpa;
     private CheckYourAnswers $form;
+    private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
     private ?SessionInterface $session;
     private ?UserInterface $user;
     private array $data;
@@ -65,7 +67,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         LoggerInterface $logger,
         EmailClient $emailClient,
         LocalisedDate $localisedDate,
-        FeatureEnabled $featureEnabled
+        FeatureEnabled $featureEnabled,
+        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -74,6 +77,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
         $this->featureEnabled = $featureEnabled;
+        $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
     }
 
     /**
@@ -132,13 +136,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $this->session->unset('actor_id');
-        $this->session->unset('actor_role');
-        $this->session->unset('donor_first_names');
-        $this->session->unset('donor_last_name');
-        $this->session->unset('donor_dob');
-        $this->session->unset('telephone_option');
-        $this->session->unset('lpa_full_match_but_not_cleansed');
+        $this->removeAccessForAllSessionValues->removePostCheckAnswersSessionValues($this->session);
 
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
