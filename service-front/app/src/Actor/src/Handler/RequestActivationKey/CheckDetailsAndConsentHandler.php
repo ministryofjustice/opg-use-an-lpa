@@ -132,7 +132,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
-
             $this->data['first_names'] = $this->session->get('first_names');
             $this->data['last_name'] = $this->session->get('last_name');
             $this->data['dob'] = Carbon::create(
