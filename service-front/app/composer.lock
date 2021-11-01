@@ -7436,16 +7436,16 @@
         },
         {
             "name": "laminas/laminas-development-mode",
-            "version": "3.4.1",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-development-mode.git",
-                "reference": "7218e3ca62cf87d4206817d37de86f8bd4c9d56a"
+                "reference": "048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/7218e3ca62cf87d4206817d37de86f8bd4c9d56a",
-                "reference": "7218e3ca62cf87d4206817d37de86f8bd4c9d56a",
+                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a",
+                "reference": "048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a",
                 "shasum": ""
             },
             "require": {
@@ -7456,7 +7456,7 @@
                 "zfcampus/zf-development-mode": "^3.2.0"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~1.0.0",
+                "laminas/laminas-coding-standard": "~2.3.0",
                 "mikey179/vfsstream": "^1.6.10",
                 "phpunit/phpunit": "^9.3"
             },
@@ -7492,7 +7492,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-10-05T09:59:45+00:00"
+            "time": "2021-10-21T14:37:30+00:00"
         },
         {
             "name": "mezzio/mezzio-tooling",
