@@ -97,18 +97,13 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        var_dump("am in RemoveLpa Handler.......");
-       // var_dump($lpaData->lpa);
-        var_dump($lpaData->actor); die;
-
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'user' => $this->user,
             'actorToken' => $actorLpaToken,
             'form' => $this->form,
-            'lpa' => $lpaData->lpa,
-            'actor' => $lpaData->actor,
+            'lpa' => $lpaData
         ]));
     }
 

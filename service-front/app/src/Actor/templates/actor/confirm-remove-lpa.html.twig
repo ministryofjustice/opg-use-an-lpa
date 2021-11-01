@@ -17,14 +17,21 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to remove this LPA?{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}If you remove an LPA from your Use a lasting power of attorney account:{% endtrans %}</p>
+                    {% if lpa is not null and lpa.lpa.status|lower == 'registered' %}
+                        <p class="govuk-body">{% trans %}LPA is registered.{% endtrans %}</p>
+                    {% endif %}
 
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}all access codes you’ve created for that LPA will be cancelled{% endtrans %}</li>
-                        <li>{% trans %}you’ll not be able to see how the LPA is being used or has been used{% endtrans %}</li>
-                        <li>{% trans %}you must contact us for a new activation key if you want to add the LPA back to your account{% endtrans %}</li>
-                    </ul>
+                    {% if lpa is not null and (lpa.lpa.status|lower == 'registered' or lpa.lpa.status|lower == 'cancelled') %}
+                        <p class="govuk-body">{% trans %}If you remove an LPA from your Use a lasting power of attorney account:{% endtrans %}</p>
 
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>{% trans %}all access codes you’ve created for that LPA will be cancelled{% endtrans %}</li>
+                            <li>{% trans %}you’ll not be able to see how the LPA is being used or has been used{% endtrans %}</li>
+                            {% if lpa is not null and lpa.lpa.status|lower == 'registered' %}
+                                <li>{% trans %}you must contact us for a new activation key if you want to add the LPA back to your account{% endtrans %}</li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
                     {{ govuk_form_open(form) }}
                         {{ govuk_form_element(form.get('__csrf')) }}
                         {{ govuk_form_element(form.get('actor_lpa_token')) }}
