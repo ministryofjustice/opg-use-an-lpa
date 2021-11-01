@@ -212,7 +212,13 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, 'P365D');
+        $repo->create(
+            $testUserId,
+            $testSiriusUid,
+            (string)$testActorId,
+            new DateInterval('P365D'),
+            new DateInterval('P2W')
+        );
     }
 
     /** @test */
@@ -332,7 +338,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('remove ActivateBy', $data['UpdateExpression']);
+            $this->assertEquals('remove ActivateBy, DueBy', $data['UpdateExpression']);
 
             return true;
         }))->willReturn($this->createAWSResult([
@@ -434,7 +440,7 @@ class UserLpaActorMapTest extends TestCase
     // Renew Activation Period
 
     /** @test */
-    public function can_renew_activation_period()
+    public function can_update_record()
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -453,11 +459,82 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a', $data['UpdateExpression']);
+            $this->assertEquals('set ActivateBy = :a, DueBy = :b, ActorId = :c', $data['UpdateExpression']);
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
             $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+
+            $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
+            $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
+            return true;
+        }))->willReturn($this->createAWSResult(
+            [
+                'Item' => [
+                    'Id' => [
+                        'S' => $testToken,
+                    ],
+                    'SiriusUid' => [
+                        'S' => $testSiriusUid,
+                    ],
+                    'Added' => [
+                        'S' => $testAdded,
+                    ],
+                    'ActorId' => [
+                        'S' => (string)$testActorId,
+                    ],
+                    'UserId' => [
+                        'S' => $testUserId,
+                    ],
+                    'ActivateBy' => [
+                        'N' => $expiry,
+                    ],
+                    'DueBy' => [
+                        'S' => 'P2W'
+                    ]
+                ],
+            ]
+        ));
+
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME
+        );
+
+        $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), (string)$testActorId);
+        $this->assertEquals($testToken, $renew['Id']);
+    }
+
+    /** @test */
+    public function can_update_record_without_actorId()
+    {
+        $testToken = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+        $testActorId = 1;
+        $testAdded = gmdate('c');
+
+        $now = new DateTimeImmutable();
+        $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals('set ActivateBy = :a, DueBy = :b', $data['UpdateExpression']);
+
+            $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
+            $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
+            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+
+            $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
+            $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
+
+            $this->assertArrayNotHasKey(':c', $data['ExpressionAttributeValues']);
 
             return true;
         }))->willReturn($this->createAWSResult(
@@ -480,6 +557,9 @@ class UserLpaActorMapTest extends TestCase
                     ],
                     'ActivateBy' => [
                         'N' => $expiry,
+                    ],
+                    'DueBy' => [
+                        'S' => 'P2W'
                     ]
                 ],
             ]
@@ -490,7 +570,7 @@ class UserLpaActorMapTest extends TestCase
             self::TABLE_NAME
         );
 
-        $renew = $userLpaActorMapRepo->renewActivationPeriod($testToken, 'P1Y');
+        $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), null);
         $this->assertEquals($testToken, $renew['Id']);
     }
 }

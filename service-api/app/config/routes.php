@@ -46,6 +46,13 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         App\Handler\OlderLpaConfirmationHandler::class,
         'lpa.older.confirm'
     );
+
+    $app->post(
+        '/v1/older-lpa/cleanse',
+        App\Handler\RequestCleanseHandler::class,
+        'lpa.older.cleanse'
+    );
+
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
     $app->post(

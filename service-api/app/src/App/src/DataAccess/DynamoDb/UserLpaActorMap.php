@@ -7,8 +7,11 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Common\Form\Fieldset\Date;
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -55,21 +58,29 @@ class UserLpaActorMap implements UserLpaActorMapInterface
     public function create(
         string $userId,
         string $siriusUid,
-        string $actorId,
-        string $expiryInterval = null
+        ?string $actorId,
+        ?DateInterval $expiryInterval = null,
+        ?DateInterval $dueByInterval = null
     ): string {
-        $added = new DateTimeImmutable();
+        $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
+
         $array = [
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
-            'ActorId'   => ['N' => $actorId],
-            'Added'     => ['S' => $added->format('Y-m-d\TH:i:s.u\Z') ]
+            'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)]
         ];
+
+        if (isset($actorId)) {
+            $array['ActorId'] = ['N' => $actorId];
+        }
 
         // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
-            $expiry = $added->add(new DateInterval($expiryInterval));
+            $expiry = $added->add($expiryInterval);
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
+
+            $dueBy = $added->add($dueByInterval);
+            $array['DueBy'] = ['S' => $dueBy->format(DateTimeInterface::ATOM)];
         }
 
         do {
@@ -133,7 +144,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                   'S' => $lpaActorToken,
               ],
           ],
-          'UpdateExpression' => 'remove ActivateBy',
+          'UpdateExpression' => 'remove ActivateBy, DueBy',
           'ReturnValues' => 'ALL_NEW'
           ]);
 
@@ -167,27 +178,37 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function renewActivationPeriod(string $lpaActorToken, string $expiryInterval): array
-    {
+    public function updateRecord(
+        string $lpaActorToken,
+        DateInterval $expiryInterval,
+        DateInterval $intervalTillDue,
+        ?string $actorId
+    ): array {
         $now = new DateTimeImmutable();
-        $expiry = $now->add(new DateInterval($expiryInterval));
+        $expiry = $now->add($expiryInterval);
+        $dueBy = $now->add($intervalTillDue);
 
-        $response = $this->client->updateItem(
-            [
-                'TableName' => $this->userLpaActorTable,
-                'Key' => [
-                    'Id' => [
-                        'S' => $lpaActorToken,
-                    ],
+        $updateRequest = [
+            'TableName' => $this->userLpaActorTable,
+            'Key' => [
+                'Id' => [
+                    'S' => $lpaActorToken,
                 ],
-                'UpdateExpression' => 'set ActivateBy = :a',
-                'ExpressionAttributeValues' => [
-                    ':a' => ['N' => (string) $expiry->getTimestamp()]
-                ],
-                'ReturnValues' => 'ALL_NEW',
-            ]
-        );
+            ],
+            'UpdateExpression' => 'set ActivateBy = :a, DueBy = :b',
+            'ExpressionAttributeValues' => [
+                ':a' => ['N' => (string) $expiry->getTimestamp()],
+                ':b' => ['S' => $dueBy->format(DateTimeInterface::ATOM)]
+            ],
+            'ReturnValues' => 'ALL_NEW',
+        ];
 
+        if ($actorId !== null) {
+            $updateRequest['UpdateExpression'] = $updateRequest['UpdateExpression'] . ', ActorId = :c';
+            $updateRequest['ExpressionAttributeValues'][':c'] = ['N' => $actorId];
+        }
+
+        $response = $this->client->updateItem($updateRequest);
         return $this->getData($response);
     }
 }

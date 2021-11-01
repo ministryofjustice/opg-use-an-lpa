@@ -23,4 +23,9 @@ class EventCodes
      * The LPA was registered before 1 September 2019
      */
     public const OLDER_LPA_TOO_OLD = 'OLDER_LPA_TOO_OLD';
+
+    /**
+     * Older LPA cleanse requested
+     */
+    public const OLDER_LPA_CLEANSE_SUCCESS = 'OLDER_LPA_CLEANSE_SUCCESS';
 }

@@ -368,4 +368,57 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendActivationKeyRequestConfirmationEmail($recipient, $referenceNumber, $postCode, $letterExpectedDate);
     }
+
+    /** @test */
+    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleansing()
+    {
+        $recipient = 'a@b.com';
+        $referenceNumber = "700000000138";
+        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
+            [
+                'reference_number' => $referenceNumber,
+                'date'             => $letterExpectedDate
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
+            $recipient,
+            $referenceNumber,
+            $letterExpectedDate
+        );
+    }
+
+    /** @test */
+    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy()
+    {
+        $this->locale = "cy";
+        $recipient = 'a@b.com';
+        $referenceNumber = "700000000138";
+        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
+            [
+                'reference_number' => $referenceNumber,
+                'date'             => $letterExpectedDate
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->locale);
+
+        $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
+            $recipient,
+            $referenceNumber,
+            $letterExpectedDate
+        );
+    }
 }
