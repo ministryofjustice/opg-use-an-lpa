@@ -4,7 +4,7 @@ import googleAnalytics from "./googleAnalytics";
 export default class CookieConsent {
     constructor(bannerElement, isInCookiesPath) {
         this.bannerElement = bannerElement;
-        const cookiePolicy = JSON.parse(getCookie('cookie_policy'));
+        const cookiePolicy = getCookie('cookie_policy');
         const seenCookieMessage = getCookie('seen_cookie_message');
         if (seenCookieMessage !== "true") {
             if (!isInCookiesPath) {
@@ -16,8 +16,10 @@ export default class CookieConsent {
         const acceptButton = bannerElement.querySelector('.cookie-banner__button-accept > button');
         this._bindEnableAllButton(acceptButton);
 
-        if (cookiePolicy && cookiePolicy.usage) {
-            window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
+        if (cookiePolicy) {
+            if (JSON.parse(cookiePolicy).usage) {
+                window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
+            }
         }
     }
 

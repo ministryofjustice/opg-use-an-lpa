@@ -15,12 +15,13 @@
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ govuk_error_summary(form) }}
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
                     <h1 class="govuk-heading-xl">{% trans %}Your details{% endtrans %}</h1>
-
-                    {{ govuk_error_summary(form) }}
 
                     {{ govuk_form_open(form) }}
 

@@ -485,6 +485,31 @@ class LpaContext implements Context
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
+
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        if($cleanseStatus == 'not marked' && $regDate == 'before') {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode($data)
+                    )
+                );
+        } else {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_NO_CONTENT,
+                        []
+                    )
+                );
+        }
     }
 
     /**
@@ -2469,6 +2494,10 @@ class LpaContext implements Context
                 )
             );
 
+        // CheckLpaCleansed: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
         // request a code to be generated and letter to be sent
         $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
             ->respondWith(
@@ -2963,10 +2992,12 @@ class LpaContext implements Context
 
     /**
      * @Given /^I already have a valid activation key for my LPA$/
+     * @Given /^I provide the additional details asked$/
+     * @Given /^I am asked to consent and confirm my details$/
      */
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
     {
-     // Not needed for this context
+        // Not needed for this context
     }
 
     /**
@@ -3050,6 +3081,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      * @Then /^I am asked for my contact details$/
+     * @Then /^I should expect it within 6 weeks time$/
      */
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
     {
@@ -3296,6 +3328,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I confirm details of the found LPA are correct$/
+     * @Then /^I am told my activation key is being sent$/
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrect()
     {
@@ -3334,11 +3367,11 @@ class LpaContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userLpaActorToken,
-                            'UserId' => $this->base->userAccountId,
+                            'Id'        => $this->userLpaActorToken,
+                            'UserId'    => $this->base->userAccountId,
                             'SiriusUid' => $this->lpaUid,
-                            'ActorId' => $this->actorId,
-                            'Added' => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            'ActorId'   => $this->actorId,
+                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
                         ]
                     ),
                 ]
@@ -3349,12 +3382,12 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => $this->userPostCode,
-                'force_activation_key' => true,
+                'reference_number'      => $this->lpaUid,
+                'first_names'           => $this->userFirstnames,
+                'last_name'             => $this->userSurname,
+                'dob'                   => $this->userDob,
+                'postcode'              => $this->userPostCode,
+                'force_activation_key'  => true,
             ],
             [
                 'user-token' => $this->userId,
@@ -3365,5 +3398,74 @@ class LpaContext implements Context
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
         }
+    }
+
+    /**
+     * @When /^I confirm that the data is correct and click the confirm and submit button$/
+     */
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // lpaService: getByUid
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // AWS Request letter response in Given steps
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id'        => $this->userLpaActorToken,
+                            'UserId'    => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId'   => $this->actorId,
+                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/cleanse',
+            [
+                'reference_number'  => $this->lpaUid,
+                'user-token'        => $this->userId,
+                'notes'             => 'Notes',
+                'actor_id'          => $this->actorId
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
+     * @When  /^I am told my activation key request has been received$/
+     * @Then /^I should expect it within 2 weeks time$/
+     * @Then /^I will receive an email confirming this information$/
+     */
+    public function iAmToldMyActivationKeyRequestHasBeenReceived()
+    {
+        //Not  needed for this  context
     }
 }

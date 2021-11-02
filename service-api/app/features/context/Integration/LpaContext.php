@@ -74,6 +74,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^I am told my activation key is being sent$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -255,6 +256,12 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I am told that I cannot request an activation key$/
+     * @Then /^I should expect it within 2 weeks time$/
+     * @Then /^I should expect it within 6 weeks time$/
+     * @Then /^I will receive an email confirming this information$/
+     * @Given /^I provide the additional details asked$/
+     * @Given /^I am asked to consent and confirm my details$/
+     * @When /^I confirm that the data is correct and click the confirm and submit button$/
      */
     public function iAmToldThatICannotRequestAnActivationKey()
     {
@@ -2614,6 +2621,59 @@ class LpaContext extends BaseIntegrationContext
             assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
             assertEquals('LPA status invalid', $ex->getMessage());
             return;
+        }
+    }
+
+    /**
+     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
+     */
+    public function myLPAWasRegistered1stSeptember2019AndLPAIsAsClean($regDate, $cleanseStatus)
+    {
+        if ($cleanseStatus == 'not marked') {
+            $this->lpa->lpaIsCleansed = false;
+        } else {
+            $this->lpa->lpaIsCleansed = true;
+        }
+
+        if ($regDate == 'before') {
+            $this->lpa->registrationDate = '2019-08-31';
+        } else {
+            $this->lpa->registrationDate = '2019-09-01';
+        }
+    }
+
+    /**
+     * @When  /^I am told my activation key request has been received$/
+     */
+    public function iAmToldMyActivationKeyRequestHasBeenReceived()
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        // Lpas::requestLetter
+        $this->pactPostInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/requestCode',
+            [
+                'case_uid' => (int)$this->lpaUid,
+                'notes' =>  'notes'
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $data
+        );
+
+        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
+            // Save activation key request in the DB
+            $this->awsFixtures->append(new Result([]));
+        }
+
+        $olderLpaService = $this->container->get(OlderLpaService::class);
+
+        try {
+            $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
+        } catch (ApiException $exception) {
+            throw new Exception('Failed to request access code letter');
         }
     }
 }
