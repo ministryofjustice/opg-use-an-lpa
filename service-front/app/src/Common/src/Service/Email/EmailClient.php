@@ -24,6 +24,8 @@ class EmailClient
     public const TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED        = '4af9acf0-f2c1-4ecc-8441-0e2173890463';
     public const TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION          = 'c23501a2-4893-426b-85e6-8a8e3731ddd7';
     public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '4674b106-c9eb-4314-a68c-ea4ba78808c5';
+    public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING
+                                                                     = 'e88d7f4d-a6fb-4dfb-a8a0-8f1c3df52744';
 
     /**
      * Welsh template IDs for the notify client
@@ -37,6 +39,8 @@ class EmailClient
     public const WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED        = 'b9b32dd2-67e9-45e8-a454-4301ba049a81';
     public const WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION          = '1be4d491-28df-4dfe-b90c-b285eafba05b';
     public const WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '712625ce-241f-45d9-bb51-13b89f6c7748';
+    public const WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING
+                                                                           = '1abc3673-1764-48c5-a870-07e1064212d1';
 
     private NotifyClient $notifyClient;
 
@@ -211,6 +215,39 @@ class EmailClient
                 'postcode'         => $postCode,
                 'date'             => $letterExpectedDate
             ]);
+        }
+    }
+
+    /**
+     * Send an activation key request confirmation email to a user when LPA is identified not cleansed
+     *
+     * @param string $recipient
+     * @param string $referenceNumber
+     * @param string $letterExpectedDate
+     */
+    public function sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
+        string $recipient,
+        string $referenceNumber,
+        string $letterExpectedDate
+    ) {
+        if ($this->locale === 'cy') {
+            $this->notifyClient->sendEmail(
+                $recipient,
+                self::WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
+                [
+                    'reference_number'  => $referenceNumber,
+                    'date'              => $letterExpectedDate,
+                ]
+            );
+        } else {
+            $this->notifyClient->sendEmail(
+                $recipient,
+                self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING,
+                [
+                    'reference_number'  => $referenceNumber,
+                    'date'              => $letterExpectedDate,
+                ]
+            );
         }
     }
 }

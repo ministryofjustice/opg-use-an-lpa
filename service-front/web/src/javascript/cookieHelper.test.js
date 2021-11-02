@@ -78,7 +78,14 @@ describe('When I create a cookie', () => {
 });
 
 describe('When I call setCookie', () => {
+
     beforeEach(() => {
+        jest
+        .spyOn(global.Date, 'now')
+        .mockImplementation(
+            () =>
+            new Date('2019-05-14T11:01:58.135Z').valueOf()
+        );
         const gettersSetters = {
             value: '',
             get: jest.fn().mockImplementation(() => {

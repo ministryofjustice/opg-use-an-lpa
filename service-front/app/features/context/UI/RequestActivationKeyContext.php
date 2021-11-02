@@ -44,6 +44,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^a letter is requested containing a one time use code$/
+     * @Then /^I am told my activation key is being sent$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -203,6 +204,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I am taken back to the consent and check details page$/
+     * @Then /^I am told my activation key request has been received$/
      */
     public function iAmTakenBackToTheConsentAndCheckDetailsPage()
     {
@@ -358,14 +360,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I asked to consent and confirm my details$/
-     */
-    public function iAskedToConsentAndConfirmMyDetails()
-    {
-        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
-    }
-
-    /**
      * @Given /^I can see the donors name is now correct$/
      */
     public function iCanSeeTheDonorsNameIsNowCorrect()
@@ -438,11 +432,10 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I confirm details of the found LPA are correct$/
-     * @When /^I request a new activation key$/
      * @Given /^The activation key not been received or was lost$/
+     * @Then /^I will receive an email confirming this information$/
      */
-    public function iConfirmTheDetailsOfTheFoundLpaAreCorrect()
+    public function theActivationKeyHasBeenReceivedOrWasLost()
     {
        //Not needed for this context
     }
@@ -981,6 +974,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I am on the Check we've found the right LPA page$/
+     * @Given /^I have provided valid details that match the Lpa$/
      */
     public function iAmOnTheCheckLPADetailsPage()
     {
@@ -1093,8 +1087,28 @@ class RequestActivationKeyContext implements Context
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
+    }
 
-        if (!$this->lpa->lpaIsCleansed && $regDate == 'before') {
+    /**
+     * @Given  /^I have previously requested an activation key$/
+     */
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
+        $this->iConfirmTheDetailsIProvidedAreCorrect();
+        $this->iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA();
+    }
+
+    /**
+     * @Then /^I confirm details of the found LPA are correct$/
+     * @When /^I request a new activation key$/
+     */
+    public function iConfirmDetailsOfTheFoundLpaAreCorrect()
+    {
+        $earliestRegDate = '2019-09-01';
+
+        if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
             $this->apiFixtures->patch('/v1/older-lpa/confirm')
                 ->respondWith(
                     new Response(
@@ -1144,13 +1158,75 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given  /^I have already requested an activation key previously$/
+     * @Given  /^I provide my contact details$/
      */
-    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
+    public function iProvideMyContactDetails()
     {
-        $this->iAmOnTheRequestAnActivationKeyPage();
-        $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
-        $this->iConfirmTheDetailsIProvidedAreCorrect();
-        $this->iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA();
+        $this->iConfirmDetailsOfTheFoundLpaAreCorrect();
+        $this->iAmAskedForMyContactDetails();
+        $this->whenIEnterMyTelephoneNumber();
+    }
+
+    /**
+     * @When  /^I confirm that the data is correct and click the confirm and submit button$/
+     */
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    {
+        $data = [
+            'queuedForCleansing' => true
+        ];
+
+        $this->ui->assertPageContainsText('Check your details');
+        $this->ui->assertPageContainsText('Confirm and submit request');
+
+        $this->apiFixtures->post('/v1/older-lpa/cleanse')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($data)
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('personalisation', $params);
+                }
+            );
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+        $this->ui->pressButton('Confirm and submit request');
+    }
+
+    /**
+     * @Then  /^I should expect it within (.*) time$/
+     */
+    public function iShouldExpectItWithin($time)
+    {
+        if ($time === '6 weeks') {
+            $date = (new DateTime())->modify('+6 weeks')->format('j F Y');
+
+            $this->ui->assertPageContainsText('We\'ve got your activation key request');
+            $this->ui->assertPageContainsText('We\'ll contact you by ' . $date);
+        } else {
+            $date = (new DateTime())->modify('+2 weeks')->format('j F Y');
+            $this->ui->assertPageContainsText('We\'re posting you an activation key');
+            $this->ui->assertPageContainsText('You should get the letter by ' . $date);
+        }
+    }
+
+    /**
+     * @Given  /^I provide the additional details asked$/
+     */
+    public function iProvideTheAdditionalDetailsAsked()
+    {
+        $this->iConfirmThatIAmThe('Donor');
+        $this->iSelectThatICannotTakeCalls();
     }
 }

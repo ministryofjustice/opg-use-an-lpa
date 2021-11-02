@@ -176,7 +176,7 @@ class LpaServiceTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getByUserLpaActorToken()
 
-    private function init_valid_user_token_test(): stdClass
+    private function init_valid_user_token_test($validState = true): stdClass
     {
         $t = new stdClass();
 
@@ -202,7 +202,7 @@ class LpaServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
             'Id' => $t->Token,
-            'UserId' => $t->SiriusUid,
+            'UserId' => $t->UserId,
             'SiriusUid' => $t->SiriusUid,
             'ActorId' => $t->ActorId,
         ]);
@@ -215,14 +215,6 @@ class LpaServiceTest extends TestCase
                 'uId' => $t->SiriusUid,
                 'status' => 'Registered',
                 'attorneys' => [
-                    [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
-                ],
-                'original_attorneys' => [
                     [
                         'id' => $t->ActorId,
                         'firstname' => 'Test',
@@ -244,7 +236,7 @@ class LpaServiceTest extends TestCase
         // check valid lpa
         $this->isValidLpaProphecy->__invoke(
             $t->Lpa->getData()
-        )->willReturn(true);
+        )->willReturn($validState);
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
@@ -257,6 +249,68 @@ class LpaServiceTest extends TestCase
         return $t;
     }
 
+    //-------------------------------------------------------------------------
+    // Test getByUserLpaActorToken()
+
+    private function init_valid_user_token_invalid_actor(): stdClass
+    {
+        $t = new stdClass();
+
+        $t->Token = 'test-token';
+        $t->UserId = 'test-user-id';
+        $t->SiriusUid = 'test-sirius-uid';
+        $t->ActorId = 1;
+        $t->Lpa = new Lpa(
+            [
+                'uId' => $t->SiriusUid,
+                'status' => 'Registered',
+                'attorneys' => [
+                    [
+                        'id' => $t->ActorId,
+                        'firstname' => 'Test',
+                        'surname' => 'Test',
+                        'systemStatus' => false
+                    ]
+                ]
+            ],
+            new DateTime()
+        );
+
+        $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
+            'Id' => $t->Token,
+            'UserId' => $t->UserId,
+            'SiriusUid' => $t->SiriusUid,
+            'ActorId' => $t->ActorId,
+        ]);
+
+
+        $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn($t->Lpa);
+
+        // resolves LPA actor as primary attorney
+        $this->resolveActorProphecy
+            ->__invoke([
+                           'uId' => $t->SiriusUid,
+                           'status' => 'Registered',
+                           'attorneys' => []
+            ], (string) $t->ActorId)
+            ->willReturn(null);
+
+        // check valid lpa
+        $this->isValidLpaProphecy->__invoke(
+            $t->Lpa->getData()
+        )->willReturn(true);
+
+        // attorney status is active
+        $this->getAttorneyStatusProphecy->__invoke([
+             'id' => $t->ActorId,
+             'firstname' => 'Test',
+             'surname' => 'Test',
+             'systemStatus' => false
+        ])->shouldBeCalled()->willReturn(2);
+
+        return $t;
+    }
+
     /** @test */
     public function can_get_by_user_token()
     {
@@ -264,7 +318,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('user-lpa-actor-token', $result);
@@ -300,23 +354,11 @@ class LpaServiceTest extends TestCase
     /** @test */
     public function cannot_get_by_user_token_with_inactive_actor()
     {
-        $t = $this->init_valid_user_token_test();
-
-        $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn([
-            'uId' => $t->SiriusUid,
-            'attorneys' => [
-                [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => false
-                ]
-            ]
-        ]);
+        $t = $this->init_valid_user_token_invalid_actor();
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
         $this->assertNull($result);
     }
@@ -343,9 +385,21 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
         $this->assertNull($result);
+    }
+
+    /** @test */
+    public function cannot_get_by_user_token_when_not_valid_lpa()
+    {
+        $t = $this->init_valid_user_token_test(false);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+
+        $this->assertEmpty($result);
     }
 
     //-------------------------------------------------------------------------
