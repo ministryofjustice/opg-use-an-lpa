@@ -8,15 +8,35 @@
             {% endif %}
         </dt>
         <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-4 govuk-!-margin-bottom-0">
-            {% if actorActive %}
-                <p class="govuk-!-margin-top-0">
-                    <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a><br>
-                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
-                    <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">{% trans %}Check access codes{% endtrans %}</a><br>
-                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype }}</span>
-                    <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">{% trans %}View LPA summary{% endtrans %}</a>
-                    <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
+            {%  if not actorActive %}
+                <div>
+                    <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
+                        <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
+                    </p>
+                </div>
+            {%  endif %}
+            {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
+                <div>
+                <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
+                    <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
                 </p>
+                </div>
+            {% endif %}
+            {% if actorActive %}
+                <ul class="govuk-list govuk-list--inline">
+                    <li>
+                        <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a>
+                        <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
+                    </li>
+                    <li>
+                        <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">{% trans %}Check access codes{% endtrans %}</a><br>
+                        <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype }}</span>
+                    </li>
+                    <li>
+                        <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">{% trans %}View LPA summary{% endtrans %}</a>
+                        <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
+                    </li>
+                </ul>
             {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions govuk-!-width-one-third">
@@ -42,17 +62,3 @@
         </dd>
     </div>
 </dl>
-{%  if not actorActive %}
-    <div>
-        <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
-            <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
-        </p>
-    </div>
-{%  endif %}
-{% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <div>
-    <p class="govuk-body govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
-        <a class="govuk-!-margin-left-3 govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
-    </p>
-    </div>
-{% endif %}

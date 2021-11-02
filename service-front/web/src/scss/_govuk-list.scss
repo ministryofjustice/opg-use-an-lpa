@@ -1,0 +1,10 @@
+.govuk-list {
+  &--inline {
+    display: flex;
+
+    > li {
+      display: inline-block;
+      margin-right: govuk-spacing(3);
+    }
+  }
+}
