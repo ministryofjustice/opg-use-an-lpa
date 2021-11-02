@@ -41,7 +41,6 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
 
         $this->setAuthenticator($authenticator);
         $this->featureEnabled = $featureEnabled;
-        $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
     }
 
     /**
@@ -51,7 +50,6 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
-        $this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($session);
         $user = $this->getUser($request);
         if (($this->featureEnabled)('allow_older_lpas')) {
             return new HtmlResponse($this->renderer->render('actor::before-requesting-activation-key-info', [
