@@ -9,11 +9,17 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
+use Cassandra\Date;
+use DateInterval;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaService
 {
+    private const CLEANSE_INTERVAL = 'P6W';
+    private const EXPIRY_INTERVAL = 'P1Y';
+    private const SEND_LETTER_INTERVAL = 'P2W';
+
     private ActorCodes $actorCodes;
     private LoggerInterface $logger;
     private LpasInterface $lpaRepository;
@@ -54,8 +60,8 @@ class OlderLpaService
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
-                'actorId'   => $lpaId,
-                'lpaId'     => $actorId,
+                'actorId' => $lpaId,
+                'lpaId' => $actorId,
             ]
         );
 
@@ -69,7 +75,7 @@ class OlderLpaService
         $this->logger->info(
             'Removal request from UserLpaActorMap {id}',
             [
-                'id' => $requestId
+                'id' => $requestId,
             ]
         );
     }
@@ -97,7 +103,13 @@ class OlderLpaService
         $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create($userId, $uid, $actorUid, 'P1Y');
+                $recordId = $this->userLpaActorMap->create(
+                    $userId,
+                    $uid,
+                    $actorUid,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::SEND_LETTER_INTERVAL)
+                );
             }
         }
 
@@ -105,19 +117,21 @@ class OlderLpaService
         $actorUidInt = (int)$actorUid;
 
         $this->logger->info(
-            'Requesting an access code letter for attorney {attorney} on LPA {lpa}',
+            'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
+                'user_id' => $userId,
                 'attorney' => $actorUidInt,
                 'lpa' => $uidInt,
             ]
         );
 
         try {
-            $this->lpaRepository->requestLetter($uidInt, $actorUidInt);
+            $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
         } catch (ApiException $apiException) {
             $this->logger->notice(
-                'Failed to request access code letter for attorney {attorney} on LPA {lpa}',
+                'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
+                    'user_id' => $userId,
                     'attorney' => $actorUidInt,
                     'lpa' => $uidInt,
                 ]
@@ -136,7 +150,90 @@ class OlderLpaService
          */
         if (($this->featureEnabled)('save_older_lpa_requests')) {
             if ($existingRecordId !== null) {
-                $this->userLpaActorMap->renewActivationPeriod($existingRecordId, 'P1Y');
+                $this->userLpaActorMap->updateRecord(
+                    $existingRecordId,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::SEND_LETTER_INTERVAL),
+                    $actorUid
+                );
+            }
+        }
+    }
+
+    /**
+     * Provides the capability to request a letter be sent to the registered
+     * address of the specified actor with a new one-time-use registration code.
+     * This will allow them to add the LPA to their UaLPA account.
+     *
+     * @param string      $uid Sirius uId for an LPA
+     * @param string      $userId
+     * @param string      $additionalInfo
+     *
+     * @param string|null $actorId
+     * @param string|null $existingRecordId
+     */
+    public function requestAccessAndCleanseByLetter(
+        string $uid,
+        string $userId,
+        string $additionalInfo,
+        ?int $actorId = null,
+        ?string $existingRecordId = null
+    ): void {
+
+        $recordId = null;
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            if ($existingRecordId === null) {
+                $recordId = $this->userLpaActorMap->create(
+                    $userId,
+                    $uid,
+                    (string)$actorId,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::CLEANSE_INTERVAL)
+                );
+            }
+        }
+
+        $uidInt = (int)$uid;
+        $this->logger->info(
+            'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
+            [
+                'user_id' => $userId,
+                'lpa' => $uidInt,
+            ]
+        );
+
+        try {
+            $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
+        } catch (ApiException $apiException) {
+            $this->logger->notice(
+                'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
+                [
+                    'user_id' => $userId,
+                    'lpa' => $uidInt,
+                ]
+            );
+
+            if ($recordId !== null) {
+                $this->removeLpa($recordId);
+            }
+
+            throw $apiException;
+        }
+
+        /**
+         * This is the exception to the method documentation. We cannot easily roll this alteration
+         * back so we'll do it last. The potential is that this operation could fail even though
+         * the API request worked. That being the case the users record will not have
+         * an up to date ActivateBy column. This isn't the end of the world.
+         */
+        if (($this->featureEnabled)('save_older_lpa_requests')) {
+            if ($existingRecordId !== null) {
+                $this->userLpaActorMap->updateRecord(
+                    $existingRecordId,
+                    new DateInterval(self::EXPIRY_INTERVAL),
+                    new DateInterval(self::CLEANSE_INTERVAL),
+                    $actorId
+                );
             }
         }
     }

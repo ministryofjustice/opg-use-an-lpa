@@ -30,8 +30,10 @@ jest.mock("./cookieHelper", () => ({
 }));
 describe('When the cookie banner is initiated', () => {
   describe('and there is no cookie set', () => {
-    getCookie.mockReturnValueOnce(null);
-    getCookie.mockReturnValueOnce(null);
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+    });
     test('it should show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.cookie-banner'));
@@ -40,8 +42,10 @@ describe('When the cookie banner is initiated', () => {
     });
   });
   describe('and the accept cookies have been set to true', () => {
-    getCookie.mockReturnValueOnce('true');
-    getCookie.mockReturnValueOnce('true');
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce('true');
+      getCookie.mockReturnValueOnce('true');
+    });
     test('it should not show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.getElementsByClassName('cookie-banner')[0], false);
@@ -50,8 +54,10 @@ describe('When the cookie banner is initiated', () => {
     });
   });
   describe('and the accept all button has been clicked', () => {
-    getCookie.mockReturnValueOnce(null);
-    getCookie.mockReturnValueOnce(null);
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+    });
     test('it should hide the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.getElementsByClassName('cookie-banner')[0], false);
@@ -63,11 +69,13 @@ describe('When the cookie banner is initiated', () => {
     });
   });
   describe('and the usage option is set to true', () => {
-    window.gaConfig = {
-      uaID: 'UA-12345'
-    }
-    getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
-    getCookie.mockReturnValueOnce('true');
+    beforeEach(() => {
+      window.gaConfig = {
+        uaID: 'UA-12345'
+      }
+      getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
+      getCookie.mockReturnValueOnce('true');
+    });
     test('it should setup useAnaltics', () => {
       expect(window.useAnalytics).toBeUndefined();
       document.body.innerHTML = cookieBannerHtml;
@@ -83,8 +91,10 @@ describe('When the cookie banner is initiated', () => {
 
 describe('When the cookie banner is initiated on the cookies page', () => {
   describe('and I am on the cookies page but have not seen the message', () => {
-    getCookie.mockReturnValueOnce(null);
-    getCookie.mockReturnValueOnce(null);
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+    });
     test('it should setup useAnaltics', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.getElementsByClassName('cookie-banner')[0], true);

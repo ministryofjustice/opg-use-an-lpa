@@ -101,31 +101,37 @@ class LpaService
         }
 
         $lpa = $this->getByUid($map['SiriusUid']);
-
-        if (is_null($lpa)) {
+        if ($lpa === null) {
             return null;
         }
 
         $lpaData = $lpa->getData();
-        $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
-
         unset($lpaData['original_attorneys']);
 
-        // If an active attorney is not found then we should not return an lpa
-        if (is_null($actor)) {
-            return null;
+        $result = [
+            'user-lpa-actor-token' => $map['Id'],
+            'date' => $lpa->getLookupTime()->format('c'),
+            'lpa' => $lpaData,
+        ];
+
+        // If an actor has been stored against an LPA then attempt to resolve it from the API return
+        if ($map['ActorId'] !== null) {
+            $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
+
+            // If an active attorney is not found then we should not return an lpa
+            if ($actor !== null) {
+                $result['actor'] = $actor;
+            } else {
+                return null;
+            }
         }
 
-        //Extract and return only LPA's where status is Registered or Cancelled
+        // Extract and return only LPA's where status is Registered or Cancelled
         if (($this->isValidLpa)($lpaData)) {
-            return [
-                'user-lpa-actor-token' => $map['Id'],
-                'date' => $lpa->getLookupTime()->format('c'),
-                'actor' => $actor,
-                'lpa' => $lpaData,
-            ];
+            return $result;
         }
 
+        // LPA was found but is not valid for use.
         return [];
     }
 
