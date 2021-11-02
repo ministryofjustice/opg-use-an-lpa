@@ -360,7 +360,7 @@ class LpaServiceTest extends TestCase
 
         $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
-        $this->assertNull($result);
+        $this->assertNull($result['actor']);
     }
 
     /** @test */

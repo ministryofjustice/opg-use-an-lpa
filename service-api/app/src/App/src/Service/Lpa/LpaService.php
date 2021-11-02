@@ -120,7 +120,6 @@ class LpaService
 
             // If an active attorney is not found then we should not return an lpa
             ($actor !== null) ? $result['actor'] = $actor : $result['actor'] = null;
-
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
