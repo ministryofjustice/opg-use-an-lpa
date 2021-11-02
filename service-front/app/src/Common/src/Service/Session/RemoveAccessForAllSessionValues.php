@@ -13,10 +13,10 @@ class RemoveAccessForAllSessionValues
     public function cleanAccessForAllSessionValues(SessionInterface $session): void
     {
         $session->unset('opg_reference_number');
-        $this->removePostCheckAnswersSessionValues($session);
+        $this->removePostLPAMatchSessionValues($session);
     }
 
-    public function removePostCheckAnswersSessionValues(SessionInterface $session): void
+    public function removePostLPAMatchSessionValues(SessionInterface $session): void
     {
         $session->unset('actor_id');
         $session->unset('actor_role');

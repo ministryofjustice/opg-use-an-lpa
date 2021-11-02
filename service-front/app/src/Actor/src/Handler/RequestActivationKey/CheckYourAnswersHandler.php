@@ -136,7 +136,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $this->removeAccessForAllSessionValues->removePostCheckAnswersSessionValues($this->session);
+        $this->removeAccessForAllSessionValues->removePostLPAMatchSessionValues($this->session);
 
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
