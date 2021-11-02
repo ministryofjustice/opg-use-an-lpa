@@ -57,4 +57,3 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
         $removeSessionValues->cleanAccessForAllSessionValues($sessionProphecy->reveal());
     }
 }
-
