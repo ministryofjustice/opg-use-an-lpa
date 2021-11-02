@@ -180,7 +180,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestToRemoveAnLPAFromMyAccountThatIs($status)
     {
-        if ($status == 'Registered' OR  $status == 'Cancelled') {
+        if ($status == 'Registered' or  $status == 'Cancelled') {
             $this->lpa['status'] = $status;
 
             // API call for get LpaById (when give organisation access is clicked)
