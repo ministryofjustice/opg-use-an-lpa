@@ -100,7 +100,7 @@ module "whitelist" {
 }
 
 data "aws_secretsmanager_secret" "notify_api_key" {
-  name = "notify-api-key"
+  name = local.account.notify_key_secret_name
 }
 
 data "aws_ip_ranges" "route53_healthchecks" {
