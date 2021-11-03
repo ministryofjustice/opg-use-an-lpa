@@ -15,7 +15,7 @@ output "workspace_name" {
   value = terraform.workspace
 }
 
-variable "accounts" {
+variable "environments" {
   type = map(
     object({
       account_id   = string
@@ -69,18 +69,18 @@ variable "accounts" {
 }
 
 locals {
-  environment       = lower(terraform.workspace)
-  account           = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  dns_namespace_acc = local.environment == "production" ? "" : "${local.account.account_name}."
-  dns_namespace_env = local.account.account_name == "production" ? "" : "${local.environment}."
-  dev_wildcard      = local.account.account_name == "production" ? "" : "*."
+  environment_name  = lower(terraform.workspace)
+  environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
+  dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
+  dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
+  dev_wildcard      = local.environment.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
-    environment-name = local.environment
+    environment-name = local.environment_name
     owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-    is-production    = local.account.is_production
+    is-production    = local.environment.is_production
   }
 
   optional_tags = {

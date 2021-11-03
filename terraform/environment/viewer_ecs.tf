@@ -5,7 +5,7 @@ resource "aws_ecs_service" "viewer" {
   name             = "viewer-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
-  desired_count    = local.account.autoscaling.view.minimum
+  desired_count    = local.environment.autoscaling.view.minimum
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
@@ -34,7 +34,7 @@ resource "aws_ecs_service" "viewer" {
 // The service's Security Groups
 
 resource "aws_security_group" "viewer_ecs_service" {
-  name_prefix = "${local.environment}-viewer-ecs-service"
+  name_prefix = "${local.environment_name}-viewer-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
 // Viewer ECS Service Task level config
 
 resource "aws_ecs_task_definition" "viewer" {
-  family                   = "${local.environment}-viewer"
+  family                   = "${local.environment_name}-viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -101,12 +101,12 @@ resource "aws_ecs_task_definition" "viewer" {
 // Permissions
 
 resource "aws_iam_role" "viewer_task_role" {
-  name               = "${local.environment}-viewer-task-role"
+  name               = "${local.environment_name}-viewer-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "viewer_permissions_role" {
-  name   = "${local.environment}-ViewerApplicationPermissions"
+  name   = "${local.environment_name}-ViewerApplicationPermissions"
   policy = data.aws_iam_policy_document.viewer_permissions_role.json
   role   = aws_iam_role.viewer_task_role.id
 }
@@ -151,7 +151,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.viewer-web.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.viewer-web.use-an-lpa"
         }
       },
       environment = [
@@ -193,7 +193,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.viewer-app.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.viewer-app.use-an-lpa"
         }
       },
       environment = local.viewer_app_environment_variables
@@ -225,19 +225,19 @@ locals {
       },
       {
         name  = "SESSION_EXPIRES",
-        value = tostring(local.account.session_expires_view)
+        value = tostring(local.environment.session_expires_view)
       },
       {
         name  = "COOKIE_EXPIRES",
-        value = tostring(local.account.cookie_expires_view)
+        value = tostring(local.environment.cookie_expires_view)
       },
       {
         name  = "GOOGLE_ANALYTICS_ID",
-        value = local.account.google_analytics_id_view
+        value = local.environment.google_analytics_id_view
       },
       {
         name  = "LOGGING_LEVEL",
-        value = tostring(local.account.logging_level)
+        value = tostring(local.environment.logging_level)
       },
       {
         name  = "BRUTE_FORCE_CACHE_URL",
