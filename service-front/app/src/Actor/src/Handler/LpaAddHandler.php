@@ -22,6 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Class LpaAddHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
@@ -72,17 +73,18 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 $postData = $form->getData();
 
                 //  Convert the date of birth
-                $dobString = sprintf(
-                    '%s-%s-%s',
-                    $postData['dob']['year'],
-                    $postData['dob']['month'],
-                    $postData['dob']['day']
+                $session->set(
+                    'dob',
+                    [
+                        'day' => $postData['dob']['day'],
+                        'month' => $postData['dob']['month'],
+                        'year' => $postData['dob']['year']
+                    ]
                 );
 
                 //  Set the data in the session and pass to the check handler
                 $session->set('passcode', $postData['passcode']);
                 $session->set('reference_number', $postData['reference_number']);
-                $session->set('dob', $dobString);
 
                 return $this->redirectToRoute('lpa.check');
             }

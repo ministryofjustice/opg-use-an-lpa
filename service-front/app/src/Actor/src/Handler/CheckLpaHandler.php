@@ -121,11 +121,19 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             throw new SessionTimeoutException();
         }
 
+        //  Convert the date of birth to string
+        $dobString = sprintf(
+            '%s-%s-%s',
+            $dob['year'],
+            $dob['month'],
+            $dob['day']
+        );
+
         switch ($request->getMethod()) {
             case 'POST':
-                return $this->handlePost($request, $passcode, $referenceNumber, $dob);
+                return $this->handlePost($request, $passcode, $referenceNumber, $dobString);
             default:
-                return $this->handleGet($request, $passcode, $referenceNumber, $dob);
+                return $this->handleGet($request, $passcode, $referenceNumber, $dobString);
         }
     }
 
