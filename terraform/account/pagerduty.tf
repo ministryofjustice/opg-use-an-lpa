@@ -5,6 +5,12 @@ resource "aws_kms_key" "pagerduty_sns" {
   enable_key_rotation     = true
 }
 
+resource "aws_kms_alias" "pagerduty_sns" {
+  name          = "alias/pagerduty-sns"
+  target_key_id = aws_kms_key.pagerduty_sns.key_id
+}
+
+
 data "aws_iam_policy_document" "pagerduty_sns_kms" {
   statement {
     sid       = "Allow Key to be used for Encryption by AWS Cloudwatch"
