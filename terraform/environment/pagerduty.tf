@@ -14,7 +14,8 @@ resource "pagerduty_service_integration" "cloudwatch_integration" {
 
 resource "aws_sns_topic" "cloudwatch_to_pagerduty" {
   name              = "CloudWatch-to-PagerDuty-${local.environment}"
-  kms_master_key_id = "alias/aws/sns"
+  kms_master_key_id = data.aws_kms_alias.secrets_manager.target_key_arn
+
 }
 
 resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
