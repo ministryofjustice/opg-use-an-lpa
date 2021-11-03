@@ -3,6 +3,12 @@ resource "aws_secretsmanager_secret" "notify_api_key" {
   kms_key_id = aws_kms_key.secrets_manager.key_id
 }
 
+resource "aws_secretsmanager_secret" "notify_api_key_demo" {
+  count      = local.account_name == "development" ? 1 : 0
+  name       = "notify-api-key-demo"
+  kms_key_id = aws_kms_key.secrets_manager.key_id
+}
+
 resource "aws_kms_key" "secrets_manager" {
   description             = "Secrets Manager encryption ${local.environment}"
   deletion_window_in_days = 10
