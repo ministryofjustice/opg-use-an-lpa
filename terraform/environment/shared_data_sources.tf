@@ -3,7 +3,7 @@ data "aws_vpc" "default" {
 }
 
 data "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${local.account_name}-lb-access-logs"
+  bucket = "opg-ual-${local.account.account_name}-lb-access-logs"
 }
 
 data "aws_subnet_ids" "private" {

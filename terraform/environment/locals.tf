@@ -2,10 +2,6 @@ variable "pagerduty_token" {
   type = string
 }
 
-variable "account_mapping" {
-  type = map(any)
-}
-
 variable "container_version" {
   type    = string
   default = "latest"
@@ -22,7 +18,8 @@ output "workspace_name" {
 variable "accounts" {
   type = map(
     object({
-      account_id = string
+      account_id   = string
+      account_name = string
       autoscaling = object({
         use = object({
           minimum = number
@@ -72,13 +69,11 @@ variable "accounts" {
 }
 
 locals {
-  account_name = lookup(var.account_mapping, terraform.workspace, "development")
-  account      = var.accounts[local.account_name]
-  environment  = lower(terraform.workspace)
-
-  dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
-  dns_namespace_env = local.account_name == "production" ? "" : "${local.environment}."
-  dev_wildcard      = local.account_name == "production" ? "" : "*."
+  environment       = lower(terraform.workspace)
+  account           = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  dns_namespace_acc = local.environment == "production" ? "" : "${local.account.account_name}."
+  dns_namespace_env = local.account.account_name == "production" ? "" : "${local.environment}."
+  dev_wildcard      = local.account.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"

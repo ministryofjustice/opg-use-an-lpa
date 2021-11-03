@@ -1,6 +1,6 @@
 data "aws_sqs_queue" "ship_to_opg_metrics" {
   count = local.account.ship_metrics_queue_enabled == true ? 1 : 0
-  name  = "${local.account_name}-ship-to-opg-metrics"
+  name  = "${local.account.account_name}-ship-to-opg-metrics"
 }
 data "aws_lambda_function" "clsf_to_sqs" {
   count         = local.account.ship_metrics_queue_enabled == true ? 1 : 0

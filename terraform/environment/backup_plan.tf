@@ -31,7 +31,7 @@ resource "aws_backup_plan" "main" {
 }
 
 data "aws_backup_vault" "main" {
-  name = "${local.account_name}_main_backup_vault"
+  name = "${local.account.account_name}_main_backup_vault"
 }
 
 data "aws_iam_role" "aws_backup_role" {
