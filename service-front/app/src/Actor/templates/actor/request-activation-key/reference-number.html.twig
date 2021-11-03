@@ -15,6 +15,9 @@
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ govuk_error_summary(form) }}
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
@@ -42,8 +45,6 @@
                             <p>{% trans %}We are working to open up the service to more LPAs. Please try again in a few weeks time.{% endtrans %}</p>
                         </div>
                     </details>
-
-                    {{ govuk_error_summary(form) }}
 
                     {{ govuk_form_open(form) }}
 

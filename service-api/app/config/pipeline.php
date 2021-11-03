@@ -74,6 +74,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - etc.
     $app->pipe('/v1/actor-codes', App\Middleware\UserIdentificationMiddleware::class);
     $app->pipe('/v1/lpas', App\Middleware\UserIdentificationMiddleware::class);
+    $app->pipe('/v1/older-lpa', App\Middleware\UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
