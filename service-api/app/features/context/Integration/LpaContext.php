@@ -2585,7 +2585,9 @@ class LpaContext extends BaseIntegrationContext
             return;
         }
 
-        throw new ExpectationFailedException('Activation key already requested for LPA exception should have been thrown');
+        throw new ExpectationFailedException(
+            'Activation key already requested for LPA exception should have been thrown'
+        );
     }
 
     /**

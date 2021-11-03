@@ -491,7 +491,7 @@ class LpaContext implements Context
             'queuedForCleansing' => true
         ];
 
-        if($cleanseStatus == 'not marked' && $regDate == 'before') {
+        if ($cleanseStatus == 'not marked' && $regDate == 'before') {
             // request a code to be generated and letter to be sent
             $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
                 ->respondWith(
