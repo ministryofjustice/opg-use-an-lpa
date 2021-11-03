@@ -1894,6 +1894,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
+     * @When /^I request to remove an LPA from my account that is (.*)$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
@@ -1987,6 +1988,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Then /^I want to be asked for confirmation prior to cancellation/
+     * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa/
      */
     public function iWantToBeAskedForConfirmationPriorToCancellation()
     {

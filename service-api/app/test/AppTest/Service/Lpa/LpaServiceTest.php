@@ -289,10 +289,17 @@ class LpaServiceTest extends TestCase
         // resolves LPA actor as primary attorney
         $this->resolveActorProphecy
             ->__invoke([
-                           'uId' => $t->SiriusUid,
-                           'status' => 'Registered',
-                           'attorneys' => []
-            ], (string) $t->ActorId)
+                    'uId' => $t->SiriusUid,
+                    'status' => 'Registered',
+                    'attorneys' => [
+                        [
+                            'id' => $t->ActorId,
+                            'firstname' => 'Test',
+                            'surname' => 'Test',
+                            'systemStatus' => false,
+                        ],
+                    ],
+                ], (string)$t->ActorId)
             ->willReturn(null);
 
         // check valid lpa
@@ -306,7 +313,7 @@ class LpaServiceTest extends TestCase
              'firstname' => 'Test',
              'surname' => 'Test',
              'systemStatus' => false
-        ])->shouldBeCalled()->willReturn(2);
+        ])->shouldBeCalled()->willReturn(0);
 
         return $t;
     }

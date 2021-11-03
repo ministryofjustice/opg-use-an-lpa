@@ -10,19 +10,19 @@ Feature: Remove an LPA from my account
     And I have added an LPA to my account
 
   @ui @integration
-  Scenario: The user is taken to a confirmation page when they request to remove an LPA
+  Scenario: The user is taken to a confirmation page when they request to remove a registered LPA
     Given I am on the dashboard page
     When I request to remove an LPA from my account that is Registered
     Then I am taken to the remove an LPA confirmation page for Registered lpa
 
   @ui @integration
-  Scenario: The user is taken to a confirmation page when they request to remove an LPA
+  Scenario: The user is taken to a confirmation page when they request to remove a cancelled LPA
     Given I am on the dashboard page
     When I request to remove an LPA from my account that is Cancelled
     Then I am taken to the remove an LPA confirmation page for Cancelled lpa
 
   @ui @integration
-  Scenario: The user is taken to a confirmation page when they request to remove an LPA
+  Scenario: The user is taken to a confirmation page when they request to remove a revoked LPA
     Given I am on the dashboard page
     When I request to remove an LPA from my account that is Revoked
     Then I am taken to the remove an LPA confirmation page for Revoked lpa
