@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler, UserAware};
-use Common\Handler\Traits\User;
+use Common\Handler\{AbstractHandler,
+    UserAware,
+    Traits\Session as SessionTrait,
+    Traits\User};
+use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -22,15 +25,17 @@ use Common\Service\Features\FeatureEnabled;
 class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAware
 {
     use User;
+    use SessionTrait;
 
-    private ?SessionInterface $session;
+    private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
     private FeatureEnabled $featureEnabled;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        FeatureEnabled $featureEnabled
+        FeatureEnabled $featureEnabled,
+        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -44,6 +49,7 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $session = $this->getSession($request, 'session');
         $user = $this->getUser($request);
         if (($this->featureEnabled)('allow_older_lpas')) {
             return new HtmlResponse($this->renderer->render('actor::before-requesting-activation-key-info', [
