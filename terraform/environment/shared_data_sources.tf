@@ -58,6 +58,10 @@ data "aws_kms_alias" "secrets_manager" {
   name = "alias/secrets_manager_encryption"
 }
 
+data "aws_kms_alias" "pagerduty_sns" {
+  name = "alias/pagerduty-sns"
+}
+
 //--------------------
 // ECR Repos
 
