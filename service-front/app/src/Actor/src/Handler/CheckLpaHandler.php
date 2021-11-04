@@ -107,7 +107,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $passcode = $this->session->get('passcode');
         $referenceNumber = $this->session->get('reference_number');
-        $dob = $this->session->get('dob');
+        $dob = $this->session->get('dob_by_code');
 
         if (
             !isset($this->identity)
@@ -121,19 +121,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             throw new SessionTimeoutException();
         }
 
-        //  Convert the date of birth to string
-        $dobString = sprintf(
-            '%s-%s-%s',
-            $dob['year'],
-            $dob['month'],
-            $dob['day']
-        );
-
         switch ($request->getMethod()) {
             case 'POST':
-                return $this->handlePost($request, $passcode, $referenceNumber, $dobString);
+                return $this->handlePost($request, $passcode, $referenceNumber, $dob);
             default:
-                return $this->handleGet($request, $passcode, $referenceNumber, $dobString);
+                return $this->handleGet($request, $passcode, $referenceNumber, $dob);
         }
     }
 
