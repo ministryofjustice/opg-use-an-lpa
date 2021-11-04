@@ -13,7 +13,7 @@ data "aws_lambda_function" "ship_to_opg_metrics" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "events" {
-  count           = local.account.ship_metrics_queue_enabled == true ? 1 : 0
+  count           = local.environment.ship_metrics_queue_enabled == true ? 1 : 0
   name            = "${local.environment_name}-clsf-to-sqs"
   log_group_name  = aws_cloudwatch_log_group.application_logs.name
   filter_pattern  = "{ $.context.event_code = * }"
