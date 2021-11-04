@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 
@@ -17,6 +22,19 @@ use Laminas\Diactoros\Response\HtmlResponse;
 class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestReferenceNumber $form;
+    private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
+
+
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        AuthenticationInterface $authenticator,
+        UrlHelper $urlHelper,
+        LoggerInterface $logger,
+        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
+    ) {
+        parent::__construct($renderer, $authenticator, $urlHelper, $logger);
+        $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
+    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -27,7 +45,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if ($request->getQueryParams()['startAgain']) {
-            $this->clearSession();
+            $this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($this->session);
         }
 
         $this->form->setData($this->session->toArray());
@@ -72,14 +90,5 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
     public function lastPage(): string
     {
         return 'lpa.add-by-paper-information';
-    }
-
-    private function clearSession()
-    {
-        $this->session->unset('postcode');
-        $this->session->unset('first_names');
-        $this->session->unset('last_name');
-        $this->session->unset('dob');
-        $this->session->unset('opg_reference_number');
     }
 }
