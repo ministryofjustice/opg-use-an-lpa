@@ -32,4 +32,4 @@ Feature: The user is able to delete their account
   Scenario: As a user I cannot access my account once it has been deleted
     Given I have deleted my account
     When I request login to my account that was deleted
-    Then My old account is not found
+    Then I am told my credentials are incorrect
