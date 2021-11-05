@@ -2,10 +2,6 @@ variable "pagerduty_token" {
   type = string
 }
 
-variable "account_mapping" {
-  type = map(any)
-}
-
 variable "container_version" {
   type    = string
   default = "latest"
@@ -19,10 +15,11 @@ output "workspace_name" {
   value = terraform.workspace
 }
 
-variable "accounts" {
+variable "environments" {
   type = map(
     object({
-      account_id = string
+      account_id   = string
+      account_name = string
       autoscaling = object({
         use = object({
           minimum = number
@@ -66,25 +63,24 @@ variable "accounts" {
       allow_meris_lpas                          = bool
       save_older_lpa_requests                   = bool
       load_balancer_deletion_protection_enabled = bool
+      notify_key_secret_name                    = string
     })
   )
 }
 
 locals {
-  account_name = lookup(var.account_mapping, terraform.workspace, "development")
-  account      = var.accounts[local.account_name]
-  environment  = lower(terraform.workspace)
-
-  dns_namespace_acc = local.environment == "production" ? "" : "${local.account_name}."
-  dns_namespace_env = local.account_name == "production" ? "" : "${local.environment}."
-  dev_wildcard      = local.account_name == "production" ? "" : "*."
+  environment_name  = lower(terraform.workspace)
+  environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
+  dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
+  dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
+  dev_wildcard      = local.environment.account_name == "production" ? "" : "*."
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
     application      = "use-an-lpa"
-    environment-name = local.environment
+    environment-name = local.environment_name
     owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
-    is-production    = local.account.is_production
+    is-production    = local.environment.is_production
   }
 
   optional_tags = {
