@@ -146,7 +146,7 @@ class LpaAddHandlerTest extends TestCase
 
         $this->sessionProphecy->set('passcode', $expected['passcode']);
         $this->sessionProphecy->set('reference_number', $expected['reference_number']);
-        $this->sessionProphecy->set('dob', $dob);
+        $this->sessionProphecy->set('dob_by_code', $dob);
 
         $this->requestProphecy->getParsedBody()
             ->willReturn($expected);
@@ -155,7 +155,11 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('/lpa/check');
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+        $handler = new LpaAddHandler(
+            $this->rendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
