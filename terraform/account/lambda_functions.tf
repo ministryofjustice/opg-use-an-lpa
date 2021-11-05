@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
   statement {
     sid       = "AllowSecretsManagerAccess"
     effect    = "Allow"
-    resources = [aws_sqs_queue.ship_to_opg_metrics[0].arn]
+    resources = [data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].arn]
     actions = [
       "secretsmanager:GetSecretValue",
     ]
