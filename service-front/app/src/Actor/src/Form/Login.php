@@ -15,8 +15,8 @@ use Laminas\Filter\StringTrim;
 
 class Login extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'login';
-    const NOT_FOUND = 'not_found';
+    public const FORM_NAME = 'login';
+    public const NOT_FOUND = 'not_found';
 
     /**
      * Error messages
@@ -24,7 +24,8 @@ class Login extends AbstractForm implements InputFilterProviderInterface
      */
     protected array $messageTemplates = [
         self::NOT_SAME => 'Security validation failed. Please try again.',
-        self::NOT_FOUND => 'We could not find a Use a lasting power of attorney account with that email address and password. Check your details and try again.'
+        self::NOT_FOUND => 'We could not find a Use a lasting power of attorney account with that email address and
+         password. Check your details and try again.'
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
