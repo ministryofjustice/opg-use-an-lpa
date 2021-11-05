@@ -102,15 +102,15 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
                // redirect to correct success page with correct data
-               if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
-                   $formValues = $form->getData();
-                   $emailAddress = $formValues['email'];
+                if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                    $formValues = $form->getData();
+                    $emailAddress = $formValues['email'];
 
-                   return $this->redirectToRoute('create-account-success', [], [
+                    return $this->redirectToRoute('create-account-success', [], [
                        'email' => $emailAddress
-                   ]);
-               }
-           }
+                    ]);
+                }
+            }
         }
 
         // user is already logged in. check done *after* POST method above due to the way
