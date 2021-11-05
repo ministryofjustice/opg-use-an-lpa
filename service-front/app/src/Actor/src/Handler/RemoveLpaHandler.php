@@ -103,7 +103,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             'user' => $this->user,
             'actorToken' => $actorLpaToken,
             'form' => $this->form,
-            'lpa' => $lpaData
+            'lpa' => $lpaData->lpa
         ]));
     }
 

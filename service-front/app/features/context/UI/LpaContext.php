@@ -50,7 +50,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
 
         if ($status == 'Registered') {
-            $this->ui->assertPageContainsText('LPA is registered.');
+            $this->ui->assertPageContainsText('LPA is registered');
         }
         if ($status == 'Cancelled') {
             $this->ui->assertPageNotContainsText(
