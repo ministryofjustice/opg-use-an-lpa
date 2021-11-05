@@ -18,7 +18,7 @@
                     <h1 class="govuk-heading-xl">{% trans %}Are you sure you want to remove this LPA?{% endtrans %}</h1>
 
                     {% if lpa is not null and lpa.lpa.status|lower == 'registered' %}
-                        <p class="govuk-body">{% trans %}LPA is registered.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</p>
                     {% endif %}
 
                     {% if lpa is not null and (lpa.lpa.status|lower == 'registered' or lpa.lpa.status|lower == 'cancelled') %}
