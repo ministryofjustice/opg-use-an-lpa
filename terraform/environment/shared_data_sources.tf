@@ -3,7 +3,7 @@ data "aws_vpc" "default" {
 }
 
 data "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${local.account_name}-lb-access-logs"
+  bucket = "opg-ual-${local.environment.account_name}-lb-access-logs"
 }
 
 data "aws_subnet_ids" "private" {
@@ -104,7 +104,7 @@ module "whitelist" {
 }
 
 data "aws_secretsmanager_secret" "notify_api_key" {
-  name = "notify-api-key"
+  name = local.environment.notify_key_secret_name
 }
 
 data "aws_ip_ranges" "route53_healthchecks" {

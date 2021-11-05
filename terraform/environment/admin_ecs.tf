@@ -2,7 +2,7 @@
 // admin ECS Service level config
 
 resource "aws_ecs_service" "admin" {
-  count            = local.account.build_admin == true ? 1 : 0
+  count            = local.environment.build_admin == true ? 1 : 0
   name             = "admin-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
@@ -35,8 +35,8 @@ resource "aws_ecs_service" "admin" {
 // The service's Security Groups
 
 resource "aws_security_group" "admin_ecs_service" {
-  count       = local.account.build_admin == true ? 1 : 0
-  name_prefix = "${local.environment}-admin-ecs-service"
+  count       = local.environment.build_admin == true ? 1 : 0
+  name_prefix = "${local.environment_name}-admin-ecs-service"
   description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -46,7 +46,7 @@ resource "aws_security_group" "admin_ecs_service" {
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
-  count                    = local.account.build_admin == true ? 1 : 0
+  count                    = local.environment.build_admin == true ? 1 : 0
   description              = "Allow Port 80 ingress from the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
 
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
@@ -78,8 +78,8 @@ resource "aws_security_group_rule" "admin_ecs_service_egress" {
 // admin ECS Service Task level config
 
 resource "aws_ecs_task_definition" "admin" {
-  count                    = local.account.build_admin == true ? 1 : 0
-  family                   = "${local.environment}-admin"
+  count                    = local.environment.build_admin == true ? 1 : 0
+  family                   = "${local.environment_name}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -93,14 +93,14 @@ resource "aws_ecs_task_definition" "admin" {
 // Permissions
 
 resource "aws_iam_role" "admin_task_role" {
-  count              = local.account.build_admin == true ? 1 : 0
-  name               = "${local.environment}-admin-task-role"
+  count              = local.environment.build_admin == true ? 1 : 0
+  name               = "${local.environment_name}-admin-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
-  count  = local.account.build_admin == true ? 1 : 0
-  name   = "${local.environment}-adminApplicationPermissions"
+  count  = local.environment.build_admin == true ? 1 : 0
+  name   = "${local.environment_name}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
   role   = aws_iam_role.admin_task_role[0].id
 }
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/use-an-lpa/*",
     ]
   }
 
@@ -157,8 +157,8 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
     ]
   }
 }
@@ -187,13 +187,13 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.admin-app.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.admin-app.use-an-lpa"
         }
       },
       environment = [
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.account.logging_level)
+          value = tostring(local.environment.logging_level)
         },
         {
           name  = "PORT",
@@ -201,7 +201,7 @@ locals {
         },
         {
           name  = "DYNAMODB_TABLE_PREFIX",
-          value = tostring(local.environment)
+          value = tostring(local.environment_name)
         },
         {
           name  = "LOGOUT_URL",
@@ -214,7 +214,7 @@ locals {
 }
 
 locals {
-  admin_domain = local.account.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
+  admin_domain = local.environment.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
 }
 
 output "admin_domain" {
