@@ -61,7 +61,7 @@ module "ship_to_opg_metrics" {
   working_directory = "/var/task"
   environment_variables = {
     "OPG_METRICS_URL" : local.account.opg_metrics.endpoint_url
-    "API_KEY" : data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].secret_string
+    "SECRET_ID" : data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].secret_id
   }
   image_uri                           = "${data.aws_ecr_repository.ship_to_opg_metrics.repository_url}:${var.lambda_container_version}"
   ecr_arn                             = data.aws_ecr_repository.ship_to_opg_metrics.arn
