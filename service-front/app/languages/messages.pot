@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-04T10:57:34+00:00\n"
+"POT-Creation-Date: 2021-11-05T15:54:09+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -222,7 +222,6 @@ msgid "Please <a href=\"%link%\" class=\"govuk-link\">sign in</a>"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:29
-#: src/Actor/templates/actor/login-not-found.html.twig:24
 msgid "Create an account"
 msgstr ""
 
@@ -295,7 +294,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
-#: src/Actor/templates/actor/login.html.twig:46
+#: src/Actor/templates/actor/login.html.twig:47
 msgid "Password"
 msgstr ""
 
@@ -1217,7 +1216,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request.html.twig:34
 #: src/Actor/templates/actor/your-details.html.twig:24
-#: src/Actor/templates/actor/login.html.twig:43
+#: src/Actor/templates/actor/login.html.twig:44
 msgid "Email address"
 msgstr ""
 
@@ -1266,7 +1265,7 @@ msgid "For your security, we've signed you out of this service because you did n
 msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:17
-#: src/Actor/templates/actor/login.html.twig:50
+#: src/Actor/templates/actor/login.html.twig:51
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:22
 msgid "Sign in"
 msgstr ""
@@ -1721,7 +1720,6 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:58
-#: src/Actor/templates/actor/login-not-found.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:46
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:21
 msgid "Try again"
@@ -1735,7 +1733,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:56
+#: src/Actor/templates/actor/login.html.twig:57
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -4398,4 +4396,17 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:24
 msgid "cancelled"
+msgstr ""
+
+#: src/Actor/templates/actor/login.html.twig:33
+msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/login.html.twig:38
+msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
+#: src/Viewer/templates/viewer/view-lpa.html.twig:11
+msgid "Give us feedback about this service"
 msgstr ""
