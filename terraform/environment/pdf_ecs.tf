@@ -5,7 +5,7 @@ resource "aws_ecs_service" "pdf" {
   name             = "pdf-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
-  desired_count    = local.account.autoscaling.pdf.minimum
+  desired_count    = local.environment.autoscaling.pdf.minimum
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
@@ -57,7 +57,7 @@ locals {
 // The pdf service's Security Groups
 
 resource "aws_security_group" "pdf_ecs_service" {
-  name_prefix = "${local.environment}-pdf-ecs-service"
+  name_prefix = "${local.environment_name}-pdf-ecs-service"
   description = "PDF generator service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -100,7 +100,7 @@ resource "aws_security_group_rule" "pdf_ecs_service_egress" {
 // pdf ECS Service Task level config
 
 resource "aws_ecs_task_definition" "pdf" {
-  family                   = "${local.environment}-pdf"
+  family                   = "${local.environment_name}-pdf"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -114,7 +114,7 @@ resource "aws_ecs_task_definition" "pdf" {
 // Permissions
 
 resource "aws_iam_role" "pdf_task_role" {
-  name               = "${local.environment}-pdf-task-role"
+  name               = "${local.environment_name}-pdf-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
@@ -141,7 +141,7 @@ locals {
       options = {
         awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
         awslogs-region        = "eu-west-1",
-        awslogs-stream-prefix = "${local.environment}.pdf-app.use-an-lpa"
+        awslogs-stream-prefix = "${local.environment_name}.pdf-app.use-an-lpa"
       }
     }
   })
