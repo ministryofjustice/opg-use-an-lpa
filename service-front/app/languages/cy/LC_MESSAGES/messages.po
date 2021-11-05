@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-10-26T16:19:05+00:00\n"
+"POT-Creation-Date: 2021-11-04T10:57:34+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2538,7 +2538,7 @@ msgstr ""
 msgid "Access revoked"
 msgstr "Diddymwyd mynediad"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
 msgid "%count% active code"
 msgid_plural "%count% active codes"
 msgstr[0] "%count% codau i’w defnyddio"
@@ -2548,7 +2548,7 @@ msgstr[3] "%count% codau i’w defnyddio"
 msgstr[4] "%count% codau i’w defnyddio"
 msgstr[5] "%count% codau i’w defnyddio"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:28
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
 msgid "No organisations have access"
 msgstr "Nid oes gan unrhyw sefydliad fynediad"
 
@@ -2558,11 +2558,11 @@ msgid ""
 msgstr ""
 "Nid oes gennych fynediad at yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon mwyach."
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:48
 msgid "Why is this?"
 msgstr "Beth yw’r rheswm dros hyn?"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:46
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
 msgid "Read more"
 msgstr "Darllen mwy"
 
@@ -4350,7 +4350,7 @@ msgstr ""
 "Ni weithredir peth marcio yn unol â manyleb yr elfen. Nid yw hyn yn cwrdd â maen prawf "
 "llwyddiant WCAG 2.1 4.1.1 (Dosbarthu) a 4.1.2 (Enw, Rôl, Gwerth)."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:90
 msgid ""
 "Some semantic elements were implemented in a way that did not convey the relationships "
 "within the page. This fails WCAG 2.1 success criteria 1.3.1 (Info and Relationships)."
@@ -4369,7 +4369,7 @@ msgstr ""
 "maen prawf llwyddiant WCAG 2.1 2.4.4 (Pwrpas Cyswllt (Mewn Cyd-destun)) a 2.4.9 (Pwrpas "
 "Cyswllt (Cyswllt yn Unig))"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:114
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:94
 msgid ""
 "The role of some components was not correctly determinable. This fails WCAG 2.1 success "
 "criteria 4.1.2 (Name, Role, Value) and 1.3.1 (Info and Relationships)."
@@ -4398,29 +4398,29 @@ msgid "We’ll fix all the accessibility issues we’ve found by December 2020."
 msgstr ""
 "Byddwn yn trwsio’r holl faterion hygyrchedd rydyn ni wedi’u darganfod erbyn Rhagfyr 2020."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:129
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:101
 msgid "Disproportionate burden"
 msgstr "Baich anghymesur"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:135
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:107
 msgid "Not applicable"
 msgstr "Amherthnasol"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:133
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:105
 msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr "Cynnwys nad yw o fewn cwmpas y rheoliadau hygyrchedd"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:137
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "Preparation of this accessibility statement"
 msgstr "Paratoi’r datganiad hygyrchedd hwn"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:140
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:112
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:92
 msgid "This statement was prepared on %date%"
 msgstr "Paratowyd y datganiad hwn ar %date%"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:144
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:116
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:96
 msgid ""
 "This service was last tested on 4 June 2020. The test was carried out by Digital "
@@ -5117,7 +5117,7 @@ msgstr ""
 msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:45
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr "<strong>Pwysig:</strong> Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau."
 
@@ -5378,7 +5378,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr "Le, dileu LPA"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:31
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:40
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
@@ -5488,7 +5488,7 @@ msgstr ""
 msgid "Seen something incorrect in the LPA details?"
 msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:38
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 msgid ""
 "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "anymore."
@@ -5968,7 +5968,7 @@ msgstr "Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
 #: src/Actor/templates/actor/contact-details.html.twig:25
 msgid "We may need to contact you to ask for more information"
-msgstr "Efallai y bydd angen i ni gysylltu â chi i ofyn am ragor o wybodaeth."
+msgstr "Efallai y bydd angen i ni gysylltu â chi i ofyn am ragor o wybodaeth"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:24
 msgid "What is your UK postcode?"
@@ -5996,3 +5996,12 @@ msgstr "Dim ond os ydych chi’n byw yn y DU y gallwch chi ofyn am allwedd cadar
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
 msgid "Your postcode"
 msgstr "Eich cod post"
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:98
+msgid "We’ll fix all the accessibility issues we’ve found by %date%."
+msgstr ""
+"Byddwn yn trwsio’r holl faterion hygyrchedd rydyn ni wedi’u darganfod erbyn %date%."
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:24
+msgid "cancelled"
+msgstr "dilëwyd"
