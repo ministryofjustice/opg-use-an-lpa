@@ -62,6 +62,10 @@ data "aws_kms_alias" "pagerduty_sns" {
   name = "alias/pagerduty-sns"
 }
 
+data "aws_kms_alias" "cloudwatch_encryption" {
+  name = "alias/cloudwatch_encryption"
+}
+
 //--------------------
 // ECR Repos
 
