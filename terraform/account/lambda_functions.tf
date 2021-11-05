@@ -88,7 +88,6 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
     effect    = "Allow"
     resources = [aws_sqs_queue.ship_to_opg_metrics[0].arn]
     actions = [
-      "secretsmanager:GetResourcePolicy",
       "secretsmanager:GetSecretValue",
     ]
   }
