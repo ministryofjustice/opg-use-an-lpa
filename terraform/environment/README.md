@@ -9,12 +9,12 @@ It is important to namespace resources to avoid getting errors for creating reso
 
 There are two namespace variables available.
 
-`${local.environment}`
+`${local.environment_name}`
 returns the workspace name
 
 ```
-"${local.environment}-use-an-lpa"
-``` 
+"${local.environment_name}-use-an-lpa"
+```
 can return `UML-93-use-an-lpa` or `production-use-an-lpa`
 
 `${local.dns_namespace}`
@@ -22,7 +22,7 @@ returns the workspace name followed by ., unless the workspace is production whe
 
 ```
 "viewer.${local.dns_namespace}use-an-lpa"
-``` 
+```
 can return `viewer.uml-93.use-an-lpa` or `viewer.use-an-lpa`.
 
 ## Running Terraform Locally
@@ -53,7 +53,7 @@ A Terraform state lock error can happen if a terraform job is forcefully termina
 CircleCI terminates a process if you cancel a job, so state lock doesn't get released.
 
 Here's how to fix it if it happens.
-Error: 
+Error:
 
 ```hsl
 rror locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed
@@ -66,7 +66,7 @@ Lock Info:
   Version:   0.11.13
   Created:   2019-05-09 16:01:50.027392879 +0000 UTC
   Info:
-```      
+```
 
 Fix:
 ```hsl
@@ -75,7 +75,7 @@ aws-vault exec identity -- terraform workspace select development
 aws-vault exec identity -- terraform force-unlock 69592de7-6132-c863-ae53-976776ffe6cf
 ```
 
-It is important to select the correct workspace. 
+It is important to select the correct workspace.
 For terraform_environment, this will be based on your PR and can be found in the CircleCI pipeline job dev_apply_environment_terraform
 
 In the example below the workspace name is `48-UML116appl`
