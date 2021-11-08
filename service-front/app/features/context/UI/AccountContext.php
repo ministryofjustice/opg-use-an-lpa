@@ -1713,9 +1713,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     * @Then /^I should be told my email change request was successful$/
      */
-    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    public function iShouldBeToldMyEmailChangeRequestWasSuccessful()
     {
         $this->ui->assertPageContainsText('Updating your email address');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
