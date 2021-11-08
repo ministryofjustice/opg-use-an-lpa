@@ -232,7 +232,12 @@ class LpaServiceTest extends TestCase
 
         $lpaData = [
             'lpa' => [
-                'id' => '70000000047'
+                'id' => '70000000047',
+                'status' => 'Registered'
+            ],
+            'actor' => [
+                'details' => [
+                ]
             ],
         ];
 
