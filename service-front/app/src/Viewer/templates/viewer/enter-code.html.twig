@@ -53,11 +53,11 @@
                             }
                         ) }}
 
-                        <details class="govuk-details" data-module="govuk-details">
+                        <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
                             <summary class="govuk-details__summary" role="button">
-                        <span class="govuk-details__summary-text">
-                          {% trans %}The code I've been given does not begin with a V{% endtrans %}
-                        </span>
+                                <span class="govuk-details__summary-text">
+                                    {% trans %}The code I've been given does not begin with a V{% endtrans %}
+                                </span>
                             </summary>
                             <div class="govuk-details__text">
                                 <p>{% trans %}The donor or attorney may have given you the wrong code.{% endtrans %}</p>
