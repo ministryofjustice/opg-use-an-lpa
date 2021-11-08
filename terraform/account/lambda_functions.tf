@@ -27,18 +27,6 @@ module "clsf_to_sqs" {
   aws_cloudwatch_log_group_kms_key_id = aws_kms_key.cloudwatch.arn
 }
 
-data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
-  count     = local.account.opg_metrics.enabled == true ? 1 : 0
-  secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
-  provider  = aws.shared
-}
-
-data "aws_secretsmanager_secret" "opg_metrics_api_key" {
-  count    = local.account.opg_metrics.enabled == true ? 1 : 0
-  name     = local.account.opg_metrics.api_key_secretsmanager_name
-  provider = aws.shared
-}
-
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
   count = local.account.opg_metrics.enabled == true ? 1 : 0
   statement {
@@ -53,6 +41,22 @@ data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
   }
 }
 
+data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
+  count     = local.account.opg_metrics.enabled == true ? 1 : 0
+  secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
+  provider  = aws.shared
+}
+
+data "aws_secretsmanager_secret" "opg_metrics_api_key" {
+  count    = local.account.opg_metrics.enabled == true ? 1 : 0
+  name     = local.account.opg_metrics.api_key_secretsmanager_name
+  provider = aws.shared
+}
+
+data "aws_kms_alias" "opg_metrics_api_key_encryption" {
+  name     = "alias/api_key_encryption"
+  provider = aws.shared
+}
 module "ship_to_opg_metrics" {
   source            = "./modules/lambda_function"
   count             = local.account.opg_metrics.enabled == true ? 1 : 0
@@ -89,6 +93,14 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
     resources = [data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].arn]
     actions = [
       "secretsmanager:GetSecretValue",
+    ]
+  }
+  statement {
+    sid       = "AllowKMSDecrypt"
+    effect    = "Allow"
+    resources = [data.aws_kms_alias.opg_metrics_api_key_encryption.arn]
+    actions = [
+      "kms:Decrypt",
     ]
   }
 }
