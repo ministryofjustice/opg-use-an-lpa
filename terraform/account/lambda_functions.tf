@@ -54,7 +54,7 @@ data "aws_secretsmanager_secret" "opg_metrics_api_key" {
 }
 
 data "aws_kms_alias" "opg_metrics_api_key_encryption" {
-  name     = "alias/api_key_encryption"
+  name     = "alias/opg_metrics_api_key_encryption"
   provider = aws.shared
 }
 module "ship_to_opg_metrics" {
