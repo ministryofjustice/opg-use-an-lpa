@@ -393,8 +393,8 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with that 
-        email address and password. Check your details and try again.');
+        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with ' .
+        'that email address and password. Check your details and try again.');
     }
 
     /**
@@ -1713,8 +1713,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the
-     * user$/
+     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
      */
     public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
     {
