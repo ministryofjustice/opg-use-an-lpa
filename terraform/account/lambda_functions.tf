@@ -42,9 +42,10 @@ data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
 }
 
 data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
-  count     = local.account.opg_metrics.enabled == true ? 1 : 0
-  secret_id = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
-  provider  = aws.shared
+  count         = local.account.opg_metrics.enabled == true ? 1 : 0
+  secret_id     = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
+  version_stage = "AWSCURRENT"
+  provider      = aws.shared
 }
 
 data "aws_secretsmanager_secret" "opg_metrics_api_key" {
@@ -88,9 +89,12 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
   }
 
   statement {
-    sid       = "AllowSecretsManagerAccess"
-    effect    = "Allow"
-    resources = [data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].arn]
+    sid    = "AllowSecretsManagerAccess"
+    effect = "Allow"
+    # resources = [data.aws_secretsmanager_secret_version.opg_metrics_api_key[0].arn]
+    resources = [
+      "arn:aws:secretsmanager:eu-west-1:679638075911:secret:opg-metrics-api-key/use-a-lasting-power-of-attorney-development-??????"
+    ]
     actions = [
       "secretsmanager:GetSecretValue",
     ]
@@ -98,7 +102,7 @@ data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
   statement {
     sid       = "AllowKMSDecrypt"
     effect    = "Allow"
-    resources = [data.aws_kms_alias.opg_metrics_api_key_encryption.arn]
+    resources = [data.aws_kms_alias.opg_metrics_api_key_encryption.target_key_arn]
     actions = [
       "kms:Decrypt",
     ]
