@@ -106,7 +106,6 @@ class LpaService
         }
 
         $lpaData = $lpa->getData();
-        
         unset($lpaData['original_attorneys']);
 
         $result = [
