@@ -659,7 +659,7 @@ class AccountContext extends BaseIntegrationContext
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(
                 function (RequestInterface $request, array $options)
- use ($expectedUrl, $expectedTemplateId) {
+                use ($expectedUrl, $expectedTemplateId) {
                     $requestBody = $request->getBody()->getContents();
 
                     assertContains($this->userPasswordResetToken, $requestBody);
