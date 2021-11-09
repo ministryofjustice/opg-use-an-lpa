@@ -27,6 +27,18 @@
                     <p class="govuk-body">{% trans %}If your current postcode does not match the address we have for you on our records, we’ll contact you to confirm your correct address.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}You can only ask for an activation key if you live in the UK.{% endtrans %}</p>
 
+                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}I do not live in the UK{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead.{% endtrans %}</p>
+                            {{ include('@partials/contact-details/telephone.html.twig', {title: false}) }}
+                        </div>
+                    </details>
+
                     {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
