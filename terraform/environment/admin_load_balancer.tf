@@ -1,6 +1,6 @@
 resource "aws_lb_target_group" "admin" {
-  count                = local.account.build_admin == true ? 1 : 0
-  name                 = "${local.environment}-admin"
+  count                = local.environment.build_admin == true ? 1 : 0
+  name                 = "${local.environment_name}-admin"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -10,13 +10,13 @@ resource "aws_lb_target_group" "admin" {
 }
 
 resource "aws_lb" "admin" {
-  count                      = local.account.build_admin == true ? 1 : 0
-  name                       = "${local.environment}-admin"
+  count                      = local.environment.build_admin == true ? 1 : 0
+  name                       = "${local.environment_name}-admin"
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
-  enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
+  enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
   security_groups = [
     aws_security_group.admin_loadbalancer[0].id,
@@ -24,13 +24,13 @@ resource "aws_lb" "admin" {
 
   access_logs {
     bucket  = data.aws_s3_bucket.access_log.bucket
-    prefix  = "admin-${local.environment}"
+    prefix  = "admin-${local.environment_name}"
     enabled = true
   }
 }
 
 resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
   port              = "80"
   protocol          = "HTTP"
@@ -47,7 +47,7 @@ resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
 }
 
 resource "aws_lb_listener" "admin_loadbalancer" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
   port              = "443"
   protocol          = "HTTPS"
@@ -79,15 +79,15 @@ resource "aws_lb_listener" "admin_loadbalancer" {
 }
 
 resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certificate" {
-  count           = local.account.build_admin == true ? 1 : 0
+  count           = local.environment.build_admin == true ? 1 : 0
   listener_arn    = aws_lb_listener.admin_loadbalancer[0].arn
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
 }
 
 
 resource "aws_security_group" "admin_loadbalancer" {
-  count       = local.account.build_admin == true ? 1 : 0
-  name_prefix = "${local.environment}-admin-loadbalancer"
+  count       = local.environment.build_admin == true ? 1 : 0
+  name_prefix = "${local.environment_name}-admin-loadbalancer"
   description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -96,7 +96,7 @@ resource "aws_security_group" "admin_loadbalancer" {
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   description       = "Port 80 ingress for redirection to port 443"
   type              = "ingress"
   from_port         = 80
@@ -107,7 +107,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress"
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
@@ -118,7 +118,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_egress" {
-  count             = local.account.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin == true ? 1 : 0
   description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0

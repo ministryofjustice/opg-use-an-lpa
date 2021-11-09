@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "actor" {
-  name                 = "${local.environment}-actor"
+  name                 = "${local.environment_name}-actor"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -9,13 +9,13 @@ resource "aws_lb_target_group" "actor" {
 }
 
 resource "aws_lb" "actor" {
-  name                       = "${local.environment}-actor"
+  name                       = "${local.environment_name}-actor"
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
 
-  enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
+  enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
   security_groups = [
     aws_security_group.actor_loadbalancer.id,
@@ -24,7 +24,7 @@ resource "aws_lb" "actor" {
 
   access_logs {
     bucket  = data.aws_s3_bucket.access_log.bucket
-    prefix  = "actor-${local.environment}"
+    prefix  = "actor-${local.environment_name}"
     enabled = true
   }
 }
@@ -116,7 +116,7 @@ resource "aws_lb_listener_rule" "rewrite_use_to_live_service_url" {
 
 # maintenance site switching
 resource "aws_ssm_parameter" "actor_maintenance_switch" {
-  name            = "${local.environment}_actor_enable_maintenance"
+  name            = "${local.environment_name}_actor_enable_maintenance"
   type            = "String"
   value           = "false"
   description     = "values of either 'true' or 'false' only"
@@ -182,7 +182,7 @@ resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
 
 
 resource "aws_security_group" "actor_loadbalancer" {
-  name_prefix = "${local.environment}-actor-loadbalancer"
+  name_prefix = "${local.environment_name}-actor-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
 }
@@ -209,7 +209,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
 
 resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
   description       = "Port 443 ingress for production from the internet to the application load balancer"
-  count             = local.environment == "production" ? 1 : 0
+  count             = local.environment_name == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -229,7 +229,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_egress" {
 }
 
 resource "aws_security_group" "actor_loadbalancer_route53" {
-  name_prefix = "${local.environment}-actor-loadbalancer-route53"
+  name_prefix = "${local.environment_name}-actor-loadbalancer-route53"
   description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
 }
