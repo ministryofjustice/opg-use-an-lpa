@@ -109,7 +109,7 @@ export default class GoogleAnalytics {
     _trackAccessCodeReveal()
     {
         const _this = this;
-        let accessCodeRevealSelector = document.querySelector('details[id$="access-code-reveal"]');
+        let accessCodeRevealSelector = document.querySelector("#access-code-reveal");
         if (accessCodeRevealSelector) {
             accessCodeRevealSelector.addEventListener('click', function (e) {
                 _this.trackEvent('AccessCodeReveal', 'LPA summary', 'The code I\'ve been given does not begin with a V');
