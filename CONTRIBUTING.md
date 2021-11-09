@@ -13,7 +13,7 @@ Civil servants on this product all follow the [Civil Service Code](https://www.g
 
 ## Coding Conventions
 
-For PHP code we use PHPStan and code to [PSR-12](https://www.php-fig.org/psr/psr-12/).
+For PHP code we use [Psalm](https://psalm.dev/), [PHPCS](https://github.com/squizlabs/PHP_CodeSniffer/wiki) and code to [PSR-12](https://www.php-fig.org/psr/psr-12/).
 
 For JavaScript we use ESlint.
 
