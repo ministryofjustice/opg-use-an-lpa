@@ -205,6 +205,7 @@ class LpaContext implements Context
      * @Given /^I am on the dashboard page$/
      * @Given /^I am on the user dashboard page$/
      * @Then /^I cannot see the added LPA$/
+     * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
      */
     public function iAmOnTheDashboardPage()
     {
@@ -490,7 +491,7 @@ class LpaContext implements Context
             'queuedForCleansing' => true
         ];
 
-        if($cleanseStatus == 'not marked' && $regDate == 'before') {
+        if ($cleanseStatus == 'not marked' && $regDate == 'before') {
             // request a code to be generated and letter to be sent
             $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
                 ->respondWith(
@@ -1688,6 +1689,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
+     * @When /^I request to remove an LPA from my account that is (.*)$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status)
     {
@@ -3466,6 +3468,6 @@ class LpaContext implements Context
      */
     public function iAmToldMyActivationKeyRequestHasBeenReceived()
     {
-        //Not  needed for this  context
+        //Not needed for this context
     }
 }

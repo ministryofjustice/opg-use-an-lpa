@@ -107,7 +107,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $passcode = $this->session->get('passcode');
         $referenceNumber = $this->session->get('reference_number');
-        $dob = $this->session->get('dob');
+        $dob = $this->session->get('dob_by_code');
 
         if (
             !isset($this->identity)

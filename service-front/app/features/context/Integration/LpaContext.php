@@ -166,6 +166,9 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm that I want to remove the LPA from my account$/
+     * @Then /^I am taken to the remove an LPA confirmation page for Revoked lpa$/
+     * @Then /^I am taken to the remove an LPA confirmation page for Cancelled lpa$/
+     * @Then /^I am taken to the remove an LPA confirmation page for Registered lpa$/
      */
     public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
     {
@@ -173,11 +176,47 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I request to remove an LPA from my account$/
+     * @When /^I request to remove an LPA from my account that is (.*)$/
      */
-    public function iRequestToRemoveAnLPAFromMyAccount()
+    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status)
     {
-        // Not needed for this context
+        if ($status == 'Registered' or  $status == 'Cancelled') {
+            $this->lpa['status'] = $status;
+
+            // API call for get LpaById (when give organisation access is clicked)
+            $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->actorLpaToken,
+                                'date' => 'date',
+                                'lpa' => [],
+                                'actor' => $this->lpaData['actor'],
+                            ]
+                        )
+                    )
+                );
+        } else {
+            // API call for get LpaById (when give organisation access is clicked)
+            $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+                ->respondWith(
+                    new Response(
+                        StatusCodeInterface::STATUS_OK,
+                        [],
+                        json_encode(
+                            [
+                                'user-lpa-actor-token' => $this->actorLpaToken,
+                                'date' => 'date',
+                                'lpa' => [],
+                                'actor' => null,
+                            ]
+                        )
+                    )
+                );
+        }
     }
 
     /**

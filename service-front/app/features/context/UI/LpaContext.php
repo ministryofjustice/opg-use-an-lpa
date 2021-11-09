@@ -42,12 +42,21 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I am taken to the remove an LPA confirmation page$/
+     * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
      */
-    public function iAmTakenToTheRemoveAnLPAConfirmationPage()
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage($status)
     {
         $this->ui->assertPageAddress('/lpa/remove-lpa');
         $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
+
+        if ($status == 'Registered') {
+            $this->ui->assertPageContainsText('LPA is registered');
+        }
+        if ($status == 'Cancelled') {
+            $this->ui->assertPageNotContainsText(
+                'you must contact us for a new activation key if you want to add the LPA back to your account'
+            );
+        }
     }
 
     /**
@@ -1820,10 +1829,28 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I request to remove an LPA from my account$/
+     * @When /^I request to remove an LPA from my account that is (.*)$/
      */
-    public function iRequestToRemoveAnLPAFromMyAccount()
+    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status)
     {
+        $this->lpa->status = $status;
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
         $this->ui->clickLink('Remove LPA');
         $this->ui->assertPageAddress('/lpa/remove-lpa');
     }
