@@ -22,6 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Class LpaAddHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
@@ -82,7 +83,7 @@ class LpaAddHandler extends AbstractHandler implements CsrfGuardAware, UserAware
                 //  Set the data in the session and pass to the check handler
                 $session->set('passcode', $postData['passcode']);
                 $session->set('reference_number', $postData['reference_number']);
-                $session->set('dob', $dobString);
+                $session->set('dob_by_code', $dobString);
 
                 return $this->redirectToRoute('lpa.check');
             }

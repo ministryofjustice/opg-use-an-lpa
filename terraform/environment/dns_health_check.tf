@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_health_check_alarm" {
-  alarm_description   = "${local.environment} viewer health check"
-  alarm_name          = "${local.environment}-viewer-healthcheck-alarm"
+  alarm_description   = "${local.environment_name} viewer health check"
+  alarm_name          = "${local.environment_name}-viewer-healthcheck-alarm"
   actions_enabled     = false
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 1
@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_health_check_alarm" {
 
 resource "aws_route53_health_check" "viewer_health_check" {
   fqdn              = aws_route53_record.viewer-use-my-lpa.fqdn
-  reference_name    = "${local.environment}-viewer"
+  reference_name    = "${local.environment_name}-viewer"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1
@@ -30,8 +30,8 @@ resource "aws_route53_health_check" "viewer_health_check" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
-  alarm_description   = "${local.environment} actor health check"
-  alarm_name          = "${local.environment}-actor-healthcheck-alarm"
+  alarm_description   = "${local.environment_name} actor health check"
+  alarm_name          = "${local.environment_name}-actor-healthcheck-alarm"
   actions_enabled     = false
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 1
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
 
 resource "aws_route53_health_check" "actor_health_check" {
   fqdn              = aws_route53_record.actor-use-my-lpa.fqdn
-  reference_name    = "${local.environment}-actor"
+  reference_name    = "${local.environment_name}-actor"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1

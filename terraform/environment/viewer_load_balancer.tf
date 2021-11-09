@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "viewer" {
-  name                 = "${local.environment}-viewer"
+  name                 = "${local.environment_name}-viewer"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
@@ -9,12 +9,12 @@ resource "aws_lb_target_group" "viewer" {
 }
 
 resource "aws_lb" "viewer" {
-  name                       = "${local.environment}-viewer"
+  name                       = "${local.environment_name}-viewer"
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet_ids.public.ids
-  enable_deletion_protection = local.account.load_balancer_deletion_protection_enabled
+  enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
   security_groups = [
     aws_security_group.viewer_loadbalancer.id,
@@ -23,7 +23,7 @@ resource "aws_lb" "viewer" {
 
   access_logs {
     bucket  = data.aws_s3_bucket.access_log.bucket
-    prefix  = "viewer-${local.environment}"
+    prefix  = "viewer-${local.environment_name}"
     enabled = true
   }
 }
@@ -115,7 +115,7 @@ resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
 
 # maintenance site switching
 resource "aws_ssm_parameter" "viewer_maintenance_switch" {
-  name            = "${local.environment}_viewer_enable_maintenance"
+  name            = "${local.environment_name}_viewer_enable_maintenance"
   type            = "String"
   value           = "false"
   description     = "values of either 'true' or 'false' only"
@@ -181,7 +181,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  name_prefix = "${local.environment}-viewer-loadbalancer"
+  name_prefix = "${local.environment_name}-viewer-loadbalancer"
   description = "View service application load balancer"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -211,7 +211,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
   description       = "Port 443 ingress for production from the internet to the application load balancer"
-  count             = local.environment == "production" ? 1 : 0
+  count             = local.environment_name == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -235,7 +235,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
 }
 
 resource "aws_security_group" "viewer_loadbalancer_route53" {
-  name_prefix = "${local.environment}-viewer-loadbalancer-route53"
+  name_prefix = "${local.environment_name}-viewer-loadbalancer-route53"
   description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
 }

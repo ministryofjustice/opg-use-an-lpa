@@ -38,13 +38,13 @@ locals {
 
 resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
   for_each       = toset(local.event_codes)
-  name           = "${local.environment}_${lower(each.value)}"
+  name           = "${local.environment_name}_${lower(each.value)}"
   pattern        = "{ $.context.event_code = \"${each.value}\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
     name          = "${lower(each.value)}_event"
-    namespace     = "${local.environment}_events"
+    namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
   }

@@ -64,7 +64,7 @@
                         <li>{% trans %}your date of birth is wrong on the LPA{% endtrans %}</li>
                     </ul>
 
-                    <a href="{{ path('lpa.add-by-paper') }}" class="govuk-button">{% trans %}Continue{% endtrans %}</a>
+                    <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" class="govuk-button">{% trans %}Continue{% endtrans %}</a>
 
                     <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
 

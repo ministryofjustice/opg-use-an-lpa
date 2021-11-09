@@ -106,6 +106,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmAskedForMyRoleOnTheLPA()
     {
+        $this->ui->assertPageAddress('/lpa/add/actor-role');
         $this->ui->assertPageContainsText('What is your role on the LPA?');
     }
 

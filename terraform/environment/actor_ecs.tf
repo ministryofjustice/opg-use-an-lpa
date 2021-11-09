@@ -5,7 +5,7 @@ resource "aws_ecs_service" "actor" {
   name             = "actor-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
-  desired_count    = local.account.autoscaling.use.minimum
+  desired_count    = local.environment.autoscaling.use.minimum
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
@@ -34,7 +34,7 @@ resource "aws_ecs_service" "actor" {
 // The service's Security Groups
 
 resource "aws_security_group" "actor_ecs_service" {
-  name_prefix = "${local.environment}-actor-ecs-service"
+  name_prefix = "${local.environment_name}-actor-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
 // Actor ECS Service Task level config
 
 resource "aws_ecs_task_definition" "actor" {
-  family                   = "${local.environment}-actor"
+  family                   = "${local.environment_name}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -101,12 +101,12 @@ resource "aws_ecs_task_definition" "actor" {
 // Permissions
 
 resource "aws_iam_role" "actor_task_role" {
-  name               = "${local.environment}-actor-task-role"
+  name               = "${local.environment_name}-actor-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "actor_permissions_role" {
-  name   = "${local.environment}-ActorApplicationPermissions"
+  name   = "${local.environment_name}-ActorApplicationPermissions"
   policy = data.aws_iam_policy_document.actor_permissions_role.json
   role   = aws_iam_role.actor_task_role.id
 }
@@ -151,7 +151,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.actor-web.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.actor-web.use-an-lpa"
         }
       },
       environment = [
@@ -194,7 +194,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.actor-app.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.actor-app.use-an-lpa"
         }
       },
       secrets = [
@@ -221,23 +221,23 @@ locals {
         },
         {
           name  = "SESSION_EXPIRES",
-          value = tostring(local.account.session_expires_use)
+          value = tostring(local.environment.session_expires_use)
         },
         {
           name  = "SESSION_EXPIRY_WARNING",
-          value = tostring(local.account.session_expiry_warning)
+          value = tostring(local.environment.session_expiry_warning)
         },
         {
           name  = "COOKIE_EXPIRES",
-          value = tostring(local.account.cookie_expires_use)
+          value = tostring(local.environment.cookie_expires_use)
         },
         {
           name  = "GOOGLE_ANALYTICS_ID",
-          value = local.account.google_analytics_id_use
+          value = local.environment.google_analytics_id_use
         },
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.account.logging_level)
+          value = tostring(local.environment.logging_level)
         },
         {
           name  = "BRUTE_FORCE_CACHE_URL",
@@ -253,19 +253,19 @@ locals {
         },
         {
           name  = "USE_OLDER_LPA_JOURNEY",
-          value = tostring(local.account.use_older_lpa_journey)
+          value = tostring(local.environment.use_older_lpa_journey)
         },
         {
           name  = "DELETE_LPA_FEATURE",
-          value = tostring(local.account.delete_lpa_feature)
+          value = tostring(local.environment.delete_lpa_feature)
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.account.allow_older_lpas)
+          value = tostring(local.environment.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.account.allow_meris_lpas)
+          value = tostring(local.environment.allow_meris_lpas)
         }
       ]
   })

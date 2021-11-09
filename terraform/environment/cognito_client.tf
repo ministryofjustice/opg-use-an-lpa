@@ -14,9 +14,9 @@ locals {
 }
 
 resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" {
-  count                                = local.account.build_admin == true ? 1 : 0
+  count                                = local.environment.build_admin == true ? 1 : 0
   provider                             = aws.identity
-  name                                 = "${local.environment}-admin-auth"
+  name                                 = "${local.environment_name}-admin-auth"
   user_pool_id                         = local.admin_cognito_user_pool_id
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid"]
@@ -36,7 +36,7 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
     refresh_token = "days"
   }
 
-  access_token_validity  = local.account.session_expires_admin
+  access_token_validity  = local.environment.session_expires_admin
   id_token_validity      = 3600
   refresh_token_validity = 1
   read_attributes        = []

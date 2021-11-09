@@ -5,7 +5,7 @@ resource "aws_ecs_service" "api" {
   name             = "api-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.api.arn
-  desired_count    = local.account.autoscaling.api.minimum
+  desired_count    = local.environment.autoscaling.api.minimum
   launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
@@ -57,7 +57,7 @@ locals {
 // The Api service's Security Groups
 
 resource "aws_security_group" "api_ecs_service" {
-  name_prefix = "${local.environment}-api-ecs-service"
+  name_prefix = "${local.environment_name}-api-ecs-service"
   description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -116,7 +116,7 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
 // Api ECS Service Task level config
 
 resource "aws_ecs_task_definition" "api" {
-  family                   = "${local.environment}-api"
+  family                   = "${local.environment_name}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -130,12 +130,12 @@ resource "aws_ecs_task_definition" "api" {
 // Permissions
 
 resource "aws_iam_role" "api_task_role" {
-  name               = "${local.environment}-api-task-role"
+  name               = "${local.environment_name}-api-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "api_permissions_role" {
-  name   = "${local.environment}-apiApplicationPermissions"
+  name   = "${local.environment_name}-apiApplicationPermissions"
   policy = data.aws_iam_policy_document.api_permissions_role.json
   role   = aws_iam_role.api_task_role.id
 }
@@ -174,8 +174,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/use-an-lpa/*",
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
     ]
   }
 
@@ -186,10 +186,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/revoke",
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/validate",
-      "arn:aws:execute-api:eu-west-1:${local.account.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/validate",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
     ]
   }
 }
@@ -218,7 +218,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.api-web.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.api-web.use-an-lpa"
         }
       },
       environment = [
@@ -261,7 +261,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment}.api-app.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.api-app.use-an-lpa"
         }
       },
       secrets = [
@@ -296,31 +296,31 @@ locals {
         },
         {
           name  = "SIRIUS_API_ENDPOINT",
-          value = local.account.lpas_collection_endpoint
+          value = local.environment.lpas_collection_endpoint
         },
         {
           name  = "LPA_CODES_API_ENDPOINT",
-          value = local.account.lpa_codes_endpoint
+          value = local.environment.lpa_codes_endpoint
         },
         {
           name  = "USE_LEGACY_CODES_SERVICE",
-          value = tostring(local.account.use_legacy_codes_service)
+          value = tostring(local.environment.use_legacy_codes_service)
         },
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.account.logging_level)
+          value = tostring(local.environment.logging_level)
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.account.allow_older_lpas)
+          value = tostring(local.environment.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.account.allow_meris_lpas)
+          value = tostring(local.environment.allow_meris_lpas)
         },
         {
           name  = "SAVE_OLDER_LPA_REQUESTS",
-          value = tostring(local.account.save_older_lpa_requests)
+          value = tostring(local.environment.save_older_lpa_requests)
         }
       ]
   })
