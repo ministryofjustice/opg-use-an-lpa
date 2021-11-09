@@ -365,11 +365,10 @@ describe('given I click the access code reveal', () => {
         const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
         revealSelector.click();
 
-        expect(global.dataLayer[13][1]).toBe('AccessCodeReveal');
-        expect(global.dataLayer[13][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[13][2].event_category).toBe('LPA summary');
-        expect(global.dataLayer[13][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[13][2].event_label).toBe('The code I\'ve been given does not begin with a V');
+        expect(global.dataLayer[14][1]).toBe('AccessCodeReveal');
+        expect(global.dataLayer[14][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[14][2].event_category).toBe('LPA summary');
+        expect(global.dataLayer[14][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[14][2].event_label).toBe('The code I\'ve been given does not begin with a V');
     });
 });
-
