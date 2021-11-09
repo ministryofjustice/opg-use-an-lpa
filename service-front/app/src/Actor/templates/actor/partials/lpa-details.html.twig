@@ -1,28 +1,42 @@
-{% if actorActive %}
-    <h3 class="govuk-heading-m govuk-!-margin-bottom-1">{{ caseSubtype }}</h3>
-{% else %}
-    <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
-{% endif %}
+<div class="moj-ticket-panel__row">
+    <div class="lpa-text">
+        {% if actorActive %}
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-1">{{ caseSubtype }}</h3>
+        {% else %}
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
+        {% endif %}
 
-{% if activeCodeCount >= 1 %}
-    <span class="moj-badge moj-badge--blue govuk-!-margin-bottom-2">
-        {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
-    </span>
-{% elseif actorActive %}
-    <span class="moj-badge moj-badge--grey govuk-!-margin-bottom-2">{% trans %}No organisations have access{% endtrans %}</span>
-{% endif %}
-{%  if not actorActive %}
-    <p class="govuk-body govuk-!-margin-bottom-0 lpa-secondary-text-colour">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
-    </p>
-{%  endif %}
-{% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <div>
-    <p class="govuk-body govuk-!-margin-bottom-0">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
-    </p>
+        {%  if not actorActive %}
+            <p class="govuk-body govuk-!-margin-bottom-0 lpa-secondary-text-colour">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
+                <a class="govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
+            </p>
+        {%  endif %}
+        {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
+            <p class="govuk-body govuk-!-margin-bottom-1">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
+                <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
+            </p>
+        {% endif %}
     </div>
-{% endif %}
+
+    <div class="lpa-status">
+        {% if lpa.status|lower == 'cancelled' %}
+            <span class="moj-badge moj-badge--red govuk-!-margin-bottom-2">{% trans %}cancelled{% endtrans %}</span>
+        {% endif %}
+
+        {% if lpa.status|lower == 'cancelled' and activeCodeCount >= 1 %}
+            <span class="moj-badge moj-badge--grey govuk-!-margin-bottom-2">
+                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+            </span>
+        {% elseif activeCodeCount >= 1 %}
+            <span class="moj-badge moj-badge--blue govuk-!-margin-bottom-2">
+                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+            </span>
+        {% elseif actorActive %}
+            <span class="govuk-hint govuk-!-margin-bottom-2 govuk-!-font-size-16 govuk-!-font-weight-bold">{% trans %}No organisations have access{% endtrans %}</span>
+        {% endif %}
+    </div>
+</div>
+
 {% if actorActive %}
     <ul class="govuk-list govuk-list--inline">
         <li>
