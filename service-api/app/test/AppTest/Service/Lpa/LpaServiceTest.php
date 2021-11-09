@@ -276,6 +276,15 @@ class LpaServiceTest extends TestCase
             new DateTime()
         );
 
+        $t->LpaAfterUnsettingOriginalAttorney = new Lpa(
+            [
+                'uId' => $t->SiriusUid,
+                'status' => 'Registered',
+                'attorneys' => []
+            ],
+            new DateTime()
+        );
+
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
             'Id' => $t->Token,
             'UserId' => $t->UserId,
@@ -289,15 +298,15 @@ class LpaServiceTest extends TestCase
         // resolves LPA actor as primary attorney
         $this->resolveActorProphecy
             ->__invoke([
-                           'uId' => $t->SiriusUid,
-                           'status' => 'Registered',
-                           'attorneys' => []
-            ], (string) $t->ActorId)
+                    'uId' => $t->SiriusUid,
+                    'status' => 'Registered',
+                    'attorneys' => [],
+                ], (string)$t->ActorId)
             ->willReturn(null);
 
         // check valid lpa
         $this->isValidLpaProphecy->__invoke(
-            $t->Lpa->getData()
+            $t->LpaAfterUnsettingOriginalAttorney->getData()
         )->willReturn(true);
 
         // attorney status is active
@@ -360,7 +369,7 @@ class LpaServiceTest extends TestCase
 
         $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
 
-        $this->assertNull($result);
+        $this->assertNull($result['actor']);
     }
 
     /** @test */
