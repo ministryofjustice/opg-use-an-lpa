@@ -913,6 +913,20 @@ class AccountContext implements Context
                         ])
                     ]
                 ]));
+
+                // ActorUsers::recordChangeEmailRequest
+                $this->awsFixtures->append(new Result([
+                    'Item' => $this->marshalAwsResultData([
+                        'EmailResetExpiry' => time() + (60 * 60 * 48),
+                        'Email'            => $this->base->userAccountEmail,
+                        'LastLogin'        => null,
+                        'Id'               => $this->base->userAccountId,
+                        'NewEmail'         => $this->newEmail,
+                        'EmailResetToken'  => $this->userEmailResetToken,
+                        'Password'         => $this->base->userAccountPassword
+                    ])
+                ]));
+
                 break;
         }
 
