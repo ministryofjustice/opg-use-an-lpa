@@ -367,7 +367,7 @@ describe('given I click the access code reveal', () => {
 
         expect(global.dataLayer[14][1]).toBe('AccessCodeReveal');
         expect(global.dataLayer[14][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[14][2].event_category).toBe('LPA summary');
+        expect(global.dataLayer[14][2].event_category).toBe('Access code');
         expect(global.dataLayer[14][2].event_label).not.toBeUndefined();
         expect(global.dataLayer[14][2].event_label).toBe('The code I\'ve been given does not begin with a V');
     });
