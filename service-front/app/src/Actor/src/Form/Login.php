@@ -24,8 +24,8 @@ class Login extends AbstractForm implements InputFilterProviderInterface
      */
     protected array $messageTemplates = [
         self::NOT_SAME => 'Security validation failed. Please try again.',
-        self::NOT_FOUND => 'We could not find a Use a lasting power of attorney account with that email address and
-         password. Check your details and try again.'
+        self::NOT_FOUND => 'We could not find a Use a lasting power of attorney account ' .
+            'with that email address and password. Check your details and try again.'
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
