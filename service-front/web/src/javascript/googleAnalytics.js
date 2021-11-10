@@ -112,7 +112,7 @@ export default class GoogleAnalytics {
         let accessCodeRevealSelector = document.querySelector("#access-code-reveal");
         if (accessCodeRevealSelector) {
             accessCodeRevealSelector.addEventListener('click', function (e) {
-                _this.trackEvent('AccessCodeReveal', 'LPA summary', 'The code I\'ve been given does not begin with a V');
+                _this.trackEvent('AccessCodeReveal', 'Access code', 'The code I\'ve been given does not begin with a V');
             });
         }
     }
