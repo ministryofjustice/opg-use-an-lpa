@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-04T10:57:34+00:00\n"
+"POT-Creation-Date: 2021-11-10T15:17:40+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -224,10 +224,6 @@ msgstr ""
 #: src/Actor/templates/actor/create-account.html.twig:29
 #: src/Actor/templates/actor/login-not-found.html.twig:24
 msgid "Create an account"
-msgstr ""
-
-#: src/Actor/templates/actor/create-account.html.twig:33
-msgid "If you already have an account, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:42
@@ -604,6 +600,7 @@ msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered a
 msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:55
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:21
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 msgstr ""
 
@@ -1828,23 +1825,23 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:67
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:39
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:44
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:64
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:62
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:89
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
-#: src/Actor/templates/actor/lpa-add.html.twig:79
+#: src/Actor/templates/actor/lpa-add.html.twig:77
 #: src/Viewer/templates/viewer/enter-code.html.twig:60
 msgid "Continue"
 msgstr ""
 
 #: src/Actor/templates/actor/before-requesting-activation-key-info.html.twig:64
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:69
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:63
 #: src/Actor/templates/actor/check-lpa.html.twig:94
-#: src/Actor/templates/actor/lpa-add.html.twig:81
+#: src/Actor/templates/actor/lpa-add.html.twig:79
 msgid "Cancel"
 msgstr ""
 
@@ -2164,19 +2161,19 @@ msgstr ""
 msgid "LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:67
+#: src/Actor/templates/actor/lpa-add.html.twig:65
 msgid "Where to find the reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:72
+#: src/Actor/templates/actor/lpa-add.html.twig:70
 msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:73
+#: src/Actor/templates/actor/lpa-add.html.twig:71
 msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:72
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr ""
 
@@ -3896,23 +3893,23 @@ msgstr ""
 msgid "Are you sure you want to remove this LPA?"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:20
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:25
 msgid "If you remove an LPA from your Use a lasting power of attorney account:"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:23
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:28
 msgid "all access codes you’ve created for that LPA will be cancelled"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:24
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "you’ll not be able to see how the LPA is being used or has been used"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:25
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:31
 msgid "you must contact us for a new activation key if you want to add the LPA back to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:37
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:44
 msgid "Yes, remove LPA"
 msgstr ""
 
@@ -3925,17 +3922,17 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:118
+#: src/Actor/src/Handler/RemoveLpaHandler.php:128
 msgctxt "flashMessage"
 msgid "health and welfare"
 msgstr ""
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:119
+#: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "property and finance"
 msgstr ""
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:126
+#: src/Actor/src/Handler/RemoveLpaHandler.php:136
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr ""
@@ -4398,4 +4395,13 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:24
 msgid "cancelled"
+msgstr ""
+
+#: src/Actor/templates/actor/create-account.html.twig:33
+msgid "If you already have an account on the Use a lasting power of attorney service, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
+#: src/Viewer/templates/viewer/view-lpa.html.twig:11
+msgid "Give us feedback about this service"
 msgstr ""
