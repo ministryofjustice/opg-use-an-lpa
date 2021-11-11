@@ -29,7 +29,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_address', [$this, 'actorAddress']),
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
-            new TwigFunction('check_date', [$this, 'cancelledorExpiredDate']),
+            new TwigFunction('check_date', [$this, 'formatCancelledorExpiredDate']),
             new TwigFunction('code_date', [$this, 'formatDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
@@ -118,7 +118,7 @@ class LpaExtension extends AbstractExtension
      * @param DateTimeInterface|string|null $date
      * @return string
      */
-    public function cancelledorExpiredDate($date): string
+    public function formatCancelledorExpiredDate($date): string
     {
         return $this->formatDate($date, 'Y-m-d\TH:i:sP');
     }
