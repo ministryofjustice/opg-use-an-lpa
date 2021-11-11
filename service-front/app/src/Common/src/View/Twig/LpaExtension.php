@@ -29,6 +29,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('actor_address', [$this, 'actorAddress']),
             new TwigFunction('actor_name', [$this, 'actorName']),
             new TwigFunction('lpa_date', [$this, 'lpaDate']),
+            new TwigFunction('check_date', [$this, 'cancelledorExpiredDate']),
             new TwigFunction('code_date', [$this, 'formatDate']),
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
@@ -108,6 +109,18 @@ class LpaExtension extends AbstractExtension
     public function lpaDate($date): string
     {
         return $this->formatDate($date, 'Y-m-d');
+    }
+
+    /**
+     * Takes an input date, whether as a string (relative or absolute - in the format 2020-11-27)
+     * or as a Datetime and converts it for displaying on pages
+     *
+     * @param DateTimeInterface|string|null $date
+     * @return string
+     */
+    public function cancelledorExpiredDate($date): string
+    {
+        return $this->formatDate($date, 'Y-m-d\TH:i:sP');
     }
 
     /**
