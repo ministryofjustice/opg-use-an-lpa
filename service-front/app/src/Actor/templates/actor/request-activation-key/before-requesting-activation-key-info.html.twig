@@ -23,9 +23,7 @@
                     <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        {% if feature_enabled('allow_older_lpas') %}
-                            <li>{% trans %}the LPA was registered on or after 1 January 2016{% endtrans %}</li>
-                        {% endif %}
+                        <li>{% trans %}the LPA was registered on or after 1 January 2016{% endtrans %}</li>
                         <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
                         <li>{% trans %}you live in the UK{% endtrans %}</li>
                         <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
@@ -37,6 +35,18 @@
                         <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
                         <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
                     </ul>
+
+                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}I do not live in the UK{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead.{% endtrans %}</p>
+                            {{ include('@partials/contact-details/telephone.html.twig', {title: false}) }}
+                        </div>
+                    </details>
 
                     <h2 class="govuk-heading-m">{% trans %}What you'll need{% endtrans %}</h2>
 

@@ -1,0 +1,19 @@
+  .govuk-list {
+
+    &--inline {
+      margin-top: govuk-spacing(1);
+      margin-bottom: govuk-spacing(0);
+
+      @include govuk-media-query($from: desktop) {
+        display: flex;
+        margin-top: govuk-spacing(2);
+
+        > li {
+          display: inline-block;
+          margin-right: govuk-spacing(3);
+          margin-bottom: govuk-spacing(0);
+        }
+      }
+    }
+    
+  }

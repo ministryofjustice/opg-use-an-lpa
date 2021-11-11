@@ -1,9 +1,11 @@
 data "aws_ecr_repository" "clsf_to_sqs" {
-  name = "${local.environment}/clsf-to-sqs"
+  name     = "opg-metrics/clsf-to-sqs"
+  provider = aws.management
 }
 
 data "aws_ecr_repository" "ship_to_opg_metrics" {
-  name = "${local.environment}/ship-to-opg-metrics"
+  name     = "opg-metrics/ship-to-opg-metrics"
+  provider = aws.management
 }
 
 module "clsf_to_sqs" {

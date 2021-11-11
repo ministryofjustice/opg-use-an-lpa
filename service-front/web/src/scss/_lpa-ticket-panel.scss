@@ -1,7 +1,31 @@
 .moj-ticket-panel {
-  .govuk-summary-list__key,
-  .govuk-summary-list__value,
-  .govuk-summary-list__actions {
-    padding-top: govuk-spacing(0);
+
+  .lpa-account-delete {
+    color: govuk-colour('red');
   }
+
+  @include govuk-media-query($from: desktop) {
+
+    .moj-ticket-panel__row {
+      display: flex;
+      justify-content: space-between;
+
+      .lpa-status {
+        text-align: right;
+      }
+
+      .moj-badge {
+        margin-bottom: govuk-spacing(3) !important;
+      }
+
+    }
+
+    .lpa-account-delete {
+      position: absolute;
+      bottom: govuk-spacing(4);
+      right: govuk-spacing(4);
+    }
+
+  }
+
 }

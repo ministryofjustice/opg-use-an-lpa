@@ -1,4 +1,4 @@
-<h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>
+{% if not title is defined or title != false %}<h3 class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h3>{% endif %}
 <p class="govuk-body">
     {% trans %}Telephone: <a class="govuk-link" href="tel:03004560300">0300 456 0300</a><br>
         Textphone: 0115 934 2778 <br>
