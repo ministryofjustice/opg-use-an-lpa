@@ -261,7 +261,7 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider codeDateDataProvider
      */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_access_codes($date, $locale, $expected)
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_access_codes($date, $locale, $expected)
     {
         $extension = new LpaExtension();
 
