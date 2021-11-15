@@ -1215,7 +1215,7 @@ class AccountContext extends BaseIntegrationContext
             )
         );
     }
-    
+
     /**
      * @When /^I request to change my email to an email address that (.*)$/
      */
