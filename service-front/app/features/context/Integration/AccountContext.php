@@ -658,10 +658,8 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(
-                function (RequestInterface $request, array $options)
-                use ($expectedUrl, $expectedTemplateId) {
+                function (RequestInterface $request, array $options) use ($expectedUrl, $expectedTemplateId) {
                     $requestBody = $request->getBody()->getContents();
-
                     assertContains($this->userPasswordResetToken, $requestBody);
                     assertContains(json_encode($expectedUrl), $requestBody);
                     assertContains($expectedTemplateId, $requestBody);
