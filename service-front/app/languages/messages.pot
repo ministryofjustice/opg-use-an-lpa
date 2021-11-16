@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-15T10:44:56+00:00\n"
+"POT-Creation-Date: 2021-11-16T14:44:07+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1836,7 +1836,7 @@ msgstr ""
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
 #: src/Actor/templates/actor/lpa-add.html.twig:77
-#: src/Viewer/templates/viewer/enter-code.html.twig:60
+#: src/Viewer/templates/viewer/enter-code.html.twig:70
 msgid "Continue"
 msgstr ""
 
@@ -2588,15 +2588,15 @@ msgstr ""
 msgid "Enter the LPA access code"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:37
+#: src/Viewer/templates/viewer/enter-code.html.twig:41
 msgid "Donor's last name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:45
+#: src/Viewer/templates/viewer/enter-code.html.twig:49
 msgid "LPA access code"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:47
+#: src/Viewer/templates/viewer/enter-code.html.twig:51
 msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
 msgstr ""
 
@@ -2604,7 +2604,7 @@ msgstr ""
 msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:55
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
 msgstr ""
 
@@ -2980,7 +2980,7 @@ msgstr ""
 msgid "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:58
+#: src/Viewer/templates/viewer/enter-code.html.twig:68
 msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr ""
 
@@ -4414,4 +4414,16 @@ msgstr ""
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
 #: src/Viewer/templates/viewer/view-lpa.html.twig:11
 msgid "Give us feedback about this service"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:59
+msgid "The code I've been given does not begin with a V"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
+msgid "The donor or attorney may have given you the wrong code."
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:64
+msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr ""
