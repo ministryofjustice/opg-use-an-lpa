@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-09T16:25:33+00:00\n"
+"POT-Creation-Date: 2021-11-16T14:44:07+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -88,7 +88,7 @@ msgid "Access codes for this LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:41
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr ""
@@ -104,7 +104,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:49
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:13
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr ""
@@ -227,7 +227,7 @@ msgid "Create an account"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:33
-msgid "If you already have an account, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
+msgid "If you already have an account, <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:42
@@ -239,7 +239,7 @@ msgid "Create a password"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:49
-msgid "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>"
+msgid "Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 characters</li><li>one lower-case and one capital letter</li><li>one number</li></ul>"
 msgstr ""
 
 #: src/Actor/templates/actor/change-email.html.twig:36
@@ -1829,14 +1829,14 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:67
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:39
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:44
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:64
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:62
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:91
 #: src/Actor/templates/actor/check-your-answers.html.twig:89
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
-#: src/Actor/templates/actor/lpa-add.html.twig:79
-#: src/Viewer/templates/viewer/enter-code.html.twig:60
+#: src/Actor/templates/actor/lpa-add.html.twig:77
+#: src/Viewer/templates/viewer/enter-code.html.twig:70
 msgid "Continue"
 msgstr ""
 
@@ -1845,7 +1845,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:69
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:63
 #: src/Actor/templates/actor/check-lpa.html.twig:94
-#: src/Actor/templates/actor/lpa-add.html.twig:81
+#: src/Actor/templates/actor/lpa-add.html.twig:79
 msgid "Cancel"
 msgstr ""
 
@@ -1921,7 +1921,7 @@ msgstr ""
 msgid "This is for your reference only"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:17
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
@@ -1937,12 +1937,12 @@ msgstr ""
 msgid "Access revoked"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:33
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:32
 msgid "%count% active code"
 msgid_plural "%count% active codes"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:36
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:35
 msgid "No organisations have access"
 msgstr ""
 
@@ -1950,11 +1950,11 @@ msgstr ""
 msgid "You no longer have access to this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:48
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Read more"
 msgstr ""
 
@@ -2165,19 +2165,19 @@ msgstr ""
 msgid "LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:67
+#: src/Actor/templates/actor/lpa-add.html.twig:65
 msgid "Where to find the reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:72
+#: src/Actor/templates/actor/lpa-add.html.twig:70
 msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:73
+#: src/Actor/templates/actor/lpa-add.html.twig:71
 msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:72
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr ""
 
@@ -2588,15 +2588,15 @@ msgstr ""
 msgid "Enter the LPA access code"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:37
+#: src/Viewer/templates/viewer/enter-code.html.twig:41
 msgid "Donor's last name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:45
+#: src/Viewer/templates/viewer/enter-code.html.twig:49
 msgid "LPA access code"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:47
+#: src/Viewer/templates/viewer/enter-code.html.twig:51
 msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
 msgstr ""
 
@@ -2604,7 +2604,7 @@ msgstr ""
 msgid "What is an <abbr title=\"lasting power of attorney\">LPA</abbr> access code?"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:55
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
 msgstr ""
 
@@ -2980,7 +2980,7 @@ msgstr ""
 msgid "I agree to the <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:58
+#: src/Viewer/templates/viewer/enter-code.html.twig:68
 msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr ""
 
@@ -3720,7 +3720,7 @@ msgstr ""
 msgid "Request another activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 msgid "<strong>Important: </strong>This LPA has instructions or preferences."
 msgstr ""
 
@@ -3917,7 +3917,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:40
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
 msgid "Remove LPA"
 msgstr ""
 
@@ -4004,7 +4004,7 @@ msgstr ""
 msgid "Seen something incorrect in the LPA details?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:10
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
@@ -4397,7 +4397,7 @@ msgstr ""
 msgid "We’ll fix all the accessibility issues we’ve found by %date%."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:24
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:23
 msgid "cancelled"
 msgstr ""
 
@@ -4414,4 +4414,16 @@ msgstr ""
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
 #: src/Viewer/templates/viewer/view-lpa.html.twig:11
 msgid "Give us feedback about this service"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:59
+msgid "The code I've been given does not begin with a V"
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
+msgid "The donor or attorney may have given you the wrong code."
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:64
+msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr ""
