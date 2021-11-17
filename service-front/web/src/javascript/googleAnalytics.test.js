@@ -62,6 +62,22 @@ import googleAnalytics from './googleAnalytics';
         </main>
     `;
 
+    const accessCodeReveal = `
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary" role="button">
+                    <span class="govuk-details__summary-text">
+                        {% trans %}The code I've been given does not begin with a V{% endtrans %}
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>{% trans %}The donor or attorney may have given you the wrong code.{% endtrans %}</p>
+                    <p>{% trans %}Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation.{% endtrans %}</p>
+                </div>
+            </details>
+        </main>
+    `;
+
 describe('given Google Analytics datalayer is not setup', () => {
     let useAnalytics;
     beforeEach(() => {
@@ -323,5 +339,36 @@ describe('given I am viewing the LPA summary', () => {
         expect(global.dataLayer[11][2].event_category).toBe('LPA summary');
         expect(global.dataLayer[11][2].event_label).not.toBeUndefined();
         expect(global.dataLayer[11][2].event_label).toBe('Download this LPA summary');
+    });
+});
+
+describe('given I click the access code reveal', () => {
+    let useAnalytics;
+    beforeEach(() => {
+        document.body.innerHTML = accessCodeReveal;
+        useAnalytics = new googleAnalytics('UA-12345');
+    });
+
+    /**
+     * Description of data layer 2 and 3 in gtag
+     * [Arguments] {
+      '0': 'event',
+      '1': 'event',
+      '2': {
+            event_category: 'event_category',
+            event_label: 'event_label',
+            value: 'value'
+         }
+        }
+     */
+    test('it should fire an event when I click the access code reveal', () => {
+        const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
+        revealSelector.click();
+
+        expect(global.dataLayer[14][1]).toBe('AccessCodeReveal');
+        expect(global.dataLayer[14][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[14][2].event_category).toBe('Access code');
+        expect(global.dataLayer[14][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[14][2].event_label).toBe('The code I\'ve been given does not begin with a V');
     });
 });
