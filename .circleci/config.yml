@@ -161,26 +161,35 @@ workflows:
                 ignore: [/dependabot\/terraform\/.*/]
             requires: [codecov_upload]
 
-  dependabot_terraform_build:
+  terraform_only_build:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
 
             # Provision and test development
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
             requires: [cancel_previous_jobs,lint_terraform]
 
         - use-my-lpa/apply_environment_terraform:
@@ -188,7 +197,10 @@ workflows:
             image_tag_input: latest
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
             requires:
               [
                 cancel_previous_jobs,
@@ -199,14 +211,20 @@ workflows:
             name: dev_seed_database
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
             requires: [dev_apply_environment_terraform]
 
         - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
             requires: [dev_seed_database]
 
         # Required end of workflow job
@@ -214,7 +232,10 @@ workflows:
             name: end_of_workflow
             filters:
               branches:
-                only: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /terraform\/.*/
+                  ]
             requires: [dev_run_behat_tests]
 
   pr_build:
