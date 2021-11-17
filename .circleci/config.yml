@@ -47,7 +47,7 @@ workflows:
       - slack_notify_stats:
           name: slack_notify_stats
 
-  dependabot_build:
+  package_update_pr:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
@@ -189,7 +189,7 @@ workflows:
                   ]
             requires: [codecov_upload]
 
-  terraform_only_build:
+  terraform_only_pr:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
