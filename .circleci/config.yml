@@ -53,96 +53,122 @@ workflows:
             name: cancel_previous_jobs
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/node_test_web:
             name: test_web
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/node_build_web:
             name: build_web
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [test_pdf]
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires:
               [
                 app_front_build,
@@ -157,8 +183,10 @@ workflows:
             name: end_of_workflow
             filters:
               branches:
-                only: [/dependabot\/.*/]
-                ignore: [/dependabot\/terraform\/.*/]
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [codecov_upload]
 
   terraform_only_build:
