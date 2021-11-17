@@ -197,7 +197,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
 
         - use-my-lpa/lint_terraform:
@@ -206,7 +206,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
 
             # Provision and test development
@@ -216,7 +216,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -227,7 +227,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
             requires:
               [
@@ -241,7 +241,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
             requires: [dev_apply_environment_terraform]
 
@@ -251,7 +251,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
             requires: [dev_seed_database]
 
@@ -262,7 +262,7 @@ workflows:
               branches:
                 only: [
                   /dependabot\/terraform\/.*/,
-                  /terraform\/.*/
+                  /tf\/.*/
                   ]
             requires: [dev_run_behat_tests]
 
@@ -273,7 +273,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/lint_terraform:
@@ -281,7 +281,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/node_test_web:
@@ -289,7 +289,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/node_build_web:
@@ -297,7 +297,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [test_web]
 
@@ -306,7 +306,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_front_app:
@@ -314,7 +314,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [build_web]
 
@@ -323,7 +323,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [build_web]
 
@@ -332,7 +332,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_api_web:
@@ -340,7 +340,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_test_admin:
@@ -348,7 +348,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_admin:
@@ -356,7 +356,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_pdf:
@@ -364,7 +364,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [test_pdf]
 
@@ -373,7 +373,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -390,7 +390,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -399,7 +399,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -418,7 +418,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -436,7 +436,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [dev_apply_environment_terraform]
 
@@ -445,7 +445,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [dev_seed_database]
 
@@ -456,7 +456,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [dev_run_behat_tests]
 
@@ -466,7 +466,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /terraform\/.*/
+              /tf\/.*/
               ] } }
             requires: [post_environment_domains]
 
