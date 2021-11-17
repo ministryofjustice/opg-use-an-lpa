@@ -51,59 +51,98 @@ workflows:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/node_test_web:
             name: test_web
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/node_build_web:
             name: build_web
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires: [test_pdf]
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires:
               [
                 app_front_build,
@@ -116,7 +155,81 @@ workflows:
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
+            filters:
+              branches:
+                ignore: [/dependabot\/terraform\/.*/]
+                only: [/dependabot\/.*/]
             requires: [codecov_upload]
+
+  dependabot_terraform_build:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+
+            # Provision and test development
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+            requires: [cancel_previous_jobs,lint_terraform]
+
+        - use-my-lpa/apply_environment_terraform:
+            name: dev_apply_environment_terraform
+            image_tag_input: latest
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+            requires:
+              [
+                cancel_previous_jobs,
+                dev_plan_shared_terraform,
+              ]
+
+        - use-my-lpa/seed_database:
+            name: dev_seed_database
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+            requires: [dev_apply_environment_terraform]
+
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+            requires: [dev_seed_database]
+
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            filters:
+              tags:
+                only: [terraform]
+              branches:
+                only: [/dependabot\/terraform\/.*/]
+            requires: [post_environment_domains]
 
   pr_build:
       jobs:
