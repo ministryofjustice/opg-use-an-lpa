@@ -166,16 +166,12 @@ workflows:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
 
@@ -183,8 +179,6 @@ workflows:
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
             requires: [cancel_previous_jobs,lint_terraform]
@@ -193,8 +187,6 @@ workflows:
             name: dev_apply_environment_terraform
             image_tag_input: latest
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
             requires:
@@ -206,8 +198,6 @@ workflows:
         - use-my-lpa/seed_database:
             name: dev_seed_database
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
             requires: [dev_apply_environment_terraform]
@@ -215,8 +205,6 @@ workflows:
         - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
             requires: [dev_seed_database]
@@ -225,8 +213,6 @@ workflows:
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
             filters:
-              tags:
-                only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
             requires: [dev_run_behat_tests]
