@@ -30,6 +30,10 @@
                             </h1>
                         </legend>
 
+                        <p class="govuk-body">
+                            {% trans %}An <abbr title="lasting power of attorney">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
+                        </p>
+
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('donor_surname'),
@@ -49,11 +53,17 @@
                             }
                         ) }}
 
-                        <div class="govuk-inset-text">
-                            <p class="govuk-!-font-weight-bold">{% trans %}What is an <abbr title="lasting power of attorney">LPA</abbr> access code?{% endtrans %}</p>
-
-                            {% trans %}An <abbr title="lasting power of attorney">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
-                        </div>
+                        <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
+                            <summary class="govuk-details__summary" role="button">
+                                <span class="govuk-details__summary-text">
+                                    {% trans %}The code I've been given does not begin with a V{% endtrans %}
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p>{% trans %}The donor or attorney may have given you the wrong code.{% endtrans %}</p>
+                                <p>{% trans %}Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation.{% endtrans %}</p>
+                            </div>
+                        </details>
 
                         <p class="govuk-body">{% trans with {'%link%': path('terms-of-use')} %}By continuing you agree to our <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>.{% endtrans %}</p>
 

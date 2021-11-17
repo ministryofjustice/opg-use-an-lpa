@@ -30,7 +30,7 @@
                             </h1>
                         </legend>
 
-                        <p class="govuk-body-l">{% trans with {'%link%': path('login')} %}If you already have an account, please <a href="%link%" class="govuk-link">sign in</a>.{% endtrans %}</p>
+                        <p class="govuk-body-l">{% trans with {'%link%': path('login')} %}If you already have an account, <a href="%link%" class="govuk-link">sign in</a>.{% endtrans %}</p>
 
                         <div class="govuk-grid-row">
 
@@ -46,7 +46,7 @@
 
                                 {{ govuk_form_element(form.get('show_hide_password'), {
                                     'label': 'Create a password'| trans,
-                                    'hint': 'Your password needs to have: <ul class="govuk-list--bullet"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>'| trans,
+                                    'hint': 'Your password needs to have at least: <ul class="govuk-list--bullet"><li>8 characters</li><li>one lower-case and one capital letter</li><li>one number</li></ul>'| trans,
                                     'attr': { 'class': 'govuk-input moj-password-reveal__input govuk-input--width-20' }
                                 })
                                 }}

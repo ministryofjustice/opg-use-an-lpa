@@ -35,6 +35,7 @@ export default class GoogleAnalytics {
         this._trackExternalLinks();
         this._trackFormValidationErrors();
         this._trackLpaDownload();
+        this._trackAccessCodeReveal();
 
         PerformanceAnalytics();
         ErrorAnalytics();
@@ -101,6 +102,17 @@ export default class GoogleAnalytics {
         if (downloadLinkSelector) {
             downloadLinkSelector.addEventListener('click', function (e) {
                 _this.trackEvent('Download', 'LPA summary', 'Download this LPA summary');
+            });
+        }
+    }
+
+    _trackAccessCodeReveal()
+    {
+        const _this = this;
+        let accessCodeRevealSelector = document.querySelector("#access-code-reveal");
+        if (accessCodeRevealSelector) {
+            accessCodeRevealSelector.addEventListener('click', function (e) {
+                _this.trackEvent('AccessCodeReveal', 'Access code', 'The code I\'ve been given does not begin with a V');
             });
         }
     }
