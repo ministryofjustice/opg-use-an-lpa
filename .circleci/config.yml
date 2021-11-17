@@ -229,7 +229,7 @@ workflows:
                 only: [terraform]
               branches:
                 only: [/dependabot\/terraform\/.*/]
-            requires: [post_environment_domains]
+            requires: [dev_run_behat_tests]
 
   pr_build:
       jobs:
