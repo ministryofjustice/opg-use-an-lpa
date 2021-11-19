@@ -61,7 +61,7 @@ ps:
 .PHONY: ps
 
 logs:
-	$(COMPOSE) logs -f $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) logs -t -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
 
 up_dependencies:
