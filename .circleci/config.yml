@@ -460,6 +460,15 @@ workflows:
               ] } }
             requires: [dev_run_behat_tests]
 
+        - python_templated_slack_on_fail_notify:
+            name: post_environment_domains
+            template: on_fail.txt
+            filters: { branches: { ignore: [
+              main,
+              /dependabot\/.*/,
+              /tf\/.*/
+              ] } }
+
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
@@ -1491,7 +1500,32 @@ jobs:
       - run:
           name: Notify Slack
           command: |
+            pip install -r ~/project/scripts/pipeline/requirements.txt
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook <<parameters.webhook>> \
+            --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
+            --commit_message "$(git log -1 --pretty=%B)"
 
+  python_templated_slack_on_fail_notify:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      template:
+        type: string
+      webhook:
+        type: string
+        default: $SLACK_WEBHOOK
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          command: |
             pip install -r ~/project/scripts/pipeline/requirements.txt
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook <<parameters.webhook>> \
