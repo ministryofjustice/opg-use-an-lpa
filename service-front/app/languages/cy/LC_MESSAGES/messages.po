@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-15T11:46:28+00:00\n"
+"POT-Creation-Date: 2021-11-16T14:44:07+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 
@@ -272,8 +272,8 @@ msgstr "Creu cyfrif"
 
 #: src/Actor/templates/actor/create-account.html.twig:33
 msgid ""
-"If you already have an account, please <a href=\"%link%\" class=\"govuk-link"
-"\">sign in</a>."
+"If you already have an account, <a href=\"%link%\" class=\"govuk-link\">sign "
+"in</a>."
 msgstr ""
 "Os oes gennych gyfrif yn barod, <a href=\"%link%\" class=\"govuk-link"
 "\">mewngofnodwch</a>."
@@ -288,13 +288,13 @@ msgstr "Crëwch gyfrinair"
 
 #: src/Actor/templates/actor/create-account.html.twig:49
 msgid ""
-"Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 "
-"characters</li><li>at least one lower-case and one capital letter</li><li>at "
-"least one number</li></ul>"
+"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
+"characters</li><li>one lower-case and one capital letter</li><li>one number</"
+"li></ul>"
 msgstr ""
-"Mae’n rhaid i’ch cyfrinair gynnwys: <ul class=\"govuk-list—bullet\"><li>o "
-"leiaf 8 o nodau</li><li>o leiaf un llythyren fach ac un briflythyren</li><li>o "
-"leiaf un rhif</li></ul>"
+"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=\"govuk-list—bullet"
+"\"><li>8 o nodau</li><li>un llythyren fach ac un briflythyren</li><li>un rhif</"
+"li></ul>"
 
 #: src/Actor/templates/actor/change-email.html.twig:36
 msgid "Confirm your password"
@@ -2521,7 +2521,7 @@ msgstr ""
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:68
 #: src/Actor/templates/actor/lpa-add.html.twig:77
-#: src/Viewer/templates/viewer/enter-code.html.twig:60
+#: src/Viewer/templates/viewer/enter-code.html.twig:70
 msgid "Continue"
 msgstr "Parhau"
 
@@ -3523,15 +3523,15 @@ msgstr "Rhowch god mynediad yr LPA"
 msgid "Enter the LPA access code"
 msgstr "Rhowch god mynediad LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:37
+#: src/Viewer/templates/viewer/enter-code.html.twig:41
 msgid "Donor's last name"
 msgstr "Enw olaf y rhoddwr"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:45
+#: src/Viewer/templates/viewer/enter-code.html.twig:49
 msgid "LPA access code"
 msgstr "Cod mynediad yr LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:47
+#: src/Viewer/templates/viewer/enter-code.html.twig:51
 msgid ""
 "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-"
 "CD34-EF56"
@@ -3545,7 +3545,7 @@ msgid ""
 msgstr ""
 "Beth yw cod mynediad <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:55
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 msgid ""
 "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a "
 "unique code given to you by the donor or an attorney named on a lasting power "
@@ -4247,7 +4247,7 @@ msgstr ""
 "Rwy’n cytuno i’r <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel="
 "\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:58
+#: src/Viewer/templates/viewer/enter-code.html.twig:68
 msgid ""
 "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class="
 "\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
@@ -6279,7 +6279,6 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
 #: src/Viewer/templates/viewer/view-lpa.html.twig:11
-#, fuzzy
 msgid "Give us feedback about this service"
 msgstr "Give us feedback about this service"
 
@@ -6304,3 +6303,18 @@ msgid ""
 msgstr ""
 "Os ydych chi wedi gwneud <abbr title=\"atwrneiaeth arhosol\"> LPA </abbr> ar-lein, bydd dal angen i "
 "chi greu cyfrif ar y gwasanaeth hwn er mwyn defnyddio’r LPA ar-lein."
+#: src/Viewer/templates/viewer/enter-code.html.twig:59
+msgid "The code I've been given does not begin with a V"
+msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
+msgid "The donor or attorney may have given you the wrong code."
+msgstr "Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi."
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:64
+msgid ""
+"Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your "
+"organisation."
+msgstr ""
+"Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
+"mynediad LPA ar gyfer eich sefydliad."
