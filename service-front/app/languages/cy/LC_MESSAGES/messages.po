@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-16T14:44:07+00:00\n"
+"POT-Creation-Date: 2021-11-19T09:11:53+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6265,6 +6265,13 @@ msgid "cancelled"
 msgstr "dilëwyd"
 
 #: src/Actor/templates/actor/create-account.html.twig:33
+msgid ""
+"If you already have an account on the Use a lasting power of attorney service, "
+"please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
+msgstr ""
+"Os oes gennych gyfrif yn barod ar y gwasanaeth Defnyddio atwrneiaeth arhosol, "
+"<a href=\"%link%\" class=\"govuk-link\"> mewngofnodwch yma</a>."
+
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:33
 msgid "I do not live in the UK"
@@ -6299,10 +6306,3 @@ msgid ""
 msgstr ""
 "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
 "mynediad LPA ar gyfer eich sefydliad."
-
-#~ msgid ""
-#~ "If you already have an account on the Use a lasting power of attorney "
-#~ "service, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
-#~ msgstr ""
-#~ "Os oes gennych gyfrif yn barod ar y gwasanaeth Defnyddio atwrneiaeth "
-#~ "arhosol, <a href=\"%link%\" class=\"govuk-link\"> mewngofnodwch yma</a>."
