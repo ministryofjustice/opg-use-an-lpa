@@ -658,10 +658,8 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
             ->inspectRequest(
-                function (RequestInterface $request, array $options)
- use ($expectedUrl, $expectedTemplateId) {
+                function (RequestInterface $request, array $options) use ($expectedUrl, $expectedTemplateId) {
                     $requestBody = $request->getBody()->getContents();
-
                     assertContains($this->userPasswordResetToken, $requestBody);
                     assertContains(json_encode($expectedUrl), $requestBody);
                     assertContains($expectedTemplateId, $requestBody);
@@ -873,9 +871,9 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     * @Then /^I should be told my email change request was successful$/
      */
-    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    public function iShouldBeToldMyEmailChangeRequestWasSuccessful()
     {
         // Not needed for this context
     }

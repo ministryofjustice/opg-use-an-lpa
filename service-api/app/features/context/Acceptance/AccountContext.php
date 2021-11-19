@@ -540,7 +540,6 @@ class AccountContext implements Context
             'User already exists with email address ' . $this->userAccountCreateData['Email'],
             $this->getResponseAsJson()
         );
-
     }
     /**
      * @Given I have asked to create a new account
@@ -853,9 +852,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to change my email to an email address that is taken by another user on the service$/
+     * @When /^I request to change my email to an email address that (.*)$/
      */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
+    public function iRequestToChangeMyEmailToAnEmailAddressThat($context)
     {
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
@@ -866,15 +865,70 @@ class AccountContext implements Context
             ])
         ]));
 
-        // ActorUsers::getByEmail (exists)
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'Email' => $this->base->userAccountEmail,
-                    'Password' => $this->base->userAccountPassword
+        if ($context === 'is taken by another user on the service') {
+            // ActorUsers::getByEmail (exists)
+            $this->awsFixtures->append(
+                new Result([
+                    'Items' => [
+                        $this->marshalAwsResultData([
+                            'Email' => $this->base->userAccountEmail,
+                            'Password' => $this->base->userAccountPassword
+                        ])
+                    ]
                 ])
-            ]
-        ]));
+            );
+        } else {
+            $this->awsFixtures->append(new Result([]));
+        }
+
+        switch ($context) {
+            case 'another user has requested to change their email to but their token has not expired':
+                // ActorUsers::getUserByNewEmail
+                $this->awsFixtures->append(new Result([
+                    'Items' => [
+                        $this->marshalAwsResultData([
+                            'EmailResetExpiry' => time() + (60 * 60),
+                            'Email'            => 'another@user.com',
+                            'LastLogin'        => null,
+                            'Id'               => 'aaaaaa1111111',
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => 't0ken12345',
+                            'Password'         => 'otherU53rsPa55w0rd'
+                        ])
+                    ]
+                ]));
+                break;
+            case 'another user has requested to change their email to but their token has expired':
+                // ActorUsers::getUserByNewEmail
+                $this->awsFixtures->append(new Result([
+                    'Items' => [
+                        $this->marshalAwsResultData([
+                            'EmailResetExpiry' => time() - (60),
+                            'Email'            => 'another@user.com',
+                            'LastLogin'        => null,
+                            'Id'               => 'aaaaaa1111111',
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => 't0ken12345',
+                            'Password'         => 'otherU53rsPa55w0rd'
+                        ])
+                    ]
+                ]));
+
+                // ActorUsers::recordChangeEmailRequest
+                $this->awsFixtures->append(new Result([
+                    'Item' => $this->marshalAwsResultData([
+                        'EmailResetExpiry' => time() + (60 * 60 * 48),
+                        'Email'            => $this->base->userAccountEmail,
+                        'LastLogin'        => null,
+                        'Id'               => $this->base->userAccountId,
+                        'NewEmail'         => $this->newEmail,
+                        'EmailResetToken'  => $this->userEmailResetToken,
+                        'Password'         => $this->base->userAccountPassword
+                    ])
+                ]));
+
+                break;
+        }
 
         $this->apiPatch('/v1/request-change-email', [
             'user-id'       => $this->base->userAccountId,
@@ -884,105 +938,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     * @Then /^I should be told my email change request was successful$/
      */
-    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    public function iShouldBeToldMyEmailChangeRequestWasSuccessful()
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
-    }
-
-    /**
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has not expired$/
-     */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasNotExpired()
-    {
-        // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
-        ]));
-
-        // ActorUsers::getByEmail (exists)
-        $this->awsFixtures->append(new Result([]));
-
-        // ActorUsers::getUserByNewEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'EmailResetExpiry' => time() + (60 * 60),
-                    'Email'            => 'another@user.com',
-                    'LastLogin'        => null,
-                    'Id'               => 'aaaaaa1111111',
-                    'NewEmail'         => $this->newEmail,
-                    'EmailResetToken'  => 't0ken12345',
-                    'Password'         => 'otherU53rsPa55w0rd'
-                ])
-            ]
-        ]));
-
-        $this->apiPatch('/v1/request-change-email', [
-            'user-id'       => $this->base->userAccountId,
-            'new-email'     => $this->newEmail,
-            'password'      => $this->base->userAccountPassword
-        ], []);
-    }
-
-    /**
-     * @When /^I request to change my email to an email address that another user has requested to change their email to but their token has expired$/
-     */
-    public function iRequestToChangeMyEmailToAnEmailAddressThatAnotherUserHasRequestedToChangeTheirEmailToButTheirTokenHasExpired()
-    {
-        // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
-        ]));
-
-        // ActorUsers::getByEmail (exists)
-        $this->awsFixtures->append(new Result([]));
-
-        // Expired
-        $otherUsersTokenExpiry = time() - (60);
-
-        // ActorUsers::getUserByNewEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
-                    'EmailResetExpiry' => $otherUsersTokenExpiry,
-                    'Email'            => 'another@user.com',
-                    'LastLogin'        => null,
-                    'Id'               => 'aaaaaa1111111',
-                    'NewEmail'         => $this->newEmail,
-                    'EmailResetToken'  => 't0ken12345',
-                    'Password'         => 'otherU53rsPa55w0rd'
-                ])
-            ]
-        ]));
-
-        // ActorUsers::recordChangeEmailRequest
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => time() + (60 * 60 * 48),
-                'Email'            => $this->base->userAccountEmail,
-                'LastLogin'        => null,
-                'Id'               => $this->base->userAccountId,
-                'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken,
-                'Password'         => $this->base->userAccountPassword
-            ])
-        ]));
-
-        $this->apiPatch('/v1/request-change-email', [
-            'user-id'       => $this->base->userAccountId,
-            'new-email'     => $this->newEmail,
-            'password'      => $this->base->userAccountPassword
-        ]);
     }
 
     /**
