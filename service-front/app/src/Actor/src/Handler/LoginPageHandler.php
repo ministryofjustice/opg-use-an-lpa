@@ -15,6 +15,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Validator\NotEmpty;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -94,19 +95,22 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                     }
                 }
 
-                return new HtmlResponse($this->renderer->render('actor::login-not-found'));
+                $form->addErrorMessage(Login::NOT_FOUND);
+                return new HtmlResponse($this->renderer->render('actor::login', [
+                    'form' => $form
+                ]));
             } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
                // redirect to correct success page with correct data
-               if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
-                   $formValues = $form->getData();
-                   $emailAddress = $formValues['email'];
+                if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
+                    $formValues = $form->getData();
+                    $emailAddress = $formValues['email'];
 
-                   return $this->redirectToRoute('create-account-success', [], [
+                    return $this->redirectToRoute('create-account-success', [], [
                        'email' => $emailAddress
-                   ]);
-               }
-           }
+                    ]);
+                }
+            }
         }
 
         // user is already logged in. check done *after* POST method above due to the way
