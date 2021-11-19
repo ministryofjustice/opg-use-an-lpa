@@ -30,13 +30,13 @@ Feature: Change email
   Scenario: The user cannot request to change their email address because the email chosen belongs to another user on the service
     Given I am on the change email page
     When I request to change my email to an email address that is taken by another user on the service
-    Then I should be told my request was successful and an email is sent to the chosen email address to warn the user
+    Then I should be told my email change request was successful
 
   @ui @integration
   Scenario: The user cannot request to change their email address because another user has requested to change their email to this and token has not expired
     Given I am on the change email page
     When I request to change my email to one that another user has requested
-    Then I should be told my request was successful and an email is sent to the chosen email address to warn the user
+    Then I should be told my email change request was successful
 
   @ui @integration
   Scenario: The user can request to change their email address that another user has requested to change their email to this but their token has expired
