@@ -1,5 +1,0 @@
-moto[sqs]==2.0.2
-coverage==5.5
-pylint==2.7.2
-pytest==6.2.2
-requests-mock

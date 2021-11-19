@@ -47,63 +47,128 @@ workflows:
       - slack_notify_stats:
           name: slack_notify_stats
 
-  dependabot_build:
+  package_update_pr:
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/node_test_web:
             name: test_web
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/node_build_web:
             name: build_web
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [test_web]
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [build_web]
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [build_web]
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [test_pdf]
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
-            filters: { branches: { only: [/dependabot\/.*/] } }
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires:
               [
                 app_front_build,
@@ -116,7 +181,90 @@ workflows:
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
+            filters:
+              branches:
+                only: [
+                  /dependabot\/npm_and_yarn\/.*/,
+                  /dependabot\/composer\/.*/,
+                  ]
             requires: [codecov_upload]
+
+  terraform_only_pr:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+
+            # Provision and test development
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+            requires: [cancel_previous_jobs,lint_terraform]
+
+        - use-my-lpa/apply_environment_terraform:
+            name: dev_apply_environment_terraform
+            image_tag_input: latest
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+            requires:
+              [
+                cancel_previous_jobs,
+                dev_plan_shared_terraform,
+              ]
+
+        - use-my-lpa/seed_database:
+            name: dev_seed_database
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+            requires: [dev_apply_environment_terraform]
+
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+            requires: [dev_seed_database]
+
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            filters:
+              branches:
+                only: [
+                  /dependabot\/terraform\/.*/,
+                  /tf\/.*/
+                  ]
+            requires: [dev_run_behat_tests]
 
   pr_build:
       jobs:
@@ -125,6 +273,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/lint_terraform:
@@ -132,6 +281,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/node_test_web:
@@ -139,26 +289,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              ] } }
-
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_clsf_to_sqs_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: clsf-to-sqs
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              ] } }
-
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_ship_to_opg_metrics_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: ship-to-opg-metrics
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/node_build_web:
@@ -166,6 +297,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [test_web]
 
@@ -174,6 +306,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_front_app:
@@ -181,6 +314,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [build_web]
 
@@ -189,6 +323,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [build_web]
 
@@ -197,6 +332,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_api_web:
@@ -204,6 +340,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_test_admin:
@@ -211,6 +348,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_admin:
@@ -218,6 +356,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
 
         - use-my-lpa/docker_build_pdf:
@@ -225,6 +364,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [test_pdf]
 
@@ -233,6 +373,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -249,6 +390,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -257,6 +399,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -275,6 +418,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires:
               [
@@ -292,6 +436,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [dev_apply_environment_terraform]
 
@@ -300,6 +445,7 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [dev_seed_database]
 
@@ -310,31 +456,23 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
+              /tf\/.*/
               ] } }
             requires: [dev_run_behat_tests]
 
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
             name: end_of_workflow
+            filters: { branches: { ignore: [
+              main,
+              /dependabot\/.*/,
+              /tf\/.*/
+              ] } }
             requires: [post_environment_domains]
 
   path_to_live:
       jobs:
         # Common tasks
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_clsf_to_sqs_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: clsf-to-sqs
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/docker_build_lambda_image:
-            name: build_ship_to_opg_metrics_lambda_image
-            account_id: "367815980639"
-            container_repo_account: development
-            lambda_name: ship-to-opg-metrics
-            filters: { branches: { only: [main] } }
-
         - use-my-lpa/node_test_web:
             name: test_web
             filters: { branches: { only: [main] } }
@@ -396,11 +534,6 @@ workflows:
             name: dev_apply_shared_terraform
             workspace: development
             filters: { branches: { only: [main] } }
-            requires:
-              [
-                build_clsf_to_sqs_lambda_image,
-                build_ship_to_opg_metrics_lambda_image,
-              ]
 
         - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
@@ -527,22 +660,6 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
-      ecr_login_lambda:
-        parameters:
-          ecr:
-            type: string
-          account_id:
-            type: string
-        steps:
-          - run:
-              name: Login to ECR
-              command: |
-                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::<< parameters.account_id >>:role/opg-use-an-lpa-ci --role-session-name ci)
-                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
-                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
-                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin << parameters.ecr >>
-
 
     executors:
       golang:
@@ -996,49 +1113,6 @@ orbs:
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
-      docker_build_lambda_image:
-        #
-        # Build Docker container for AWS Lambda
-        #
-        executor: python
-        parameters:
-          account_id:
-            type: string
-          container_repo_account:
-            type: string
-          lambda_name:
-            type: string
-        environment:
-            ECR_URL: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com/<< parameters.container_repo_account >>/<< parameters.lambda_name >>
-        steps:
-          - checkout
-          - install_aws_cli
-          - setup_remote_docker:
-              version: 20.10.7
-              docker_layer_caching: false
-          - dockerhub_login
-          - run:
-              name: Build
-              command: |
-                echo $ECR_URL
-                docker build --file terraform/account/lambda/<< parameters.lambda_name >>/Dockerfile --tag ${ECR_URL}:latest .
-          - ecr_login_lambda:
-              ecr: << parameters.account_id >>.dkr.ecr.eu-west-1.amazonaws.com
-              account_id: << parameters.account_id >>
-          - run:
-              name: Push container
-              command: |
-                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-                echo $ECR_URL
-                docker tag ${ECR_URL}:latest ${ECR_URL}:${IMAGE_TAG}
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-                  # We want all of the tags pushed
-                  docker push --all-tags ${ECR_URL}
-                else
-                  docker push ${ECR_URL}:${IMAGE_TAG}
-                fi
-
       docker_test_admin:
         #
         # Run golang unit tests against admin
@@ -1168,12 +1242,10 @@ orbs:
           - run:
               name: Plan Shared Terraform
               command: |
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init
-                terraform plan -lock-timeout=300s -var lambda_container_version=${IMAGE_TAG}
+                terraform plan -lock-timeout=300s
 
       apply_shared_terraform:
         #
@@ -1193,12 +1265,10 @@ orbs:
           - run:
               name: Apply Shared Terraform
               command: |
-                export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
                 terraform --version
                 cd ~/project/terraform/account
                 terraform init
-                terraform apply -lock-timeout=300s --auto-approve -var lambda_container_version=${IMAGE_TAG}
+                terraform apply -lock-timeout=300s --auto-approve
 
       apply_environment_terraform:
         #
