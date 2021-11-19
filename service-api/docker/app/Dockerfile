@@ -27,7 +27,7 @@ COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.con
 
 WORKDIR /app
 
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["app/docker-healthcheck.sh"]
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["docker-healthcheck.sh"]
 
 CMD php-fpm
 

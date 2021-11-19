@@ -257,7 +257,7 @@ locals {
         }
       ],
       healthCheck = {
-        command     = ["CMD", "./app/docker-healthcheck"],
+        command     = ["CMD", "docker-healthcheck"],
         startPeriod = 30,
         interval    = 15,
         timeout     = 30,
