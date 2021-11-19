@@ -461,7 +461,7 @@ workflows:
             requires: [dev_run_behat_tests]
 
         - python_templated_slack_on_fail_notify:
-            name: post_environment_domains
+            name: on_fail_notification
             template: on_fail.txt
             filters: { branches: { ignore: [
               main,
