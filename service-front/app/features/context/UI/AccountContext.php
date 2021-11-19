@@ -393,7 +393,8 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect()
     {
-        $this->ui->assertPageContainsText('We could not find an account with that email and password');
+        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with ' .
+        'that email address and password. Check your details and try again.');
     }
 
     /**
@@ -1712,9 +1713,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told my request was successful and an email is sent to the chosen email address to warn the user$/
+     * @Then /^I should be told my email change request was successful$/
      */
-    public function iShouldBeToldMyRequestWasSuccessfulAndAnEmailIsSentToTheChosenEmailAddressToWarnTheUser()
+    public function iShouldBeToldMyEmailChangeRequestWasSuccessful()
     {
         $this->ui->assertPageContainsText('Updating your email address');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
@@ -1863,15 +1864,6 @@ class AccountContext implements Context
     public function myEmailResetTokenIsStillValid()
     {
         $this->userEmailResetToken = '12345abcde';
-    }
-
-    /**
-     * @Then /^My old account is not found$/
-     */
-    public function myOldAccountIsNotFound()
-    {
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('We could not find an account with that email and password');
     }
 
     /**
