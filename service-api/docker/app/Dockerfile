@@ -33,5 +33,7 @@ FROM production as development
 
 COPY --from=composer-dev /app/vendor /app/vendor
 
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["docker-healthcheck"]
+
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
