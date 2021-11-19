@@ -257,10 +257,10 @@ locals {
         }
       ],
       healthCheck = {
-        command     = ["CMD-SHELL", "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"],
+        command     = ["CMD", "./app/docker-healthcheck"],
         startPeriod = 30,
         interval    = 15,
-        timeout     = 10,
+        timeout     = 30,
         retries     = 3
       },
       volumesFrom = [],
