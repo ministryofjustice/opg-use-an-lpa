@@ -2,12 +2,13 @@
 // Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
-  name             = "api-service"
-  cluster          = aws_ecs_cluster.use-an-lpa.id
-  task_definition  = aws_ecs_task_definition.api.arn
-  desired_count    = local.environment.autoscaling.api.minimum
-  launch_type      = "FARGATE"
-  platform_version = "1.4.0"
+  name                              = "api-service"
+  cluster                           = aws_ecs_cluster.use-an-lpa.id
+  task_definition                   = aws_ecs_task_definition.api.arn
+  desired_count                     = local.environment.autoscaling.api.minimum
+  launch_type                       = "FARGATE"
+  platform_version                  = "1.4.0"
+  health_check_grace_period_seconds = 0
 
   network_configuration {
     security_groups  = [aws_security_group.api_ecs_service.id]
