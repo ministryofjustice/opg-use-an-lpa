@@ -27,13 +27,13 @@ COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.con
 
 WORKDIR /app
 
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["app/docker-healthcheck.sh"]
+
 CMD php-fpm
 
 FROM production as development
 
 COPY --from=composer-dev /app/vendor /app/vendor
-
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["docker-healthcheck"]
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
