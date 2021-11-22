@@ -479,7 +479,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -490,7 +490,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -500,7 +500,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -511,7 +511,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -522,7 +522,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -551,7 +551,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -561,7 +561,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -571,7 +571,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -589,7 +589,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -601,7 +601,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -616,7 +616,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -637,7 +637,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -667,7 +667,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -679,7 +679,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -692,7 +692,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -713,7 +713,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -724,7 +724,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -737,7 +737,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
-                  mentions: 'S02GWAQC9AP'
+                  mentions: '${SLACK_GROUP_ID}'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
