@@ -279,6 +279,7 @@ workflows:
               - slack/status:
                 fail_only: false
                 failure_message: 'TESTING - Path to Live Failure'
+                success_message: 'TESTING - Path to Live Failure'
                 webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
         - use-my-lpa/lint_terraform:
             name: lint_terraform
