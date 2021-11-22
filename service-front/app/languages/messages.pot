@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-16T14:44:07+00:00\n"
+"POT-Creation-Date: 2021-11-19T09:11:53+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4397,6 +4397,10 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:23
 msgid "cancelled"
+msgstr ""
+
+#: src/Actor/templates/actor/create-account.html.twig:33
+msgid "If you already have an account on the Use a lasting power of attorney service, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:42
