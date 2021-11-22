@@ -279,7 +279,7 @@ workflows:
               - slack/status:
                   fail_only: false
                   failure_message: 'Path to Live Failure - See job for details'
-                  mentions: 'U5RD73HM5'
+                  mentions: 'S02GWAQC9AP'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/lint_terraform:
