@@ -1,7 +1,0 @@
-:star: *Failed Workflow* :star:
-*User:* {{ user }}
-*Links*
-    *CircleCI build url:* {{ circleci_build_url }}
-
-*Commit message:*
-{{ commit_message }}
