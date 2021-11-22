@@ -275,6 +275,12 @@ workflows:
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
+            post-steps:
+              - slack/status:
+                  fail_only: false
+                  failure_message: 'Path to Live Failure - See job for details'
+                  mentions: 'ual-devs'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/lint_terraform:
             name: lint_terraform
@@ -479,6 +485,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -489,6 +496,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -498,6 +506,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -508,6 +517,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -518,6 +528,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -546,6 +557,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -555,6 +567,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -564,6 +577,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -581,6 +595,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -592,6 +607,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -606,6 +622,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -626,6 +643,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -655,6 +673,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -666,6 +685,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -678,6 +698,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -698,6 +719,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -708,6 +730,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
@@ -720,6 +743,7 @@ workflows:
             post-steps:
               - slack/status:
                   fail_only: true
+                  mentions: 'ual-devs'
                   failure_message: 'Path to Live Failure - See job for details'
                   webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
