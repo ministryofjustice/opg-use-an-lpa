@@ -275,6 +275,7 @@ workflows:
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
+
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters: { branches: { ignore: [
