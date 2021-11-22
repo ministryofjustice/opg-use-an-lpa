@@ -277,9 +277,9 @@ workflows:
               ] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters: { branches: { ignore: [
@@ -482,9 +482,9 @@ workflows:
             filters: { branches: { only: [main] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/node_build_web:
             name: build_web
@@ -492,18 +492,18 @@ workflows:
             requires: [test_web]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
             filters: { branches: { only: [main] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
@@ -511,9 +511,9 @@ workflows:
             requires: [build_web]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
@@ -521,9 +521,9 @@ workflows:
             requires: [build_web]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
@@ -549,27 +549,27 @@ workflows:
             requires: [test_pdf]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters: { branches: { only: [main] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [main] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
@@ -584,9 +584,9 @@ workflows:
               ]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
@@ -595,9 +595,9 @@ workflows:
             filters: { branches: { only: [main] } }
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
@@ -609,9 +609,9 @@ workflows:
               ]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_environment_terraform:
             name: preprod_apply_environment_terraform
@@ -629,10 +629,9 @@ workflows:
               ]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
-
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - ecr_scan_results:
             name: ecr_scan_results
@@ -659,9 +658,9 @@ workflows:
             requires: [preprod_apply_environment_terraform]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/run_behat_suite:
             name: preprod_run_behat_tests
@@ -670,9 +669,9 @@ workflows:
             requires: [preprod_seed_database]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
@@ -682,9 +681,9 @@ workflows:
             requires: [preprod_run_behat_tests]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
@@ -702,9 +701,9 @@ workflows:
               ]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/run_healthcheck_test:
             name: prod_run_healthcheck_test
@@ -712,9 +711,9 @@ workflows:
             requires: [production_apply_environment_terraform]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - python_templated_slack_notify:
             name: post_production_release_message
@@ -724,9 +723,9 @@ workflows:
             requires: [prod_run_healthcheck_test]
             post-steps:
               - slack/status:
-                fail_only: true
-                failure_message: 'Path to Live Failure - See job for details'
-                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
+                  fail_only: true
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
 
 orbs:
