@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-19T09:11:53+00:00\n"
+"POT-Creation-Date: 2021-11-22T09:47:30+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -271,9 +271,13 @@ msgid "Create an account"
 msgstr "Creu cyfrif"
 
 #: src/Actor/templates/actor/create-account.html.twig:33
+#, fuzzy
+#| msgid ""
+#| "If you already have an account, <a href=\"%link%\" class=\"govuk-link"
+#| "\">sign in</a>."
 msgid ""
-"If you already have an account, <a href=\"%link%\" class=\"govuk-link\">sign "
-"in</a>."
+"If you already have an account, please <a href=\"%link%\" class=\"govuk-link"
+"\">sign in</a>."
 msgstr ""
 "Os oes gennych gyfrif yn barod, <a href=\"%link%\" class=\"govuk-link"
 "\">mewngofnodwch</a>."
@@ -285,16 +289,6 @@ msgstr "Teipiwch eich cyfeiriad e-bost"
 #: src/Actor/templates/actor/create-account.html.twig:48
 msgid "Create a password"
 msgstr "Crëwch gyfrinair"
-
-#: src/Actor/templates/actor/create-account.html.twig:49
-msgid ""
-"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
-"characters</li><li>one lower-case and one capital letter</li><li>one number</"
-"li></ul>"
-msgstr ""
-"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=\"govuk-list—bullet"
-"\"><li>8 o nodau</li><li>un llythyren fach ac un briflythyren</li><li>un rhif</"
-"li></ul>"
 
 #: src/Actor/templates/actor/change-email.html.twig:36
 msgid "Confirm your password"
@@ -314,7 +308,7 @@ msgstr "Rhybudd"
 
 #: src/Actor/templates/actor/create-account.html.twig:58
 #: src/Actor/templates/actor/password-reset.html.twig:47
-#: src/Actor/templates/actor/password-change.html.twig:38
+#: src/Actor/templates/actor/password-change.html.twig:39
 msgid "Never share your password with anyone."
 msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 
@@ -354,7 +348,7 @@ msgid "Password"
 msgstr "Cyfrinair"
 
 #: src/Actor/templates/actor/password-reset.html.twig:55
-#: src/Actor/templates/actor/password-change.html.twig:51
+#: src/Actor/templates/actor/password-change.html.twig:52
 msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
@@ -801,11 +795,11 @@ msgstr ""
 "                        Byddwch yn cytuno i unrhyw newidiadau os byddwch yn "
 "parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru."
 
-#: src/Actor/templates/actor/password-change.html.twig:41
+#: src/Actor/templates/actor/password-change.html.twig:42
 msgid "Current password"
 msgstr "Cyfrinair presennol"
 
-#: src/Actor/templates/actor/password-change.html.twig:46
+#: src/Actor/templates/actor/password-change.html.twig:47
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
@@ -6304,13 +6298,6 @@ msgstr ""
 msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
 msgstr "Mewngofnodi neu <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a>."
 
-#: src/Actor/templates/actor/login.html.twig:38
-msgid ""
-"If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
-"you'll still need to create an account on this service to use the LPA online."
-msgstr ""
-"Os ydych chi wedi gwneud <abbr title=\"atwrneiaeth arhosol\"> LPA </abbr> ar-lein, bydd dal angen i "
-"chi greu cyfrif ar y gwasanaeth hwn er mwyn defnyddio’r LPA ar-lein."
 #: src/Viewer/templates/viewer/enter-code.html.twig:59
 msgid "The code I've been given does not begin with a V"
 msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
@@ -6326,3 +6313,42 @@ msgid ""
 msgstr ""
 "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
 "mynediad LPA ar gyfer eich sefydliad."
+
+#: src/Actor/templates/actor/create-account.html.twig:49
+msgid ""
+"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
+"characters</li><li>one lower-case and one capital letter</li><li>one number</"
+"li></ul>"
+msgstr ""
+"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=\"govuk-list—bullet"
+"\"><li>8 o nodau</li><li>un llythyren fach ac un briflythyren</li><li>un rhif</"
+"li></ul>"
+
+#: src/Actor/templates/actor/password-reset.html.twig:39
+#: src/Actor/templates/actor/password-change.html.twig:32
+msgid "Your password needs to have at least:"
+msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf:"
+
+#: src/Actor/templates/actor/password-reset.html.twig:42
+#: src/Actor/templates/actor/password-change.html.twig:35
+msgid "8 characters"
+msgstr "8 o nodau"
+
+#: src/Actor/templates/actor/password-reset.html.twig:43
+#: src/Actor/templates/actor/password-change.html.twig:36
+msgid "one lower-case and one capital letter"
+msgstr "un llythyren fach ac un briflythyren"
+
+#: src/Actor/templates/actor/password-reset.html.twig:44
+#: src/Actor/templates/actor/password-change.html.twig:37
+msgid "one number"
+msgstr "un rhif"
+
+#: src/Actor/templates/actor/login.html.twig:38
+msgid ""
+"If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
+"you'll still need to create an account on this service to use the LPA online."
+msgstr ""
+"Os ydych chi wedi gwneud <abbr title=\"atwrneiaeth arhosol\"> LPA </abbr> ar-"
+"lein, bydd dal angen i chi greu cyfrif ar y gwasanaeth hwn er mwyn defnyddio’r "
+"LPA ar-lein."
