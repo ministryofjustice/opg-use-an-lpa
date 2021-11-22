@@ -24,8 +24,8 @@
                     <p class="govuk-body">
                         {% trans %}If you need help with this service you can get in touch by telephone or email.{% endtrans %}
                     </p>
-                    {{ include('@partials/contact-details/email.html.twig') }}
-                    {{ include('@partials/contact-details/telephone.html.twig') }}
+                    {{ include('@partials/contact-details/email.html.twig', {heading_level: 2 }) }}
+                    {{ include('@partials/contact-details/telephone.html.twig', {heading_level: 2 }) }}
                 </div>
             </div>
         </main>
