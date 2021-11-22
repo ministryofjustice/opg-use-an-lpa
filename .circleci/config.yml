@@ -1,10 +1,5 @@
 version: 2.1
 
-slack-fail-post-step: &slack-fail-post-step
-  post-steps:
-    - slack/status:
-        fail_only: true
-
 workflows:
   keep_demo_environment_up_to_date:
     triggers:
@@ -281,8 +276,8 @@ workflows:
               /tf\/.*/
               ] } }
             post-steps:
-              - slack/status
-
+              - slack/status:
+                fail_only: true
         - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters: { branches: { ignore: [
