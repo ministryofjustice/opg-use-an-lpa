@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-22T09:47:30+00:00\n"
+"POT-Creation-Date: 2021-11-22T17:35:23+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -270,18 +270,6 @@ msgstr ""
 msgid "Create an account"
 msgstr "Creu cyfrif"
 
-#: src/Actor/templates/actor/create-account.html.twig:33
-#, fuzzy
-#| msgid ""
-#| "If you already have an account, <a href=\"%link%\" class=\"govuk-link"
-#| "\">sign in</a>."
-msgid ""
-"If you already have an account, please <a href=\"%link%\" class=\"govuk-link"
-"\">sign in</a>."
-msgstr ""
-"Os oes gennych gyfrif yn barod, <a href=\"%link%\" class=\"govuk-link"
-"\">mewngofnodwch</a>."
-
 #: src/Actor/templates/actor/create-account.html.twig:42
 msgid "Enter your email address"
 msgstr "Teipiwch eich cyfeiriad e-bost"
@@ -325,21 +313,6 @@ msgstr "Newid eich cyfrinair"
 #: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
-
-#: src/Actor/templates/actor/password-reset.html.twig:42
-#: src/Actor/templates/actor/password-change.html.twig:34
-msgid "at least 8 characters"
-msgstr "o leiaf 8 o nodau"
-
-#: src/Actor/templates/actor/password-reset.html.twig:43
-#: src/Actor/templates/actor/password-change.html.twig:35
-msgid "at least one lower-case and one capital letter"
-msgstr "o leiaf un llythyren fach ac un briflythyren"
-
-#: src/Actor/templates/actor/password-reset.html.twig:44
-#: src/Actor/templates/actor/password-change.html.twig:36
-msgid "at least one number"
-msgstr "o leiaf un rhif"
 
 #: src/Actor/templates/actor/password-reset.html.twig:50
 #: src/Actor/templates/actor/your-details.html.twig:37
@@ -6334,16 +6307,6 @@ msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf:"
 msgid "8 characters"
 msgstr "8 o nodau"
 
-#: src/Actor/templates/actor/password-reset.html.twig:43
-#: src/Actor/templates/actor/password-change.html.twig:36
-msgid "one lower-case and one capital letter"
-msgstr "un llythyren fach ac un briflythyren"
-
-#: src/Actor/templates/actor/password-reset.html.twig:44
-#: src/Actor/templates/actor/password-change.html.twig:37
-msgid "one number"
-msgstr "un rhif"
-
 #: src/Actor/templates/actor/login.html.twig:38
 msgid ""
 "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
@@ -6352,3 +6315,13 @@ msgstr ""
 "Os ydych chi wedi gwneud <abbr title=\"atwrneiaeth arhosol\"> LPA </abbr> ar-"
 "lein, bydd dal angen i chi greu cyfrif ar y gwasanaeth hwn er mwyn defnyddio’r "
 "LPA ar-lein."
+
+#: src/Actor/templates/actor/password-reset.html.twig:43
+#: src/Actor/templates/actor/password-change.html.twig:36
+msgid "1 lower-case and 1 capital letter"
+msgstr "1 llythyren fach ac 1 briflythyren"
+
+#: src/Actor/templates/actor/password-reset.html.twig:44
+#: src/Actor/templates/actor/password-change.html.twig:37
+msgid "1 number"
+msgstr "1 rhif"

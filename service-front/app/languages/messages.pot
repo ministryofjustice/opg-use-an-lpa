@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-22T09:47:30+00:00\n"
+"POT-Creation-Date: 2021-11-22T17:35:23+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -225,20 +225,12 @@ msgstr ""
 msgid "Create an account"
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:33
-msgid "If you already have an account, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
-msgstr ""
-
 #: src/Actor/templates/actor/create-account.html.twig:42
 msgid "Enter your email address"
 msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:48
 msgid "Create a password"
-msgstr ""
-
-#: src/Actor/templates/actor/create-account.html.twig:49
-msgid "Your password needs to have: <ul class=\"govuk-list--bullet\"><li>at least 8 characters</li><li>at least one lower-case and one capital letter</li><li>at least one number</li></ul>"
 msgstr ""
 
 #: src/Actor/templates/actor/change-email.html.twig:36
@@ -275,21 +267,6 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset.html.twig:39
 #: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have:"
-msgstr ""
-
-#: src/Actor/templates/actor/password-reset.html.twig:42
-#: src/Actor/templates/actor/password-change.html.twig:34
-msgid "at least 8 characters"
-msgstr ""
-
-#: src/Actor/templates/actor/password-reset.html.twig:43
-#: src/Actor/templates/actor/password-change.html.twig:35
-msgid "at least one lower-case and one capital letter"
-msgstr ""
-
-#: src/Actor/templates/actor/password-reset.html.twig:44
-#: src/Actor/templates/actor/password-change.html.twig:36
-msgid "at least one number"
 msgstr ""
 
 #: src/Actor/templates/actor/password-reset.html.twig:50
@@ -4454,16 +4431,16 @@ msgstr ""
 msgid "8 characters"
 msgstr ""
 
+#: src/Actor/templates/actor/login.html.twig:38
+msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online."
+msgstr ""
+
 #: src/Actor/templates/actor/password-reset.html.twig:43
 #: src/Actor/templates/actor/password-change.html.twig:36
-msgid "one lower-case and one capital letter"
+msgid "1 lower-case and 1 capital letter"
 msgstr ""
 
 #: src/Actor/templates/actor/password-reset.html.twig:44
 #: src/Actor/templates/actor/password-change.html.twig:37
-msgid "one number"
-msgstr ""
-
-#: src/Actor/templates/actor/login.html.twig:38
-msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online."
+msgid "1 number"
 msgstr ""
