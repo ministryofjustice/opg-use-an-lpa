@@ -1,5 +1,10 @@
 version: 2.1
 
+slack-fail-post-step: &slack-fail-post-step
+  post-steps:
+    - slack/status:
+        fail_only: true
+
 workflows:
   keep_demo_environment_up_to_date:
     triggers:
@@ -268,34 +273,33 @@ workflows:
 
   pr_build:
       jobs:
-        - cancel_redundant_builds: *slack-fail-post-step
+        - cancel_redundant_builds:
             name: cancel_previous_jobs
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
+            post-steps:
+              - slack/status
 
-        - use-my-lpa/lint_terraform: *slack-fail-post-step
+        - use-my-lpa/lint_terraform:
             name: lint_terraform
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/node_test_web: *slack-fail-post-step
+        - use-my-lpa/node_test_web:
             name: test_web
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/node_build_web: *slack-fail-post-step
+        - use-my-lpa/node_build_web:
             name: build_web
             filters: { branches: { ignore: [
               main,
@@ -303,18 +307,16 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [test_web]
-            post-steps: [slack/status]
 
-        - use-my-lpa/node_test_service_pdf: *slack-fail-post-step
+        - use-my-lpa/node_test_service_pdf:
             name: test_pdf
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_front_app: *slack-fail-post-step
+        - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters: { branches: { ignore: [
               main,
@@ -322,9 +324,8 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [build_web]
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_front_web: *slack-fail-post-step
+        - use-my-lpa/docker_build_front_web:
             name: web_front_build
             filters: { branches: { ignore: [
               main,
@@ -332,45 +333,40 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [build_web]
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_api_app: *slack-fail-post-step
+        - use-my-lpa/docker_build_api_app:
             name: app_api_build
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_api_web: *slack-fail-post-step
+        - use-my-lpa/docker_build_api_web:
             name: web_api_build
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_test_admin: *slack-fail-post-step
+        - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_admin: *slack-fail-post-step
+        - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
-        - use-my-lpa/docker_build_pdf: *slack-fail-post-step
+        - use-my-lpa/docker_build_pdf:
             name: pdf_build
             filters: { branches: { ignore: [
               main,
@@ -378,9 +374,8 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [test_pdf]
-            post-steps: [slack/status]
 
-        - use-my-lpa/codecov_upload: *slack-fail-post-step
+        - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { ignore: [
               main,
@@ -395,10 +390,9 @@ workflows:
                 test_pdf,
                 admin_app_test,
               ]
-            post-steps: [slack/status]
 
             # Provision and test development
-        - use-my-lpa/plan_shared_terraform: *slack-fail-post-step
+        - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
             filters: { branches: { ignore: [
               main,
@@ -406,9 +400,8 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
-            post-steps: [slack/status]
 
-        - use-my-lpa/apply_environment_terraform: *slack-fail-post-step
+        - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
             filters: { branches: { ignore: [
               main,
@@ -426,9 +419,8 @@ workflows:
                 pdf_build,
                 admin_app_build,
               ]
-            post-steps: [slack/status]
 
-        - ecr_scan_results: *slack-fail-post-step
+        - ecr_scan_results:
             name: ecr_scan_results
             filters: { branches: { ignore: [
               main,
@@ -445,9 +437,8 @@ workflows:
                 admin_app_build,
                 dev_apply_environment_terraform,
               ]
-            post-steps: [slack/status]
 
-        - use-my-lpa/seed_database: *slack-fail-post-step
+        - use-my-lpa/seed_database:
             name: dev_seed_database
             filters: { branches: { ignore: [
               main,
@@ -455,9 +446,8 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [dev_apply_environment_terraform]
-            post-steps: [slack/status]
 
-        - use-my-lpa/run_behat_suite: *slack-fail-post-step
+        - use-my-lpa/run_behat_suite:
             name: dev_run_behat_tests
             filters: { branches: { ignore: [
               main,
@@ -465,10 +455,9 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [dev_seed_database]
-            post-steps: [slack/status]
 
 
-        - python_templated_slack_notify: *slack-fail-post-step
+        - python_templated_slack_notify:
             name: post_environment_domains
             template: successful_dev_build.txt
             filters: { branches: { ignore: [
@@ -477,9 +466,8 @@ workflows:
               /tf\/.*/
               ] } }
             requires: [dev_run_behat_tests]
-            post-steps: [slack/status]
 
-        - python_templated_slack_on_fail_notify: *slack-fail-post-step
+        - python_templated_slack_on_fail_notify:
             name: on_fail_notification
             template: on_fail.txt
             filters: { branches: { ignore: [
@@ -487,7 +475,6 @@ workflows:
               /dependabot\/.*/,
               /tf\/.*/
               ] } }
-            post-steps: [slack/status]
 
         # Required end of workflow job
         - use-my-lpa/end_of_workflow:
@@ -1526,37 +1513,32 @@ jobs:
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
             --commit_message "$(git log -1 --pretty=%B)"
 
-  slack-fail-post-step: &slack-fail-post-step
-  post-steps:
-    - slack/status:
-        fail_only: true
-
-  # python_templated_slack_on_fail_notify:
-  #   docker:
-  #     - image: circleci/python
-  #       auth:
-  #         username: $DOCKER_USER
-  #         password: $DOCKER_ACCESS_TOKEN
-  #   resource_class: small
-  #   parameters:
-  #     template:
-  #       type: string
-  #     webhook:
-  #       type: string
-  #       default: $SLACK_WEBHOOK
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: /tmp
-  #     - run:
-  #         name: Notify Slack
-  #         when: on_fail
-  #         command: |
-  #           pip install -r ~/project/scripts/pipeline/requirements.txt
-  #           python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-  #           --slack_webhook <<parameters.webhook>> \
-  #           --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
-  #           --commit_message "$(git log -1 --pretty=%B)"
+  python_templated_slack_on_fail_notify:
+    docker:
+      - image: circleci/python
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      template:
+        type: string
+      webhook:
+        type: string
+        default: $SLACK_WEBHOOK
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          when: on_fail
+          command: |
+            pip install -r ~/project/scripts/pipeline/requirements.txt
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook <<parameters.webhook>> \
+            --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
+            --commit_message "$(git log -1 --pretty=%B)"
 
 
   slack_notify_stats:
