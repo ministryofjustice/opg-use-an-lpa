@@ -35,7 +35,6 @@ class LpaExtensionTest extends TestCase
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
-            'check_date'                      => 'formatCancelledorExpiredDate',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -255,26 +254,6 @@ class LpaExtensionTest extends TestCase
                 '',
             ]
         ];
-    }
-
-    /**
-     * @test
-     * @dataProvider codeDateDataProvider
-     */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_access_codes($date, $locale, $expected)
-    {
-        $extension = new LpaExtension();
-
-        // retain the current locale
-        $originalLocale = \Locale::getDefault();
-        \Locale::setDefault($locale);
-
-        $dateString = $extension->formatCancelledorExpiredDate($date);
-
-        // restore the locale setting
-        \Locale::setDefault($originalLocale);
-
-        $this->assertEquals($expected, $dateString);
     }
 
     /**

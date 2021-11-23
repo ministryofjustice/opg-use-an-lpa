@@ -20,9 +20,9 @@
             {% if not (check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code)) %}
                 {% trans count days_remaining_to_expiry(code.Expires) %}Access code expires in %count% day|Access code expires in %count% days{% endtrans %}
             {% elseif check_if_code_is_cancelled(code) %}
-                {% trans with {'%date%': check_date(code.Cancelled, 'Y-m-d\TH:i:sP')} %}Access code cancelled %date%{% endtrans %}
+                {% trans with {'%date%': code_date(code.Cancelled)} %}Access code cancelled %date%{% endtrans %}
             {% else %}
-                {% trans with {'%date%': check_date(code.Expires, 'Y-m-d\TH:i:sP')} %}Access code expired %date%{% endtrans %}
+                {% trans with {'%date%': code_date(code.Expires)} %}Access code expired %date%{% endtrans %}
             {% endif %}
         </div>
     </div>

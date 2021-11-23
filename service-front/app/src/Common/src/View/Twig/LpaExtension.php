@@ -37,7 +37,6 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
             new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
-            new TwigFunction('check_date', [$this, 'formatCancelledorExpiredDate']),
         ];
     }
 
@@ -246,17 +245,5 @@ class LpaExtension extends AbstractExtension
         }
 
         return $formatter;
-    }
-
-    /**
-     * Takes an input date, whether as a string (relative or absolute - in the format 2021-11-02T11:34:35+00:00)
-     * or as a Datetime and converts it for displaying on pages
-     *
-     * @param DateTimeInterface|string|null $date
-     * @return string
-     */
-    public function formatCancelledorExpiredDate($date): string
-    {
-        return $this->formatDate($date, 'Y-m-d\TH:i:sP');
     }
 }
