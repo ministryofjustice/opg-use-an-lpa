@@ -1,5 +1,5 @@
-{{ include('@partials/contact-details/email.html.twig') }}
+{{ include('@partials/contact-details/email.html.twig', {'heading_level': heading_level|default(3) }) }}
 
-{{ include('@partials/contact-details/telephone.html.twig') }}
+{{ include('@partials/contact-details/telephone.html.twig', {'heading_level': heading_level|default(3) }) }}
 
-{{ include('@partials/contact-details/address.html.twig') }}
+{{ include('@partials/contact-details/address.html.twig', {'heading_level': heading_level|default(3) }) }}

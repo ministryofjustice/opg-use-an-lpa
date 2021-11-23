@@ -27,7 +27,7 @@
                     <p class="govuk-body"><strong>{% trans with {'%date%': lpa_date(date)} %}You should get the letter by %date%{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call.{% endtrans %}</p>
 
-                    {{ include('@partials/contact-details/telephone.html.twig') }}
+                    {{ include('@partials/contact-details/telephone.html.twig', {heading_level: 2 }) }}
 
                     <h2 class="govuk-heading-m">{% trans %}Have more than one LPA?{% endtrans %}</h2>
                     <p class="govuk-body">{% trans %}You'll need an activation key for each LPA that you'd like to add to your account.{% endtrans %}</p>
