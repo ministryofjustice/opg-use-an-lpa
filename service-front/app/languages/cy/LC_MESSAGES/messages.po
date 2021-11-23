@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-23T11:32:33+00:00\n"
+"POT-Creation-Date: 2021-11-23T16:56:49+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2641,43 +2641,43 @@ msgstr "Beth yw’r rheswm dros hyn?"
 msgid "Read more"
 msgstr "Darllen mwy"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:17
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "Access code"
 msgstr "Cod mynediad LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:22
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:38
 msgid "Created by"
 msgstr "Crëwyd gan"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "LPA viewed"
 msgstr "Wedi gweld LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:45
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:61
 msgid "Viewed"
 msgstr "Gweld"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:55
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "Not viewed"
 msgstr "Heb weld LPA"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:62
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:78
 msgid "Expires"
 msgstr "Daw i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
 msgid "Expired"
 msgstr "Wedi dod i ben"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:97
 msgid "Status"
 msgstr "Statws"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:83
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:99
 msgid "EXPIRED"
 msgstr "WEDI DOD I BEN"
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:76
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:92
 msgid "CANCELLED"
 msgstr "DILËWYD"
 
@@ -5333,7 +5333,7 @@ msgstr ""
 "Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
 "neu ar ôl 1 Medi 2019."
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
 msgid "%organisation% on %date%"
 msgstr "%organisation% ar %date%"
 
@@ -6324,3 +6324,29 @@ msgstr ""
 "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=“govuk-list—"
 "bullet”><li>8 o nodau</li><li>1 llythyren fach ac 1 briflythyren</li><li>1 "
 "rhif</li></ul>"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:12
+msgid "VIEWED"
+msgstr "GWELD"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:14
+msgid "NOT VIEWED"
+msgstr "HEB WELD LPA"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires in %count% day"
+msgid_plural "Access code expires in %count% days"
+msgstr[0] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[1] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[2] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[3] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[4] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[5] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:23
+msgid "Access code cancelled %date%"
+msgstr "Canslwyd eich cod mynediad ar %date%"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:25
+msgid "Access code expired %date%"
+msgstr "Daeth eich cod mynediad i ben ar %date%"
