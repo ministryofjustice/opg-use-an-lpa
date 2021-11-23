@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-22T17:35:23+00:00\n"
+"POT-Creation-Date: 2021-11-23T11:32:33+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6287,16 +6287,6 @@ msgstr ""
 "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
 "mynediad LPA ar gyfer eich sefydliad."
 
-#: src/Actor/templates/actor/create-account.html.twig:49
-msgid ""
-"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
-"characters</li><li>one lower-case and one capital letter</li><li>one number</"
-"li></ul>"
-msgstr ""
-"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=\"govuk-list—bullet"
-"\"><li>8 o nodau</li><li>un llythyren fach ac un briflythyren</li><li>un rhif</"
-"li></ul>"
-
 #: src/Actor/templates/actor/password-reset.html.twig:39
 #: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have at least:"
@@ -6325,3 +6315,12 @@ msgstr "1 llythyren fach ac 1 briflythyren"
 #: src/Actor/templates/actor/password-change.html.twig:37
 msgid "1 number"
 msgstr "1 rhif"
+
+#: src/Actor/templates/actor/create-account.html.twig:49
+msgid ""
+"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
+"characters</li><li>1 lower-case and 1 capital letter</li><li>1 number</li></ul>"
+msgstr ""
+"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=“govuk-list—"
+"bullet”><li>8 o nodau</li><li>1 llythyren fach ac 1 briflythyren</li><li>1 "
+"rhif</li></ul>"

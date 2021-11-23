@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-22T17:35:23+00:00\n"
+"POT-Creation-Date: 2021-11-23T11:32:33+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4417,10 +4417,6 @@ msgstr ""
 msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr ""
 
-#: src/Actor/templates/actor/create-account.html.twig:49
-msgid "Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 characters</li><li>one lower-case and one capital letter</li><li>one number</li></ul>"
-msgstr ""
-
 #: src/Actor/templates/actor/password-reset.html.twig:39
 #: src/Actor/templates/actor/password-change.html.twig:32
 msgid "Your password needs to have at least:"
@@ -4443,4 +4439,8 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset.html.twig:44
 #: src/Actor/templates/actor/password-change.html.twig:37
 msgid "1 number"
+msgstr ""
+
+#: src/Actor/templates/actor/create-account.html.twig:49
+msgid "Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 characters</li><li>1 lower-case and 1 capital letter</li><li>1 number</li></ul>"
 msgstr ""
