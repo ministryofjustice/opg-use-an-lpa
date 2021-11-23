@@ -476,46 +476,104 @@ workflows:
         - use-my-lpa/node_test_web:
             name: test_web
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/node_build_web:
             name: build_web
             filters: { branches: { only: [main] } }
             requires: [test_web]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/node_test_service_pdf:
             name: test_pdf
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters: { branches: { only: [main] } }
             requires: [build_web]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_front_web:
             name: web_front_build
             filters: { branches: { only: [main] } }
             requires: [build_web]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_api_app:
             name: app_api_build
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                fail_only: true
+                failure_message: 'Path to Live Failure - See job for details'
+                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_api_web:
             name: web_api_build
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                fail_only: true
+                failure_message: 'Path to Live Failure - See job for details'
+                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_pdf:
             name: pdf_build
             filters: { branches: { only: [main] } }
             requires: [test_pdf]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/codecov_upload:
             name: codecov_upload
@@ -528,12 +586,24 @@ workflows:
                 test_pdf,
                 admin_app_test,
               ]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         # Provision and test preproduction
         - use-my-lpa/apply_shared_terraform:
             name: dev_apply_shared_terraform
             workspace: development
             filters: { branches: { only: [main] } }
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_shared_terraform:
             name: preprod_apply_shared_terraform
@@ -543,6 +613,12 @@ workflows:
               [
                 dev_apply_shared_terraform,
               ]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_environment_terraform:
             name: preprod_apply_environment_terraform
@@ -558,6 +634,12 @@ workflows:
                 pdf_build,
                 admin_app_build,
               ]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - ecr_scan_results:
             name: ecr_scan_results
@@ -572,17 +654,34 @@ workflows:
                 admin_app_build,
                 preprod_apply_environment_terraform,
               ]
+            post-steps:
+              - slack/status:
+                fail_only: true
+                failure_message: 'Path to Live Failure - See job for details'
+                webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/seed_database:
             name: preprod_seed_database
             filters: { branches: { only: [main] } }
             requires: [preprod_apply_environment_terraform]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/run_behat_suite:
             name: preprod_run_behat_tests
             workspace: preproduction
             filters: { branches: { only: [main] } }
             requires: [preprod_seed_database]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         # Provision and test production
         - use-my-lpa/apply_shared_terraform:
@@ -590,6 +689,12 @@ workflows:
             workspace: production
             filters: { branches: { only: [main] } }
             requires: [preprod_run_behat_tests]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/apply_environment_terraform:
             name: production_apply_environment_terraform
@@ -605,11 +710,23 @@ workflows:
                 pdf_build,
                 admin_app_build,
               ]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - use-my-lpa/run_healthcheck_test:
             name: prod_run_healthcheck_test
             filters: { branches: { only: [main] } }
             requires: [production_apply_environment_terraform]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
         - python_templated_slack_notify:
             name: post_production_release_message
@@ -617,10 +734,16 @@ workflows:
             webhook: $PROD_RELEASE_SLACK_WEBHOOK
             filters: { branches: { only: [main] } }
             requires: [prod_run_healthcheck_test]
+            post-steps:
+              - slack/status:
+                  fail_only: true
+                  mentions: '${SLACK_GROUP_ID}'
+                  failure_message: 'Path to Live Failure - See job for details'
+                  webhook: '${PROD_RELEASE_SLACK_WEBHOOK}'
 
 
 orbs:
-  slack: circleci/slack@3.3.0
+  slack: circleci/slack@3.4.2
   use-my-lpa:
     orbs:
       docker: circleci/docker@1.4.0
@@ -1491,13 +1614,11 @@ jobs:
       - run:
           name: Notify Slack
           command: |
-
             pip install -r ~/project/scripts/pipeline/requirements.txt
             python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook <<parameters.webhook>> \
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
             --commit_message "$(git log -1 --pretty=%B)"
-
 
   slack_notify_stats:
     docker:
