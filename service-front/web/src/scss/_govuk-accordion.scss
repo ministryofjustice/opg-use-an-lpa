@@ -1,0 +1,21 @@
+/* ///////////////// Access code items ///////////////// */
+.govuk-accordion {
+  &__section-heading {
+    .govuk-tag {
+      position: absolute;
+      top: govuk-spacing(3);
+      right: govuk-spacing(0);
+    }
+  }
+
+  .js-enabled &__icon {
+    top: auto;
+    bottom: govuk-spacing(4);
+  }
+
+  &__section-button {
+    word-wrap: break-word;
+    max-width: 500px;
+  }
+}
+

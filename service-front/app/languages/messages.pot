@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-23T11:32:33+00:00\n"
+"POT-Creation-Date: 2021-11-23T16:56:49+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1933,43 +1933,43 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:17
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "Access code"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:22
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:38
 msgid "Created by"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:33
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "LPA viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:45
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:61
 msgid "Viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:55
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "Not viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:62
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:78
 msgid "Expires"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
 msgid "Expired"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:97
 msgid "Status"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:83
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:99
 msgid "EXPIRED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:76
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:92
 msgid "CANCELLED"
 msgstr ""
 
@@ -3719,7 +3719,7 @@ msgstr ""
 msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:49
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:65
 msgid "%organisation% on %date%"
 msgstr ""
 
@@ -4443,4 +4443,25 @@ msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:49
 msgid "Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 characters</li><li>1 lower-case and 1 capital letter</li><li>1 number</li></ul>"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:12
+msgid "VIEWED"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:14
+msgid "NOT VIEWED"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires in %count% day"
+msgid_plural "Access code expires in %count% days"
+msgstr[0] ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:23
+msgid "Access code cancelled %date%"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:25
+msgid "Access code expired %date%"
 msgstr ""
