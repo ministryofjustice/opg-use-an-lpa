@@ -33,6 +33,14 @@ class LpaContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
+     */
+    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
+    {
+        $this->ui->assertPageAddress('/lpa/instructions-preferences-signed-before-2016');
+    }
+
+    /**
      * @Then /^I am taken to the change LPA details page$/
      */
     public function iAmTakenToTheChangeLPADetailsPage()
@@ -74,6 +82,14 @@ class LpaContext implements Context
     public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
     {
         $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
+    }
+
+    /**
+     * @When /^I click on the Read more link$/
+     */
+    public function iClickOnTheReadMoreLink()
+    {
+        $this->ui->clickLink('Read more');
     }
 
     /**
@@ -1378,6 +1394,57 @@ class LpaContext implements Context
     }
 
     /**
+     * @Given /^I have added an LPA to my account which has a donor signature before 2016$/
+     */
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016()
+    {
+        $this->lpa = json_decode(file_get_contents
+                                 (
+                                     __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
+                                 ));
+
+        $this->userLpaActorToken = '987654321';
+        $this->actorId = 9;
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'primary-attorney',
+                'details' => [
+                    'addresses' => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country' => '',
+                            'county' => '',
+                            'id' => 0,
+                            'postcode' => '',
+                            'town' => '',
+                            'type' => 'Primary',
+                        ],
+                    ],
+                    'companyName' => null,
+                    'dob' => '1975-10-05',
+                    'email' => 'string',
+                    'firstname' => 'Ian',
+                    'id' => 0,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'Deputy',
+                    'systemStatus' => true,
+                    'uId' => '700000000054',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
+            'lpa' => $this->lpa,
+        ];
+    }
+
+
+    /**
      * @Given /^I have created an access code$/
      */
     public function iHaveCreatedAnAccessCode()
@@ -1853,6 +1920,30 @@ class LpaContext implements Context
             );
         $this->ui->clickLink('Remove LPA');
         $this->ui->assertPageAddress('/lpa/remove-lpa');
+    }
+
+    /**
+     * @When /^I request to view an LPA which has a donor signature before 2016$/
+     */
+    public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016()
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+        $this->ui->clickLink('View LPA summary');
     }
 
     /**

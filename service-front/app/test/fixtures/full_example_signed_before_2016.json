@@ -1,0 +1,201 @@
+{
+  "id": 0,
+  "uId": "700000000054",
+  "applicationType": "Online",
+  "caseSubtype": "hw",
+  "receiptDate": "2015-06-30",
+  "rejectedDate": "2015-06-30",
+  "registrationDate": "2015-06-30",
+  "cancellationDate" : null,
+  "status": "Registered",
+  "lpaIsCleansed": false,
+  "caseAttorneySingular": true,
+  "caseAttorneyJointlyAndSeverally": true,
+  "caseAttorneyJointly": true,
+  "caseAttorneyJointlyAndJointlyAndSeverally": true,
+  "applicationHasRestrictions": true,
+  "applicationHasGuidance": true,
+  "lpaDonorSignatureDate": "2018-06-30",
+  "lifeSustainingTreatment": "yes",
+  "onlineLpaId": "ABC123",
+  "attorneyActDecisions": "Example decision",
+  "donor": {
+    "id": 0,
+    "uId": "700000000054",
+    "email": "string",
+    "dob": "1980-10-10",
+    "salutation": "Mrs",
+    "firstname": "Ian",
+    "middlenames": "Deputy",
+    "surname": "Deputy",
+    "companyName": "ABC Ltd",
+    "addresses": [
+      {
+        "id": 0,
+        "town": "string",
+        "county": "string",
+        "postcode": "string",
+        "country": "UK",
+        "type": "Primary",
+        "addressLine1": "string",
+        "addressLine2": "string",
+        "addressLine3": "string"
+      }
+    ]
+  },
+  "attorneys": [
+    {
+      "id": 9,
+      "uId": "700000000054",
+      "email": "string",
+      "dob": "1975-10-05",
+      "salutation": "Mrs",
+      "firstname": "Ian",
+      "middlenames": "Deputy",
+      "surname": "Deputy",
+      "companyName": "ABC Ltd",
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ],
+      "systemStatus": true
+    },
+    {
+      "id": 64,
+      "uId": "700000000054",
+      "dob": "1975-10-05",
+      "email": "string",
+      "salutation": "Mr",
+      "firstname": "Simon",
+      "middlenames": null,
+      "surname": "Matthews",
+      "companyName": null,
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ],
+      "systemStatus": true
+    },
+    {
+      "id": 164,
+      "uId": "700000000054",
+      "dob": "1975-10-05",
+      "email": "string",
+      "salutation": "Mr",
+      "firstname": "Harold",
+      "middlenames": null,
+      "surname": "Stallman",
+      "companyName": null,
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ],
+      "systemStatus": true
+    }
+  ],
+  "replacementAttorneys": [
+    {
+      "id": 8,
+      "uId": "700000000054",
+      "email": "string",
+      "dob": "1980-10-10",
+      "salutation": "Mrs",
+      "firstname": "Ian",
+      "middlenames": "Deputy",
+      "surname": "Deputy",
+      "companyName": "ABC Ltd",
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ]
+    }
+  ],
+  "trustCorporations": [
+    {
+      "id": 7,
+      "uId": "700000000054",
+      "email": "string",
+      "dob": "1980-10-10",
+      "salutation": "Mrs",
+      "firstname": "Ian",
+      "middlenames": "Deputy",
+      "surname": "Deputy",
+      "companyName": "ABC Ltd",
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ]
+    }
+  ],
+  "certificateProviders": [
+    {
+      "id": 6,
+      "uId": "700000000054",
+      "email": "string",
+      "dob": "1980-10-10",
+      "salutation": "Mrs",
+      "firstname": "Ian",
+      "middlenames": "Deputy",
+      "surname": "Deputy",
+      "companyName": "ABC Ltd",
+      "addresses": [
+        {
+          "id": 0,
+          "town": "string",
+          "county": "string",
+          "postcode": "string",
+          "country": "UK",
+          "type": "Primary",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string"
+        }
+      ]
+    }
+  ]
+}
