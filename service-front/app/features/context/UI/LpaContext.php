@@ -37,7 +37,7 @@ class LpaContext implements Context
      */
     public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
     {
-        $this->ui->assertPageAddress('/lpa/instructions-preferences-signed-before-2016');
+        $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
     }
 
     /**
@@ -1398,10 +1398,9 @@ class LpaContext implements Context
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016()
     {
-        $this->lpa = json_decode(file_get_contents
-                                 (
-                                     __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
-                                 ));
+        $this->lpa = json_decode(file_get_contents(
+            __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
+        ));
 
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
@@ -1439,6 +1438,7 @@ class LpaContext implements Context
             ],
             'applicationHasRestrictions' => true,
             'applicationHasGuidance' => false,
+            'lpaDonorSignatureDate' => '2015-06-30',
             'lpa' => $this->lpa,
         ];
     }
