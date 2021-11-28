@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-23T16:56:49+00:00\n"
+"POT-Creation-Date: 2021-11-28T22:24:40+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -97,7 +97,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:60
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:102
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -6350,3 +6350,55 @@ msgstr "Canslwyd eich cod mynediad ar %date%"
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:25
 msgid "Access code expired %date%"
 msgstr "Daeth eich cod mynediad i ben ar %date%"
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
+msgid ""
+"%organisation% may ask you for other information, such as \"%donorFirstName%'s"
+"\" account details, and your name and contact details. They may also ask you "
+"to confirm your identity. This is to protect %donorFirstName% and prevent "
+"fraud."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion cyfrif "
+"\"%donorFirstName%'s\", eich manylion cyswllt ac ati. Efallai y byddant yn "
+"gofyn i chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% "
+"ac atal twyll."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:69
+msgid ""
+"%organisation% may ask you for other information, such as your customer "
+"account details, your attorney's contact details and so on."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion eich "
+"cyfrif cwsmer, manylion cyswllt eich twrnai ac ati."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
+msgid ""
+"%organisation% may ask you for other information, such as \"%donorFirstName%'s"
+"\" NHS number, your contact details and so on."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG "
+"\"%donorFirstName%'s\", eich manylion cyswllt ac ati. "
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:84
+msgid ""
+"%organisation% may ask you for other information, such as your NHS number, "
+"your attorney's contact details and so on."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel eich rhif GIG, "
+"manylion cyswllt eich atwrnai ac ati."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:93
+msgid ""
+"As there are instructions/preferences/instructions and preferences on this "
+"LPA, you may also be asked to show the paper LPA."
+msgstr ""
+"Gan fod yna gyfarwyddiadau/ddymuniadau/gyfarwyddiadau and ddymuniadau ar yr "
+"LPA hon, efallai y gofynnir i chi ddangos yr LPA bapur hefyd."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:97
+msgid ""
+"If there are instructions/preferences/instructions and preferences on this "
+"LPA, you may also be asked to show the paper LPA."
+msgstr ""
+"Os oes yna gyfarwyddiadau/ddymuniadau/gyfarwyddiadau and ddymuniadau ar yr LPA "
+"hon, efallai y gofynnir i chi ddangos yr LPA bapur hefyd."
