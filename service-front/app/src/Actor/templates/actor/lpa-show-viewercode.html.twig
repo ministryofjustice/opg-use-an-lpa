@@ -87,15 +87,14 @@
                             </p>
                         {% endif %}
                     {% endif %}
-
-                    {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
-                        <p class="govuk-body">
-                            {% trans %}As there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                        </p>
-                    {%  else %}
+                    {% if is_donor_signature_date_too_old(lpa) %}
                         <p class="govuk-body">
                             {% trans %}If there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
                         </p>
+                    {% elseif lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                            <p class="govuk-body">
+                                {% trans %}As there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                            </p>
                     {% endif %}
 
                     <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
