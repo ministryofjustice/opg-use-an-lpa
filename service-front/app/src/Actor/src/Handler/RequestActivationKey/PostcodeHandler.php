@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestPostcode;
-use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
+use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 

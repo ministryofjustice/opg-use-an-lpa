@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestNames;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * Class RequestActivationKeyHandler
@@ -26,7 +27,12 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($this->session->toArray());
+        $this->form->setData(
+            [
+                'first_names' => $this->state()->firstNames,
+                'last_name' => $this->state()->lastName
+            ]
+        );
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
@@ -42,9 +48,9 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            //  Set the data in the session and pass to the check your answers handler
-            $this->session->set('first_names', $postData['first_names']);
-            $this->session->set('last_name', $postData['last_name']);
+            //  Set the data in the state and pass to the check your answers handler
+            $this->state()->firstNames = $postData['first_names'];
+            $this->state()->lastName = $postData['last_name'];
 
             $nextPageName = $this->getRouteNameFromAnswersInSession();
             return $this->redirectToRoute($nextPageName);
@@ -59,7 +65,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function isMissingPrerequisite(): bool
     {
-        return !$this->session->has('opg_reference_number');
+        return $this->state()->referenceNumber !== null;
     }
 
     public function nextPage(): string

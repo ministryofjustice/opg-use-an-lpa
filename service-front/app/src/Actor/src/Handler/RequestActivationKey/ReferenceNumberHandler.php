@@ -8,6 +8,7 @@ use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Common\Workflow\StateBuilderFactory;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -33,10 +34,10 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
-        FeatureEnabled $featureEnabled
+        FeatureEnabled $featureEnabled,
+        StateBuilderFactory $stateFactory
     ) {
-        parent::__construct($renderer, $authenticator, $urlHelper, $logger);
-        $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
+        parent::__construct($renderer, $authenticator, $urlHelper, $logger, $stateFactory);
         $this->featureEnabled = $featureEnabled;
     }
 
@@ -52,16 +53,26 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if (array_key_exists('startAgain', $request->getQueryParams())) {
-            $this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($this->session);
+            $this->state()->reset();
+            //$this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($this->session);
         }
 
-        $this->form->setData($this->session->toArray());
+        $this->form->setData(
+            [
+                'opg_reference_number' => $this->state()->referenceNumber
+            ]
+        );
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/reference-number',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->getRouteNameFromAnswersInSession(true)
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -71,17 +82,22 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->session->set('opg_reference_number', $postData['opg_reference_number']);
+            $this->state()->referenceNumber = $postData['opg_reference_number'];
 
             $nextPageName = $this->getRouteNameFromAnswersInSession();
             return $this->redirectToRoute($nextPageName);
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/reference-number', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/reference-number',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->getRouteNameFromAnswersInSession(true)
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(): bool

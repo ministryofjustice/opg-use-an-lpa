@@ -10,7 +10,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Handler\WorkflowStep;
+use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
