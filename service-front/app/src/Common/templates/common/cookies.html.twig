@@ -2,14 +2,6 @@
 
 {% block html_title %}{% trans %}Cookies{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
 
-{% block service_name %}
-{% if application == "actor" %}
-    {% trans %}Use a lasting power of attorney{% endtrans %}
-{% elseif application == "viewer" %}
-    {% trans %}View a lasting power of attorney{% endtrans %}
-{% endif %}
-{% endblock %}
-
 {% set usageCookies = form.get('usageCookies') %}
 {% set referer = form.get('referer') %}
 

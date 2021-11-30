@@ -36,7 +36,7 @@ class ContactUsPageHandler extends AbstractHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
-        return new HtmlResponse($this->renderer->render('partials::contact-us', [
+        return new HtmlResponse($this->renderer->render('common::contact-us', [
             'referer' => $referer
         ]));
     }
