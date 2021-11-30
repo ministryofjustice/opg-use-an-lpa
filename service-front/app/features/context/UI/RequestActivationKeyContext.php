@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
-use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -27,6 +25,9 @@ use Psr\Http\Message\RequestInterface;
  * @property string $userSurname
  * @property string $activationCode
  * @property string $codeCreatedDate
+ *
+ * @psalm-ignore UndefinedThisPropertyFetch
+ * @psalm-ignore UndefinedThisPropertyAssignment
  */
 class RequestActivationKeyContext implements Context
 {
@@ -468,6 +469,8 @@ class RequestActivationKeyContext implements Context
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
 
+        $this->activationCode = null;
+
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
 
@@ -652,7 +655,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         /**
-         * This step definition needs to behave differently dependant on some prior context step
+         * This step definition needs to behave differently dependent on some prior context step
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response

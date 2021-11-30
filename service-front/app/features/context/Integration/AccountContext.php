@@ -48,18 +48,12 @@ class AccountContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    /** @var MockHandler */
-    private $apiFixtures;
-    /** @var EmailClient */
-    private $emailClient;
-    /** @var LpaFactory */
-    private $lpaFactory;
-    /** @var LpaService */
-    private $lpaService;
-    /** @var UserService */
-    private $userService;
-    /** @var ViewerCodeService */
-    private $viewerCodeService;
+    private MockHandler $apiFixtures;
+    private EmailClient $emailClient;
+    private LpaFactory $lpaFactory;
+    private LpaService $lpaService;
+    private UserService $userService;
+    private ViewerCodeService $viewerCodeService;
 
     /**
      * @Given /^I access the account creation page$/

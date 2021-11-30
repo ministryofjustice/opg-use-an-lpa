@@ -47,19 +47,17 @@ use Psr\Http\Message\RequestInterface;
  * @property string userMiddlenames
  * @property string userSurname
  * @property string codeCreatedDate
+ *
+ * @psalm-ignore UndefinedThisPropertyFetch
  */
 class LpaContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    /** @var MockHandler */
-    private $apiFixtures;
-    /** @var LpaFactory */
-    private $lpaFactory;
-    /** @var LpaService */
-    private $lpaService;
-    /** @var ViewerCodeService */
-    private $viewerCodeService;
+    private MockHandler $apiFixtures;
+    private LpaFactory $lpaFactory;
+    private LpaService $lpaService;
+    private ViewerCodeService $viewerCodeService;
 
     /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
@@ -958,6 +956,7 @@ class LpaContext extends BaseIntegrationContext
         $this->referenceNo = '700000000138';
         $this->userDob = '1975-10-05';
         $this->actorLpaToken = '24680';
+        $this->actorId = 0;
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->actorLpaToken,
@@ -1901,5 +1900,46 @@ class LpaContext extends BaseIntegrationContext
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
         assertEquals($response, $result);
+    }
+
+    /**
+     * @Then /^The Revoked LPA details are not displayed$/
+     */
+    public function theRevokedLPADetailsAreNotDisplayed()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @When /^The status of the LPA got Revoked$/
+     * @Then /^I cannot see my access codes and their details$/
+     */
+    public function theStatusOfTheLpaGotRevoked()
+    {
+        // Not needed for this context
+    }
+
+    /**
+     * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
+     * @Then /^I request to view an LPA whose status changed to Revoked$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
+    {
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
     }
 }

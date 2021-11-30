@@ -164,7 +164,7 @@ services:
   # Front Composer (Shared)
 
   front-composer:
-    image: composer:2.1.5
+    image: composer:2.1.12
     volumes:
       - ./service-front/app:/app
     command:

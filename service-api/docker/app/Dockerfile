@@ -10,7 +10,7 @@ COPY service-api/app/composer.json service-api/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM php:8-fpm-alpine3.14 AS production
+FROM php:7.4-fpm-alpine3.15 AS production
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
