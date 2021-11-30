@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-11-28T22:24:40+00:00\n"
+"POT-Creation-Date: 2021-11-30T14:45:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -79,7 +79,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:102
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:101
 msgid "Give another organisation access"
 msgstr ""
 
@@ -4482,10 +4482,22 @@ msgstr ""
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:93
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
 msgid "As there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:97
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
 msgid "If there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:21
+msgid "The link you've clicked on is invalid or has expired."
+msgstr ""
+
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:22
+msgid "Password reset links expire after 24 hours or if you ask us to reset your password again."
+msgstr ""
+
+#: src/Actor/templates/actor/password-reset-not-found.html.twig:23
+msgid "If you've asked for a password reset more than once, make sure you clicked on the link in the most recent password reset email."
 msgstr ""
