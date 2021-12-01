@@ -202,18 +202,22 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
-                    var_dump(($this->featureEnabled)('streamline_lpas_to_cleansing_team')); die;
-
-                    if (($this->featureEnabled)('allow_older_lpas') and
-                        (!($this->featureEnabled)('streamline_lpas_to_cleansing_team')
-                        )) {
+                    if (
+                        ($this->featureEnabled)('allow_older_lpas') and
+                        (!($this->featureEnabled)('streamline_lpas_to_cleansing_team'))
+                    ) {
                         $form = new ActorRole($this->getCsrfGuard($request));
                         return $this->redirectToRoute('lpa.add.actor-role');
                     } else {
-                        return new HtmlResponse($this->renderer->render(
-                            'actor::cannot-find-lpa',
-                            ['user'  => $this->user]
-                        ));
+                        return new HtmlResponse(
+                            $this->renderer->render(
+                                'actor::cannot-find-lpa',
+                                [
+                                    'user' => $this->user,
+                                    'lpa_reference_number' => $this->data['reference_number'],
+                                ]
+                            )
+                        );
                     }
 
                 case OlderLpaApiResponse::NOT_FOUND:
