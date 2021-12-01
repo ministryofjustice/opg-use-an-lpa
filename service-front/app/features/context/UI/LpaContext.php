@@ -11,6 +11,7 @@ use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use JSHayes\FakeRequests\RequestHandler;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
 
@@ -31,6 +32,9 @@ class LpaContext implements Context
 {
     use ActorContext;
     use BaseUiContextTrait;
+
+    /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
+    private RequestHandler $requestDashboardLPAs;
 
     /**
      * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
@@ -224,6 +228,15 @@ class LpaContext implements Context
     public function iAmOnTheAddAnLPATriagePage()
     {
         $this->ui->visit('/lpa/add');
+        $this->iAmTakenToTheAddAnLPATriagePage();
+    }
+
+    /**
+     * @Then /^I am taken to the add an LPA triage page$/
+     */
+    public function iAmTakenToTheAddAnLPATriagePage()
+    {
+        $this->ui->assertPageAddress('/lpa/add');
         $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
     }
 
@@ -249,26 +262,6 @@ class LpaContext implements Context
      */
     public function iAmOnTheDashboardPage()
     {
-        //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
-
-        //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
-
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -356,7 +349,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I have added 2 LPAs to my account$/
+     * @Given /^I have added an additional LPA to my account$/
      */
     public function iHaveAdded2LPAsToMyAccount()
     {
@@ -380,8 +373,7 @@ class LpaContext implements Context
         }
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
+        $this->requestDashboardLPAs->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
@@ -1359,8 +1351,54 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given I have been given access to use an LPA via credentials
      * @Given I have added an LPA to my account
+     */
+    public function iHaveAddedAnLpaToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        //API call for getting all the users added LPAs
+        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
+
+    /**
+     * @Given I have no LPAs in my account
+     */
+    public function iHaveNoLpasInMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
+
+    /**
+     * @Given I have been given access to use an LPA via credentials
+     *
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
@@ -1403,6 +1441,7 @@ class LpaContext implements Context
             'applicationHasRestrictions' => true,
             'applicationHasGuidance' => false,
             'lpa' => $this->lpa,
+            'added' => '2021-10-5 12:00:00'
         ];
     }
 
@@ -1462,8 +1501,8 @@ class LpaContext implements Context
      */
     public function iHaveCreatedAnAccessCode()
     {
-        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
-        $this->iAmGivenAUniqueAccessCode();
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
     }
 
     /**
@@ -1474,6 +1513,57 @@ class LpaContext implements Context
         $this->iHaveCreatedAnAccessCode();
         $this->iClickToCheckMyAccessCodes();
         $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
+    }
+
+    /**
+     * @Given I have generated an access code for an LPA on my account
+     */
+    public function iHaveGeneratedAnAccessCodeForAnLPAOnMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        $this->organisation = "TestOrg";
+        $this->accessCode = "XYZ321ABC987";
+
+        // API call for get LpaById
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+
+        // API call to get access codes
+        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            0 => [
+                                'SiriusUid' => $this->lpa->uId,
+                                'Added' => (new DateTime('yesterday'))->format('c'),
+                                'Expires' => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode' => $this->accessCode,
+                                'Viewed' => false,
+                                'ActorId' => $this->actorId,
+                            ],
+                        ]
+                    )
+                )
+            );
     }
 
     /**
@@ -1819,9 +1909,9 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('lpa/dashboard');
+        $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->clickLink('Give an organisation access');
-        $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
+        $this->ui->assertPageAddress('/lpa/code-make?lpa=' . $this->userLpaActorToken);
     }
 
     /**
@@ -2057,6 +2147,14 @@ class LpaContext implements Context
     public function iSelectToAddAnLPA()
     {
         $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @When /^I choose to add my first LPA$/
+     */
+    public function iChooseToAddMyFirstLPA()
+    {
+        $this->ui->clickLink('Add your first LPA');
     }
 
     /**
@@ -2432,7 +2530,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^The status of the LPA got Revoked$/
+     * @When /^The LPA has been revoked$/
      * @Then /^I cannot see my access codes and their details$/
      */
     public function theStatusOfTheLpaGotRevoked()

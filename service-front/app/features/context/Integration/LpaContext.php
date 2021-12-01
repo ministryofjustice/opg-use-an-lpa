@@ -1911,7 +1911,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^The status of the LPA got Revoked$/
+     * @When /^The LPA has been revoked$/
      * @Then /^I cannot see my access codes and their details$/
      */
     public function theStatusOfTheLpaGotRevoked()

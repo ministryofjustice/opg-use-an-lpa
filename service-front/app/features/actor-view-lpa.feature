@@ -33,8 +33,7 @@ Feature: View an LPA that I have added to my account
    Scenario: The user cannot view an LPA added to their account whose status has changed Revoked
      Given I have added an LPA to my account
      And I am on the dashboard page
-     And The status of the LPA got Revoked
+     And The LPA has been revoked
      When I request to view an LPA whose status changed to Revoked
      Then I am taken back to the dashboard page
      And The Revoked LPA details are not displayed
-     
