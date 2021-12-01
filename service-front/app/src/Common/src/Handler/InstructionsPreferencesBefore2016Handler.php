@@ -28,7 +28,6 @@ class InstructionsPreferencesBefore2016Handler extends AbstractHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UrlValidityCheckService $urlValidityCheckService
-
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
