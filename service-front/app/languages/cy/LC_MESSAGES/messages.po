@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-30T14:45:19+00:00\n"
+"POT-Creation-Date: 2021-12-01T17:36:54+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2560,10 +2560,6 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:19
 msgid "We cannot change your password"
 msgstr "Nid oes modd i ni newid eich cyfrinair"
-
-#: src/Actor/templates/actor/password-reset-not-found.html.twig:21
-msgid "The link you have clicked on is invalid or has expired."
-msgstr "Mae’r ddolen y bu i chi glicio arni yn annilys neu mae wedi dod i ben."
 
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:3
 msgid "Which organisation do you want to give access to"
