@@ -321,6 +321,10 @@ locals {
         {
           name  = "SAVE_OLDER_LPA_REQUESTS",
           value = tostring(local.environment.save_older_lpa_requests)
+        },
+        {
+          name  = "STREAMLINE_LPAS_TO_CLEANSING_TEAM",
+          value = tostring(local.environment.streamline_lpas_to_cleansing_team)
         }
       ]
   })

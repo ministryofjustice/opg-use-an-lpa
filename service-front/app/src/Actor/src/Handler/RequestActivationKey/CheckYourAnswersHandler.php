@@ -149,6 +149,8 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['postcode']
             );
 
+           // var_dump($result->getData());die;
+
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::LPA_ALREADY_ADDED:
                     $lpaAddedData = $result->getData();
@@ -200,7 +202,11 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
-                    if (($this->featureEnabled)('allow_older_lpas')) {
+                    var_dump(($this->featureEnabled)('streamline_lpas_to_cleansing_team')); die;
+
+                    if (($this->featureEnabled)('allow_older_lpas') and
+                        (!($this->featureEnabled)('streamline_lpas_to_cleansing_team')
+                        )) {
                         $form = new ActorRole($this->getCsrfGuard($request));
                         return $this->redirectToRoute('lpa.add.actor-role');
                     } else {
