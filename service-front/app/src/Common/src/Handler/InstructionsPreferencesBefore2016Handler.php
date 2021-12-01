@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Common\Handler;
 
-use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
+use Common\Service\Url\UrlValidityCheckService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -20,18 +18,20 @@ use Laminas\Diactoros\Response\HtmlResponse;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class InstructionsPreferencesBefore2016Handler extends AbstractHandler implements UserAware
+class InstructionsPreferencesBefore2016Handler extends AbstractHandler
 {
     use User;
 
+    private UrlValidityCheckService $urlValidityCheckService;
+
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
+        UrlValidityCheckService $urlValidityCheckService
+
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
     /**
@@ -42,10 +42,10 @@ class InstructionsPreferencesBefore2016Handler extends AbstractHandler implement
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->getUser($request);
+        $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
 
-        return new HtmlResponse($this->renderer->render('actor::instructions-preferences-signed-before-2016', [
-            'user' => $user,
+        return new HtmlResponse($this->renderer->render('common::instructions-preferences-signed-before-2016', [
+            'referer' => $referer,
         ]));
     }
 }

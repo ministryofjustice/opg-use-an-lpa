@@ -55,7 +55,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
     $app->get(
         '/instructions-preferences-signed-before-2016',
-        Viewer\Handler\InstructionsPreferencesBefore2016Handler::class,
+        Common\Handler\InstructionsPreferencesBefore2016Handler::class,
         'lpa.instructions-preferences-before-2016'
     );
 };
@@ -170,7 +170,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], 'lpa.instructions-preferences');
     $app->get('/lpa/instructions-preferences-signed-before-2016', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\InstructionsPreferencesBefore2016Handler::class
+        Common\Handler\InstructionsPreferencesBefore2016Handler::class
     ], 'lpa.instructions-preferences-before-2016');
     $app->get('/lpa/death-notification', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
