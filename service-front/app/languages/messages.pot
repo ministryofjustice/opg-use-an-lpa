@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-12-01T17:36:54+00:00\n"
+"POT-Creation-Date: 2021-12-02T15:42:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4462,16 +4462,8 @@ msgstr ""
 msgid "Access code expired %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
-msgid "%organisation% may ask you for other information, such as \"%donorFirstName%'s\" account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud."
-msgstr ""
-
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:69
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
-msgid "%organisation% may ask you for other information, such as \"%donorFirstName%'s\" NHS number, your contact details and so on."
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:84
@@ -4496,4 +4488,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:23
 msgid "If you've asked for a password reset more than once, make sure you clicked on the link in the most recent password reset email."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
+msgid "%organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
+msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
 msgstr ""
