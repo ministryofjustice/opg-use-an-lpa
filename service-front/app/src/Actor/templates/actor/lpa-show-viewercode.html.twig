@@ -59,8 +59,8 @@
                     {% if lpa.caseSubtype == 'pfa' %}
                         {% if actorRole == 'Attorney' %}
                             <p class="govuk-body">
-                                {% trans with {'%organisation%': organisation} %}
-                                    %organisation% may ask you for other information, such as "%donorFirstName%'s" account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud.
+                                {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
+                                    %organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud.
                                 {% endtrans %}
                             </p>
                         {% endif %}
@@ -74,7 +74,7 @@
                     {% elseif lpa.caseSubtype == 'hw'  %}
                         {% if actorRole == 'Attorney' %}
                             <p class="govuk-body">
-                                {% trans with {'%organisation%': organisation} %}
+                                {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
                                     %organisation% may ask you for other information, such as "%donorFirstName%'s" NHS number, your contact details and so on.
                                 {% endtrans %}
                             </p>
