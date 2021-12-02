@@ -13,7 +13,7 @@ class RestrictSendingLpaForCleansing
     private LoggerInterface $logger;
     private DateTimeImmutable $earliestDate;
 
-    public function __construct(LoggerInterface $logger, LpaService $lpaService)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);

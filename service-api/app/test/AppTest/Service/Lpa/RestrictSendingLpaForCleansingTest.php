@@ -4,11 +4,8 @@ namespace AppTest\Service\Lpa;
 
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
-use Exception;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Service\Features\FeatureEnabled;
 
 /**
  * Class RestrictSendingLpaForCleansingTest
@@ -23,19 +20,14 @@ class RestrictSendingLpaForCleansingTest extends TestCase
      */
     private $loggerProphecy;
 
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
-
     public function setUp()
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
     }
 
-    public function restrictSendingLpaForCleansing(): RestrictSendingLpaForCleansingTest
+    public function restrictSendingLpaForCleansing(): RestrictSendingLpaForCleansing
     {
         return new RestrictSendingLpaForCleansing(
-            $this->featureEnabledProphecy->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
@@ -46,8 +38,6 @@ class RestrictSendingLpaForCleansingTest extends TestCase
      */
     public function throws_not_found_exception_when_lpa_status_registered_and_actorMatch_is_null()
     {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
-
         $lpa = [
             'registrationDate' => '2020-05-26',
         ];
@@ -57,7 +47,6 @@ class RestrictSendingLpaForCleansingTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA not found');
 
-        $this->restrictSendingLpaForCleansing()($lpa, $actorDetailsMatch);
-
+        ($this->restrictSendingLpaForCleansing()($lpa, $actorDetailsMatch));
     }
 }

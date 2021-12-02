@@ -507,7 +507,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_registered_after_2019_and_streamline_flag_true()
+    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_streamline_flag_true()
     {
         $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(true);
 
