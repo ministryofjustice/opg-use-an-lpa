@@ -2426,6 +2426,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the add an older LPA page$/
      * @Given /^I am on the Check we've found the right LPA page$/
+     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
      */
     public function iAmOnTheAddAnOlderLPAPage()
     {
@@ -2723,6 +2724,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
+     * @Then /^I am asked for my role on the LPA$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -3470,4 +3472,51 @@ class LpaContext implements Context
     {
         //Not needed for this context
     }
+
+    /**
+     * @When /^I confirm details of the found LPA are correct and flag is turned (.*)$/
+     */
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flag)
+    {
+        $this->lpa->status = 'Registered';
+        $this->lpa->registrationDate = '2019-10-31';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => 'Wrong',
+                'force_activation_key'  => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        if ($flag == 'ON') {
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+        } else {
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        }
+    }
+
 }
