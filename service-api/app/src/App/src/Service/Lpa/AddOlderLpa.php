@@ -8,6 +8,7 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use DateTime;
 use Psr\Log\LoggerInterface;
+use App\Service\Features\FeatureEnabled;
 
 class AddOlderLpa
 {
@@ -17,6 +18,8 @@ class AddOlderLpa
     private LpaService $lpaService;
     private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
     private OlderLpaService $olderLpaService;
+    private FeatureEnabled $featureEnabled;
+    private RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing;
 
     /**
      * @param FindActorInLpa               $findActorInLpa
@@ -34,7 +37,9 @@ class AddOlderLpa
         LpaAlreadyAdded $lpaAlreadyAdded,
         OlderLpaService $olderLpaService,
         ValidateOlderLpaRequirements $validateOlderLpaRequirements,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FeatureEnabled $featureEnabled,
+        RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing
     ) {
         $this->findActorInLpa = $findActorInLpa;
         $this->lpaService = $lpaService;
@@ -42,6 +47,8 @@ class AddOlderLpa
         $this->olderLpaService = $olderLpaService;
         $this->validateOlderLpaRequirements = $validateOlderLpaRequirements;
         $this->logger = $logger;
+        $this->featureEnabled = $featureEnabled;
+        $this->restrictSendingLpaForCleansing = $restrictSendingLpaForCleansing;
     }
 
     /**
@@ -92,6 +99,12 @@ class AddOlderLpa
 
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);
+
+        // Streamline lpa's sent to cleansing team that are registered after 2019 and when user details do not match
+        if (($this->featureEnabled)('streamline_cleansing_lpas')) {
+            ($this->restrictSendingLpaForCleansing)($lpaData, $resolvedActor);
+        }
+
         if ($resolvedActor === null) {
             $this->logger->info(
                 'Actor details for LPA {uId} not found',
@@ -99,7 +112,10 @@ class AddOlderLpa
                     'uId' => $matchData['reference_number'],
                 ]
             );
-            throw new BadRequestException('LPA details do not match');
+            throw new BadRequestException(
+                'LPA details do not match',
+                ['lpaRegDate' => $lpaData['registrationDate']]
+            );
         }
 
         // Attach donor/attorney data to be used by the front

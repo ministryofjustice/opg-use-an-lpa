@@ -121,13 +121,6 @@ Feature: Add an older LPA
     Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for their role on the LPA if the data does not match
-    Given I am on the add an older LPA page
-    And I provide details that do not match a valid paper document
-    When I confirm that those details are correct
-    Then I am asked for my role on the LPA
-
-  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given My LPA has been found but my details did not match
     And I am asked for my role on the LPA
@@ -217,6 +210,20 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     When I provide an LPA number that does not exist
     And I confirm the details I provided are correct
+    Then I am informed that an LPA could not be found with this reference number
+
+  @ui @ff:allow_older_lpas:true @ff:streamline_cleansing_lpas:false
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    And I provide details that do not match a valid paper document
+    When I confirm that those details are correct
+    Then I am asked for my role on the LPA
+
+  @ui @ff:allow_older_lpas:true @ff:streamline_cleansing_lpas:true
+  Scenario: The user is asked for their role on the LPA if the data does not match
+    Given I am on the add an older LPA page
+    And I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
+    When I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with this reference number
 
   # The following scenarios are for testing navigation of the OOL partial match journey

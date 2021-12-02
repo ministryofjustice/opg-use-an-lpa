@@ -268,8 +268,8 @@ locals {
           value = tostring(local.environment.allow_meris_lpas)
         },
         {
-          name  = "STREAMLINE_LPAS_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.streamline_lpas_to_cleansing_team)
+          name  = "STREAMLINE_CLEANSING_LPAS",
+          value = tostring(local.environment.streamline_cleansing_lpas)
         },
       ]
   })

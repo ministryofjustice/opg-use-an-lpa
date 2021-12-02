@@ -33,7 +33,7 @@ return [
         'delete_lpa_feature'                => true,
         'allow_older_lpas'                  => true,
         'save_older_lpa_requests'           => true,
-        'streamline_lpas_to_cleansing_team' => true,
+        'streamline_cleansing_lpas'         => true,
     ],
 
     'notify' => [
