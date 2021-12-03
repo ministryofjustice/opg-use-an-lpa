@@ -125,7 +125,6 @@ services:
       ALLOW_MERIS_LPAS: "false"
       STREAMLINE_CLEANSING_LPAS: "true"
 
-
       # Local only
       API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
@@ -203,7 +202,6 @@ services:
       ALLOW_MERIS_LPAS: "false"
       SAVE_OLDER_LPA_REQUESTS: "true"
       STREAMLINE_CLEANSING_LPAS: "true"
-
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
