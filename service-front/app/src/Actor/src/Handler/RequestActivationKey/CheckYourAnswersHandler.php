@@ -148,7 +148,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $this->data['dob'],
                 $this->data['postcode']
             );
-            
+
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::LPA_ALREADY_ADDED:
                     $lpaAddedData = $result->getData();
