@@ -34,6 +34,7 @@ export default class GoogleAnalytics {
         });
         this._trackExternalLinks();
         this._trackFormValidationErrors();
+        this._trackFromValidationErrorsWithoutLink(); // done as separate method to stop assumptions breaking original functionality
         this._trackLpaDownload();
         this._trackAccessCodeReveal();
 
@@ -79,6 +80,14 @@ export default class GoogleAnalytics {
         }
     }
 
+    _trackFromValidationErrorsWithoutLink()
+    {
+        console.log("Tracking Errors")
+        let errorFields = document.getElementsByClassName('govuk-error-summary__list')[0].getElementsByTagName("a");
+        errorFields = [].slice.call(errorFields);
+        let formErrors = errorFields.filter(x => x.getAttribute('href') !== '' && x.getAttribute('href') !== '#');
+        formErrors.forEach(x => this.trackEvent('Form', 'Form errors', x.textContent));
+    }
     _trackFormValidationErrors()
     {
         let errorFields = document.getElementsByClassName('govuk-form-group--error');
