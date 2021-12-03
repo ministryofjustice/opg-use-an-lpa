@@ -84,10 +84,10 @@ export default class GoogleAnalytics {
     {
         console.log("Tracking Errors")
         let errorFields = document.getElementsByClassName('govuk-error-summary__list')
-        if(errorFields.length > 0) {
+        if (errorFields.length > 0) {
             errorFields = errorFields[0].getElementsByTagName("a");
             errorFields = [].slice.call(errorFields);
-            let formErrors = errorFields.filter(x => x.getAttribute('href') !== '' && x.getAttribute('href') !== '#');
+            let formErrors = errorFields.filter(x => x.getAttribute('href') === '' || x.getAttribute('href') === '#');
             formErrors.forEach(x => this.trackEvent('Form', 'Form errors', x.textContent));
         }
     }
