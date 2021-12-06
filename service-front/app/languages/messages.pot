@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-12-02T15:42:19+00:00\n"
+"POT-Creation-Date: 2021-12-06T17:32:43+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1992,10 +1992,6 @@ msgstr ""
 msgid "the donor or an attorney has moved house"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:38
-msgid "the donor or an attorney has changed their name by marriage or deed poll"
-msgstr ""
-
 #: src/Actor/templates/actor/change-details.html.twig:39
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr ""
@@ -3625,10 +3621,6 @@ msgstr ""
 msgid "you've moved house"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
-msgid "you've changed your name by marriage or deed poll"
-msgstr ""
-
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 msgid "your name or address on the LPA is misspelt"
 msgstr ""
@@ -4496,4 +4488,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
+msgstr ""
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
+msgid "you've changed your name"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:38
+msgid "the donor or an attorney has changed their name"
 msgstr ""

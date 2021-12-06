@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-12-02T15:42:19+00:00\n"
+"POT-Creation-Date: 2021-12-06T17:32:43+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2711,12 +2711,6 @@ msgstr ""
 msgid "the donor or an attorney has moved house"
 msgstr "os yw’r rhoddwr neu atwrnai wedi symud tŷ"
 
-#: src/Actor/templates/actor/change-details.html.twig:38
-msgid "the donor or an attorney has changed their name by marriage or deed poll"
-msgstr ""
-"os yw’r rhoddwr neu atwrnai wedi newid ei enw drwy briodas neu weithred newid "
-"enw"
-
 #: src/Actor/templates/actor/change-details.html.twig:39
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
@@ -5191,11 +5185,6 @@ msgstr ""
 msgid "you've moved house"
 msgstr "rydych wedi symud i dŷ arall"
 
-# The Welsh says ‘the donor or an attorney has changed their name’
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
-msgid "you've changed your name by marriage or deed poll"
-msgstr "rydych wedi newid eich enw trwy briodas neu weithred newid enw"
-
 # as above
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 msgid "your name or address on the LPA is misspelt"
@@ -6418,3 +6407,11 @@ msgid ""
 msgstr ""
 "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG "
 "%donorFirstName%, eich manylion cyswllt ac ati."
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
+msgid "you've changed your name"
+msgstr "rydych wedi newid eich enw"
+
+#: src/Actor/templates/actor/change-details.html.twig:38
+msgid "the donor or an attorney has changed their name"
+msgstr "os yw’r rhoddwr neu atwrnai wedi newid ei enw"
