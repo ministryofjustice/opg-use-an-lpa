@@ -2686,9 +2686,9 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I confirm the details of the found LPA are correct and flag is turned (.*)$/
+     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
      */
-    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flag)
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
         $this->lpa->status = 'Registered';
         $this->lpa->registrationDate = '2019-10-31';
@@ -2716,7 +2716,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
-        if ($flag == 'ON') {
+        if ($flagStatus == 'ON') {
             try {
                 $addOlderLpa->validateRequest($this->userId, $data);
             } catch (NotFoundException $ex) {

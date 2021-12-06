@@ -3474,10 +3474,9 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I confirm the details of the found LPA are correct and flag is turned (.*)$/
-     *
+     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
      */
-    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flag)
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
         $this->lpa->status = 'Registered';
         $this->lpa->registrationDate = '2019-10-31';
@@ -3513,7 +3512,7 @@ class LpaContext implements Context
             ]
         );
 
-        if ($flag == 'ON') {
+        if ($flagStatus == 'ON') {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
