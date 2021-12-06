@@ -29,11 +29,11 @@ return [
     ],
 
     'feature_flags' => [
-        'use_older_lpa_journey'             => true,
-        'delete_lpa_feature'                => true,
-        'allow_older_lpas'                  => true,
-        'save_older_lpa_requests'           => true,
-        'streamline_cleansing_lpas'         => true,
+        'use_older_lpa_journey'     => true,
+        'delete_lpa_feature'        => true,
+        'allow_older_lpas'          => true,
+        'save_older_lpa_requests'   => true,
+        'streamline_cleansing_lpas' => true,
     ],
 
     'notify' => [
