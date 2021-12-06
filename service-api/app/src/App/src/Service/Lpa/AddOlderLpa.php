@@ -37,9 +37,9 @@ class AddOlderLpa
         LpaAlreadyAdded $lpaAlreadyAdded,
         OlderLpaService $olderLpaService,
         ValidateOlderLpaRequirements $validateOlderLpaRequirements,
+        RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing,
         LoggerInterface $logger,
-        FeatureEnabled $featureEnabled,
-        RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing
+        FeatureEnabled $featureEnabled
     ) {
         $this->findActorInLpa = $findActorInLpa;
         $this->lpaService = $lpaService;
