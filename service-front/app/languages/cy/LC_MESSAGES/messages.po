@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-12-01T17:36:54+00:00\n"
+"POT-Creation-Date: 2021-12-02T15:42:19+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6347,18 +6347,6 @@ msgstr "Canslwyd eich cod mynediad ar %date%"
 msgid "Access code expired %date%"
 msgstr "Daeth eich cod mynediad i ben ar %date%"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
-msgid ""
-"%organisation% may ask you for other information, such as \"%donorFirstName%'s"
-"\" account details, and your name and contact details. They may also ask you "
-"to confirm your identity. This is to protect %donorFirstName% and prevent "
-"fraud."
-msgstr ""
-"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion cyfrif "
-"\"%donorFirstName%'s\", eich manylion cyswllt ac ati. Efallai y byddant yn "
-"gofyn i chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% "
-"ac atal twyll."
-
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:69
 msgid ""
 "%organisation% may ask you for other information, such as your customer "
@@ -6366,14 +6354,6 @@ msgid ""
 msgstr ""
 "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion eich "
 "cyfrif cwsmer, manylion cyswllt eich twrnai ac ati."
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
-msgid ""
-"%organisation% may ask you for other information, such as \"%donorFirstName%'s"
-"\" NHS number, your contact details and so on."
-msgstr ""
-"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG "
-"\"%donorFirstName%'s\", eich manylion cyswllt ac ati. "
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:84
 msgid ""
@@ -6419,3 +6399,22 @@ msgstr ""
 "Os ydych chi wedi gofyn am gael ailosod cyfrinair fwy nac unwaith, gwnewch yn "
 "siŵr eich bod wedi clicio ar y ddolen yn yr e-bost ailosod cyfrinair "
 "diweddaraf."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
+msgid ""
+"%organisation% may ask you for other information, such as %donorFirstName%'s "
+"account details, and your name and contact details. They may also ask you to "
+"confirm your identity. This is to protect %donorFirstName% and prevent fraud."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion cyfrif "
+"%donorFirstName%, eich manylion cyswllt ac ati. Efallai y byddant yn gofyn i "
+"chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% ac atal "
+"twyll."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
+msgid ""
+"%organisation% may ask you for other information, such as %donorFirstName%'s "
+"NHS number, your contact details and so on."
+msgstr ""
+"Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG "
+"%donorFirstName%, eich manylion cyswllt ac ati."
