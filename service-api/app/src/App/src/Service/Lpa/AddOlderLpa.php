@@ -100,7 +100,9 @@ class AddOlderLpa
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);
 
-        // Streamline lpa's sent to cleansing team that are registered after 2019 and when user details do not match
+        // We may want to turn off the ability for a user to have their case pushed to the cleansing 
+        // team if they fail to match and have a "newer" older lpa. In which case they'll be told we 
+        // can't find their LPA.
         if (($this->featureEnabled)('streamline_cleansing_lpas')) {
             ($this->restrictSendingLpaForCleansing)($lpaData, $resolvedActor);
         }
