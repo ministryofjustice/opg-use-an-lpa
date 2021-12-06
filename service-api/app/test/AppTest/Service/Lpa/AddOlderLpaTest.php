@@ -32,20 +32,20 @@ class AddOlderLpaTest extends TestCase
     /** @var ObjectProphecy|LpaAlreadyAdded */
     private $lpaAlreadyAddedProphecy;
 
+    /** @var ObjectProphecy|OlderLpaService */
+    private $olderLpaServiceProphecy;
+
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirementsProphecy;
+
+    /** @var ObjectProphecy|RestrictSendingLpaForCleansing */
+    private $restrictSendingLpaForCleansingProphecy;
 
     /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
 
-    /** @var ObjectProphecy|OlderLpaService */
-    private $olderLpaServiceProphecy;
-
     /** @var ObjectProphecy|FeatureEnabled */
     private $featureEnabledProphecy;
-
-    /** @var ObjectProphecy|RestrictSendingLpaForCleansing */
-    private $restrictSendingLpaForCleansingProphecy;
 
     private string $userId;
     private string $lpaUid;
@@ -61,9 +61,9 @@ class AddOlderLpaTest extends TestCase
         $this->lpaAlreadyAddedProphecy = $this->prophesize(LpaAlreadyAdded::class);
         $this->olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
         $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
+        $this->restrictSendingLpaForCleansingProphecy = $this->prophesize(RestrictSendingLpaForCleansing::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
-        $this->restrictSendingLpaForCleansingProphecy = $this->prophesize(RestrictSendingLpaForCleansing::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -108,9 +108,10 @@ class AddOlderLpaTest extends TestCase
             $this->lpaAlreadyAddedProphecy->reveal(),
             $this->olderLpaServiceProphecy->reveal(),
             $this->validateOlderLpaRequirementsProphecy->reveal(),
+            $this->restrictSendingLpaForCleansingProphecy->reveal(),
             $this->loggerProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
-            $this->restrictSendingLpaForCleansingProphecy->reveal()
+            $this->featureEnabledProphecy->reveal()
+
         );
     }
 

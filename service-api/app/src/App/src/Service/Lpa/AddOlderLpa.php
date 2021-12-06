@@ -13,13 +13,15 @@ use App\Service\Features\FeatureEnabled;
 class AddOlderLpa
 {
     private FindActorInLpa $findActorInLpa;
-    private LoggerInterface $logger;
+
     private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
-    private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
     private OlderLpaService $olderLpaService;
-    private FeatureEnabled $featureEnabled;
+    private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
     private RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing;
+    private LoggerInterface $logger;
+    private FeatureEnabled $featureEnabled;
+
 
     /**
      * @param FindActorInLpa               $findActorInLpa
@@ -46,9 +48,9 @@ class AddOlderLpa
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->olderLpaService = $olderLpaService;
         $this->validateOlderLpaRequirements = $validateOlderLpaRequirements;
+        $this->restrictSendingLpaForCleansing = $restrictSendingLpaForCleansing;
         $this->logger = $logger;
         $this->featureEnabled = $featureEnabled;
-        $this->restrictSendingLpaForCleansing = $restrictSendingLpaForCleansing;
     }
 
     /**

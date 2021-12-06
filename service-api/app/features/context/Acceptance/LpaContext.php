@@ -3474,7 +3474,8 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I confirm details of the found LPA are correct and flag is turned (.*)$/
+     * @When /^I confirm the details of the found LPA are correct and flag is turned (.*)$/
+     *
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flag)
     {

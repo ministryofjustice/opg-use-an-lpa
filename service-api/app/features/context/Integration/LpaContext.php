@@ -1642,7 +1642,6 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/
-     * @When /^I provide details of LPA registered on 1st September 2019 which do not match a valid paper document$/
      */
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
@@ -2687,7 +2686,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I confirm details of the found LPA are correct and flag is turned (.*)$/
+     * @When /^I confirm the details of the found LPA are correct and flag is turned (.*)$/
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flag)
     {

@@ -207,12 +207,12 @@ Feature: Add an older LPA
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given I am on the add an older LPA page
     And I provide details of LPA registered after 1st September 2019 which do not match a valid paper document
-    When I confirm details of the found LPA are correct and flag is turned ON
+    When I confirm the details of the found LPA are correct and flag is turned ON
     Then I am informed that an LPA could not be found with these details
 
   @acceptance @integration @pact @ff:allow_older_lpas:true @ff:streamline_cleansing_lpas:false
   Scenario: The user is asked for their role on the LPA when request for cleansing streamlining flag tuned off
     Given I am on the add an older LPA page
     And I provide details of LPA registered after 1st September 2019 which do not match a valid paper document
-    When I confirm details of the found LPA are correct and flag is turned OFF
+    When I confirm the details of the found LPA are correct and flag is turned OFF
     Then I am asked for my role on the LPA
