@@ -34,7 +34,6 @@ class RestrictSendingLpaForCleansingTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function throws_not_found_exception_when_lpa_status_registered_and_actorMatch_is_null()
     {
