@@ -105,7 +105,8 @@ class AddOlderLpa
         // We may want to turn off the ability for a user to have their case pushed to the cleansing 
         // team if they fail to match and have a "newer" older lpa. In which case they'll be told we 
         // can't find their LPA.
-        if (($this->featureEnabled)('streamline_cleansing_lpas')) {
+        if (($this->featureEnabled)('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled'))
+        {
             ($this->restrictSendingLpaForCleansing)($lpaData, $resolvedActor);
         }
 

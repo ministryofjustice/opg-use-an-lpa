@@ -8,8 +8,8 @@ return [
         'delete_lpa_feature' => filter_var(getenv('DELETE_LPA_FEATURE'), FILTER_VALIDATE_BOOLEAN) ?: false,
         'allow_older_lpas' => filter_var(getenv('ALLOW_OLDER_LPAS'), FILTER_VALIDATE_BOOLEAN) ?: false,
         'allow_meris_lpas' => filter_var(getenv('ALLOW_MERIS_LPAS'), FILTER_VALIDATE_BOOLEAN) ?: false,
-        'streamline_cleansing_lpas' => filter_var(
-            getenv('STREAMLINE_CLEANSING_LPAS'),
+        'dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled' => filter_var(
+            getenv('DONT_SEND_LPAS_REGISTERED_BEFORE_SEP_2019_TO_CLEANSING_TEAM_ENABLED'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
     ]

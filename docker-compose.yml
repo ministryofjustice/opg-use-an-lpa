@@ -123,7 +123,7 @@ services:
       DELETE_LPA_FEATURE: "true"
       ALLOW_OLDER_LPAS: "true"
       ALLOW_MERIS_LPAS: "false"
-      STREAMLINE_CLEANSING_LPAS: "true"
+      DONT_SEND_LPAS_REGISTERED_BEFORE_SEP_2019_TO_CLEANSING_TEAM_ENABLED: "true"
 
       # Local only
       API_SERVICE_URL: http://api-web
@@ -201,7 +201,7 @@ services:
       ALLOW_OLDER_LPAS: "true"
       ALLOW_MERIS_LPAS: "false"
       SAVE_OLDER_LPA_REQUESTS: "true"
-      STREAMLINE_CLEANSING_LPAS: "true"
+      DONT_SEND_LPAS_REGISTERED_BEFORE_SEP_2019_TO_CLEANSING_TEAM_ENABLED: "true"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"

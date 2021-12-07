@@ -118,7 +118,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
@@ -178,7 +180,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
         $alreadyAddedData = [
             'donor'         => [
                 'uId'           => '12345',
@@ -215,7 +219,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
         $this->dataToMatch['force_activation_key'] = true;
 
         $alreadyAddedData = [
@@ -349,7 +355,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
         $dataToMatch = [
             'reference_number'      => $this->lpaUid,
             'dob'                   => '1980-03-01',
@@ -381,7 +389,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->willReturn(null);
@@ -416,7 +426,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(false);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(false);
         $this->dataToMatch['force_activation_key'] = true;
 
         $this->lpaAlreadyAddedProphecy
@@ -508,9 +520,11 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_streamline_flag_true()
+    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_restrict_flag_true()
     {
-        $this->featureEnabledProphecy->__invoke('streamline_cleansing_lpas')->willReturn(true);
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')
+            ->willReturn(true);
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
