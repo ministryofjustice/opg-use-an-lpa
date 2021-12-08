@@ -37,12 +37,7 @@ FROM production as development
 
 COPY --from=composer-dev /app/vendor /app/vendor
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-
-RUN set -xe \
-  && install-php-extensions xdebug \
-  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-  && rm /usr/bin/install-php-extensions
+COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
