@@ -32,6 +32,7 @@ CMD php-fpm
 FROM production as development
 
 COPY --from=composer-dev /app/vendor /app/vendor
+COPY service-api/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
