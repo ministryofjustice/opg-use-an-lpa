@@ -190,8 +190,7 @@
                         <dd class="govuk-summary-list__value">
                             {% if is_donor_signature_date_too_old(lpa) %}
                                 {% trans with {'%link%': path('lpa.instructions-preferences-before-2016')} %}
-                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions.
-                                    <a class="govuk-link" href="%link%">Read more</a>
+                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions.<a class="govuk-link" href="%link%">Read more</a>
                                 {% endtrans %}
                             {% elseif lpa.applicationHasGuidance %}
                                 {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
