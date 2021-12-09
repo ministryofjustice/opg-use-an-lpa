@@ -35,6 +35,7 @@ class LpaContext implements Context
 
     /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
     private RequestHandler $requestDashboardLPAs;
+    private RequestHandler $requestDashboardLPACodes;
 
     /**
      * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
@@ -1368,7 +1369,7 @@ class LpaContext implements Context
             );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
             ->respondWith(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
@@ -1511,6 +1512,7 @@ class LpaContext implements Context
     public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
     {
         $this->iHaveCreatedAnAccessCode();
+        $this->iAmOnTheDashboardPage();
         $this->iClickToCheckMyAccessCodes();
         $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
     }
@@ -1890,8 +1892,6 @@ class LpaContext implements Context
      */
     public function iRequestToGiveAnOrganisationAccess()
     {
-        $this->iAmOnTheDashboardPage();
-
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
             ->respondWith(
@@ -1909,7 +1909,6 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('/lpa/code-make?lpa=' . $this->userLpaActorToken);
     }
