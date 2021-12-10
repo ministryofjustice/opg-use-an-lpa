@@ -23,14 +23,14 @@ RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
 COPY service-api/app /app
 COPY --from=composer /app/vendor /app/vendor
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
-COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
+COPY service-api/docker/app/health-check.sh /app
 
 WORKDIR /app
 
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["docker-healthcheck.sh"]
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["./health-check.sh"]
 
-CMD php-fpm
+CMD ["php-fpm"]
 
 FROM production as development
 
