@@ -89,11 +89,19 @@
                     {% endif %}
                     {% if is_donor_signature_date_too_old(lpa) %}
                         <p class="govuk-body">
-                            {% trans %}If there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                            {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
                         </p>
-                    {% elseif lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                    {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
                         <p class="govuk-body">
-                            {% trans %}As there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                            {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% elseif lpa.applicationHasRestrictions%}
+                        <p class="govuk-body">
+                            {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% elseif lpa.applicationHasGuidance%}
+                        <p class="govuk-body">
+                            {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
                         </p>
                     {% endif %}
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-12-02T15:42:19+00:00\n"
+"POT-Creation-Date: 2021-12-07T16:30:58+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -79,7 +79,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:101
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:109
 msgid "Give another organisation access"
 msgstr ""
 
@@ -1992,10 +1992,6 @@ msgstr ""
 msgid "the donor or an attorney has moved house"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:38
-msgid "the donor or an attorney has changed their name by marriage or deed poll"
-msgstr ""
-
 #: src/Actor/templates/actor/change-details.html.twig:39
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr ""
@@ -3625,10 +3621,6 @@ msgstr ""
 msgid "you've moved house"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
-msgid "you've changed your name by marriage or deed poll"
-msgstr ""
-
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:47
 msgid "your name or address on the LPA is misspelt"
 msgstr ""
@@ -4470,14 +4462,6 @@ msgstr ""
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
-msgid "As there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA."
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
-msgid "If there are instructions/preferences/instructions and preferences on this LPA, you may also be asked to show the paper LPA."
-msgstr ""
-
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:21
 msgid "The link you've clicked on is invalid or has expired."
 msgstr ""
@@ -4496,4 +4480,28 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:77
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
+msgstr ""
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
+msgid "you've changed your name"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:38
+msgid "the donor or an attorney has changed their name"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
+msgid "As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:100
+msgid "As there are instructions on this LPA, you may also be asked to show the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:104
+msgid "As there are preferences on this LPA, you may also be asked to show the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
+msgid "If there are instructions and preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
