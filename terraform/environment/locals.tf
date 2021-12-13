@@ -64,6 +64,7 @@ variable "environments" {
       save_older_lpa_requests                   = bool
       load_balancer_deletion_protection_enabled = bool
       notify_key_secret_name                    = string
+      aws_waf_enabled                           = bool
     })
   )
 }
