@@ -33,7 +33,6 @@ export default class GoogleAnalytics {
 
         this._trackClicks();
 
-        this._trackExternalLinks();
         this._trackFormValidationErrors();
         this._trackFromValidationErrorsWithoutLink(); // done as separate method to stop assumptions breaking original functionality
 
@@ -44,8 +43,14 @@ export default class GoogleAnalytics {
     _trackClicks() {
         const _this = this;
         document.addEventListener('click', (e) => {
-            if (e.target && e.target.matches('[data-attribute="ga-event"]')) {
-                _this.sendEvent(e)
+            if (e.target) {
+
+                if (e.target.matches('[data-attribute="ga-event"]')) {
+                    _this.sendEvent(e)
+                } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
+                    _this.trackEvent('click', 'outbound', e.target.getAttribute('href'));
+                }
+
             }
         })
     }
@@ -95,18 +100,7 @@ export default class GoogleAnalytics {
         return dataCleansed;
     }
 
-    _trackExternalLinks() {
-        const externalLinkSelector = document.querySelectorAll('a[href^="http"]');
-        const _this = this;
-        for (let i = 0; i < externalLinkSelector.length; i++) {
-            externalLinkSelector[i].addEventListener("click", function (e) {
-                _this.trackEvent('click', 'outbound', this.href);
-            });
-        }
-    }
-
     _trackFromValidationErrorsWithoutLink() {
-        console.log("Tracking Errors")
         let errorFields = document.getElementsByClassName('govuk-error-summary__list')
         if (errorFields.length > 0) {
             errorFields = errorFields[0].getElementsByTagName("a");

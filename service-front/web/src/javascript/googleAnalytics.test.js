@@ -81,6 +81,7 @@ import googleAnalytics from './googleAnalytics';
 describe('given Google Analytics datalayer is not setup', () => {
     let useAnalytics;
     beforeEach(() => {
+        global.dataLayer = [];
         document.body.innerHTML = linkList;
         useAnalytics = new googleAnalytics('UA-12345');
     });
@@ -106,11 +107,11 @@ describe('given Google Analytics datalayer is not setup', () => {
         expect(global.dataLayer[2][0]).toBe('event');
         expect(global.dataLayer[2][1]).toBe('click');
         expect(global.dataLayer[2][2].event_category).toBe('outbound');
-        expect(global.dataLayer[2][2].event_label).toBe('http://localhost/');
+        expect(global.dataLayer[2][2].event_label).toBe('http://localhost');
         expect(global.dataLayer[3][0]).toBe('event');
         expect(global.dataLayer[3][1]).toBe('click');
         expect(global.dataLayer[3][2].event_category).toBe('outbound');
-        expect(global.dataLayer[3][2].event_label).toBe('https://localhost/');
+        expect(global.dataLayer[3][2].event_label).toBe('https://localhost');
         expect(global.dataLayer.length).toEqual(4);
     });
 });
@@ -118,6 +119,7 @@ describe('given Google Analytics datalayer is not setup', () => {
 describe('given Google Analytics is enabled', () => {
     let useAnalytics;
     beforeEach(() => {
+        document = document.documentElement;
         document.body.innerHTML = linkList;
         document.title = 'Test Page Title';
         delete global.window.location;
@@ -155,12 +157,12 @@ describe('given Google Analytics is enabled', () => {
         expect(global.dataLayer[2][0]).toBe('event');
         expect(global.dataLayer[2][1]).toBe('click');
         expect(global.dataLayer[2][2].event_category).toBe('outbound');
-        expect(global.dataLayer[2][2].event_label).toBe('http://localhost/');
-        expect(global.dataLayer[3][0]).toBe('event');
-        expect(global.dataLayer[3][1]).toBe('click');
-        expect(global.dataLayer[3][2].event_category).toBe('outbound');
-        expect(global.dataLayer[3][2].event_label).toBe('https://localhost/');
-        expect(global.dataLayer.length).toEqual(4);
+        expect(global.dataLayer[2][2].event_label).toBe('http://localhost');
+        expect(global.dataLayer[4][0]).toBe('event');
+        expect(global.dataLayer[4][1]).toBe('click');
+        expect(global.dataLayer[4][2].event_category).toBe('outbound');
+        expect(global.dataLayer[4][2].event_label).toBe('https://localhost');
+        expect(global.dataLayer.length).toEqual(6);
     });
 
     /**
@@ -258,7 +260,6 @@ describe('given Google Analytics is enabled', () => {
     });
 
     test('it should strip querystrings out of the pageview', () => {
-        console.log(global.dataLayer)
         expect(global.dataLayer[1][2].page_title).toBe('Test Page Title');
         expect(global.dataLayer[1][2].page_path).toBe('/use-lpa');
     });
@@ -268,6 +269,7 @@ describe('given Google Analytics is enabled', () => {
 describe('given a form has reported validation errors', () => {
     let useAnalytics;
     beforeEach(() => {
+        document = document.documentElement;
         document.body.innerHTML = formErrors;
         useAnalytics = new googleAnalytics('UA-12345');
     });
@@ -364,8 +366,6 @@ describe('given I click the access code reveal', () => {
     test('it should fire an event when I click the access code reveal', () => {
         const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
         revealSelector.click();
-
-        console.log(global.dataLayer)
 
         expect(global.dataLayer[22][1]).toBe('AccessCodeReveal');
         expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
