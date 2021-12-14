@@ -1,5 +1,5 @@
 resource "aws_wafv2_web_acl" "main" {
-  name        = "development-web-acl"
+  name        = "${local.account_name}-web-acl"
   description = "Managed rules"
   scope       = "REGIONAL"
 
@@ -25,6 +25,27 @@ resource "aws_wafv2_web_acl" "main" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesPHPRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    priority = 1
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
       sampled_requests_enabled   = true
     }
   }
