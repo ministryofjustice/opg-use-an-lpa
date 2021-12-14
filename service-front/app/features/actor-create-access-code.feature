@@ -39,7 +39,7 @@ Feature: The user is able to create access codes for organisations
     When I request to give an organisation access to one of my LPAs
     Then I am given a unique access code
 
-  # TODO This test actually does nothing.
+  # TODO This test actually does nothing. UML-1966
   @ui @integration
   Scenario: As a user I wouldn't be able to create a viewer code if the status of LPA has changed to Revoked
     Given The LPA has been revoked
