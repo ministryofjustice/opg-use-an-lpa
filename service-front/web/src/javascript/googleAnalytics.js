@@ -4,14 +4,12 @@ import {
 } from "@ministryofjustice/opg-performance-analytics";
 
 export default class GoogleAnalytics {
-    constructor(analyticsId)
-    {
+    constructor(analyticsId) {
         this.analyticsId = analyticsId;
         this._setUpOnLoad();
     }
 
-    _setUpOnLoad()
-    {
+    _setUpOnLoad() {
         let s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = `https://www.googletagmanager.com/gtag/js?id=${this.analyticsId}`;
@@ -29,21 +27,50 @@ export default class GoogleAnalytics {
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
             'allow_ad_personalization_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
-            'page_title' : document.title,
+            'page_title': document.title,
             'page_path': `${location.pathname.split('?')[0]}`
         });
+
+        this._trackClicks();
+
         this._trackExternalLinks();
         this._trackFormValidationErrors();
         this._trackFromValidationErrorsWithoutLink(); // done as separate method to stop assumptions breaking original functionality
-        this._trackLpaDownload();
-        this._trackAccessCodeReveal();
 
         PerformanceAnalytics();
         ErrorAnalytics();
     }
 
-    trackEvent(action, category, label, value = "")
-    {
+    _trackClicks() {
+        const _this = this;
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.matches('[data-attribute="ga-event"]')) {
+                _this.sendEvent(e)
+            }
+        })
+    }
+
+    extractEventInfo(eventElement) {
+        return {
+            action: eventElement.getAttribute('data-gaAction'),
+            event_params:
+            {
+                event_category: eventElement.getAttribute('data-gaCategory'),
+                event_label: eventElement.getAttribute('data-gaLabel')
+            }
+        }
+    }
+
+    sendEvent(event) {
+        if (typeof window.gtag === 'function') {
+            const eventElement = event.target
+            const eventInfo = this.extractEventInfo(eventElement)
+
+            window.gtag('event', eventInfo.action, eventInfo.event_params)
+        }
+    }
+
+    trackEvent(action, category, label, value = "") {
         window.gtag('event', this._sanitiseData(action), {
             'event_category': this._sanitiseData(category),
             'event_label': this._sanitiseData(label),
@@ -51,8 +78,7 @@ export default class GoogleAnalytics {
         });
     }
 
-    _sanitiseData(data)
-    {
+    _sanitiseData(data) {
         const sanitisedDataRegex = [
             /[^\s=/?&]+(?:@|%40)[^\s=/?&]+/g, // Email
             /[A-PR-UWYZ][A-HJ-Z]?[0-9][0-9A-HJKMNPR-Y]?(?:[\\s+]|%20)*[0-9][ABD-HJLNPQ-Z]{2}/gi, // Postcode
@@ -69,8 +95,7 @@ export default class GoogleAnalytics {
         return dataCleansed;
     }
 
-    _trackExternalLinks()
-    {
+    _trackExternalLinks() {
         const externalLinkSelector = document.querySelectorAll('a[href^="http"]');
         const _this = this;
         for (let i = 0; i < externalLinkSelector.length; i++) {
@@ -80,8 +105,7 @@ export default class GoogleAnalytics {
         }
     }
 
-    _trackFromValidationErrorsWithoutLink()
-    {
+    _trackFromValidationErrorsWithoutLink() {
         console.log("Tracking Errors")
         let errorFields = document.getElementsByClassName('govuk-error-summary__list')
         if (errorFields.length > 0) {
@@ -91,8 +115,7 @@ export default class GoogleAnalytics {
             formErrors.forEach(x => this.trackEvent('Form', 'Form errors', x.textContent));
         }
     }
-    _trackFormValidationErrors()
-    {
+    _trackFormValidationErrors() {
         let errorFields = document.getElementsByClassName('govuk-form-group--error');
         for (let i = 0, len = errorFields.length; i < len; i++) {
             let labelElement = errorFields[i].getElementsByTagName('label')[0];
@@ -104,28 +127,6 @@ export default class GoogleAnalytics {
                 let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
                 this.trackEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
             }
-        }
-    }
-
-    _trackLpaDownload()
-    {
-        const _this = this;
-        let downloadLinkSelector = document.querySelector('a[href$="/download-lpa"]');
-        if (downloadLinkSelector) {
-            downloadLinkSelector.addEventListener('click', function (e) {
-                _this.trackEvent('Download', 'LPA summary', 'Download this LPA summary');
-            });
-        }
-    }
-
-    _trackAccessCodeReveal()
-    {
-        const _this = this;
-        let accessCodeRevealSelector = document.querySelector("#access-code-reveal");
-        if (accessCodeRevealSelector) {
-            accessCodeRevealSelector.addEventListener('click', function (e) {
-                _this.trackEvent('AccessCodeReveal', 'Access code', 'The code I\'ve been given does not begin with a V');
-            });
         }
     }
 }

@@ -54,7 +54,7 @@ import googleAnalytics from './googleAnalytics';
             <nav class="moj-sub-navigation" aria-label="Sub navigation">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                        <a class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
+                        <a data-attribute="ga-event" data-gaAction="Download" data-gaCategory="LPA summary" data-gaLabel="Download this LPA summary" class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
                            href="https://localhost:9001/download-lpa">Download this LPA summary</a>
                     </li>
                 </ul>
@@ -64,7 +64,7 @@ import googleAnalytics from './googleAnalytics';
 
     const accessCodeReveal = `
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
+            <details data-attribute="ga-event" data-gaAction="AccessCodeReveal" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V" id="access-code-reveal" id="access-code-reveal" class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary" role="button">
                     <span class="govuk-details__summary-text">
                         {% trans %}The code I've been given does not begin with a V{% endtrans %}
@@ -365,10 +365,12 @@ describe('given I click the access code reveal', () => {
         const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
         revealSelector.click();
 
-        expect(global.dataLayer[14][1]).toBe('AccessCodeReveal');
-        expect(global.dataLayer[14][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[14][2].event_category).toBe('Access code');
-        expect(global.dataLayer[14][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[14][2].event_label).toBe('The code I\'ve been given does not begin with a V');
+        console.log(global.dataLayer)
+
+        expect(global.dataLayer[22][1]).toBe('AccessCodeReveal');
+        expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[22][2].event_category).toBe('Access code');
+        expect(global.dataLayer[22][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[22][2].event_label).toBe('The code I\'ve been given does not begin with a V');
     });
 });
