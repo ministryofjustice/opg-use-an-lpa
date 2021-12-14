@@ -64,7 +64,7 @@ variable "environments" {
       save_older_lpa_requests                   = bool
       load_balancer_deletion_protection_enabled = bool
       notify_key_secret_name                    = string
-      associate_waf_web_acl_with_alb_enabled    = bool
+      associate_alb_with_waf_web_acl_enabled    = bool
     })
   )
 }
