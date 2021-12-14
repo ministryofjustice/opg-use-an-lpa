@@ -68,10 +68,10 @@ export default class GoogleAnalytics {
 
     sendEvent(event) {
         if (typeof window.gtag === 'function') {
-            const eventElement = event.target
-            const eventInfo = this.extractEventInfo(eventElement)
+            const eventElement = event.target;
+            const eventInfo = this.extractEventInfo(eventElement);
 
-            window.gtag('event', eventInfo.action, eventInfo.event_params)
+            this.trackEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
         }
     }
 
