@@ -135,7 +135,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function activateRecord(string $lpaActorToken): array
+    public function activateRecord(string $lpaActorToken, $actorId): array
     {
         $response = $this->client->updateItem([
           'TableName' => $this->userLpaActorTable,
@@ -144,7 +144,12 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                   'S' => $lpaActorToken,
               ],
           ],
-          'UpdateExpression' => 'remove ActivateBy, DueBy',
+          'UpdateExpression' => 'set ActorId = :a remove ActivateBy, DueBy',
+          'ExpressionAttributeValues' => [
+              ':a' => [
+                  'N' => $actorId
+              ]
+          ],
           'ReturnValues' => 'ALL_NEW'
           ]);
 

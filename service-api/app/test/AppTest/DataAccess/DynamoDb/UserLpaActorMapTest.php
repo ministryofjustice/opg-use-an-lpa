@@ -338,7 +338,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('remove ActivateBy, DueBy', $data['UpdateExpression']);
+            $this->assertEquals('set ActorId = :a remove ActivateBy, DueBy', $data['UpdateExpression']);
 
             return true;
         }))->willReturn($this->createAWSResult([
@@ -363,7 +363,7 @@ class UserLpaActorMapTest extends TestCase
 
         $userLpaActorMapRepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken);
+        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken, $testActorId);
         $this->assertEquals($testToken, $removeActorMap['Id']);
     }
 
