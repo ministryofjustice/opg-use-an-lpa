@@ -501,7 +501,12 @@ class UserLpaActorMapTest extends TestCase
             self::TABLE_NAME
         );
 
-        $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), (string)$testActorId);
+        $renew = $userLpaActorMapRepo->updateRecord(
+            $testToken,
+            new DateInterval('P1Y'),
+            new DateInterval('P2W'),
+            (string)$testActorId
+        );
         $this->assertEquals($testToken, $renew['Id']);
     }
 
