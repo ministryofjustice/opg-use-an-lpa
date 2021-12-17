@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Common\Handler;
 
+use Common\Handler\Traits\User;
 use Common\Service\Url\UrlValidityCheckService;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
- * Class ContactUsPageHandler
- * @package Common\Handler
+ * Class InstructionsPreferencesHandler
+ *
+ * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class ContactUsPageHandler extends AbstractHandler
+class InstructionsPreferencesBefore2016Handler extends AbstractHandler
 {
+    use User;
+
     private UrlValidityCheckService $urlValidityCheckService;
 
     public function __construct(
@@ -30,14 +34,17 @@ class ContactUsPageHandler extends AbstractHandler
     }
 
     /**
+     * Handles a request and produces a response
+     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
-        return new HtmlResponse($this->renderer->render('common::contact-us', [
-            'referer' => $referer
+
+        return new HtmlResponse($this->renderer->render('common::instructions-preferences-signed-before-2016', [
+            'referer' => $referer,
         ]));
     }
 }

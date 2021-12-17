@@ -47,8 +47,17 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/session-check', Viewer\Handler\ViewerSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
-    $app->get('/accessibility-statement', \Viewer\Handler\ViewerAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get(
+        '/accessibility-statement',
+        Viewer\Handler\ViewerAccessibilityStatementHandler::class,
+        'accessibility-statement'
+    );
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
+    $app->get(
+        '/instructions-preferences-signed-before-2016',
+        Common\Handler\InstructionsPreferencesBefore2016Handler::class,
+        'lpa.instructions-preferences-before-2016'
+    );
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -60,7 +69,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
     $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'terms-of-use');
     $app->get('/privacy-notice', [Actor\Handler\ActorPrivacyNoticeHandler::class], 'privacy-notice');
-    $app->get('/accessibility-statement', \Actor\Handler\ActorAccessibilityStatementHandler::class, 'accessibility-statement');
+    $app->get(
+        '/accessibility-statement',
+        Actor\Handler\ActorAccessibilityStatementHandler::class,
+        'accessibility-statement'
+    );
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     // User creation
@@ -155,6 +168,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
     ], 'lpa.instructions-preferences');
+    $app->get('/lpa/instructions-preferences-signed-before-2016', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Handler\InstructionsPreferencesBefore2016Handler::class
+    ], 'lpa.instructions-preferences-before-2016');
     $app->get('/lpa/death-notification', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
