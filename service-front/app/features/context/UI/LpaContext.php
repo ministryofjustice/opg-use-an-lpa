@@ -1447,7 +1447,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I have added an LPA to my account which has a donor signature before 2016$/
+     * @Given I have been given access to use an LPA via credentials which has a donor signature before 2016
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016()
     {
@@ -1494,8 +1494,55 @@ class LpaContext implements Context
             'lpaDonorSignatureDate' => '2015-06-30',
             'lpa' => $this->lpa,
         ];
+
+        //API call for getting all the users added LPAs
+        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
     }
 
+    /**
+     * @Given I have added an LPA to my account which has a donor signature before 2016
+     */
+    public function iHaveAddedAnLPAToMyAccountSignedBefore2016()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016();
+
+        //API call for getting all the users added LPAs
+        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([$this->userLpaActorToken => $this->lpaData])
+                )
+            );
+
+        //API call for getting each LPAs share codes
+        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+    }
 
     /**
      * @Given /^I have created an access code$/
