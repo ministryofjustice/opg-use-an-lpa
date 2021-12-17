@@ -309,7 +309,7 @@ describe('given I click the access code reveal', () => {
         const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
         revealSelector.click();
 
-        expect(global.dataLayer[22][1]).toBe('AccessCodeReveal');
+        expect(global.dataLayer[22][1]).toBe('Details');
         expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
         expect(global.dataLayer[22][2].event_category).toBe('Access code');
         expect(global.dataLayer[22][2].event_label).not.toBeUndefined();
