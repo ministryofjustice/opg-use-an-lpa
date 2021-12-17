@@ -1,10 +1,10 @@
-FROM composer:2.1.5 AS composer
+FROM composer:2.1.14 AS composer
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM composer:2.1.5 AS composer-dev
+FROM composer:2.1.14 AS composer-dev
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
