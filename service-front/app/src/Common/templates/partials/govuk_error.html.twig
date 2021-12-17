@@ -10,7 +10,7 @@
                     {% for id, messages in errors %}
                         {% for message in messages %}
                             <li>
-                                <a href="#{%- if id >= 0 -%}{{ id }}{%- endif -%}">{{ message | trans([], null, 'error') | raw }}</a>
+                                <a data-gaCategory="Form errors" data-gaAction="{%- if id >= 0 -%}#{{ id }} {% else %}Form{%- endif -%}" data-gaLabel="{%- if id >= 0 -%}#{{ id }} -{%- endif -%} {{""}} {{ message | trans([], null, 'error') | raw }}" href="#{%- if id >= 0 -%}{{ id }}{%- endif -%}">{{ message | trans([], null, 'error') | raw }}</a>
                             </li>
                         {% endfor %}
                     {% endfor %}
