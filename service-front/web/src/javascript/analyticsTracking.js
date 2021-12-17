@@ -20,9 +20,9 @@ export default class AnalyticsTracking {
             if (e.target) {
 
                 if (e.target.matches('[data-attribute="ga-event"]')) {
-                    _this.sendEvent(e)
+                    _this.processClickEvent(e)
                 } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
-                    _this.trackEvent('click', 'outbound', e.target.getAttribute('href'));
+                    _this.sendGoogleAnalyticsEvent('click', 'outbound', e.target.getAttribute('href'));
                 }
 
             }
@@ -40,16 +40,16 @@ export default class AnalyticsTracking {
         }
     }
 
-    sendEvent(event) {
+    processClickEvent(event) {
         if (typeof window.gtag === 'function') {
             const eventElement = event.target;
             const eventInfo = this.extractEventInfo(eventElement);
 
-            this.trackEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
+            this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
         }
     }
 
-    trackEvent(action, category, label, value = "") {
+    sendGoogleAnalyticsEvent(action, category, label, value = "") {
         window.gtag('event', this._sanitiseData(action), {
             'event_category': this._sanitiseData(category),
             'event_label': this._sanitiseData(label),
@@ -80,7 +80,7 @@ export default class AnalyticsTracking {
             errorFields = errorFields[0].getElementsByTagName("a");
             errorFields = [].slice.call(errorFields);
             let formErrors = errorFields.filter(x => x.getAttribute('href') === '' || x.getAttribute('href') === '#');
-            formErrors.forEach(x => this.trackEvent('Form', 'Form errors', x.textContent));
+            formErrors.forEach(x => this.sendGoogleAnalyticsEvent('Form', 'Form errors', x.textContent));
         }
     }
     _trackFormValidationErrors() {
@@ -93,7 +93,7 @@ export default class AnalyticsTracking {
             let errorMessages = (errorFields[i].querySelectorAll('.govuk-error-message'));
             for (let x = 0, len = errorMessages.length; x < len; x++) {
                 let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
-                this.trackEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
+                this.sendGoogleAnalyticsEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
             }
         }
     }

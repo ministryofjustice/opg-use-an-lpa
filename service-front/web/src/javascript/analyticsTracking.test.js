@@ -184,7 +184,7 @@ describe('given Google Analytics is enabled', () => {
             }
          */
     test('it should fire events correctly', () => {
-        analyticsTracking.trackEvent('event', 'event_category', 'event_label', 'value')
+        analyticsTracking.sendGoogleAnalyticsEvent('event', 'event_category', 'event_label', 'value')
 
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
@@ -214,7 +214,7 @@ describe('given Google Analytics is enabled', () => {
             }
          */
     test('it should sanitize the data being sent', () => {
-        analyticsTracking.trackEvent('test@test.com', '01234567890', 'NG156WL', '28/06/1984')
+        analyticsTracking.sendGoogleAnalyticsEvent('test@test.com', '01234567890', 'NG156WL', '28/06/1984')
         expect(global.dataLayer.length).toEqual(3);
         expect(global.dataLayer[2]).not.toBeUndefined();
         expect(global.dataLayer[2][0]).toBe('event');
