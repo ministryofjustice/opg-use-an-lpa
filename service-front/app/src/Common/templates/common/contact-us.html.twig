@@ -2,14 +2,6 @@
 
 {% block html_title %}{% trans %}Contact us{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
 
-{% block service_name %}
-{% if application == "actor" %}
-    {% trans %}Use a lasting power of attorney{% endtrans %}
-{% elseif application == "viewer" %}
-    {% trans %}View a lasting power of attorney{% endtrans %}
-{% endif %}
-{% endblock %}
-
 {% block content %}
     <div class="govuk-width-container">
         {{ include('@partials/welsh-switch.html.twig') }}

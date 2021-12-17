@@ -143,3 +143,9 @@ Feature: View an LPA via sharecode
     And I waited too long to enter the share code
     And I give a valid LPA share code
     Then I have an error message informing me to try again.
+    
+  @ui
+  Scenario: The user views an LPA that has been signed before 2016
+    Given I view an LPA successfully
+    When I click on the Read more link
+    Then I am taken to a page explaining why instructions and preferences are not available
