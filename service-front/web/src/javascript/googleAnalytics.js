@@ -1,10 +1,10 @@
 export default class GoogleAnalytics {
     constructor(analyticsId) {
         this.analyticsId = analyticsId;
-        this._setUpOnLoad();
+        this.init();
     }
 
-    _setUpOnLoad() {
+    init() {
         let s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = `https://www.googletagmanager.com/gtag/js?id=${this.analyticsId}`;
