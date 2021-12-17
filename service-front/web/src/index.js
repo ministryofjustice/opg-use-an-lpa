@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import './scss.js';
-import {Accordion, initAll} from 'govuk-frontend';
+import { Accordion, initAll } from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
