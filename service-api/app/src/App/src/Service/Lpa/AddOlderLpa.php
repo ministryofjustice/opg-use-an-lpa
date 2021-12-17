@@ -159,7 +159,8 @@ class AddOlderLpa
                     'Activation key already requested for LPA',
                     [
                         'donor'         => $lpaAddedData['donor'],
-                        'caseSubtype'   => $lpaAddedData['caseSubtype']
+                        'caseSubtype'   => $lpaAddedData['caseSubtype'],
+                       // 'data'  => $lpaAddedData
                     ]
                 );
             }
@@ -174,7 +175,8 @@ class AddOlderLpa
                     'LPA has an activation key already',
                     [
                         'donor'         => $resolvedActor['donor'],
-                        'caseSubtype'   => $resolvedActor['caseSubtype']
+                        'caseSubtype'   => $resolvedActor['caseSubtype'],
+                        'activationKeyDueDate' => $hasActivationCode->format('c')
                     ]
                 );
             }

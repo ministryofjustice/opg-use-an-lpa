@@ -37,6 +37,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
             new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
+            new TwigFunction('format_post_code', [$this, 'formatPostCode']),
         ];
     }
 
@@ -245,5 +246,22 @@ class LpaExtension extends AbstractExtension
         }
 
         return $formatter;
+    }
+
+    /**
+     * Create a formatted postcode
+     *
+     * @param string|null $postCode
+     * @return string
+     */
+    public function formatPostCode(?string $PostCode): string
+    {
+        //make uppercase
+        $cleanPostcode = strtoupper($PostCode);
+
+        //insert space
+        $postcode = substr($cleanPostcode, 0, -3) . " " . substr($cleanPostcode, -3);
+
+        return $postcode;
     }
 }

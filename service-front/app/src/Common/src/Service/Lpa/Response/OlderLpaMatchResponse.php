@@ -28,6 +28,11 @@ class OlderLpaMatchResponse
         return $this->caseSubtype;
     }
 
+    public function getDueDate(string $activationKeyDueDate): string
+    {
+        return $this->$activationKeyDueDate;
+    }
+
     public function setDonor(CaseActor $donor): void
     {
         $this->donor = $donor;
@@ -41,5 +46,10 @@ class OlderLpaMatchResponse
     public function setCaseSubtype(string $caseSubtype): void
     {
         $this->caseSubtype = $caseSubtype;
+    }
+
+    public function setDueDate(string $activationKeyDueDate): void
+    {
+        $this->activationKeyDueDate = $activationKeyDueDate;
     }
 }

@@ -50,10 +50,14 @@ class OlderLpaService
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
     {
+        $this->logger->notice('I am here........1');
+
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
         if (is_null($response->getData()['Created'])) {
             return null;
         }
+
+        $this->logger->notice('I am here........2');
 
         $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
@@ -64,6 +68,8 @@ class OlderLpaService
                 'lpaId' => $actorId,
             ]
         );
+
+        $this->logger->notice('I am here........3');
 
         return $createdDate;
     }

@@ -12,6 +12,8 @@ class ActivationKeyExistsResponse
 
     protected string $caseSubtype;
 
+    protected string $activationKeyDueDate;
+
     public function getDonor(): ?CaseActor
     {
         return $this->donor;
@@ -22,6 +24,12 @@ class ActivationKeyExistsResponse
         return $this->caseSubtype;
     }
 
+    public function getDueDate(): ?string
+    {
+        var_dump($this->activationKeyDueDate); die;
+        return $this->activationKeyDueDate;
+    }
+
     public function setDonor(CaseActor $donor): void
     {
         $this->donor = $donor;
@@ -30,5 +38,10 @@ class ActivationKeyExistsResponse
     public function setCaseSubtype(string $caseSubtype): void
     {
         $this->caseSubtype = $caseSubtype;
+    }
+
+    public function setDueDate(string $activationKeyDueDate): void
+    {
+        $this->activationKeyDueDate = $activationKeyDueDate;
     }
 }

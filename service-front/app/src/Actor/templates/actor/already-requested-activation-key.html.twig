@@ -15,31 +15,32 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}You've already asked for an activation key for this LPA{% endtrans %}</h1>
 
-                    <dl class="govuk-summary-list govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-body govuk-summary-list__key">
-                                {% trans %}Donor name{% endtrans %}
-                            </dt>
-                            <dd class="govuk-body govuk-summary-list__value">
-                                {{ actor_name(donor) }}
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-body govuk-summary-list__key">
-                                {% trans %}LPA type{% endtrans %}
-                            </dt>
-                            <dd class="govuk-body govuk-summary-list__value">
-                                {% if lpaType|lower == "pfa" %}
-                                    {% trans %}Property and finance{% endtrans %}
-                                {% else %}
-                                    {% trans %}Health and welfare{% endtrans %}
-                                {% endif %}
-                            </dd>
-                        </div>
-                    </dl>
+{#                    <dl class="govuk-summary-list govuk-summary-list">#}
+{#                        <div class="govuk-summary-list__row">#}
+{#                            <dt class="govuk-body govuk-summary-list__key">#}
+{#                                {% trans %}Donor name{% endtrans %}#}
+{#                            </dt>#}
+{#                            <dd class="govuk-body govuk-summary-list__value">#}
+{#                                {{ actor_name(donor) }}#}
+{#                            </dd>#}
+{#                        </div>#}
+{#                        <div class="govuk-summary-list__row">#}
+{#                            <dt class="govuk-body govuk-summary-list__key">#}
+{#                                {% trans %}LPA type{% endtrans %}#}
+{#                            </dt>#}
+{#                            <dd class="govuk-body govuk-summary-list__value">#}
+{#                                {% if lpaType|lower == "pfa" %}#}
+{#                                    {% trans %}Property and finance{% endtrans %}#}
+{#                                {% else %}#}
+{#                                    {% trans %}Health and welfare{% endtrans %}#}
+{#                                {% endif %}#}
+{#                            </dd>#}
+{#                        </div>#}
+{#                    </dl>#}
 
                     <p class="govuk-body">{% trans %}Once we've finished checking all the details, we'll post you a letter with your activation key for this LPA. We'll contact you if we need any more information.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}The letter will be sent to the address we have for you on our records. We send the key by post because its more secure.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%postcode%': actorPostCode} %}The letter will be sent to the address we have for you on our records (postcode: %postcode%). We send the key by post because its more secure.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}You should hear from us or get the activation key letter by <date-added-here>. If not, please contact us.{% endtrans %}</p>
 
                     {{ govuk_form_open(form) }}
 
