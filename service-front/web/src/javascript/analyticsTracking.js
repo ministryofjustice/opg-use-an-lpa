@@ -7,9 +7,6 @@ export default class AnalyticsTracking {
     constructor() {
         this.init();
 
-        this._trackFormValidationErrors();
-        this._trackFromValidationErrorsWithoutLink(); // done as separate method to stop assumptions breaking original functionality
-
         PerformanceAnalytics();
         ErrorAnalytics();
     }
@@ -20,13 +17,20 @@ export default class AnalyticsTracking {
             if (e.target) {
 
                 if (e.target.matches('[data-attribute="ga-event"]')) {
-                    _this.processClickEvent(e)
+                    _this.processEventElement(e.target)
                 } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
                     _this.sendGoogleAnalyticsEvent('click', 'outbound', e.target.getAttribute('href'));
                 }
 
             }
         })
+
+        const gaLoadEvents = document.querySelectorAll('[data-attribute="ga-load-event"]');
+
+        for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
+            const element = gaLoadEvents[i];
+            _this.processEventElement(element)
+        }
     }
 
     extractEventInfo(eventElement) {
@@ -40,9 +44,8 @@ export default class AnalyticsTracking {
         }
     }
 
-    processClickEvent(event) {
+    processEventElement(eventElement) {
         if (typeof window.gtag === 'function') {
-            const eventElement = event.target;
             const eventInfo = this.extractEventInfo(eventElement);
 
             this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
@@ -72,29 +75,5 @@ export default class AnalyticsTracking {
         }
 
         return dataCleansed;
-    }
-
-    _trackFromValidationErrorsWithoutLink() {
-        let errorFields = document.getElementsByClassName('govuk-error-summary__list')
-        if (errorFields.length > 0) {
-            errorFields = errorFields[0].getElementsByTagName("a");
-            errorFields = [].slice.call(errorFields);
-            let formErrors = errorFields.filter(x => x.getAttribute('href') === '' || x.getAttribute('href') === '#');
-            formErrors.forEach(x => this.sendGoogleAnalyticsEvent('Form', 'Form errors', x.textContent));
-        }
-    }
-    _trackFormValidationErrors() {
-        let errorFields = document.getElementsByClassName('govuk-form-group--error');
-        for (let i = 0, len = errorFields.length; i < len; i++) {
-            let labelElement = errorFields[i].getElementsByTagName('label')[0];
-            let label = labelElement.textContent.trim();
-            let inputId = labelElement.getAttribute('for');
-            // there can be more than one error message per field eg password rules
-            let errorMessages = (errorFields[i].querySelectorAll('.govuk-error-message'));
-            for (let x = 0, len = errorMessages.length; x < len; x++) {
-                let errorMessage = errorMessages[x].textContent.replace("Error:", "").trim();
-                this.sendGoogleAnalyticsEvent(label, 'Form errors', ('#' + inputId + ' - ' + errorMessage));
-            }
-        }
     }
 }

@@ -10,44 +10,21 @@ import AnalyticsTracking from './analyticsTracking';
     `;
 
     const formErrors = `
-        <form name="create_account" method="post" novalidate="">
-        <fieldset class="govuk-fieldset">
-
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                <h1 class="govuk-fieldset__heading">Create an account</h1>
-            </legend>
-
-            <div class="govuk-form-group govuk-form-group--error">
-                <label class="govuk-label" for="email">
-                    Enter your email address
-                </label>
-                <span class="govuk-error-message">
-                    <span class="govuk-visually-hidden">Error:</span> Enter an email address in the correct format, like name@example.com
-                </span>
-                <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                                                                        <li>
+                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#email" data-gaLabel="#email - Enter an email address in the correct format, like name@example.com" href="#email">Enter an email address in the correct format,
+                                 like name@example.com</a>
+                            </li>
+                                                                                                <li>
+                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#password" data-gaLabel="#password - Enter your password" href="#password">Enter your password</a>
+                            </li>
+                                                            </ul>
             </div>
-
-
-            <div class="govuk-form-group govuk-form-group--error">
-                <label class="govuk-label" for="show_hide_password">
-                    Create a password
-                </label>
-                <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must be 8 characters or more
-                </span>
-                <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must include a number
-                </span>
-                <span class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> Password must include a capital letter
-                </span>
-                <input class="govuk-input govuk-input moj-password-reveal__input govuk-input--width-20" id="show_hide_password" name="show_hide_password" type="password" value="">
-                <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button" data-showpassword="Show" data-hidepassword="Hide">Show</button>
-            </div>
-
-            <button data-prevent-double-click="true" type="submit" class="govuk-button">Create account</button>
-        </fieldset>
-    </form>
+        </div>
     `;
 
     const lpaSummary = `
@@ -260,29 +237,17 @@ describe('given a form has reported validation errors', () => {
             }
      */
     test('it should fire off form error events correctly', () => {
-        expect(global.dataLayer[4][1]).toBe('Enter your email address');
+        expect(global.dataLayer[4][1]).toBe('#email');
         expect(global.dataLayer[4][2].event_category).not.toBeUndefined();
         expect(global.dataLayer[4][2].event_category).toBe('Form errors');
         expect(global.dataLayer[4][2].event_label).not.toBeUndefined();
         expect(global.dataLayer[4][2].event_label).toBe('#email - Enter an email address in the correct format, like [sanitised]');
 
-        expect(global.dataLayer[5][1]).toBe('Create a password');
+        expect(global.dataLayer[5][1]).toBe('#password');
         expect(global.dataLayer[5][2].event_category).not.toBeUndefined();
         expect(global.dataLayer[5][2].event_category).toBe('Form errors');
         expect(global.dataLayer[5][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[5][2].event_label).toBe('#show_hide_password - Password must be 8 characters or more');
-
-        expect(global.dataLayer[6][1]).toBe('Create a password');
-        expect(global.dataLayer[6][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[6][2].event_category).toBe('Form errors');
-        expect(global.dataLayer[6][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[6][2].event_label).toBe('#show_hide_password - Password must include a number');
-
-        expect(global.dataLayer[7][1]).toBe('Create a password');
-        expect(global.dataLayer[7][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[7][2].event_category).toBe('Form errors');
-        expect(global.dataLayer[7][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[7][2].event_label).toBe('#show_hide_password - Password must include a capital letter');
+        expect(global.dataLayer[5][2].event_label).toBe('#password - Enter your password');
     });
 });
 
