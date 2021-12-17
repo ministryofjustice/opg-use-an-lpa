@@ -268,8 +268,8 @@ locals {
           value = tostring(local.environment.allow_meris_lpas)
         },
         {
-          name  = "DONT_SEND_LPAS_REGISTERED_BEFORE_SEP_2019_TO_CLEANSING_TEAM_ENABLED",
-          value = tostring(local.environment.dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled)
+          name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
+          value = tostring(local.environment.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
       ]
   })

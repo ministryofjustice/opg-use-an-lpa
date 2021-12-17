@@ -15,7 +15,7 @@
                 <div class="govuk-grid-column-two-thirds">
 
                     {% if feature_enabled('allow_older_lpas') and not
-                        (feature_enabled('dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled')) %}
+                        (feature_enabled('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')) %}
 
                         <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA with that reference number{% endtrans %}</h1>
 

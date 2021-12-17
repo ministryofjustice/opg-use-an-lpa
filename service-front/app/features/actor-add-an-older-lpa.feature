@@ -10,7 +10,7 @@ Feature: Add an older LPA
     And I am currently signed in
 
   @ui @integration @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled:false
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user cannot add an old LPA which does not have a registered status
     Given I am on the add an older LPA page
     When I provide details of an LPA that is not registered
@@ -207,7 +207,7 @@ Feature: Add an older LPA
     And I can see my attorney role, donor details and that I have not provided a telephone number
 
   @ui @integration @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled:false
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user cannot add an old LPA to their account as the LPA reference number could not be found
     Given I am on the add an older LPA page
     When I provide an LPA number that does not exist
@@ -215,7 +215,7 @@ Feature: Add an older LPA
     Then I am informed that an LPA could not be found with this reference number
 
   @ui @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled:false
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user is asked for their role on the LPA if the data does not match
     Given I am on the add an older LPA page
     And I provide details that do not match a valid paper document
@@ -223,7 +223,7 @@ Feature: Add an older LPA
     Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_before_sep_2019_to_cleansing_team_enabled:true
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given I am on the add an older LPA page
     And I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
