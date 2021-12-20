@@ -39,7 +39,7 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         $template = $twigEnv->load(self::THEME_FILE);
 
         return $template->renderBlock('error_message', [
-            'id'     => $element->getName(),
+            'element'     => $element,
             'errors' => $this->flattenMessages($element->getMessages()),
         ]);
     }
