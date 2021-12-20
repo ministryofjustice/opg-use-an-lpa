@@ -6489,7 +6489,7 @@ msgid ""
 msgstr ""
 "Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich "
 "cyfer yn ein cofnodion (cod post: %postcode%). Dylai fod wedi cyrraedd erbyn "
-"%dueDate%>."
+"%dueDate%."
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:19
 msgid ""
