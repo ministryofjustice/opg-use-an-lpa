@@ -115,7 +115,7 @@ class ActorCodeServiceTest extends TestCase
         // We expect a uuid4 back.
         $this->assertEquals('token-3', $result);
     }
-    
+
     /** @test */
     public function confirmation_with_valid_details_fails_flag_as_used(): void
     {
