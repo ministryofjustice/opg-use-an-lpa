@@ -8,15 +8,20 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use DateTime;
 use Psr\Log\LoggerInterface;
+use App\Service\Features\FeatureEnabled;
 
 class AddOlderLpa
 {
     private FindActorInLpa $findActorInLpa;
-    private LoggerInterface $logger;
+
     private LpaAlreadyAdded $lpaAlreadyAdded;
     private LpaService $lpaService;
-    private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
     private OlderLpaService $olderLpaService;
+    private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
+    private RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing;
+    private LoggerInterface $logger;
+    private FeatureEnabled $featureEnabled;
+
 
     /**
      * @param FindActorInLpa               $findActorInLpa
@@ -34,14 +39,18 @@ class AddOlderLpa
         LpaAlreadyAdded $lpaAlreadyAdded,
         OlderLpaService $olderLpaService,
         ValidateOlderLpaRequirements $validateOlderLpaRequirements,
-        LoggerInterface $logger
+        RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing,
+        LoggerInterface $logger,
+        FeatureEnabled $featureEnabled
     ) {
         $this->findActorInLpa = $findActorInLpa;
         $this->lpaService = $lpaService;
         $this->lpaAlreadyAdded = $lpaAlreadyAdded;
         $this->olderLpaService = $olderLpaService;
         $this->validateOlderLpaRequirements = $validateOlderLpaRequirements;
+        $this->restrictSendingLpaForCleansing = $restrictSendingLpaForCleansing;
         $this->logger = $logger;
+        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -92,6 +101,15 @@ class AddOlderLpa
 
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);
+
+        // We may want to turn off the ability for a user to have their case pushed to the cleansing 
+        // team if they fail to match and have a "newer" older lpa. In which case they'll be told we 
+        // can't find their LPA.
+        if (($this->featureEnabled)('dont_send_lpas_registered_after_sep_2019_to_cleansing_team'))
+        {
+            ($this->restrictSendingLpaForCleansing)($lpaData, $resolvedActor);
+        }
+
         if ($resolvedActor === null) {
             $this->logger->info(
                 'Actor details for LPA {uId} not found',
@@ -99,7 +117,10 @@ class AddOlderLpa
                     'uId' => $matchData['reference_number'],
                 ]
             );
-            throw new BadRequestException('LPA details do not match');
+            throw new BadRequestException(
+                'LPA details do not match',
+                ['lpaRegDate' => $lpaData['registrationDate']]
+            );
         }
 
         // Attach donor/attorney data to be used by the front

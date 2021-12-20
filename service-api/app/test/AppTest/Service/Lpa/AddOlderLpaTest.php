@@ -7,11 +7,13 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
+use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
@@ -30,14 +32,20 @@ class AddOlderLpaTest extends TestCase
     /** @var ObjectProphecy|LpaAlreadyAdded */
     private $lpaAlreadyAddedProphecy;
 
+    /** @var ObjectProphecy|OlderLpaService */
+    private $olderLpaServiceProphecy;
+
     /** @var ObjectProphecy|ValidateOlderLpaRequirements */
     private $validateOlderLpaRequirementsProphecy;
+
+    /** @var ObjectProphecy|RestrictSendingLpaForCleansing */
+    private $restrictSendingLpaForCleansingProphecy;
 
     /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
 
-    /** @var ObjectProphecy|OlderLpaService */
-    private $olderLpaServiceProphecy;
+    /** @var ObjectProphecy|FeatureEnabled */
+    private $featureEnabledProphecy;
 
     private string $userId;
     private string $lpaUid;
@@ -53,7 +61,9 @@ class AddOlderLpaTest extends TestCase
         $this->lpaAlreadyAddedProphecy = $this->prophesize(LpaAlreadyAdded::class);
         $this->olderLpaServiceProphecy = $this->prophesize(OlderLpaService::class);
         $this->validateOlderLpaRequirementsProphecy = $this->prophesize(ValidateOlderLpaRequirements::class);
+        $this->restrictSendingLpaForCleansingProphecy = $this->prophesize(RestrictSendingLpaForCleansing::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = '700000012345';
@@ -98,13 +108,20 @@ class AddOlderLpaTest extends TestCase
             $this->lpaAlreadyAddedProphecy->reveal(),
             $this->olderLpaServiceProphecy->reveal(),
             $this->validateOlderLpaRequirementsProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->restrictSendingLpaForCleansingProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
+            $this->featureEnabledProphecy->reveal()
+
         );
     }
 
     /** @test */
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
+
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->willReturn(null);
@@ -163,6 +180,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
         $alreadyAddedData = [
             'donor'         => [
                 'uId'           => '12345',
@@ -199,6 +219,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
         $this->dataToMatch['force_activation_key'] = true;
 
         $alreadyAddedData = [
@@ -332,6 +355,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
         $dataToMatch = [
             'reference_number'      => $this->lpaUid,
             'dob'                   => '1980-03-01',
@@ -363,6 +389,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
             ->willReturn(null);
@@ -397,6 +426,9 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true()
     {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(false);
         $this->dataToMatch['force_activation_key'] = true;
 
         $this->lpaAlreadyAddedProphecy
@@ -485,5 +517,38 @@ class AddOlderLpaTest extends TestCase
             ],
             new DateTime()
         );
+    }
+
+    /** @test */
+    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_restrict_flag_true()
+    {
+        $this->featureEnabledProphecy
+            ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
+            ->willReturn(true);
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->lpaServiceProphecy
+            ->getByUid($this->lpaUid)
+            ->willReturn($this->lpa);
+
+        $this->validateOlderLpaRequirementsProphecy
+            ->__invoke($this->lpaData);
+
+        $this->findActorInLpaProphecy
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn(null);
+
+        $this->restrictSendingLpaForCleansingProphecy
+            ->__invoke($this->lpaData, null)
+            ->willThrow(new NotFoundException('LPA not found'));
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('LPA not found');
+
+        $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 }
