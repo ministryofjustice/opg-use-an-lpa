@@ -668,8 +668,9 @@ class LpaContext extends BaseIntegrationContext
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
+        $newID = $this->awsFixtures->getLastCommand()['data']['ExpressionAttributeValues'][':a']['N'];
         // Check ActorID is overridden
-        assertEquals($this->actorId, $this->awsFixtures->getLastCommand()['data']['ExpressionAttributeValues'][':a']['N']);
+        assertEquals($this->actorId, $newID);
 
         //Check response is for correct Item ID
         assertEquals($this->userLpaActorToken, $response);
