@@ -35,7 +35,7 @@ class OlderLpaServiceTest extends TestCase
     public $actorCodesProphecy;
 
     /** @var ObjectProphecy|ResolveActor */
-    private  $resolveActorProphecy;
+    private $resolveActorProphecy;
 
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapProphecy;
