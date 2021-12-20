@@ -79,3 +79,16 @@ SELECT
     Item.UserLpaActor.S as userlpaactor
 FROM viewer_codes
 ```
+
+Import a CSV uploaded to the exports bucket
+
+```SQL
+CREATE EXTERNAL TABLE IF NOT EXISTS imported_csv (
+  `shared_code` string,
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES ("separatorChar" = ",", "escapeChar" = "\\")
+
+LOCATION 's3://use-a-lpa-dynamodb-exports-production/Imported_CSVs/'
+TBLPROPERTIES ('has_encrypted_data'='true');
+```
