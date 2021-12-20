@@ -617,7 +617,7 @@ class LpaContext extends BaseIntegrationContext
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorLpaId,
+                                'ActorId' => '700000000001',
                                 'UserId' => $this->userId,
                                 'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
                             ]
@@ -660,14 +660,18 @@ class LpaContext extends BaseIntegrationContext
         try {
             $response = $actorCodeService->confirmDetails(
                 $this->oneTimeCode,
-                $this->lpaUid,
+                $this->actorLpaId,
                 $this->userDob,
-                (string)$this->actorLpaId
+                $this->userId
             );
         } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
+        // Check ActorID is overridden
+        assertEquals($this->actorId, $this->awsFixtures->getLastCommand()['data']['ExpressionAttributeValues'][':a']['N']);
+
+        //Check response is for correct Item ID
         assertEquals($this->userLpaActorToken, $response);
     }
 
@@ -2209,7 +2213,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->oneTimeCode,
                 $this->lpaUid,
                 $this->userDob,
-                (string)$this->actorLpaId
+                $this->actorLpaId
             );
         } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
