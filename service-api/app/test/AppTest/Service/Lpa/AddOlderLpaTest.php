@@ -111,7 +111,6 @@ class AddOlderLpaTest extends TestCase
             $this->restrictSendingLpaForCleansingProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->featureEnabledProphecy->reveal()
-
         );
     }
 
