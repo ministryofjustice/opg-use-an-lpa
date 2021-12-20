@@ -88,7 +88,13 @@
         <div class="govuk-header__content">
 
             <a href="{{ path('home') }}" class="govuk-header__link govuk-header__link--service-name">
-                {% block service_name %}{% endblock %}
+                {% block service_name %}
+                    {% if application == "actor" %}
+                        {% trans %}Use a lasting power of attorney{% endtrans %}
+                    {% elseif application == "viewer" %}
+                        {% trans %}View a lasting power of attorney{% endtrans %}
+                    {% endif %}
+                {% endblock %}
             </a>
 
         </div>

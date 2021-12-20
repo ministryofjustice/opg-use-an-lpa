@@ -657,6 +657,7 @@ class ViewerContext implements Context
             'uId' => '7000-0000-0000',
             'receiptDate' => '2014-09-26',
             'registrationDate' => '2014-10-26',
+            'lpaDonorSignatureDate' => '2015-06-30',
             'donor' => [
                 'id' => 1,
                 'uId' => '7000-0000-0288',
@@ -832,6 +833,18 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I view an LPA successfully$/
+     */
+    public function iViewAnLPASuccessfully()
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
+        $this->iAccessTheViewerService();
+        $this->iGiveAValidLPAShareCode();
+        $this->iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect();
+        $this->iAmViewingAValidLPA();
+    }
+
+    /**
      * @Given /^I waited too long to enter the share code$/
      */
     public function iWaitedTooLongToEnterTheShareCode()
@@ -875,5 +888,21 @@ class ViewerContext implements Context
     public function iWantToSeePageToEnterAnotherShareCode()
     {
         $this->ui->assertPageAddress('/home');
+    }
+
+    /**
+     * @When /^I click on the Read more link$/
+     */
+    public function iClickOnTheReadMoreLink()
+    {
+        $this->ui->clickLink('Read more');
+    }
+
+    /**
+     * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
+     */
+    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
+    {
+        $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
     }
 }
