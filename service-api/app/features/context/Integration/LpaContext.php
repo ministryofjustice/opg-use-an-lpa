@@ -1469,6 +1469,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I am shown the details of an LPA$/
      * @Then /^I am asked for my contact details$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
+     * @When /^I confirm details of the found LPA are correct$/
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
@@ -1651,6 +1652,7 @@ class LpaContext extends BaseIntegrationContext
             'first_names' => $firstnames,
             'last_name' => $lastname,
             'force_activation_key' => false
+
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1886,6 +1888,8 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I request to go back and try again$/
+     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
+     * @Then /^I am asked for my role on the LPA$/
      */
     public function iRequestToGoBackAndTryAgain()
     {
@@ -2678,6 +2682,56 @@ class LpaContext extends BaseIntegrationContext
             $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
         } catch (ApiException $exception) {
             throw new Exception('Failed to request access code letter');
+        }
+    }
+
+    /**
+     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
+     */
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
+    {
+        $this->lpa->status = 'Registered';
+        $this->lpa->registrationDate = '2019-10-31';
+
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob'              => $this->userDob,
+            'postcode'         => 'WRONG',
+            'first_names'      => $this->userFirstname,
+            'last_name'        => $this->userSurname,
+            'force_activation_key' => false
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        if ($flagStatus == 'ON') {
+            try {
+                $addOlderLpa->validateRequest($this->userId, $data);
+            } catch (NotFoundException $ex) {
+                assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+                assertEquals('LPA not found', $ex->getMessage());
+                return;
+            }
+        } else {
+            try {
+                $addOlderLpa->validateRequest($this->userId, $data);
+            } catch (BadRequestException $ex) {
+                assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+                assertEquals('LPA details do not match', $ex->getMessage());
+                return;
+            }
         }
     }
 }
