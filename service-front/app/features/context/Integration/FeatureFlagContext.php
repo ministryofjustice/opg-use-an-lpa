@@ -25,7 +25,7 @@ class FeatureFlagContext extends BaseIntegrationContext
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);
 
-                if (!preg_match('/^[a-z_]+$/', $tagParts[1], $matches)) {
+                if (!preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches)) {
                     throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 

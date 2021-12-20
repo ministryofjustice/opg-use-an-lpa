@@ -206,7 +206,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     } else {
                         return new HtmlResponse($this->renderer->render(
                             'actor::cannot-find-lpa',
-                            ['user'  => $this->user]
+                            [
+                                'user'  => $this->user,
+                                'lpa_reference_number' => $this->data['reference_number']
+                            ],
                         ));
                     }
 

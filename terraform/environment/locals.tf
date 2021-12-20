@@ -65,6 +65,7 @@ variable "environments" {
       load_balancer_deletion_protection_enabled = bool
       notify_key_secret_name                    = string
       associate_alb_with_waf_web_acl_enabled    = bool
+      dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
     })
   )
 }
