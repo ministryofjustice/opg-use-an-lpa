@@ -69,6 +69,7 @@ class AddOlderLpa
     {
         // Check if it's been added to the users account already
         $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number']);
+
         if ($lpaAddedData !== null) {
             if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
@@ -160,7 +161,6 @@ class AddOlderLpa
                     [
                         'donor'         => $lpaAddedData['donor'],
                         'caseSubtype'   => $lpaAddedData['caseSubtype'],
-                       // 'data'  => $lpaAddedData
                     ]
                 );
             }

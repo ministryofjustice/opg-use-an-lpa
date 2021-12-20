@@ -414,8 +414,9 @@ class AddOlderLpaTest extends TestCase
         $expectedException = new BadRequestException(
             'LPA has an activation key already',
             [
-                'donor'         => $this->resolvedActor['donor'],
-                'caseSubtype'   => $this->resolvedActor['caseSubtype']
+                'donor'                => $this->resolvedActor['donor'],
+                'caseSubtype'          => $this->resolvedActor['caseSubtype'],
+                'activationKeyDueDate' => new DateTime()
             ]
         );
 

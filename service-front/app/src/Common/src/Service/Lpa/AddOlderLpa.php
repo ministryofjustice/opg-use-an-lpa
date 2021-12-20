@@ -84,10 +84,6 @@ class AddOlderLpa
 
         try {
             $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
-
-            var_dump($response);
-            die;
-
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
                 case StatusCodeInterface::STATUS_BAD_REQUEST:

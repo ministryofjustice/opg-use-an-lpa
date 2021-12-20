@@ -647,6 +647,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
         $this->fillAndSubmitOlderLpaForm();
 
         /**
@@ -693,7 +694,8 @@ class RequestActivationKeyContext implements Context
                                         'surname'       => $this->lpa->donor->surname,
                                     ],
                                     'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken
+                                    'lpaActorToken' => $this->userLpaActorToken,
+                                    'activationKeyDueDate' => $createdDate->format('c')
                                 ],
                             ]
                         )

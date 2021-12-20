@@ -26,7 +26,6 @@ class ActivationKeyExistsResponse
 
     public function getDueDate(): ?string
     {
-        var_dump($this->activationKeyDueDate); die;
         return $this->activationKeyDueDate;
     }
 

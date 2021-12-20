@@ -35,6 +35,7 @@ class LpaExtensionTest extends TestCase
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
+            'format_post_code'                => 'formatPostCode',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -482,5 +483,16 @@ class LpaExtensionTest extends TestCase
         $status = $extension->isDonorSignatureDateOld($lpa);
 
         $this->assertEquals(false, $status);
+    }
+
+    /** @test */
+    public function it_returns_a_space_formatted_postcode()
+    {
+        $extension = new LpaExtension();
+
+        $donorPostcode = "co62XT";
+        $formattedDonorPostcode = $extension->formatPostCode($donorPostcode);
+
+        $this->assertEquals('CO6 2XT', $formattedDonorPostcode);
     }
 }

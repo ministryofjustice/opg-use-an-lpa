@@ -1774,8 +1774,8 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $codeExists = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-        $codeExists->Created = $createdDate;
+        $createdDate = (new DateTime())->modify('-14 days');
+        $codeExists->Created = $createdDate->format('Y-m-d');
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1803,7 +1803,8 @@ class LpaContext extends BaseIntegrationContext
                         'middlenames'   => $this->lpa->donor->middlenames,
                         'surname'       => $this->lpa->donor->surname
                     ],
-                    'caseSubtype'   => $this->lpa->caseSubtype
+                    'caseSubtype'           => $this->lpa->caseSubtype,
+                    'activationKeyDueDate'  => $createdDate->format('c')
                 ],
                 $ex->getAdditionalData()
             );
