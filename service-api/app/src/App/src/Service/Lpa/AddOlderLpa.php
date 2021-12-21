@@ -83,7 +83,7 @@ class AddOlderLpa
             }
         }
 
-        // Fetch the LPA from the LpaService
+        // Fetch the LPA from the LpaServiceOLDER_LPA_KEY_ALREADY_REQUESTED
         $lpa = $this->lpaService->getByUid((string) $matchData['reference_number']);
         if ($lpa === null) {
             $this->logger->info(

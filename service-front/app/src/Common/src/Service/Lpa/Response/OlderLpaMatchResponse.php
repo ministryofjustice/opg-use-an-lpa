@@ -12,6 +12,7 @@ class OlderLpaMatchResponse
     /** @var CaseActor|null */
     protected $attorney = null;
     protected string $caseSubtype;
+    protected string $activationKeyDueDate;
 
     public function getDonor(): ?CaseActor
     {
@@ -28,9 +29,9 @@ class OlderLpaMatchResponse
         return $this->caseSubtype;
     }
 
-    public function getDueDate(string $activationKeyDueDate): string
+    public function getDueDate(): string
     {
-        return $this->$activationKeyDueDate;
+        return $this->activationKeyDueDate;
     }
 
     public function setDonor(CaseActor $donor): void

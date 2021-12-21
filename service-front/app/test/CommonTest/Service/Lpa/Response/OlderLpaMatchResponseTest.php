@@ -84,4 +84,24 @@ class OlderLpaMatchResponseTest extends TestCase
         $this->assertNull($dto->getAttorney());
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
+
+    /** @test */
+    public function it_allows_lpa_activation_key_due_date_to_be_set()
+    {
+        $donor = new CaseActor();
+        $donor->setUId('12345');
+        $donor->setFirstname('Example');
+        $donor->setMiddlenames('Donor');
+        $donor->setSurname('Person');
+
+        $dto = new OlderLpaMatchResponse();
+        $dto->setDonor($donor);
+        $dto->setCaseSubtype('pfa');
+        $dto->setDueDate('2021-12-06');
+
+        $this->assertEquals($donor, $dto->getDonor());
+        $this->assertNull($dto->getAttorney());
+        $this->assertEquals('pfa', $dto->getCaseSubtype());
+        $this->assertEquals('2021-12-06', $dto->getDueDate());
+    }
 }
