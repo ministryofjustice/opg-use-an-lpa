@@ -1532,12 +1532,12 @@ class LpaContext extends BaseIntegrationContext
         $keyExistsDTO = new ActivationKeyExistsResponse();
         $keyExistsDTO->setDonor($donor);
         $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $keyExistsDTO->setDueDate($createdDate->format('c'));
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             $keyExistsDTO
         );
-
         assertEquals($response, $result);
     }
 

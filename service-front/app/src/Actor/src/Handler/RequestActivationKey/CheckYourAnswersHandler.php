@@ -174,9 +174,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
-                    $activationKeyDueDate = date('Y-m-d', strtotime(($result->getData()->getDueDate()). ' + 10 days'));
+                    $activationKeyDueDate = date(
+                        'Y-m-d',
+                        strtotime(($result->getData()->getDueDate()) . ' + 10 days')
+                    );
 
                     return new HtmlResponse(
                         $this->renderer->render(
