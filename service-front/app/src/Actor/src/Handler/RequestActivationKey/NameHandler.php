@@ -43,8 +43,8 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->session->set('first_names', $postData['first_names']);
-            $this->session->set('last_name', $postData['last_name']);
+            $this->session->set('first_names', str_replace(['‘', '’'], "'", $postData['first_names']));
+            $this->session->set('last_name', str_replace(['‘', '’'], "'", $postData['last_name']));
 
             $nextPageName = $this->getRouteNameFromAnswersInSession();
             return $this->redirectToRoute($nextPageName);
