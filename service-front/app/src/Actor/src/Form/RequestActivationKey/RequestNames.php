@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\ConvertQuotesToApostrophe;
-use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
-use Common\Validator\DobValidator;
-use Laminas\Filter\StringToUpper;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\{Digits, NotEmpty, StringLength};
+use Laminas\Validator\{NotEmpty};
 use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
