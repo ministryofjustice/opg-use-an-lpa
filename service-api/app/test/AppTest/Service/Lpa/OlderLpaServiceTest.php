@@ -35,7 +35,7 @@ class OlderLpaServiceTest extends TestCase
     public $actorCodesProphecy;
 
     /** @var ObjectProphecy|ResolveActor */
-    private  $resolveActorProphecy;
+    private $resolveActorProphecy;
 
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapProphecy;
@@ -119,7 +119,7 @@ class OlderLpaServiceTest extends TestCase
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
-            '',
+            null,
             $this->oneYearInterval,
             $this->sixWeekInterval
         )->willReturn($this->lpaActorToken);
@@ -251,7 +251,7 @@ class OlderLpaServiceTest extends TestCase
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
-            '',
+            null,
             $this->oneYearInterval,
             $this->sixWeekInterval
         )->willReturn($this->lpaActorToken);
