@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Common\Filter;
-
 
 use Laminas\Filter\AbstractFilter;
 
@@ -16,5 +14,4 @@ class ConvertQuotesToApostrophe extends AbstractFilter
     {
         return  str_replace(['‘', '’'], "'", $name);
     }
-
 }
