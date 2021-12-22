@@ -42,9 +42,9 @@ import AnalyticsTracking from './analyticsTracking';
 
     const accessCodeReveal = `
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <details data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V" id="access-code-reveal" id="access-code-reveal" class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary" role="button">
-                    <span class="govuk-details__summary-text">
+            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary" role="button" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
+                    <span class="govuk-details__summary-text" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
                         {% trans %}The code I've been given does not begin with a V{% endtrans %}
                     </span>
                 </summary>
@@ -308,6 +308,10 @@ describe('given I click the access code reveal', () => {
     test('it should fire an event when I click the access code reveal', () => {
         const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
         revealSelector.click();
+
+        var map = new Map()
+        global.dataLayer.forEach((element, index) => {map.set(index,element)})
+        console.log(map)
 
         expect(global.dataLayer[22][1]).toBe('Details');
         expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
