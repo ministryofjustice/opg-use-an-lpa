@@ -4531,10 +4531,6 @@ msgstr ""
 msgid "We cannot show whether or not this <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions. <a class=\"govuk-link\" href=\"%link%\">Read more</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:18
-msgid "We posted an activation key to the address we have for you on our records (postcode: %postcode%). It should have arrived by %dueDate%."
-msgstr ""
-
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:19
 msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before."
 msgstr ""

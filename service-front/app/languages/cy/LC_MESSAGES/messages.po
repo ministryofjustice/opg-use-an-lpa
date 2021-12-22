@@ -6482,15 +6482,6 @@ msgstr ""
 "hon gyfarwyddiadau neu ddymuniadau ai peidio. <a class=\"govuk-link\" href="
 "\"%link%\">Darllen mwy</a>"
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:18
-msgid ""
-"We posted an activation key to the address we have for you on our records "
-"(postcode: %postcode%). It should have arrived by %dueDate%."
-msgstr ""
-"Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich "
-"cyfer yn ein cofnodion (cod post: %postcode%). Dylai fod wedi cyrraedd erbyn "
-"%dueDate%."
-
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:19
 msgid ""
 "If you've lost the letter, you can ask for a new key. This will cancel the key "

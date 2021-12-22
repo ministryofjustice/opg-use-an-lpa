@@ -15,7 +15,7 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}We've already sent you an activation key for this LPA{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans with {'%postcode%' : format_post_code(postCode), '%dueDate%' : lpa_date(dueDate)} %}We posted an activation key to the address we have for you on our records (postcode: %postcode%). It should have arrived by %dueDate%.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%dueDate%' : lpa_date(dueDate)} %}We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before.{% endtrans %}</p>
                     <p class="govuk-body">{% trans with {'%link%': path('contact-us')} %}If the letter did not arrive, <a class="govuk-link" href="%link%">contact us</a> to check we have your correct address before you ask for a new key.{% endtrans %}</p>
 

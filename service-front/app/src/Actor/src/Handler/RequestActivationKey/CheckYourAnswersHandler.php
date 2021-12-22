@@ -207,7 +207,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                 'user'          => $this->user,
                                 'donor'         => $result->getData()->getDonor(),
                                 'lpaType'       => $result->getData()->getCaseSubtype(),
-                                'actorPostCode' => $this->data['postcode'],
                                 'form'          => $form
                             ]
                         )
