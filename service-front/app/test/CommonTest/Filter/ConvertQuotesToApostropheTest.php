@@ -1,15 +1,12 @@
 <?php
 
-
 namespace CommonTest\Filter;
-
 
 use Common\Filter\ConvertQuotesToApostrophe;
 use PHPUnit\Framework\TestCase;
 
 class ConvertQuotesToApostropheTest extends TestCase
 {
-
     private ConvertQuotesToApostrophe $filter;
 
     public function setUp()
@@ -36,5 +33,4 @@ class ConvertQuotesToApostropheTest extends TestCase
             ['d’Antoine', 'd\'Antoine']
         ];
     }
-
 }
