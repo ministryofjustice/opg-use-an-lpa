@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
+use Common\Filter\ConvertQuotesToApostrophe;
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
@@ -51,6 +52,7 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
             'first_names' => [
                 'filters'  => [
                     ['name' => StringTrim::class],
+                    ['name' => ConvertQuotesToApostrophe::class]
                 ],
                 'validators' => [
                     [
