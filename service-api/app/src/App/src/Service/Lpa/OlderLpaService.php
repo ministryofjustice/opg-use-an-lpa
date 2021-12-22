@@ -186,7 +186,7 @@ class OlderLpaService
                 $recordId = $this->userLpaActorMap->create(
                     $userId,
                     $uid,
-                    (string)$actorId,
+                    $actorId ? (string)$actorId : null,
                     new DateInterval(self::EXPIRY_INTERVAL),
                     new DateInterval(self::CLEANSE_INTERVAL)
                 );
@@ -232,7 +232,7 @@ class OlderLpaService
                     $existingRecordId,
                     new DateInterval(self::EXPIRY_INTERVAL),
                     new DateInterval(self::CLEANSE_INTERVAL),
-                    $actorId
+                    $actorId ? (string)$actorId : null
                 );
             }
         }
