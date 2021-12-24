@@ -74,7 +74,8 @@ class ECRScanChecker:
                 }
             )
         except botocore.exceptions.WaiterError as error:
-            print(error)
+            print(error.last_response['Error']['Code'],
+                  error.last_response['Error']['Message'])
             exit(1)
         else:
             print("No ECR image scan results for image {0}, tag {1}".format(
@@ -109,16 +110,13 @@ class ECRScanChecker:
                         self.report += result
                     print(self.report)
             except botocore.exceptions.ClientError as error:
-                if error.response['Error']['Code'] == 'AccessDeniedException':
-                    print(error.response['Error']['Code'])
-                print(error.response['Error']['Message'])
-
-                # print("Unable to get ECR image scan results for image {0}, tag {1}".format(
-                #     image, tag))
-            # except:
-            #     print(findings)
-            #     print("Unable to get ECR image scan results for image {0}, tag {1}".format(
-            #         image, tag))
+                print(error.response['Error']['Code'],
+                      error.response['Error']['Message'])
+                exit(1)
+            else:
+                print(findings)
+                print("Unable to get ECR image scan results for image {0}, tag {1}".format(
+                    image, tag))
 
     def get_ecr_scan_findings(self, image, tag):
         response = self.aws_ecr_client.describe_image_scan_findings(
@@ -171,7 +169,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.result_limit, args.search)
-    # work.recursive_wait(args.tag)
+    work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
