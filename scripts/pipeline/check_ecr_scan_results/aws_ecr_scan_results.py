@@ -1,3 +1,4 @@
+import botocore
 import boto3
 import argparse
 import requests
@@ -72,7 +73,10 @@ class ECRScanChecker:
                     'MaxAttempts': 60
                 }
             )
-        except:
+        except botocore.exceptions.WaiterError as error:
+            print(error)
+            exit(1)
+        else:
             print("No ECR image scan results for image {0}, tag {1}".format(
                 image, tag))
 
@@ -105,6 +109,7 @@ class ECRScanChecker:
                         self.report += result
                     print(self.report)
             except:
+                print(findings)
                 print("Unable to get ECR image scan results for image {0}, tag {1}".format(
                     image, tag))
 
