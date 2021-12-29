@@ -13,12 +13,10 @@ class ECRScanChecker:
     aws_account_id = ''
     images_to_check = []
     report = ''
-    report_limit = ''
     date_start_inclusive = ''
     date_end_inclusive = ''
 
-    def __init__(self, date_inclusive, report_limit, search_term):
-        self.report_limit = int(report_limit)
+    def __init__(self, date_inclusive, search_term):
         self.aws_account_id = 311462405659  # management account id
         self.date_start_inclusive = datetime.combine(
             date_inclusive, datetime.min.time())
@@ -92,15 +90,15 @@ class ECRScanChecker:
                       error.last_response['Error']['Message'])
                 exit(1)
 
-    def recursive_check_make_report(self, tag, print_to_terminal):
+    def recursive_check_make_report(self, tag, report_limit, print_to_terminal):
         print("Checking ECR scan results...")
         for image in self.images_to_check:
             try:
-                findings = self.list_findings(image, tag)
+                findings = self.list_findings(image, tag, report_limit)
                 if findings["findings"] != []:
                     title = f"\n\n:warning: *AWS ECR Scan found results for {image}:* \n"
 
-                    severity_counts = f"Vulnerability Reports Found.\nDisplaying the first {self.report_limit} in order of severity\n\n"
+                    severity_counts = f"Vulnerability Reports Found.\nDisplaying the first {report_limit} in order of severity\n\n"
 
                     self.report = title + severity_counts
 
@@ -123,7 +121,7 @@ class ECRScanChecker:
                       error.response['Error']['Message'])
                 exit(1)
 
-    def list_findings(self, image, tag):
+    def list_findings(self, image, tag, report_limit):
         response = self.aws_inspector2_client.list_findings(
             filterCriteria={
                 'awsAccountId': [
@@ -151,7 +149,7 @@ class ECRScanChecker:
                     },
                 ],
             },
-            maxResults=self.report_limit,
+            maxResults=report_limit,
             sortCriteria={
                 'field': 'SEVERITY',
                 'sortOrder': 'DESC'
@@ -204,10 +202,10 @@ def main():
                         help="Optionally turn off posting messages to slack")
 
     args = parser.parse_args()
-    work = ECRScanChecker(args.ecr_pushed_date_inclusive,
-                          args.result_limit, args.search)
+    work = ECRScanChecker(args.ecr_pushed_date_inclusive, args.search)
     # work.recursive_wait(args.tag)
-    work.recursive_check_make_report(args.tag, args.print_to_terminal)
+    work.recursive_check_make_report(
+        args.tag, args.result_limit, args.print_to_terminal)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
     if args.post_to_slack == True and args.slack_webhook is not None:
