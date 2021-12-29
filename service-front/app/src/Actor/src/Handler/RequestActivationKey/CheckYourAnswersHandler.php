@@ -183,7 +183,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'Y-m-d',
                         strtotime(($result->getData()->getDueDate()) . ' + 10 days')
                     );
-
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
@@ -197,9 +196,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
+
                 case OlderLpaApiResponse::KEY_ALREADY_REQUESTED:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
                     $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+
+                    $activationKeyDueDate = date(
+                        'Y-m-d',
+                        strtotime(($result->getData()->getDueDate()))
+                    );
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-requested-activation-key',
@@ -207,6 +212,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                 'user'          => $this->user,
                                 'donor'         => $result->getData()->getDonor(),
                                 'lpaType'       => $result->getData()->getCaseSubtype(),
+                                'dueDate'       => $activationKeyDueDate,
                                 'form'          => $form
                             ]
                         )

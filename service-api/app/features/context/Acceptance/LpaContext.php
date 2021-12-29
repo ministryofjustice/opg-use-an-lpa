@@ -385,7 +385,7 @@ class LpaContext implements Context
             'caseSubtype' => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken
         ];
-
+        
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
@@ -676,7 +676,8 @@ class LpaContext implements Context
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype
+            'caseSubtype'           => $this->lpa->caseSubtype,
+            'activationKeyDueDate'  => ''
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);

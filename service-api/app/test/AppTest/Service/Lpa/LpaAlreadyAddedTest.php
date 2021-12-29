@@ -6,6 +6,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
+use Laminas\Form\Element\DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -145,6 +146,7 @@ class LpaAlreadyAddedTest extends TestCase
                 'caseSubtype' => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
                 'notActivated'  => true,
+                'activationKeyDueDate' => null
             ], $lpaAddedData);
     }
 
@@ -276,8 +278,9 @@ class LpaAlreadyAddedTest extends TestCase
                     'middlenames' => '',
                     'surname'     => 'Person',
                 ],
-                'caseSubtype' => 'hw',
-                'lpaActorToken' => $this->userLpaActorToken
+                'caseSubtype'           => 'hw',
+                'lpaActorToken'         => $this->userLpaActorToken,
+                'activationKeyDueDate'  => null
             ],
             $lpaAddedData
         );
