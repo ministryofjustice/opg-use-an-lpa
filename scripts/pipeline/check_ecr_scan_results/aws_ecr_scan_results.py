@@ -83,8 +83,8 @@ class ECRScanChecker:
             )
         except botocore.exceptions.WaiterError as error:
             if 'Error' in error.last_response and 'ScanNotFoundException' in error.last_response['Error']['Code']:
-                print("No ECR image scan results for image {0}, tag {1}".format(
-                    image, tag))
+                print(
+                    f"No ECR image scan results for image {image}, tag {tag}")
             if 'Error' in error.last_response and not 'ScanNotFoundException' in error.last_response['Error']['Code']:
                 print(error.last_response['Error']['Code'],
                       error.last_response['Error']['Message'])
@@ -96,20 +96,16 @@ class ECRScanChecker:
             try:
                 findings = self.list_findings(image, tag, report_limit)
                 if findings["findings"] != []:
-                    title = f"\n\n:warning: *AWS ECR Scan found results for {image}:* \n"
 
-                    severity_counts = f"Vulnerability Reports Found.\nDisplaying the first {report_limit} in order of severity\n\n"
-
-                    self.report = title + severity_counts
+                    self.report = f"\n\n:warning: *AWS ECR Scan found results for {image}:* \n" + \
+                        f"Vulnerability Reports Found.\nDisplaying the first {report_limit} in order of severity\n\n"
 
                     for finding in findings["findings"]:
                         cve = finding["title"]
                         severity = finding["severity"]
-
                         description = "None"
                         if "description" in finding:
                             description = finding["description"]
-
                         link = finding["packageVulnerabilityDetails"]["sourceUrl"]
                         vuln_type = finding["type"]
                         result = f"*Image:* {image} \n*Tag:* {tag} \n*Severity:* {severity} \n*CVE:* {cve} \n*Description:* {description} \n*Link:* `{link}`\n*Type:* `{vuln_type}`\n\n"
@@ -196,10 +192,10 @@ def main():
                         help="Webhook to use, determines what channel to post to")
     parser.add_argument('--print_to_terminal', dest='print_to_terminal', action='store_const',
                         const=True, default=False,
-                        help='add host IP address to security group ci ingress rule (default: remove all ci ingress rules)')
-    parser.add_argument("--post_to_slack",
-                        default=True,
-                        help="Optionally turn off posting messages to slack")
+                        help='print findings to terminal')
+    parser.add_argument('--post_to_slack', dest='post_to_slack', action='store_const',
+                        const=True, default=False,
+                        help='Optionally turn off posting messages to slack')
 
     args = parser.parse_args()
     work = ECRScanChecker(args.ecr_pushed_date_inclusive, args.search)
@@ -208,7 +204,7 @@ def main():
         args.tag, args.result_limit, args.print_to_terminal)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
-    if args.post_to_slack == True and args.slack_webhook is not None:
+    if args.post_to_slack and args.slack_webhook is not None:
         work.post_to_slack(args.slack_webhook)
 
 
