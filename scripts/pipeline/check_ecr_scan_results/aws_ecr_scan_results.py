@@ -118,7 +118,7 @@ class ECRScanChecker:
                             description = finding["description"]
 
                         link = finding["findingArn"]
-                        result = "*Image:* {0} \n*Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
+                        result = "*Image:* {0} \n*Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* `{5}`\n\n".format(
                             image, tag, severity, cve, description, link)
                         self.report += result
                     print(self.report)
