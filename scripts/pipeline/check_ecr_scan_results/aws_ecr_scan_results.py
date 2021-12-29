@@ -140,8 +140,8 @@ class ECRScanChecker:
                 ],
                 'ecrImagePushedAt': [
                     {
-                        'endInclusive': self.date_start_inclusive,
-                        'startInclusive': self.date_end_inclusive
+                        'endInclusive': self.date_end_inclusive
+                        'startInclusive': self.date_start_inclusive
                     },
                 ],
                 'ecrImageRepositoryName': [
