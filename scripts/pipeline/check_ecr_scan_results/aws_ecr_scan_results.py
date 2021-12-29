@@ -79,7 +79,7 @@ class ECRScanChecker:
                 },
                 WaiterConfig={
                     'Delay': 5,
-                    'MaxAttempts': 1
+                    'MaxAttempts': 60
                 }
             )
         except botocore.exceptions.WaiterError as error:
@@ -227,6 +227,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.search)
+    work.recursive_wait(args.tag)
     work.recursive_check_make_report(
         args.tag,
         args.ecr_pushed_date_inclusive,
