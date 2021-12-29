@@ -120,6 +120,7 @@ class ECRScanChecker:
                             description = finding['description']
                         link = finding['packageVulnerabilityDetails']['sourceUrl']
                         vuln_type = finding['type']
+                        updated = finding['updatedAt']
                         result = (
                             f'*Image:* {image} \n'
                             f'*Tag: * {tag} \n'
@@ -127,6 +128,7 @@ class ECRScanChecker:
                             f'*Type:* `{vuln_type}`\n'
                             f'*CVE:* {cve} \n'
                             f'*Description:* {description} \n'
+                            f'*Updated:* `{updated}`\n'
                             f'*Link:* `{link}`\n\n'
                         )
                         self.report += result
@@ -227,7 +229,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.search)
-    work.recursive_wait(args.tag)
+    # work.recursive_wait(args.tag)
     work.recursive_check_make_report(
         args.tag,
         args.ecr_pushed_date_inclusive,
