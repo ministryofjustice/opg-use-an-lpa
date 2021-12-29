@@ -11,10 +11,7 @@ from datetime import datetime
 
 class ECRScanChecker:
     aws_account_id = ''
-    aws_iam_session = ''
-    aws_ecr_client = ''
     images_to_check = []
-    tag = ''
     report = ''
     report_limit = ''
     date_start_inclusive = ''
@@ -27,28 +24,26 @@ class ECRScanChecker:
             date_inclusive, datetime.min.time())
         self.date_end_inclusive = datetime.combine(
             date_inclusive, datetime.max.time())
-        self.set_iam_role_session()
+        aws_iam_session = self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
             region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
         self.aws_inspector2_client = boto3.client(
             'inspector2',
             region_name='eu-west-1',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
         self.images_to_check = self.get_repositories(search_term)
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
-                self.aws_account_id)
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/opg-use-an-lpa-ci'
         else:
-            role_arn = 'arn:aws:iam::{}:role/operator'.format(
-                self.aws_account_id)
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/operator'
 
         sts = boto3.client(
             'sts',
@@ -59,7 +54,7 @@ class ECRScanChecker:
             RoleSessionName='checking_ecr_image_scan',
             DurationSeconds=900
         )
-        self.aws_iam_session = session
+        return session
 
     def get_repositories(self, search_term):
         images_to_check = []
@@ -103,11 +98,9 @@ class ECRScanChecker:
             try:
                 findings = self.list_findings(image, tag)
                 if findings["findings"] != []:
-                    title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
-                        image)
+                    title = f"\n\n:warning: *AWS ECR Scan found results for {image}:* \n"
 
-                    severity_counts = "Vulnerability Reports Found.\nDisplaying the first {} in order of severity\n\n".format(
-                        self.report_limit)
+                    severity_counts = f"Vulnerability Reports Found.\nDisplaying the first {self.report_limit} in order of severity\n\n"
 
                     self.report = title + severity_counts
 
@@ -119,14 +112,14 @@ class ECRScanChecker:
                         if "description" in finding:
                             description = finding["description"]
 
-                        link = finding["findingArn"]
-                        result = "*Image:* {0} \n*Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* `{5}`\n\n".format(
-                            image, tag, severity, cve, description, link)
+                        link = finding["packageVulnerabilityDetails"]["sourceUrl"]
+                        vuln_type = finding["type"]
+                        result = f"*Image:* {image} \n*Tag:* {tag} \n*Severity:* {severity} \n*CVE:* {cve} \n*Description:* {description} \n*Link:* `{link}`\n*Type:* `{vuln_type}`\n\n"
                         self.report += result
                     if print_to_terminal:
                         print(self.report)
             except botocore.exceptions.ClientError as error:
-                print("ERROR MESSAGE!!", error.response['Error']['Code'],
+                print(error.response['Error']['Code'],
                       error.response['Error']['Message'])
                 exit(1)
 
@@ -168,9 +161,9 @@ class ECRScanChecker:
 
     def post_to_slack(self, slack_webhook):
         if self.report != "":
-            branch_info = "*Github Branch:* {0}\n*CircleCI Job Link:* {1}\n\n".format(
-                os.getenv('CIRCLE_BRANCH', ""),
-                os.getenv('CIRCLE_BUILD_URL', ""))
+            build_url = os.getenv('CIRCLE_BUILD_URL', "")
+            circleci_branch = os.getenv('CIRCLE_BRANCH', "")
+            branch_info = f"*Github Branch:* {circleci_branch}\n*CircleCI Job Link:* {build_url}\n\n"
             self.report += branch_info
 
             post_data = json.dumps({"text": self.report})
