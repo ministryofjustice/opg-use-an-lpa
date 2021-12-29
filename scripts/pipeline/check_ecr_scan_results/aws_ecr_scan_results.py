@@ -4,6 +4,7 @@ import argparse
 import requests
 import json
 import os
+import pprint
 
 
 class ECRScanChecker:
@@ -25,7 +26,14 @@ class ECRScanChecker:
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+        self.aws_inspector2_client = boto3.client(
+            'inspector2',
+            region_name='eu-west-1',
+            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
         self.images_to_check = self.get_repositories(search_term)
+        print(self.images_to_check)
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -70,31 +78,27 @@ class ECRScanChecker:
                 },
                 WaiterConfig={
                     'Delay': 5,
-                    'MaxAttempts': 60
+                    'MaxAttempts': 1
                 }
             )
         except botocore.exceptions.WaiterError as error:
-            if error.last_response['Error']['Code'] == "AccessDeniedException":
+            if 'Error' in error.last_response and 'ScanNotFoundException' in error.last_response['Error']['Code']:
+                print("No ECR image scan results for image {0}, tag {1}".format(
+                    image, tag))
+            if 'Error' in error.last_response and not 'ScanNotFoundException' in error.last_response['Error']['Code']:
                 print(error.last_response['Error']['Code'],
                       error.last_response['Error']['Message'])
                 exit(1)
-            else:
-                print(error.last_response['Error']['Code'],
-                      error.last_response['Error']['Message'])
-
-        else:
-            print("No ECR image scan results for image {0}, tag {1}".format(
-                image, tag))
 
     def recursive_check_make_report(self, tag):
         print("Checking ECR scan results...")
         for image in self.images_to_check:
             try:
-                findings = self.get_ecr_scan_findings(image, tag)[
-                    "imageScanFindings"]
+                findings = self.list_findings(image, tag)
                 if findings["findings"] != []:
 
-                    counts = findings["findingSeverityCounts"]
+                    # counts = findings["findingSeverityCounts"]
+                    counts = 1
                     title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
                         image)
                     severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
@@ -102,34 +106,50 @@ class ECRScanChecker:
                     self.report = title + severity_counts
 
                     for finding in findings["findings"]:
-                        cve = finding["name"]
+                        cve = finding["title"]
                         severity = finding["severity"]
 
                         description = "None"
                         if "description" in finding:
                             description = finding["description"]
 
-                        link = finding["uri"]
+                        link = finding["findingArn"]
                         result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
                             image, tag, severity, cve, description, link)
                         self.report += result
                     print(self.report)
             except botocore.exceptions.ClientError as error:
-                print(error.response['Error']['Code'],
+                print("ERROR MESSAGE!!", error.response['Error']['Code'],
                       error.response['Error']['Message'])
                 exit(1)
-            else:
-                print(findings)
-                print("Unable to get ECR image scan results for image {0}, tag {1}".format(
-                    image, tag))
 
-    def get_ecr_scan_findings(self, image, tag):
-        response = self.aws_ecr_client.describe_image_scan_findings(
-            repositoryName=image,
-            imageId={
-                'imageTag': tag
+    def list_findings(self, image, tag):
+        response = self.aws_inspector2_client.list_findings(
+            filterCriteria={
+                'awsAccountId': [
+                    {
+                        'comparison': 'EQUALS',
+                        'value': str(self.aws_account_id)
+                    },
+                ],
+                'ecrImageRepositoryName': [
+                    {
+                        'comparison': 'EQUALS',
+                        'value': image
+                    },
+                ],
+                'ecrImageTags': [
+                    {
+                        'comparison': 'EQUALS',
+                        'value': tag
+                    },
+                ],
             },
-            maxResults=self.report_limit
+            maxResults=self.report_limit,
+            sortCriteria={
+                'field': 'SEVERITY',
+                'sortOrder': 'DESC'
+            }
         )
         return response
 
