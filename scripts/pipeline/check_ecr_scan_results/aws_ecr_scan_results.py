@@ -100,6 +100,7 @@ class ECRScanChecker:
     def recursive_check_make_report(self, tag, date_inclusive, report_limit, print_to_terminal):
         print('Checking ECR scan results...')
         for image in self.images_to_check:
+            print(image)
             try:
                 findings = self.list_findings(
                     image, tag, date_inclusive, report_limit)
@@ -212,7 +213,7 @@ def main():
                         default=date.today(),
                         help='ECR Image push datetime in format YYYY-MM-dd')
     parser.add_argument('--result_limit',
-                        default=5,
+                        default=50,
                         help='How many results for each image to return. Defaults to 5')
     parser.add_argument('--slack_webhook',
                         default=os.getenv('SLACK_WEBHOOK'),
