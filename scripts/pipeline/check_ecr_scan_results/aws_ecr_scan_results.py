@@ -5,6 +5,7 @@ import requests
 import json
 import os
 import pprint
+import datetime
 
 
 class ECRScanChecker:
@@ -15,10 +16,13 @@ class ECRScanChecker:
     tag = ''
     report = ''
     report_limit = ''
+    date_inclusive = ''
 
-    def __init__(self, report_limit, search_term):
+    def __init__(self, date_inclusive, report_limit, search_term):
         self.report_limit = int(report_limit)
         self.aws_account_id = 311462405659  # management account id
+        self.date_inclusive = date_inclusive
+        print(self.date_inclusive)
         self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
@@ -114,7 +118,7 @@ class ECRScanChecker:
                             description = finding["description"]
 
                         link = finding["findingArn"]
-                        result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
+                        result = "*Image:* {0} \n*Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
                             image, tag, severity, cve, description, link)
                         self.report += result
                     print(self.report)
@@ -130,6 +134,12 @@ class ECRScanChecker:
                     {
                         'comparison': 'EQUALS',
                         'value': str(self.aws_account_id)
+                    },
+                ],
+                'ecrImagePushedAt': [
+                    {
+                        'endInclusive': self.date_inclusive,
+                        'startInclusive': self.date_inclusive
                     },
                 ],
                 'ecrImageRepositoryName': [
@@ -182,6 +192,9 @@ def main():
     parser.add_argument("--tag",
                         default="latest",
                         help="Image tag to check scan results for.")
+    parser.add_argument("--ecr_pushed_date_inclusive",
+                        default=datetime.datetime.today(),
+                        help="ECR Image push datetime in format YYYY-MM-dd hh-mm-ss.ms")
     parser.add_argument("--result_limit",
                         default=5,
                         help="How many results for each image to return. Defaults to 5")
@@ -193,7 +206,8 @@ def main():
                         help="Optionally turn off posting messages to slack")
 
     args = parser.parse_args()
-    work = ECRScanChecker(args.result_limit, args.search)
+    work = ECRScanChecker(args.ecr_pushed_date_inclusive,
+                          args.result_limit, args.search)
     work.recursive_wait(args.tag)
     work.recursive_check_make_report(args.tag)
     if args.slack_webhook is None:
