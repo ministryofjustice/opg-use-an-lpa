@@ -17,19 +17,26 @@ class ECRScanChecker:
     def __init__(self, search_term):
         self.aws_account_id = 311462405659  # management account id
         aws_iam_session = self.set_iam_role_session()
-        self.aws_ecr_client = boto3.client(
+
+        self.aws_ecr_client = self.get_aws_client(
             'ecr',
-            region_name='eu-west-1',
-            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
-        self.aws_inspector2_client = boto3.client(
+            aws_iam_session)
+
+        self.aws_inspector2_client = self.get_aws_client(
             'inspector2',
-            region_name='eu-west-1',
+            aws_iam_session)
+
+        self.images_to_check = self.get_repositories(search_term)
+
+    @staticmethod
+    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
+        client = boto3.client(
+            client_type,
+            region_name=region,
             aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=aws_iam_session['Credentials']['SessionToken'])
-        self.images_to_check = self.get_repositories(search_term)
+        return client
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
