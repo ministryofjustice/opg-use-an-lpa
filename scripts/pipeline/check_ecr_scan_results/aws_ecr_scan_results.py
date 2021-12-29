@@ -13,15 +13,9 @@ class ECRScanChecker:
     aws_account_id = ''
     images_to_check = []
     report = ''
-    date_start_inclusive = ''
-    date_end_inclusive = ''
 
-    def __init__(self, date_inclusive, search_term):
+    def __init__(self, search_term):
         self.aws_account_id = 311462405659  # management account id
-        self.date_start_inclusive = datetime.combine(
-            date_inclusive, datetime.min.time())
-        self.date_end_inclusive = datetime.combine(
-            date_inclusive, datetime.max.time())
         aws_iam_session = self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
@@ -96,11 +90,12 @@ class ECRScanChecker:
                 print(
                     f'No ECR image scan results for image {image}, tag {tag}')
 
-    def recursive_check_make_report(self, tag, report_limit, print_to_terminal):
+    def recursive_check_make_report(self, tag, date_inclusive, report_limit, print_to_terminal):
         print('Checking ECR scan results...')
         for image in self.images_to_check:
             try:
-                findings = self.list_findings(image, tag, report_limit)
+                findings = self.list_findings(
+                    image, tag, date_inclusive, report_limit)
                 if findings['findings'] != []:
 
                     self.report = (
@@ -134,7 +129,12 @@ class ECRScanChecker:
                       error.response['Error']['Message'])
                 sys.exit(1)
 
-    def list_findings(self, image, tag, report_limit):
+    def list_findings(self, image, tag, date_inclusive, report_limit):
+        date_start_inclusive = datetime.combine(
+            date_inclusive, datetime.min.time())
+
+        date_end_inclusive = datetime.combine(
+            date_inclusive, datetime.max.time())
         response = self.aws_inspector2_client.list_findings(
             filterCriteria={
                 'awsAccountId': [
@@ -145,8 +145,8 @@ class ECRScanChecker:
                 ],
                 'ecrImagePushedAt': [
                     {
-                        'endInclusive': self.date_end_inclusive,
-                        'startInclusive': self.date_start_inclusive
+                        'endInclusive': date_end_inclusive,
+                        'startInclusive': date_start_inclusive
                     },
                 ],
                 'ecrImageRepositoryName': [
@@ -218,10 +218,13 @@ def main():
                         help='Optionally turn off posting messages to slack')
 
     args = parser.parse_args()
-    work = ECRScanChecker(args.ecr_pushed_date_inclusive, args.search)
-    # work.recursive_wait(args.tag)
+    work = ECRScanChecker(args.search)
     work.recursive_check_make_report(
-        args.tag, args.result_limit, args.print_to_terminal)
+        args.tag,
+        args.ecr_pushed_date_inclusive,
+        args.result_limit,
+        args.print_to_terminal
+    )
     if args.skip_post_to_slack and args.slack_webhook is not None:
         work.post_to_slack(args.slack_webhook)
     else:
