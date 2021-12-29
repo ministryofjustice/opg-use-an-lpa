@@ -22,11 +22,11 @@ class ECRScanChecker:
 
     def __init__(self, date_inclusive, report_limit, search_term):
         self.report_limit = int(report_limit)
-        self.aws_account_id = 311462405659
+        self.aws_account_id = 311462405659  # management account id
         self.date_start_inclusive = datetime.combine(
-            date_inclusive, datetime.min.time())  # management account id
+            date_inclusive, datetime.min.time())
         self.date_end_inclusive = datetime.combine(
-            date_inclusive, datetime.max.time())  # management account id
+            date_inclusive, datetime.max.time())
         self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
@@ -97,7 +97,7 @@ class ECRScanChecker:
                       error.last_response['Error']['Message'])
                 exit(1)
 
-    def recursive_check_make_report(self, tag):
+    def recursive_check_make_report(self, tag, print_to_terminal):
         print("Checking ECR scan results...")
         for image in self.images_to_check:
             try:
@@ -123,7 +123,8 @@ class ECRScanChecker:
                         result = "*Image:* {0} \n*Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* `{5}`\n\n".format(
                             image, tag, severity, cve, description, link)
                         self.report += result
-                    print(self.report)
+                    if print_to_terminal:
+                        print(self.report)
             except botocore.exceptions.ClientError as error:
                 print("ERROR MESSAGE!!", error.response['Error']['Code'],
                       error.response['Error']['Message'])
@@ -171,7 +172,6 @@ class ECRScanChecker:
                 os.getenv('CIRCLE_BRANCH', ""),
                 os.getenv('CIRCLE_BUILD_URL', ""))
             self.report += branch_info
-            print(self.report)
 
             post_data = json.dumps({"text": self.report})
             response = requests.post(
@@ -203,6 +203,9 @@ def main():
     parser.add_argument("--slack_webhook",
                         default=os.getenv('SLACK_WEBHOOK'),
                         help="Webhook to use, determines what channel to post to")
+    parser.add_argument('--print_to_terminal', dest='print_to_terminal', action='store_const',
+                        const=True, default=False,
+                        help='add host IP address to security group ci ingress rule (default: remove all ci ingress rules)')
     parser.add_argument("--post_to_slack",
                         default=True,
                         help="Optionally turn off posting messages to slack")
@@ -210,8 +213,8 @@ def main():
     args = parser.parse_args()
     work = ECRScanChecker(args.ecr_pushed_date_inclusive,
                           args.result_limit, args.search)
-    work.recursive_wait(args.tag)
-    work.recursive_check_make_report(args.tag)
+    # work.recursive_wait(args.tag)
+    work.recursive_check_make_report(args.tag, args.print_to_terminal)
     if args.slack_webhook is None:
         print("No slack webhook provided, skipping post of results to slack")
     if args.post_to_slack == True and args.slack_webhook is not None:
