@@ -5,7 +5,8 @@ import requests
 import json
 import os
 import pprint
-import datetime
+from datetime import date
+from datetime import datetime
 
 
 class ECRScanChecker:
@@ -16,13 +17,16 @@ class ECRScanChecker:
     tag = ''
     report = ''
     report_limit = ''
-    date_inclusive = ''
+    date_start_inclusive = ''
+    date_end_inclusive = ''
 
     def __init__(self, date_inclusive, report_limit, search_term):
         self.report_limit = int(report_limit)
-        self.aws_account_id = 311462405659  # management account id
-        self.date_inclusive = date_inclusive
-        print(self.date_inclusive)
+        self.aws_account_id = 311462405659
+        self.date_start_inclusive = datetime.combine(
+            date_inclusive, datetime.min.time())  # management account id
+        self.date_end_inclusive = datetime.combine(
+            date_inclusive, datetime.max.time())  # management account id
         self.set_iam_role_session()
         self.aws_ecr_client = boto3.client(
             'ecr',
@@ -37,7 +41,6 @@ class ECRScanChecker:
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
         self.images_to_check = self.get_repositories(search_term)
-        print(self.images_to_check)
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -100,13 +103,12 @@ class ECRScanChecker:
             try:
                 findings = self.list_findings(image, tag)
                 if findings["findings"] != []:
-
-                    # counts = findings["findingSeverityCounts"]
-                    counts = 1
                     title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
                         image)
-                    severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
-                        counts, self.report_limit)
+
+                    severity_counts = "Vulnerability Reports Found.\nDisplaying the first {} in order of severity\n\n".format(
+                        self.report_limit)
+
                     self.report = title + severity_counts
 
                     for finding in findings["findings"]:
@@ -138,8 +140,8 @@ class ECRScanChecker:
                 ],
                 'ecrImagePushedAt': [
                     {
-                        'endInclusive': self.date_inclusive,
-                        'startInclusive': self.date_inclusive
+                        'endInclusive': self.date_start_inclusive,
+                        'startInclusive': self.date_end_inclusive
                     },
                 ],
                 'ecrImageRepositoryName': [
@@ -193,8 +195,8 @@ def main():
                         default="latest",
                         help="Image tag to check scan results for.")
     parser.add_argument("--ecr_pushed_date_inclusive",
-                        default=datetime.datetime.today(),
-                        help="ECR Image push datetime in format YYYY-MM-dd hh-mm-ss.ms")
+                        default=date.today(),
+                        help="ECR Image push datetime in format YYYY-MM-dd")
     parser.add_argument("--result_limit",
                         default=5,
                         help="How many results for each image to return. Defaults to 5")
