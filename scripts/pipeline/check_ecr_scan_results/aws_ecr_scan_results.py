@@ -74,9 +74,14 @@ class ECRScanChecker:
                 }
             )
         except botocore.exceptions.WaiterError as error:
-            print(error.last_response['Error']['Code'],
-                  error.last_response['Error']['Message'])
-            exit(1)
+            if error.last_response['Error']['Code'] == "AccessDeniedException":
+                print(error.last_response['Error']['Code'],
+                      error.last_response['Error']['Message'])
+                exit(1)
+            else:
+                print(error.last_response['Error']['Code'],
+                      error.last_response['Error']['Message'])
+
         else:
             print("No ECR image scan results for image {0}, tag {1}".format(
                 image, tag))
