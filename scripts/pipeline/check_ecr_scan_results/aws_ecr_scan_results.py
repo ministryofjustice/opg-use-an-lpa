@@ -52,13 +52,13 @@ class ECRScanChecker:
         return client
 
     def get_repositories(self, search_term):
-        images_to_check = []
+        repositories = []
         response = self.aws_ecr_client.describe_repositories()
         for repository in response['repositories']:
             if search_term in repository['repositoryName']:
-                images_to_check.append(repository['repositoryName'])
+                repositories.append(repository['repositoryName'])
 
-        return images_to_check
+        return repositories
 
     def list_findings_for_each_repository(self, repositories, tag, date_inclusive, report_limit):
         print('Checking ECR scan results...')
@@ -130,7 +130,7 @@ class ECRScanChecker:
         return response
 
     @classmethod
-    def summarise_finding(cls, image, tag, finding):
+    def summarise_finding(cls, repository, tag, finding):
         severity = finding['severity']
         vuln_type = finding['type']
         cve = finding['title']
@@ -140,7 +140,7 @@ class ECRScanChecker:
         updated = finding['updatedAt']
         link = finding['packageVulnerabilityDetails']['sourceUrl']
         result = (
-            f'*Repository:* {image} \n'
+            f'*Repository:* {repository} \n'
             f'*Tag:* {tag} \n'
             f'*Severity:* {severity} \n'
             f'*Type:* `{vuln_type}`\n'
