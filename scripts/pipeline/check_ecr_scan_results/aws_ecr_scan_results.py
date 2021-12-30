@@ -213,7 +213,10 @@ def main():
         print(report)
 
     if args.skip_post_to_slack and args.slack_webhook is not None:
-        work.post_to_slack(args.slack_webhook, report)
+        work.post_to_slack(
+            args.slack_webhook,
+            report,
+        )
     else:
         print('Skipping post of results to slack')
 
