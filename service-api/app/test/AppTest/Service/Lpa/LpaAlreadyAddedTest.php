@@ -137,17 +137,19 @@ class LpaAlreadyAddedTest extends TestCase
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
         $this->assertEquals(
             [
-                'donor'         => [
-                    'uId'           => '700000000444',
-                    'firstname'     => 'Another',
-                    'middlenames'   => '',
-                    'surname'       => 'Person',
+                'donor' => [
+                    'uId' => '700000000444',
+                    'firstname' => 'Another',
+                    'middlenames' => '',
+                    'surname' => 'Person',
                 ],
                 'caseSubtype' => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
-                'notActivated'  => true,
-                'activationKeyDueDate' => null
-            ], $lpaAddedData);
+                'notActivated' => true,
+                'activationKeyDueDate' => null,
+            ],
+            $lpaAddedData
+        );
     }
 
     /**
