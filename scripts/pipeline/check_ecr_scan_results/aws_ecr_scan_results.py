@@ -11,10 +11,8 @@ import requests
 
 class ECRScanChecker:
     aws_account_id = ''
-    images_to_check = []
-    report = ''
 
-    def __init__(self, search_term):
+    def __init__(self):
         self.aws_account_id = 311462405659  # management account id
         aws_iam_session = self.set_iam_role_session()
 
@@ -25,18 +23,6 @@ class ECRScanChecker:
         self.aws_inspector2_client = self.get_aws_client(
             'inspector2',
             aws_iam_session)
-
-        self.images_to_check = self.get_repositories(search_term)
-
-    @staticmethod
-    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
-        client = boto3.client(
-            client_type,
-            region_name=region,
-            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
-        return client
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -55,6 +41,16 @@ class ECRScanChecker:
         )
         return session
 
+    @staticmethod
+    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
+        client = boto3.client(
+            client_type,
+            region_name=region,
+            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
+            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
+        return client
+
     def get_repositories(self, search_term):
         images_to_check = []
         response = self.aws_ecr_client.describe_repositories()
@@ -64,92 +60,32 @@ class ECRScanChecker:
 
         return images_to_check
 
-    def recursive_wait(self, tag):
-        print('Waiting for ECR scans to complete...')
-        for image in self.images_to_check:
-            self.wait_for_scan_completion(image, tag)
-        print('ECR image scans complete')
-
-    def wait_for_scan_completion(self, image, tag):
-        try:
-            waiter = self.aws_ecr_client.get_waiter('image_scan_complete')
-            waiter.wait(
-                repositoryName=image,
-                imageId={
-                    'imageTag': tag
-                },
-                WaiterConfig={
-                    'Delay': 5,
-                    'MaxAttempts': 10
-                }
-            )
-        except botocore.exceptions.WaiterError as error:
-            if (
-                'Error' in error.last_response
-                and not 'ScanNotFoundException' in error.last_response['Error']['Code']
-            ):
-                print(error.last_response['Error']['Code'],
-                      error.last_response['Error']['Message'])
-                sys.exit(1)
-            if (
-                'Error' in error.last_response
-                and 'ScanNotFoundException' in error.last_response['Error']['Code']
-            ):
-                print(
-                    f'Image scan does not exist for image {image}, tag {tag}')
-            else:
-                print(
-                    f'{error}',
-                    f'While waiting for image {image}, tag {tag}')
-        except botocore.exceptions.ClientError as error:
-            print(error.response['Error']['Code'],
-                  error.response['Error']['Message'])
-            sys.exit(1)
-
-    def recursive_check_make_report(self, tag, date_inclusive, report_limit):
+    def list_findings_for_each_repository(self, repositories, tag, date_inclusive, report_limit):
         print('Checking ECR scan results...')
-        for image in self.images_to_check:
-            print(image)
+        report = ''
+        for repository in repositories:
+            print(repository)
             try:
                 findings = self.list_findings(
-                    image, tag, date_inclusive, report_limit)
+                    repository, tag, date_inclusive, report_limit)
                 if findings['findings'] != []:
 
-                    self.report = (
-                        f'\n\n:warning: *AWS ECR Scan found results for {image}:* \n'
+                    report = (
+                        f'\n\n:warning: *AWS ECR Scan found results for {repository}:* \n'
                         f'Vulnerability Reports Found.\n'
                         f'Displaying the first {report_limit} in order of severity\n\n'
                     )
 
                     for finding in findings['findings']:
-                        cve = finding['title']
-                        severity = finding['severity']
-                        description = 'None'
-                        if 'description' in finding:
-                            description = finding['description']
-                        link = finding['packageVulnerabilityDetails']['sourceUrl']
-                        vuln_type = finding['type']
-                        updated = finding['updatedAt']
-                        result = (
-                            f'*Image:* {image} \n'
-                            f'*Tag:* {tag} \n'
-                            f'*Severity:* {severity} \n'
-                            f'*Type:* `{vuln_type}`\n'
-                            f'*CVE:* {cve} \n'
-                            f'*Description:* {description} \n'
-                            f'*Updated:* `{updated}`\n'
-                            f'*Link:* `{link}`\n\n'
-                        )
-                        self.report += result
+                        report += self.summarise_finding(
+                            repository, tag, finding)
 
             except botocore.exceptions.ClientError as error:
                 print(error.response['Error']['Code'],
                       error.response['Error']['Message'])
                 sys.exit(1)
-            except:
-                print("error")
 
-        return self.report
+        return report
 
     def list_findings(self, image, tag, date_inclusive, report_limit):
         date_start_inclusive = datetime.combine(
@@ -193,17 +129,40 @@ class ECRScanChecker:
         )
         return response
 
-    def post_to_slack(self, slack_webhook):
-        if self.report != '':
+    @classmethod
+    def summarise_finding(cls, image, tag, finding):
+        severity = finding['severity']
+        vuln_type = finding['type']
+        cve = finding['title']
+        description = 'None'
+        if 'description' in finding:
+            description = finding['description']
+        updated = finding['updatedAt']
+        link = finding['packageVulnerabilityDetails']['sourceUrl']
+        result = (
+            f'*Repository:* {image} \n'
+            f'*Tag:* {tag} \n'
+            f'*Severity:* {severity} \n'
+            f'*Type:* `{vuln_type}`\n'
+            f'*CVE:* {cve} \n'
+            f'*Description:* {description} \n'
+            f'*Updated:* `{updated}`\n'
+            f'*Link:* `{link}`\n\n'
+        )
+        return result
+
+    @classmethod
+    def post_to_slack(cls, slack_webhook, report):
+        if report != '':
             build_url = os.getenv('CIRCLE_BUILD_URL', '')
             circleci_branch = os.getenv('CIRCLE_BRANCH', '')
             branch_info = (
                 f'*Github Branch:* {circleci_branch}\n'
                 f'*CircleCI Job Link:* {build_url}\n\n'
             )
-            self.report += branch_info
+            report += branch_info
 
-            post_data = json.dumps({'text': self.report})
+            post_data = json.dumps({'text': report})
             response = requests.post(
                 slack_webhook, data=post_data,
                 headers={'Content-Type': 'application/json'}
@@ -241,17 +200,20 @@ def main():
                         help='Optionally turn off posting messages to slack')
 
     args = parser.parse_args()
-    work = ECRScanChecker(args.search)
-    # work.recursive_wait(args.tag)
-    report = work.recursive_check_make_report(
+    work = ECRScanChecker()
+    repositories = work.get_repositories(args.search)
+    report = work.list_findings_for_each_repository(
+        repositories,
         args.tag,
         args.ecr_pushed_date_inclusive,
         args.result_limit,
     )
+
     if args.print_to_terminal:
         print(report)
+
     if args.skip_post_to_slack and args.slack_webhook is not None:
-        work.post_to_slack(args.slack_webhook)
+        work.post_to_slack(args.slack_webhook, report)
     else:
         print('Skipping post of results to slack')
 
