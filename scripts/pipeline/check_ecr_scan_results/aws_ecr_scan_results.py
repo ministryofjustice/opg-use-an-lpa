@@ -95,9 +95,15 @@ class ECRScanChecker:
                 and 'ScanNotFoundException' in error.last_response['Error']['Code']
             ):
                 print(
-                    f'No ECR image scan results for image {image}, tag {tag}')
+                    f'Image scan does not exist for image {image}, tag {tag}')
             else:
-                print("somethig else went wrong")
+                print(
+                    f'{error}',
+                    f'While waiting for image {image}, tag {tag}')
+        except botocore.exceptions.ClientError as error:
+            print(error.response['Error']['Code'],
+                  error.response['Error']['Message'])
+            sys.exit(1)
 
     def recursive_check_make_report(self, tag, date_inclusive, report_limit):
         print('Checking ECR scan results...')
@@ -231,7 +237,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.search)
-    work.recursive_wait(args.tag)
+    # work.recursive_wait(args.tag)
     report = work.recursive_check_make_report(
         args.tag,
         args.ecr_pushed_date_inclusive,
