@@ -318,7 +318,8 @@ class LpaContext extends BaseIntegrationContext
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
+            'lpaActorToken' => $this->userLpaActorToken,
+            'activationKeyDueDate'   => null
         ];
 
         try {
@@ -2497,7 +2498,8 @@ class LpaContext extends BaseIntegrationContext
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
+            'lpaActorToken' => $this->userLpaActorToken,
+            'activationKeyDueDate' => null
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
@@ -2581,7 +2583,8 @@ class LpaContext extends BaseIntegrationContext
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => null
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);

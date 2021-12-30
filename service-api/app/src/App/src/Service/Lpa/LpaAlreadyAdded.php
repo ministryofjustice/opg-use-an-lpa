@@ -110,7 +110,8 @@ class LpaAlreadyAdded
                         'surname'       => $lpaData['lpa']['donor']['surname'],
                     ],
                     'caseSubtype'   => $lpaData['lpa']['caseSubtype'],
-                    'lpaActorToken' => $userLpaActorToken
+                    'lpaActorToken' => $userLpaActorToken,
+                    'activationKeyDueDate' => $lpaData['lpa']['activationKeyDueDate']
                 ];
             }
         }

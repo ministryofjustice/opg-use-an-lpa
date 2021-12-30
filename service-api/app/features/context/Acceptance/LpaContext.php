@@ -276,6 +276,7 @@ class LpaContext implements Context
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken,
+            'activationKeyDueDate' => null
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -383,11 +384,12 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
+            'lpaActorToken' => (int)$this->userLpaActorToken,
+            'activationKeyDueDate' => null
         ];
-        
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
+
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
@@ -2841,6 +2843,7 @@ class LpaContext implements Context
         ];
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
+
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 

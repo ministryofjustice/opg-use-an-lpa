@@ -1037,7 +1037,8 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
-                                'caseSubtype' => $this->lpa->caseSubtype
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'activationKeyDueDate'  =>  null
                             ],
                         ]
                     )
