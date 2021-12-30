@@ -48,11 +48,12 @@ class RequestCleanseHandler implements RequestHandlerInterface
 
         $addedData = ($this->lpaAlreadyAdded)($userId, (string)$requestData['reference_number']);
 
+        $actorId = $requestData['actor_id'];
         $this->olderLpaService->requestAccessAndCleanseByLetter(
             (string)$requestData['reference_number'],
             $userId,
             $requestData['notes'],
-            (int)$requestData['actor_id'],
+            $actorId ? (int) $actorId : null,
             $addedData['lpaActorToken'] ?? null
         );
 
