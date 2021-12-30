@@ -170,7 +170,8 @@ class ECRScanChecker:
             )
             if response.status_code != 200:
                 raise ValueError(
-                    f'Request to slack returned an error {response.status_code}, the response is:\n'
+                    f'Request to slack returned an error {response.status_code},'
+                    f'the response is:\n'
                     f'{response.text}'
                 )
 
