@@ -61,6 +61,7 @@ class ECRScanChecker:
         for repository in response['repositories']:
             if search_term in repository['repositoryName']:
                 images_to_check.append(repository['repositoryName'])
+
         return images_to_check
 
     def recursive_wait(self, tag):
@@ -79,7 +80,7 @@ class ECRScanChecker:
                 },
                 WaiterConfig={
                     'Delay': 5,
-                    'MaxAttempts': 6
+                    'MaxAttempts': 10
                 }
             )
         except botocore.exceptions.WaiterError as error:
@@ -140,12 +141,15 @@ class ECRScanChecker:
                             f'*Link:* `{link}`\n\n'
                         )
                         self.report += result
-                return self.report
 
             except botocore.exceptions.ClientError as error:
                 print(error.response['Error']['Code'],
                       error.response['Error']['Message'])
                 sys.exit(1)
+            except:
+                print("error")
+
+        return self.report
 
     def list_findings(self, image, tag, date_inclusive, report_limit):
         date_start_inclusive = datetime.combine(
@@ -153,6 +157,7 @@ class ECRScanChecker:
 
         date_end_inclusive = datetime.combine(
             date_inclusive, datetime.max.time())
+
         response = self.aws_inspector2_client.list_findings(
             filterCriteria={
                 'awsAccountId': [
