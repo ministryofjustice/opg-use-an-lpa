@@ -79,7 +79,7 @@ class ECRScanChecker:
                 },
                 WaiterConfig={
                     'Delay': 5,
-                    'MaxAttempts': 60
+                    'MaxAttempts': 6
                 }
             )
         except botocore.exceptions.WaiterError as error:
@@ -96,8 +96,10 @@ class ECRScanChecker:
             ):
                 print(
                     f'No ECR image scan results for image {image}, tag {tag}')
+            else:
+                print("somethig else went wrong")
 
-    def recursive_check_make_report(self, tag, date_inclusive, report_limit, print_to_terminal):
+    def recursive_check_make_report(self, tag, date_inclusive, report_limit):
         print('Checking ECR scan results...')
         for image in self.images_to_check:
             print(image)
@@ -123,7 +125,7 @@ class ECRScanChecker:
                         updated = finding['updatedAt']
                         result = (
                             f'*Image:* {image} \n'
-                            f'*Tag: * {tag} \n'
+                            f'*Tag:* {tag} \n'
                             f'*Severity:* {severity} \n'
                             f'*Type:* `{vuln_type}`\n'
                             f'*CVE:* {cve} \n'
@@ -132,8 +134,8 @@ class ECRScanChecker:
                             f'*Link:* `{link}`\n\n'
                         )
                         self.report += result
-                    if print_to_terminal:
-                        print(self.report)
+                return self.report
+
             except botocore.exceptions.ClientError as error:
                 print(error.response['Error']['Code'],
                       error.response['Error']['Message'])
@@ -215,7 +217,7 @@ def main():
                         default=date.today(),
                         help='ECR Image push datetime in format YYYY-MM-dd')
     parser.add_argument('--result_limit',
-                        default=50,
+                        default=5,
                         help='How many results for each image to return. Defaults to 5')
     parser.add_argument('--slack_webhook',
                         default=os.getenv('SLACK_WEBHOOK'),
@@ -229,13 +231,14 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.search)
-    # work.recursive_wait(args.tag)
-    work.recursive_check_make_report(
+    work.recursive_wait(args.tag)
+    report = work.recursive_check_make_report(
         args.tag,
         args.ecr_pushed_date_inclusive,
         args.result_limit,
-        args.print_to_terminal
     )
+    if args.print_to_terminal:
+        print(report)
     if args.skip_post_to_slack and args.slack_webhook is not None:
         work.post_to_slack(args.slack_webhook)
     else:
