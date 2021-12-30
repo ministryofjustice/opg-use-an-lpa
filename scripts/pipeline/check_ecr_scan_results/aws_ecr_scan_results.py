@@ -237,7 +237,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker(args.search)
-    # work.recursive_wait(args.tag)
+    work.recursive_wait(args.tag)
     report = work.recursive_check_make_report(
         args.tag,
         args.ecr_pushed_date_inclusive,
