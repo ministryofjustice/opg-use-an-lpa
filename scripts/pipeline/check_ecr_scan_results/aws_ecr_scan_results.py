@@ -10,19 +10,19 @@ import requests
 
 
 class ECRScanChecker:
-    aws_account_id = ''
-
     def __init__(self):
         self.aws_account_id = 311462405659  # management account id
         aws_iam_session = self.set_iam_role_session()
 
         self.aws_ecr_client = self.get_aws_client(
             'ecr',
-            aws_iam_session)
+            aws_iam_session,
+        )
 
         self.aws_inspector2_client = self.get_aws_client(
             'inspector2',
-            aws_iam_session)
+            aws_iam_session,
+        )
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -51,34 +51,35 @@ class ECRScanChecker:
             aws_session_token=aws_iam_session['Credentials']['SessionToken'])
         return client
 
-    def get_repositories(self, search_term):
-        repositories = []
+    def get_ecr_image_repositories(self, search_term):
+        ecr_image_repositories = []
         response = self.aws_ecr_client.describe_repositories()
         for repository in response['repositories']:
             if search_term in repository['repositoryName']:
-                repositories.append(repository['repositoryName'])
+                ecr_image_repositories.append(repository['repositoryName'])
 
-        return repositories
+        return ecr_image_repositories
 
-    def list_findings_for_each_repository(self, repositories, tag, date_inclusive, report_limit):
+    def list_findings_for_each_repository(self, ecr_repositories, tag, push_date, report_limit):
         print('Checking ECR scan results...')
         report = ''
-        for repository in repositories:
-            print(repository)
+        for ecr_image_repository_name in ecr_repositories:
+            print(ecr_image_repository_name)
             try:
                 findings = self.list_findings(
-                    repository, tag, date_inclusive, report_limit)
+                    ecr_image_repository_name, tag, push_date, report_limit)
                 if findings['findings'] != []:
 
                     report = (
-                        f'\n\n:warning: *AWS ECR Scan found results for {repository}:* \n'
+                        f'\n\n'
+                        f':warning: *AWS ECR Scan found results for {ecr_image_repository_name}:*\n'
                         f'Vulnerability Reports Found.\n'
                         f'Displaying the first {report_limit} in order of severity\n\n'
                     )
 
                     for finding in findings['findings']:
                         report += self.summarise_finding(
-                            repository, tag, finding)
+                            ecr_image_repository_name, tag, finding)
 
             except botocore.exceptions.ClientError as error:
                 print(error.response['Error']['Code'],
@@ -87,12 +88,12 @@ class ECRScanChecker:
 
         return report
 
-    def list_findings(self, image, tag, date_inclusive, report_limit):
+    def list_findings(self, ecr_image_repository_name, tag, push_date, report_limit):
         date_start_inclusive = datetime.combine(
-            date_inclusive, datetime.min.time())
+            push_date, datetime.min.time())
 
         date_end_inclusive = datetime.combine(
-            date_inclusive, datetime.max.time())
+            push_date, datetime.max.time())
 
         response = self.aws_inspector2_client.list_findings(
             filterCriteria={
@@ -111,7 +112,7 @@ class ECRScanChecker:
                 'ecrImageRepositoryName': [
                     {
                         'comparison': 'EQUALS',
-                        'value': image
+                        'value': ecr_image_repository_name
                     },
                 ],
                 'ecrImageTags': [
@@ -130,7 +131,7 @@ class ECRScanChecker:
         return response
 
     @classmethod
-    def summarise_finding(cls, repository, tag, finding):
+    def summarise_finding(cls, ecr_image_repository_name, tag, finding):
         severity = finding['severity']
         vuln_type = finding['type']
         cve = finding['title']
@@ -140,7 +141,7 @@ class ECRScanChecker:
         updated = finding['updatedAt']
         link = finding['packageVulnerabilityDetails']['sourceUrl']
         result = (
-            f'*Repository:* {repository} \n'
+            f'*Repository:* {ecr_image_repository_name} \n'
             f'*Tag:* {tag} \n'
             f'*Severity:* {severity} \n'
             f'*Type:* `{vuln_type}`\n'
@@ -183,7 +184,7 @@ def main():
     parser.add_argument('--tag',
                         default='latest',
                         help='Image tag to check scan results for.')
-    parser.add_argument('--ecr_pushed_date_inclusive',
+    parser.add_argument('--ecr_push_date',
                         default=date.today(),
                         help='ECR Image push datetime in format YYYY-MM-dd')
     parser.add_argument('--result_limit',
@@ -201,11 +202,11 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker()
-    repositories = work.get_repositories(args.search)
+    ecr_repositories = work.get_ecr_image_repositories(args.search)
     report = work.list_findings_for_each_repository(
-        repositories,
+        ecr_repositories,
         args.tag,
-        args.ecr_pushed_date_inclusive,
+        args.ecr_push_date,
         args.result_limit,
     )
 
