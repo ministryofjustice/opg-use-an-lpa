@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2021-12-20T17:46:56+00:00\n"
+"POT-Creation-Date: 2022-01-02T23:29:42+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -13,7 +13,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:50
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:28
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:28
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:37
@@ -26,7 +26,6 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:33
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
@@ -40,7 +39,6 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:35
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
@@ -1749,7 +1747,6 @@ msgid "Type of LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:27
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:21
 #: src/Actor/templates/actor/check-lpa.html.twig:37
 msgid "Donor name"
 msgstr ""
@@ -4027,7 +4024,7 @@ msgstr ""
 msgid "You've already added this LPA to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:54
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:32
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:30
 msgid "Continue and ask for a new key"
 msgstr ""
@@ -4268,11 +4265,11 @@ msgstr ""
 msgid "Let us know if a donor or attorney’s details change"
 msgstr ""
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:41
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:18
 msgid "Once we've finished checking all the details, we'll post you a letter with your activation key for this LPA. We'll contact you if we need any more information."
 msgstr ""
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:42
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:19
 msgid "The letter will be sent to the address we have for you on our records. We send the key by post because its more secure."
 msgstr ""
 
@@ -4537,4 +4534,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:20
 msgid "If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:20
+msgid "You should hear from us or get the activation key letter by %dueDate%. If not, please contact us."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:18
+msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
 msgstr ""

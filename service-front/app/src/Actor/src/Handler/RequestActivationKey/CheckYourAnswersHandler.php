@@ -205,6 +205,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         'Y-m-d',
                         strtotime(($result->getData()->getDueDate()))
                     );
+                    
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-requested-activation-key',

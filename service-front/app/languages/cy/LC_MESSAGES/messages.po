@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-12-20T17:46:56+00:00\n"
+"POT-Creation-Date: 2022-01-02T23:29:42+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,7 +23,7 @@ msgstr "Eich cod mynediad yr LPA newydd"
 #: src/Actor/templates/actor/check-access-codes.html.twig:15
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/instructions-preferences.html.twig:12
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:50
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:28
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:28
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:23
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:37
@@ -36,7 +36,6 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/check-access-codes.html.twig:26
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:24
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:33
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
@@ -50,7 +49,6 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-access-codes.html.twig:28
 #: src/Actor/templates/actor/lpa-already-added.html.twig:41
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:26
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:35
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:73
 #: src/Actor/templates/actor/check-lpa.html.twig:31
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:24
@@ -2419,7 +2417,6 @@ msgid "Type of LPA"
 msgstr "Math o LPA"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:27
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:21
 #: src/Actor/templates/actor/check-lpa.html.twig:37
 msgid "Donor name"
 msgstr "Enw’r rhoddwr"
@@ -5754,7 +5751,7 @@ msgid "You've already added this LPA to your account"
 msgstr "Rydym wedi dileu LPA o’ch cyfrif"
 
 # Welsh is currently: Ask for an activation key
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:54
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:32
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:30
 msgid "Continue and ask for a new key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
@@ -6059,7 +6056,7 @@ msgstr ""
 msgid "Let us know if a donor or attorney’s details change"
 msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:41
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:18
 msgid ""
 "Once we've finished checking all the details, we'll post you a letter with "
 "your activation key for this LPA. We'll contact you if we need any more "
@@ -6069,7 +6066,7 @@ msgstr ""
 "gyda’ch allwedd cadarnhau cyfrif ar gyfer yr atwrneiaeth arhosol hon. Byddwn "
 "yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:42
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:19
 msgid ""
 "The letter will be sent to the address we have for you on our records. We send "
 "the key by post because its more secure."
@@ -6498,3 +6495,20 @@ msgstr ""
 "Os na chyrhaeddodd y llythyr, <a class=\"govuk-link\" href=\"%link%"
 "\">cysylltwch â ni</a> i wneud yn siŵr bod eich cyfeiriad cywir gennym cyn i "
 "chi ofyn am allwedd newydd."
+
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:20
+msgid ""
+"You should hear from us or get the activation key letter by %dueDate%. If not, "
+"please contact us."
+msgstr ""
+"Fe ddylech chi glywed gennym ni neu dylai’r llythyr sy’n cynnwys yr allwedd "
+"cadarnhau cyfrif eich cyrraedd erbyn %dueDate%. Os na fydd hynny wedi digwydd, "
+"cysylltwch â ni."
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:18
+msgid ""
+"We posted an activation key to the address we have for you on our records. It "
+"should have arrived by %dueDate%."
+msgstr ""
+"Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich "
+"cyfer yn ein cofnodion. Dylai fod wedi cyrraedd erbyn %dueDate%."

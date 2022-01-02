@@ -429,6 +429,7 @@ class RequestActivationKeyContext implements Context
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
         $this->ui->pressButton('Continue');
     }
 
@@ -1038,7 +1039,7 @@ class RequestActivationKeyContext implements Context
                                     'surname' => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype' => $this->lpa->caseSubtype,
-                                'activationKeyDueDate'  =>  null
+                                'activationKeyDueDate'  =>  '2022-01-30'
                             ],
                         ]
                     )
