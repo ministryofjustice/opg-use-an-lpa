@@ -4,8 +4,6 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -26,9 +24,8 @@
                         {% trans %}Back to GOV.UK{% endtrans %}
                     </a>
                 </div>
-
             </div>
-
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

@@ -1963,10 +1963,6 @@ msgstr ""
 msgid "CANCELLED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/new-use-service.html.twig:4
-msgid "beta"
-msgstr ""
-
 #: src/Actor/templates/actor/partials/cancel-code-option.html.twig:8
 msgid "Cancel organisation's access"
 msgstr ""

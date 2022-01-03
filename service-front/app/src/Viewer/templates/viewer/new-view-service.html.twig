@@ -1,10 +1,8 @@
-<div class="govuk-phase-banner" role="complementary" aria-labelledby="view-an-lpa-phase-banner">
-    <p class="govuk-phase-banner__content" id="view-an-lpa-phase-banner">
-        <strong class="govuk-tag govuk-phase-banner__content__tag ">
-            beta
-        </strong>
-        <span class="govuk-phase-banner__text">
-            {%trans with {'{link}': 'https://eu.surveymonkey.com/r/ViewLPA'}%}This is a new service – your <a class="govuk-link" href="{link}" target="_blank">feedback</a> will help us to improve it.{%endtrans%}
-        </span>
-    </p>
-</div>
+<hr>
+<p class="govuk-body">
+    {% trans with {'{link}': 'https://eu.surveymonkey.com/r/ViewLPA'} %}
+        Your <a class="govuk-link" href="{link}" target="_blank">feedback</a> will help us to improve
+    {% endtrans %}
+</p>
+<br><br><br>
+

@@ -5,10 +5,7 @@
 {% block content %}
 
 <div class="govuk-width-container">
-    {{ include('@actor/partials/new-use-service.html.twig') }}
-
     {{ include('@partials/account-bar.html.twig') }}
-
     {{ include('@partials/welsh-switch.html.twig') }}
 
     <div role="navigation" aria-labelledby="back-link-navigation">
@@ -252,9 +249,7 @@
                 {% trans %}You cannot use a download or print out of this <abbr title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.{% endtrans %}
             </strong>
         </div>
-
     </main>
+    {{ include('@actor/partials/new-use-service.html.twig') }}
 </div>
-
-
 {% endblock %}
