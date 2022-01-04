@@ -199,13 +199,15 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::KEY_ALREADY_REQUESTED:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
                     $activationKeyDueDate = date(
                         'Y-m-d',
                         strtotime(($result->getData()->getDueDate()))
                     );
-                    
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-requested-activation-key',
@@ -244,7 +246,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
                     $lpaData = $result->getData();
                     $actor = is_null($lpaData->getAttorney()) ? $lpaData->getDonor() : $lpaData->getAttorney();
