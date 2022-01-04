@@ -4,7 +4,7 @@ Full Match ({{ data.actor_id }}) - cleanse and send activation key
 Part Match - cleanse and send activation key
 {% endif %}
 Requester: {{ data.first_names }} {{ data.last_name }}
-{% if data.actor_id is not defined %}
+{% if data.actor_id is not null %}
 {{ data.dob.format('d/m/Y') }}
 {{ data.postcode }}
 {% endif %}
