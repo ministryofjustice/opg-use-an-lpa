@@ -18,7 +18,11 @@
 
                     <p class="govuk-body">{% trans %}<a class="govuk-link" href="https://www.lastingpowerofattorney.service.gov.uk/contact">Contact us</a> if you want to use an LPA you added to the account you deleted - you'll need to ask us for a new activation key.{% endtrans %}</p>
 
-                    <p class="govuk-body">{% trans %}Your <a href="https://www.surveymonkey.co.uk/r/Use-LPA" class="govuk-link">feedback</a> is important to us - it will help us to improve this service.{% endtrans %}</p>
+                    <p class="govuk-body">
+                        {% trans with {'{link}': 'https://eu.surveymonkey.com/r/UseLPA'} %}
+                            Your <a class="govuk-link" href="{link}">feedback</a> is important to us - it will help us to improve this service.
+                        {% endtrans %}
+                    </p>
 
                     <a href="https://www.gov.uk/" draggable="false" class="govuk-button govuk-!-margin-top-4">
                         {% trans %}Back to GOV.UK{% endtrans %}
