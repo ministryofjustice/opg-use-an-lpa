@@ -311,7 +311,6 @@ describe('given I click the access code reveal', () => {
 
         var map = new Map()
         global.dataLayer.forEach((element, index) => {map.set(index,element)})
-        console.log(map)
 
         expect(global.dataLayer[22][1]).toBe('Details');
         expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
