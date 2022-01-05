@@ -13,14 +13,21 @@ class LogStderrListenerDelegatorFactory
      * @param ContainerInterface $container
      * @param string $name
      * @param callable $callback
-     * @param array $options
+     * @param ?array $options
      * @return LogStderrListener
      */
-    public function __invoke(ContainerInterface $container, $name, callable $callback, array $options = null)
+    public function __invoke(ContainerInterface $container, string $name, callable $callback, ?array $options = null)
     {
+        $config = $container->get('config');
+
+        $includeTrace = false;
+        if (isset($config['debug']) && $config['debug']) {
+            $includeTrace = true;
+        }
+
         $errorHandler = $callback();
         $errorHandler->attachListener(
-            new LogStderrListener($container->get(LoggerInterface::class))
+            new LogStderrListener($container->get(LoggerInterface::class), $includeTrace)
         );
         return $errorHandler;
     }
