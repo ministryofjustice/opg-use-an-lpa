@@ -30,7 +30,7 @@ export default class AnalyticsTracking {
                 if (mutation.type === "attributes") {
                     if (mutation.target.getAttribute('data-module') === 'govuk-details') {
                         let eventInfo = _this.extractEventInfo(mutation.target);
-                        _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, mutation.oldValue === null ? "open" : "close");
+                        _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category,  eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close"));
                     }
                 }
             });
