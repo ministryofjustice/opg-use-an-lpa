@@ -41,10 +41,10 @@ import AnalyticsTracking from './analyticsTracking';
     `;
 
     const accessCodeReveal = `
-        <main class="govuk-main-wrapper" id="main-content" role="main">
-            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details">
-                <summary class="govuk-details__summary" role="button" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
-                    <span class="govuk-details__summary-text" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
+        <main class="govuk-main-wrapper" id="main-content" role="main" >
+            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
+                <summary class="govuk-details__summary" role="button">
+                    <span class="govuk-details__summary-text">
                         {% trans %}The code I've been given does not begin with a V{% endtrans %}
                     </span>
                 </summary>

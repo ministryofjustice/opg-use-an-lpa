@@ -25,6 +25,27 @@ export default class AnalyticsTracking {
             }
         })
 
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.type === "attributes") {
+                    if (mutation.target.getAttribute('data-module') === 'govuk-details') {
+                        let eventInfo = _this.extractEventInfo(mutation.target);
+                        _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, mutation.oldValue === null ? "open" : "close");
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.body, {
+            attributes: true,
+            subtree: true,
+            childList: true,
+            attributeOldValue: true,
+            attributeFilter: ['open']
+        });
+
+
+
         const gaLoadEvents = document.querySelectorAll('[data-attribute="ga-load-event"]');
 
         for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
