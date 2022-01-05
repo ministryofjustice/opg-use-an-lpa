@@ -84,14 +84,16 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                 );
 
                 $lpaData = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+                $actorRole = ($lpaData['actor']['type'] === 'donor') ? 'Donor' : 'Attorney';
 
                 return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
                     'user'         => $user,
                     'actorToken'   => $validated['lpa_token'],
                     'code'         => $codeData['code'],
                     'expires'      => new DateTimeImmutable($codeData['expires']),
-                    'organisation' => $codeData['organisation'],
-                    'lpa'          => $lpaData->lpa
+                    'organisation' => ucwords($codeData['organisation']),
+                    'lpa'          => $lpaData->lpa,
+                    'actorRole'    => $actorRole
                 ]));
             }
         }

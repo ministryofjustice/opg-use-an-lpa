@@ -25,6 +25,7 @@ class ActorCodeServiceTest extends TestCase
 
     /** @var LpaService|ObjectProphecy */
     private $lpaServiceProphecy;
+    private string $testActorUid;
 
     /** @var UserLpaActorMapInterface|ObjectProphecy */
     private $userLpaActorMapInterfaceProphecy;
@@ -70,7 +71,7 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            '1'
+            $this->testActorUid
         )
             ->willReturn('00000000-0000-4000-A000-000000000000')
             ->shouldBeCalled();
@@ -93,7 +94,7 @@ class ActorCodeServiceTest extends TestCase
             ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        $this->userLpaActorMapInterfaceProphecy->activateRecord('token-3')->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->activateRecord('token-3', $this->testActorUid)->shouldBeCalled();
 
         $mapResults = [
             [
@@ -126,7 +127,7 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            '1'
+            $this->testActorUid
         )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')
@@ -199,7 +200,7 @@ class ActorCodeServiceTest extends TestCase
         $testUid = 'test-uid';
         $testDob = 'test-dob';
         $testActorId = 1;
-        $testActorUid = '123456789012';
+        $this->testActorUid = '123456789012';
 
         $mockLpa = [
             'uId' => $testUid,
@@ -209,12 +210,12 @@ class ActorCodeServiceTest extends TestCase
             'details' => [
                 'dob' => $testDob,
                 'id'  => $testActorId,
-                'uId' => $testActorUid,
+                'uId' => $this->testActorUid,
             ],
         ];
 
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
-            ->willReturn($testActorUid)
+            ->willReturn($this->testActorUid)
             ->shouldBeCalled();
 
         $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
@@ -231,7 +232,7 @@ class ActorCodeServiceTest extends TestCase
             $testUid,
             $testDob,
             $testActorId,
-            $testActorUid,
+            $this->testActorUid,
             $mockLpa,
             $mockActor,
         ];

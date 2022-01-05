@@ -435,6 +435,7 @@ class RequestActivationKeyContext implements Context
     /**
      * @Given /^The activation key not been received or was lost$/
      * @Then /^I will receive an email confirming this information$/
+     * @Given /^My LPA was registered 'on or after' 1st September 2019$/
      */
     public function theActivationKeyHasBeenReceivedOrWasLost()
     {
@@ -1046,6 +1047,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @When I provide details of an LPA that is not registered
+     * @When I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
     {

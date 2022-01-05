@@ -68,10 +68,11 @@ interface UserLpaActorMapInterface
      * Activates a LPA relation record, enabling it for use by the user
      *
      * @param string $lpaActorToken
+     * @param string $actorId
      *
      * @return array The record that was activated
      */
-    public function activateRecord(string $lpaActorToken): array;
+    public function activateRecord(string $lpaActorToken, string $actorId): array;
 
     /**
      * Renews the LPA relation records activation period and due by date using the supplied intervals.

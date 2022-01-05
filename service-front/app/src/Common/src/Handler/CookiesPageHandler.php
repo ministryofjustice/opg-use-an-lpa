@@ -71,7 +71,7 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
-        return new HtmlResponse($this->renderer->render('partials::cookies', [
+        return new HtmlResponse($this->renderer->render('common::cookies', [
             'form'        => $form,
             'application' => $this->application
         ]));
