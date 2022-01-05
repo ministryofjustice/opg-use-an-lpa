@@ -42,7 +42,7 @@ class ECRScanChecker:
         return session
 
     @staticmethod
-    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
+    def get_aws_client(client_type, aws_iam_session, region='eu-west-1'):
         client = boto3.client(
             client_type,
             region_name=region,
