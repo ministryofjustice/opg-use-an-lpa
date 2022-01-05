@@ -8,7 +8,9 @@
 
     <div class="govuk-width-container">
         <p class="govuk-body">
-            <a class="govuk-link" href="https://eu.surveymonkey.com/r/ViewSatisfactionScore">{% trans %}Give us feedback about this service{% endtrans %}</a>
+            {% trans with {'{link}': 'https://eu.surveymonkey.com/r/ViewLPA'} %}
+                Your <a class="govuk-link" href="{link}" target="_blank">feedback</a> will help us to improve
+            {% endtrans %}
         </p>
     </div>
 

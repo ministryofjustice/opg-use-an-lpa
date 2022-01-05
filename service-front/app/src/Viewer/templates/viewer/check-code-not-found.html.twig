@@ -4,8 +4,6 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@viewer/new-view-service.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -21,13 +19,14 @@
                         {% trans %}Try again{% endtrans %}
                     </a>
 
-                    <p class="govuk-body">
-                        <a class="govuk-link" href="https://eu.surveymonkey.com/r/ViewSatisfactionScore">{% trans %}Give us feedback about this service{% endtrans %}</a>
-                    </p>
+{#                    <p class="govuk-body">#}
+{#                        {% trans with {'{link}': 'https://eu.surveymonkey.com/r/ViewLPA'} %}#}
+{#                            Your <a class="govuk-link" href="{link}" target="_blank">feedback</a> will help us to improve#}
+{#                        {% endtrans %}#}
+{#                    </p>#}
                     
                 </div>
             </div>
-
         </main>
         {{ include('@viewer/new-view-service.html.twig') }}
     </div>
