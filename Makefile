@@ -6,7 +6,7 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 endif
 
 up:
-	$(COMPOSE) up -d $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
 
 exec:
