@@ -42,7 +42,7 @@ import AnalyticsTracking from './analyticsTracking';
 
     const accessCodeReveal = `
         <main class="govuk-main-wrapper" id="main-content" role="main" >
-            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
+            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-attribute="ga-event" data-gaCategory="Details" data-gaAction="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
                 <summary class="govuk-details__summary" role="button">
                     <span class="govuk-details__summary-text">
                         {% trans %}The code I've been given does not begin with a V{% endtrans %}
@@ -312,9 +312,9 @@ describe('given I click the access code reveal', () => {
         var map = new Map()
         global.dataLayer.forEach((element, index) => {map.set(index,element)})
 
-        expect(global.dataLayer[22][1]).toBe('Details');
+        expect(global.dataLayer[22][1]).toBe('Access code');
         expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[22][2].event_category).toBe('Access code');
+        expect(global.dataLayer[22][2].event_category).toBe('Details');
         expect(global.dataLayer[22][2].event_label).not.toBeUndefined();
         expect(global.dataLayer[22][2].event_label).toBe('The code I\'ve been given does not begin with a V');
     });
