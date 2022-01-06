@@ -88,7 +88,11 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                 $data = $form->getData();
 
                 try {
-                    $this->userService->changePassword($user->getIdentity(), new HiddenString($data['current_password']), new HiddenString($data['new_password']));
+                    $this->userService->changePassword(
+                        $user->getIdentity(),
+                        new HiddenString($data['current_password']),
+                        new HiddenString($data['new_password'])
+                    );
 
                     $this->emailClient->sendPasswordChangedEmail($user->getDetail('email'));
 
