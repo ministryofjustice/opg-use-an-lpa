@@ -1,12 +1,12 @@
 <?php
 
-namespace ActorTest\RequestActivationKey;
+namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestNames;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
