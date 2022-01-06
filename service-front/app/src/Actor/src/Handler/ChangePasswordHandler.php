@@ -95,7 +95,7 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                     return $this->redirectToRoute('your-details');
                 } catch (ApiException $e) {
                     if ($e->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
-                        $form->addErrorMessage(PasswordChange::INVALID_PASSWORD, 'current_password');
+                        $form->addErrorMessage(PasswordChange::INVALID_PASSWORD);
                     }
                 }
             }
