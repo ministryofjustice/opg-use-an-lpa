@@ -9,6 +9,10 @@ up:
 	$(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
 
+stop:
+	$(COMPOSE) stop $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: stop
+
 exec:
 	$(COMPOSE) exec $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: exec
