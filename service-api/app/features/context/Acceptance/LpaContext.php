@@ -1077,7 +1077,7 @@ class LpaContext implements Context
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'Expires' => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
@@ -1341,7 +1341,7 @@ class LpaContext implements Context
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'Expires' => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
@@ -3518,5 +3518,4 @@ class LpaContext implements Context
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         }
     }
-
 }
