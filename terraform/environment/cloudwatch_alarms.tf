@@ -66,7 +66,7 @@ resource "aws_cloudwatch_log_metric_filter" "function_errors" {
 resource "aws_cloudwatch_metric_alarm" "function_errors" {
   for_each            = toset(local.event_codes)
   actions_enabled     = true
-  alarm_name          = each.value.metric_name
+  alarm_name          = "${local.environment_name}_${lower(each.value)}_errors"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "increase in errors for the function ${lower(each.value)}"
   namespace           = "application function errors"
