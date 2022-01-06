@@ -3518,5 +3518,4 @@ class LpaContext implements Context
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         }
     }
-
 }
