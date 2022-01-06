@@ -94,7 +94,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                 $password = new HiddenString($formData['current_password']);
 
                 if ($newEmail === $user->getDetails()['Email']) {
-                    $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT, 'new_email_address');
+                    $form->addErrorMessage(ChangeEmail::NEW_EMAIL_NOT_DIFFERENT);
                 } else {
                     try {
                         $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
@@ -115,7 +115,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         ]));
                     } catch (ApiException $ex) {
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
-                            $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD, 'current_password');
+                            $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD);
                         } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
                             // send email to the other user who has not completed their reset saying someone has tried to use their email
                             $this->emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($newEmail);
