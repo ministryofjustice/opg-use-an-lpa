@@ -72,7 +72,7 @@ resource "aws_security_group_rule" "pdf_ecs_service_viewer_ingress" {
   description              = "Allow Port 80 ingress from the View service"
   type                     = "ingress"
   from_port                = 80
-  to_port                  = 80
+  to_port                  = 8000
   protocol                 = "tcp"
   security_group_id        = aws_security_group.pdf_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
