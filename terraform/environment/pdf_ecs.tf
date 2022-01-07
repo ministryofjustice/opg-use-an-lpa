@@ -19,7 +19,7 @@ resource "aws_ecs_service" "pdf" {
     registry_arn = aws_service_discovery_service.pdf.arn
   }
 
-  wait_for_steady_state = true
+  # wait_for_steady_state = true
 
   lifecycle {
     create_before_destroy = true
@@ -141,6 +141,12 @@ locals {
         awslogs-region        = "eu-west-1",
         awslogs-stream-prefix = "${local.environment_name}.pdf-app.use-an-lpa"
       }
-    }
+    },
+    environment = [
+      {
+        name  = "PDF_SERVICE_PORT",
+        value = "8000"
+      }
+    ]
   })
 }
