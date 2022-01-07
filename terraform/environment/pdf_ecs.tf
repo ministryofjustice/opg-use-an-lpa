@@ -120,12 +120,11 @@ resource "aws_iam_role" "pdf_task_role" {
 
 //-----------------------------------------------
 // pdf ECS Service Task Container level config
-
 locals {
   pdf_app = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}",
+    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${data.aws_ecr_image.pdf_service.image_digest}",
     mountPoints = [],
     name        = "pdf",
     portMappings = [
