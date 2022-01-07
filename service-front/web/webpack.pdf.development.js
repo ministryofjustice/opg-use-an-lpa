@@ -4,6 +4,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "development",
+  target: ["web", "es5"],
   output: {
     path: '/dist',
     filename: 'javascript/pdf.bundle.js',
