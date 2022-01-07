@@ -3,8 +3,20 @@ module.exports = {
     [
       '@babel/preset-env',
       {
+        corejs: {
+          version: "3",
+          proposals: true
+        },
+        useBuiltIns: 'usage',
         targets: {
-          node: 'current',
+          browsers: [
+            "edge >= 16",
+            "safari >= 9",
+            "firefox >= 57",
+            "ie >= 11",
+            "ios >= 9",
+            "chrome >= 49"
+          ]
         },
       },
     ],
@@ -14,7 +26,10 @@ module.exports = {
       '@babel/plugin-transform-runtime',
       {
         regenerator: true,
-      },
-    ],
+        corejs: 3,
+      }],
+    '@babel/plugin-transform-reserved-words',
+    '@babel/plugin-transform-member-expression-literals',
+    '@babel/plugin-transform-property-literals',
   ],
 };
