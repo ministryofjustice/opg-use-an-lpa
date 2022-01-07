@@ -1,7 +1,11 @@
-<hr>
-<p class="govuk-body">
-    {% trans with {'{link}': 'https://eu.surveymonkey.com/r/UseLPA'} %}
-        Your <a class="govuk-link" href="{link}" target="_blank">feedback</a> will help us to improve
-    {% endtrans %}
-</p>
-<br><br><br>
+{{ include('@partials/section-break.html.twig') }}
+<div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+                <p class="govuk-body">
+                        {% trans with {'{link}': 'https://eu.surveymonkey.com/r/UseLPA'} %}
+                                Your <a class="govuk-link" href="{link}"
+                                        target="_blank">feedback</a> will help us to improve
+                        {% endtrans %}
+                </p>
+        </div>
+</div>
