@@ -124,16 +124,15 @@ locals {
   pdf_app = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${data.aws_ecr_image.pdf_service.image_digest}",
+    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:latest",
     mountPoints = [],
     name        = "pdf",
     portMappings = [
       {
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8000,
+        hostPort      = 8000,
         protocol      = "tcp"
-      }
-    ],
+    }],
     volumesFrom = [],
     logConfiguration = {
       logDriver = "awslogs",
