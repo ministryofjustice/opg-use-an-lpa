@@ -5,7 +5,7 @@ module.exports = {
       {
         corejs: {
           version: "3",
-          proposals: true
+          proposals: true // TODO: Test without this
         },
         useBuiltIns: 'usage',
         targets: {

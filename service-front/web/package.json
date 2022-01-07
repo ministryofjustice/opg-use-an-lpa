@@ -23,6 +23,7 @@
     "@babel/plugin-transform-reserved-words": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "@babel/runtime-corejs3": "^7.16.7",
     "@testing-library/dom": "^8.10.1",
     "@testing-library/jest-dom": "^5.14.1",
     "babel-jest": "^27.3.1",
