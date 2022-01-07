@@ -240,15 +240,18 @@
             </div>
         </div>
 
-        {{ include('@partials/section-break.html.twig') }}
-
+        <p>
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                {% trans %}You cannot use a download or print out of this <abbr title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.{% endtrans %}
+                {% trans %}You cannot use a download or print out of this <abbr
+                        title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr
+                        title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.{% endtrans %}
             </strong>
         </div>
+        </p>
+
     </main>
     {{ include('@actor/partials/new-use-service.html.twig') }}
 </div>
