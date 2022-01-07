@@ -9,6 +9,7 @@ module.exports = merge(common, {
     path: path.resolve(__dirname, 'dist'),
     filename: 'javascript/pdf.bundle.js',
     sourceMapFilename: 'pdf.[name].js.map',
+    ecmaVersion: 5
   },
   optimization: {
     minimizer: [new CssMinimizerPlugin()],

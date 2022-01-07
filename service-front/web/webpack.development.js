@@ -6,6 +6,7 @@ module.exports = merge(common, {
   mode: "development",
   output: {
     path: '/dist',
+    ecmaVersion: 5,
     filename: 'javascript/bundle.js',
     sourceMapFilename: '[name].js.map',
   },
