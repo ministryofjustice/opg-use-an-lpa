@@ -52,8 +52,8 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@ministryofjustice/frontend": "0.2.6",
-    "@ministryofjustice/opg-performance-analytics": "^1.1.1",
-    "govuk-frontend": "^3.14.0"
+    "govuk-frontend": "^3.14.0",
+    "perfume.js": "^6.3.0"
   },
   "jest-junit": {
     "outputDirectory": "./test-results/junit",
