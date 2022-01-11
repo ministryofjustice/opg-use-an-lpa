@@ -6,13 +6,13 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
+use Common\Validator\ChecksumValidator;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
-use Common\Validator\DobValidator;
-use Laminas\Filter\StringToUpper;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\{Digits, NotEmpty, StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
+use App\Service\Features\FeatureEnabled;
 
 /**
  * Class RequestActivationKey
@@ -20,6 +20,8 @@ use Mezzio\Csrf\CsrfGuardInterface;
  */
 class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
+    private FeatureEnabled $featureEnabled;
+
     public const FORM_NAME = 'request_activation_key_reference_number';
 
     /**
@@ -42,6 +44,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
      */
     public function getInputFilterSpecification(): array
     {
+       // $condition = ($this->featureEnabled)('allow_older_lpas');
         return [
             'opg_reference_number' => [
                 'filters'  => [
@@ -61,7 +64,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                         'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 12,
+                            'min'      => 7,
                             'max'      => 12,
                             'messages'  => [
                                 StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
@@ -73,9 +76,12 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                         'name'    => Digits::class,
                         'options' => [
                             'message' =>
-                                'Enter the 12 numbers of the LPA reference number. ' .
-                                'Do not include letters or other characters'
+                                'The LPA reference number must be a number'
                         ],
+                    ],
+                    [
+                        //'name'    => $condition ? ChecksumValidator::class : NULL
+                        'name'    => ChecksumValidator::class
                     ],
                 ]
             ]

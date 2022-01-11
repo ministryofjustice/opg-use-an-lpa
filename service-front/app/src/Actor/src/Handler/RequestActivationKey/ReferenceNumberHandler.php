@@ -24,7 +24,6 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
     private RequestReferenceNumber $form;
     private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
 
-
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
