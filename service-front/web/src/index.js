@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import './scss.js';
-var Promise = require('es6-promise-promise');
+require('es6-promise/auto');
 import { Accordion, initAll } from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
