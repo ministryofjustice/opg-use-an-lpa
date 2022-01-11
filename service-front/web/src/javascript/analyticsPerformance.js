@@ -2,6 +2,7 @@ import Perfume from "perfume.js";
 
 export default class AnalyticsPerformance {
     constructor() {
+        const _this = this;
         new Perfume({
             analyticsTracker: (options) =>
                 this.AnalyticsTrackerGTag(options),
@@ -9,7 +10,7 @@ export default class AnalyticsPerformance {
 
         if (typeof window.onerror === "object") {
             window.onerror = (err, url, line) => {
-                track("exception", {
+                _this.track("exception", {
                     description: `${line}: ${err}`,
                 });
             };
