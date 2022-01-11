@@ -36,6 +36,4 @@ class GovUkLaminasFormErrorsExtensionTest extends TestCase
             $this->assertEquals($expectedFunctions[$function->getName()], $functionCallable[1]);
         }
     }
-
-
 }
