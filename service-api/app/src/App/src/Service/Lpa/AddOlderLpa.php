@@ -102,8 +102,8 @@ class AddOlderLpa
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);
 
-        // We may want to turn off the ability for a user to have their case pushed to the cleansing 
-        // team if they fail to match and have a "newer" older lpa. In which case they'll be told we 
+        // We may want to turn off the ability for a user to have their case pushed to the cleansing
+        // team if they fail to match and have a "newer" older lpa. In which case they'll be told we
         // can't find their LPA.
         if (
             $resolvedActor === null
