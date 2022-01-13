@@ -230,8 +230,7 @@ class LpaAlreadyAddedTest extends TestCase
                 'surname'       => 'Person',
             ],
             'caseSubtype' => 'hw',
-            'lpaActorToken' => $this->userLpaActorToken,
-            'activationKeyDueDate' => null
+            'lpaActorToken' => $this->userLpaActorToken
         ], $lpaAddedData);
     }
 

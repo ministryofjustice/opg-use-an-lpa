@@ -318,8 +318,7 @@ class LpaContext extends BaseIntegrationContext
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken,
-            'activationKeyDueDate'   => null
+            'lpaActorToken' => $this->userLpaActorToken
         ];
 
         try {
@@ -2493,17 +2492,30 @@ class LpaContext extends BaseIntegrationContext
             );
         }
 
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken,
-            'activationKeyDueDate' => null
-        ];
+        if (($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => $this->userLpaActorToken,
+                'activationKeyDueDate' => null,
+            ];
+        } else {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => (int)$this->userLpaActorToken,
+            ];
+        }
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
