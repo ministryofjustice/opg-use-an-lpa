@@ -158,9 +158,9 @@ class AddOlderLpa
                 throw new BadRequestException(
                     'Activation key already requested for LPA',
                     [
-                        'donor'                 => $lpaAddedData['donor'],
-                        'caseSubtype'           => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate'  => $lpaAddedData['activationKeyDueDate']
+                        'donor'                => $lpaAddedData['donor'],
+                        'caseSubtype'          => $lpaAddedData['caseSubtype'],
+                        'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']
                     ]
                 );
             }
@@ -176,7 +176,10 @@ class AddOlderLpa
                     [
                         'donor'         => $resolvedActor['donor'],
                         'caseSubtype'   => $resolvedActor['caseSubtype'],
-                        'activationKeyDueDate' => $hasActivationCode->format('c')
+                        'activationKeyDueDate' => date(
+                            'Y-m-d',
+                            strtotime($hasActivationCode->format('c') . ' + 10 days')
+                        ),
                     ]
                 );
             }

@@ -678,8 +678,8 @@ class LpaContext implements Context
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype'           => $this->lpa->caseSubtype,
-            'activationKeyDueDate'  => ''
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => null
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -2839,7 +2839,11 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname
             ],
             'caseSubtype'           => $this->lpa->caseSubtype,
-            'activationKeyDueDate'  => $createdDate->format('c')
+            'activationKeyDueDate'  => $createdDate->format('c'),
+            'activationKeyDueDate'  => date(
+                'Y-m-d',
+                strtotime($createdDate->format('c') . ' + 10 days')
+            )
         ];
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');

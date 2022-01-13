@@ -1805,7 +1805,10 @@ class LpaContext extends BaseIntegrationContext
                         'surname'       => $this->lpa->donor->surname
                     ],
                     'caseSubtype'           => $this->lpa->caseSubtype,
-                    'activationKeyDueDate'  => $createdDate->format('c')
+                    'activationKeyDueDate'  => date(
+                        'Y-m-d',
+                        strtotime($createdDate->format('c') . ' + 10 days')
+                    )
                 ],
                 $ex->getAdditionalData()
             );

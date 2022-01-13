@@ -179,19 +179,12 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->urlHelper->generate('lpa.confirm-activation-key-generation')
                     );
 
-                    $activationKeyDueDate = date(
-                        'Y-m-d',
-                        strtotime(($result->getData()->getDueDate()) . ' + 10 days')
-                    );
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
                                 'user'      => $this->user,
-                                'donor'     => $result->getData()->getDonor(),
-                                'lpaType'   => $result->getData()->getCaseSubtype(),
-                                'postCode'  => $this->data['postcode'],
-                                'dueDate'   => $activationKeyDueDate,
+                                'dueDate'   => $result->getData()->getDueDate(),
                                 'form'      => $form
                             ]
                         )
@@ -213,8 +206,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::already-requested-activation-key',
                             [
                                 'user'          => $this->user,
-                                'donor'         => $result->getData()->getDonor(),
-                                'lpaType'       => $result->getData()->getCaseSubtype(),
                                 'dueDate'       => $activationKeyDueDate,
                                 'form'          => $form
                             ]
