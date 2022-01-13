@@ -59,7 +59,8 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 'name'    => Digits::class,
                 'options' => [
                     'message' =>
-                        'The LPA reference number must be a number'
+                        'Enter the 12 numbers of the LPA reference number. ' .
+                        'Do not include letters or other characters'
                 ],
             ],
         ];

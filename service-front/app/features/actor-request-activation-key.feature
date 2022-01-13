@@ -8,7 +8,7 @@ Feature: Ask for an activation key
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @ui
+  @ui @ff:allow_meris_lpas:false
   Scenario Outline: The user cannot request an activation key with an invalid LPA reference number
     Given I am on the request an activation key page
     When I request an activation key with an invalid lpa reference number format of "<reference number>"
@@ -73,4 +73,17 @@ Feature: Ask for an activation key
     Given I am on the request an activation key page
     When I visit the Postcode page without filling out the form
     Then I am redirected to the activation key page
+
+  @ui @ff:allow_meris_lpas:true
+  Scenario Outline: The user cannot request an activation key with an invalid Meris reference number
+    Given I am on the request an activation key page
+    When I request an activation key with an invalid lpa reference number format of "<reference number>"
+    Then I am told that my input is invalid because <reason>
+
+    Examples:
+      | reference number | reason |
+      | 70000000000      | Enter an LPA reference number that is either 7 or 12 numbers long |
+      | 7000045          | LPA reference numbers that are 7 numbers long must begin with a 2 or 3  |
+      | 500000000526     | LPA reference numbers that are 12 numbers long must begin with a 7 |
+      | 700000000253     | Entered LPA reference number is not correct |
 
