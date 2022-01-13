@@ -109,9 +109,10 @@ class LpaService
         unset($lpaData['original_attorneys']);
 
         $result = [
-            'user-lpa-actor-token' => $map['Id'],
-            'date' => $lpa->getLookupTime()->format('c'),
-            'lpa' => $lpaData,
+            'user-lpa-actor-token'  => $map['Id'],
+            'date'                  => $lpa->getLookupTime()->format('c'),
+            'lpa'                   => $lpaData,
+            'activationKeyDueDate'  => $map['DueBy']
         ];
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return

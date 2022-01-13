@@ -28,8 +28,10 @@ class ActivationKeyExistsResponseTest extends TestCase
         $dto = new ActivationKeyExistsResponse();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
+        $dto->setDueDate('2021-12-06');
 
         $this->assertEquals($donor, $dto->getDonor());
         $this->assertEquals('pfa', $dto->getCaseSubtype());
+        $this->assertEquals('2021-12-06', $dto->getDueDate());
     }
 }

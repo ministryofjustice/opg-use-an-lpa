@@ -31,6 +31,8 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
+use DateInterval;
+use DateTime;
 
 /**
  * Class CheckYourAnswersHandler
@@ -172,29 +174,40 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
+
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
                                 'user'      => $this->user,
-                                'donor'     => $result->getData()->getDonor(),
-                                'lpaType'   => $result->getData()->getCaseSubtype(),
+                                'dueDate'   => $result->getData()->getDueDate(),
                                 'form'      => $form
                             ]
                         )
                     );
+
                 case OlderLpaApiResponse::KEY_ALREADY_REQUESTED:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
+
+                    $activationKeyDueDate = date(
+                        'Y-m-d',
+                        strtotime(($result->getData()->getDueDate()))
+                    );
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-requested-activation-key',
                             [
-                                'user'      => $this->user,
-                                'donor'     => $result->getData()->getDonor(),
-                                'lpaType'   => $result->getData()->getCaseSubtype(),
-                                'form'      => $form
+                                'user'          => $this->user,
+                                'dueDate'       => $activationKeyDueDate,
+                                'form'          => $form
                             ]
                         )
                     );
@@ -224,7 +237,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
-                    $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-activation-key-generation'));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
                     $lpaData = $result->getData();
                     $actor = is_null($lpaData->getAttorney()) ? $lpaData->getDonor() : $lpaData->getAttorney();
