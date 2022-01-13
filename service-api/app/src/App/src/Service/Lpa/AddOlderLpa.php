@@ -155,12 +155,28 @@ class AddOlderLpa
                         'uId' => $matchData['reference_number'],
                     ]
                 );
+
+                $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
+
+                //if activation key due date is null, check activation code exist in sirius
+                if ($activationKeyDueDate == null) {
+                    $hasActivationCode = $this->olderLpaService->hasActivationCode(
+                        $resolvedActor['lpa-id'],
+                        $resolvedActor['actor']['uId']
+                    );
+                    if ($hasActivationCode instanceof DateTime) {
+                        $activationKeyDueDate = date(
+                            'Y-m-d',
+                            strtotime($hasActivationCode->format('c') . ' + 10 days')
+                        );
+                    }
+                }
                 throw new BadRequestException(
                     'Activation key already requested for LPA',
                     [
                         'donor'                => $lpaAddedData['donor'],
                         'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']
+                        'activationKeyDueDate' => $activationKeyDueDate
                     ]
                 );
             }
