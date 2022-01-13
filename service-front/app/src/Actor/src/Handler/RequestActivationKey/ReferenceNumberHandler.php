@@ -13,6 +13,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
+use Common\Service\Features\FeatureEnabled;
 
 /**
  * Class ReferenceNumberHandler
@@ -23,21 +24,24 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 {
     private RequestReferenceNumber $form;
     private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
+    private FeatureEnabled $featureEnabled;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
+        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
+        FeatureEnabled $featureEnabled
     ) {
         parent::__construct($renderer, $authenticator, $urlHelper, $logger);
         $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
+        $this->featureEnabled = $featureEnabled;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new RequestReferenceNumber($this->getCsrfGuard($request));
+        $this->form = new RequestReferenceNumber($this->getCsrfGuard($request), $this->featureEnabled);
         return parent::handle($request);
     }
 

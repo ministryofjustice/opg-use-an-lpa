@@ -9,6 +9,7 @@ use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Common\Service\Features\FeatureEnabled;
 
 class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
 {
@@ -30,13 +31,15 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'                => Csrf::class,
-            'opg_reference_number'  => Text::class
+            'opg_reference_number'  => Text::class,
         ];
     }
 
     public function setUp()
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestReferenceNumber($guardProphecy->reveal());
+        $featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
+
+        $this->form = new RequestReferenceNumber($guardProphecy->reveal(), $featureEnabledProphecy->reveal());
     }
 }
