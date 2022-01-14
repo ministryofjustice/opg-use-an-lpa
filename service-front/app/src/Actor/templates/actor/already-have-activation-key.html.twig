@@ -15,35 +15,9 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}We've already sent you an activation key for this LPA{% endtrans %}</h1>
 
-                    <dl class="govuk-summary-list govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-body govuk-summary-list__key">
-                                {% trans %}Donor name{% endtrans %}
-                            </dt>
-                            <dd class="govuk-body govuk-summary-list__value">
-                                {{ actor_name(donor) }}
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-body govuk-summary-list__key">
-                                {% trans %}LPA type{% endtrans %}
-                            </dt>
-                            <dd class="govuk-body govuk-summary-list__value">
-                                {% if lpaType|lower == "pfa" %}
-                                    {% trans %}Property and finance{% endtrans %}
-                                {% else %}
-                                    {% trans %}Health and welfare{% endtrans %}
-                                {% endif %}
-                            </dd>
-                        </div>
-                    </dl>
-
-                    <h2 class="govuk-heading-m">{% trans %}If you’ve not asked for an activation key before{% endtrans %}</h2>
-                    <p class="govuk-body">{% trans %}Your activation key is on the letter that told you the LPA had been registered or in an email we sent you.{% endtrans %}</p>
-                    <h2 class="govuk-heading-m">{% trans %}If you’ve already asked for an activation key through this service{% endtrans %}</h2>
-                    <p class="govuk-body">{% trans %}We have posted an activation key to you - it can take up to 10 working days to arrive.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}If you've lost the letter, you can ask for a new key. This will cancel the key we sent to you before.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans with {'%link%': path('lpa.change-details')} %}If the letter did not arrive, <a class="govuk-link" href="%link%">check we have your correct address</a> before you ask for a new key.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%dueDate%' : lpa_date(dueDate)} %}We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%link%': path('contact-us')} %}If the letter did not arrive, <a class="govuk-link" href="%link%">contact us</a> to check we have your correct address before you ask for a new key.{% endtrans %}</p>
 
                     {{ govuk_form_open(form) }}
 
