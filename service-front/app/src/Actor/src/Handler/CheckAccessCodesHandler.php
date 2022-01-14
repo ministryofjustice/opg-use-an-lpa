@@ -28,15 +28,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
     use Session;
     use CsrfGuard;
 
-    /**
-     * @var ViewerCodeService
-     */
-    private $viewerCodeService;
-
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    private ViewerCodeService $viewerCodeService;
+    private LpaService $lpaService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -100,13 +93,19 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $shareCodes[$key]['form'] = $form;
             }
 
-            if ($lpaData->lpa->getDonor()->getId() == $code['ActorId']) {
+            if (
+                $lpaData->lpa->getDonor()->getId() === intval($code['ActorId'])
+                || $lpaData->lpa->getDonor()->getUId() === $code['ActorId']
+            ) {
                 $shareCodes[$key]['CreatedBy'] =
                     $lpaData->lpa->getDonor()->getFirstname() . ' ' . $lpaData->lpa->getDonor()->getSurname();
             }
 
             foreach ($lpaData->lpa->getAttorneys() as $attorney) {
-                if ($attorney->getId() == $code['ActorId']) {
+                if (
+                    $attorney->getId() === intval($code['ActorId'])
+                    || $attorney->getUId() === $code['ActorId']
+                ) {
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
             }
