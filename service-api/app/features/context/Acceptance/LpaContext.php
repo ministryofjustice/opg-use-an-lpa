@@ -609,6 +609,8 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -667,6 +669,16 @@ class LpaContext implements Context
                 )
             );
 
+        // check if actor has a code
+        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['Created' => $createdDate->format('Y-m-d')])
+                )
+            );
+
         // API call to request an activation key
         $this->apiPost(
             '/v1/older-lpa/validate',
@@ -691,7 +703,10 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => null
+            'activationKeyDueDate' => date(
+                'Y-m-d',
+                strtotime($createdDate->format('Y-m-d') . ' + 10 days')
+            )
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);

@@ -2536,6 +2536,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
         $data = [
             'reference_number' => $this->lpaUid,
             'dob' => $this->userDob,
@@ -2591,6 +2593,21 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
+        $codeExists = new stdClass();
+        $createdDate = (new DateTime())->modify('-14 days');
+        $codeExists->Created = $createdDate->format('Y-m-d');
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa' => $this->lpaUid,
+                'actor' => $this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
         $expectedResponse = [
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
@@ -2599,7 +2616,10 @@ class LpaContext extends BaseIntegrationContext
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => null
+            'activationKeyDueDate' => date(
+                'Y-m-d',
+                strtotime($codeExists->Created . ' + 10 days')
+            )
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);

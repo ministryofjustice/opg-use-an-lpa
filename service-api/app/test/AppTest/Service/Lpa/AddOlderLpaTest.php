@@ -191,6 +191,7 @@ class AddOlderLpaTest extends TestCase
             ],
             'caseSubtype' => 'hw',
             'lpaActorToken' => 'qwerty-54321',
+            'activationKeyDueDate' => null,
             'notActivated'  => true
         ];
 
@@ -209,7 +210,18 @@ class AddOlderLpaTest extends TestCase
             ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $expectedException = new BadRequestException('Activation key already requested for LPA', $alreadyAddedData);
+        $this->olderLpaServiceProphecy
+            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->willReturn(new DateTime());
+
+        $expectedException = new BadRequestException(
+            'Activation key already requested for LPA',
+            [
+                'donor'                => $this->resolvedActor['donor'],
+                'caseSubtype'          => $this->resolvedActor['caseSubtype'],
+                'activationKeyDueDate' => new DateTime()
+            ]
+        );
 
         $this->expectExceptionObject($expectedException);
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
