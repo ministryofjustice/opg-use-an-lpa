@@ -24,11 +24,11 @@ COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-front/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
-COPY service-api/docker/app/health-check.sh /app
+COPY service-front/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["./health-check.sh"]
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["/usr/local/bin/health-check.sh"]
 
 CMD php-fpm
 
