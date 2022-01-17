@@ -120,8 +120,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             );
 
             if (
-                $lpa->getDonor()->getId() === intval($code['ActorId'])
-                || $lpa->getDonor()->getUId() === $code['ActorId']
+                $lpa->getDonor()->getId() === $code['ActorId']
+                || intval($lpa->getDonor()->getUId()) === $code['ActorId']
             ) {
                 $shareCodes[$key]['CreatedBy'] =
                     $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
@@ -137,8 +137,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 );
 
                 if (
-                    $attorney->getId() === intval($code['ActorId'])
-                    || $attorney->getUId() === $code['ActorId']
+                    $attorney->getId() === $code['ActorId']
+                    || intval($attorney->getUId()) === $code['ActorId']
                 ) {
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
