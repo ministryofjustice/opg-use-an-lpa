@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-17T16:00:11+00:00\n"
+"POT-Creation-Date: 2022-01-17T16:41:14+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6002,14 +6002,6 @@ msgstr ""
 "Rydym wrthi’n ceisio agor y gwasanaeth i fwy o atwrneiaethau arhosol. Rhowch "
 "gynnig arall arni mewn wythnos neu ddwy."
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid ""
-"You can only use this service if your LPA was registered on or after 1 January "
-"2016."
-msgstr ""
-"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
-"neu ar 1 Ionawr 2016."
-
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
 msgid "We could not find an LPA with that reference number"
 msgstr "Dydyn ni ddim wedi dod o hyd i LPA gyda’r cyfeirnod yna"
@@ -6513,7 +6505,7 @@ msgstr ""
 "Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich "
 "cyfer yn ein cofnodion. Dylai fod wedi cyrraedd erbyn %dueDate%."
 
-#: src/Actor/templates/actor/home-page.html.twig:50
+#: src/Actor/templates/actor/home-page.html.twig:51
 msgid ""
 "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
 "basis only, and may be paused temporarily.However, once your LPA is added you "
@@ -6523,3 +6515,19 @@ msgstr ""
 "treial yn unig, a gellir eu oedi dros dro. Fodd bynnag, unwaith y bydd eich "
 "LPA yn cael ei ychwanegu, byddwch bob amser yn gallu ei ddefnyddio yn y "
 "gwasanaeth hwn."
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
+msgid ""
+"You can only use this service if your LPA was registered on or after 1 January "
+"2016"
+msgstr ""
+"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
+"neu ar 1 Ionawr 2016"
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:11
+msgid ""
+"You can only use this service if your LPA was registered on or after 1 "
+"September 2019"
+msgstr ""
+"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
+"neu ar ôl 1 Medi 2019"

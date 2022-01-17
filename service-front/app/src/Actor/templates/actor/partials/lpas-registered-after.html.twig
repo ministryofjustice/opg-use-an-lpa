@@ -6,9 +6,9 @@
         </svg>
 
         {% if feature_enabled('allow_older_lpas') %}
-            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 January 2016.{% endtrans %}</span>
+            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 January 2016{% endtrans %}&#42;</span>
         {% else %}
-            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 September 2019.{% endtrans %}</span>
+            <span class="govuk-heading-m govuk-!-margin-bottom-0">{% trans %}You can only use this service if your LPA was registered on or after 1 September 2019{% endtrans %}</span>
         {%  endif %}
     </div>
 </div>

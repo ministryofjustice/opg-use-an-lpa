@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-01-17T16:00:11+00:00\n"
+"POT-Creation-Date: 2022-01-17T16:41:14+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4229,10 +4229,6 @@ msgstr ""
 msgid "We are working to open up the service to more LPAs. Please try again in a few weeks time."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
-msgstr ""
-
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
 msgid "We could not find an LPA with that reference number"
 msgstr ""
@@ -4544,6 +4540,14 @@ msgstr ""
 msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:50
+#: src/Actor/templates/actor/home-page.html.twig:51
 msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily.However, once your LPA is added you will always be able to use it in this service."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
+msgid "You can only use this service if your LPA was registered on or after 1 January 2016"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:11
+msgid "You can only use this service if your LPA was registered on or after 1 September 2019"
 msgstr ""
