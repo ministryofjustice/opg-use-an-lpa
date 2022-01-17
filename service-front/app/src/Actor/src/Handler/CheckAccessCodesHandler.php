@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CancelCode;
+use Common\Entity\Lpa;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
@@ -16,6 +17,7 @@ use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CheckAccessCodesHandler
@@ -36,9 +38,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LpaService $lpaService,
-        ViewerCodeService $viewerCodeService
+        ViewerCodeService $viewerCodeService,
+        LoggerInterface $logger
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->lpaService = $lpaService;
@@ -54,6 +57,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var string $actorLpaToken */
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
@@ -65,10 +69,16 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
-        //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
+        // TODO UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         if (is_null($lpaData)) {
             return $this->redirectToRoute('lpa.dashboard');
         }
+
+        /**
+         * @var Lpa $lpa
+         * @psalm-suppress UndefinedPropertyFetch # Psalm doesn't like ArrayObjects, and why should it?
+         */
+        $lpa = $lpaData->lpa;
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
             $identity,
@@ -93,15 +103,39 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $shareCodes[$key]['form'] = $form;
             }
 
+            $this->logger->info(
+                'Resolved actor id to {type}:{actor_id}',
+                [
+                    'actor_id' => $code['ActorId'],
+                    'type' => gettype($code['ActorId']),
+                ]
+            );
+
+            $this->logger->info(
+                'Donor Id is {type}:{donor_id}',
+                [
+                    'donor_id' => $lpa->getDonor()->getUId(),
+                    'type' => gettype($lpa->getDonor()->getUId()),
+                ]
+            );
+
             if (
-                $lpaData->lpa->getDonor()->getId() === intval($code['ActorId'])
-                || $lpaData->lpa->getDonor()->getUId() === $code['ActorId']
+                $lpa->getDonor()->getId() === intval($code['ActorId'])
+                || $lpa->getDonor()->getUId() === $code['ActorId']
             ) {
                 $shareCodes[$key]['CreatedBy'] =
-                    $lpaData->lpa->getDonor()->getFirstname() . ' ' . $lpaData->lpa->getDonor()->getSurname();
+                    $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
             }
 
-            foreach ($lpaData->lpa->getAttorneys() as $attorney) {
+            foreach ($lpa->getAttorneys() as $attorney) {
+                $this->logger->info(
+                    'Attorney Id is {type}:{attorney_id}',
+                    [
+                        'attorney_id' => $attorney->getUId(),
+                        'type' => gettype($attorney->getUId()),
+                    ]
+                );
+
                 if (
                     $attorney->getId() === intval($code['ActorId'])
                     || $attorney->getUId() === $code['ActorId']
@@ -109,6 +143,13 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
             }
+
+            $this->logger->info(
+                'Created by resolved to {actor_name}',
+                [
+                    'actor_name' => $shareCodes[$key]['CreatedBy'] ?? 'NULL',
+                ]
+            );
         }
 
         /** @var FlashMessagesInterface $flash */
@@ -117,7 +158,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
             'actorToken'    => $actorLpaToken,
             'user'          => $user,
-            'lpa'           => $lpaData->lpa,
+            'lpa'           => $lpa,
             'shareCodes'    => $shareCodes,
             'flash'         => $flash
         ]));
