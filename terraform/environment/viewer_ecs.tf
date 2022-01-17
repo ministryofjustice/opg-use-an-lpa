@@ -145,13 +145,6 @@ locals {
           protocol      = "tcp"
         }
       ],
-      healthCheck = {
-        command     = ["CMD", "/usr/local/bin/health-check.sh"],
-        startPeriod = 30,
-        interval    = 15,
-        timeout     = 30,
-        retries     = 3
-      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
@@ -194,6 +187,13 @@ locals {
           protocol      = "tcp"
         }
       ],
+      healthCheck = {
+        command     = ["CMD", "/usr/local/bin/health-check.sh"],
+        startPeriod = 30,
+        interval    = 15,
+        timeout     = 30,
+        retries     = 10
+      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",

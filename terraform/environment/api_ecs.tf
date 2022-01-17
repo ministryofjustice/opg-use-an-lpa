@@ -261,7 +261,7 @@ locals {
         startPeriod = 30,
         interval    = 15,
         timeout     = 30,
-        retries     = 3
+        retries     = 10
       },
       volumesFrom = [],
       logConfiguration = {
