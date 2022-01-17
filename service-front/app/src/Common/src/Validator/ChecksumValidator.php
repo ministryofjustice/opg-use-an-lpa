@@ -33,18 +33,18 @@ class ChecksumValidator extends AbstractValidator
         $isValid = true;
         $ref_number_checksum = '';
 
+        $positionOfSeven = stripos((string)$reference_number, '7');
+        $positionOfTwo = stripos((string)$reference_number, '2');
+        $positionOfThree = stripos((string)$reference_number, '3');
+
         //check flag 'allow_meris_lpas' status here
-        if (!(strlen($reference_number) == 7 or strlen($reference_number) == 12)) {
+        if (!(strlen($reference_number) === 7 or strlen($reference_number) === 12)) {
             $this->error(self::MUST_BE_LENGTH);
             $isValid = false;
-        } elseif (strlen($reference_number) == 12 and !preg_match('/^7/', (string)$reference_number)) {
+        } elseif (strlen($reference_number) === 12 and $positionOfSeven !== 0) {
             $this->error(self::LPA_MUST_START_WITH);
             $isValid = false;
-        } elseif (
-            strlen($reference_number) == 7 and
-            !(preg_match('/^2/', (string)$reference_number) or
-                preg_match('/^3/', (string)$reference_number))
-        ) {
+        } elseif (strlen($reference_number) === 7 and !($positionOfTwo === 0 or $positionOfThree === 0)) {
             $this->error(self::MERIS_NO_MUST_START_WITH);
             $isValid = false;
         } else {
