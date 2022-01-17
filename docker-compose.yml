@@ -122,7 +122,7 @@ services:
       USE_OLDER_LPA_JOURNEY: "true"
       DELETE_LPA_FEATURE: "true"
       ALLOW_OLDER_LPAS: "true"
-      ALLOW_MERIS_LPAS: "false"
+      ALLOW_MERIS_LPAS: "true"
       DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
 
       # Local only
@@ -199,7 +199,7 @@ services:
 
       # Feature flags
       ALLOW_OLDER_LPAS: "true"
-      ALLOW_MERIS_LPAS: "false"
+      ALLOW_MERIS_LPAS: "true"
       SAVE_OLDER_LPA_REQUESTS: "true"
       DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
 
