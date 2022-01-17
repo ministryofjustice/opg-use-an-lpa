@@ -46,7 +46,7 @@
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
                     {% if feature_enabled('allow_older_lpas') %}
-                    <p class="govuk-body">
+                    <p id="footnote-on-trial" class="govuk-body">
                         <span>&#42;</span>
                         {% trans %}
                             Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily.However, once your LPA is added you will always be able to use it in this service.
