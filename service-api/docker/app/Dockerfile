@@ -12,7 +12,8 @@ RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-auto
 
 FROM php:7-fpm-alpine3.14 AS production
 
-RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS fcgi \
+RUN apk add --update --no-cache fcgi \
+  && apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
   && apk upgrade curl \
   && pecl install xdebug \
   && pecl install apcu \
@@ -24,11 +25,11 @@ COPY service-api/app /app
 COPY --from=composer /app/vendor /app/vendor
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
-COPY service-api/docker/app/health-check.sh /app
+COPY service-api/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["./health-check.sh"]
+HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["/usr/local/bin/health-check.sh"]
 
 CMD ["php-fpm"]
 
