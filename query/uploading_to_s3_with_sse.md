@@ -11,7 +11,7 @@ You will need to assume the db_analysis role in order to use the dynamodb export
 - Log into AWS Console
 - Assume the `db-analysis` role in the UaL Production account
 - Navigate to the Imported CSVs path in the DyanmoDB exports bucket
-https://s3.console.aws.amazon.com/s3/buckets/use-a-lpa-dynamodb-exports-production?region=eu-west-1&prefix=Imported_CSVs/&showversions=false
+<https://s3.console.aws.amazon.com/s3/buckets/use-a-lpa-dynamodb-exports-production?region=eu-west-1&prefix=Imported_CSVs/&showversions=false>
 
 ## Create a Folder with Server Side Encryption
 
