@@ -103,7 +103,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $shareCodes[$key]['form'] = $form;
             }
 
-            $this->logger->info(
+            $this->logger->debug(
                 'Resolved actor id to {type}:{actor_id}',
                 [
                     'actor_id' => $code['ActorId'],
@@ -111,7 +111,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 ]
             );
 
-            $this->logger->info(
+            $this->logger->debug(
                 'Donor Id is {type}:{donor_id}',
                 [
                     'donor_id' => $lpa->getDonor()->getUId(),
@@ -128,7 +128,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             }
 
             foreach ($lpa->getAttorneys() as $attorney) {
-                $this->logger->info(
+                $this->logger->debug(
                     'Attorney Id is {type}:{attorney_id}',
                     [
                         'attorney_id' => $attorney->getUId(),
@@ -144,7 +144,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 }
             }
 
-            $this->logger->info(
+            $this->logger->debug(
                 'Created by resolved to {actor_name}',
                 [
                     'actor_name' => $shareCodes[$key]['CreatedBy'] ?? 'NULL',
