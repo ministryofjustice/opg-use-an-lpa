@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-01-02T23:29:42+00:00\n"
+"POT-Creation-Date: 2022-01-17T16:00:11+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4542,4 +4542,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:18
 msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
+msgstr ""
+
+#: src/Actor/templates/actor/home-page.html.twig:50
+msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily.However, once your LPA is added you will always be able to use it in this service."
 msgstr ""
