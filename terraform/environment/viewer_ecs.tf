@@ -221,7 +221,7 @@ locals {
       },
       {
         name  = "PDF_SERVICE_URL",
-        value = "http://${local.pdf_service_fqdn}"
+        value = "http://${local.pdf_service_fqdn}:8000"
       },
       {
         name  = "SESSION_EXPIRES",
