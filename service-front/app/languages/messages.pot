@@ -4541,13 +4541,10 @@ msgid "We posted an activation key to the address we have for you on our records
 msgstr ""
 
 #: src/Actor/templates/actor/home-page.html.twig:51
-msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily.However, once your LPA is added you will always be able to use it in this service."
+msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once your LPA is added you will always be able to use it in this service."
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
 msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:11
-msgid "You can only use this service if your LPA was registered on or after 1 September 2019"
-msgstr ""

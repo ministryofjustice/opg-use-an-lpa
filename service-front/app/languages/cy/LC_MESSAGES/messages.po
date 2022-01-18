@@ -6500,7 +6500,7 @@ msgstr ""
 #: src/Actor/templates/actor/home-page.html.twig:51
 msgid ""
 "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
-"basis only, and may be paused temporarily.However, once your LPA is added you "
+"basis only, and may be paused temporarily. However, once your LPA is added you "
 "will always be able to use it in this service."
 msgstr ""
 "Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 ar sail "
