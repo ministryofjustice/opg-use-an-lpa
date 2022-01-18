@@ -218,6 +218,12 @@ services:
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY: null
     healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi
+            -bind -connect 127.0.0.1:9000"
+        ]
       interval: 10s
       timeout: 30s
       retries: 3
