@@ -124,7 +124,7 @@ locals {
   pdf_app = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:latest",
+    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}@${data.aws_ecr_image.pdf_service.image_digest}",
     mountPoints = [],
     name        = "pdf",
     portMappings = [
