@@ -7,6 +7,11 @@ variable "container_version" {
   default = "latest"
 }
 
+variable "pdf_container_version" {
+  type    = string
+  default = "latest"
+}
+
 output "container_version" {
   value = var.container_version
 }
