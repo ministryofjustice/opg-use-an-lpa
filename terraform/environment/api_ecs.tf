@@ -258,8 +258,8 @@ locals {
       ],
       healthCheck = {
         command     = ["CMD", "/usr/local/bin/health-check.sh"],
-        startPeriod = 30,
-        interval    = 15,
+        startPeriod = 90,
+        interval    = 10,
         timeout     = 30,
         retries     = 10
       },
