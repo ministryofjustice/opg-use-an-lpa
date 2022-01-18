@@ -13,7 +13,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-auto
 FROM php:7-fpm-alpine3.14 AS production
 
 RUN apk add --update --no-cache fcgi \
-  apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
+  && apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
   && apk upgrade curl \
   && pecl install xdebug \
   && pecl install apcu \
