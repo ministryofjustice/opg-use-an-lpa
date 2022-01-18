@@ -90,9 +90,8 @@
                         </span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p>{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
-                                <p>{% trans %}Telephone: 0300 456 0300{% endtrans %}</p>
-                                <p>{% trans %}Textphone: 0115 934 2778{% endtrans %}</p>
+                                <p class="govuk-body">{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
+                                {{ include('@partials/contact-details/telephone.html.twig') }}
                             </div>
                         </details>
                     {% endif %}
