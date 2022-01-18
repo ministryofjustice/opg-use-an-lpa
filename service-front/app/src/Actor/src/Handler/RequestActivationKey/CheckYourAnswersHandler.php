@@ -221,7 +221,11 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'actor::cannot-find-lpa',
                             [
                                 'user'  => $this->user,
-                                'lpa_reference_number' => $this->data['reference_number']
+                                'lpa_reference_number' => $this->data['reference_number'],
+                                'first_name' =>  $this->data['first_names'],
+                                'last_name' => $this->data['last_name'],
+                                'dob' => $this->data['dob'],
+                                'postcode' => $this->data['postcode']
                             ],
                         ));
                     }
