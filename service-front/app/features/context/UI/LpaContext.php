@@ -472,7 +472,14 @@ class LpaContext implements Context
     public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
     {
         $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-1 dl.govuk-summary-list',
+            'V - XYZ3 - 21AB - C987'
+        );
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-1 dl.govuk-summary-list',
+            'Ian Deputy'
+        );
     }
 
     /**
@@ -481,10 +488,16 @@ class LpaContext implements Context
     public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
     {
         $this->ui->assertPageContainsText($activeTitle);
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-1 dl.govuk-summary-list',
+            'V - XYZ3 - 21AB - C987'
+        );
 
         $this->ui->assertPageContainsText($inactiveTitle);
-        $this->ui->assertPageContainsText('V - ABC3 - 21AB - CXYZ');
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-2 dl.govuk-summary-list',
+            'V - ABC3 - 21AB - CXYZ'
+        );
     }
 
     /**
