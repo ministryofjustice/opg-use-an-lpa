@@ -1,4 +1,5 @@
 NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
+ECR_LOGIN ?= @aws-vault exec management -- aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
 COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
@@ -61,7 +62,7 @@ ps:
 .PHONY: ps
 
 logs:
-	$(COMPOSE) logs -f $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) logs -t -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
 
 up_dependencies:
@@ -70,7 +71,11 @@ up_dependencies:
 .PHONY: up_dependencies
 
 up_services:
-	$(NOTIFY); $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	@echo "Logging into ECR..."
+	$(ECR_LOGIN)
+	@echo "Getting Notify API Key..."
+	$(NOTIFY)
+	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
 seed:
