@@ -29,8 +29,6 @@ COPY service-api/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 
-HEALTHCHECK --interval=10s --timeout=30s --retries=3 CMD ["/usr/local/bin/health-check.sh"]
-
 CMD ["php-fpm"]
 
 FROM production as development
