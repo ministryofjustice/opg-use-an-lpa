@@ -116,7 +116,7 @@ class RequestActivationKeyContext implements Context
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA to send you an activation key');
     }
 
     /**
