@@ -4,10 +4,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -72,5 +69,6 @@
                 {{ govuk_form_close() }}
             </div>
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

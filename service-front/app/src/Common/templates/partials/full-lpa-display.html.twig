@@ -1,6 +1,4 @@
 <div class="govuk-width-container">
-    {{ include('@viewer/new-view-service.html.twig') }}
-
     {% if not forDownload %}
         {{ include('@partials/welsh-switch.html.twig') }}
     {% endif %}
@@ -260,21 +258,14 @@
         </div>
 
         {% if not forDownload %}
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-
-            <p class="govuk-body">
-                <a class="govuk-link check-another" href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
-            </p>
-
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="govuk-body">
+                        <a class="govuk-link check-another"
+                           href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
+                    </p>
+                </div>
             </div>
-        </div>
-
         {% endif %}
-
     </main>
-
 </div>
