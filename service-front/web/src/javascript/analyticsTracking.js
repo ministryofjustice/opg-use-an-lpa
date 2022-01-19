@@ -14,8 +14,8 @@ export default class AnalyticsTracking {
     init() {
         const _this = this;
         document.addEventListener('click', (e) => {
+            /* istanbul ignore else */
             if (e.target) {
-
                 if (e.target.matches('[data-attribute="ga-event"]')) {
                     _this.processEventElement(e.target)
                 } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
@@ -23,18 +23,10 @@ export default class AnalyticsTracking {
                 }
 
             }
+
         })
 
-        var observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.type === "attributes") {
-                    if (mutation.target.getAttribute('data-module') === 'govuk-details') {
-                        let eventInfo = _this.extractEventInfo(mutation.target);
-                        _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category,  eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close"));
-                    }
-                }
-            });
-        });
+        var observer = new MutationObserver(this.observeMutations);
 
         observer.observe(document.body, {
             attributes: true,
@@ -66,9 +58,9 @@ export default class AnalyticsTracking {
     }
 
     processEventElement(eventElement) {
+        /* istanbul ignore else */
         if (typeof window.gtag === 'function') {
             const eventInfo = this.extractEventInfo(eventElement);
-
             this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
         }
     }
@@ -96,5 +88,17 @@ export default class AnalyticsTracking {
         }
 
         return dataCleansed;
+    }
+
+    observeMutations(mutations) {
+        const _this = this;
+        mutations.forEach(function (mutation) {
+            if (mutation.type === "attributes") {
+                if (mutation.target.getAttribute('data-module') === 'govuk-details') {
+                    let eventInfo = _this.extractEventInfo(mutation.target);
+                    _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category,  eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close"));
+                }
+            }
+        });
     }
 }
