@@ -24,9 +24,9 @@ export default class AnalyticsTracking {
 
             }
 
-        })
+        });
 
-        var observer = new MutationObserver(this.observeMutations);
+        var observer = new MutationObserver(() => _this.observeMutations);
 
         observer.observe(document.body, {
             attributes: true,
@@ -42,7 +42,7 @@ export default class AnalyticsTracking {
 
         for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
             const element = gaLoadEvents[i];
-            _this.processEventElement(element)
+            _this.processEventElement(element);
         }
     }
 
@@ -54,14 +54,19 @@ export default class AnalyticsTracking {
                 event_category: eventElement.getAttribute('data-gaCategory'),
                 event_label: eventElement.getAttribute('data-gaLabel')
             }
-        }
+        };
     }
 
     processEventElement(eventElement) {
         /* istanbul ignore else */
         if (typeof window.gtag === 'function') {
             const eventInfo = this.extractEventInfo(eventElement);
-            this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
+
+            this.sendGoogleAnalyticsEvent(
+                eventInfo.action,
+                eventInfo.event_params.event_category,
+                eventInfo.event_params.event_label
+            );
         }
     }
 
@@ -96,7 +101,11 @@ export default class AnalyticsTracking {
             if (mutation.type === "attributes") {
                 if (mutation.target.getAttribute('data-module') === 'govuk-details') {
                     let eventInfo = _this.extractEventInfo(mutation.target);
-                    _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category,  eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close"));
+                    _this.sendGoogleAnalyticsEvent(
+                        eventInfo.action,
+                        eventInfo.event_params.event_category,
+                        eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close")
+                    );
                 }
             }
         });
