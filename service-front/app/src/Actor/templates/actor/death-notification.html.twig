@@ -5,10 +5,7 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         {% if actorToken != 'null' %}
@@ -75,6 +72,6 @@
                 </div>
             </div>
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
-
 {% endblock %}

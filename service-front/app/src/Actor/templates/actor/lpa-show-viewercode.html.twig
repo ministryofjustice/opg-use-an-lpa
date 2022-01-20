@@ -4,10 +4,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -56,11 +53,61 @@
 
                     <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
 
+                    {% if lpa.caseSubtype == 'pfa' %}
+                        {% if actorRole == 'Attorney' %}
+                            <p class="govuk-body">
+                                {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
+                                    %organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud.
+                                {% endtrans %}
+                            </p>
+                        {% endif %}
+                        {% if actorRole == 'Donor' %}
+                            <p class="govuk-body">
+                                {% trans with {'%organisation%': organisation} %}
+                                    %organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on.
+                                {% endtrans %}
+                            </p>
+                        {% endif %}
+                    {% elseif lpa.caseSubtype == 'hw'  %}
+                        {% if actorRole == 'Attorney' %}
+                            <p class="govuk-body">
+                                {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
+                                    %organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on.
+                                {% endtrans %}
+                            </p>
+                        {% endif %}
+                        {% if actorRole == 'Donor' %}
+                            <p class="govuk-body">
+                                {% trans with {'%organisation%': organisation} %}
+                                    %organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on.
+                                {% endtrans %}
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                    {% if is_donor_signature_date_too_old(lpa) %}
+                        <p class="govuk-body">
+                            {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+                        <p class="govuk-body">
+                            {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% elseif lpa.applicationHasRestrictions%}
+                        <p class="govuk-body">
+                            {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% elseif lpa.applicationHasGuidance%}
+                        <p class="govuk-body">
+                            {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                        </p>
+                    {% endif %}
+
                     <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
                             {% trans %}Give another organisation access{% endtrans %}
                     </a>
                 </div>
             </div>
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

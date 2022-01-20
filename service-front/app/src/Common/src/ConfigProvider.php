@@ -119,6 +119,7 @@ class ConfigProvider
                 'error'    => [__DIR__ . '/../templates/error'],
                 'layout'   => [__DIR__ . '/../templates/layout'],
                 'partials' => [__DIR__ . '/../templates/partials'],
+                'common'   => [__DIR__ . '/../templates/common']
             ],
         ];
     }

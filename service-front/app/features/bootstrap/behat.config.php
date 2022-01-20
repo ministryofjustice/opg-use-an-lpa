@@ -29,10 +29,11 @@ return [
     ],
 
     'feature_flags' => [
-        'use_older_lpa_journey' => true,
-        'delete_lpa_feature'    => true,
-        'allow_older_lpas'      => true,
-        'save_older_lpa_requests' => true,
+        'use_older_lpa_journey'                                               => true,
+        'delete_lpa_feature'                                                  => true,
+        'allow_older_lpas'                                                    => true,
+        'save_older_lpa_requests'                                             => true,
+        'dont_send_lpas_registered_after_sep_2019_to_cleansing_team'          => true,
     ],
 
     'notify' => [

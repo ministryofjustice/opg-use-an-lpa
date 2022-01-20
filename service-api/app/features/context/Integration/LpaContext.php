@@ -617,7 +617,7 @@ class LpaContext extends BaseIntegrationContext
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorLpaId,
+                                'ActorId' => '700000000001',
                                 'UserId' => $this->userId,
                                 'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
                             ]
@@ -660,14 +660,19 @@ class LpaContext extends BaseIntegrationContext
         try {
             $response = $actorCodeService->confirmDetails(
                 $this->oneTimeCode,
-                $this->lpaUid,
+                $this->actorLpaId,
                 $this->userDob,
-                (string)$this->actorLpaId
+                $this->userId
             );
         } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
+        $newID = $this->awsFixtures->getLastCommand()['data']['ExpressionAttributeValues'][':a']['N'];
+        // Check ActorID is overridden
+        assertEquals($this->actorId, $newID);
+
+        //Check response is for correct Item ID
         assertEquals($this->userLpaActorToken, $response);
     }
 
@@ -1469,6 +1474,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I am shown the details of an LPA$/
      * @Then /^I am asked for my contact details$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
+     * @When /^I confirm details of the found LPA are correct$/
      */
     public function iAmShownTheDetailsOfAnLPA()
     {
@@ -1651,6 +1657,7 @@ class LpaContext extends BaseIntegrationContext
             'first_names' => $firstnames,
             'last_name' => $lastname,
             'force_activation_key' => false
+
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1767,8 +1774,8 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $codeExists = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-        $codeExists->Created = $createdDate;
+        $createdDate = (new DateTime())->modify('-14 days');
+        $codeExists->Created = $createdDate->format('Y-m-d');
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1796,7 +1803,11 @@ class LpaContext extends BaseIntegrationContext
                         'middlenames'   => $this->lpa->donor->middlenames,
                         'surname'       => $this->lpa->donor->surname
                     ],
-                    'caseSubtype'   => $this->lpa->caseSubtype
+                    'caseSubtype'           => $this->lpa->caseSubtype,
+                    'activationKeyDueDate'  => date(
+                        'Y-m-d',
+                        strtotime($createdDate->format('c') . ' + 10 days')
+                    )
                 ],
                 $ex->getAdditionalData()
             );
@@ -1886,6 +1897,8 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I request to go back and try again$/
+     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
+     * @Then /^I am asked for my role on the LPA$/
      */
     public function iRequestToGoBackAndTryAgain()
     {
@@ -2209,7 +2222,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->oneTimeCode,
                 $this->lpaUid,
                 $this->userDob,
-                (string)$this->actorLpaId
+                $this->actorLpaId
             );
         } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
@@ -2479,16 +2492,30 @@ class LpaContext extends BaseIntegrationContext
             );
         }
 
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
-        ];
+        if (($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => $this->userLpaActorToken,
+                'activationKeyDueDate' => null,
+            ];
+        } else {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => (int)$this->userLpaActorToken,
+            ];
+        }
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
@@ -2571,7 +2598,8 @@ class LpaContext extends BaseIntegrationContext
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => null
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
@@ -2678,6 +2706,56 @@ class LpaContext extends BaseIntegrationContext
             $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
         } catch (ApiException $exception) {
             throw new Exception('Failed to request access code letter');
+        }
+    }
+
+    /**
+     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
+     */
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
+    {
+        $this->lpa->status = 'Registered';
+        $this->lpa->registrationDate = '2019-10-31';
+
+        $data = [
+            'reference_number' => $this->lpaUid,
+            'dob'              => $this->userDob,
+            'postcode'         => 'WRONG',
+            'first_names'      => $this->userFirstname,
+            'last_name'        => $this->userSurname,
+            'force_activation_key' => false
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+
+        if ($flagStatus == 'ON') {
+            try {
+                $addOlderLpa->validateRequest($this->userId, $data);
+            } catch (NotFoundException $ex) {
+                assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+                assertEquals('LPA not found', $ex->getMessage());
+                return;
+            }
+        } else {
+            try {
+                $addOlderLpa->validateRequest($this->userId, $data);
+            } catch (BadRequestException $ex) {
+                assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+                assertEquals('LPA details do not match', $ex->getMessage());
+                return;
+            }
         }
     }
 }

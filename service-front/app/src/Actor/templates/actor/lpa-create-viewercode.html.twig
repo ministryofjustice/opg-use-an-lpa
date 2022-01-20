@@ -4,10 +4,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -53,7 +50,7 @@
                     {{ govuk_form_element(form.get('org_name'), {
                         'label': 'Organisation name' | trans,
                         'hint': 'This is for your reference only' | trans,
-                        'attr' : {'class': 'govuk-!-width-one-half'}
+                        'attr' : {'class': 'govuk-!-width-three-quarters'}
                     }) }}
 
                     <div class="govuk-warning-text">
@@ -72,5 +69,6 @@
                 {{ govuk_form_close() }}
             </div>
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

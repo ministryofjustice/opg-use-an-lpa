@@ -275,7 +275,7 @@ class LpaContext implements Context
                 'surname' => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken,
+            'lpaActorToken' => $this->userLpaActorToken
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -375,19 +375,33 @@ class LpaContext implements Context
             ]
         );
 
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
-        ];
-
+        if (($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => (int)$this->userLpaActorToken,
+                'activationKeyDueDate' => null
+            ];
+        } else {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => (int)$this->userLpaActorToken
+            ];
+        }
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
+
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
@@ -676,7 +690,8 @@ class LpaContext implements Context
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => null
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -1077,7 +1092,7 @@ class LpaContext implements Context
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'Expires' => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
@@ -1341,7 +1356,7 @@ class LpaContext implements Context
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'Expires' => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
                                 'ViewerCode' => $this->accessCode,
@@ -2426,6 +2441,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the add an older LPA page$/
      * @Given /^I am on the Check we've found the right LPA page$/
+     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
      */
     public function iAmOnTheAddAnOlderLPAPage()
     {
@@ -2723,6 +2739,7 @@ class LpaContext implements Context
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
+     * @Then /^I am asked for my role on the LPA$/
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
@@ -2783,7 +2800,7 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
     {
-        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+        $createdDate = (new DateTime())->modify('-14 days');
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -2802,7 +2819,13 @@ class LpaContext implements Context
 
         // check if actor has a code
         $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => $createdDate])));
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(['Created' => $createdDate->format('Y-m-d')])
+                )
+            );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2827,11 +2850,16 @@ class LpaContext implements Context
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname
             ],
-            'caseSubtype' => $this->lpa->caseSubtype,
+            'caseSubtype'           => $this->lpa->caseSubtype,
+            'activationKeyDueDate'  => $createdDate->format('c'),
+            'activationKeyDueDate'  => date(
+                'Y-m-d',
+                strtotime($createdDate->format('c') . ' + 10 days')
+            )
         ];
-
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
+
         assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
@@ -3469,5 +3497,51 @@ class LpaContext implements Context
     public function iAmToldMyActivationKeyRequestHasBeenReceived()
     {
         //Not needed for this context
+    }
+
+    /**
+     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
+     */
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
+    {
+        $this->lpa->status = 'Registered';
+        $this->lpa->registrationDate = '2019-10-31';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'  => $this->lpaUid,
+                'first_names'       => $this->userFirstnames,
+                'last_name'         => $this->userSurname,
+                'dob'               => $this->userDob,
+                'postcode'          => 'Wrong',
+                'force_activation_key'  => false
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        if ($flagStatus == 'ON') {
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
+        } else {
+            $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        }
     }
 }

@@ -5,10 +5,7 @@
 {% block content %}
 
 <div class="govuk-width-container">
-    {{ include('@actor/partials/new-use-service.html.twig') }}
-
     {{ include('@partials/account-bar.html.twig') }}
-
     {{ include('@partials/welsh-switch.html.twig') }}
 
     <div role="navigation" aria-labelledby="back-link-navigation">
@@ -166,7 +163,9 @@
                         <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">
                             {% if is_donor_signature_date_too_old(lpa) %}
-                                {% trans %}Unknown{% endtrans %}
+                                {% trans with {'%link%': path('lpa.instructions-preferences-before-2016')} %}
+                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions. <a class="govuk-link" href="%link%">Read more</a>
+                                {% endtrans %}
                             {% elseif lpa.applicationHasGuidance %}
                                 {% trans %}Yes, the donor made preferences on their <abbr title="lasting power of attorney">LPA</abbr>.<br>To view these, ask to see the paper <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}
                             {% else %}
@@ -241,18 +240,19 @@
             </div>
         </div>
 
-        {{ include('@partials/section-break.html.twig') }}
-
+        <p>
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                {% trans %}You cannot use a download or print out of this <abbr title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.{% endtrans %}
+                {% trans %}You cannot use a download or print out of this <abbr
+                        title="lasting power of attorney">LPA</abbr> summary in place of the original paper <abbr
+                        title="lasting power of attorney">LPA</abbr> or instead of giving someone an access code.{% endtrans %}
             </strong>
         </div>
+        </p>
 
     </main>
+    {{ include('@actor/partials/new-use-service.html.twig') }}
 </div>
-
-
 {% endblock %}

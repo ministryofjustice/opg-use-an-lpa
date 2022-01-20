@@ -210,6 +210,7 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
+        $createdDate = (new DateTime())->modify('-14 days');
         $response = [
             'donor'         => [
                 'uId'           => '12345',
@@ -218,6 +219,7 @@ class AddOlderLpaTest extends TestCase
                 'surname'       => 'Person',
             ],
             'caseSubtype' => 'hw',
+            'activationKeyDueDate' => $createdDate->format('c')
         ];
 
         $this->apiClientProphecy

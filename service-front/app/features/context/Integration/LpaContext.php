@@ -1485,6 +1485,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
         // API call for requesting activation code
         $this->apiFixtures->post('/v1/older-lpa/validate')
             ->respondWith(
@@ -1502,7 +1504,8 @@ class LpaContext extends BaseIntegrationContext
                                     'middlenames'   => $this->lpa['donor']['middlenames'],
                                     'surname'       => $this->lpa['donor']['surname'],
                                 ],
-                                'caseSubtype'   => $this->lpa['caseSubtype']
+                                'caseSubtype'   => $this->lpa['caseSubtype'],
+                                'activationKeyDueDate' => $createdDate->format('c')
                             ]
                         ]
                     )
@@ -1529,12 +1532,12 @@ class LpaContext extends BaseIntegrationContext
         $keyExistsDTO = new ActivationKeyExistsResponse();
         $keyExistsDTO->setDonor($donor);
         $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $keyExistsDTO->setDueDate($createdDate->format('c'));
 
         $response = new OlderLpaApiResponse(
             OlderLpaApiResponse::HAS_ACTIVATION_KEY,
             $keyExistsDTO
         );
-
         assertEquals($response, $result);
     }
 

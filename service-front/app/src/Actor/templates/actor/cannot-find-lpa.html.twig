@@ -4,17 +4,15 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    {% if feature_enabled('allow_older_lpas') %}
+                    {% if feature_enabled('allow_older_lpas') and not
+                        (feature_enabled('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')) %}
 
                         <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA with that reference number{% endtrans %}</h1>
 
@@ -34,34 +32,79 @@
 
                     {% else %}
 
-                        <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA with the details you entered{% endtrans %}</h1>
-
+                        <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA to send you an activation key{% endtrans %}</h1>
                         <p class="govuk-body">{% trans %}This could be because the information you entered does not match the information we hold about the LPA.{% endtrans %}</p>
 
-                        <h2 class="govuk-heading-l">{% trans %}Let us know if your details have changed{% endtrans %}</h2>
-                        <p class="govuk-body">{% trans %}It's important that we hold up-to-date information about donors and attorneys. This is because the first time you show an LPA to an organisation, they might ask you to confirm that your name and address match what’s on the LPA.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}You should contact us if:{% endtrans %}</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>{% trans %}you've moved house{% endtrans %}</li>
-                            <li>{% trans %}you've changed your name by marriage or deed poll{% endtrans %}</li>
-                            <li>{% trans %}your name or address on the LPA is misspelt{% endtrans %}</li>
-                            <li>{% trans %}your date of birth is wrong on the LPA{% endtrans %}</li>
-                        </ul>
+                        <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
+                        <dl class="govuk-summary-list govuk-summary-list">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}LPA reference number{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ lpa_reference_number }}
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Name{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ first_name ~ ' ' ~  last_name }}
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Date of birth{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ code_date(dob) }}
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Postcode{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ postcode }}
+                                </dd>
+                            </div>
+                        </dl>
 
-                        <h2 class="govuk-heading-l">{% trans %}How to let us know{% endtrans %}</h2>
-                        <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
+                        <h2 class="govuk-heading-l">{% trans %}Did you give us the right LPA reference number?{% endtrans %}</h2>
+                        <p class="govuk-body">{% trans %}You’ll find the reference number on the LPA and at the top of any letter you’ve received from us about the LPA. If you do not have the LPA or have not kept any letters, check with someone else named on the LPA.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}If you're named on more than one LPA, make sure you’ve entered the reference number for the right LPA.{% endtrans %}</p>
 
-                        {{ include('@partials/contact-details/contact-details.html.twig') }}
+                        <h2 class="govuk-heading-l">{% trans %}Do we have your correct name and date of birth on our records?{% endtrans %}</h2>
+                        <p class="govuk-body">{% trans %}If you've changed your name and not told us, or if your name or date of birth are wrong on the paper LPA, try to ask for a key again using your details as they appear on the LPA. If you do not have the LPA, check with the person who does.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}You must then contact us so we can update your details on our records.{% endtrans %}</p>
 
+                        <h2 class="govuk-heading-l">{% trans %}Is your address correct on our records?{% endtrans %}</h2>
+                        <p class="govuk-body">{% trans %}If there's a mistake in your address on the LPA, or you've moved and not told us, let us know your correct address.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}You must do this before you try to ask for an activation key again, so we can post your key to the right address.{% endtrans %}</p>
+
+                        <details class="govuk-details" data-module="govuk-details">
+                            <summary class="govuk-details__summary" role="button">
+                        <span class="govuk-details__summary-text">
+                          {% trans %}What to do if you’re sure you entered the right information{% endtrans %}
+                        </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
+                                {{ include('@partials/contact-details/telephone.html.twig') }}
+                            </div>
+                        </details>
                     {% endif %}
 
-                    <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'})}}" draggable="false" class="govuk-button">{% trans %}Try again{% endtrans %}</a>
-                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1" href="{{ path('lpa.dashboard') }}">
+                    <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" draggable="false"
+                       class="govuk-button">{% trans %}Try again{% endtrans %}</a>
+                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1"
+                       href="{{ path('lpa.dashboard') }}">
                         {% trans %}Back to your LPAs{% endtrans %}
                     </a>
                 </div>
             </div>
         </main>
-
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

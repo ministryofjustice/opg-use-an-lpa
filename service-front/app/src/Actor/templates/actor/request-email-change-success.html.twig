@@ -4,10 +4,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -31,11 +28,9 @@
                     <p class="govuk-body">{% trans %}The link will work for 48 hours.{% endtrans %}</p>
 
                     <p class="govuk-body">{%trans with {'%link%': path('login')} %}If you’ve already confirmed the change, you can use your new email address to <a href="%link%" class="govuk-link">sign in</a> now.{% endtrans %}</p>
-
                 </div>
-
             </div>
-
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

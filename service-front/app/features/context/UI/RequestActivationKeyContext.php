@@ -116,7 +116,7 @@ class RequestActivationKeyContext implements Context
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA to send you an activation key');
     }
 
     /**
@@ -429,12 +429,14 @@ class RequestActivationKeyContext implements Context
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
         $this->ui->pressButton('Continue');
     }
 
     /**
      * @Given /^The activation key not been received or was lost$/
      * @Then /^I will receive an email confirming this information$/
+     * @Given /^My LPA was registered 'on or after' 1st September 2019$/
      */
     public function theActivationKeyHasBeenReceivedOrWasLost()
     {
@@ -646,6 +648,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
         $this->fillAndSubmitOlderLpaForm();
 
         /**
@@ -692,7 +695,8 @@ class RequestActivationKeyContext implements Context
                                         'surname'       => $this->lpa->donor->surname,
                                     ],
                                     'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken
+                                    'lpaActorToken' => $this->userLpaActorToken,
+                                    'activationKeyDueDate' => $createdDate->format('c')
                                 ],
                             ]
                         )
@@ -1034,7 +1038,8 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
-                                'caseSubtype' => $this->lpa->caseSubtype
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'activationKeyDueDate'  =>  '2022-01-30'
                             ],
                         ]
                     )
@@ -1046,6 +1051,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @When I provide details of an LPA that is not registered
+     * @When I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
      */
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
     {
