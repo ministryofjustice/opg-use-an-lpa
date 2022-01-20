@@ -4,10 +4,8 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
 
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -39,6 +37,6 @@
                 </div>
             </div>
         </main>
-
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}
