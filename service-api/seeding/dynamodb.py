@@ -135,28 +135,28 @@ userLpaActorMap = [
     {
         'Id': '806f3720-5b43-49ce-ac66-c670860bf4ee',
         'SiriusUid': '700000000138',
-        'ActorId': "23",
+        'ActorId': 23,
         'Added': '2020-08-19T15:22:32.838097Z ',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
     },
     {
         'Id': 'f1315df5-b7c3-430a-baa0-9b96cc629648',
         'SiriusUid': '700000000344',
-        'ActorId': "59",
+        'ActorId': 59,
         'Added': '2020-08-20T14:37:49.522828Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
     },
     {
         'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
         'SiriusUid': '700000000047',
-        'ActorId': "9",
+        'ActorId': 9,
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
     },
     {
         'Id': 'e69a80db-0001-45a1-a4c5-06bd7ecf8d2e',
         'SiriusUid': '700000000435',
-        'ActorId': "78",
+        'ActorId': 78,
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivateBy': activateBy
@@ -164,7 +164,7 @@ userLpaActorMap = [
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',
         'SiriusUid': '700000000252',
-        'ActorId': "43",
+        'ActorId': 43,
         'Added': '2021-04-23T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
     }
