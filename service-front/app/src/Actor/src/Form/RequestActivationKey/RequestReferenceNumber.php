@@ -6,7 +6,7 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Validator\MerisCheckValidator;
+use Common\Validator\ReferenceCheckValidator;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -77,12 +77,12 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 ],
             ],
         ];
-        $merisCheck = [
-            'name' => MerisCheckValidator::class,
+        $referenceCheck = [
+            'name' => ReferenceCheckValidator::class,
         ];
 
         if (($this->featureEnabled)('allow_meris_lpas')) {
-            array_push($validators, $merisCheck);
+            array_push($validators, $referenceCheck);
         } else {
             array_push($validators, $stringLength);
         }

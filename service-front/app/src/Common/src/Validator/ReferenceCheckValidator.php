@@ -6,7 +6,7 @@ namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
 
-class MerisCheckValidator extends AbstractValidator
+class ReferenceCheckValidator extends AbstractValidator
 {
     public const MERIS_NO_MUST_START_WITH = 'mustStartWith';
     public const MUST_BE_LENGTH = 'mustBeLength';

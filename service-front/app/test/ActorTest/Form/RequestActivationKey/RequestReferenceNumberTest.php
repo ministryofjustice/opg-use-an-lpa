@@ -55,9 +55,9 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     public function it_sets_correct_validator_when_flag_set_to_true()
     {
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
-        $key = array_search('Common\Validator\MerisCheckValidator', array_column($validators, 'name'));
+        $key = array_search('Common\Validator\ReferenceCheckValidator', array_column($validators, 'name'));
 
-        $this->assertContains($validators[$key]['name'], 'Common\Validator\MerisCheckValidator');
+        $this->assertContains($validators[$key]['name'], 'Common\Validator\ReferenceCheckValidator');
     }
 
     /** @test */
