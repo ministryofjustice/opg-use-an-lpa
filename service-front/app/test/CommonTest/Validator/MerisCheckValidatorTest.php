@@ -7,7 +7,6 @@ namespace CommonTest\Validator;
 use Common\Validator\MerisCheckValidator;
 use PHPUnit\Framework\TestCase;
 
-
 class MerisCheckValidatorTest extends TestCase
 {
     /**
