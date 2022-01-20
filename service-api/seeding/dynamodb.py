@@ -1,4 +1,6 @@
 import os
+import sys
+import botocore
 import boto3
 import simplejson as json
 from passlib.hash import sha256_crypt
@@ -45,7 +47,8 @@ viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
 now = datetime.datetime.now()
 timezone = pytz.timezone("Europe/London")
-endOfToday = timezone.localize(now.replace(hour=23, minute=59, second=59, microsecond=0))
+endOfToday = timezone.localize(now.replace(
+    hour=23, minute=59, second=59, microsecond=0))
 
 lastWeek = endOfToday - datetime.timedelta(days=7)
 nextWeek = endOfToday + datetime.timedelta(days=7)
@@ -82,13 +85,18 @@ viewerCodes = [
 ]
 
 for i in viewerCodes:
-    viewerCodesTable.put_item(
-        Item=i,
-    )
-    response = viewerCodesTable.get_item(
-        Key={'ViewerCode': i['ViewerCode']}
-    )
-    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    try:
+        viewerCodesTable.put_item(
+            Item=i,
+        )
+        response = viewerCodesTable.get_item(
+            Key={'ViewerCode': i['ViewerCode']}
+        )
+        print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    except botocore.exceptions.ClientError as error:
+        print(error.response['Error']['Code'],
+              error.response['Error']['Message'])
+        sys.exit(1)
 
 # test user details
 
@@ -104,13 +112,18 @@ actorUsers = [
 ]
 
 for i in actorUsers:
-    actorUsersTable.put_item(
-        Item=i,
-    )
-    response = actorUsersTable.get_item(
-        Key={'Id': i['Id']}
-    )
-    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    try:
+        actorUsersTable.put_item(
+            Item=i,
+        )
+        response = actorUsersTable.get_item(
+            Key={'Id': i['Id']}
+        )
+        print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    except botocore.exceptions.ClientError as error:
+        print(error.response['Error']['Code'],
+              error.response['Error']['Message'])
+        sys.exit(1)
 
 # added lpas on test user account
 
@@ -158,10 +171,15 @@ userLpaActorMap = [
 ]
 
 for i in userLpaActorMap:
-    userLpaActorMapTable.put_item(
-        Item=i,
-    )
-    response = userLpaActorMapTable.get_item(
-        Key={'Id': i['Id']}
-    )
-    print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    try:
+        userLpaActorMapTable.put_item(
+            Item=i,
+        )
+        response = userLpaActorMapTable.get_item(
+            Key={'Id': i['Id']}
+        )
+        print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    except botocore.exceptions.ClientError as error:
+        print(error.response['Error']['Code'],
+              error.response['Error']['Message'])
+        sys.exit(1)
