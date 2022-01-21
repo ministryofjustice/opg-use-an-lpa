@@ -2,13 +2,12 @@
 // Api ECS Service level config
 
 resource "aws_ecs_service" "api" {
-  name                              = "api-service"
-  cluster                           = aws_ecs_cluster.use-an-lpa.id
-  task_definition                   = aws_ecs_task_definition.api.arn
-  desired_count                     = local.environment.autoscaling.api.minimum
-  launch_type                       = "FARGATE"
-  platform_version                  = "1.4.0"
-  health_check_grace_period_seconds = 0
+  name             = "api-service"
+  cluster          = aws_ecs_cluster.use-an-lpa.id
+  task_definition  = aws_ecs_task_definition.api.arn
+  desired_count    = local.environment.autoscaling.api.minimum
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.api_ecs_service.id]
@@ -122,7 +121,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app}]"
+  container_definitions    = "[${local.api_web}, ${local.api_app}, ${local.aws_otel_collector}]"
   task_role_arn            = aws_iam_role.api_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
 }
@@ -241,6 +240,29 @@ locals {
       }]
   })
 
+  aws_otel_collector = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints = [],
+      name        = "aws-otel-collector",
+      command = [
+        "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
+      ],
+      portMappings = [],
+      volumesFrom  = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment_name}.otel.use-an-lpa"
+        }
+      },
+      environment = []
+  })
+
 
   api_app = jsonencode(
     {
@@ -256,13 +278,6 @@ locals {
           protocol      = "tcp"
         }
       ],
-      healthCheck = {
-        command     = ["CMD", "/usr/local/bin/health-check.sh"],
-        startPeriod = 90,
-        interval    = 10,
-        timeout     = 30,
-        retries     = 3
-      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
