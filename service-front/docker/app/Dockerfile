@@ -15,7 +15,7 @@ FROM php:7-fpm-alpine3.14 AS production
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
-  && apk add --update --no-cache icu gettext \
+  && apk add --update --no-cache icu gettext fcgi \
   && apk upgrade curl \
   && install-php-extensions apcu redis intl gettext xdebug \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -24,6 +24,7 @@ COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-front/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
+COPY service-front/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 
