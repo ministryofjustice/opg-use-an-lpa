@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "viewer" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.viewer_web}, ${local.viewer_app}, ${local.viewer_aws_otel_collector}]"
+  container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
   task_role_arn            = aws_iam_role.viewer_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
 }

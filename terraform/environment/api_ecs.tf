@@ -121,7 +121,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app}, ${local.aws_otel_collector}]"
+  container_definitions    = "[${local.api_web}, ${local.api_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
   task_role_arn            = aws_iam_role.api_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
 }
@@ -254,7 +254,7 @@ locals {
       }]
   })
 
-  aws_otel_collector = jsonencode(
+  api_aws_otel_collector = jsonencode(
     {
       cpu         = 0,
       essential   = true,
@@ -271,7 +271,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.otel.use-an-lpa"
+          awslogs-stream-prefix = "${local.environment_name}.api-otel.use-an-lpa"
         }
       },
       environment = []
