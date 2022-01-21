@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "viewer" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
+  container_definitions    = "[${local.viewer_web}, ${local.viewer_app}, ${local.viewer_aws_otel_collector}]"
   task_role_arn            = aws_iam_role.viewer_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
 }
@@ -172,6 +172,30 @@ locals {
           value = var.container_version
       }]
   })
+
+  viewer_aws_otel_collector = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints = [],
+      name        = "aws-otel-collector",
+      command = [
+        "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
+      ],
+      portMappings = [],
+      volumesFrom  = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment_name}.viewer-otel.use-an-lpa"
+        }
+      },
+      environment = []
+  })
+
 
   viewer_app = jsonencode(
     {
