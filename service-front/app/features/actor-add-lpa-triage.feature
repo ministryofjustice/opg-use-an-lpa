@@ -10,11 +10,17 @@ Feature: Add an LPA triage page
     And I am currently signed in
     And I have been given access to use an LPA via credentials
 
-  @ui
+  @ui @ff:use_older_lpa_journey:true
   Scenario: The user is taken to the add lpa triage page from the dashboard
     Given I am on the dashboard page
     When I select to add an LPA
     Then I am on the add an LPA triage page
+
+  @ui @ff:use_older_lpa_journey:false
+  Scenario: The user is taken to the add lpa add page from the dashboard when the flag is off
+    Given I am on the dashboard page
+    When I select to add an LPA
+    Then I will be taken to the appropriate Add a lasting power of attorney to add an lpa
 
   @ui
   Scenario Outline: A user with an activation key is taken to the add an LPA page
