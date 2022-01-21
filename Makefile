@@ -36,11 +36,12 @@ endif
 .PHONY: build_all
 
 rebuild:
-	$(COMPOSE) build --no-cache
+	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: rebuild
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: exec
 .PHONY: down
 
 down_all:
