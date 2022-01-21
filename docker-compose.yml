@@ -23,8 +23,8 @@ services:
   # Viewer Front
 
   service-pdf:
-    container_name: service_pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:v1.31.0-UML-1190.2
+    container_name: service-pdf
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:v1.31.0-UML-2042-additional-params.2
     ports:
       - 9004:80
 
