@@ -7438,24 +7438,23 @@
         },
         {
             "name": "laminas/laminas-development-mode",
-            "version": "3.5.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-development-mode.git",
-                "reference": "048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a"
+                "reference": "4f74da6f4b82e5060457cfb2fbd0ce452dfecd51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a",
-                "reference": "048bd2a92ccf8c3e0e3677b9df8ae71086e4fc3a",
+                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/4f74da6f4b82e5060457cfb2fbd0ce452dfecd51",
+                "reference": "4f74da6f4b82e5060457cfb2fbd0ce452dfecd51",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
                 "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
-            "replace": {
-                "zfcampus/zf-development-mode": "^3.2.0"
+            "conflict": {
+                "zfcampus/zf-development-mode": "*"
             },
             "require-dev": {
                 "laminas/laminas-coding-standard": "~2.3.0",
@@ -7494,7 +7493,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-10-21T14:37:30+00:00"
+            "time": "2021-12-03T09:38:03+00:00"
         },
         {
             "name": "mezzio/mezzio-tooling",
@@ -11643,5 +11642,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
