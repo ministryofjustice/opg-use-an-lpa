@@ -116,6 +116,20 @@ resource "aws_iam_role_policy" "actor_permissions_role" {
 */
 data "aws_iam_policy_document" "actor_permissions_role" {
   statement {
+    sid    = "xrayaccess"
+    effect = "Allow"
+
+    actions = [
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords",
+      "xray:GetSamplingRules",
+      "xray:GetSamplingTargets",
+      "xray:GetSamplingStatisticSummaries",
+    ]
+
+    resources = ["*"]
+  }
+  statement {
     effect = "Allow"
 
     actions = [
