@@ -7,11 +7,6 @@ variable "container_version" {
   default = "latest"
 }
 
-variable "pdf_container_version" {
-  type    = string
-  default = "latest"
-}
-
 output "container_version" {
   value = var.container_version
 }
@@ -71,6 +66,7 @@ variable "environments" {
       notify_key_secret_name                                     = string
       associate_alb_with_waf_web_acl_enabled                     = bool
       dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
+      pdf_container_version                                      = string
     })
   )
 }
