@@ -147,8 +147,8 @@ class PdfService
     {
         $headers = [
             'Content-Type'       => 'text/html',
-            'strip-anchor-tags'  => true,
-            'print-background'   => true,
+            'strip-anchor-tags'  => 1,
+            'print-background'   => 1,
             'emulate-media-type' => 'screen',
         ];
 
