@@ -264,7 +264,7 @@ locals {
       mountPoints = [],
       name        = "aws-otel-collector",
       command = [
-        "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
+        "--config=/etc/ecs/ecs-default-config.yaml"
       ],
       portMappings = [],
       volumesFrom  = [],
