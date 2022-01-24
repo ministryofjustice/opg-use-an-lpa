@@ -63,7 +63,13 @@ class PdfServiceTest extends TestCase
             $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
 
             $this->assertCount(1, $request->getHeader('Strip-Anchor-Tags'));
-            $this->assertEquals('1', $request->getHeader('Strip-Anchor-Tags')[0]);
+            $this->assertEquals('true', $request->getHeader('Strip-Anchor-Tags')[0]);
+
+            $this->assertCount(1, $request->getHeader('Print-Background'));
+            $this->assertEquals('true', $request->getHeader('Print-Background')[0]);
+
+            $this->assertCount(1, $request->getHeader('Emulate-Media-Type'));
+            $this->assertEquals('screen', $request->getHeader('Emulate-Media-Type')[0]);
 
             return true;
         }))
