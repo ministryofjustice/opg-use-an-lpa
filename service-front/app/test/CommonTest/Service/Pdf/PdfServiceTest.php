@@ -183,7 +183,7 @@ class PdfServiceTest extends TestCase
         )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function(RequestInterface $request) {
+        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
             $this->assertCount(1, $request->getHeader('x-amzn-trace-id'));
             $this->assertEquals('Root=1-1-11', $request->getHeader('x-amzn-trace-id')[0]);
 
