@@ -96,8 +96,9 @@ data "aws_ecr_repository" "use_an_lpa_pdf" {
 
 data "aws_ecr_image" "pdf_service" {
   repository_name = "pdf_service"
-  image_tag       = var.pdf_container_version
-  provider        = aws.management
+  image_tag       = "v1.31.0-UML-2042-additional-params.5"
+  # image_tag       = var.pdf_container_version
+  provider = aws.management
 }
 
 data "aws_ecr_repository" "use_an_lpa_admin_app" {
