@@ -15,6 +15,7 @@ We will need to explicitely define what immutable tag should be used.
 ## Decision
 
 For common service docker images, we will,
+
 - refer to immutable image tags in docker-compose.yaml for local development
 - refer to immutable image tags in terraform.tfvars.json (local.environment.pdf_container_version) for AWS deployment with Terraform
 
