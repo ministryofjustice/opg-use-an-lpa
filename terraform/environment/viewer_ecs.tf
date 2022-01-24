@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "viewer" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.viewer_web}, ${local.viewer_app}]"
+  container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
   task_role_arn            = aws_iam_role.viewer_task_role.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
 }
@@ -115,6 +115,20 @@ resource "aws_iam_role_policy" "viewer_permissions_role" {
   Defines permissions that the application running within the task has.
 */
 data "aws_iam_policy_document" "viewer_permissions_role" {
+  statement {
+    sid    = "xrayaccess"
+    effect = "Allow"
+
+    actions = [
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords",
+      "xray:GetSamplingRules",
+      "xray:GetSamplingTargets",
+      "xray:GetSamplingStatisticSummaries",
+    ]
+
+    resources = ["*"]
+  }
   statement {
     effect = "Allow"
 
@@ -173,6 +187,30 @@ locals {
       }]
   })
 
+  viewer_aws_otel_collector = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints = [],
+      name        = "aws-otel-collector",
+      command = [
+        "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
+      ],
+      portMappings = [],
+      volumesFrom  = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${local.environment_name}.viewer-otel.use-an-lpa"
+        }
+      },
+      environment = []
+  })
+
+
   viewer_app = jsonencode(
     {
       cpu         = 1,
@@ -187,13 +225,6 @@ locals {
           protocol      = "tcp"
         }
       ],
-      healthCheck = {
-        command     = ["CMD", "/usr/local/bin/health-check.sh"],
-        startPeriod = 90,
-        interval    = 10,
-        timeout     = 30,
-        retries     = 3
-      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
@@ -228,7 +259,7 @@ locals {
       },
       {
         name  = "PDF_SERVICE_URL",
-        value = "http://${local.pdf_service_fqdn}"
+        value = "http://${local.pdf_service_fqdn}:8000"
       },
       {
         name  = "SESSION_EXPIRES",
