@@ -11,7 +11,7 @@
                         {% for message in messages %}
                             <li>
                                 {% if id <= 0 %}
-                                    <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="Form" data-gaLabel="{{ message | trans([], null, 'error') | raw }}" href="#">{{ message | trans([], null, 'error') | raw }}</a>
+                                    <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="Form" data-gaLabel="{{ message }}" href="#">{{ message | trans([], null, 'error') | raw }}</a>
                                 {% else %}
                                     <a href="#{{ id }}">{{ message | trans([], null, 'error') | raw }}</a>
                                 {% endif %}
@@ -29,7 +29,7 @@
         {# ... display the errors for a single field #}
         {%- for error in errors -%}
             <span class="govuk-error-message">
-                <span data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="{{ element.label }}" data-gaLabel="#{{ element.getName() }} - {{ error | trans([], null, 'error') | raw }}" class="govuk-visually-hidden">{% trans %}Error:{% endtrans %}</span> {{ error | trans([], null, 'error') | raw }}
+                <span data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="{{ element.label }}" data-gaLabel="#{{ element.getName() }} - {{ error }}" class="govuk-visually-hidden">{% trans %}Error:{% endtrans %}</span> {{ error | trans([], null, 'error') | raw }}
             </span>
         {%- endfor -%}
     {% endif %}
