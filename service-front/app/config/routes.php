@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+const ALLOW_OLDER_LPAS = 'allow_older_lpas';
+const USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
+const DELETE_LPA_FEATURE = 'delete_lpa_feature';
+
 use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
@@ -192,7 +196,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
-            'allow_older_lpas',
+            ALLOW_OLDER_LPAS,
             Actor\Handler\RequestActivationKey\ContactDetailsHandler::class,
             $defaultNotFoundPage
         )
@@ -202,7 +206,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
-            'allow_older_lpas',
+            ALLOW_OLDER_LPAS,
             \Actor\Handler\RequestActivationKey\ActorRoleHandler::class,
             $defaultNotFoundPage
         )
@@ -212,7 +216,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
-            'allow_older_lpas',
+            ALLOW_OLDER_LPAS,
             \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class,
             $defaultNotFoundPage
         )
@@ -222,7 +226,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
-            'allow_older_lpas',
+            ALLOW_OLDER_LPAS,
             \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class,
             $defaultNotFoundPage
         )
@@ -234,7 +238,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\AddLpaTriageHandler::class,
                 Actor\Handler\LpaAddHandler::class
             )
@@ -244,7 +248,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\LpaAddHandler::class,
                 $defaultNotFoundPage
             )
@@ -254,7 +258,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class,
                 $defaultNotFoundPage
             )
@@ -264,7 +268,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class,
                 $defaultNotFoundPage
             )
@@ -274,7 +278,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\NameHandler::class,
                 $defaultNotFoundPage
             )
@@ -284,7 +288,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\DateOfBirthHandler::class,
                 $defaultNotFoundPage
             )
@@ -294,7 +298,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\PostcodeHandler::class,
                 $defaultNotFoundPage
             )
@@ -304,7 +308,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class,
                 $defaultNotFoundPage
             )
@@ -314,7 +318,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'use_older_lpa_journey',
+                USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class,
                 $defaultNotFoundPage
             )
@@ -326,7 +330,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Mezzio\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
-                'delete_lpa_feature',
+                DELETE_LPA_FEATURE,
                 Actor\Handler\RemoveLpaHandler::class,
                 $defaultNotFoundPage
             )
