@@ -146,6 +146,7 @@ services:
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
+      NOTIFY_API_KEY:
     healthcheck:
       test:
         [
