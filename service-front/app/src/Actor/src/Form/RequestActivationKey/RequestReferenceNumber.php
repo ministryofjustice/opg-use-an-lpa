@@ -7,6 +7,7 @@ namespace Actor\Form\RequestActivationKey;
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
 use Common\Validator\ReferenceCheckValidator;
+use Common\Validator\LuhnCheck;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -56,11 +57,15 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
             ],
             [
                 'name' => Digits::class,
+                'break_chain_on_failure' => true,
                 'options' => [
                     'message' =>
                         'Enter the 12 numbers of the LPA reference number. ' .
                         'Do not include letters or other characters',
                 ],
+            ],
+            [
+                'name'    => LuhnCheck::class
             ],
         ];
         $stringLength = [

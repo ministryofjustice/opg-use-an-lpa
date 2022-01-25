@@ -93,6 +93,9 @@ Feature: Add an LPA
       | 7000-0000-00011 | The LPA reference number you entered is too long     |
       | 70000000000     | The LPA reference number you entered is too short    |
       |                 | Enter the LPA reference number                       |
+#      | 700000000253    | The LPA reference number provided is not correct     |
+#      | 100000000253    | The LPA reference number provided is not correct     |
+
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB
