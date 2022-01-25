@@ -21,7 +21,8 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
         ContainerInterface $container,
         string $featureFlagName,
         string $trueRoute,
-        string $falseRoute) {
+        string $falseRoute
+    ) {
         $this->middlewareContainer = $container;
         $this->featureFlagName = $featureFlagName;
         $this->trueRoute = $trueRoute;
@@ -36,11 +37,10 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
             throw new UnexpectedValueException('Missing feature flags configuration');
         }
 
-        $flagEnabled = $config['feature_flags'][$this->featureFlagName] ?? False;
+        $flagEnabled = $config['feature_flags'][$this->featureFlagName] ?? false;
 
         $middleware = $this->middlewareContainer->get($flagEnabled ? $this->trueRoute : $this->falseRoute);
 
         return $middleware->handle($request, $handler);
-
     }
 }
