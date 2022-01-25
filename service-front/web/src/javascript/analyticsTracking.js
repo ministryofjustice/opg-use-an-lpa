@@ -36,8 +36,6 @@ export default class AnalyticsTracking {
             attributeFilter: ['open']
         });
 
-
-
         const gaLoadEvents = document.querySelectorAll('[data-attribute="ga-load-event"]');
 
         for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
