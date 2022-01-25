@@ -1,6 +1,4 @@
 <div class="govuk-width-container">
-    {{ include('@viewer/new-view-service.html.twig') }}
-
     {% if not forDownload %}
         {{ include('@partials/welsh-switch.html.twig') }}
     {% endif %}
@@ -190,7 +188,7 @@
                         <dd class="govuk-summary-list__value">
                             {% if is_donor_signature_date_too_old(lpa) %}
                                 {% trans with {'%link%': path('lpa.instructions-preferences-before-2016')} %}
-                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions.<a class="govuk-link" href="%link%">Read more</a>
+                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions. <a class="govuk-link" href="%link%">Read more</a>
                                 {% endtrans %}
                             {% elseif lpa.applicationHasGuidance %}
                                 {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
@@ -260,21 +258,14 @@
         </div>
 
         {% if not forDownload %}
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-
-            <p class="govuk-body">
-                <a class="govuk-link check-another" href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
-            </p>
-
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="govuk-body">
+                        <a class="govuk-link check-another"
+                           href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
+                    </p>
+                </div>
             </div>
-        </div>
-
         {% endif %}
-
     </main>
-
 </div>

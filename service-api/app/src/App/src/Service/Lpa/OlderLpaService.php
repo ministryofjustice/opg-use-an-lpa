@@ -64,7 +64,6 @@ class OlderLpaService
                 'lpaId' => $actorId,
             ]
         );
-
         return $createdDate;
     }
 

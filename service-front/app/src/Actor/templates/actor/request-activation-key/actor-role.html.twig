@@ -4,10 +4,8 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
 
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
@@ -45,14 +43,11 @@
 
                         </fieldset>
                     </div>
-
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
-
                     {{ govuk_form_close() }}
-
                 </div>
             </div>
         </main>
-
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}
