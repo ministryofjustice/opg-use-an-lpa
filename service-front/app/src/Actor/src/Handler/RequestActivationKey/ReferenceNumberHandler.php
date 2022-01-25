@@ -42,7 +42,10 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new RequestReferenceNumber($this->getCsrfGuard($request), $this->featureEnabled);
+        $this->form = new RequestReferenceNumber(
+            $this->getCsrfGuard($request),
+            ($this->featureEnabled)('allow_meris_lpas')
+        );
         return parent::handle($request);
     }
 

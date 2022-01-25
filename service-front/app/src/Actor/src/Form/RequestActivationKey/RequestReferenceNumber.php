@@ -12,7 +12,6 @@ use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\{Digits, NotEmpty, StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
-use Common\Service\Features\FeatureEnabled;
 
 /**
  * Class RequestActivationKey
@@ -20,18 +19,18 @@ use Common\Service\Features\FeatureEnabled;
  */
 class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    private FeatureEnabled $featureEnabled;
+    private bool $merisEntryEnabled;
 
     public const FORM_NAME = 'request_activation_key_reference_number';
 
     /**
      * RequestActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
-     * @param FeatureEnabled $featureEnabled
+     * @param bool $featureFlagEnabled
      */
-    public function __construct(CsrfGuardInterface $csrfGuard, FeatureEnabled $featureEnabled)
+    public function __construct(CsrfGuardInterface $csrfGuard, bool $featureFlagEnabled)
     {
-        $this->featureEnabled = $featureEnabled;
+        $this->merisEntryEnabled = $featureFlagEnabled;
 
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
@@ -81,7 +80,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
             'name' => ReferenceCheckValidator::class,
         ];
 
-        if (($this->featureEnabled)('allow_meris_lpas')) {
+        if ($this->merisEntryEnabled) {
             array_push($validators, $referenceCheck);
         } else {
             array_push($validators, $stringLength);
