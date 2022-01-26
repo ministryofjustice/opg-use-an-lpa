@@ -30,7 +30,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
      */
     public function __construct(CsrfGuardInterface $csrfGuard, bool $merisEntryEnabled)
     {
-        $this->merisEntryEnabled = $featureFlagEnabled;
+        $this->merisEntryEnabled = $merisEntryEnabled;
 
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
