@@ -26,7 +26,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
     /**
      * RequestActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
-     * @param bool $featureFlagEnabled
+     * @param bool $merisEntryEnabled
      */
     public function __construct(CsrfGuardInterface $csrfGuard, bool $featureFlagEnabled)
     {
