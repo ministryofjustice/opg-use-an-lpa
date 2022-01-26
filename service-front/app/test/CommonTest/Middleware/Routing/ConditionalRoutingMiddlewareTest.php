@@ -12,7 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\DI\Config\ContainerWrapper;
 
-class ConditionalRoutingMiddlewareTest extends TestCase {
+class ConditionalRoutingMiddlewareTest extends TestCase
+{
     /** @test */
     public function test_when_feature_flag_is_on_true_route_is_called()
     {
@@ -48,7 +49,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase {
         $containerProphecy = $this->prophesize(ContainerWrapper::class);
         $containerProphecy->get('TrueRoute')->shouldNotBeCalled();
         $containerProphecy->get('FalseRoute')->shouldBeCalled()->willReturn($trueRouteProphecy);
-        $containerProphecy->get('config')->willReturn(['feature_flags'=> ['Feature_Flag_Name'=> false]]);
+        $containerProphecy->get('config')->willReturn(['feature_flags' => ['Feature_Flag_Name' => false]]);
 
 
 
