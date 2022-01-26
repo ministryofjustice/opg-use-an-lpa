@@ -28,7 +28,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
      * @param CsrfGuardInterface $csrfGuard
      * @param bool $merisEntryEnabled
      */
-    public function __construct(CsrfGuardInterface $csrfGuard, bool $featureFlagEnabled)
+    public function __construct(CsrfGuardInterface $csrfGuard, bool $merisEntryEnabled)
     {
         $this->merisEntryEnabled = $featureFlagEnabled;
 
