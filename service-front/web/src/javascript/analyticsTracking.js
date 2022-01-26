@@ -16,7 +16,7 @@ export default class AnalyticsTracking {
         document.addEventListener('click', (e) => {
             /* istanbul ignore else */
             if (e.target) {
-                if (e.target.matches('[data-attribute="ga-event"]')) {
+                if (e.target.matches('[data-gaEventType="onClick"]')) {
                     _this.processEventElement(e.target)
                 } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
                     _this.sendGoogleAnalyticsEvent('click', 'outbound', e.target.getAttribute('href'));
@@ -36,7 +36,7 @@ export default class AnalyticsTracking {
             attributeFilter: ['open']
         });
 
-        const gaLoadEvents = document.querySelectorAll('[data-attribute="ga-load-event"]');
+        const gaLoadEvents = document.querySelectorAll('[data-gaEventType="onLoad"]');
 
         for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
             const element = gaLoadEvents[i];

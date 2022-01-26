@@ -16,11 +16,11 @@ import AnalyticsTracking from './analyticsTracking';
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                                                                         <li>
-                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#email" data-gaLabel="#email - Enter an email address in the correct format, like name@example.com" href="#email">Enter an email address in the correct format,
+                                <a data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="#email" data-gaLabel="#email - Enter an email address in the correct format, like name@example.com" href="#email">Enter an email address in the correct format,
                                  like name@example.com</a>
                             </li>
                                                                                                 <li>
-                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#password" data-gaLabel="#password - Enter your password" href="#password">Enter your password</a>
+                                <a data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="#password" data-gaLabel="#password - Enter your password" href="#password">Enter your password</a>
                             </li>
                                                             </ul>
             </div>
@@ -32,7 +32,7 @@ import AnalyticsTracking from './analyticsTracking';
             <nav class="moj-sub-navigation" aria-label="Sub navigation">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                        <a data-attribute="ga-event" data-gaAction="Download" data-gaCategory="LPA summary" data-gaLabel="Download this LPA summary" class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
+                        <a data-gaEventType="onClick" data-gaAction="Download" data-gaCategory="LPA summary" data-gaLabel="Download this LPA summary" class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
                            href="https://localhost:9001/download-lpa">Download this LPA summary</a>
                     </li>
                 </ul>
