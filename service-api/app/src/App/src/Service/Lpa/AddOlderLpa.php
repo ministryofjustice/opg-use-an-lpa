@@ -159,7 +159,7 @@ class AddOlderLpa
                 $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
 
                 //if activation key due date is null, check activation code exist in sirius
-                if ($activationKeyDueDate == null) {
+                if ($activationKeyDueDate === null) {
                     $hasActivationCode = $this->olderLpaService->hasActivationCode(
                         $resolvedActor['lpa-id'],
                         $resolvedActor['actor']['uId']
