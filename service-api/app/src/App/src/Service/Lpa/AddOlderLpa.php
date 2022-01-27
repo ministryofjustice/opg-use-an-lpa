@@ -6,7 +6,10 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
 
@@ -164,11 +167,9 @@ class AddOlderLpa
                         $resolvedActor['lpa-id'],
                         $resolvedActor['actor']['uId']
                     );
+
                     if ($hasActivationCode instanceof DateTime) {
-                        $activationKeyDueDate = date(
-                            'Y-m-d',
-                            strtotime($hasActivationCode->format('c') . ' + 10 days')
-                        );
+                        $activationKeyDueDate = $hasActivationCode->add(new DateInterval('P10D'));
                     }
                 }
                 throw new BadRequestException(
@@ -176,7 +177,7 @@ class AddOlderLpa
                     [
                         'donor'                => $lpaAddedData['donor'],
                         'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate' => $activationKeyDueDate
+                        'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d')
                     ]
                 );
             }
@@ -190,12 +191,10 @@ class AddOlderLpa
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'donor'         => $resolvedActor['donor'],
-                        'caseSubtype'   => $resolvedActor['caseSubtype'],
-                        'activationKeyDueDate' => date(
-                            'Y-m-d',
-                            strtotime($hasActivationCode->format('c') . ' + 10 days')
-                        ),
+                        'donor'                 => $resolvedActor['donor'],
+                        'caseSubtype'           => $resolvedActor['caseSubtype'],
+                        'activationKeyDueDate'  =>
+                            $hasActivationCode->add(new DateInterval('P10D'))->format('Y-m-d')
                     ]
                 );
             }
