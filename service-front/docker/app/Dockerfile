@@ -1,24 +1,26 @@
-FROM composer:2.0.14 AS composer
+FROM composer:2.1.14 AS composer
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM composer:2.0.14 AS composer-dev
+
+FROM composer:2.1.14 AS composer-dev
 
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
 
-FROM php:7-fpm-alpine3.14 AS production
+
+FROM php:8.0-fpm-alpine3.15 AS production
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu gettext fcgi \
-  && apk upgrade curl \
-  && install-php-extensions apcu redis intl gettext xdebug \
-  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  && apk upgrade --update --no-cache curl \
+  && install-php-extensions apcu redis intl gettext \
+  && rm /usr/bin/install-php-extensions
 
 COPY service-front/app /app
 COPY --from=composer /app/vendor /app/vendor
@@ -28,11 +30,19 @@ COPY service-front/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 
-CMD php-fpm
+CMD ["php-fpm"]
+
 
 FROM production as development
 
 COPY --from=composer-dev /app/vendor /app/vendor
+
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+RUN set -xe \
+  && install-php-extensions xdebug \
+  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+  && rm /usr/bin/install-php-extensions
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm

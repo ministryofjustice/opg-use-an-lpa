@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Form;
 
+use Common\Form\AbstractForm;
 use Common\Form\CookieConsent;
 use Common\Form\CreateAccount;
-use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
+use Laminas\Form\Element\{Hidden, Radio};
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\{Radio, Hidden};
+use PHPUnit\Framework\TestCase;
 
 class CookieConsentTest extends TestCase implements TestsLaminasForm
 {
@@ -39,7 +38,7 @@ class CookieConsentTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new CookieConsent($guardProphecy->reveal());

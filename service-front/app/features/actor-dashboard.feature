@@ -23,38 +23,33 @@ Feature: The user is able to see correct information on their dashboard
 
   @integration @ui
   Scenario: As a user I can see the number of active access codes an LPA has
-    Given I have added an LPA to my account
-    When I am on the dashboard page
+    Given I am on the dashboard page
     Then I can see that no organisations have access to my LPA
 
   @ui
   Scenario: As a user I can see the message on instructions and preferences
-    Given I have added an LPA to my account
-    When I am on the dashboard page
+    Given I am on the dashboard page
     Then I can see the message Important: This LPA has instructions or preferences
 
   @ui
   Scenario: As a user I can see the read more link in the message on instructions and preferences
-    Given I have added an LPA to my account
-    When I am on the dashboard page
+    Given I am on the dashboard page
     Then I can see Read more link along with the instructions or preference message
 
   @ui
   Scenario: As a user I am navigated to the instructions and preferences page
-    Given I have added an LPA to my account
-    When I am on the dashboard page
+    Given I am on the dashboard page
     And I click the Read more link in the instructions or preference message
     Then I am navigated to the instructions and preferences page
 
   @ui
   Scenario: Check back function on instructions and preferences page
-    Given I have added an LPA to my account
-    When I am on the instructions and preferences page
+    Given I am on the instructions and preferences page
     And I click the Back to your LPAs link on the page
     Then I should be taken to the <dashboard> page
 
   @ui
   Scenario: As a user I am shown how many LPAs are in my account
-    Given I have added 2 LPAs to my account
+    Given I have added an additional LPA to my account
     When I am on the dashboard page
     Then I am told that I have 2 LPAs in my account

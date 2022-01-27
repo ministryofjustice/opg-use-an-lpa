@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Service\Session\RemoveAccessForAllSessionValues;
-use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
+use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
+use Common\Service\Session\RemoveAccessForAllSessionValues;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ReferenceNumberHandler
@@ -44,7 +44,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($request->getQueryParams()['startAgain']) {
+        if (array_key_exists('startAgain', $request->getQueryParams())) {
             $this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($this->session);
         }
 

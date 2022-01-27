@@ -7,12 +7,12 @@ namespace CommonTest\Service\Url;
 use Common\Service\Url\UrlValidityCheckService;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouteResult;
 use Mezzio\Router\RouterInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Mezzio\Helper\UrlHelper;
 
 class UrlValidityCheckServiceTest extends TestCase
 {
@@ -38,7 +38,7 @@ class UrlValidityCheckServiceTest extends TestCase
 
     private $locale;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serverRequestFactoryProphecy = $this->prophesize(ServerRequestFactory::class);
         $this->routerProphecy = $this->prophesize(RouterInterface::class);
@@ -202,7 +202,7 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = 'cy';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
         $homeUrl = 'https://localhost:9002/home';
         $welshHomeUrl = 'https://localhost:9002/cy/home';
@@ -230,7 +230,7 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
 
-        $resultReferer = $service->setValidReferer($refererUrl);
+        $resultReferer = $service->setValidReferer($englishRefererUrl);
 
         $this->assertEquals($welshHomeUrl, $resultReferer);
     }

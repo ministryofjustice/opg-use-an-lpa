@@ -105,7 +105,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
-        $lpaData = (!empty($lpaData) and ($lpaData['actor'] != null)) ? ($this->parseLpaData)($lpaData) : null;
+        $lpaData = isset($lpaData['actor']) ? ($this->parseLpaData)($lpaData) : null;
 
         if ($lpaData['lpa'] !== null) {
             $this->logger->info(

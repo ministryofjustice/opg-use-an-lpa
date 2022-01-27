@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ActorTest\Handler;
 
 use Actor\Handler\ChangeDetailsHandler;
-use PHPUnit\Framework\TestCase;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Template\TemplateRendererInterface;
-use Mezzio\Helper\UrlHelper;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ChangeDetailsHandlerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class ChangeDetailsHandlerTest extends TestCase
      */
     private $requestProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);

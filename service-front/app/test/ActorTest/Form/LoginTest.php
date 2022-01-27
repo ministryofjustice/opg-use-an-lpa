@@ -7,11 +7,11 @@ namespace ActorTest\Form;
 use Actor\Form\Login;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Form\Element\Password;
 use Common\Form\Element\Email;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Password;
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class LoginTest extends TestCase implements TestsLaminasForm
 {
@@ -39,7 +39,7 @@ class LoginTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new Login($guardProphecy->reveal());
