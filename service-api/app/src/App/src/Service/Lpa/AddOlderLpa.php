@@ -169,15 +169,19 @@ class AddOlderLpa
                     );
 
                     if ($hasActivationCode instanceof DateTime) {
-                        $activationKeyDueDate = $hasActivationCode->add(new DateInterval('P10D'));
+                        $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+                        $activationKeyDueDate = $activationKeyDueDate
+                            ->add(new DateInterval('P10D'))
+                            ->format('Y-m-d');
                     }
                 }
+
                 throw new BadRequestException(
                     'Activation key already requested for LPA',
                     [
                         'donor'                => $lpaAddedData['donor'],
                         'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d')
+                        'activationKeyDueDate' => $activationKeyDueDate
                     ]
                 );
             }
