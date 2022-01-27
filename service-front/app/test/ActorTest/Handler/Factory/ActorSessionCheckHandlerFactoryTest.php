@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler\Factory;
 
-use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
 use Actor\Handler\ActorSessionCheckHandler;
+use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -21,7 +21,7 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
      */
     private $containerProphecy;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->containerProphecy = $this->prophesize(ContainerInterface::class);
         $this->containerProphecy

@@ -37,7 +37,7 @@ class DonorDetailsTest extends TestCase
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new DonorDetails($guardProphecy->reveal());

@@ -114,17 +114,21 @@ class UserService implements UserRepositoryInterface
                     'Authentication successful for account with Id {id}',
                     [
                         'id'         => $userData['Id'],
-                        'last-login' => $userData['LastLogin']
+                        'last-login' => $userData['LastLogin'] ?? 'never'
                     ]
                 );
+
+                $filteredDetails = [
+                    'Email'     => $userData['Email'],
+                ];
+                if (array_key_exists('LastLogin', $userData)) {
+                    $filteredDetails['LastLogin'] = $userData['LastLogin'];
+                }
 
                 return ($this->userModelFactory)(
                     $userData['Id'],
                     [],
-                    [
-                        'Email'     => $userData['Email'],
-                        'LastLogin' => $userData['LastLogin']
-                    ]
+                    $filteredDetails
                 );
             }
         } catch (ApiException $e) {

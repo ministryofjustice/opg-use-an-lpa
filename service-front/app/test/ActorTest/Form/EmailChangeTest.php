@@ -7,10 +7,10 @@ namespace ActorTest\Form;
 use Actor\Form\ChangeEmail;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Common\Form\Element\Email;
 use CommonTest\Form\LaminasFormTests;
 use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Password;
-use Common\Form\Element\Email;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +40,7 @@ class EmailChangeTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new ChangeEmail($guardProphecy->reveal());

@@ -11,9 +11,9 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Handler\WorkflowStep;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
  * @codeCoverageIgnore
@@ -54,8 +54,8 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
             $this->session->set(
                 'telephone_option',
                 [
-                    'telephone' => $postData['telephone_option']['telephone'],
-                    'no_phone' => $postData['telephone_option']['no_phone']
+                    'telephone' => $postData['telephone_option']['telephone'] ?? null,
+                    'no_phone' => $postData['telephone_option']['no_phone'] ?? null
                 ]
             );
 

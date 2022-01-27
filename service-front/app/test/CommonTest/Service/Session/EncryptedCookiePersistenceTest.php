@@ -66,7 +66,7 @@ class EncryptedCookiePersistenceTest extends TestCase
     private $testKey;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         // A real key used within the tests. It doesn't matter what it is.
         $this->testKey = new Key('test-id', new EncryptionKey(new HiddenString(random_bytes(32))));
