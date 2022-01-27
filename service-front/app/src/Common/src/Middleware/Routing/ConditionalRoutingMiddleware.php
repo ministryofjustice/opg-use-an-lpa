@@ -4,7 +4,6 @@ namespace Common\Middleware\Routing;
 
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
-use Mezzio\MiddlewareContainer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
