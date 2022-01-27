@@ -65,6 +65,27 @@ class ConditionalRoutingMiddlewareTest extends TestCase
         $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
     }
 
+    /** @test */
+    public function test_when_feature_flag_is_undefined_false_route_is_called()
+    {
+        $trueRouteProphecy = $this->prophesize(RequestHandlerInterface::class);
+
+        $this->containerProphecy->get('TrueRoute')->shouldNotBeCalled();
+        $this->containerProphecy->get('FalseRoute')->shouldBeCalled()->willReturn($trueRouteProphecy);
+        $this->containerProphecy->get('config')->willReturn(['feature_flags' => []]);
+
+        $sut = new ConditionalRoutingMiddleware(
+            $this->containerProphecy->reveal(),
+            'Feature_Flag_Name',
+            'TrueRoute',
+            'FalseRoute'
+        );
+
+        $trueRouteProphecy->handle(Argument::cetera())->shouldBeCalled();
+
+        $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
+    }
+
     /** @test  */
     public function test_when_feature_flag_is_not_defined_error_raised()
     {
