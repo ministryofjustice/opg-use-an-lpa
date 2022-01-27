@@ -16,6 +16,14 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
     private string $trueRoute;
     private string $falseRoute;
 
+    /**
+     * @param ContainerInterface $container The container needed to get the state of the feature flag when the route
+     *                                      is needed.
+     * @param string $featureFlagName       The name of the feature flag that will be used to determine the
+     *                                      correct route
+     * @param string             $trueRoute The route taken if the feature flag is true
+     * @param string             $falseRoute The route taken if the feature flag is false Or undefined.
+     */
     public function __construct(
         ContainerInterface $container,
         string $featureFlagName,
