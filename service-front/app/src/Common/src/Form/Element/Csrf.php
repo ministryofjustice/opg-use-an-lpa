@@ -6,6 +6,7 @@ namespace Common\Form\Element;
 
 use Common\Validator\CsrfGuardValidator as CsrfValidator;
 use Laminas\Form\Element\Csrf as LaminasCsrf;
+use Laminas\Validator\Csrf as LaminasCsrfValidator;
 
 /**
  * Class Csrf
@@ -16,9 +17,9 @@ class Csrf extends LaminasCsrf
     /**
      * Overridden function required to implement our custom CsrfValidator
      *
-     * @return \Laminas\Validator\Csrf
+     * @return LaminasCsrfValidator
      */
-    public function getCsrfValidator(): \Laminas\Validator\Csrf
+    public function getCsrfValidator(): LaminasCsrfValidator
     {
         if (null === $this->csrfValidator) {
             $csrfOptions = $this->getCsrfValidatorOptions();
