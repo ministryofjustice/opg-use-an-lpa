@@ -86,15 +86,6 @@ workflows:
                   ]
             requires: [test_web]
 
-        - use-my-lpa/node_test_service_pdf:
-            name: test_pdf
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters:
@@ -133,16 +124,6 @@ workflows:
                   /dependabot\/composer\/.*/,
                   ]
 
-        - use-my-lpa/docker_build_pdf:
-            name: pdf_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires: [test_pdf]
-
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters:
@@ -174,7 +155,6 @@ workflows:
                 app_front_build,
                 app_api_build,
                 test_web,
-                test_pdf,
                 admin_app_test,
               ]
 
@@ -301,14 +281,6 @@ workflows:
               ] } }
             requires: [test_web]
 
-        - use-my-lpa/node_test_service_pdf:
-            name: test_pdf
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/
-              ] } }
-
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters: { branches: { ignore: [
@@ -359,15 +331,6 @@ workflows:
               /tf\/.*/
               ] } }
 
-        - use-my-lpa/docker_build_pdf:
-            name: pdf_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/
-              ] } }
-            requires: [test_pdf]
-
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { ignore: [
@@ -380,7 +343,6 @@ workflows:
                 app_front_build,
                 app_api_build,
                 test_web,
-                test_pdf,
                 admin_app_test,
               ]
 
@@ -409,7 +371,6 @@ workflows:
                 web_front_build,
                 web_api_build,
                 app_api_build,
-                pdf_build,
                 admin_app_build,
               ]
 
@@ -426,7 +387,6 @@ workflows:
                 web_front_build,
                 web_api_build,
                 app_api_build,
-                pdf_build,
                 admin_app_build,
               ]
 
@@ -481,10 +441,6 @@ workflows:
             filters: { branches: { only: [main] } }
             requires: [test_web]
 
-        - use-my-lpa/node_test_service_pdf:
-            name: test_pdf
-            filters: { branches: { only: [main] } }
-
         - use-my-lpa/docker_build_front_app:
             name: app_front_build
             filters: { branches: { only: [main] } }
@@ -503,11 +459,6 @@ workflows:
             name: web_api_build
             filters: { branches: { only: [main] } }
 
-        - use-my-lpa/docker_build_pdf:
-            name: pdf_build
-            filters: { branches: { only: [main] } }
-            requires: [test_pdf]
-
         - use-my-lpa/docker_test_admin:
             name: admin_app_test
             filters: { branches: { only: [main] } }
@@ -524,7 +475,6 @@ workflows:
                 app_front_build,
                 app_api_build,
                 test_web,
-                test_pdf,
                 admin_app_test,
               ]
 
@@ -554,7 +504,6 @@ workflows:
                 web_front_build,
                 web_api_build,
                 app_api_build,
-                pdf_build,
                 admin_app_build,
               ]
 
@@ -567,7 +516,6 @@ workflows:
                 web_front_build,
                 web_api_build,
                 app_api_build,
-                pdf_build,
                 admin_app_build,
                 preprod_apply_environment_terraform,
               ]
@@ -601,7 +549,6 @@ workflows:
                 web_front_build,
                 web_api_build,
                 app_api_build,
-                pdf_build,
                 admin_app_build,
               ]
 
@@ -712,48 +659,6 @@ orbs:
         resource_class: small
 
     jobs:
-      node_test_service_pdf:
-        executor: node-browsers
-        steps:
-          - checkout
-          - restore_cache:
-              name: Restore node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}
-          - run:
-              name: Install dependencies
-              command: |
-                if [ ! -d service-pdf/app/node_modules ]; then
-                  cd service-pdf/app/ && npm install
-                fi
-          - run:
-              name: Run tests with Jest
-              command: cd service-pdf/app/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
-          - store_test_results:
-              path: service-pdf/app/test-results
-          - store_artifacts:
-              path: service-pdf/app/test-results/junit
-          - run:
-              name: Run coverage with Jest
-              command: |
-                mkdir -p /home/circleci/project/build/service-pdf
-                cd service-pdf/app/
-                ./node_modules/.bin/jest --ci --runInBand --coverage
-                cp -a ./coverage /home/circleci/project/build/service-pdf
-          - store_test_results:
-              path: build/service-pdf/
-          - store_artifacts:
-              path: build/service-pdf/
-          - persist_to_workspace:
-              root: build
-              paths:
-                - service-pdf/
-              when: always
-          - save_cache:
-              name: Save node modules cache
-              key: node_modules-{{ checksum "service-pdf/app/package-lock.json" }}-{{ arch }}
-              paths:
-                - service-pdf/app/node_modules
-
       node_test_web:
         #
         # Build Docker container for Front App
@@ -1066,44 +971,6 @@ orbs:
 
                 docker tag api-web:latest << parameters.container_repo_url >>:latest
                 docker tag api-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-
-                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-                  # We want all of the tags pushed
-                  docker push --all-tags << parameters.container_repo_url >>
-                else
-                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-                fi
-
-      docker_build_pdf:
-        #
-        # Build Docker container for PDF Generator
-        #   and runs the Unit Tests.
-        #
-        executor: python
-        parameters:
-          container_repo_url:
-            type: string
-            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/pdf
-        steps:
-          - checkout
-          - install_aws_cli
-          - setup_remote_docker:
-              version: 20.10.7
-              docker_layer_caching: false
-          - dockerhub_login
-          - run:
-              name: Build
-              command: |
-                docker build --target production --file service-pdf/docker/app/Dockerfile --tag pdf:latest .
-          - ecr_login
-          - run:
-              name: Push container
-              command: |
-                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-                echo $IMAGE_TAG
-
-                docker tag pdf:latest << parameters.container_repo_url >>:latest
-                docker tag pdf:latest << parameters.container_repo_url >>:${IMAGE_TAG}
 
                 if [ "${CIRCLE_BRANCH}" == "main" ]; then
                   # We want all of the tags pushed

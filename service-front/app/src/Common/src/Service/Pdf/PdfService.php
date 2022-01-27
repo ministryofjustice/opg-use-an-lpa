@@ -146,8 +146,10 @@ class PdfService
     private function generateHeaders(): array
     {
         $headers = [
-            'Content-Type'      => 'text/html',
-            'Strip-Anchor-Tags' => true,
+            'Content-Type'       => 'text/html',
+            'Strip-Anchor-Tags'  => 'true',
+            'Print-Background'   => 'true',
+            'Emulate-Media-Type' => 'screen',
         ];
 
         if (!empty($this->traceId)) {
