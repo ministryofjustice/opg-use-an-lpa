@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Common\Service\Security;
 
 use Common\Service\Security\RateLimit\KeyedRateLimitService;
-use Laminas\Cache\StorageFactory;
+use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class RateLimitServiceFactory
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
     {
@@ -26,7 +23,10 @@ class RateLimitServiceFactory
      * Returns a configured rate limit service loaded using the name given
      *
      * @param string $limitName
+     *
      * @return RateLimitService
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function factory(string $limitName): RateLimiterInterface
     {
@@ -44,8 +44,10 @@ class RateLimitServiceFactory
             throw new RuntimeException('Missing rate limit type configuration for ' . $limitName);
         }
 
+        $factory = $this->container->get(StorageAdapterFactoryInterface::class);
+
         $config['ratelimits'][$limitName]['storage']['options']['namespace'] = $limitName;
-        $cacheAdaptor = StorageFactory::factory($config['ratelimits'][$limitName]['storage']);
+        $cacheAdaptor = $factory->createFromArrayConfiguration($config['ratelimits'][$limitName]['storage']);
 
         $type = $config['ratelimits'][$limitName]['type'];
         switch ($type) {
@@ -67,6 +69,8 @@ class RateLimitServiceFactory
      * Returns all configured rate limit services
      *
      * @return RateLimitService[]
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function all(): array
     {

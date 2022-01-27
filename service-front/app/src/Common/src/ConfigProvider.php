@@ -105,6 +105,9 @@ class ConfigProvider
                 \Laminas\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
+                \Laminas\Cache\Storage\AdapterPluginManager::class => [
+                    Service\Cache\RedisAdapterPluginManagerDelegatorFactory::class,
+                ],
             ],
         ];
     }
