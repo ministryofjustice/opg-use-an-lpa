@@ -44,5 +44,7 @@ RUN set -xe \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
   && rm /usr/bin/install-php-extensions
 
+COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
+
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
