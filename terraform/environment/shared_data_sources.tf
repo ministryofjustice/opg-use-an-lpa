@@ -91,7 +91,13 @@ data "aws_ecr_repository" "use_an_lpa_api_web" {
 
 data "aws_ecr_repository" "use_an_lpa_pdf" {
   provider = aws.management
-  name     = "use_an_lpa/pdf"
+  name     = "pdf_service"
+}
+
+data "aws_ecr_image" "pdf_service" {
+  repository_name = "pdf_service"
+  image_tag       = local.environment.pdf_container_version
+  provider        = aws.management
 }
 
 data "aws_ecr_repository" "use_an_lpa_admin_app" {
