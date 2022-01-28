@@ -72,7 +72,7 @@ resource "aws_security_group_rule" "pdf_ecs_service_viewer_ingress" {
   description              = "Allow Port 80 ingress from the View service"
   type                     = "ingress"
   from_port                = 80
-  to_port                  = 80
+  to_port                  = 8000
   protocol                 = "tcp"
   security_group_id        = aws_security_group.pdf_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
@@ -120,21 +120,19 @@ resource "aws_iam_role" "pdf_task_role" {
 
 //-----------------------------------------------
 // pdf ECS Service Task Container level config
-
 locals {
   pdf_app = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}",
+    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}@${data.aws_ecr_image.pdf_service.image_digest}",
     mountPoints = [],
     name        = "pdf",
     portMappings = [
       {
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8000,
+        hostPort      = 8000,
         protocol      = "tcp"
-      }
-    ],
+    }],
     volumesFrom = [],
     logConfiguration = {
       logDriver = "awslogs",
@@ -143,6 +141,12 @@ locals {
         awslogs-region        = "eu-west-1",
         awslogs-stream-prefix = "${local.environment_name}.pdf-app.use-an-lpa"
       }
-    }
+    },
+    environment = [
+      {
+        name  = "PDF_SERVICE_PORT",
+        value = "8000"
+      }
+    ]
   })
 }
