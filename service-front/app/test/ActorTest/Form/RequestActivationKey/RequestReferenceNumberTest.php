@@ -49,7 +49,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
         $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
     }
     /** @test */
-    public function it_sets_correct_validator_when_flag_set_to_true()
+    public function it_sets_correct_validator_when_flag_set_to_true(): void
     {
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
         $key = array_search(
@@ -61,7 +61,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     }
 
     /** @test */
-    public function it_sets_correct_validator_when_flag_set_to_false()
+    public function it_sets_correct_validator_when_flag_set_to_false(): void
     {
         $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false);
 
