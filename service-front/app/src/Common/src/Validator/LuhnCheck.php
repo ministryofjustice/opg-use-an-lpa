@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Common\Validator;
 
+use Laminas\Validator\AbstractValidator;
+
 /**
  * Class LuhnCheck
+ *
  * @package Common\Validator
  */
-class LuhnCheck extends DateValidator
+class LuhnCheck extends AbstractValidator
 {
     public const INVALID_REFERENCE = 'invalidReference';
     public const LPA_MUST_START_WITH = 'mustStartWithSeven';

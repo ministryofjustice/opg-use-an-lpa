@@ -11,7 +11,7 @@ use Common\Validator\LuhnCheck;
 use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\{Digits, NotEmpty, StringLength};
+use Laminas\Validator\{Digits, NotEmpty,StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
