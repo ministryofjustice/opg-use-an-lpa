@@ -9,7 +9,7 @@ class StripSpacesAndHyphensTest extends TestCase
 {
     private StripSpacesAndHyphens $filter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new StripSpacesAndHyphens();
     }

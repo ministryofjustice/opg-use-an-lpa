@@ -11,10 +11,18 @@ Feature: Add an LPA triage page
     And I have been given access to use an LPA via credentials
 
   @ui
-  Scenario: The user is taken to the add lpa triage page from the dashboard
-    Given I am on the dashboard page
+  Scenario: The user is taken to the add lpa triage page from the dashboard (first LPA)
+    Given I have no LPAs in my account
+    And I am on the dashboard page
+    When I choose to add my first LPA
+    Then I am taken to the add an LPA triage page
+
+  @ui
+  Scenario: The user is taken to the add lpa triage page from the dashboard (additional LPA)
+    Given I have added an LPA to my account
+    And I am on the dashboard page
     When I select to add an LPA
-    Then I am on the add an LPA triage page
+    Then I am taken to the add an LPA triage page
 
   @ui
   Scenario Outline: A user with an activation key is taken to the add an LPA page

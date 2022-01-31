@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\View\Twig;
+namespace CommonTest\View\Twig;
 
 use Common\View\Twig\JavascriptVariablesExtension;
 use Common\View\Twig\JavascriptVariablesExtensionFactory;

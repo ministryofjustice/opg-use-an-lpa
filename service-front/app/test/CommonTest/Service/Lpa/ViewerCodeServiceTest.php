@@ -7,8 +7,8 @@ namespace CommonTest\Service\Lpa;
 use ArrayObject;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\ViewerCodeService;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 class ViewerCodeServiceTest extends TestCase
 {
@@ -25,7 +25,7 @@ class ViewerCodeServiceTest extends TestCase
      */
     private $apiClientProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(Client::class);
 

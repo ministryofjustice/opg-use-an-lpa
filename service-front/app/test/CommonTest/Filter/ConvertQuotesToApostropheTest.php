@@ -9,7 +9,7 @@ class ConvertQuotesToApostropheTest extends TestCase
 {
     private ConvertQuotesToApostrophe $filter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new ConvertQuotesToApostrophe();
     }

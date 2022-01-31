@@ -14,7 +14,7 @@ class DobTrimFilterTest extends TestCase
      */
     private DateTrimFilter $filter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new DateTrimFilter();
     }

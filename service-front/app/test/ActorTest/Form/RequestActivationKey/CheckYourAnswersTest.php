@@ -33,7 +33,7 @@ class CheckYourAnswersTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new CheckYourAnswers($guardProphecy->reveal());

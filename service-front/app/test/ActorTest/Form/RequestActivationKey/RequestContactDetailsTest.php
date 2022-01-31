@@ -5,9 +5,9 @@ namespace ActorTest\Form\RequestActivationKey;
 use Actor\Form\RequestActivationKey\RequestContactDetails;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Text;
-use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -36,7 +36,7 @@ class RequestContactDetailsTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new RequestContactDetails($guardProphecy->reveal());

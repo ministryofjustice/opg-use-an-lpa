@@ -27,7 +27,7 @@
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "ext-apcu": "*",
         "ext-redis": "*",
         "ext-intl": "*",
@@ -35,9 +35,11 @@
         "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.91",
         "cooperaj/better-twig-i18n": "^1.1",
-        "dflydev/fig-cookies": "^2.0",
-        "elie29/zend-phpdi-config": "^3.0",
-        "laminas/laminas-cache": "2.9.0",
+        "dflydev/fig-cookies": "^3.0",
+        "elie29/zend-phpdi-config": "^8.0",
+        "laminas/laminas-cache": "^2.12.0",
+        "laminas/laminas-cache-storage-adapter-apcu": "^1.0",
+        "laminas/laminas-cache-storage-adapter-redis": "^1.0",
         "laminas/laminas-component-installer": "^2.1.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-crypt": "^3.3",
@@ -56,20 +58,34 @@
         "nesbot/carbon": "^2.45.1",
         "paragonie/halite": "^4.5",
         "php-http/guzzle6-adapter": "^2.0",
-        "wshafer/psr11-monolog": "^3.0"
+        "blazon/psr11-monolog": "^4.0"
     },
     "require-dev": {
         "behat/behat": "^3.6",
         "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
-        "jshayes/fake-requests": "^2.3",
+        "jshayes/fake-requests": "^3.0",
         "laminas/laminas-development-mode": "^3.1",
         "mezzio/mezzio-tooling": "^1.0",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^3.0",
         "vimeo/psalm": "^3.0"
+    },
+    "replace": {
+        "laminas/laminas-cache-storage-adapter-apc": "*",
+        "laminas/laminas-cache-storage-adapter-blackhole": "*",
+        "laminas/laminas-cache-storage-adapter-dba": "*",
+        "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
+        "laminas/laminas-cache-storage-adapter-filesystem": "*",
+        "laminas/laminas-cache-storage-adapter-memcache": "*",
+        "laminas/laminas-cache-storage-adapter-memcached": "*",
+        "laminas/laminas-cache-storage-adapter-mongodb": "*",
+        "laminas/laminas-cache-storage-adapter-session": "*",
+        "laminas/laminas-cache-storage-adapter-wincache": "*",
+        "laminas/laminas-cache-storage-adapter-xcache": "*",
+        "laminas/laminas-cache-storage-adapter-zend-server": "*"
     },
     "autoload": {
         "psr-4": {

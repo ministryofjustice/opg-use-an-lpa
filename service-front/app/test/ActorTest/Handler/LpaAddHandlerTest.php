@@ -7,9 +7,6 @@ namespace ActorTest\Handler;
 use Actor\Form\LpaAdd;
 use Actor\Handler\LpaAddHandler;
 use Common\Service\Lpa\LpaService;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Argument\Token\CallbackToken;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -18,6 +15,9 @@ use Mezzio\Csrf\CsrfMiddleware;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument\Token\CallbackToken;
+use Psr\Http\Message\ServerRequestInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
@@ -53,7 +53,7 @@ class LpaAddHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
 
