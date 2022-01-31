@@ -1774,8 +1774,8 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $codeExists = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
-        $codeExists->Created = $createdDate;
+        $createdDate = (new DateTime())->modify('-14 days');
+        $codeExists->Created = $createdDate->format('Y-m-d');
 
         $this->pactPostInteraction(
             $this->codesApiPactProvider,
@@ -1803,7 +1803,11 @@ class LpaContext extends BaseIntegrationContext
                         'middlenames'   => $this->lpa->donor->middlenames,
                         'surname'       => $this->lpa->donor->surname
                     ],
-                    'caseSubtype'   => $this->lpa->caseSubtype
+                    'caseSubtype'           => $this->lpa->caseSubtype,
+                    'activationKeyDueDate'  => date(
+                        'Y-m-d',
+                        strtotime($createdDate->format('c') . ' + 10 days')
+                    )
                 ],
                 $ex->getAdditionalData()
             );
@@ -2488,16 +2492,30 @@ class LpaContext extends BaseIntegrationContext
             );
         }
 
-        $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
-            ],
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
-        ];
+        if (($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => $this->userLpaActorToken,
+                'activationKeyDueDate' => null,
+            ];
+        } else {
+            $expectedResponse = [
+                'donor' => [
+                    'uId' => $this->lpa->donor->uId,
+                    'firstname' => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname' => $this->lpa->donor->surname,
+                ],
+                'caseSubtype' => $this->lpa->caseSubtype,
+                'lpaActorToken' => (int)$this->userLpaActorToken,
+            ];
+        }
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
@@ -2580,7 +2598,8 @@ class LpaContext extends BaseIntegrationContext
                 'middlenames'   => $this->lpa->donor->middlenames,
                 'surname'       => $this->lpa->donor->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => null
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);

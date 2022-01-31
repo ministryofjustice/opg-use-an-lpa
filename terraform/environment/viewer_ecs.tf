@@ -187,6 +187,13 @@ locals {
           protocol      = "tcp"
         }
       ],
+      healthCheck = {
+        command     = ["CMD", "/usr/local/bin/health-check.sh"],
+        startPeriod = 90,
+        interval    = 10,
+        timeout     = 30,
+        retries     = 3
+      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
@@ -221,7 +228,7 @@ locals {
       },
       {
         name  = "PDF_SERVICE_URL",
-        value = "http://${local.pdf_service_fqdn}"
+        value = "http://${local.pdf_service_fqdn}:8000"
       },
       {
         name  = "SESSION_EXPIRES",

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session\KeyManager;
 
-use Common\Service\Session\KeyManager\Key;
-use Common\Service\Session\KeyManager\KeyCache;
-use Common\Service\Session\KeyManager\KmsManager;
-use Common\Service\Session\KeyManager\KeyNotFoundException;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
+use Aws\Kms\Exception\KmsException;
 use Aws\Kms\KmsClient;
 use Aws\Result as AwsResult;
-use Aws\Kms\Exception\KmsException;
+use Common\Service\Session\KeyManager\Key;
+use Common\Service\Session\KeyManager\KeyCache;
+use Common\Service\Session\KeyManager\KeyNotFoundException;
+use Common\Service\Session\KeyManager\KmsManager;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 
 class KmsManagerTest extends TestCase
 {
@@ -22,7 +22,7 @@ class KmsManagerTest extends TestCase
     private $cacheProphecy;
     private $kmsClientProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Constructor arguments
         $this->cacheProphecy = $this->prophesize(KeyCache::class);

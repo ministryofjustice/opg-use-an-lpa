@@ -5,10 +5,7 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -53,13 +50,10 @@
                              <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
                         </span>
                     </div>
-
                     <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">{% trans %}Delete account{% endtrans %}</a>
-
                 </div>
             </div>
-
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
-
 {% endblock %}

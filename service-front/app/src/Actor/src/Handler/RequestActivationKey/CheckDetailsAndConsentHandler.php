@@ -98,7 +98,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         ) {
             $this->data['actor_role'] = $this->session->get('actor_role');
 
-            if (strtolower($this->data['actor_role']) === 'attorney') {
+            if (strtolower($this->data['actor_role'] ?? null) === 'attorney') {
                 $this->data['donor_first_names'] = $this->session->get('donor_first_names');
                 $this->data['donor_last_name'] = $this->session->get('donor_last_name');
                 $this->data['donor_dob'] = Carbon::create(
@@ -131,6 +131,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
+
         if ($this->form->isValid()) {
             $this->data['first_names'] = $this->session->get('first_names');
             $this->data['last_name'] = $this->session->get('last_name');
@@ -150,7 +151,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                 'and provided the following contact information: {role}, {phone}',
                 [
                     'id'    => $this->user->getIdentity(),
-                    'role'  => $this->data['actor_role'] === 'donor' ?
+                    'role'  => ($this->data['actor_role'] ?? null) === 'donor' ?
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_DONOR :
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
                     'phone' => array_key_exists('telephone', $this->data) ?

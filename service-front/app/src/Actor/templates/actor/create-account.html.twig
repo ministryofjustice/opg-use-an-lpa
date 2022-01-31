@@ -4,8 +4,6 @@
 
 {% block content %}
 <div class="govuk-width-container">
-    {{ include('@actor/partials/new-use-service.html.twig') }}
-
     {{ include('@partials/welsh-switch.html.twig') }}
 
     <div role="navigation" aria-labelledby="back-link-navigation">
@@ -62,19 +60,13 @@
                                 {{ govuk_form_element(form.get('terms'), { 'label': 'I agree to the <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>' | trans({ '%link%': path('terms-of-use') }) }) }}
 
                                 <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Create account{% endtrans %}</button>
-
                             </div>
-
                         </div>
-
                     </fieldset>
-
                 {{ govuk_form_close() }}
-
             </div>
-
         </div>
-
     </main>
+    {{ include('@actor/partials/new-use-service.html.twig') }}
 </div>
 {% endblock %}

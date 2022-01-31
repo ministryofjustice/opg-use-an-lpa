@@ -38,34 +38,35 @@ variable "environments" {
           maximum = number
         })
       })
-      build_admin                               = bool
-      cookie_expires_use                        = number
-      cookie_expires_view                       = number
-      google_analytics_id_use                   = string
-      google_analytics_id_view                  = string
-      have_a_backup_plan                        = bool
-      is_production                             = bool
-      log_retention_in_days                     = number
-      logging_level                             = number
-      lpa_codes_endpoint                        = string
-      lpas_collection_endpoint                  = string
-      pagerduty_service_name                    = string
-      session_expires_use                       = number
-      session_expires_view                      = number
-      session_expires_admin                     = number
-      session_expiry_warning                    = number
-      ship_metrics_queue_enabled                = bool
-      sirius_account_id                         = string
-      use_legacy_codes_service                  = bool
-      use_older_lpa_journey                     = bool
-      delete_lpa_feature                        = bool
-      allow_older_lpas                          = bool
-      allow_meris_lpas                          = bool
-      save_older_lpa_requests                   = bool
-      load_balancer_deletion_protection_enabled = bool
-      notify_key_secret_name                    = string
-      associate_alb_with_waf_web_acl_enabled    = bool
+      build_admin                                                = bool
+      cookie_expires_use                                         = number
+      cookie_expires_view                                        = number
+      google_analytics_id_use                                    = string
+      google_analytics_id_view                                   = string
+      have_a_backup_plan                                         = bool
+      is_production                                              = bool
+      log_retention_in_days                                      = number
+      logging_level                                              = number
+      lpa_codes_endpoint                                         = string
+      lpas_collection_endpoint                                   = string
+      pagerduty_service_name                                     = string
+      session_expires_use                                        = number
+      session_expires_view                                       = number
+      session_expires_admin                                      = number
+      session_expiry_warning                                     = number
+      ship_metrics_queue_enabled                                 = bool
+      sirius_account_id                                          = string
+      use_legacy_codes_service                                   = bool
+      use_older_lpa_journey                                      = bool
+      delete_lpa_feature                                         = bool
+      allow_older_lpas                                           = bool
+      allow_meris_lpas                                           = bool
+      save_older_lpa_requests                                    = bool
+      load_balancer_deletion_protection_enabled                  = bool
+      notify_key_secret_name                                     = string
+      associate_alb_with_waf_web_acl_enabled                     = bool
       dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
+      pdf_container_version                                      = string
     })
   )
 }

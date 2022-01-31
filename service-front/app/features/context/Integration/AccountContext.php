@@ -48,18 +48,12 @@ class AccountContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    /** @var MockHandler */
-    private $apiFixtures;
-    /** @var EmailClient */
-    private $emailClient;
-    /** @var LpaFactory */
-    private $lpaFactory;
-    /** @var LpaService */
-    private $lpaService;
-    /** @var UserService */
-    private $userService;
-    /** @var ViewerCodeService */
-    private $viewerCodeService;
+    private MockHandler $apiFixtures;
+    private EmailClient $emailClient;
+    private LpaFactory $lpaFactory;
+    private LpaService $lpaService;
+    private UserService $userService;
+    private ViewerCodeService $viewerCodeService;
 
     /**
      * @Given /^I access the account creation page$/
@@ -1034,51 +1028,5 @@ class AccountContext extends BaseIntegrationContext
         $this->lpaService = $this->container->get(LpaService::class);
         $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
-    }
-
-    /**
-     * @Then /^The Revoked LPA details are not displayed$/
-     */
-    public function theRevokedLPADetailsAreNotDisplayed()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^The status of the LPA got Revoked$/
-     * @Then /^I cannot see my access codes and their details$/
-     */
-    public function theStatusOfTheLpaGotRevoked()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
-     * @Then /^I request to view an LPA whose status changed to Revoked$/
-     */
-    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
-    {
-        {
-            $this->organisation = "TestOrg";
-            $this->accessCode = "XYZ321ABC987";
-
-            // API call for get LpaById (when give organisation access is clicked)
-            $this->apiFixtures->get('/v1/lpas/' . $this->actorLpaToken)
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'user-lpa-actor-token' => $this->actorLpaToken,
-                                'date' => 'date',
-                                'lpa' => [],
-                                'actor' => $this->lpaData['actor'],
-                            ]
-                        )
-                    )
-                );
-        }
     }
 }

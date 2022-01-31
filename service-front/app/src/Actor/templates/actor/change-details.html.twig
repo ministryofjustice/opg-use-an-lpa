@@ -5,10 +5,7 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@actor/partials/new-use-service.html.twig') }}
-
         {{ include('@partials/account-bar.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         {% if actorToken != 'null' %}
@@ -74,11 +71,9 @@
                             {% trans with {'%link%': path('lpa.death-notification')} %}Find out more about what to do if <a class="govuk-link" href="%link%"> the donor or an attorney dies</a>{% endtrans %}
                         {% endif %}
                     </p>
-
                 </div>
             </div>
-
         </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
-
 {% endblock %}

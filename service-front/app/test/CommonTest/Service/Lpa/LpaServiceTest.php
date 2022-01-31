@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
-use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
@@ -35,7 +34,7 @@ class LpaServiceTest extends TestCase
     /** @var LpaService */
     private $lpaService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiClientProphecy = $this->prophesize(Client::class);
         $this->parseLpaData = $this->prophesize(ParseLpaData::class);
