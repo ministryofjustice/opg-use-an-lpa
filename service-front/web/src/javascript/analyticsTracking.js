@@ -26,7 +26,7 @@ export default class AnalyticsTracking {
 
         });
 
-        var observer = new MutationObserver(() => _this.observeMutations);
+        let observer = new MutationObserver((mutations) => this.observeMutations(mutations, _this));
 
         observer.observe(document.body, {
             attributes: true,
@@ -93,8 +93,7 @@ export default class AnalyticsTracking {
         return dataCleansed;
     }
 
-    observeMutations(mutations) {
-        const _this = this;
+    observeMutations(mutations, _this) {
         mutations.forEach(function (mutation) {
             if (mutation.type === "attributes") {
                 if (mutation.target.getAttribute('data-module') === 'govuk-details') {
