@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -60,7 +61,14 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     );
 };
 
-$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void
+{
+    $ALLOW_OLDER_LPAS = 'allow_older_lpas';
+    $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
+    $DELETE_LPA_FEATURE = 'delete_lpa_feature';
+
+    $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
+
     $app->route('/home', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -182,87 +190,150 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], 'lpa.change-lpa-details');
 
     // Access for All Journey
-    if (($container->get(Common\Service\Features\FeatureEnabled::class))('allow_older_lpas')) {
-        $app->route('/lpa/add/contact-details', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\ContactDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.contact-details');
+    $app->route('/lpa/add/contact-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            Actor\Handler\RequestActivationKey\ContactDetailsHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.contact-details');
 
-        $app->route('/lpa/add/actor-role', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\RequestActivationKey\ActorRoleHandler::class
-        ], ['GET', 'POST'], 'lpa.add.actor-role');
+    $app->route('/lpa/add/actor-role', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\ActorRoleHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.actor-role');
 
-        $app->route('/lpa/add/donor-details', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.donor-details');
+    $app->route('/lpa/add/donor-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.donor-details');
 
-        $app->route('/lpa/add/check-details-and-consent', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
-        ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
-    }
+    $app->route('/lpa/add/check-details-and-consent', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
+
     // Older LPA journey
-    if (($container->get(Common\Service\Features\FeatureEnabled::class))('use_older_lpa_journey')) {
         // if flag true, send user to triage page as entry point
         $app->route('/lpa/add', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\AddLpaTriageHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\AddLpaTriageHandler::class,
+                Actor\Handler\LpaAddHandler::class
+            )
         ], ['GET', 'POST'], 'lpa.add');
 
         $app->route('/lpa/add-by-code', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\LpaAddHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\LpaAddHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.add-by-code');
 
         $app->route('/lpa/add-by-paper-information', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.add-by-paper-information');
 
         $app->route('/lpa/request-code/lpa-reference-number', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.add-by-paper');
 
         $app->route('/lpa/request-code/your-name', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\NameHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\NameHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.your-name');
 
         $app->route('/lpa/request-code/date-of-birth', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\DateOfBirthHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\DateOfBirthHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.date-of-birth');
 
         $app->route('/lpa/request-code/postcode', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\PostcodeHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\PostcodeHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.postcode');
 
         $app->route('/lpa/request-code/check-answers', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.check-answers');
 
         $app->post('/lpa/confirm-activation-key-generation', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $USE_OLDER_LPA_JOURNEY,
+                Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class,
+                $defaultNotFoundPage
+            )
         ], 'lpa.confirm-activation-key-generation');
-    } else {
-        $app->route('/lpa/add-details', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\LpaAddHandler::class
-        ], ['GET', 'POST'], 'lpa.add');
-    }
 
-    if (($container->get(Common\Service\Features\FeatureEnabled::class))('delete_lpa_feature')) {
+
+
         $app->route('/lpa/remove-lpa', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RemoveLpaHandler::class
+            new ConditionalRoutingMiddleware(
+                $container,
+                $DELETE_LPA_FEATURE,
+                Actor\Handler\RemoveLpaHandler::class,
+                $defaultNotFoundPage
+            )
         ], ['GET', 'POST'], 'lpa.remove-lpa');
-    }
+
 };
 
 switch (getenv('CONTEXT')) {

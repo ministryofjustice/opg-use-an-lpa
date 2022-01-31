@@ -674,7 +674,7 @@ orbs:
               name: Install dependencies
               command: |
                 if [ ! -d service-front/web/node_modules ]; then
-                  cd service-front/web/ && npm install
+                  cd service-front/web/ && npm ci
                 fi
           - run:
               name: Run tests with Jest
@@ -714,12 +714,12 @@ orbs:
           - checkout
           - restore_cache:
               name: Restore node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
           - run:
               name: Install dependencies
               command: |
                 if [ ! -d service-front/web/node_modules ]; then
-                  cd service-front/web/ && npm install
+                  cd service-front/web/ && npm ci
                 fi
           - run:
               name: Build assets
@@ -727,7 +727,7 @@ orbs:
                 cd service-front/web/ && npm run build && npm run build:pdf_production
           - save_cache:
               name: Save node modules cache
-              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
               paths:
                 - service-front/web/node_modules
           - persist_to_workspace:
