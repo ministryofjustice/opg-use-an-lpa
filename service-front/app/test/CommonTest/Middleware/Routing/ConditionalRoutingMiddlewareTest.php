@@ -25,7 +25,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function test_when_feature_flag_is_on_true_route_is_called() : void
+    public function test_when_feature_flag_is_on_true_route_is_called(): void
     {
         $trueRouteProphecy = $this->prophesize(RequestHandlerInterface::class);
         $this->containerProphecy->get('TrueRoute')->shouldBeCalled()->willReturn($trueRouteProphecy);
@@ -45,7 +45,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function test_when_feature_flag_is_off_false_route_is_called() : void
+    public function test_when_feature_flag_is_off_false_route_is_called(): void
     {
         $trueRouteProphecy = $this->prophesize(RequestHandlerInterface::class);
 
@@ -66,7 +66,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function test_when_feature_flag_is_undefined_false_route_is_called() : void
+    public function test_when_feature_flag_is_undefined_false_route_is_called(): void
     {
         $trueRouteProphecy = $this->prophesize(RequestHandlerInterface::class);
 
