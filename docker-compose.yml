@@ -162,9 +162,11 @@ services:
   # Front Composer (Shared)
 
   front-composer:
-    image: composer:2.1.14
+    image: actor-app
     volumes:
       - ./service-front/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist
@@ -172,7 +174,6 @@ services:
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader
-      - --ignore-platform-reqs
 
   # ---------------------------
   # API
@@ -246,9 +247,11 @@ services:
       start_period: 90s
 
   api-composer:
-    image: composer:2.0.8
+    image: api-app
     volumes:
       - ./service-api/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist
