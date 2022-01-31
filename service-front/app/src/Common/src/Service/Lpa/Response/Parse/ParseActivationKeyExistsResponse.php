@@ -39,6 +39,11 @@ class ParseActivationKeyExistsResponse
         $response = new ActivationKeyExistsResponse();
         $response->setDonor($this->lpaFactory->createCaseActorFromData($data['donor']));
         $response->setCaseSubtype($data['caseSubtype']);
+
+        if (isset($data['activationKeyDueDate'])) {
+            $response->setDueDate($data['activationKeyDueDate']);
+        }
+
         return $response;
     }
 }

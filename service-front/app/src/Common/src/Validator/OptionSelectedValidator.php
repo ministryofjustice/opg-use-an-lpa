@@ -24,7 +24,12 @@ class OptionSelectedValidator extends AbstractValidator
      */
     public function isValid($value): bool
     {
-        $valid = (!empty($value['telephone']) xor $value['no_phone'] === 'yes');
+        $valid = (
+            (isset($value['telephone']) && !empty($value['telephone']))
+            xor
+            (isset($value['no_phone']) && $value['no_phone'] === 'yes')
+        );
+
         if (!$valid) {
             $this->error(self::OPTION_MUST_BE_SELECTED);
         }

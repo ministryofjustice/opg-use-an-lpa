@@ -26,7 +26,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
                 'middlenames'   => 'Donor',
                 'surname'       => 'Person',
             ],
-            'caseSubtype' => 'hw'
+            'caseSubtype' => 'hw',
+            'activationKeyDueDate' => '2021-12-06'
         ];
 
         $this->donor = new CaseActor();
@@ -51,6 +52,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
+        $this->assertEquals('2021-12-06', $result->getDueDate());
     }
 
     /** @test */

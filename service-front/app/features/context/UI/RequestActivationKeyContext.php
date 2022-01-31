@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Common\Validator\OptionSelectedValidator;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
-use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -27,6 +25,9 @@ use Psr\Http\Message\RequestInterface;
  * @property string $userSurname
  * @property string $activationCode
  * @property string $codeCreatedDate
+ *
+ * @psalm-ignore UndefinedThisPropertyFetch
+ * @psalm-ignore UndefinedThisPropertyAssignment
  */
 class RequestActivationKeyContext implements Context
 {
@@ -116,7 +117,7 @@ class RequestActivationKeyContext implements Context
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with the details you entered');
+        $this->ui->assertElementContainsText('h1', 'We could not find an LPA to send you an activation key');
     }
 
     /**
@@ -182,7 +183,7 @@ class RequestActivationKeyContext implements Context
     public function iAmOnTheRequestAnActivationKeyPage()
     {
         $this->ui->visit('/lpa/request-code/lpa-reference-number');
-        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
     /**
@@ -190,7 +191,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iAmRedirectedToTheActivationKeyPage()
     {
-        $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
     /**
@@ -429,6 +430,7 @@ class RequestActivationKeyContext implements Context
     public function iConfirmTheDetailsIProvidedAreCorrect()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
         $this->ui->pressButton('Continue');
     }
 
@@ -466,6 +468,8 @@ class RequestActivationKeyContext implements Context
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $this->activationCode = null;
 
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
@@ -647,10 +651,11 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperDocument()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
         $this->fillAndSubmitOlderLpaForm();
 
         /**
-         * This step definition needs to behave differently dependant on some prior context step
+         * This step definition needs to behave differently dependent on some prior context step
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response
@@ -693,7 +698,8 @@ class RequestActivationKeyContext implements Context
                                         'surname'       => $this->lpa->donor->surname,
                                     ],
                                     'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken
+                                    'lpaActorToken' => $this->userLpaActorToken,
+                                    'activationKeyDueDate' => $createdDate->format('c')
                                 ],
                             ]
                         )
@@ -894,7 +900,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iVisitTheDateOfBirthPageWithoutFillingOutTheForm()
     {
-        $this->ui->visit('lpa/request-code/date-of-birth');
+        $this->ui->visit('/lpa/request-code/date-of-birth');
     }
 
     /**
@@ -902,7 +908,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iVisitThePostcodePageWithoutFillingOutTheForm()
     {
-        $this->ui->visit('lpa/request-code/postcode');
+        $this->ui->visit('/lpa/request-code/postcode');
     }
 
     /**
@@ -1035,7 +1041,8 @@ class RequestActivationKeyContext implements Context
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
-                                'caseSubtype' => $this->lpa->caseSubtype
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'activationKeyDueDate'  =>  '2022-01-30'
                             ],
                         ]
                     )

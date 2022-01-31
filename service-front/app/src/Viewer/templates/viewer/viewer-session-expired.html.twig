@@ -4,8 +4,6 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@viewer/new-view-service.html.twig') }}
-
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -22,5 +20,6 @@
 
             </div>
         </main>
+        {{ include('@viewer/new-view-service.html.twig') }}
     </div>
 {% endblock %}

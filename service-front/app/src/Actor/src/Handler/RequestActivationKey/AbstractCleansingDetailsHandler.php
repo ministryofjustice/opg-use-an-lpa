@@ -101,18 +101,18 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     {
         $s = $this->session->toArray();
 
-        $alwaysRequired = (
-            !empty($s['telephone_option']['telephone']) ||
-            $s['telephone_option']['no_phone'] === 'yes'
-            ) ?? false;
+        $alwaysRequired =
+            isset($s['telephone_option']['telephone'])
+            ||
+            ($s['telephone_option']['no_phone'] ?? null) === 'yes';
 
         if ($this->session->get('actor_role') === 'attorney') {
             return $alwaysRequired &&
                 $this->session->has('donor_first_names') &&
                 $this->session->has('donor_last_name') &&
-                $this->session->has('donor_dob')
-            ;
+                $this->session->has('donor_dob');
         }
+
         return $alwaysRequired;
     }
 }

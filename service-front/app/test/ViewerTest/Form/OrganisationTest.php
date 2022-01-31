@@ -7,8 +7,8 @@ use Common\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Viewer\Form\Organisation;
 use PHPUnit\Framework\TestCase;
+use Viewer\Form\Organisation;
 
 class OrganisationTest extends TestCase
 {
@@ -25,7 +25,7 @@ class OrganisationTest extends TestCase
         'organisation'  => Text::class,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 

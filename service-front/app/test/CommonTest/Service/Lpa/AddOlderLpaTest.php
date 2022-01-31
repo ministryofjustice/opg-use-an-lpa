@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use App\Exception\BadRequestException;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -210,6 +209,7 @@ class AddOlderLpaTest extends TestCase
      */
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
+        $createdDate = (new DateTime())->modify('-14 days');
         $response = [
             'donor'         => [
                 'uId'           => '12345',
@@ -218,6 +218,7 @@ class AddOlderLpaTest extends TestCase
                 'surname'       => 'Person',
             ],
             'caseSubtype' => 'hw',
+            'activationKeyDueDate' => $createdDate->format('c')
         ];
 
         $this->apiClientProphecy
@@ -587,7 +588,7 @@ class AddOlderLpaTest extends TestCase
 
     /**
      * @test
-     * @covers ::confir
+     * @covers ::confirm
      */
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
