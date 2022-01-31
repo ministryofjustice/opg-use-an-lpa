@@ -9,7 +9,6 @@ use App\Exception\NotFoundException;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
-use DateTimeZone;
 use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
 
@@ -192,13 +191,17 @@ class AddOlderLpa
             );
 
             if ($hasActivationCode instanceof DateTime) {
+                $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+                $activationKeyDueDate = $activationKeyDueDate
+                    ->add(new DateInterval('P10D'))
+                    ->format('Y-m-d');
+
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
                         'donor'                 => $resolvedActor['donor'],
                         'caseSubtype'           => $resolvedActor['caseSubtype'],
-                        'activationKeyDueDate'  =>
-                            $hasActivationCode->add(new DateInterval('P10D'))->format('Y-m-d')
+                        'activationKeyDueDate'  => $activationKeyDueDate
                     ]
                 );
             }

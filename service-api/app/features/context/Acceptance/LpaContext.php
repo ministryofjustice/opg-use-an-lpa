@@ -13,6 +13,8 @@ use DateTime;
 use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use DateTimeImmutable;
+use DateInterval;
 
 /**
  * @property mixed lpa
@@ -611,6 +613,11 @@ class LpaContext implements Context
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -703,10 +710,7 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => date(
-                'Y-m-d',
-                strtotime($createdDate->format('Y-m-d') . ' + 10 days')
-            )
+            'activationKeyDueDate' => $activationKeyDueDate
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -2817,6 +2821,11 @@ class LpaContext implements Context
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2867,10 +2876,7 @@ class LpaContext implements Context
             ],
             'caseSubtype'           => $this->lpa->caseSubtype,
             'activationKeyDueDate'  => $createdDate->format('c'),
-            'activationKeyDueDate'  => date(
-                'Y-m-d',
-                strtotime($createdDate->format('c') . ' + 10 days')
-            )
+            'activationKeyDueDate'  => $activationKeyDueDate
         ];
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
