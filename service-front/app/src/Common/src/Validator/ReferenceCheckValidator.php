@@ -26,7 +26,7 @@ class ReferenceCheckValidator extends AbstractValidator
      *
      * @return bool
      */
-    public function isValid($reference_number)
+    public function isValid($reference_number): bool
     {
         $isValid = true;
 
