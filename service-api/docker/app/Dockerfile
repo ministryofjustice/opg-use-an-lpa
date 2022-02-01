@@ -9,7 +9,11 @@ RUN set -xe \
   && apk add --update --no-cache fcgi \
   && apk upgrade --update --no-cache curl \
   && install-php-extensions apcu \
-  && rm /usr/bin/install-php-extensions
+  && rm /usr/bin/install-php-extensions \
+
+COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
+COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
+COPY service-api/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
 CMD ["php-fpm"]
@@ -25,20 +29,17 @@ COPY service-api/app/composer.json service-api/app/composer.lock /app/
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
 
 #
-# Create production image using base and configuration
+# Create production image using base and app files
 #
-FROM php-base AS production
+FROM php-base AS app
 
 COPY service-api/app /app
 COPY --from=dependency /app/vendor /app/vendor
-COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
-COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
-COPY service-api/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 #
 # Install development dependencies and tools into production image
 #
-FROM production as development
+FROM app as development
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
@@ -56,4 +57,4 @@ CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
 #
 # For safety reasons have the production image be the output
 #
-# FROM production as final
+FROM app as production
