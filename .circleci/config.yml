@@ -768,12 +768,14 @@ orbs:
               name: Run unit tests
               command: |
                 docker run -d --name tests front-app:latest
+                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
                 docker exec tests docker-php-ext-enable xdebug
                 docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           - run:
               name: Run integration/acceptance tests
               command: |
                 docker run -d --name inttests front-app:latest
+                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
                 docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
                 docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
@@ -884,6 +886,7 @@ orbs:
               name: Run unit tests
               command: |
                 docker run -d --name tests api-app:latest
+                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
                 docker exec tests docker-php-ext-enable xdebug
                 docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           - run:
@@ -899,6 +902,7 @@ orbs:
                 export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
 
                 docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
+                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
                 docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
                 docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
                   /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc

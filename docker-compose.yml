@@ -52,6 +52,7 @@ services:
     container_name: viewer-app
     image: viewer-app
     build:
+      target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
@@ -77,18 +78,18 @@ services:
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-        ]
-      interval: 10s
-      timeout: 30s
-      retries: 3
-      start_period: 90s
     depends_on:
       - redis
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   # ---------------------------
   # Actor Front
@@ -114,6 +115,7 @@ services:
     container_name: actor-app
     image: actor-app
     build:
+      target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
@@ -147,24 +149,26 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
       NOTIFY_API_KEY:
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-        ]
-      interval: 10s
-      timeout: 30s
-      retries: 3
-      start_period: 90s
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   # ---------------------------
   # Front Composer (Shared)
 
   front-composer:
-    image: composer:2.1.14
+    image: actor-app
     volumes:
       - ./service-front/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist
@@ -172,7 +176,6 @@ services:
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader
-      - --ignore-platform-reqs
 
   # ---------------------------
   # API
@@ -196,6 +199,7 @@ services:
     container_name: api-app
     image: api-app
     build:
+      target: development
       context: .
       dockerfile: service-api/docker/app/Dockerfile
     depends_on:
@@ -234,21 +238,23 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-        ]
-      interval: 10s
-      timeout: 30s
-      retries: 3
-      start_period: 90s
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   api-composer:
-    image: composer:2.0.8
+    image: api-app
     volumes:
       - ./service-api/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist
