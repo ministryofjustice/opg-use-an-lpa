@@ -20,6 +20,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use DateTimeImmutable;
+use DateInterval;
 
 class AddOlderLpaTest extends TestCase
 {
@@ -179,6 +181,13 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
             ->willReturn(false);
@@ -212,14 +221,14 @@ class AddOlderLpaTest extends TestCase
 
         $this->olderLpaServiceProphecy
             ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
-            ->willReturn(new DateTime());
+            ->willReturn($createdDate);
 
         $expectedException = new BadRequestException(
             'Activation key already requested for LPA',
             [
                 'donor'                => $this->resolvedActor['donor'],
                 'caseSubtype'          => $this->resolvedActor['caseSubtype'],
-                'activationKeyDueDate' => new DateTime()
+                'activationKeyDueDate' => $activationKeyDueDate
             ]
         );
 
@@ -400,6 +409,13 @@ class AddOlderLpaTest extends TestCase
     /** @test */
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
             ->willReturn(false);
@@ -420,14 +436,14 @@ class AddOlderLpaTest extends TestCase
 
         $this->olderLpaServiceProphecy
             ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
-            ->willReturn(new DateTime());
+            ->willReturn($createdDate);
 
         $expectedException = new BadRequestException(
             'LPA has an activation key already',
             [
                 'donor'                => $this->resolvedActor['donor'],
                 'caseSubtype'          => $this->resolvedActor['caseSubtype'],
-                'activationKeyDueDate' => new DateTime()
+                'activationKeyDueDate' => $activationKeyDueDate
             ]
         );
 
