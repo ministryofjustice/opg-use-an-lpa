@@ -22,7 +22,7 @@ class ReferenceCheckValidatorTest extends TestCase
     /**
      * @dataProvider validFormatProvider
      */
-    public function testIsValidReference($reference_number)
+    public function testIsValidReference($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
@@ -46,7 +46,7 @@ class ReferenceCheckValidatorTest extends TestCase
     /**
      * @dataProvider notValidStartFormatProvider
      */
-    public function testLpaReferenceStartsWithSeven($reference_number)
+    public function testLpaReferenceStartsWithSeven($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
@@ -77,7 +77,7 @@ class ReferenceCheckValidatorTest extends TestCase
     /**
      * @dataProvider notValidMerisFormatProvider
      */
-    public function testMerisReferenceStartsWithSeven($reference_number)
+    public function testMerisReferenceStartsWithSeven($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
@@ -108,7 +108,7 @@ class ReferenceCheckValidatorTest extends TestCase
     /**
      * @dataProvider invalidLengthProvider
      */
-    public function testIsValidInvalid($reference_number)
+    public function testIsValidInvalid($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
