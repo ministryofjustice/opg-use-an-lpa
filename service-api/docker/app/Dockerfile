@@ -9,7 +9,7 @@ RUN set -xe \
   && apk add --update --no-cache fcgi \
   && apk upgrade --update --no-cache curl \
   && install-php-extensions apcu \
-  && rm /usr/bin/install-php-extensions \
+  && rm /usr/bin/install-php-extensions
 
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
 COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
