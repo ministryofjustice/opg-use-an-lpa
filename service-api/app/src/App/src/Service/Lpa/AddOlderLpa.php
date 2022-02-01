@@ -6,7 +6,9 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
 
@@ -155,12 +157,30 @@ class AddOlderLpa
                         'uId' => $matchData['reference_number'],
                     ]
                 );
+
+                $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
+
+                //if activation key due date is null, check activation code exist in sirius
+                if ($activationKeyDueDate === null) {
+                    $hasActivationCode = $this->olderLpaService->hasActivationCode(
+                        $resolvedActor['lpa-id'],
+                        $resolvedActor['actor']['uId']
+                    );
+
+                    if ($hasActivationCode instanceof DateTime) {
+                        $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+                        $activationKeyDueDate = $activationKeyDueDate
+                            ->add(new DateInterval('P10D'))
+                            ->format('Y-m-d');
+                    }
+                }
+
                 throw new BadRequestException(
                     'Activation key already requested for LPA',
                     [
                         'donor'                => $lpaAddedData['donor'],
                         'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']
+                        'activationKeyDueDate' => $activationKeyDueDate
                     ]
                 );
             }
@@ -171,15 +191,17 @@ class AddOlderLpa
             );
 
             if ($hasActivationCode instanceof DateTime) {
+                $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+                $activationKeyDueDate = $activationKeyDueDate
+                    ->add(new DateInterval('P10D'))
+                    ->format('Y-m-d');
+
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'donor'         => $resolvedActor['donor'],
-                        'caseSubtype'   => $resolvedActor['caseSubtype'],
-                        'activationKeyDueDate' => date(
-                            'Y-m-d',
-                            strtotime($hasActivationCode->format('c') . ' + 10 days')
-                        ),
+                        'donor'                 => $resolvedActor['donor'],
+                        'caseSubtype'           => $resolvedActor['caseSubtype'],
+                        'activationKeyDueDate'  => $activationKeyDueDate
                     ]
                 );
             }
