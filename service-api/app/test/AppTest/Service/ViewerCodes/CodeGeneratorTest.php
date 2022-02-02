@@ -38,7 +38,6 @@ class CodeGeneratorTest extends TestCase
         //---
 
         for ($i = 0; $i < 50000; $i++) {    // We need a large data sample for the last test, thus 50,000.
-
             $code = CodeGenerator::generateCode();
 
             //---
@@ -77,9 +76,11 @@ class CodeGeneratorTest extends TestCase
 
         $ratio = $highestFrequency / $lowestFrequency;
 
-        // We want teh value to be 1.0, within 1 decimal place.
+        // We want the value to be 1.0, within 1 decimal place.
         // e.g. 1.03 should pass. 1.09 should not.
-        $this->assertEquals(1, round($ratio, 1),
+        $this->assertEquals(
+            1,
+            round($ratio, 1),
             'There is an element of chance that this test might fail. Try re-running if nothing has changed.'
         );
     }
