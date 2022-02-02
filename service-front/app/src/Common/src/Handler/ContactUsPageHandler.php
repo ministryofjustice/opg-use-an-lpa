@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Common\Handler;
 
 use Common\Service\Url\UrlValidityCheckService;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
 
 /**
  * Class ContactUsPageHandler
@@ -35,7 +35,9 @@ class ContactUsPageHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $referer = $this->urlValidityCheckService->setValidReferer($request->getHeaders()['referer'][0]);
+        $refererHeader = $request->getHeaders()['referer'][0] ?? null;
+
+        $referer = $this->urlValidityCheckService->setValidReferer($refererHeader);
         return new HtmlResponse($this->renderer->render('common::contact-us', [
             'referer' => $referer
         ]));

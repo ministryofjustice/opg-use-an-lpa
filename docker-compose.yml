@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: service-front/web/Dockerfile
     entrypoint: >
-      sh -c "npm i && npm run build-scss && npm run build:pdf && npm run watch"
+      sh -c "npm ci && npm run build-scss && npm run build:pdf && npm run watch"
     volumes:
       - ./service-front/web:/web:rw,delegated
       - webpack_dist:/dist
@@ -24,10 +24,7 @@ services:
 
   service-pdf:
     container_name: service-pdf
-    image: service-pdf
-    build:
-      context: .
-      dockerfile: service-pdf/docker/app/Dockerfile
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:v1.31.0
     ports:
       - 9004:80
 
@@ -55,6 +52,7 @@ services:
     container_name: viewer-app
     image: viewer-app
     build:
+      target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
@@ -82,6 +80,16 @@ services:
       COOKIE_SECURE: "false"
     depends_on:
       - redis
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   # ---------------------------
   # Actor Front
@@ -107,6 +115,7 @@ services:
     container_name: actor-app
     image: actor-app
     build:
+      target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
@@ -139,14 +148,27 @@ services:
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
+      NOTIFY_API_KEY:
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   # ---------------------------
   # Front Composer (Shared)
 
   front-composer:
-    image: composer:2.0.8
+    image: actor-app
     volumes:
       - ./service-front/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist
@@ -154,7 +176,6 @@ services:
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader
-      - --ignore-platform-reqs
 
   # ---------------------------
   # API
@@ -178,6 +199,7 @@ services:
     container_name: api-app
     image: api-app
     build:
+      target: development
       context: .
       dockerfile: service-api/docker/app/Dockerfile
     depends_on:
@@ -216,11 +238,23 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
+#        ]
+#      interval: 10s
+#      timeout: 30s
+#      retries: 3
+#      start_period: 90s
 
   api-composer:
-    image: composer:2.0.8
+    image: api-app
     volumes:
       - ./service-api/app:/app
+    entrypoint:
+      - /usr/bin/composer
     command:
       - install
       - --prefer-dist

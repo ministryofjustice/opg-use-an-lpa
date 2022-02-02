@@ -6,10 +6,10 @@
     "license": "MIT",
     "config": {
         "sort-packages": true,
-        "platform": {
-            "php": "7.4"
-            }
-        },
+        "allow-plugins": {
+            "laminas/laminas-component-installer": false
+        }
+    },
     "extra": {
         "zf": {
             "component-whitelist": [
@@ -40,6 +40,7 @@
     ],
     "require": {
         "php": "^7.4",
+        "ext-apcu": "*",
         "aws/aws-sdk-php": "^3.93",
         "elie29/zend-phpdi-config": "^3.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -60,7 +61,7 @@
     },
     "require-dev": {
         "behat/behat": "^3.5",
-        "cooperaj/behat-psr-extension": "^v2.0",
+        "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
         "jshayes/fake-requests": "^2.3",
         "laminas/laminas-development-mode": "^3.1",

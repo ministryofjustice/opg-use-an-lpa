@@ -8,7 +8,6 @@ use Common\Form\AbstractForm;
 use Common\Validator\PasswordValidator;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 
@@ -18,7 +17,7 @@ use Laminas\Validator\StringLength;
  */
 class PasswordChange extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = "password-change";
+    public const FORM_NAME = 'password-change';
 
     /**
      * Error codes

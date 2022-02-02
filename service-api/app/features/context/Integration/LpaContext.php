@@ -31,6 +31,8 @@ use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
+use DateTimeImmutable;
+use DateInterval;
 
 /**
  * Class LpaContext
@@ -1775,6 +1777,12 @@ class LpaContext extends BaseIntegrationContext
 
         $codeExists = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
+
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         $codeExists->Created = $createdDate->format('Y-m-d');
 
         $this->pactPostInteraction(
@@ -1804,10 +1812,7 @@ class LpaContext extends BaseIntegrationContext
                         'surname'       => $this->lpa->donor->surname
                     ],
                     'caseSubtype'           => $this->lpa->caseSubtype,
-                    'activationKeyDueDate'  => date(
-                        'Y-m-d',
-                        strtotime($createdDate->format('c') . ' + 10 days')
-                    )
+                    'activationKeyDueDate'  => $activationKeyDueDate
                 ],
                 $ex->getAdditionalData()
             );
@@ -2536,6 +2541,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
+        $createdDate = (new DateTime())->modify('-14 days');
+
         $data = [
             'reference_number' => $this->lpaUid,
             'dob' => $this->userDob,
@@ -2591,6 +2598,27 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
+        $codeExists = new stdClass();
+        $createdDate = (new DateTime())->modify('-14 days');
+
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
+        $codeExists->Created = $createdDate->format('Y-m-d');
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa' => $this->lpaUid,
+                'actor' => $this->actorLpaId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
         $expectedResponse = [
             'donor'         => [
                 'uId'           => $this->lpa->donor->uId,
@@ -2599,7 +2627,7 @@ class LpaContext extends BaseIntegrationContext
                 'surname'       => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => null
+            'activationKeyDueDate' => $activationKeyDueDate
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);

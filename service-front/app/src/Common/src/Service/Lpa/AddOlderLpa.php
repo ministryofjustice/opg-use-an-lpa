@@ -107,7 +107,7 @@ class AddOlderLpa
             'Successfully matched LPA {uId} for account with Id {id} ',
             [
                 'event_code' => EventCodes::OLDER_LPA_FOUND,
-                'id'  => $data['identity'],
+                'id'  => $userToken,
                 'uId' => $data['reference_number']
             ]
         );
@@ -160,7 +160,7 @@ class AddOlderLpa
                 'event_code' => $forceActivationKey
                     ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY
                     : EventCodes::OLDER_LPA_SUCCESS,
-                'id'  => $data['identity'],
+                'id'  => $userToken,
                 'uId' => $data['reference_number']
             ]
         );

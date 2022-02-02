@@ -11,7 +11,7 @@ class ActorViewerCodeFilterTest extends TestCase
 {
     private ActorViewerCodeFilter $filter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new ActorViewerCodeFilter();
     }

@@ -1,32 +1,32 @@
+import {
+    PerformanceAnalytics,
+    ErrorAnalytics,
+} from "@ministryofjustice/opg-performance-analytics";
+
 export default class AnalyticsTracking {
     constructor() {
         this.init();
+
+        PerformanceAnalytics();
+        ErrorAnalytics();
     }
 
     init() {
         const _this = this;
         document.addEventListener('click', (e) => {
+            /* istanbul ignore else */
             if (e.target) {
-
-                if (e.target.matches('[data-attribute="ga-event"]')) {
+                if (e.target.matches('[data-gaEventType="onClick"]')) {
                     _this.processEventElement(e.target)
                 } else if (e.target.getAttribute('href') && e.target.getAttribute('href').indexOf('http') === 0) {
                     _this.sendGoogleAnalyticsEvent('click', 'outbound', e.target.getAttribute('href'));
                 }
 
             }
-        })
 
-        var observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.type === "attributes") {
-                    if (mutation.target.getAttribute('data-module') === 'govuk-details') {
-                        let eventInfo = _this.extractEventInfo(mutation.target);
-                        _this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close"));
-                    }
-                }
-            });
         });
+
+        let observer = new MutationObserver((mutations) => this.observeMutations(mutations, _this));
 
         observer.observe(document.body, {
             attributes: true,
@@ -36,13 +36,11 @@ export default class AnalyticsTracking {
             attributeFilter: ['open']
         });
 
-
-
-        const gaLoadEvents = document.querySelectorAll('[data-attribute="ga-load-event"]');
+        const gaLoadEvents = document.querySelectorAll('[data-gaEventType="onLoad"]');
 
         for (let i = 0, len = gaLoadEvents.length; i < len; i++) {
             const element = gaLoadEvents[i];
-            _this.processEventElement(element)
+            _this.processEventElement(element);
         }
     }
 
@@ -54,14 +52,19 @@ export default class AnalyticsTracking {
                 event_category: eventElement.getAttribute('data-gaCategory'),
                 event_label: eventElement.getAttribute('data-gaLabel')
             }
-        }
+        };
     }
 
     processEventElement(eventElement) {
+        /* istanbul ignore else */
         if (typeof window.gtag === 'function') {
             const eventInfo = this.extractEventInfo(eventElement);
 
-            this.sendGoogleAnalyticsEvent(eventInfo.action, eventInfo.event_params.event_category, eventInfo.event_params.event_label);
+            this.sendGoogleAnalyticsEvent(
+                eventInfo.action,
+                eventInfo.event_params.event_category,
+                eventInfo.event_params.event_label
+            );
         }
     }
 
@@ -88,5 +91,20 @@ export default class AnalyticsTracking {
         }
 
         return dataCleansed;
+    }
+
+    observeMutations(mutations, _this) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === "attributes") {
+                if (mutation.target.getAttribute('data-module') === 'govuk-details') {
+                    let eventInfo = _this.extractEventInfo(mutation.target);
+                    _this.sendGoogleAnalyticsEvent(
+                        eventInfo.action,
+                        eventInfo.event_params.event_category,
+                        eventInfo.event_params.event_label + " " + (mutation.oldValue === null ? "open" : "close")
+                    );
+                }
+            }
+        });
     }
 }

@@ -1,37 +1,60 @@
-FROM composer:2.0.14 AS composer
+#
+# Base image containing correct PHP, extensions and configuration
+#
+FROM php:7.4-fpm-alpine3.15 AS php-base
 
-COPY service-api/app /app
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+RUN set -xe \
+  && apk add --update --no-cache fcgi \
+  && apk upgrade --update --no-cache curl \
+  && install-php-extensions apcu \
+  && rm /usr/bin/install-php-extensions
+
+COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
+COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
+COPY service-api/docker/app/health-check.sh /usr/local/bin/health-check.sh
+
+WORKDIR /app
+CMD ["php-fpm"]
+
+#
+# Download production dependencies
+#
+FROM php-base AS dependency
+
+COPY --from=composer /usr/bin/composer /usr/bin/
+COPY service-api/app/composer.json service-api/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
 
-FROM composer:2.0.14 AS composer-dev
+#
+# Create production image using base and app files
+#
+FROM php-base AS app
 
 COPY service-api/app /app
+COPY --from=dependency /app/vendor /app/vendor
 
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+#
+# Install development dependencies and tools into production image
+#
+FROM app as development
 
-FROM php:7-fpm-alpine3.14 AS production
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+COPY --from=composer /usr/bin/composer /usr/bin/
 
-RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
-  && apk upgrade curl \
-  && pecl install xdebug \
-  && pecl install apcu \
-  && docker-php-ext-enable apcu \
-  && pecl clear-cache \
-  && apk del .build-dependencies
+RUN set -xe \
+  && install-php-extensions xdebug \
+  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-COPY service-api/app /app
-COPY --from=composer /app/vendor /app/vendor
-COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
-COPY service-api/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.conf
-
-WORKDIR /app
-
-CMD php-fpm
-
-FROM production as development
-
-COPY --from=composer-dev /app/vendor /app/vendor
+# Development images are only ever run using compose so will have this mounted in as a volume
+RUN rm -rf /app/vendor
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
+
+#
+# For safety reasons have the production image be the output
+#
+FROM app as production

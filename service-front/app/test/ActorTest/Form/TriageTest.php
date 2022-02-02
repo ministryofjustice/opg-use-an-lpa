@@ -7,10 +7,10 @@ namespace ActorTest\Form;
 use Actor\Form\Triage;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use CommonTest\Form\{TestsLaminasForm, LaminasFormTests};
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
+use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\{Radio};
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class TriageTest extends TestCase implements TestsLaminasForm
 {
@@ -37,7 +37,7 @@ class TriageTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form = new Triage($guardProphecy->reveal());

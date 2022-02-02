@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
-use PHPUnit\Framework\TestCase;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Form\Element\Text;
+use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
 
 class AbstractFormTest extends TestCase
 {
@@ -16,7 +16,7 @@ class AbstractFormTest extends TestCase
      */
     private $form;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
@@ -51,8 +51,8 @@ class AbstractFormTest extends TestCase
     {
         $this->form->addErrorMessage('testKey', 'testElement');
 
-        $errors = $this->form->getErrorMessages();
-        $this->assertContains('testErrorMessage', $errors['testElement']);
+        $errors = $this->form->getElements()['testElement']->getMessages();
+        $this->assertContains('testErrorMessage', $errors);
     }
 
     /** @test */

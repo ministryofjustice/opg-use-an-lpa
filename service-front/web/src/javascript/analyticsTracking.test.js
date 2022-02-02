@@ -16,11 +16,11 @@ import AnalyticsTracking from './analyticsTracking';
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                                                                         <li>
-                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#email" data-gaLabel="#email - Enter an email address in the correct format, like name@example.com" href="#email">Enter an email address in the correct format,
+                                <a data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="#email" data-gaLabel="#email - Enter an email address in the correct format, like name@example.com" href="#email">Enter an email address in the correct format,
                                  like name@example.com</a>
                             </li>
                                                                                                 <li>
-                                <a data-attribute="ga-load-event" data-gaCategory="Form errors" data-gaAction="#password" data-gaLabel="#password - Enter your password" href="#password">Enter your password</a>
+                                <a data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="#password" data-gaLabel="#password - Enter your password" href="#password">Enter your password</a>
                             </li>
                                                             </ul>
             </div>
@@ -32,7 +32,7 @@ import AnalyticsTracking from './analyticsTracking';
             <nav class="moj-sub-navigation" aria-label="Sub navigation">
                 <ul class="moj-sub-navigation__list">
                     <li class="moj-sub-navigation__item">
-                        <a data-attribute="ga-event" data-gaAction="Download" data-gaCategory="LPA summary" data-gaLabel="Download this LPA summary" class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
+                        <a data-gaEventType="onClick" data-gaAction="Download" data-gaCategory="LPA summary" data-gaLabel="Download this LPA summary" class="govuk-link moj-sub-navigation__link moj-sub-navigation__link--underline"
                            href="https://localhost:9001/download-lpa">Download this LPA summary</a>
                     </li>
                 </ul>
@@ -42,7 +42,7 @@ import AnalyticsTracking from './analyticsTracking';
 
     const accessCodeReveal = `
         <main class="govuk-main-wrapper" id="main-content" role="main" >
-            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-attribute="ga-event" data-gaAction="Details" data-gaCategory="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
+            <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-gaCategory="Details" data-gaAction="Access code" data-gaLabel="The code I\'ve been given does not begin with a V">
                 <summary class="govuk-details__summary" role="button">
                     <span class="govuk-details__summary-text">
                         {% trans %}The code I've been given does not begin with a V{% endtrans %}
@@ -306,16 +306,69 @@ describe('given I click the access code reveal', () => {
         }
      */
     test('it should fire an event when I click the access code reveal', () => {
-        const revealSelector = document.querySelector('details[id$="access-code-reveal"]');
-        revealSelector.click();
 
-        var map = new Map()
-        global.dataLayer.forEach((element, index) => {map.set(index,element)})
+        //test open
+        analyticsTracking.observeMutations([
+            {
+                type : "attributes",
+                oldValue: null,
+                target: {
+                    getAttribute: jest.fn( () => "govuk-details")
+                        .mockImplementationOnce(() => 'govuk-details')
+                        .mockImplementationOnce(() => 'Details')
+                        .mockImplementationOnce(() => 'Access Codes')
+                        .mockImplementationOnce(() => 'Some Label')
+                }
+            }],
+            analyticsTracking
+        )
 
-        expect(global.dataLayer[22][1]).toBe('Details');
-        expect(global.dataLayer[22][2].event_category).not.toBeUndefined();
-        expect(global.dataLayer[22][2].event_category).toBe('Access code');
-        expect(global.dataLayer[22][2].event_label).not.toBeUndefined();
-        expect(global.dataLayer[22][2].event_label).toBe('The code I\'ve been given does not begin with a V');
+        expect(global.dataLayer[17][1]).toBe('Details');
+        expect(global.dataLayer[17][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[17][2].event_category).toBe('Access Codes');
+        expect(global.dataLayer[17][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[17][2].event_label).toBe('Some Label open');
+
+        //test close
+        analyticsTracking.observeMutations([
+            {
+                type : "attributes",
+                oldValue: 'close',
+                target: {
+                    getAttribute: jest.fn( () => "govuk-details")
+                        .mockImplementationOnce(() => 'govuk-details')
+                        .mockImplementationOnce(() => 'Details')
+                        .mockImplementationOnce(() => 'Access Codes')
+                        .mockImplementationOnce(() => 'Some Label')
+                }
+            }],
+            analyticsTracking
+        )
+
+        expect(global.dataLayer[18][1]).toBe('Details');
+        expect(global.dataLayer[18][2].event_category).not.toBeUndefined();
+        expect(global.dataLayer[18][2].event_category).toBe('Access Codes');
+        expect(global.dataLayer[18][2].event_label).not.toBeUndefined();
+        expect(global.dataLayer[18][2].event_label).toBe('Some Label close');
+    });
+
+    test('it wont fire an event when I click a details tag that does not have the govuk-details data module', () => {
+
+        let dataLayerLength = global.dataLayer.length
+        analyticsTracking.observeMutations([
+            {
+                type : "attributes",
+                oldValue: null,
+                target: {
+                    getAttribute: jest.fn( () => "govuk-details")
+                        .mockImplementationOnce(() => 'Details')
+                        .mockImplementationOnce(() => 'Access Codes')
+                        .mockImplementationOnce(() => 'Some Label')
+                }
+            }],
+            analyticsTracking
+        );
+
+        expect(global.dataLayer == dataLayerLength);
     });
 });

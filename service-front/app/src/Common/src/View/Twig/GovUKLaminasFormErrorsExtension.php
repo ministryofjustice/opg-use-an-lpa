@@ -12,7 +12,7 @@ use Laminas\Form\FormInterface;
 
 class GovUKLaminasFormErrorsExtension extends AbstractExtension
 {
-    const THEME_FILE = '@partials/govuk_error.html.twig';
+    public const THEME_FILE = '@partials/govuk_error.html.twig';
 
     /**
      * @return array
@@ -20,8 +20,16 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('govuk_error', [$this, 'errorMessage'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('govuk_error_summary', [$this, 'errorSummary'], ['needs_environment' => true, 'is_safe' => ['html']])
+            new TwigFunction(
+                'govuk_error',
+                [$this, 'errorMessage'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'govuk_error_summary',
+                [$this, 'errorSummary'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            )
         ];
     }
 

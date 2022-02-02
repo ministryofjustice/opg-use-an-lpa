@@ -9,12 +9,21 @@ use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Common\Service\Features\FeatureEnabled;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
     protected RequestReferenceNumber $form;
+
+    /** @var ObjectProphecy|FeatureEnabled */
+    private $featureEnabledProphecy;
+
+    /** @var ObjectProphecy|CsrfGuardInterface */
+    private $guardProphecy;
+
 
     public function getForm(): AbstractForm
     {
@@ -34,9 +43,31 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
         ];
     }
 
-    public function setUp()
+    public function setUp(): void
     {
-        $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestReferenceNumber($guardProphecy->reveal());
+        $this->guardProphecy = $this->prophesize(CsrfGuardInterface::class);
+        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
+    }
+    /** @test */
+    public function it_sets_correct_validator_when_flag_set_to_true(): void
+    {
+        $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
+        $key = array_search(
+            'Common\Validator\ReferenceCheckValidator',
+            array_column($validators, 'name')
+        );
+
+        $this->assertContains($validators[$key]['name'], 'Common\Validator\ReferenceCheckValidator');
+    }
+
+    /** @test */
+    public function it_sets_correct_validator_when_flag_set_to_false(): void
+    {
+        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false);
+
+        $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
+        $key = array_search('Laminas\Validator\StringLength', array_column($validators, 'name'));
+
+        $this->assertContains($validators[$key]['name'], 'Laminas\Validator\StringLength');
     }
 }

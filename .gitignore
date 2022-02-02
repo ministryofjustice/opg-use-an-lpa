@@ -9,6 +9,7 @@ geckodriver.log
 .python-version
 .pytest_cache
 .coverage
+.phpunit.result.cache
 scripts/analysis_scripts/*.csv
 
 query/s3_objects/**

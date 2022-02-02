@@ -1,4 +1,5 @@
 NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
+ECR_LOGIN ?= @aws-vault exec management -- aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
 COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
@@ -6,8 +7,16 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 endif
 
 up:
-	$(COMPOSE) up -d $(filter-out $@,$(MAKECMDGOALS))
+	@echo "Logging into ECR..."
+	$(ECR_LOGIN)
+	@echo "Getting Notify API Key..."
+	$(NOTIFY)
+	$(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
+
+stop:
+	$(COMPOSE) stop $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: stop
 
 exec:
 	$(COMPOSE) exec $(filter-out $@,$(MAKECMDGOALS))
@@ -35,11 +44,12 @@ endif
 .PHONY: build_all
 
 rebuild:
-	$(COMPOSE) build --no-cache
+	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: rebuild
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: exec
 .PHONY: down
 
 down_all:
@@ -61,7 +71,7 @@ ps:
 .PHONY: ps
 
 logs:
-	$(COMPOSE) logs -f $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) logs -t -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
 
 up_dependencies:
@@ -70,7 +80,11 @@ up_dependencies:
 .PHONY: up_dependencies
 
 up_services:
-	$(NOTIFY); $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	@echo "Logging into ECR..."
+	$(ECR_LOGIN)
+	@echo "Getting Notify API Key..."
+	$(NOTIFY)
+	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
 seed:
@@ -99,19 +113,19 @@ development_mode:
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer composer install --ignore-platform-reqs
+	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer composer install --ignore-platform-reqs
+	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_api_composer
 
 run_front_composer_update:
-	$(COMPOSE) run front-composer composer update --ignore-platform-reqs
+	$(COMPOSE) run front-composer update
 .PHONY: run_front_composer_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer composer update
+	$(COMPOSE) run api-composer update
 .PHONY: run_api_composer_update
 
 clear_config_cache:

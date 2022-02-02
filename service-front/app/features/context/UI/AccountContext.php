@@ -815,7 +815,7 @@ class AccountContext implements Context
      */
     public function iCreateAnAccount()
     {
-        $this->email = 'test@example.com';
+        $this->userEmail = 'test@example.com';
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
 
@@ -830,7 +830,7 @@ class AccountContext implements Context
                     json_encode(
                         [
                             'Id' => '123',
-                            'Email' => $this->email,
+                            'Email' => $this->userEmail,
                             'ActivationToken' => $this->activationToken,
                         ]
                     )
@@ -841,7 +841,7 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $this->email);
+        $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');
@@ -852,7 +852,7 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountUsingDuplicateDetails()
     {
-        $this->email = 'test@example.com';
+        $this->userEmail = 'test@example.com';
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
 
@@ -866,7 +866,7 @@ class AccountContext implements Context
                     [],
                     json_encode(
                         [
-                            'Email' => $this->email,
+                            'Email' => $this->userEmail,
                             'ActivationToken' => $this->activationToken,
                         ]
                     )
@@ -877,7 +877,7 @@ class AccountContext implements Context
         $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
-        $this->ui->fillField('email', $this->email);
+        $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
         $this->ui->pressButton('Create account');

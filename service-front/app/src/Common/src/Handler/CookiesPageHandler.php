@@ -67,7 +67,7 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         }
         $form->get('usageCookies')->setValue($usageCookies);
 
-        $cookiesPageReferer = $request->getHeaders()['referer'][0];
+        $cookiesPageReferer = $request->getHeaders()['referer'][0] ?? null;
 
         $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
@@ -81,37 +81,30 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
 
-        $cookies = $request->getCookieParams();
         $form->setData($request->getParsedBody());
 
         $response = new RedirectResponse(
             $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
         );
 
-        if (array_key_exists(self::COOKIE_POLICY_NAME, $cookies)) {
-            try {
-                $cookiePolicy = json_decode($cookies[self::COOKIE_POLICY_NAME], true);
-            } catch (\Exception $e) {
-                return $response;
-            }
+        $cookiePolicy = [];
+        $cookiePolicy['essential'] = true;
+        $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
 
-            $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
-            $response = FigResponseCookies::set(
-                $response,
-                SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
-                    ->withHttpOnly(false)
-                    ->withExpires(new \DateTime('+365 days'))
-                    ->withPath('/')
-            );
+        $response = FigResponseCookies::set(
+            $response,
+            SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
+                ->withHttpOnly(false)
+                ->withExpires(new \DateTime('+365 days'))
+                ->withPath('/')
+        );
 
-            $response = FigResponseCookies::set(
-                $response,
-                SetCookie::create(self::SEEN_COOKIE_NAME, "true")
-                    ->withHttpOnly(false)
-                    ->withExpires(new \DateTime('+30 days'))
-                    ->withPath('/')
-            );
-        }
-        return $response;
+        return FigResponseCookies::set(
+            $response,
+            SetCookie::create(self::SEEN_COOKIE_NAME, 'true')
+                ->withHttpOnly(false)
+                ->withExpires(new \DateTime('+30 days'))
+                ->withPath('/')
+        );
     }
 }

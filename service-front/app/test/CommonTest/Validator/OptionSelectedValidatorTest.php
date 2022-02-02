@@ -11,13 +11,13 @@ class OptionSelectedValidatorTest extends TestCase
 {
     private OptionSelectedValidator $validator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->validator = new OptionSelectedValidator();
     }
 
     /** @test */
-    public function isValidWhenOnlyTelephoneNumberPresent()
+    public function isValidWhenOnlyTelephoneNumberPresent(): void
     {
         $isValid = $this->validator->isValid(
             [
@@ -29,7 +29,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /** @test */
-    public function isValidWhenOnlyNoPhoneCheckboxPresent()
+    public function isValidWhenOnlyNoPhoneCheckboxPresent(): void
     {
         $isValid = $this->validator->isValid(
             [
@@ -42,7 +42,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /** @test */
-    public function isNotValidWhenNeitherValuesArePresent()
+    public function isNotValidWhenNeitherValuesArePresent(): void
     {
         $isValid = $this->validator->isValid([]);
 
@@ -58,7 +58,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /** @test */
-    public function isNotValidWhenBothValuesArePresent()
+    public function isNotValidWhenBothValuesArePresent(): void
     {
         $isValid = $this->validator->isValid(
             [
