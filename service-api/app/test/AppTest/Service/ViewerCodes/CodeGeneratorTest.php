@@ -18,7 +18,7 @@ class CodeGeneratorTest extends TestCase
          * Thus them appearing here.
          */
         $this->assertEquals(12, CodeGenerator::CODE_LENGTH);
-        $this->assertEquals('346789QWERTYUPADFGHJKLXCVBNM', CodeGenerator::ALLOWED_CHARACTERS);
+        $this->assertEquals('346789BCDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
     }
 
     /**
