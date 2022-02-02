@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\ViewerCodes;
 
 use PHPUnit\Framework\TestCase;
+
 use App\Service\ViewerCodes\CodeGenerator;
 
 
@@ -32,7 +33,7 @@ class CodeGeneratorTest extends TestCase
 
         // We are going to count the number of times each character is seen, thus we setup an array to do that in.
         $characterCount = [];
-        foreach($allowedCharArray as $char){
+        foreach ($allowedCharArray as $char) {
             $characterCount[$char] = 0;
         }
 
@@ -59,7 +60,7 @@ class CodeGeneratorTest extends TestCase
             //---
 
             // Record each character used
-            foreach($usedCharsArray as $char){
+            foreach ($usedCharsArray as $char) {
                 $characterCount[$char]++;
             }
         }
@@ -67,7 +68,7 @@ class CodeGeneratorTest extends TestCase
         //---
 
         /*
-         * The following test works by looking at the difference between the code character seen least and most frequently.
+         * The following test works by looking at the difference between the least and most frequent code character.
          * Given a large enough data set, the difference between the two frequencies should converge on 1.0
          */
 
