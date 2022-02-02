@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\ViewerCodes;
 
 use PHPUnit\Framework\TestCase;
-
 use App\Service\ViewerCodes\CodeGenerator;
-
 
 class CodeGeneratorTest extends TestCase
 {
