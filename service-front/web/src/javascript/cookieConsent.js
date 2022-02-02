@@ -1,5 +1,6 @@
 import { getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes } from './cookieHelper';
-import googleAnalytics from "./googleAnalytics";
+import GoogleAnalytics from "./googleAnalytics";
+import AnalyticsTracking from "./analyticsTracking";
 
 export default class CookieConsent {
     constructor(bannerElement, isInCookiesPath) {
@@ -18,7 +19,8 @@ export default class CookieConsent {
 
         if (cookiePolicy) {
             if (JSON.parse(cookiePolicy).usage) {
-                window.useAnalytics = new googleAnalytics(window.gaConfig.uaId);
+                window.useAnalytics = new GoogleAnalytics(window.gaConfig.uaId);
+                window.analyticsTracking = new AnalyticsTracking();
             }
         }
     }

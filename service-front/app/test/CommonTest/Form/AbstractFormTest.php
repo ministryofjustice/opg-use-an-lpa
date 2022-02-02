@@ -51,8 +51,8 @@ class AbstractFormTest extends TestCase
     {
         $this->form->addErrorMessage('testKey', 'testElement');
 
-        $errors = $this->form->getErrorMessages();
-        $this->assertContains('testErrorMessage', $errors['testElement']);
+        $errors = $this->form->getElements()['testElement']->getMessages();
+        $this->assertContains('testErrorMessage', $errors);
     }
 
     /** @test */

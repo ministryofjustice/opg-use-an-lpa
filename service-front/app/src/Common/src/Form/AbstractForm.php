@@ -57,7 +57,18 @@ abstract class AbstractForm extends Form
             throw new InvalidArgumentException("No form element named '$elementName' found");
         }
 
-        $this->errorMessages[$elementName] = [$this->messageTemplates[$messageKey]];
+        if ($elementName === '') {
+            //add error to just the error summary section
+            $this->errorMessages[''] = [$this->messageTemplates[$messageKey]];
+        } else {
+            //add error to error messages for the element
+            $formElement = $this->getElements()[$elementName];
+
+            $messages = $formElement->getMessages();
+            array_push($messages, $this->messageTemplates[$messageKey]);
+
+            $formElement->setMessages($messages);
+        }
     }
 
     /**
