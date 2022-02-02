@@ -44,37 +44,6 @@ class ReferenceCheckValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider notValidStartFormatProvider
-     */
-    public function testLpaReferenceStartsWithSeven($reference_number): void
-    {
-        $isValid = $this->validator->isValid($reference_number);
-
-        $this->assertEquals(
-            [
-                ReferenceCheckValidator::LPA_MUST_START_WITH =>
-                    'LPA reference numbers that are 12 numbers long must begin with a 7',
-            ],
-            $this->validator->getMessages()
-        );
-
-        $this->assertFalse($isValid);
-    }
-
-    public function notValidStartFormatProvider()
-    {
-        return [
-            ['400000000132'],
-            ['500000000254'],
-            ['123456789123'],
-            ['234987456123'],
-            ['800000012345'],
-            ['100000000002'],
-            ['911111111119'],
-        ];
-    }
-
-    /**
      * @dataProvider notValidMerisFormatProvider
      */
     public function testMerisReferenceStartsWithSeven($reference_number): void
