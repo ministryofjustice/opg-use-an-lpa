@@ -22,6 +22,10 @@ exec:
 	$(COMPOSE) exec $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: exec
 
+run:
+	$(COMPOSE) run $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: run
+
 # Starts the application and seeds initial data.
 up_all: | up_dependencies up_services seed
 .PHONY: up_all
