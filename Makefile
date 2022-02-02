@@ -1,9 +1,18 @@
 NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
 ECR_LOGIN ?= @aws-vault exec management -- aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
-COMPOSE = docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
+
+COMPOSE_V2 = $(shell docker compose &> /dev/null; echo $$?)
+ifeq ($(COMPOSE_V2),0)
+CMD := docker compose
+endif
+CMD ?= docker-compose
+
+COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
+TEST_COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml -f docker-compose.testing.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
 COMPOSE := $(COMPOSE) -f docker-compose.override.yml
+TEST_COMPOSE := $(TEST_COMPOSE) -f docker-compose.override.yml
 endif
 
 up:
@@ -38,12 +47,7 @@ build:
 .PHONY: build
 
 build_all:
-ifeq (, $(shell which go))
-	$(error "No golang in PATH, consider doing brew install go")
-endif
-	@echo "Installing go dependencies..."
-	go get -u github.com/aws/aws-sdk-go/...
-	$(COMPOSE) build
+	$(MAKE) build
 	$(MAKE) build --directory=../opg-data-lpa/
 .PHONY: build_all
 
@@ -139,7 +143,7 @@ clear_config_cache:
 .PHONY: clear_config_cache
 
 smoke_tests:
-	$(COMPOSE) -f docker-compose.testing.yml run smoke-tests composer behat
+	$(TEST_COMPOSE) run smoke-tests vendor/bin/behat
 .PHONY: smoke_tests
 
 # empty target to stop additional arguments from calling
