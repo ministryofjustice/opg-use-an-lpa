@@ -9,12 +9,12 @@ class CodeGenerator
     /**
      * The length of the code.
      */
-    const CODE_LENGTH = 12;
+    private const CODE_LENGTH = 12;
 
     /**
      * The characters allowed to appear in the code.
      */
-    const ALLOWED_CHARACTERS = '346789BCDFGHJKMPQRTVWXY';
+    private const ALLOWED_CHARACTERS = '346789BCDFGHJKMPQRTVWXY';
 
     /**
      * Generates a random code of length CODE_LENGTH, using only the characters in ALLOWED_CHARACTERS.
