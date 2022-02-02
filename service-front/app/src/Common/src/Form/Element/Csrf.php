@@ -18,7 +18,7 @@ class Csrf extends LaminasCsrf
      *
      * @return \Laminas\Validator\Csrf
      */
-    public function getCsrfValidator()
+    public function getCsrfValidator(): \Laminas\Validator\Csrf
     {
         if (null === $this->csrfValidator) {
             $csrfOptions = $this->getCsrfValidatorOptions();

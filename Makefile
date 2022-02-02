@@ -113,19 +113,19 @@ development_mode:
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer composer install --ignore-platform-reqs
+	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer composer install --ignore-platform-reqs
+	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_api_composer
 
 run_front_composer_update:
-	$(COMPOSE) run front-composer composer update --ignore-platform-reqs
+	$(COMPOSE) run front-composer update
 .PHONY: run_front_composer_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer composer update
+	$(COMPOSE) run api-composer update
 .PHONY: run_api_composer_update
 
 clear_config_cache:
