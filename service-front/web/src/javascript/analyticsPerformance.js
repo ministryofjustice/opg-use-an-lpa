@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import Perfume from "perfume.js";
 
 export default class AnalyticsPerformance {
