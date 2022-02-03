@@ -45,11 +45,10 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/jshayes/fake-requests" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-redis" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cli" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-code" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-component-installer" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-composer-autoloading" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-config-aggregator" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-crypt" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-development-mode" />
@@ -66,7 +65,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-stdlib" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-stratigility" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-validator" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-zendframework-bridge" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/mezzio/mezzio" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/mezzio/mezzio-authentication" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/mezzio/mezzio-authentication-session" />
@@ -159,6 +157,7 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/psr-http-message-bridge" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/service-contracts" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/string" />
@@ -182,6 +181,7 @@
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
@@ -192,6 +192,7 @@
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
@@ -203,6 +204,7 @@
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
             <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs>
             <env name="COMPOSE_PROFILES" value="testing" />
@@ -219,6 +221,7 @@
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
             <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
+            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
