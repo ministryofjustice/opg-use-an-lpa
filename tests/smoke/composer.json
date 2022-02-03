@@ -9,20 +9,12 @@
         "dmore/chrome-mink-driver": "^2.7",
         "symfony/process": "^5.0",
         "fig/http-message-util": "^1.1",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
             "Smoke\\": "src/",
             "Test\\Context\\": "context/"
         }
-    },
-    "scripts": {
-        "dc": [
-            "Composer\\Config::disableProcessTimeout",
-            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml -f ../../docker-compose.testing.yml"
-        ],
-        "dc-run": "@dc run --rm smoke-tests",
-        "behat": "@dc-run vendor/bin/behat -vvv"
     }
 }

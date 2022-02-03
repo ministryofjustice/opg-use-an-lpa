@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ExpectationException;
 use DMore\ChromeDriver\ChromeDriver;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class CommonContext
@@ -62,7 +63,7 @@ class CommonContext implements Context
     public function iAccessTheOldServiceUrl(): void
     {
         $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
-        $rootUrl = sprintf('https://%s/home', $oldUrlHost);
+        $rootUrl = sprintf('http://%s/home', $oldUrlHost);
 
         $this->ui->visit($rootUrl);
     }
@@ -213,9 +214,10 @@ class CommonContext implements Context
     {
         $session = $this->ui->getSession();
         $xrobotstag = $session->getResponseHeader("X-Robots-Tag");
-        assertNotNull($xrobotstag);
-        assertContains('nofollow', $xrobotstag);
-        assertContains('noindex', $xrobotstag);
+
+        Assert::assertNotNull($xrobotstag);
+        Assert::assertStringContainsString('nofollow', $xrobotstag);
+        Assert::assertStringContainsString('noindex', $xrobotstag);
     }
 
     /**

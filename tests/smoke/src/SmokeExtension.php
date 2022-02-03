@@ -84,10 +84,6 @@ class SmokeExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config): void
     {
-        $definition = new Definition('Smoke\Drivers\XvfbDriver');
-        $definition->addTag(Driver::DRIVER_TAG, ['priority' => 99]);
-        $container->setDefinition('smokedriver.driver.xvfb', $definition);
-
         $definition = new Definition('Smoke\Drivers\ChromeDriver');
         $definition->addTag(Driver::DRIVER_TAG);
         $container->setDefinition('smokedriver.driver.chrome', $definition);

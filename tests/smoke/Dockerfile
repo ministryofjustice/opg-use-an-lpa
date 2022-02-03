@@ -1,6 +1,12 @@
-# CircleCI have already done all the hard work of setting up headless chrome and such with PHP7.x
-FROM circleci/php:7-cli-browsers
+FROM php:8-cli-alpine
 
-# This emulates a circleci process checkout command
-RUN mkdir -p /home/circleci/project/
-WORKDIR /home/circleci/project
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+COPY --from=composer /usr/bin/composer /usr/bin/
+
+RUN set -xe \
+  && apk add --update --no-cache chromium \
+  && ln -s /usr/bin/chromium-browser /usr/bin/google-chrome-stable \
+  && install-php-extensions xdebug \
+  && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+WORKDIR /app
