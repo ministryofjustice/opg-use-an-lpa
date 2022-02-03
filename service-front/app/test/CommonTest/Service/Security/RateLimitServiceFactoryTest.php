@@ -6,8 +6,10 @@ namespace CommonTest\Service\Security;
 
 use Common\Service\Security\RateLimiterInterface;
 use Common\Service\Security\RateLimitServiceFactory;
-use Laminas\Cache\Exception\InvalidArgumentException;
+use Laminas\Cache\Service\StorageAdapterFactoryInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -66,31 +68,13 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /** @test */
-    public function it_requires_a_valid_adaptor_configuration_for_a_keyed_limiter_service()
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->shouldBeCalled()
-            ->willReturn(
-                [
-                    'ratelimits' => [
-                        'a-rate-limiter' => [
-                            'type' => 'keyed'
-                        ]
-                    ]
-                ]
-            );
-
-        $factory = new RateLimitServiceFactory($containerProphecy->reveal());
-
-        $this->expectException(InvalidArgumentException::class);
-        $rateLimiter = $factory->factory('a-rate-limiter');
-    }
-
-    /** @test */
     public function it_throws_an_exception_with_an_invalid_limiter_service_type()
     {
+        $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
+        $cacheAdapterProphecy
+            ->createFromArrayConfiguration(Argument::type('array'))
+            ->willReturn($this->prophesize(StorageInterface::class)->reveal());
+
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
             ->get('config')
@@ -107,6 +91,10 @@ class RateLimitServiceFactoryTest extends TestCase
                     ]
                 ]
             );
+        $containerProphecy
+            ->get(StorageAdapterFactoryInterface::class)
+            ->shouldBeCalled()
+            ->willReturn($cacheAdapterProphecy->reveal());
 
         $factory = new RateLimitServiceFactory($containerProphecy->reveal());
 
@@ -118,6 +106,11 @@ class RateLimitServiceFactoryTest extends TestCase
     /** @test */
     public function it_creates_a_configured_keyed_rate_limiter_service()
     {
+        $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
+        $cacheAdapterProphecy
+            ->createFromArrayConfiguration(Argument::type('array'))
+            ->willReturn($this->prophesize(StorageInterface::class)->reveal());
+
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
             ->get('config')
@@ -137,6 +130,10 @@ class RateLimitServiceFactoryTest extends TestCase
         $containerProphecy
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+        $containerProphecy
+            ->get(StorageAdapterFactoryInterface::class)
+            ->shouldBeCalled()
+            ->willReturn($cacheAdapterProphecy->reveal());
 
         $factory = new RateLimitServiceFactory($containerProphecy->reveal());
 
@@ -148,6 +145,11 @@ class RateLimitServiceFactoryTest extends TestCase
     /** @test */
     public function it_creates_multiple_configured_rate_limiters()
     {
+        $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
+        $cacheAdapterProphecy
+            ->createFromArrayConfiguration(Argument::type('array'))
+            ->willReturn($this->prophesize(StorageInterface::class)->reveal());
+
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
             ->get('config')
@@ -179,6 +181,10 @@ class RateLimitServiceFactoryTest extends TestCase
         $containerProphecy
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+        $containerProphecy
+            ->get(StorageAdapterFactoryInterface::class)
+            ->shouldBeCalledTimes(3)
+            ->willReturn($cacheAdapterProphecy->reveal());
 
         $factory = new RateLimitServiceFactory($containerProphecy->reveal());
 
