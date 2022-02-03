@@ -1,0 +1,8 @@
+{
+    "owners": ["use-an-lpa"],
+    "dependencies": [
+        "https://github.com/ministryofjustice/opg-pdf-service",
+        "https://github.com/ministryofjustice/opg-data-lpa",
+        "https://github.com/ministryofjustice/opg-data-lpa-codes"
+    ]
+}
