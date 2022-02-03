@@ -108,7 +108,7 @@
         "clear-config-cache": "php bin/clear-config-cache.php",
         "dc": [
             "Composer\\Config::disableProcessTimeout",
-            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml"
+            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml -f ../../docker-compose.override.yml"
         ],
         "dc-run": "@dc run --rm actor-app",
         "dc-php": "@dc-run php",
