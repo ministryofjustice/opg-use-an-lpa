@@ -194,7 +194,7 @@
           <envs />
         </remote_data>
       </interpreter>
-      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so">
+      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
         <remote_data INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" INITIALIZED="false" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="smoke-tests" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
@@ -202,7 +202,9 @@
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
             <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
           </dockerComposeConfigurationPaths>
-          <envs />
+          <envs>
+            <env name="COMPOSE_PROFILES" value="testing" />
+          </envs>
         </remote_data>
       </interpreter>
       <interpreter id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" name="test-api-app" home="docker-compose://DATA" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so">
@@ -380,14 +382,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="smoke">
-        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="7.4.15">
-          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-intl.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini, /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini, /usr/local/etc/php/conf.d/docker-php-ext-zip.ini</additional_php_ini>
+        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.2">
+          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini, /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.0.3">
+            <debugger_info debugger="xdebug" debugger_version="3.1.3">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -407,7 +409,6 @@
             <extension name="ftp" />
             <extension name="hash" />
             <extension name="iconv" />
-            <extension name="intl" />
             <extension name="json" />
             <extension name="libxml" />
             <extension name="mbstring" />
@@ -426,7 +427,6 @@
             <extension name="xml" />
             <extension name="xmlreader" />
             <extension name="xmlwriter" />
-            <extension name="zip" />
             <extension name="zlib" />
           </loaded_extensions>
         </phpinfo>

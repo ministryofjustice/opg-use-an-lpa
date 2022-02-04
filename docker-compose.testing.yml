@@ -6,16 +6,20 @@ volumes:
 services:
 
   zap:
+    profiles:
+      - tools
     build:
       context: zap
 
   smoke-tests:
+    profiles:
+      - testing
     build:
       context: .
       dockerfile: tests/smoke/Dockerfile
     volumes:
-      - ./tests/smoke:/home/circleci/project
-      - ./tests/features:/home/circleci/project/features
+      - ./tests/smoke:/app
+      - ./tests/features:/app/features
     environment:
       BEHAT_VIEWER_URL: http://viewer-web
       BEHAT_ACTOR_URL: http://actor-web
@@ -23,6 +27,8 @@ services:
       BEHAT_OLD_ACTOR_URL: http://actor-web
 
   lpa-codes-pact-mock:
+    profiles:
+      - testing
     image: pactfoundation/pact-cli:latest
     ports:
         - 1234:80
@@ -40,6 +46,8 @@ services:
         - lpa-codes
 
   api-gateway-pact-mock:
+    profiles:
+      - testing
     image: pactfoundation/pact-cli:latest
     command:
       - mock-service
@@ -55,6 +63,8 @@ services:
       - api-gateway
 
   api-app:
+    profiles:
+      - testing
     image: api-app
     depends_on:
       - lpa-codes-pact-mock
