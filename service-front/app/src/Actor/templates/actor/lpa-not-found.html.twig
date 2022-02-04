@@ -18,10 +18,11 @@
 
                     <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
                     <div class="govuk-details">
+                        <p class="govuk-body">{% trans %}Activation key:{% endtrans %} <strong>C-{{ passcode }}</strong></p>
+                        <p class="govuk-body">{% trans %}Make sure this is the activation key in the letter we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans with {'%link%': path('lpa.add-by-paper-information')}%}Your activation key expires one year after the date on the letter. If your key has expired, you can <a href="%link%" class="govuk-link">ask for a new activation key</a>.{% endtrans %}</p>
                         <p class="govuk-body">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> reference number:{% endtrans %} <strong>{{ referenceNumber }}</strong></p>
                         <p class="govuk-body">{% trans %}Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}Activation key:{% endtrans %} <strong>{{ passcode }}</strong></p>
-                        <p class="govuk-body">{% trans %}Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.{% endtrans %}</p>
                         <p class="govuk-body">{% trans %}Date of birth:{% endtrans %} <strong>{{ lpa_date(dob) }}</strong></p>
                         <p class="govuk-body">{% trans %}The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth.{% endtrans %}</p>
                     </div>
@@ -34,8 +35,7 @@
                         </summary>
                         <div class="govuk-details__text">
                             <p>{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
-
-                            {{ include('@partials/contact-details/telephone.html.twig') }}
+                            {{ include('@partials/contact-details/telephone.html.twig', {title: false} ) }}
                         </div>
                     </details>
 
