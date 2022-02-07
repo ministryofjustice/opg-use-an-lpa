@@ -5,6 +5,7 @@ const path = require('path');
 
 module.exports = merge(common, {
   mode: "production",
+  target: ["web", "es5"],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'javascript/bundle.js',
