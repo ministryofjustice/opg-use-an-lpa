@@ -6,6 +6,7 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestNames;
 use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -29,15 +30,15 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
     {
         $this->form->setData(
             [
-                'first_names' => $this->state()->firstNames,
-                'last_name' => $this->state()->lastName
+                'first_names' => $this->state($request)->firstNames,
+                'last_name' => $this->state($request)->lastName
             ]
         );
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
+            'back' => $this->lastPage($this->state($request))
         ]));
     }
 
@@ -49,32 +50,31 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             $postData = $this->form->getData();
 
             //  Set the data in the state and pass to the check your answers handler
-            $this->state()->firstNames = $postData['first_names'];
-            $this->state()->lastName = $postData['last_name'];
+            $this->state($request)->firstNames = $postData['first_names'];
+            $this->state($request)->lastName = $postData['last_name'];
 
-            $nextPageName = $this->getRouteNameFromAnswersInSession();
-            return $this->redirectToRoute($nextPageName);
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
+            'back' => $this->lastPage($this->state($request))
         ]));
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state()->referenceNumber !== null;
+        return ! $this->state($request)->has('referenceNumber');
     }
 
-    public function nextPage(): string
+    public function nextPage(WorkflowState $state): string
     {
-        return 'lpa.date-of-birth';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-paper';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

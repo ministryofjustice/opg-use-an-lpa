@@ -6,7 +6,9 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
 use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
+use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
@@ -27,12 +29,24 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($this->session->toArray());
+        /** @var DateTimeImmutable $dob */
+        if (($dob = $this->state($request)->dob) !== null) {
+            $this->form->setData(
+                [
+                    'dob' =>
+                        [
+                            'day' => $dob->format('d'),
+                            'month' => $dob->format('m'),
+                            'year' => $dob->format('Y'),
+                        ]
+                ]
+            );
+        }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
+            'back' => $this->lastPage($this->state($request))
         ]));
     }
 
@@ -43,38 +57,36 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            //  Set the data in the session and pass to the check your answers handler
-            $this->session->set(
-                'dob',
-                [
-                    'day' => $postData['dob']['day'],
-                    'month' => $postData['dob']['month'],
-                    'year' => $postData['dob']['year']
-                ]
+            // Set the data in the session and pass to the check your answers handler
+            $this->state($request)->dob = (new DateTimeImmutable())->setDate(
+                (int) $postData['dob']['year'],
+                (int) $postData['dob']['month'],
+                (int) $postData['dob']['day']
             );
-            $nextPageName = $this->getRouteNameFromAnswersInSession();
-            return $this->redirectToRoute($nextPageName);
+
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
+            'back' => $this->lastPage($this->state($request))
         ]));
     }
-    public function isMissingPrerequisite(): bool
+
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names');
+        return ! ($this->state($request)->has('referenceNumber')
+            && $this->state($request)->has('firstNames'));
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.your-name';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
-    public function nextPage(): string
+    public function nextPage(WorkflowState $state): string
     {
-        return 'lpa.postcode';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.postcode';
     }
 }

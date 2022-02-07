@@ -6,6 +6,7 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestPostcode;
 use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -28,7 +29,13 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($this->session->toArray());
+        if (($postcode = $this->state($request)->postcode) !== null) {
+            $this->form->setData(
+                [
+                    'postcode' => $postcode
+                ]
+            );
+        }
 
         return new HtmlResponse(
             $this->renderer->render(
@@ -36,7 +43,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->getRouteNameFromAnswersInSession(true),
+                    'back' => $this->lastPage($this->state($request))
                 ]
             )
         );
@@ -50,7 +57,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->session->set('postcode', $postData['postcode']);
+            $this->state($request)->postcode = $postData['postcode'];
 
             return $this->redirectToRoute('lpa.check-answers');
         }
@@ -61,25 +68,25 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->getRouteNameFromAnswersInSession(true),
+                    'back' => $this->lastPage($this->state($request))
                 ]
             )
         );
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names')
-            || !$this->session->has('dob');
+        return ! ($this->state($request)->has('referenceNumber')
+            && $this->state($request)->has('firstNames')
+            && $this->state($request)->has('dob'));
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.date-of-birth';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
-    public function nextPage(): string
+    public function nextPage(WorkflowState $state): string
     {
         return 'lpa.check-answers';
     }

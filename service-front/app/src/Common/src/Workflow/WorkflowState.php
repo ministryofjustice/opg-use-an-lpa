@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Common\Workflow;
 
-interface WorkflowState
+use JsonSerializable;
+
+interface WorkflowState extends JsonSerializable
 {
     /**
-     * Populates a state object with an array of key value pairs like one might find in a session.
+     * @param string $property The name of the state value to be found in the state
      *
-     * @param array<string,mixed> $values
+     * @return bool
      */
-    public function build(array $values): void;
+    public function has(string $property): bool;
 
     /**
      * Reset the workflow to the beginning.

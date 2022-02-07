@@ -13,24 +13,39 @@ class RequestActivationKey implements WorkflowState
     public const ACTOR_DONOR = 'donor';
     public const ACTOR_ATTORNEY = 'attorney';
 
-    // these are kept across runs of the workflow
-    public ?string $firstNames = null;
-    public ?string $lastName = null;
-    public ?DateTimeImmutable $dob = null;
-    public ?string $postcode = null;
+    public ?DateTimeImmutable $dob;
+    public ?DateTimeImmutable $donorDob;
 
-    // these should be reset across runs
-    public ?int $referenceNumber = null;
-    private ?string $actorType = null;
-    public ?string $donorFirstNames = null;
-    public ?string $donorLastName = null;
-    public ?DateTimeImmutable $donorDob = null;
-    public ?string $telephone = null;
-    public ?bool $noTelephone = null;
+    /**
+     * Lovely constructor promotion
+     */
+    public function __construct(
+        // these are kept across runs of the workflow
+        public ?string $firstNames = null,
+        public ?string $lastName = null,
+        ?string $dob = null,
+        public ?string $postcode = null,
+        // these should be reset across runs
+        public ?int $referenceNumber = null,
+        private ?string $actorType = null,
+        public ?string $donorFirstNames = null,
+        public ?string $donorLastName = null,
+        ?string $donorDob = null,
+        public ?string $telephone = null,
+        public ?bool $noTelephone = null,
+        // not used for entered data but to track workflow path
+        public ?int $actorUid = null,
+        public bool $needsCleaning = false,
+    ) {
+        // if only constructor promotion allowed data transformers
+        $this->dob = $dob !== null ? new DateTimeImmutable($dob) : null;
+        $this->donorDob = $donorDob !== null ? new DateTimeImmutable($donorDob) : null;
+    }
 
-    // not used for entered data but to track workflow path
-    public ?int $actorUid = null;
-    public bool $needsCleaning = false;
+    public function has(string $property): bool
+    {
+        return $this->$property !== null;
+    }
 
     /**
      * Reset the workflow to the start.
@@ -68,5 +83,25 @@ class RequestActivationKey implements WorkflowState
         }
 
         $this->actorType = $role;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        $serialized = [];
+
+        foreach (get_object_vars($this) as $prop => $value) {
+            if ($value !== null) {
+                if ($value instanceof DateTimeImmutable) {
+                    $serialized[$prop] = $value->format('c');
+                } else {
+                    $serialized[$prop] = $value;
+                }
+            }
+        }
+
+        return $serialized;
     }
 }

@@ -15,6 +15,7 @@ use Common\Handler\Traits\User;
 use Common\Workflow\State;
 use Common\Workflow\StateAware;
 use Common\Workflow\StateBuilderFactory;
+use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -33,7 +34,6 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     UserAware,
     CsrfGuardAware,
     SessionAware,
-    StateAware,
     WorkflowStep
 {
     use User;
@@ -43,42 +43,17 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
-    protected StateBuilderFactory $stateFactory;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger,
-        StateBuilderFactory $stateFactory
+        LoggerInterface $logger
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->logger = $logger;
-        $this->stateFactory = $stateFactory;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function stateFactory(): callable
-    {
-        return ($this->stateFactory)(RequestActivationKey::class);
-    }
-
-    /**
-     * @param bool $back optional parameter specifying if the route named should be for the back button
-     *
-     * @return string the name of the route
-     */
-    protected function getRouteNameFromAnswersInSession(bool $back = false): string
-    {
-        if ($this->hasFutureAnswersInSession()) {
-            return 'lpa.check-answers';
-        } else {
-            return $back ? $this->lastPage() : $this->nextPage();
-        }
     }
 
     /**
@@ -90,24 +65,28 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
-        if ($this->isMissingPrerequisite()) {
+        if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-paper');
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
-    protected function hasFutureAnswersInSession(): bool
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return RequestActivationKey
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
-        return $this->session->has('postcode');
+        return $this->loadState($request, RequestActivationKey::class);
     }
 }

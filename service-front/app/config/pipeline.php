@@ -60,6 +60,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
 
+    $app->pipe(\Common\Middleware\Workflow\StatePersistenceMiddleware::class);
+
     $app->pipe(\Mezzio\Flash\FlashMessageMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.

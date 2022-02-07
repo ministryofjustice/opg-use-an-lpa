@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
-use Common\Handler\{CsrfGuardAware, UserAware, WorkflowStep};
-use Common\Service\Session\RemoveAccessForAllSessionValues;
+use Common\Handler\{CsrfGuardAware, UserAware};
+use Common\Service\Features\FeatureEnabled;
+use Common\Workflow\WorkflowState;
+use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Common\Workflow\StateBuilderFactory;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
-use Common\Service\Features\FeatureEnabled;
 
 /**
  * Class ReferenceNumberHandler
@@ -24,20 +24,16 @@ use Common\Service\Features\FeatureEnabled;
 class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestReferenceNumber $form;
-    private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
     private FeatureEnabled $featureEnabled;
-
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
-        FeatureEnabled $featureEnabled,
-        StateBuilderFactory $stateFactory
+        FeatureEnabled $featureEnabled
     ) {
-        parent::__construct($renderer, $authenticator, $urlHelper, $logger, $stateFactory);
+        parent::__construct($renderer, $authenticator, $urlHelper, $logger);
         $this->featureEnabled = $featureEnabled;
     }
 
@@ -47,19 +43,19 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
             $this->getCsrfGuard($request),
             ($this->featureEnabled)('allow_meris_lpas')
         );
+
         return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if (array_key_exists('startAgain', $request->getQueryParams())) {
-            $this->state()->reset();
-            //$this->removeAccessForAllSessionValues->cleanAccessForAllSessionValues($this->session);
+            $this->state($request)->reset();
         }
 
         $this->form->setData(
             [
-                'opg_reference_number' => $this->state()->referenceNumber
+                'opg_reference_number' => $this->state($request)->referenceNumber
             ]
         );
 
@@ -69,7 +65,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->getRouteNameFromAnswersInSession(true)
+                    'back' => $this->lastPage($this->state($request))
                 ]
             )
         );
@@ -82,10 +78,9 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->state()->referenceNumber = $postData['opg_reference_number'];
+            $this->state($request)->referenceNumber = (int) $postData['opg_reference_number'];
 
-            $nextPageName = $this->getRouteNameFromAnswersInSession();
-            return $this->redirectToRoute($nextPageName);
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse(
@@ -94,24 +89,24 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->getRouteNameFromAnswersInSession(true)
+                    'back' => $this->lastPage($this->state($request))
                 ]
             )
         );
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         return false;
     }
 
-    public function nextPage(): string
+    public function nextPage(WorkflowState $state): string
     {
-        return 'lpa.your-name';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-paper-information';
+        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
     }
 }
