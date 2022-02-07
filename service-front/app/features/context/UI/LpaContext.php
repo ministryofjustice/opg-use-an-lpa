@@ -375,12 +375,12 @@ class LpaContext implements Context
 
         //API call for getting all the users added LPAs
         $this->requestDashboardLPAs->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($lpas)
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($lpas)
+            )
+        );
     }
 
     /**
