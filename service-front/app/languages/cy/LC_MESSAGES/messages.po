@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-19T15:24:39+00:00\n"
+"POT-Creation-Date: 2022-02-04T14:46:48+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -359,20 +359,6 @@ msgid ""
 msgstr ""
 "Dylech allu defnyddio’r gwasanaeth hwn yn lle gorfod dangos fersiwn papur y "
 "<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun."
-
-#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
-msgid ""
-"You cannot use a download or print out of the\n"
-"                        <abbr title=\"lasting power of attorney\">LPA</abbr> "
-"summary in place of the original paper\n"
-"                        <abbr title=\"lasting power of attorney\">LPA</abbr> "
-"or instead of giving someone an access code"
-msgstr ""
-"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r \n"
-"                        crynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</"
-"abbr> ar-lein yn lle fersiwn papur y \n"
-"                        <abbr title=\"latwrneiaeth arhosol\">LPA</abbr> neu yn "
-"lle rhoi cod mynediad i rywun"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:39
 msgid ""
@@ -1056,17 +1042,6 @@ msgstr "Dyddiad cofrestru"
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:233
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
-
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:252
-msgid ""
-"You cannot use a download or print out of this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr> summary in place of the original paper <abbr title="
-"\"lasting power of attorney\">LPA</abbr> or instead of giving someone an "
-"access code."
-msgstr ""
-"Ni ellir defnyddio’r crynodeb hwn o’r <abbr title=\"atwrneiaethau arhosol"
-"\">LPA</abbr> yn lle’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> papur "
-"gwreiddiol neu yn lle rhoi cod mynediad i rywun."
 
 #: src/Actor/templates/actor/layout.html.twig:5
 #: src/Actor/templates/actor/home-page.html.twig:5
@@ -2289,11 +2264,11 @@ msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol gyda’r wybodaeth a roesoc
 msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:21
+#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>:"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:22
+#: src/Actor/templates/actor/lpa-not-found.html.twig:25
 msgid ""
 "Check this is the right reference number for the LPA you want to add. If "
 "you’re named on more than one LPA, you may have entered the reference number "
@@ -2303,7 +2278,7 @@ msgstr ""
 "hychwanegu. Os ydych wedi’ch enwi ar fwy nag un LPA, efallai eich bod wedi "
 "nodi cyfeirnod LPA gwahanol."
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:23
+#: src/Actor/templates/actor/lpa-not-found.html.twig:21
 msgid "Activation key:"
 msgstr "Allwedd cadarnhau cyfrif:"
 
@@ -2313,16 +2288,12 @@ msgid ""
 "their attorneys have their own activation key. If you’re using someone else’s "
 "activation key, we will not find the LPA."
 msgstr ""
-"Gwnewch yn siŵr mai dyma’r allwedd cadarnhau cyfrif y bu i ni ei anfon atoch. "
-"Mae gan y rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw. Os ydych yn "
-"defnyddio allwedd cadarnhau cyfrif rhywun arall, ni fyddwn yn gallu dod o hyd "
-"i’r LPA."
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:25
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
 msgid "Date of birth:"
 msgstr "Dyddiad geni:"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+#: src/Actor/templates/actor/lpa-not-found.html.twig:27
 msgid ""
 "The date of birth must be for the person the activation key was sent to. For "
 "example, if you’re an attorney, you must enter the activation key we sent to "
@@ -2333,7 +2304,7 @@ msgstr ""
 "roi’r allwedd cadarnhau cyfrif y bu i ni ei anfon atoch a’ch dyddiad geni chi."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:89
-#: src/Actor/templates/actor/lpa-not-found.html.twig:32
+#: src/Actor/templates/actor/lpa-not-found.html.twig:33
 msgid "What to do if you’re sure you entered the right information"
 msgstr "Beth i’w wneud os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir"
 
@@ -3181,7 +3152,7 @@ msgstr "Blwyddyn"
 msgid "There is a problem"
 msgstr "Mae problem"
 
-#: src/Common/templates/partials/govuk_error.html.twig:28
+#: src/Common/templates/partials/govuk_error.html.twig:32
 msgid "Error:"
 msgstr "Gwall:"
 
@@ -5679,7 +5650,7 @@ msgid "If you cannot find it, please call us:"
 msgstr "Os na allwch ddod o hyd iddo, gallwch ein ffonio:"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:93
-#: src/Actor/templates/actor/lpa-not-found.html.twig:36
+#: src/Actor/templates/actor/lpa-not-found.html.twig:37
 msgid "If you're sure you entered the right information, please call us:"
 msgstr "Os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni:"
 
@@ -5707,11 +5678,6 @@ msgstr ""
 "        Ffôn testun: 0115 934 2778 <br>\n"
 "        Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
-msgid "ask for an activation key if you have not been given one"
-msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:22
 msgid "What is your role on the LPA?"
@@ -6587,3 +6553,55 @@ msgid ""
 msgstr ""
 "Rhaid i chi wneud hyn cyn ceisio gofyn am allwedd cadarnhau cyfrif eto, er "
 "mwyn i ni allu postio eich allwedd i’r cyfeiriad cywir."
+
+# translation is : ask for an activation key if you have not been given one
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+msgid ""
+"ask for an activation key if you have not been given one - or it has expired"
+msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:22
+msgid ""
+"Make sure this is the activation key in the letter we sent to you. The donor "
+"and each of their attorneys have their own activation key. If you’re using "
+"someone else’s activation key, we will not find the LPA."
+msgstr ""
+"Gwnewch yn siŵr mai dyma'r allwedd cadarnhau cyfrif yn y llythyr a anfonwyd "
+"atoch.Mae gan y rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw. Os "
+"ydych yn defnyddio allwedd cadarnhau cyfrif rhywun arall, ni fyddwn yn gallu "
+"dod o hyd i’r LPA."
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:23
+msgid ""
+"Your activation key expires one year after the date on the letter. If your key "
+"has expired, you can <a href=\"%link%\" class=\"govuk-link\">ask for a new "
+"activation key</a>."
+msgstr ""
+"Bydd eich allwedd cadarnhau cyfrif yn dod i ben flwyddyn ar ôl y dyddiad ar y "
+"llythyr.Os yw eich allwedd wedi dod i ben, gallwch ofyn am allwedd ysgogi "
+"newydd."
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+msgid ""
+"You cannot use a download or print out of the\n"
+"                        <abbr title=\"lasting power of attorney\">LPA</abbr> "
+"summary in place of the original paper\n"
+"                        <abbr title=\"lasting power of attorney\">LPA</abbr> "
+"or instead of giving someone an access code"
+msgstr ""
+"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r \n"
+"                        crynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</"
+"abbr> ar-lein yn lle fersiwn papur y \n"
+"                        <abbr title=\"latwrneiaeth arhosol\">LPA</abbr> neu yn "
+"lle rhoi cod mynediad i rywun"
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:248
+msgid ""
+"You cannot use a download or print out of this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> summary in place of the original paper <abbr title="
+"\"lasting power of attorney\">LPA</abbr> or instead of giving someone an "
+"access code."
+msgstr ""
+"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r"
+"crynodeb <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ar-lein yn lle fersiwn papur y"
+"<abbr title=“latwrneiaeth arhosol”>LPA</abbr> neu yn lle rhoi cod mynediad i rywun."

@@ -375,12 +375,12 @@ class LpaContext implements Context
 
         //API call for getting all the users added LPAs
         $this->requestDashboardLPAs->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($lpas)
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($lpas)
+            )
+        );
     }
 
     /**
@@ -2183,7 +2183,7 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
         $this->ui->assertPageContainsText('LPA reference number: 700000000054');
-        $this->ui->assertPageContainsText('Activation key: XYUPHWQRECHV');
+        $this->ui->assertPageContainsText('Activation key: C-XYUPHWQRECHV');
         $this->ui->assertPageContainsText('Date of birth: 5 October 1975');
     }
 
