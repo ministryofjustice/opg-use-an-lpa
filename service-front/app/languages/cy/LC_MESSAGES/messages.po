@@ -4770,7 +4770,7 @@ msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:35
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
 msgid "Use this service to:"
-msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
+msgstr "Defnyddiwch y gwasanaeth hwn i:"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:52
 msgid "What to do next"
@@ -6554,11 +6554,10 @@ msgstr ""
 "Rhaid i chi wneud hyn cyn ceisio gofyn am allwedd cadarnhau cyfrif eto, er "
 "mwyn i ni allu postio eich allwedd i’r cyfeiriad cywir."
 
-# translation is : ask for an activation key if you have not been given one
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid ""
 "ask for an activation key if you have not been given one - or it has expired"
-msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
+msgstr "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi dod i ben"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:22
 msgid ""
