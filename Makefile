@@ -129,11 +129,11 @@ run_api_composer:
 .PHONY: run_api_composer
 
 run_front_composer_update:
-	$(COMPOSE) run front-composer update
+	$(COMPOSE) run front-composer update $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer update
+	$(COMPOSE) run api-composer update $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer_update
 
 clear_config_cache:
