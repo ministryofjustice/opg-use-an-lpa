@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-02-04T14:46:48+00:00\n"
+"POT-Creation-Date: 2022-02-10T14:07:41+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2454,7 +2454,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:86
 #: src/Actor/templates/actor/home-page.html.twig:52
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/lpa-add.html.twig:74
+#: src/Actor/templates/actor/lpa-add.html.twig:75
 #: src/Viewer/templates/viewer/enter-code.html.twig:68
 msgid "Continue"
 msgstr "Parhau"
@@ -2464,7 +2464,7 @@ msgstr "Parhau"
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:66
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:61
 #: src/Actor/templates/actor/check-lpa.html.twig:92
-#: src/Actor/templates/actor/lpa-add.html.twig:76
+#: src/Actor/templates/actor/lpa-add.html.twig:77
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -2872,16 +2872,16 @@ msgstr "Ychwanegu atwrneiaeth arhosol"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:20
-#: src/Actor/templates/actor/lpa-add.html.twig:54
+#: src/Actor/templates/actor/lpa-add.html.twig:55
 #: src/Common/templates/partials/full-lpa-display.html.twig:253
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:62
+#: src/Actor/templates/actor/lpa-add.html.twig:63
 msgid "Where to find the reference number"
 msgstr "Cael hyd i’ch cyfeirnod LPA"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:67
+#: src/Actor/templates/actor/lpa-add.html.twig:68
 msgid ""
 "The reference number is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered."
@@ -2889,7 +2889,7 @@ msgstr ""
 "Gellir gweld cyfeirnod yn y llythyr oedd yn rhoi gwybod i chi fod yr LPA wedi "
 "ei chofrestru."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:68
+#: src/Actor/templates/actor/lpa-add.html.twig:69
 msgid ""
 "You can also find the reference number on the <abbr title=\"lasting power of "
 "attorney\">LPA</abbr> or any related letters from the Office of the Public "
@@ -2898,7 +2898,7 @@ msgstr ""
 "Gwelir y cyfeirnod hefyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "neu unrhyw lythyr cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus."
 
-#: src/Actor/templates/actor/lpa-add.html.twig:69
+#: src/Actor/templates/actor/lpa-add.html.twig:70
 msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
 msgstr "Bydd wedi ei nodi fel ‘cyfeirnod OPG’ neu ‘Ein cyf’ neu ‘Rhif achos’."
 
@@ -2922,11 +2922,11 @@ msgstr ""
 "Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn "
 "dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:38
+#: src/Actor/templates/actor/lpa-add.html.twig:39
 msgid "Where to find your activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:42
+#: src/Actor/templates/actor/lpa-add.html.twig:43
 msgid ""
 "Your activation key is printed on the letter that told you the <abbr title="
 "\"lasting power of attorney\">LPA</abbr> had been registered. The donor and "
@@ -2956,7 +2956,7 @@ msgstr "Beth yw eich dyddiad geni?"
 
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:28
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:37
-#: src/Actor/templates/actor/lpa-add.html.twig:50
+#: src/Actor/templates/actor/lpa-add.html.twig:51
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -5458,7 +5458,7 @@ msgstr ""
 msgid "Life-sustaining <br>treatment"
 msgstr "Triniaeth <br>cynnal bywyd"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:55
+#: src/Actor/templates/actor/lpa-add.html.twig:56
 msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-0000-0000"
 
@@ -5466,7 +5466,7 @@ msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-0000-0000
 msgid "Your activation key"
 msgstr "Eich allwedd cadarnhau cyfrif"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:49
+#: src/Actor/templates/actor/lpa-add.html.twig:50
 msgid "Your date of birth"
 msgstr "Eich dyddiad geni"
 
@@ -5645,7 +5645,7 @@ msgstr ""
 "Os yw’r wybodaeth yn anghywir, neu os yw enw wedi cael ei gamsillafu, ffoniwch "
 "ni ar:"
 
-#: src/Actor/templates/actor/lpa-add.html.twig:43
+#: src/Actor/templates/actor/lpa-add.html.twig:44
 msgid "If you cannot find it, please call us:"
 msgstr "Os na allwch ddod o hyd iddo, gallwch ein ffonio:"
 
@@ -6556,6 +6556,7 @@ msgstr ""
 
 # translation is : ask for an activation key if you have not been given one
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
 msgid ""
 "ask for an activation key if you have not been given one - or it has expired"
 msgstr "gofynnwch am allwedd cadarnhau cyfrif os nad ydych wedi cael un"
@@ -6602,6 +6603,16 @@ msgid ""
 "\"lasting power of attorney\">LPA</abbr> or instead of giving someone an "
 "access code."
 msgstr ""
-"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r"
-"crynodeb <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ar-lein yn lle fersiwn papur y"
-"<abbr title=“latwrneiaeth arhosol”>LPA</abbr> neu yn lle rhoi cod mynediad i rywun."
+"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu "
+"o’rcrynodeb <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ar-lein yn lle "
+"fersiwn papur y<abbr title=“latwrneiaeth arhosol”>LPA</abbr> neu yn lle rhoi "
+"cod mynediad i rywun."
+
+#: src/Actor/templates/actor/lpa-add.html.twig:33
+msgid ""
+"Activation keys are 13 letters and numbers long and start with a C<br/>For "
+"example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
+msgstr ""
+"Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn "
+"dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56 <br/><br/> Nid oes angen "
+"ichi nodi’r C-"
