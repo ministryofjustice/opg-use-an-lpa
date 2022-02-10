@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-01-19T15:24:39+00:00\n"
+"POT-Creation-Date: 2022-02-04T14:53:17+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -296,13 +296,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:23
 msgid "You should be able to use this service instead of showing someone the original paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr ""
-
-#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
-msgid ""
-"You cannot use a download or print out of the\n"
-"                        <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper\n"
-"                        <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:39
@@ -742,10 +735,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:233
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
-msgstr ""
-
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:252
-msgid "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
 msgstr ""
 
 #: src/Actor/templates/actor/layout.html.twig:5
@@ -1658,15 +1647,15 @@ msgstr ""
 msgid "Check your answers"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:21
+#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:22
+#: src/Actor/templates/actor/lpa-not-found.html.twig:25
 msgid "Check this is the right reference number for the LPA you want to add. If you’re named on more than one LPA, you may have entered the reference number for a different LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:23
+#: src/Actor/templates/actor/lpa-not-found.html.twig:21
 msgid "Activation key:"
 msgstr ""
 
@@ -1674,16 +1663,16 @@ msgstr ""
 msgid "Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:25
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
 msgid "Date of birth:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+#: src/Actor/templates/actor/lpa-not-found.html.twig:27
 msgid "The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth."
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:89
-#: src/Actor/templates/actor/lpa-not-found.html.twig:32
+#: src/Actor/templates/actor/lpa-not-found.html.twig:33
 msgid "What to do if you’re sure you entered the right information"
 msgstr ""
 
@@ -2324,7 +2313,7 @@ msgstr ""
 msgid "There is a problem"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_error.html.twig:28
+#: src/Common/templates/partials/govuk_error.html.twig:32
 msgid "Error:"
 msgstr ""
 
@@ -3972,7 +3961,7 @@ msgid "If you cannot find it, please call us:"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:93
-#: src/Actor/templates/actor/lpa-not-found.html.twig:36
+#: src/Actor/templates/actor/lpa-not-found.html.twig:37
 msgid "If you're sure you entered the right information, please call us:"
 msgstr ""
 
@@ -3989,11 +3978,6 @@ msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
 "        Textphone: 0115 934 2778 <br>\n"
 "        Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
-msgstr ""
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
-msgid "ask for an activation key if you have not been given one"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:22
@@ -4581,3 +4565,26 @@ msgstr ""
 msgid "You must do this before you try to ask for an activation key again, so we can post your key to the right address."
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
+msgid "ask for an activation key if you have not been given one - or it has expired"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:22
+msgid "Make sure this is the activation key in the letter we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:23
+msgid "Your activation key expires one year after the date on the letter. If your key has expired, you can <a href=\"%link%\" class=\"govuk-link\">ask for a new activation key</a>."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+msgid ""
+"You cannot use a download or print out of the\n"
+"                        <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper\n"
+"                        <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:248
+msgid "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
+msgstr ""
