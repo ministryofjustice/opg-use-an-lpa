@@ -5,25 +5,19 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestContactDetails;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\Session as SessionTrait;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
-use Common\Workflow\WorkflowStep;
+use Actor\Workflow\RequestActivationKey;
+use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+
 /**
+ * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements UserAware, CsrfGuardAware, WorkflowStep
+class ContactDetailsHandler extends AbstractCleansingDetailsHandler
 {
-    use User;
-    use CsrfGuard;
-    use SessionTrait;
-
     private RequestContactDetails $form;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -34,13 +28,24 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($this->session->toArray());
+        $this->form->setData(
+            [
+                'telephone_option' =>
+                    [
+                        'telephone' => $this->state($request)->telephone,
+                        'no_phone' => $this->state($request)->noTelephone ? 'yes' : 'no'
+                    ]
+            ]
+        );
 
-        return new HtmlResponse($this->renderer->render('actor::contact-details', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse($this->renderer->render(
+            'actor::contact-details',
+            [
+                'user' => $this->user,
+                'form' => $this->form->prepare(),
+                'back' => $this->lastPage($this->state($request))
+            ]
+        ));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -50,59 +55,58 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler implements U
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            //  Set the data in the session
-            $this->session->set(
-                'telephone_option',
-                [
-                    'telephone' => $postData['telephone_option']['telephone'] ?? null,
-                    'no_phone' => $postData['telephone_option']['no_phone'] ?? null
-                ]
-            );
+            $this->state($request)->telephone = $postData['telephone_option']['telephone'] ?? null;
+            $this->state($request)->noTelephone = ($postData['telephone_option']['no_phone'] ?? null) === 'yes';
 
-            return $this->redirectToRoute($this->nextPage());
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render('actor::contact-details', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->getRouteNameFromAnswersInSession(true)
-        ]));
+        return new HtmlResponse($this->renderer->render(
+            'actor::contact-details',
+            [
+                'user' => $this->user,
+                'form' => $this->form->prepare(),
+                'back' => $this->lastPage($this->state($request))
+            ]
+        ));
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
-        if ($this->session->has('lpa_full_match_but_not_cleansed')) {
-            return !$this->session->has('actor_id');
+        if ($this->state($request)->needsCleansing) {
+            return $this->state($request)->actorUid === null; // isMissing equals false if actorUid present
         }
 
-        $required = parent::isMissingPrerequisite()
-            || !$this->session->has('actor_role');
+        $required = parent::isMissingPrerequisite($request)
+            || $this->state($request)->getActorRole() === null;
 
-        if ($this->session->get('actor_role') === 'attorney') {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
             return $required
-                || !$this->session->has('donor_first_names')
-                || !$this->session->has('donor_last_name')
-                || !$this->session->has('donor_dob');
+                || $this->state($request)->donorFirstNames === null
+                || $this->state($request)->donorLastName === null
+                || $this->state($request)->donorDob === null;
         }
 
         return $required;
     }
 
-    public function nextPage(): string
+    public function nextPage(WorkflowState $state): string
     {
         return 'lpa.add.check-details-and-consent';
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        if ($this->session->get('actor_role') === 'attorney') {
-                return 'lpa.add.donor-details';
+        /** @var RequestActivationKey $state **/
+        if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+            return 'lpa.add.donor-details';
         }
 
-        if ($this->session->has('lpa_full_match_but_not_cleansed')) {
+        if ($state->needsCleansing) {
             return 'lpa.check-answers';
         }
+
         return 'lpa.add.actor-role';
     }
 }

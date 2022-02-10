@@ -7,8 +7,10 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
+    LoggerAware,
     SessionAware,
     Traits\CsrfGuard,
+    Traits\Logger,
     Traits\Session as SessionTrait,
     UserAware};
 use Common\Handler\Traits\User;
@@ -34,11 +36,13 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     UserAware,
     CsrfGuardAware,
     SessionAware,
+    LoggerAware,
     WorkflowStep
 {
     use User;
     use CsrfGuard;
     use SessionTrait;
+    use Logger;
     use State;
 
     protected ?SessionInterface $session;
@@ -50,10 +54,9 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
         UrlHelper $urlHelper,
         LoggerInterface $logger
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->logger = $logger;
     }
 
     /**

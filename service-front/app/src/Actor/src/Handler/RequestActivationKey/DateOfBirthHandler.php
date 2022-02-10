@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{CsrfGuardAware, UserAware};
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
@@ -76,17 +77,19 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return ! ($this->state($request)->has('referenceNumber')
-            && $this->state($request)->has('firstNames'));
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null;
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.your-name';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.postcode';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.postcode';
     }
 }

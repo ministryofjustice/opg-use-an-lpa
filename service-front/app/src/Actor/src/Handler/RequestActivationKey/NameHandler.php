@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestNames;
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{CsrfGuardAware, UserAware};
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
@@ -65,16 +66,18 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return ! $this->state($request)->has('referenceNumber');
+        return $this->state($request)->referenceNumber === null;
     }
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.add-by-paper';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

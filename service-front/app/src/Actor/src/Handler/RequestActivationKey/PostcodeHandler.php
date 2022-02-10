@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestPostcode;
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{CsrfGuardAware, UserAware};
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
@@ -76,14 +77,15 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return ! ($this->state($request)->has('referenceNumber')
-            && $this->state($request)->has('firstNames')
-            && $this->state($request)->has('dob'));
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->dob === null;
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function nextPage(WorkflowState $state): string

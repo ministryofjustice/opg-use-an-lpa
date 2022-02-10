@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{CsrfGuardAware, UserAware};
 use Common\Service\Features\FeatureEnabled;
 use Common\Workflow\WorkflowState;
@@ -102,11 +103,13 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.your-name';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->has('postcode') ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
+        /** @var RequestActivationKey $state */
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
     }
 }

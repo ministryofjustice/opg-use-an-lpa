@@ -20,6 +20,7 @@ interface WorkflowStep
      * @param ServerRequestInterface $request
      *
      * @return bool True if the user has the prerequisite workflow state items for this part of the workflow
+     * @throws StateNotInitialisedException
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool;
 

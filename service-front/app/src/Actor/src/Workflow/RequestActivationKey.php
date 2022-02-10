@@ -6,6 +6,7 @@ namespace Actor\Workflow;
 
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
+use RuntimeException;
 
 class RequestActivationKey implements WorkflowState
 {
@@ -13,6 +14,7 @@ class RequestActivationKey implements WorkflowState
     public const ACTOR_DONOR = 'donor';
     public const ACTOR_ATTORNEY = 'attorney';
 
+    private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
 
@@ -27,7 +29,7 @@ class RequestActivationKey implements WorkflowState
         public ?string $postcode = null,
         // these should be reset across runs
         public ?int $referenceNumber = null,
-        private ?string $actorType = null,
+        ?string $actorType = null,
         public ?string $donorFirstNames = null,
         public ?string $donorLastName = null,
         ?string $donorDob = null,
@@ -35,16 +37,15 @@ class RequestActivationKey implements WorkflowState
         public ?bool $noTelephone = null,
         // not used for entered data but to track workflow path
         public ?int $actorUid = null,
-        public bool $needsCleaning = false,
+        public ?bool $needsCleansing = null,
     ) {
+        if ($actorType !== null) { // TODO replace with enums at PHP 8.1
+            $this->setActorRole($actorType);
+        }
+
         // if only constructor promotion allowed data transformers
         $this->dob = $dob !== null ? new DateTimeImmutable($dob) : null;
         $this->donorDob = $donorDob !== null ? new DateTimeImmutable($donorDob) : null;
-    }
-
-    public function has(string $property): bool
-    {
-        return $this->$property !== null;
     }
 
     /**
@@ -64,22 +65,31 @@ class RequestActivationKey implements WorkflowState
         $this->noTelephone = null;
 
         $this->actorUid = null;
-        $this->needsCleaning = false;
+        $this->needsCleansing = false;
     }
 
+    /**
+     * TODO replace with enums at PHP 8.1
+     *
+     * @return string|null
+     */
     public function getActorRole(): ?string
     {
         return $this->actorType;
     }
 
     /**
+     * TODO replace with enums at PHP 8.1
+     *
      * @param string $role
      * @psalm-param self::ACTOR_* $role
+     *
+     * @throws RuntimeException
      */
     public function setActorRole(string $role): void
     {
         if (!in_array($role, [self::ACTOR_ATTORNEY, self::ACTOR_DONOR])) {
-            throw new \RuntimeException("Actor type '$role' not recognised");
+            throw new RuntimeException("Actor type '$role' not recognised");
         }
 
         $this->actorType = $role;

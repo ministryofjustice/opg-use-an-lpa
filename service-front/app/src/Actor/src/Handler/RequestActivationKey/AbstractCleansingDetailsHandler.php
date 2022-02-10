@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\LoggerAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Workflow\State;
+use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -25,16 +30,20 @@ use Psr\Log\LoggerInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
+abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    LoggerAware,
+    WorkflowStep
 {
     use User;
     use CsrfGuard;
     use SessionTrait;
+    use Logger;
+    use State;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
-    /** @var LoggerInterface */
-    protected $logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -42,24 +51,9 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         UrlHelper $urlHelper,
         LoggerInterface $logger
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->logger = $logger;
-    }
-
-    /**
-     * @param bool $back optional parameter specifying if the route named should be for the back button
-     *
-     * @return string the name of the route
-     */
-    protected function getRouteNameFromAnswersInSession(bool $back = false): string
-    {
-        if ($this->hasFutureAnswersInSession()) {
-            return 'lpa.add.check-details-and-consent';
-        } else {
-            return $back ? $this->lastPage() : $this->nextPage();
-        }
     }
 
     /**
@@ -72,45 +66,54 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
-        if ($this->isMissingPrerequisite()) {
+        if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add.actor-role');
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names')
-            || !$this->session->has('last_name')
-            || !$this->session->has('dob')
-            || !$this->session->has('postcode');
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->lastName === null
+            || $this->state($request)->dob === null
+            || $this->state($request)->postcode === null;
     }
 
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
-    protected function hasFutureAnswersInSession(): bool
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return RequestActivationKey
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
-        $s = $this->session->toArray();
+        return $this->loadState($request, RequestActivationKey::class);
+    }
 
-        $alwaysRequired =
-            isset($s['telephone_option']['telephone'])
-            ||
-            ($s['telephone_option']['no_phone'] ?? null) === 'yes';
+    /**
+     * @param RequestActivationKey $state
+     *
+     * @return bool
+     */
+    protected function hasFutureAnswersInState(RequestActivationKey $state): bool
+    {
+        $alwaysRequired = $state->telephone !== null || $state->noTelephone;
 
-        if ($this->session->get('actor_role') === 'attorney') {
+        if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
             return $alwaysRequired &&
-                $this->session->has('donor_first_names') &&
-                $this->session->has('donor_last_name') &&
-                $this->session->has('donor_dob');
+                $state->donorFirstNames !== null &&
+                $state->donorLastName !== null &&
+                $state->donorDob !== null;
         }
 
         return $alwaysRequired;

@@ -273,18 +273,17 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
             }
+
+            $this->getLogger()->alert(
+                'No valid older LPA addition response was returned from our API in ' . __METHOD__
+            );
+            throw new RuntimeException('No valid response was returned from our API');
         }
 
-        $this->logger->alert('No valid older LPA addition response was returned from our API');
-        throw new RuntimeException('No valid response was returned from our API');
+        $this->getLogger()->alert('Invalid CSRF when submitting to ' . __METHOD__);
+        throw new RuntimeException('Invalid CSRF when submitting form');
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return RequestActivationKey
-     * @throws StateNotInitialisedException
-     */
     public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
@@ -292,11 +291,11 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return ! ($this->state($request)->has('referenceNumber')
-            && $this->state($request)->has('firstNames')
-            && $this->state($request)->has('lastName')
-            && $this->state($request)->has('dob')
-            && $this->state($request)->has('postcode'));
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->lastName === null
+            || $this->state($request)->dob === null
+            || $this->state($request)->postcode === null;
     }
 
     public function nextPage(WorkflowState $state): string
