@@ -14,15 +14,13 @@ use Laminas\Validator\AbstractValidator;
 class LuhnCheck extends AbstractValidator
 {
     public const INVALID_REFERENCE = 'invalidReference';
-    public const LPA_MUST_START_WITH = 'mustStartWithSeven';
 
     /**
      * @var string[]
      */
     protected $messageTemplates = [
         //  From parent
-        self::INVALID_REFERENCE => 'The LPA reference number provided is not correct',
-        self::LPA_MUST_START_WITH  => 'LPA reference numbers that are 12 numbers long must begin with a 7',
+        self::INVALID_REFERENCE => 'The LPA reference number provided is not correct'
     ];
 
     /**
@@ -33,23 +31,32 @@ class LuhnCheck extends AbstractValidator
     public function isValid($reference_number)
     {
         $isValid = true;
-        $ref_number_checksum = '';
-
-        $positionOfSeven = stripos((string)$reference_number, '7');
-
         if (strlen($reference_number) === 12) {
-            if (!($positionOfSeven === 0)) {
-                $this->error(self::LPA_MUST_START_WITH);
-                $isValid = false;
-            } else {
-                foreach (str_split(strrev((string)$reference_number)) as $i => $d) {
-                    $ref_number_checksum .= $i % 2 !== 0 ? $d * 2 : $d;
-                }
+            // Force the value to be a string so we can work with it like a string.
+            $value = (string)$reference_number;
 
-                if (array_sum(str_split($ref_number_checksum)) % 10 != 0) {
-                    $this->error(self::INVALID_REFERENCE);
-                    $isValid = false;
+            // Set some initial values up.
+            $length = strlen($value);
+            $parity = $length % 2;
+            $sum = 0;
+
+            for ($i = $length - 1; $i >= 0; --$i) {
+                // Extract a character from the value.
+                $char = $value[$i];
+                if ($i % 2 != $parity) {
+                    $char *= 2;
+                    if ($char > 9) {
+                        $char -= 9;
+                    }
                 }
+                // Add the character to the sum of characters.
+                $sum += $char;
+            }
+
+            // Return the value of the sum multiplied by 9 and then modulus 10.
+            if (($sum * 9) % 10 != 0) {
+                $this->error(self::INVALID_REFERENCE);
+                $isValid = false;
             }
         }
         return $isValid;

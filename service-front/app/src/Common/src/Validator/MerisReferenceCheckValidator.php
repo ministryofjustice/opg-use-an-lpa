@@ -6,7 +6,7 @@ namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
 
-class ReferenceCheckValidator extends AbstractValidator
+class MerisReferenceCheckValidator extends AbstractValidator
 {
     public const MERIS_NO_MUST_START_WITH = 'mustStartWith';
     public const MUST_BE_LENGTH = 'mustBeLength';
@@ -34,10 +34,13 @@ class ReferenceCheckValidator extends AbstractValidator
         if (!(strlen($reference_number) === 7 or strlen($reference_number) === 12)) {
             $this->error(self::MUST_BE_LENGTH);
             $isValid = false;
-        } elseif (strlen($reference_number) === 7 and !($positionOfTwo === 0 or $positionOfThree === 0)) {
+        }
+
+        if (!($positionOfTwo === 0 or $positionOfThree === 0) and strlen($reference_number) === 7) {
             $this->error(self::MERIS_NO_MUST_START_WITH);
             $isValid = false;
         }
+
         return $isValid;
     }
 }

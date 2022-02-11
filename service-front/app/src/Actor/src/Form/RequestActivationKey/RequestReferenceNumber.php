@@ -6,9 +6,9 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Validator\ReferenceCheckValidator;
+use Common\Validator\MerisReferenceCheckValidator;
 use Common\Validator\LuhnCheck;
-use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
+use Common\Validator\SiriusReferenceStartsWithCheck;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\{Digits, NotEmpty,StringLength};
@@ -65,12 +65,15 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 ],
             ],
             [
-                'name'    => LuhnCheck::class
+                'name'    => SiriusReferenceStartsWithCheck::class,
+                'break_chain_on_failure' => true,
+            ],
+            [
+                'name'    => LuhnCheck::class,
             ],
         ];
         $stringLength = [
             'name' => StringLength::class,
-            'break_chain_on_failure' => true,
             'options' => [
                 'encoding' => 'UTF-8',
                 'min' => 12,
@@ -81,12 +84,12 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 ],
             ],
         ];
-        $referenceCheck = [
-            'name' => ReferenceCheckValidator::class,
+        $merisReferenceCheck = [
+            'name' => MerisReferenceCheckValidator::class,
         ];
 
         if ($this->merisEntryEnabled) {
-            array_push($validators, $referenceCheck);
+            array_push($validators, $merisReferenceCheck);
         } else {
             array_push($validators, $stringLength);
         }
