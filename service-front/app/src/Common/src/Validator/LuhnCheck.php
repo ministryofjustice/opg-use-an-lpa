@@ -43,7 +43,7 @@ class LuhnCheck extends AbstractValidator
             for ($i = $length - 1; $i >= 0; --$i) {
                 // Extract a character from the value.
                 $char = $value[$i];
-                if ($i % 2 != $parity) {
+                if ($i % 2 == $parity) {
                     $char *= 2;
                     if ($char > 9) {
                         $char -= 9;
@@ -54,11 +54,12 @@ class LuhnCheck extends AbstractValidator
             }
 
             // Return the value of the sum multiplied by 9 and then modulus 10.
-            if (($sum * 9) % 10 != 0) {
+            if (($sum) % 10 != 0) {
                 $this->error(self::INVALID_REFERENCE);
                 $isValid = false;
             }
         }
+        
         return $isValid;
     }
 }
