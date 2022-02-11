@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
-use Common\Validator\ReferenceCheckValidator;
+use Common\Validator\MerisReferenceCheckValidator;
 use PHPUnit\Framework\TestCase;
 
-class ReferenceCheckValidatorTest extends TestCase
+class MerisReferenceCheckValidatorTest extends TestCase
 {
     /**
-     * @var ReferenceCheckValidator
+     * @var MerisReferenceCheckValidator
      */
     private $validator;
 
     public function setUp(): void
     {
-        $this->validator = new ReferenceCheckValidator();
+        $this->validator = new MerisReferenceCheckValidator();
     }
 
     /**
@@ -46,13 +46,13 @@ class ReferenceCheckValidatorTest extends TestCase
     /**
      * @dataProvider notValidMerisFormatProvider
      */
-    public function testMerisReferenceStartsWithSeven($reference_number): void
+    public function testMerisReferenceStartsWithTwoOrThree($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
         $this->assertEquals(
             [
-                ReferenceCheckValidator::MERIS_NO_MUST_START_WITH =>
+                MerisReferenceCheckValidator::MERIS_NO_MUST_START_WITH =>
                     'LPA reference numbers that are 7 numbers long must begin with a 2 or 3',
             ],
             $this->validator->getMessages()
@@ -83,7 +83,7 @@ class ReferenceCheckValidatorTest extends TestCase
 
         $this->assertEquals(
             [
-                ReferenceCheckValidator::MUST_BE_LENGTH =>
+                MerisReferenceCheckValidator::MUST_BE_LENGTH =>
                     'Enter an LPA reference number that is either 7 or 12 numbers long',
             ],
             $this->validator->getMessages()

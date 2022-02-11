@@ -36,6 +36,8 @@ class LuhnCheckTest extends TestCase
             ['700000000047'],
             ['700000000138'],
             ['712121234926'],
+            ['322271628'],
+            ['4417123456789113']
         ];
     }
 
@@ -59,32 +61,6 @@ class LuhnCheckTest extends TestCase
             ['700000000132'],
             ['700000000254'],
             ['711111111526'],
-        ];
-    }
-
-    /**
-     * @dataProvider incorrectFormatProvider
-     */
-    public function testReferenceStartsWithSeven($reference_number)
-    {
-        $isValid = $this->validator->isValid($reference_number);
-
-        $this->assertEquals(
-            [
-                LuhnCheck::LPA_MUST_START_WITH => 'LPA reference numbers that are 12 numbers long must begin with a 7',
-            ],
-            $this->validator->getMessages()
-        );
-
-        $this->assertFalse($isValid);
-    }
-
-    public function incorrectFormatProvider()
-    {
-        return [
-            ['100000000132'],
-            ['200000000254'],
-            ['311111111526'],
         ];
     }
 }

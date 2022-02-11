@@ -28,11 +28,10 @@ class SiriusReferenceStartsWithCheck extends AbstractValidator
 
         $positionOfSeven = stripos((string)$reference_number, '7');
 
-        if ((strlen($reference_number) === 12) and ($positionOfSeven != 0)) {
+        if (!(strlen($reference_number) === 12 and $positionOfSeven === 0)) {
             $this->error(self::LPA_MUST_START_WITH);
             $isValid = false;
         }
-
 
         return $isValid;
     }
