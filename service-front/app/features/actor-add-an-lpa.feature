@@ -88,7 +88,7 @@ Feature: Add an LPA
 
     Examples:
       | referenceNo     | reason                                                                  |
-      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format                    |
+      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format                       |
       | 7000-0000 00    | The LPA reference number you entered is too short                       |
       | 7000-0000-00011 | The LPA reference number you entered is too long                        |
       | 70000000000     | The LPA reference number you entered is too short                       |

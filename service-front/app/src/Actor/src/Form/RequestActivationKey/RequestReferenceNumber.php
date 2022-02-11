@@ -74,6 +74,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
         ];
         $stringLength = [
             'name' => StringLength::class,
+            'break_chain_on_failure' => true,
             'options' => [
                 'encoding' => 'UTF-8',
                 'min' => 12,

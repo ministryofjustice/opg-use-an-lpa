@@ -59,7 +59,7 @@ class LuhnCheck extends AbstractValidator
                 $isValid = false;
             }
         }
-        
+
         return $isValid;
     }
 }
