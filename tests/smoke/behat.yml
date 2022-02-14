@@ -14,7 +14,7 @@ default:
           chrome:
             api_url: "http://localhost:9222"
             # Set the optimal Socket Timeout to avoid client-server connection problems in behat scripts.
-            socket_timeout: 60
+            socket_timeout: 15
 
   suites:
     actor:
