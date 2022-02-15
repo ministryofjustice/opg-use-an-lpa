@@ -26,7 +26,7 @@ use Laminas\Validator\StringLength;
  */
 class LpaAdd extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'lpa_add';
+    public const FORM_NAME = 'lpa_add';
 
     /**
      * LpaAdd constructor.
