@@ -37,15 +37,20 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
-                       'name' => 'passcode',
-                       'type' => 'Text',
-                   ]);
+        $this->add(
+            [
+                'name' => 'passcode',
+                'type' => 'Text',
 
-        $this->add([
-                       'name' => 'reference_number',
-                       'type' => 'Text',
-                   ]);
+            ]
+        );
+
+        $this->add(
+            [
+                'name' => 'reference_number',
+                'type' => 'Text',
+            ]
+        );
 
         $this->add(new Date('dob'));
     }
