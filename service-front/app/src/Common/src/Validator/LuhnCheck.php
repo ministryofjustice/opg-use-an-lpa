@@ -26,9 +26,8 @@ class LuhnCheck extends AbstractValidator
     /**
      * @param mixed $reference_number
      * @return bool
-     * @throws \Exception
      */
-    public function isValid($reference_number)
+    public function isValid($reference_number): bool
     {
         $isValid = true;
         if (strlen($reference_number) === 12) {
@@ -37,14 +36,18 @@ class LuhnCheck extends AbstractValidator
 
             // Set some initial values up.
             $length = strlen($value);
-            $parity = $length % 2;
+            $checkDigit  = $length % 2;
             $sum = 0;
 
             for ($i = $length - 1; $i >= 0; --$i) {
                 // Extract a character from the value.
                 $char = $value[$i];
-                if ($i % 2 == $parity) {
+
+                //Every other digit should be multiplied by two.
+                if ($i % 2 === $checkDigit) {
                     $char *= 2;
+                    //When the digit becomes 2 digits (due to digit*2),
+                    //we add the two digits together.
                     if ($char > 9) {
                         $char -= 9;
                     }
@@ -53,8 +56,8 @@ class LuhnCheck extends AbstractValidator
                 $sum += $char;
             }
 
-            // Return the value of the sum multiplied by 9 and then modulus 10.
-            if (($sum) % 10 != 0) {
+            // Check if sum mod 10 equals zero
+            if (($sum) % 10 !== 0) {
                 $this->error(self::INVALID_REFERENCE);
                 $isValid = false;
             }
