@@ -29,7 +29,8 @@
 
                     {{ govuk_form_element(form.get('passcode'), {
                         'label': 'Your activation key'| trans,
-                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56'| trans,
+                        'input_prefix' : 'C -',
+                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-'| trans,
                         'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'} }) }}
 
                     <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Activation Key" data-gaLabel="Where to find your activation key">
