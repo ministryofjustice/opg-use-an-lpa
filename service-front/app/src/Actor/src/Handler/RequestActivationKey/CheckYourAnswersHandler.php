@@ -7,6 +7,7 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CheckYourAnswers;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Actor\Workflow\RequestActivationKey;
+use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
     LoggerAware,
@@ -281,7 +282,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         }
 
         $this->getLogger()->alert('Invalid CSRF when submitting to ' . __METHOD__);
-        throw new RuntimeException('Invalid CSRF when submitting form');
+        throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
     public function state(ServerRequestInterface $request): RequestActivationKey

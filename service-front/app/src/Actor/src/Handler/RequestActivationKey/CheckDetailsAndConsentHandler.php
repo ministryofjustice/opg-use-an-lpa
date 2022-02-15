@@ -7,6 +7,7 @@ namespace Actor\Handler\RequestActivationKey;
 use Actor\Form\RequestActivationKey\CheckDetailsAndConsent;
 use Actor\Workflow\RequestActivationKey;
 use Carbon\Carbon;
+use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -197,7 +198,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         }
 
         $this->getLogger()->alert('Invalid CSRF when submitting to ' . __METHOD__);
-        throw new RuntimeException('Invalid CSRF when submitting form');
+        throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
     public function state(ServerRequestInterface $request): RequestActivationKey
@@ -207,24 +208,31 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        $ret = $this->state($request)->referenceNumber === null
+        $missing = $this->state($request)->referenceNumber === null
             || $this->state($request)->firstNames === null
             || $this->state($request)->lastName === null
             || $this->state($request)->dob === null
             || $this->state($request)->postcode === null
-            || $this->state($request)->getActorRole() === null
             || (
                 $this->state($request)->telephone === null
                 && $this->state($request)->noTelephone === null
             );
 
+        // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
+        if (!$missing && $this->state($request)->needsCleansing) {
+            return $this->state($request)->actorUid === null; // isMissing equals false if actorUid present
+        }
+
+        $missing = $missing || $this->state($request)->getActorRole() === null;
+
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            return $ret
+            return $missing
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null
                 || $this->state($request)->donorDob === null;
         }
-        return $ret;
+
+        return $missing;
     }
 
     public function nextPage(WorkflowState $state): string
