@@ -11,7 +11,7 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -53,10 +53,8 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
 
         $session = $this->getSession($request, 'session');
 
-        // TODO UML-1758 session clearing hack till we figure out a better way.
-        $id = $session->get(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE);
-        $session->clear();
-        $session->set(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE, $id);
+        // Tell the SessionExpiredAttributeAllowlistMiddleware to clean out the session when it's done.
+        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
 
         $session->regenerate();
 
