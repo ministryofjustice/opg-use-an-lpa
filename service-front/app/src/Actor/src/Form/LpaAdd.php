@@ -41,7 +41,6 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
             [
                 'name' => 'passcode',
                 'type' => 'Text',
-
             ]
         );
 
