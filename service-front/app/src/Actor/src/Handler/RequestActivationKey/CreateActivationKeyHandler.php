@@ -140,6 +140,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
 
     public function lastPage(WorkflowState $state): string
     {
-        // TODO: Implement lastPage() method.
+        return '';
     }
 }
