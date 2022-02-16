@@ -1,5 +1,5 @@
 paths:
-  /use-an-lpa/lpas/{uid}:
+  /lpa-online-tool/lpas/{lpa_online_tool_id}:
     get:
       responses:
         '200':
