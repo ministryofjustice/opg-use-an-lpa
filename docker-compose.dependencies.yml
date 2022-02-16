@@ -47,3 +47,25 @@ services:
     environment:
       REGION: eu-west-1
       SEED_PATH: /init/kms-seed.yaml
+
+  # ---------------------------
+  # Sirius gateway mock
+  gateway:
+    container_name: gateway
+    image: gateway
+    build:
+      context: ./mock-integrations
+      dockerfile: ./Dockerfile-gateway
+    depends_on:
+      - mocksirius
+    ports:
+      - 7010:5000
+
+  mocksirius:
+    container_name: mocksirius
+    image: mocksirius
+    build:
+      context: ./mock-integrations
+      dockerfile: ./Dockerfile-mocksirius
+    ports:
+      - 7011:5000
