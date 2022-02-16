@@ -33,7 +33,8 @@ class LuhnCheck extends AbstractValidator
 
         /*
          * Check for reference length here because this validator is referred in both places ie,
-         * newer journey [LpaAdd.php] and older journey [RequestReferenceNumber.php].
+         * newer journey where only sirius reference numbers will be entered by user [LpaAdd.php] and
+         * older journey where both Sirius of Meris numbers could be entered [RequestReferenceNumber.php].
          * Luhn check only applies to Sirius reference
         */
         if (strlen($reference_number) === 12) {
