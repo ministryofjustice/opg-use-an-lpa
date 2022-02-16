@@ -30,6 +30,12 @@ class LuhnCheck extends AbstractValidator
     public function isValid($reference_number): bool
     {
         $isValid = true;
+
+        /*
+         * Check for reference length here because this validator is referred in both places ie,
+         * newer journey [LpaAdd.php] and older journey [RequestReferenceNumber.php].
+         * Luhn check only applies to Sirius reference
+        */
         if (strlen($reference_number) === 12) {
             // Force the value to be a string so we can work with it like a string.
             $value = (string)$reference_number;
