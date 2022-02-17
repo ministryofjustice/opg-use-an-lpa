@@ -1744,7 +1744,7 @@ class LpaContext implements Context
             );
 
         $this->ui->fillField('passcode', 'ABC321GHI567');
-        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->fillField('reference_number', '700000000278');
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');

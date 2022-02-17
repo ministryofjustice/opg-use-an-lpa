@@ -11,7 +11,8 @@ use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
 use Common\Form\Fieldset\DateTrimFilter;
 use Common\Validator\DobValidator;
-use Laminas\Filter\StringToUpper;
+use Common\Validator\LuhnCheck;
+use Common\Validator\SiriusReferenceStartsWithCheck;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -121,6 +122,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
@@ -133,11 +135,19 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'pattern' => '/^\d{12}$/',
                             'message' => 'Enter the LPA reference number in the correct format',
                         ],
                     ],
+                    [
+                        'name' => SiriusReferenceStartsWithCheck::class,
+                        'break_chain_on_failure' => true,
+                    ],
+                    [
+                        'name'    => LuhnCheck::class
+                    ]
                 ],
             ],
             'dob'              => [
