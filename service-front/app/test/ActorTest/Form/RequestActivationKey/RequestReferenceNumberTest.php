@@ -5,6 +5,7 @@ namespace ActorTest\Form\RequestActivationKey;
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Common\Validator\MerisReferenceCheckValidator;
 use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -53,11 +54,11 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     {
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
         $key = array_search(
-            'Common\Validator\ReferenceCheckValidator',
+            'Common\Validator\MerisReferenceCheckValidator',
             array_column($validators, 'name')
         );
 
-        $this->assertContains($validators[$key]['name'], 'Common\Validator\ReferenceCheckValidator');
+        $this->assertContains($validators[$key]['name'], 'Common\Validator\MerisReferenceCheckValidator');
     }
 
     /** @test */

@@ -11,7 +11,8 @@ use Common\Form\Fieldset\Date;
 use Common\Form\Fieldset\DatePrefixFilter;
 use Common\Form\Fieldset\DateTrimFilter;
 use Common\Validator\DobValidator;
-use Laminas\Filter\StringToUpper;
+use Common\Validator\LuhnCheck;
+use Common\Validator\SiriusReferenceStartsWithCheck;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -21,29 +22,35 @@ use Laminas\Validator\StringLength;
 
 /**
  * Class LpaAdd
+ *
  * @package Actor\Form
  */
 class LpaAdd extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'lpa_add';
+    public const FORM_NAME = 'lpa_add';
 
     /**
      * LpaAdd constructor.
+     *
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
-            'name' => 'passcode',
-            'type' => 'Text',
-        ]);
+        $this->add(
+            [
+                'name' => 'passcode',
+                'type' => 'Text',
+            ]
+        );
 
-        $this->add([
-            'name' => 'reference_number',
-            'type' => 'Text',
-        ]);
+        $this->add(
+            [
+                'name' => 'reference_number',
+                'type' => 'Text',
+            ]
+        );
 
         $this->add(new Date('dob'));
     }
@@ -55,78 +62,96 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'passcode' => [
-                'filters'  => [
+            'passcode'         => [
+                'filters'    => [
                     ['name' => StringTrim::class],
-                    ['name' => ActorViewerCodeFilter::class]
+                    ['name' => ActorViewerCodeFilter::class],
                 ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter your activation key',
+                            'message' => 'Enter your activation key',
                         ],
                     ],
                     [
-                        'name'    => StringLength::class,
+                        'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
+                        'options'                => [
+                            'pattern' => "/^(?![Cc][[:alnum:]]{12,}).*$/",
+                            'message' => 'The activation key you entered is too long. '
+                                . 'Check that you only entered the 12 letters and numbers that follow the C-',
+                        ],
+                    ],
+                    [
+                        'name'                   => StringLength::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 12,
-                            'messages'  => [
-                                StringLength::TOO_LONG => 'The activation key you entered is too long',
-                                StringLength::TOO_SHORT => 'The activation key you entered is too short'
+                            'messages' => [
+                                StringLength::TOO_LONG  => 'The activation key you entered is too long',
+                                StringLength::TOO_SHORT => 'The activation key you entered is too short',
                             ],
                         ],
                     ],
                     [
-                        'name'    => Regex::class,
+                        'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
+                        'options'                => [
                             'pattern' => "/^[[:alnum:]]{12}$/",
                             'message' => 'Enter an activation key in the correct format',
                         ],
                     ],
-                ]
+                ],
             ],
             'reference_number' => [
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
-                    ['name' => StripSpacesAndHyphens::class]
+                    ['name' => StripSpacesAndHyphens::class],
                 ],
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter the LPA reference number',
+                            'message' => 'Enter the LPA reference number',
                         ],
                     ],
                     [
                         'name'    => StringLength::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
                             'max'      => 12,
-                            'messages'  => [
-                                StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
-                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short'
+                            'messages' => [
+                                StringLength::TOO_LONG  => 'The LPA reference number you entered is too long',
+                                StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
                             ],
                         ],
                     ],
                     [
                         'name'    => Regex::class,
+                        'break_chain_on_failure' => true,
                         'options' => [
                             'pattern' => '/^\d{12}$/',
                             'message' => 'Enter the LPA reference number in the correct format',
                         ],
                     ],
-                ]
+                    [
+                        'name' => SiriusReferenceStartsWithCheck::class,
+                        'break_chain_on_failure' => true,
+                    ],
+                    [
+                        'name'    => LuhnCheck::class
+                    ]
+                ],
             ],
-            'dob' => [
-                'filters'  => [
+            'dob'              => [
+                'filters'    => [
                     ['name' => DateTrimFilter::class],
                     ['name' => DatePrefixFilter::class],
                 ],
@@ -134,7 +159,7 @@ class LpaAdd extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name' => DobValidator::class,
                     ],
-                ]
+                ],
             ],
         ];
     }

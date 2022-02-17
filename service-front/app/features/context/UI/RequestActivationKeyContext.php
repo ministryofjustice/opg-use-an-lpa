@@ -87,7 +87,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->assertPageContainsText('Check your answers');
-        $this->ui->assertPageContainsText('700000000001');
+        $this->ui->assertPageContainsText('700018506654');
         $this->ui->assertPageContainsText('The Attorney Person');
         $this->ui->assertPageContainsText('9 February 1998');
         $this->ui->assertPageContainsText('ABC123');
@@ -146,7 +146,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->visit('/lpa/request-code/lpa-reference-number');
 
-        $this->ui->fillField('opg_reference_number', '700000000001');
+        $this->ui->fillField('opg_reference_number', '700018506654');
         $this->ui->pressButton('Continue');
 
         $this->ui->assertPageAddress('/lpa/request-code/your-name');
@@ -162,7 +162,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->visit('/lpa/request-code/lpa-reference-number');
 
-        $this->ui->fillField('opg_reference_number', '700000000001');
+        $this->ui->fillField('opg_reference_number', '700018506654');
         $this->ui->pressButton('Continue');
     }
 
@@ -239,7 +239,7 @@ class RequestActivationKeyContext implements Context
     public function iAmTakenBackToTheReferenceNumberPageWhereICanSeeMyAnswerAndChangeIt()
     {
         $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
-        $this->ui->assertFieldContains('opg_reference_number', '700000000001');
+        $this->ui->assertFieldContains('opg_reference_number', '700018506654');
     }
 
     /**
@@ -782,7 +782,7 @@ class RequestActivationKeyContext implements Context
     public function iRequestAnActivationKeyWithValidDetails()
     {
         $formData = [
-            'opg_reference_number' => '700000000001',
+            'opg_reference_number' => '700018506654',
             'first_names' => 'The Attorney',
             'last_name' => 'Person',
             'postcode' => 'ABC123',

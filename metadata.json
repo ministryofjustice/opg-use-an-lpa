@@ -1,0 +1,9 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ministryofjustice/opg-repository-reporting/main/schema/v0.0.1.json",
+    "owners": ["use-an-lpa"],
+    "dependencies": [
+        "https://github.com/ministryofjustice/opg-pdf-service",
+        "https://github.com/ministryofjustice/opg-data-lpa",
+        "https://github.com/ministryofjustice/opg-data-lpa-codes"
+    ]
+} 
