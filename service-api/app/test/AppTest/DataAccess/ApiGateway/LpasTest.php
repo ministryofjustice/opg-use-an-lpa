@@ -67,9 +67,11 @@ class LpasTest extends TestCase
         $responseProphecy->getBody()->willReturn('{ "uId": "7000-0005-5554" }');
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
-        $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn( new FulfilledPromise($responseProphecy->reveal()));
+        $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn(
+            new FulfilledPromise($responseProphecy->reveal())
+        );
         $this->dataSanitiserStrategy->sanitise(Argument::any())->will(function ($args) {
-           return $args[0];
+            return $args[0];
         });
         $this->signatureV4Prophecy
             ->signRequest(
@@ -89,11 +91,9 @@ class LpasTest extends TestCase
 
         $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
         $this->assertEquals('7000-0005-5554', $shouldBeAnLPA->getData()['uId']);
-
-
     }
 
-    /** @test  */
+    /** @test */
     public function lpa_not_found_gives_null(): void
     {
         $assert = $this;
@@ -101,7 +101,9 @@ class LpasTest extends TestCase
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(404);
 
-        $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn( new FulfilledPromise($responseProphecy->reveal()));
+        $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn(
+            new FulfilledPromise($responseProphecy->reveal())
+        );
         $this->dataSanitiserStrategy->sanitise(Argument::any())->will(function ($args) {
             return $args[0];
         });
