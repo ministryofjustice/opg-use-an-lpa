@@ -159,7 +159,8 @@ class LpaAddHandlerTest extends TestCase
             $this->rendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
             $this->authenticatorProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal());
+            $this->lpaServiceProphecy->reveal()
+        );
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -173,7 +174,7 @@ class LpaAddHandlerTest extends TestCase
                [
                     '__csrf' => self::CSRF_CODE,
                     'passcode' => '100000000001',
-                    'reference_number' => '700000000001',
+                    'reference_number' => '700000072400',
                     'dob' => [
                         'day' => '01',
                         'month' => '01',
@@ -186,7 +187,7 @@ class LpaAddHandlerTest extends TestCase
                 [
                     '__csrf' => self::CSRF_CODE,
                     'passcode' => '100000000001',
-                    'reference_number' => '700000000001',
+                    'reference_number' => '700000072400',
                     'dob' => [
                         'day' => '1',
                         'month' => '01',
@@ -199,7 +200,7 @@ class LpaAddHandlerTest extends TestCase
                 [
                     '__csrf' => self::CSRF_CODE,
                     'passcode' => '100000000001',
-                    'reference_number' => '700000000001',
+                    'reference_number' => '700000072400',
                     'dob' => [
                         'day' => '01',
                         'month' => '1',
@@ -212,7 +213,7 @@ class LpaAddHandlerTest extends TestCase
                 [
                     '__csrf' => self::CSRF_CODE,
                     'passcode' => '100000000001',
-                    'reference_number' => '700000000001',
+                    'reference_number' => '700000072400',
                     'dob' => [
                         'day' => '10',
                         'month' => '11',

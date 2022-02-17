@@ -78,6 +78,7 @@ Feature: Add an LPA
       | C - T3S* - PA22 - C0D3  |  Enter an activation key in the correct format |
       | T3STPA22C0D             | The activation key you entered is too short    |
       |                         | Enter your activation key                      |
+      | C1234567823FG           | The activation key you entered is too long. Check that you only entered the 12 letters and numbers that follow the C- |
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid reference number
@@ -86,12 +87,15 @@ Feature: Add an LPA
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | referenceNo     | reason                                               |
-      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format |
-      | 7000-0000 00    | The LPA reference number you entered is too short    |
-      | 7000-0000-00011 | The LPA reference number you entered is too long     |
-      | 70000000000     | The LPA reference number you entered is too short    |
-      |                 | Enter the LPA reference number                       |
+      | referenceNo     | reason                                                                  |
+      | 7000-0000-ABC!  | Enter the LPA reference number in the correct format                       |
+      | 7000-0000 00    | The LPA reference number you entered is too short                       |
+      | 7000-0000-00011 | The LPA reference number you entered is too long                        |
+      | 70000000000     | The LPA reference number you entered is too short                       |
+      |                 | Enter the LPA reference number                                          |
+      | 700000000253    | The LPA reference number provided is not correct                        |
+      | 100000000253    | LPA reference numbers that are 12 numbers long must begin with a 7      |
+
 
   @ui
   Scenario Outline: The user cannot add an LPA with an invalid DOB

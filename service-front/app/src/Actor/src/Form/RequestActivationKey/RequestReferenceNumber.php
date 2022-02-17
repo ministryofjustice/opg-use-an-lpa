@@ -6,11 +6,12 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Validator\ReferenceCheckValidator;
-use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
+use Common\Validator\MerisReferenceCheckValidator;
+use Common\Validator\LuhnCheck;
+use Common\Validator\SiriusReferenceStartsWithCheck;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\{Digits, NotEmpty, StringLength};
+use Laminas\Validator\{Digits, NotEmpty,StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
@@ -56,11 +57,19 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
             ],
             [
                 'name' => Digits::class,
+                'break_chain_on_failure' => true,
                 'options' => [
                     'message' =>
                         'Enter the 12 numbers of the LPA reference number. ' .
                         'Do not include letters or other characters',
                 ],
+            ],
+            [
+                'name'    => SiriusReferenceStartsWithCheck::class,
+                'break_chain_on_failure' => true,
+            ],
+            [
+                'name'    => LuhnCheck::class,
             ],
         ];
         $stringLength = [
@@ -76,12 +85,12 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 ],
             ],
         ];
-        $referenceCheck = [
-            'name' => ReferenceCheckValidator::class,
+        $merisReferenceCheck = [
+            'name' => MerisReferenceCheckValidator::class,
         ];
 
         if ($this->merisEntryEnabled) {
-            array_push($validators, $referenceCheck);
+            array_push($validators, $merisReferenceCheck);
         } else {
             array_push($validators, $stringLength);
         }
