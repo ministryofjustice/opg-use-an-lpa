@@ -83,7 +83,7 @@ x-amazon-apigateway-gateway-responses:
         {
             "Effect": "Allow",
             "Principal": {
-              "AWS": [${allowed_roles}]
+              "AWS": []
             },
             "Action": "execute-api:Invoke",
             "Resource": [
@@ -479,52 +479,38 @@ components:
           description: e.g. 7000-0000-0054
         applicationType:
           type: string
-          enum: [Online, Classic]
         caseSubtype:
           type: string
-          enum: [hw, pfa]
-          minLength: 1
-          maxLength: 3
         receiptDate:
           type: string
-          format: date
           description: The date the LPA was created
           example: '2018-06-30'
         rejectedDate:
           type: string
-          format: date
           description: The date the LPA was rejected
           example: '2018-06-30'
         registrationDate:
           type: string
-          format: date
           description: The date the LPA was registered
           example: '2018-06-30'
         cancellationDate:
           type: string
-          format: date
           description: The date the LPA was cancelled
           example: '2018-06-30'
         invalidDate:
           type: string
-          format: date
           description: The date the LPA was marked invalid
           example: '2018-06-30'
         withdrawnDate:
           type: string
-          format: date
           description: The date the LPA was withdrawn
           example: '2018-06-30'
         dispatchDate:
           type: string
-          format: date
           description: The date the LPA was dispatched
           example: '2018-06-30'
         status:
           type: string
-          enum: [Cancelled, Imperfect, Invalid, Pending, Perfect, Rejected, Revoked, Suspended, With COP, Withdrawn, Registered, Payment Pending]
-          minLength: 1
-          maxLength: 10
         caseAttorneySingular:
           type: boolean
         caseAttorneyJointlyAndSeverally:
@@ -539,19 +525,16 @@ components:
           type: boolean
         lpaDonorSignatureDate:
           type: string
-          format: date
           example: '2018-06-30'
         lpaIsCleansed:
           type: boolean
         lifeSustainingTreatment:
           type: string
-          enum: ['Option A', 'Option B', null]
         onlineLpaId:
           type: string
           example: ABC123
         attorneyActDecisions:
           type: string
-          enum: ['When Registered', 'Loss of capacity', null]
         donor:
           $ref: '#/components/schemas/Donor'
         attorneys:
@@ -603,8 +586,8 @@ components:
         - firstname
         - middlenames
         - surname
-        - companyName
-        - systemStatus
+        # - companyName
+        # - systemStatus
         - addresses
       properties:
         id:
@@ -689,8 +672,6 @@ components:
           type: string
           description: Address type
           example: Primary
-          enum: [Primary]
-          maxLength: 7
         addressLine1:
           type: string
           description: The first line of the address
