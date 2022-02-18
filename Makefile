@@ -95,6 +95,13 @@ up_services:
 	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
+up_mock:
+	@echo "Merging Swagger Documents..."
+	./mock-integrations/merge.sh
+	@echo "Starting Mock..."
+	$(COMPOSE) up -d --remove-orphans api-gateway mocksirius
+.PHONY: up_services
+
 seed:
 	$(COMPOSE) up -d api-seeding
 .PHONY: seed
