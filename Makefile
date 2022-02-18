@@ -84,7 +84,6 @@ logs:
 
 up_dependencies:
 	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms
-	# $(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
 .PHONY: up_dependencies
 
 up_services:
@@ -94,12 +93,15 @@ up_services:
 	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
-up_mock:
+update_mock:
 	@echo "Merging Swagger Documents..."
 	./mock-integrations/merge.sh
-	@echo "Starting Mock..."
+	$(COMPOSE) restart api-gateway mocksirius
+.PHONY: update_mock
+
+up_mock:
 	$(COMPOSE) up -d --remove-orphans api-gateway mocksirius
-.PHONY: up_services
+.PHONY: up_mock
 
 seed:
 	$(COMPOSE) up -d api-seeding
