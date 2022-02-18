@@ -64,11 +64,11 @@ services:
   mocksirius:
     container_name: mocksirius
     image: stoplight/prism:4
-    command: 'mock -h 0.0.0.0 -p 5000 /tmp/swagger.yaml'
+    command: 'mock -h 0.0.0.0 /tmp/swagger.yaml'
     volumes:
       - ./mock-integrations/swagger.yaml:/tmp/swagger.yaml:ro
     ports:
-      - 7011:5000
+      - 7011:4010
   # mocksirius:
   #   container_name: mocksirius
   #   image: mocksirius
