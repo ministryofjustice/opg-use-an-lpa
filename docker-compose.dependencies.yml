@@ -52,12 +52,10 @@ services:
   # Sirius gateway mock
   api-gateway:
     container_name: gateway
-    image: gateway
-    build:
-      context: ./mock-integrations
-      dockerfile: ./Dockerfile-gateway
-    depends_on:
-      - mocksirius
+    image: nginx:stable-alpine
+    command: 'nginx -g "daemon off;"'
+    volumes:
+      - ./mock-integrations/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - 7010:5000
 

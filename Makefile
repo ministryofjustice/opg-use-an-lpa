@@ -91,8 +91,7 @@ up_services:
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
-	$(NOTIFY)
-	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
 
 up_mock:
