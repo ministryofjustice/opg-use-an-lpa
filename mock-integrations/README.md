@@ -47,6 +47,12 @@ curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/200
 The URLs above cause Prism to return examples with specific statuses, as shown.
 Any other LPA ID (the last part of the path) will return a "Received" status.
 
+Yaml examples can be generated from the data-lpa api using yq
+
+```shell
+aws-vaul exec identity -- python ./scripts/call-api-gateway/call_api_gateway.py 700000000047 | yq -P
+```
+
 ## Working on the scripts
 
 We use a script to add our own modifications to the Sirius Swagger file
