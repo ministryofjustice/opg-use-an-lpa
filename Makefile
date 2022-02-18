@@ -93,6 +93,7 @@ up_services:
 update_mock:
 	@echo "Merging Swagger Documents..."
 	./mock-integrations/merge.sh
+	@echo "Restarting data-lpa API..."
 	$(COMPOSE) restart api-gateway data-lpa
 .PHONY: update_mock
 
