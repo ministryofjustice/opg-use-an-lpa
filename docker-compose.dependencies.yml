@@ -51,7 +51,7 @@ services:
   # ---------------------------
   # Sirius gateway mock
   api-gateway:
-    container_name: gateway
+    container_name: api-gateway
     image: nginx:stable-alpine
     command: 'nginx -g "daemon off;"'
     volumes:
