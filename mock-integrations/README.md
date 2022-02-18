@@ -1,6 +1,6 @@
 # Gateway mock
 
-Mock servers which together mimic the Sirius gateway API.
+Mock servers which together mimic the data-lpa gateway API.
 
 Runs using [Prism](https://stoplight.io/open-source/prism), delivering
 the API specified in the latest version of the
@@ -30,25 +30,18 @@ random data which varies for every request.
 
 It's possible to invoke the mock endpoints using curl or similar as follows:
 
-```
-# Received
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A47629358836
+```shell
+# Valid LPA Uid
+curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/700000000047
 
-# Rejected
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A88668805824
+# Valid Meris Id with 1 LPA
+curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/3000000
 
-# Registered
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A68582508781
+# Valid Meris Id with many LPAs
+curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/2000000
 
-# Invalid
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A93348314693
-
-# Withdrawn
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A43476377885
-
-# Waiting (returns a 404 which Make front-end interprets as Waiting status, i.e.
-# the LPA application has not yet been recorded on Sirius)
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/lpa-online-tool/lpas/A91155453023
+# Not found
+curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/2000001
 ```
 
 The URLs above cause Prism to return examples with specific statuses, as shown.
@@ -61,7 +54,7 @@ We use a script to add our own modifications to the Sirius Swagger file
 working on these scripts (in the `scripts/` directory), follow these
 instructions to set up your environment:
 
-```
+```shell
 virtualenv -p python3 ~/venv/gatewaymock
 source ~/venv/gatewaymock/bin/activate
 pip install -r requirements.txt
