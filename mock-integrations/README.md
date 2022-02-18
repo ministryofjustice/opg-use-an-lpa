@@ -16,6 +16,14 @@ The example name is then used in the gateway nginx proxy to add a `Prefer: examp
 [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation),
 allowing us to predictably return the correct array of LPAs for a given request.
 
+## Prerequisites
+
+You will need yq and wget to work with this mock!
+
+```shell
+brew install yq wget
+```
+
 ## Viewing the examples
 
 It's possible to invoke the mock endpoints using curl or similar as follows:
