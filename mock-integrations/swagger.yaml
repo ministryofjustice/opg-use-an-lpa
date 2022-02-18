@@ -36,7 +36,10 @@ components:
           type: string
         type:
           description: Address type
+          enum:
+          - Primary
           example: Primary
+          maxLength: 7
           type: string
       required:
       - id
@@ -105,6 +108,8 @@ components:
       - firstname
       - middlenames
       - surname
+      - companyName
+      - systemStatus
       - addresses
       type: object
     Donor:
@@ -419,8 +424,15 @@ components:
         applicationHasRestrictions:
           type: boolean
         applicationType:
+          enum:
+          - Online
+          - Classic
           type: string
         attorneyActDecisions:
+          enum:
+          - When Registered
+          - Loss of capacity
+          - null
           type: string
         attorneys:
           items:
@@ -429,6 +441,7 @@ components:
         cancellationDate:
           description: The date the LPA was cancelled
           example: '2018-06-30'
+          format: date
           type: string
         caseAttorneyJointly:
           type: boolean
@@ -439,6 +452,11 @@ components:
         caseAttorneySingular:
           type: boolean
         caseSubtype:
+          enum:
+          - hw
+          - pfa
+          maxLength: 3
+          minLength: 1
           type: string
         certificateProviders:
           items:
@@ -447,6 +465,7 @@ components:
         dispatchDate:
           description: The date the LPA was dispatched
           example: '2018-06-30'
+          format: date
           type: string
         donor:
           $ref: '#/components/schemas/Donor'
@@ -455,11 +474,17 @@ components:
         invalidDate:
           description: The date the LPA was marked invalid
           example: '2018-06-30'
+          format: date
           type: string
         lifeSustainingTreatment:
+          enum:
+          - Option A
+          - Option B
+          - null
           type: string
         lpaDonorSignatureDate:
           example: '2018-06-30'
+          format: date
           type: string
         lpaIsCleansed:
           type: boolean
@@ -469,20 +494,38 @@ components:
         receiptDate:
           description: The date the LPA was created
           example: '2018-06-30'
+          format: date
           type: string
         registrationDate:
           description: The date the LPA was registered
           example: '2018-06-30'
+          format: date
           type: string
         rejectedDate:
           description: The date the LPA was rejected
           example: '2018-06-30'
+          format: date
           type: string
         replacementAttorneys:
           items:
             $ref: '#/components/schemas/CaseActor'
           type: array
         status:
+          enum:
+          - Cancelled
+          - Imperfect
+          - Invalid
+          - Pending
+          - Perfect
+          - Rejected
+          - Revoked
+          - Suspended
+          - With COP
+          - Withdrawn
+          - Registered
+          - Payment Pending
+          maxLength: 10
+          minLength: 1
           type: string
         trustCorporations:
           items:
@@ -495,6 +538,7 @@ components:
         withdrawnDate:
           description: The date the LPA was withdrawn
           example: '2018-06-30'
+          format: date
           type: string
       required:
       - id
@@ -962,7 +1006,7 @@ paths:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 9 High Street
@@ -1014,17 +1058,17 @@ paths:
                         postcode: N4 4DL
                         town: Home
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '2000-12-15'
-                      email: ''
+                      email: null
                       firstname: Jess
                       id: 3453
-                      middlenames: ''
-                      salutation: ''
+                      middlenames: null
+                      salutation: null
                       surname: Doe
                       systemStatus: true
                       uId: 7000-0015-0610
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: true
                     caseAttorneyJointlyAndSeverally: false
@@ -1041,11 +1085,11 @@ paths:
                         postcode: SK14 0RH
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: Danielle
                       id: 11
-                      middlenames: ''
+                      middlenames: null
                       salutation: Miss
                       surname: Hart
                       uId: 7000-0000-0831
@@ -1061,7 +1105,7 @@ paths:
                         postcode: DN37 5SH
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: RachelSanderson@opgtest.com
                       firstname: Rachel
@@ -1074,26 +1118,26 @@ paths:
                       surname: Sanderson
                       uId: 7000-0000-0799
                     id: 2
-                    invalidDate: ''
+                    invalidDate: null
                     lifeSustainingTreatment: Option A
                     lpaDonorSignatureDate: '2018-12-12'
                     lpaIsCleansed: false
                     onlineLpaId: A33718377316
                     receiptDate: '2014-09-26'
                     registrationDate: '2021-04-26'
-                    rejectedDate: ''
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
-                    statusDate: ''
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0047
-                    withdrawnDate: ''
+                    withdrawnDate: null
                 lpa0138:
                   value:
                   - applicationHasGuidance: true
                     applicationHasRestrictions: true
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 22 Prospect Hill
@@ -1113,7 +1157,7 @@ paths:
                       middlenames: ''
                       salutation: Mr
                       surname: Matthews
-                      systemStatus: false
+                      systemStatus: true
                       uId: 7000-0000-0997
                     - addresses:
                       - addressLine1: my house
@@ -1133,12 +1177,132 @@ paths:
                       middlenames: ''
                       salutation: Miss
                       surname: Matthews
-                      systemStatus: false
+                      systemStatus: true
                       uId: 7000-0011-6322
+                    - addresses:
+                      - addressLine1: Home
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
+                        id: 3072
+                        postcode: B90 1GD
+                        town: Homeless
+                        type: Primary
+                      companyName: null
+                      dob: '2000-05-14'
+                      email: null
+                      firstname: Doobie
+                      id: 3352
+                      middlenames: null
+                      salutation: Mr
+                      surname: Doo
+                      systemStatus: true
+                      uId: 7000-0014-6980
+                    - addresses:
+                      - addressLine1: Home
+                        addressLine2: Home
+                        addressLine3: Home
+                        country: ''
+                        county: ''
+                        id: 3073
+                        postcode: N4 4DL
+                        town: Home
+                        type: Primary
+                      companyName: ''
+                      dob: '1981-06-14'
+                      email: null
+                      firstname: David
+                      id: 3353
+                      middlenames: null
+                      salutation: null
+                      surname: Jones
+                      systemStatus: true
+                      uId: 7000-0014-7012
+                    - addresses:
+                      - addressLine1: 25 The High Street
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
+                        id: 3077
+                        postcode: B91 3DJ
+                        town: Solihull
+                        type: Primary
+                      companyName: ''
+                      dob: '1961-06-14'
+                      email: null
+                      firstname: Jane
+                      id: 3357
+                      middlenames: null
+                      salutation: null
+                      surname: Doe
+                      systemStatus: true
+                      uId: 7000-0014-7137
+                    - addresses:
+                      - addressLine1: 7 The Low Street
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
+                        id: 3103
+                        postcode: WR1 1EK
+                        town: Worcester
+                        type: Primary
+                      companyName: null
+                      dob: '1981-06-14'
+                      email: null
+                      firstname: Daisy
+                      id: 3383
+                      middlenames: null
+                      salutation: null
+                      surname: Brown
+                      systemStatus: true
+                      uId: 7000-0014-7947
+                    - addresses:
+                      - addressLine1: 115 Danford Lane
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
+                        id: 3116
+                        postcode: B91 1QG
+                        town: Solihull
+                        type: Primary
+                      companyName: ''
+                      dob: '1981-06-14'
+                      email: null
+                      firstname: Daisy
+                      id: 3396
+                      middlenames: null
+                      salutation: null
+                      surname: Chain
+                      systemStatus: true
+                      uId: 7000-0014-8515
+                    - addresses:
+                      - addressLine1: 1 test road
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
+                        id: 3182
+                        postcode: b1 1tf
+                        town: ''
+                        type: Primary
+                      companyName: null
+                      dob: '1989-01-01'
+                      email: null
+                      firstname: daniel's
+                      id: 3460
+                      middlenames: null
+                      salutation: mr
+                      surname: john
+                      systemStatus: true
+                      uId: 7000-0015-0974
                     cancellationDate: '2020-03-17'
                     caseAttorneyJointly: false
-                    caseAttorneyJointlyAndJointlyAndSeverally: true
-                    caseAttorneyJointlyAndSeverally: false
+                    caseAttorneyJointlyAndJointlyAndSeverally: false
+                    caseAttorneyJointlyAndSeverally: true
                     caseAttorneySingular: false
                     caseSubtype: hw
                     certificateProviders:
@@ -1152,15 +1316,15 @@ paths:
                         postcode: PH8 1UR
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: Joanne
                       id: 27
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mrs
                       surname: Armstrong
                       uId: 7000-0000-1011
-                    dispatchDate: '2021-04-26'
+                    dispatchDate: '2021-10-14'
                     donor:
                       addresses:
                       - addressLine1: 24 Gloucester Road
@@ -1172,7 +1336,7 @@ paths:
                         postcode: HS8 2YB
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: babaragilson@opgtest.com
                       firstname: Babara
@@ -1185,25 +1349,26 @@ paths:
                       surname: Gilson
                       uId: 7000-0000-0971
                     id: 5
-                    invalidDate: ''
+                    invalidDate: null
                     lifeSustainingTreatment: Option B
-                    lpaDonorSignatureDate: '2019-10-03'
-                    lpaIsCleansed: true
+                    lpaDonorSignatureDate: '2016-01-01'
+                    lpaIsCleansed: false
                     onlineLpaId: A15527329531
                     receiptDate: '2014-09-26'
                     registrationDate: '2020-05-15'
-                    rejectedDate: ''
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0138
-                    withdrawnDate: ''
+                    withdrawnDate: null
                 lpa0252:
                   value:
                   - applicationHasGuidance: true
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 29 Wressle Road
@@ -1215,7 +1380,7 @@ paths:
                         postcode: DT2 2SH
                         town: ''
                         type: Primary
-                      companyName: null
+                      companyName: ''
                       dob: '1975-10-05'
                       email: TainaRucker@opgtest.com
                       firstname: Taina
@@ -1240,16 +1405,17 @@ paths:
                         county: ''
                         id: 47
                         postcode: SP7 1RD
-                        town: null
+                        town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: Desire
                       id: 47
-                      middlenames: ''
+                      middlenames: null
                       salutation: Miss
                       surname: Beasley
                       uId: 7000-0000-1250
+                    dispatchDate: null
                     donor:
                       addresses:
                       - addressLine1: 26 Traill Street
@@ -1261,7 +1427,7 @@ paths:
                         postcode: CO6 2XT
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: orethalang@opgtest.com
                       firstname: Babara
@@ -1270,69 +1436,72 @@ paths:
                       - id: 43
                         uId: 7000-0000-1219
                       middlenames: Suzanne
-                      salutation: Mrs
+                      salutation: ''
                       surname: Gilson
                       uId: 7000-0000-1219
                     id: 9
+                    invalidDate: null
                     lifeSustainingTreatment: Option B
                     lpaDonorSignatureDate: '2019-10-05'
-                    lpaIsCleansed: true
+                    lpaIsCleansed: false
                     onlineLpaId: A48218451245
                     receiptDate: '2014-09-26'
-                    registrationDate: '2020-09-26'
-                    rejectedDate: ''
+                    registrationDate: null
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Cancelled
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0252
+                    withdrawnDate: null
                 lpa0344:
                   value:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 50 Hull Road
                         addressLine2: PAR
-                        addressLine3: null
+                        addressLine3: ''
                         country: ''
                         county: ''
                         id: 64
                         postcode: PL24 9DQ
-                        town: null
+                        town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1975-10-05'
                       email: SimonMatthews@opgtest.com
                       firstname: Simon
                       id: 64
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Matthews
                       systemStatus: true
                       uId: 7000-0000-1441
                     - addresses:
                       - addressLine1: 1 Use Lane
-                        addressLine2: null
-                        addressLine3: null
-                        country: null
-                        county: null
+                        addressLine2: ''
+                        addressLine3: ''
+                        country: ''
+                        county: ''
                         id: 2808
                         postcode: ''
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1975-10-05'
-                      email: ''
+                      email: null
                       firstname: simone
                       id: 3022
-                      middlenames: ''
+                      middlenames: null
                       salutation: miss
                       surname: matthews
                       systemStatus: true
                       uId: 7000-0013-6098
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: false
                     caseAttorneyJointlyAndSeverally: true
@@ -1344,60 +1513,70 @@ paths:
                         addressLine2: SHUSTOKE
                         addressLine3: ''
                         country: ''
-                        county: null
+                        county: ''
                         id: 63
                         postcode: B46 7EY
-                        town: null
+                        town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: David
                       id: 63
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Stewart
                       uId: 7000-0000-1433
+                    dispatchDate: null
                     donor:
                       addresses:
-                      - addressLine1: 73 Withers Close
+                      - addressLine1: 71 Withers Close
                         addressLine2: ALLATHASDAL
                         addressLine3: ''
                         country: ''
                         county: ''
-                        id: 59
+                        id: 53
                         postcode: HS9 2PN
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: linkedpersonone@opgtest.com
                       firstname: Linked
-                      id: 59
+                      id: 53
                       linked:
+                      - id: 53
+                        uId: 7000-0000-1334
                       - id: 59
                         uId: 7000-0000-1391
+                      - id: 98
+                        uId: 7000-0000-1813
+                      - id: 110
+                        uId: 7000-0000-1938
                       middlenames: Person
                       salutation: Mr
                       surname: One
-                      uId: 7000-0000-1391
+                      uId: 7000-0000-1334
                     id: 12
-                    lifeSustainingTreatment: Option A
-                    lpaDonorSignatureDate: '2019-10-06'
-                    lpaIsCleansed: true
-                    onlineLpaId: ''
+                    invalidDate: null
+                    lifeSustainingTreatment: null
+                    lpaDonorSignatureDate: '2015-10-06'
+                    lpaIsCleansed: false
+                    onlineLpaId: null
                     receiptDate: '2014-09-26'
                     registrationDate: '2020-06-10'
-                    rejectedDate: ''
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0344
+                    withdrawnDate: null
                 lpa0435:
                   value:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 13 Union Terrace
@@ -1409,17 +1588,17 @@ paths:
                         postcode: DD10 4TB
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1975-10-05'
                       email: AndreaRobinson@opgtest.com
                       firstname: Andrea
                       id: 78
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mrs
                       surname: Robinson
                       systemStatus: true
                       uId: 7000-0000-1599
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: false
                     caseAttorneyJointlyAndSeverally: true
@@ -1436,14 +1615,15 @@ paths:
                         postcode: DN37 5SH
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: Rachel
                       id: 80
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mrs
                       surname: Sanderson
                       uId: 7000-0000-1615
+                    dispatchDate: '2022-02-17'
                     donor:
                       addresses:
                       - addressLine1: 16 Wade Lane
@@ -1453,9 +1633,9 @@ paths:
                         county: ''
                         id: 76
                         postcode: NE20 3PN
-                        town: null
+                        town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: demtriceflood@opgtest.com
                       firstname: Demetrice
@@ -1468,23 +1648,26 @@ paths:
                       surname: Flood
                       uId: 7000-0000-1573
                     id: 15
-                    lifeSustainingTreatment: ''
+                    invalidDate: null
+                    lifeSustainingTreatment: null
                     lpaDonorSignatureDate: '2019-10-02'
-                    lpaIsCleansed: true
+                    lpaIsCleansed: false
                     onlineLpaId: A26997335988
                     receiptDate: '2014-09-26'
-                    registrationDate: '2020-05-14'
-                    rejectedDate: ''
+                    registrationDate: '2022-01-17'
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
+                    statusDate: '2022-01-17'
                     trustCorporations: []
                     uId: 7000-0000-0435
+                    withdrawnDate: null
                 lpa0526:
                   value:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 50 Hull Road
@@ -1496,17 +1679,17 @@ paths:
                         postcode: PL24 9DQ
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1975-10-05'
                       email: SimonMatthews@opgtest.com
                       firstname: Simon
                       id: 97
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Matthews
                       systemStatus: true
                       uId: 7000-0000-1805
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: true
                     caseAttorneyJointlyAndSeverally: false
@@ -1523,14 +1706,15 @@ paths:
                         postcode: B46 7EY
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: David
                       id: 96
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Stewart
                       uId: 7000-0000-1797
+                    dispatchDate: null
                     donor:
                       addresses:
                       - addressLine1: 71 Withers Close
@@ -1542,7 +1726,7 @@ paths:
                         postcode: HS9 2PN
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: cherrylschindler@opgtest.com
                       firstname: Cherryl
@@ -1555,23 +1739,26 @@ paths:
                       surname: Schindler
                       uId: 7000-0000-1755
                     id: 18
+                    invalidDate: null
                     lifeSustainingTreatment: Option A
                     lpaDonorSignatureDate: '2012-12-12'
-                    lpaIsCleansed: true
+                    lpaIsCleansed: false
                     onlineLpaId: A13316443118
                     receiptDate: '2014-09-26'
-                    registrationDate: ''
-                    rejectedDate: ''
+                    registrationDate: null
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Pending
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0526
+                    withdrawnDate: null
                 lpa0617:
                   value:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 50 Hull Road
@@ -1583,17 +1770,17 @@ paths:
                         postcode: PL24 9DQ
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1975-10-05'
                       email: SimonMatthews@opgtest.com
                       firstname: Simon
                       id: 115
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Matthews
                       systemStatus: true
                       uId: 7000-0000-1987
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: false
                     caseAttorneyJointlyAndSeverally: true
@@ -1610,49 +1797,59 @@ paths:
                         postcode: B46 7EY
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: David
                       id: 114
-                      middlenames: ''
+                      middlenames: null
                       salutation: Mr
                       surname: Stewart
                       uId: 7000-0000-1979
+                    dispatchDate: null
                     donor:
                       addresses:
                       - addressLine1: 71 Withers Close
                         addressLine2: ALLATHASDAL
                         addressLine3: ''
                         country: ''
-                        county: null
-                        id: 110
+                        county: ''
+                        id: 53
                         postcode: HS9 2PN
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: linkedpersonone@opgtest.com
                       firstname: Linked
-                      id: 110
+                      id: 53
                       linked:
+                      - id: 53
+                        uId: 7000-0000-1334
+                      - id: 59
+                        uId: 7000-0000-1391
+                      - id: 98
+                        uId: 7000-0000-1813
                       - id: 110
                         uId: 7000-0000-1938
                       middlenames: Person
                       salutation: Mr
-                      surname: one
-                      uId: 7000-0000-1938
+                      surname: One
+                      uId: 7000-0000-1334
                     id: 21
-                    lifeSustainingTreatment: ''
+                    invalidDate: null
+                    lifeSustainingTreatment: null
                     lpaDonorSignatureDate: '2019-09-28'
-                    lpaIsCleansed: true
-                    onlineLpaId: ''
+                    lpaIsCleansed: false
+                    onlineLpaId: null
                     receiptDate: '2014-09-26'
-                    registrationDate: ''
-                    rejectedDate: ''
+                    registrationDate: null
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Pending
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0617
+                    withdrawnDate: null
                 meris2000000:
                   value:
                   - applicationHasGuidance: false
@@ -1787,7 +1984,7 @@ paths:
                   - applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
-                    attorneyActDecisions: ''
+                    attorneyActDecisions: null
                     attorneys:
                     - addresses:
                       - addressLine1: 9 High Street
@@ -1839,17 +2036,17 @@ paths:
                         postcode: N4 4DL
                         town: Home
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '2000-12-15'
-                      email: ''
+                      email: null
                       firstname: Jess
                       id: 3453
-                      middlenames: ''
-                      salutation: ''
+                      middlenames: null
+                      salutation: null
                       surname: Doe
                       systemStatus: true
                       uId: 7000-0015-0610
-                    cancellationDate: ''
+                    cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: true
                     caseAttorneyJointlyAndSeverally: false
@@ -1866,11 +2063,11 @@ paths:
                         postcode: SK14 0RH
                         town: ''
                         type: Primary
-                      dob: ''
-                      email: ''
+                      dob: null
+                      email: null
                       firstname: Danielle
                       id: 11
-                      middlenames: ''
+                      middlenames: null
                       salutation: Miss
                       surname: Hart
                       uId: 7000-0000-0831
@@ -1886,7 +2083,7 @@ paths:
                         postcode: DN37 5SH
                         town: ''
                         type: Primary
-                      companyName: ''
+                      companyName: null
                       dob: '1948-11-01'
                       email: RachelSanderson@opgtest.com
                       firstname: Rachel
@@ -1899,20 +2096,20 @@ paths:
                       surname: Sanderson
                       uId: 7000-0000-0799
                     id: 2
-                    invalidDate: ''
+                    invalidDate: null
                     lifeSustainingTreatment: Option A
                     lpaDonorSignatureDate: '2018-12-12'
                     lpaIsCleansed: false
                     onlineLpaId: A33718377316
                     receiptDate: '2014-09-26'
                     registrationDate: '2021-04-26'
-                    rejectedDate: ''
+                    rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
-                    statusDate: ''
+                    statusDate: null
                     trustCorporations: []
                     uId: 7000-0000-0047
-                    withdrawnDate: ''
+                    withdrawnDate: null
                 meris3000000:
                   value:
                   - applicationHasGuidance: false
