@@ -59,8 +59,8 @@ services:
     ports:
       - 7010:5000
 
-  mocksirius:
-    container_name: mocksirius
+  data-lpa:
+    container_name: data-lpa
     image: stoplight/prism:4
     command: 'mock -h 0.0.0.0 /tmp/swagger.yaml'
     volumes:

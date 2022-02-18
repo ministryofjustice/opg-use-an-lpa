@@ -96,11 +96,11 @@ up_services:
 update_mock:
 	@echo "Merging Swagger Documents..."
 	./mock-integrations/merge.sh
-	$(COMPOSE) restart api-gateway mocksirius
+	$(COMPOSE) restart api-gateway data-lpa
 .PHONY: update_mock
 
 up_mock:
-	$(COMPOSE) up -d --remove-orphans api-gateway mocksirius
+	$(COMPOSE) up -d --remove-orphans api-gateway data-lpa
 .PHONY: up_mock
 
 seed:
