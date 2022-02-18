@@ -36,7 +36,7 @@ run:
 .PHONY: run
 
 # Starts the application and seeds initial data.
-up_all: | up_dependencies up_services seed
+up_all: | up_dependencies up_mock up_services seed
 .PHONY: up_all
 
 restart_all: | down_all up_all
@@ -83,7 +83,7 @@ logs:
 .PHONY: logs
 
 up_dependencies:
-	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms gateway mocksirius
+	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms
 	# $(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
 .PHONY: up_dependencies
 

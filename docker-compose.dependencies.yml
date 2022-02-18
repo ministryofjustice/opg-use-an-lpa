@@ -69,11 +69,3 @@ services:
       - ./mock-integrations/swagger.yaml:/tmp/swagger.yaml:ro
     ports:
       - 7011:4010
-  # mocksirius:
-  #   container_name: mocksirius
-  #   image: mocksirius
-  #   build:
-  #     context: ./mock-integrations
-  #     dockerfile: ./Dockerfile-mocksirius
-  #   ports:
-  #     - 7011:5000
