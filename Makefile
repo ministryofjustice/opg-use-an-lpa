@@ -48,7 +48,6 @@ build:
 
 build_all:
 	$(MAKE) build
-	# $(MAKE) build --directory=../opg-data-lpa/
 .PHONY: build_all
 
 rebuild:
@@ -61,7 +60,6 @@ down:
 .PHONY: down
 
 down_all:
-	$(MAKE) down --directory=../opg-data-lpa/
 	$(COMPOSE) down
 .PHONY: down_all
 
@@ -70,7 +68,6 @@ destroy:
 .PHONY: destroy
 
 destroy_all:
-	$(MAKE) destroy --directory=../opg-data-lpa/
 	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy_all
 
