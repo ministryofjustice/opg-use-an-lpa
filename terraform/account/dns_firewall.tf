@@ -15,7 +15,7 @@ resource "aws_route53_resolver_query_log_config" "egress" {
 }
 
 resource "aws_route53_resolver_query_log_config_association" "egress" {
-  resolver_query_log_config_id = aws_route53_resolver_query_log_config.egress.id
+  resolver_query_log_config_id = aws_route53_resolver_query_log_config.egress[0].id
   resource_id                  = aws_default_vpc.default.id
 }
 
