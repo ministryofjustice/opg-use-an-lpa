@@ -64,7 +64,43 @@ class LpasTest extends TestCase
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(200);
-        $responseProphecy->getBody()->willReturn('{ "uId": "7000-0005-5554" }');
+        $responseProphecy->getBody()->willReturn('{"uId": "7000-0005-5554", "type": "HW"}');
+        $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
+
+        $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn(
+            new FulfilledPromise($responseProphecy->reveal())
+        );
+        $this->dataSanitiserStrategy->sanitise(Argument::any())->will(function ($args) {
+            return $args[0];
+        });
+        $this->signatureV4Prophecy
+            ->signRequest(
+                Argument::type(Request::class),
+                Argument::type(Credentials::class)
+            )->shouldBeCalled()
+            ->will(function ($args) use ($assert) {
+                // assert the request has trace-id
+                /** @var Request $request */
+                $request = $args[0];
+                $assert->assertEquals($assert->traceId, $request->getHeaderLine('x-amzn-trace-id'));
+
+                return $request;
+            });
+
+        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+
+        $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
+        $this->assertEquals('7000-0005-5554', $shouldBeAnLPA->getData()['uId']);
+    }
+
+    /** @test */
+    public function can_get_an_lpa_when_response_is_array(): void
+    {
+        $assert = $this;
+
+        $responseProphecy = $this->prophesize(Response::class);
+        $responseProphecy->getStatusCode()->willReturn(200);
+        $responseProphecy->getBody()->willReturn('[{"uId": "7000-0005-5554", "type": "HW"}]');
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
         $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn(
@@ -100,6 +136,7 @@ class LpasTest extends TestCase
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(404);
+        $responseProphecy->getBody()->willReturn(null);
 
         $this->httpClientProphecy->sendAsync(Argument::type(Request::class), Argument::any())->willReturn(
             new FulfilledPromise($responseProphecy->reveal())

@@ -116,11 +116,18 @@ class Lpas implements LpasInterface
         foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();
 
+
+            $responseBody = $result->getBody() ? json_decode((string)$result->getBody(), true) : null;
+
+            if (isset($responseBody[0])) {
+                $responseBody = $responseBody[0];
+            }
+
             switch ($statusCode) {
                 case 200:
                     # TODO: We can some more error checking around this.
                     $results[$uid] = new Response\Lpa(
-                        $this->sanitiser->sanitise(json_decode((string)$result->getBody(), true)),
+                        $this->sanitiser->sanitise($responseBody),
                         new DateTime($result->getHeaderLine('Date'))
                     );
                     break;
