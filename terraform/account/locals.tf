@@ -23,8 +23,9 @@ variable "accounts" {
         endpoint_url                = string
       })
       dns_firewall = object({
-        enabled = bool
-        domains = list(string)
+        enabled         = bool
+        domains_allowed = list(string)
+        domains_blocked = list(string)
       })
     })
   )
