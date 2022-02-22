@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_log_group" "aws_route53_resolver_query_log" {
   count             = local.account.dns_firewall.enabled == true ? 1 : 0
   name              = "use-an-lpa-aws-route53-resolver-query-log-config"
-  retention_in_days = local.account.retention_in_days
+  retention_in_days = 400
   kms_key_id        = aws_kms_key.cloudwatch.arn
   tags = {
     "Name" = "use-an-lpa-aws-route53-resolver-query-log-config"
