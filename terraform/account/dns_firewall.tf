@@ -53,7 +53,7 @@ resource "aws_route53_resolver_firewall_rule" "egress_block" {
   block_response          = "NODATA"
   firewall_domain_list_id = aws_route53_resolver_firewall_domain_list.egress_block[0].id
   firewall_rule_group_id  = aws_route53_resolver_firewall_rule_group.egress[0].id
-  priority                = 100
+  priority                = 200
 }
 
 resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
