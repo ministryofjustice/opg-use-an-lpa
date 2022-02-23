@@ -6,12 +6,10 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Validator\MerisReferenceCheckValidator;
-use Common\Validator\LuhnCheck;
-use Common\Validator\SiriusReferenceStartsWithCheck;
+use Common\Validator\{MerisReferenceCheckValidator,LuhnCheck,SiriusReferenceStartsWithCheck};
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\{Digits, NotEmpty,StringLength};
+use Laminas\Validator\{Digits, NotEmpty, StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
 
 /**
@@ -20,14 +18,13 @@ use Mezzio\Csrf\CsrfGuardInterface;
  */
 class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    private bool $merisEntryEnabled;
-
     public const FORM_NAME = 'request_activation_key_reference_number';
 
+    private bool $merisEntryEnabled;
+
     /**
-     * RequestActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
-     * @param bool $merisEntryEnabled
+     * @param bool               $merisEntryEnabled Allow the acceptance of Meris numbers
      */
     public function __construct(CsrfGuardInterface $csrfGuard, bool $merisEntryEnabled)
     {
