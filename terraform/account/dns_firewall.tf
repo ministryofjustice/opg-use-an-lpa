@@ -22,7 +22,15 @@ resource "aws_route53_resolver_query_log_config_association" "egress" {
 
 locals {
   interpolated_dns = [
-    aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address,
+    "logs.${data.aws_region.current.name}.amazonaws.com.",
+    "logs.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    "api.ecr.${data.aws_region.current.name}.amazonaws.com.",
+    "api.ecr.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    "dynamodb.${data.aws_region.current.name}.amazonaws.com.",
+    "kms.${data.aws_region.current.name}.amazonaws.com.",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com.",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    "${replace(aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address, "master", "*")}.",
     "api.${local.environment}-internal.",
     "pdf.${local.environment}-internal.",
   ]
@@ -68,6 +76,6 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   count                  = local.account.dns_firewall.enabled ? 1 : 0
   name                   = "egress"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.egress[0].id
-  priority               = 200
+  priority               = 300
   vpc_id                 = aws_default_vpc.default.id
 }
