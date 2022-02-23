@@ -65,6 +65,15 @@ class AccountContext implements Context
     }
 
     /**
+     * @Given /^another user logs in$/
+     */
+    public function anotherUserLogsIn()
+    {
+        $this->userEmail = 'anotheruser@test.com';
+        $this->iAmCurrentlySignedIn();
+    }
+
+    /**
      * @Given /^I access the account creation page$/
      */
     public function iAccessTheAccountCreationPage()
