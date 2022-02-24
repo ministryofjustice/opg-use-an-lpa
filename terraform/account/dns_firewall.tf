@@ -79,3 +79,17 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   priority               = 300
   vpc_id                 = aws_default_vpc.default.id
 }
+
+
+resource "aws_cloudwatch_query_definition" "dns_firewall_statistics" {
+  count = local.account.dns_firewall.enabled ? 1 : 0
+  name  = "DNS Firewall Queries/DNS Firewall Statistics"
+
+  log_group_names = [aws_cloudwatch_log_group.aws_route53_resolver_query_log[0].name]
+
+  query_string = <<EOF
+fields @timestamp, query_name, firewall_rule_action
+| sort @timestamp desc
+| stats count() as frequency by query_name, firewall_rule_action
+EOF
+}
