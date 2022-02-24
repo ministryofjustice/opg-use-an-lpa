@@ -17,6 +17,7 @@ use Psr\Http\Message\RequestInterface;
  * @property mixed  $lpa
  * @property string $userLpaActorToken
  * @property int    $actorId
+ * @property string $actorUId
  * @property array  $lpaData
  * @property string $organisation
  * @property string $accessCode
@@ -496,6 +497,7 @@ class RequestActivationKeyContext implements Context
 
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
+        $this->actorUId = '700000000054';
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->userLpaActorToken,
@@ -1153,7 +1155,7 @@ class RequestActivationKeyContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA needs cleansing',
                                 'data' => [
-                                    'actor_id' => $this->actorId
+                                    'actor_id' => $this->actorUId
                                 ],
                             ]
                         )
