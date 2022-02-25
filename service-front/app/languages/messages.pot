@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-02-10T15:22:56+00:00\n"
+"POT-Creation-Date: 2022-02-25T15:41:06+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -26,7 +26,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:23
 #: src/Actor/templates/actor/lpa-already-added.html.twig:36
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:21
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:75
 #: src/Actor/templates/actor/check-lpa.html.twig:27
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:21
 #: src/Common/templates/partials/full-lpa-display.html.twig:11
@@ -39,7 +39,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:25
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:23
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:70
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:75
 #: src/Actor/templates/actor/check-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:21
 #: src/Common/templates/partials/full-lpa-display.html.twig:13
@@ -166,7 +166,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:11
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:12
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:11
-#: src/Actor/templates/actor/login.html.twig:10
+#: src/Actor/templates/actor/login.html.twig:12
 #: src/Actor/templates/actor/lpa-removed.html.twig:12
 #: src/Actor/templates/actor/check-lpa.html.twig:10
 #: src/Actor/templates/actor/change-lpa-details.html.twig:17
@@ -268,7 +268,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:50
 msgid "Password"
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
-#: src/Actor/templates/actor/login.html.twig:42
+#: src/Actor/templates/actor/login.html.twig:47
 msgid "Email address"
 msgstr ""
 
@@ -1230,7 +1230,7 @@ msgid "For your security, we've signed you out of this service because you did n
 msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
-#: src/Actor/templates/actor/login.html.twig:49
+#: src/Actor/templates/actor/login.html.twig:54
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
 msgid "Sign in"
 msgstr ""
@@ -1571,16 +1571,16 @@ msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:18
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:17
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:23
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:20
 msgid "Your lasting powers of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:29
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:46
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:51
 msgid "Add another LPA"
 msgstr ""
 
@@ -1690,7 +1690,7 @@ msgstr ""
 msgid "Try again"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:27
+#: src/Actor/templates/actor/login.html.twig:32
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr ""
 
@@ -1698,7 +1698,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:55
+#: src/Actor/templates/actor/login.html.twig:60
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -1793,7 +1793,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:59
 #: src/Actor/templates/actor/check-lpa.html.twig:89
 #: src/Actor/templates/actor/check-your-answers.html.twig:86
-#: src/Actor/templates/actor/home-page.html.twig:52
+#: src/Actor/templates/actor/home-page.html.twig:56
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
 #: src/Actor/templates/actor/lpa-add.html.twig:75
 #: src/Viewer/templates/viewer/enter-code.html.twig:68
@@ -1813,23 +1813,23 @@ msgstr ""
 msgid "Sign in or create an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:18
+#: src/Actor/templates/actor/home-page.html.twig:22
 msgid "Do you have a Use a lasting power of attorney account?"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:28
+#: src/Actor/templates/actor/home-page.html.twig:32
 msgid "Yes, I already have an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:30
+#: src/Actor/templates/actor/home-page.html.twig:34
 msgid "If you made an LPA online, you will still need to create an account to use this service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:33
+#: src/Actor/templates/actor/home-page.html.twig:37
 msgid "No, this is the first time I’ve used the service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:42
+#: src/Actor/templates/actor/home-page.html.twig:46
 msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
 
@@ -2078,26 +2078,26 @@ msgstr ""
 msgid "If it does not arrive at all, please check that you've given us the correct email address for your existing <abbr title=\"lasting power of attorney\">LPA</abbr> account &mdash; we'll only send a password reset link to the email address belonging to an account."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:23
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
 msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:37
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:39
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:44
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:45
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:48
 msgid "Add your first LPA"
 msgstr ""
 
@@ -3325,18 +3325,18 @@ msgctxt "error"
 msgid "Enter your organisation name"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:26
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:25
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:28
 msgid "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">the role of an attorney</a> and how to support the donor <a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
 msgid "What can I do with this service?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:37
 msgid "Use this service to:"
 msgstr ""
 
@@ -3681,7 +3681,7 @@ msgstr ""
 msgid "%organisation% on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:58
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:63
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
@@ -4349,7 +4349,7 @@ msgctxt "error"
 msgid "We could not find a Use a lasting power of attorney account with that email address and password. Check your details and try again."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:31
+#: src/Actor/templates/actor/login.html.twig:36
 msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
 msgstr ""
 
@@ -4375,7 +4375,7 @@ msgstr ""
 msgid "8 characters"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:36
+#: src/Actor/templates/actor/login.html.twig:41
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online."
 msgstr ""
 
@@ -4512,7 +4512,7 @@ msgstr ""
 msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/home-page.html.twig:50
 msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once your LPA is added you will always be able to use it in this service."
 msgstr ""
 
@@ -4565,8 +4565,8 @@ msgstr ""
 msgid "You must do this before you try to ask for an activation key again, so we can post your key to the right address."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:39
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:45
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:42
 msgid "ask for an activation key if you have not been given one - or it has expired"
 msgstr ""
 
@@ -4597,4 +4597,12 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
 msgctxt "error"
 msgid "The activation key you entered is too long. Check that you only entered the 12 letters and numbers that follow the C-"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:8
+msgid "This service will be unavailable between 3pm on Friday 4 March and 6pm on Sunday 6 March 2022."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
+msgid "If you need to use your lasting power of attorney during this time you can still use the paper LPA document."
 msgstr ""
