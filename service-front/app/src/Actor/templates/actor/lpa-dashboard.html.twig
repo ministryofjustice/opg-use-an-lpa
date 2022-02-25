@@ -3,104 +3,104 @@
 {% block html_title %}{% trans %}Your lasting powers of attorney{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
-<div class="govuk-width-container">
-    {{ include('@partials/account-bar.html.twig') }}
+    <div class="govuk-width-container">
+        {{ include('@partials/account-bar.html.twig') }}
 
-    <div class="govuk-clearfix">
-        {{ include('@partials/welsh-switch.html.twig') }}
-    </div>
-
-    {{ include('@actor/partials/upcoming-service-downtime.html.twig') }}
-
-    <main class="govuk-main-wrapper" id="main-content" role="main">
-
-        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
-
-        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\RemoveLpaHandler::REMOVE_LPA_FLASH_MSG'}) }}
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <h1 class="govuk-heading-xl">{% trans %}Your lasting powers of attorney{% endtrans %}</h1>
-            </div>
+        <div class="govuk-clearfix">
+            {{ include('@partials/welsh-switch.html.twig') }}
         </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <p class="govuk-body-l">{% trans %}Any lasting power of attorney (LPA) you add to your account will appear on this page.{% endtrans %}</p>
+        {{ include('@actor/partials/upcoming-service-downtime.html.twig') }}
 
-                <p class="govuk-body-m">{% trans %}Find out about <a href="https://www.gov.uk/lasting-power-attorney-duties" class="govuk-link">the role of an attorney</a> and how to support the donor <a href="https://www.gov.uk/make-decisions-for-someone/making-decisions" class="govuk-link">to make decisions</a>.{% endtrans %}</p>
+        <main class="govuk-main-wrapper" id="main-content" role="main">
 
-                <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="What can I do with this service?">
-                    <summary class="govuk-details__summary" role="button" >
-                        <span class="govuk-details__summary-text">
-                          {% trans %}What can I do with this service?{% endtrans %}
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p>{% trans %}Use this service to:{% endtrans %}</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>{% trans %}give organisations access to an online summary of an <abbr title="lasting power of attorney">LPA</abbr> by making a secure access code{% endtrans %}</li>
-                            <li>{% trans %}keep track of the organisations that have online access to an <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
-                            <li>{% trans %}view an <abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}</li>
-                            <li>{% trans %}ask for an activation key if you have not been given one - or it has expired{% endtrans %}</li>
-                        </ul>
-                    </div>
-                </details>
+            {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
 
-                <a href="{{ path('lpa.add') }}" draggable="false" class="govuk-button">
-                    {% trans %}Add another LPA{% endtrans %}
-                </a>
+            {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\RemoveLpaHandler::REMOVE_LPA_FLASH_MSG'}) }}
 
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h1 class="govuk-heading-xl">{% trans %}Your lasting powers of attorney{% endtrans %}</h1>
+                </div>
             </div>
-        </div>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="govuk-body-l">{% trans %}Any lasting power of attorney (LPA) you add to your account will appear on this page.{% endtrans %}</p>
 
-                {% set totalLpas = total_lpas %}
+                    <p class="govuk-body-m">{% trans %}Find out about <a href="https://www.gov.uk/lasting-power-attorney-duties" class="govuk-link">the role of an attorney</a> and how to support the donor <a href="https://www.gov.uk/make-decisions-for-someone/making-decisions" class="govuk-link">to make decisions</a>.{% endtrans %}</p>
 
-                <p class="govuk-body govuk-!-margin-bottom-0">
-                    {% trans count totalLpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
-                </p>
+                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="What can I do with this service?">
+                        <summary class="govuk-details__summary" role="button" >
+                            <span class="govuk-details__summary-text">
+                              {% trans %}What can I do with this service?{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}Use this service to:{% endtrans %}</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>{% trans %}give organisations access to an online summary of an <abbr title="lasting power of attorney">LPA</abbr> by making a secure access code{% endtrans %}</li>
+                                <li>{% trans %}keep track of the organisations that have online access to an <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
+                                <li>{% trans %}view an <abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}</li>
+                                <li>{% trans %}ask for an activation key if you have not been given one - or it has expired{% endtrans %}</li>
+                            </ul>
+                        </div>
+                    </details>
 
-                {% for donorName, token in lpas %}
+                    <a href="{{ path('lpa.add') }}" draggable="false" class="govuk-button">
+                        {% trans %}Add another LPA{% endtrans %}
+                    </a>
 
-                    <h2 class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</h2>
+                </div>
+            </div>
 
-                    {% for lpaData in token %}
-                        {% set lpa = lpaData['lpa'] %}
-                        {% set actorToken = lpaData['user-lpa-actor-token'] %}
-                        {% set actorActive = lpaData['actorActive'] %}
-                        {% set activeCodeCount = lpaData['activeCodeCount'] %}
-                        {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance'| trans : 'Health and welfare'| trans %}
-                        {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
-                        {% set applicationHasGuidance = lpa.applicationHasGuidance %}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
 
-                <article class="moj-ticket-panel" aria-label="Added lpa list">
-                    {% if actorActive %}
+                    {% set totalLpas = total_lpas %}
 
-                        {% if lpa.status|lower == 'registered' %}
-                            <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Registered lpa section">
-                                 {{ include('@actor/partials/lpa-details.html.twig') }}
-                            </section>
-                        {% elseif lpa.status|lower == 'cancelled' %}
-                            <section class="moj-ticket-panel__content moj-ticket-panel__content--red" aria-label="Cancelled lpa section">
+                    <p class="govuk-body govuk-!-margin-bottom-0">
+                        {% trans count totalLpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
+                    </p>
+
+                    {% for donorName, token in lpas %}
+
+                        <h2 class="govuk-heading-l govuk-!-margin-top-5 govuk-!-margin-bottom-3">{{ donor_name_with_dob_removed(donorName) }}</h2>
+
+                        {% for lpaData in token %}
+                            {% set lpa = lpaData['lpa'] %}
+                            {% set actorToken = lpaData['user-lpa-actor-token'] %}
+                            {% set actorActive = lpaData['actorActive'] %}
+                            {% set activeCodeCount = lpaData['activeCodeCount'] %}
+                            {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance'| trans : 'Health and welfare'| trans %}
+                            {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
+                            {% set applicationHasGuidance = lpa.applicationHasGuidance %}
+
+                    <article class="moj-ticket-panel" aria-label="Added lpa list">
+                        {% if actorActive %}
+
+                            {% if lpa.status|lower == 'registered' %}
+                                <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Registered lpa section">
+                                     {{ include('@actor/partials/lpa-details.html.twig') }}
+                                </section>
+                            {% elseif lpa.status|lower == 'cancelled' %}
+                                <section class="moj-ticket-panel__content moj-ticket-panel__content--red" aria-label="Cancelled lpa section">
+                                        {{ include('@actor/partials/lpa-details.html.twig') }}
+                                </section>
+                            {% endif %}
+                        {% else %}
+                            <section class="moj-ticket-panel__content moj-ticket-panel__content--grey" aria-label="Inactive actor on lpa section">
                                     {{ include('@actor/partials/lpa-details.html.twig') }}
                             </section>
                         {% endif %}
-                    {% else %}
-                        <section class="moj-ticket-panel__content moj-ticket-panel__content--grey" aria-label="Inactive actor on lpa section">
-                                {{ include('@actor/partials/lpa-details.html.twig') }}
-                        </section>
-                    {% endif %}
-                </article>
+                    </article>
 
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
 
+                </div>
             </div>
-        </div>
-    </main>
-    {{ include('@actor/partials/new-use-service.html.twig') }}
-</div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
 {% endblock %}
