@@ -4,11 +4,16 @@
 
 {% block content %}
 <div class="govuk-width-container">
-    {{ include('@partials/welsh-switch.html.twig') }}
 
-    <div role="navigation" aria-labelledby="back-link-navigation">
-        <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+    <div class="govuk-clearfix">
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
     </div>
+
+    {{ include('@actor/partials/upcoming-service-downtime.html.twig') }}
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
