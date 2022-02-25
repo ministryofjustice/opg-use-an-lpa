@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
+use Actor\Workflow\RequestActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler,
-    CsrfGuardAware,
-    Traits\CsrfGuard,
-    Traits\Session,
-    Traits\User,
-    UserAware};
-use DateTime;
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\AddOlderLpa};
 use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Workflow\State;
+use Common\Workflow\StateNotInitialisedException;
+use Common\Workflow\WorkflowState;
+use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -30,20 +29,16 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class CreateActivationKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class CreateActivationKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     use User;
     use Session;
     use CsrfGuard;
+    use State;
 
-    /** @var EmailClient */
-    private $emailClient;
-
-    /** @var AddOlderLpa */
-    private $addOlderLpa;
-
-    /** @var LocalisedDate */
-    private $localisedDate;
+    private EmailClient $emailClient;
+    private AddOlderLpa $addOlderLpa;
+    private LocalisedDate $localisedDate;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -65,36 +60,31 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
      * Handles a request and produces a response
      *
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
-     * @throws InvalidRequestException
+     * @throws InvalidRequestException|StateNotInitialisedException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->getUser($request);
         $form = new CreateNewActivationKey($this->getCsrfGuard($request));
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
-        $session = $this->getSession($request, 'session');
+
+        $user = $this->getUser($request);
+
+        if ($this->isMissingPrerequisite($request)) {
+            return $this->redirectToRoute('lpa.add-by-paper');
+        }
 
         $form->setData($request->getParsedBody());
-        if (
-            $form->isValid() &&
-            $session->has('opg_reference_number') &&
-            $session->has('first_names') &&
-            $session->has('last_name') &&
-            $session->has('dob') &&
-            $session->has('postcode')
-        ) {
+        if ($form->isValid()) {
+            $state = $this->state($request);
+
             $result = $this->addOlderLpa->confirm(
-                $identity,
-                (int) $session->get('opg_reference_number'),
-                $session->get('first_names'),
-                $session->get('last_name'),
-                Carbon::create(
-                    $session->get('dob')['year'],
-                    $session->get('dob')['month'],
-                    $session->get('dob')['day']
-                )->toImmutable(),
-                $session->get('postcode'),
+                $user->getIdentity(),
+                $state->referenceNumber,
+                $state->firstNames,
+                $state->lastName,
+                $state->dob,
+                $state->postcode,
                 $form->getData()['force_activation'] === 'yes'
             );
 
@@ -104,8 +94,8 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
 
                     $this->emailClient->sendActivationKeyRequestConfirmationEmail(
                         $user->getDetails()['Email'],
-                        $session->get('opg_reference_number'),
-                        strtoupper($session->get('postcode')),
+                        (string) $state->referenceNumber,
+                        strtoupper($state->postcode),
                         ($this->localisedDate)($letterExpectedDate)
                     );
 
@@ -119,13 +109,37 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                         )
                     );
                 case OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING:
-                    $session->set('lpa_full_match_but_not_cleansed', true);
-                    $session->set('actor_id', $result->getData()['actor_id']);
+                    $state->needsCleansing = true;
+                    $state->actorUid = (int) $result->getData()['actor_id'];
 
                     return $this->redirectToRoute('lpa.add.contact-details');
             }
         }
 
         throw new InvalidRequestException('Invalid form');
+    }
+
+    public function state(ServerRequestInterface $request): RequestActivationKey
+    {
+        return $this->loadState($request, RequestActivationKey::class);
+    }
+
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
+    {
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->lastName === null
+            || $this->state($request)->dob === null
+            || $this->state($request)->postcode === null;
+    }
+
+    public function nextPage(WorkflowState $state): string
+    {
+        return 'lpa.dashboard';
+    }
+
+    public function lastPage(WorkflowState $state): string
+    {
+        return '';
     }
 }

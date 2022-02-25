@@ -17,6 +17,7 @@ use Psr\Http\Message\RequestInterface;
  * @property mixed  $lpa
  * @property string $userLpaActorToken
  * @property int    $actorId
+ * @property string $actorUId
  * @property array  $lpaData
  * @property string $organisation
  * @property string $accessCode
@@ -435,6 +436,29 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I do not see my information$/
+     */
+    public function iDoNotSeeMyInformation()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+
+        $this->ui->assertFieldNotContains('first_names', 'The Attorney');
+        $this->ui->assertFieldNotContains('last_name', 'Person');
+    }
+
+    /**
+     * @Given /^starts the Add an Older LPA journey$/
+     */
+    public function startsTheAddAnOlderLPAJourney()
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        $this->ui->visit('/lpa/request-code/lpa-reference-number');
+        $this->ui->fillField('opg_reference_number', $this->lpa->uId);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @Given /^The activation key not been received or was lost$/
      * @Then /^I will receive an email confirming this information$/
      * @Given /^My LPA was registered 'on or after' 1st September 2019$/
@@ -473,6 +497,7 @@ class RequestActivationKeyContext implements Context
 
         $this->userLpaActorToken = '987654321';
         $this->actorId = 9;
+        $this->actorUId = '700000000054';
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->userLpaActorToken,
@@ -537,7 +562,8 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I have requested an activation key with valid details$/
+     * @Given I have requested an activation key with valid details
+     * @Given I reach the Check answers part of the Add an Older LPA journey
      */
     public function iHaveRequestedAnActivationKeyWithValidDetails()
     {
@@ -916,7 +942,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iVisitTheYourNamePageWithoutFillingOutTheForm()
     {
-        $this->ui->visit('lpa/request-code/your-name');
+        $this->ui->visit('/lpa/request-code/your-name');
     }
 
     /**
@@ -1129,7 +1155,7 @@ class RequestActivationKeyContext implements Context
                                 'title' => 'Bad request',
                                 'details' => 'LPA needs cleansing',
                                 'data' => [
-                                    'actor_id' => $this->actorId
+                                    'actor_id' => $this->actorUId
                                 ],
                             ]
                         )

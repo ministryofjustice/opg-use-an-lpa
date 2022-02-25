@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\Session as SessionTrait;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
-use Common\Handler\WorkflowStep;
+use Actor\Workflow\RequestActivationKey;
+use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,11 +16,9 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAware, CsrfGuardAware, WorkflowStep
+class ActorRoleHandler extends AbstractCleansingDetailsHandler
 {
-    use User;
-    use CsrfGuard;
-    use SessionTrait;
+    private ActorRole $form;
 
     /**
      * @param ServerRequestInterface $request
@@ -43,7 +37,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAw
             [
                 'user'  => $this->user,
                 'form'  => $this->form,
-                'back' => $this->getRouteNameFromAnswersInSession(true)
+                'back' => $this->lastPage($this->state($request))
             ]
         ));
     }
@@ -60,36 +54,38 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler implements UserAw
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                $this->session->set('actor_role', 'donor');
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_DONOR);
             } elseif ($selected === 'Attorney') {
-                $this->session->set('actor_role', 'attorney');
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_ATTORNEY);
             }
-            $nextPageName = $this->getRouteNameFromAnswersInSession();
-            return $this->redirectToRoute($nextPageName);
+
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
-            'user'  => $this->user,
-            'form'  => $this->form,
-            'back' => $this->getRouteNameFromAnswersInSession(true)
+            'user' => $this->user,
+            'form' => $this->form,
+            'back' => $this->lastPage($this->state($request))
         ]));
     }
 
-    public function isMissingPrerequisite(): bool
+    public function nextPage(WorkflowState $state): string
     {
-        return parent::isMissingPrerequisite();
-    }
-
-    public function nextPage(): string
-    {
-        if ($this->session->get('actor_role') === 'attorney') {
-            return 'lpa.add.donor-details';
+        /** @var RequestActivationKey $state **/
+        if ($this->hasFutureAnswersInState($state)) {
+            return 'lpa.add.check-details-and-consent';
         }
-        return 'lpa.add.contact-details';
+
+        return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
+            ? 'lpa.add.donor-details'
+            : 'lpa.add.contact-details';
     }
 
-    public function lastPage(): string
+    public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.check-answers';
+        /** @var RequestActivationKey $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.check-answers';
     }
 }

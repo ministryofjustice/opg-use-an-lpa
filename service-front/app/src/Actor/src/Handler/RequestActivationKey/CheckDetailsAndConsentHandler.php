@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\CheckDetailsAndConsent;
+use Actor\Workflow\RequestActivationKey;
 use Carbon\Carbon;
+use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
@@ -14,12 +16,15 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Workflow\State;
+use Common\Workflow\WorkflowState;
+use Common\Workflow\WorkflowStep;
+use DateTimeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -30,6 +35,7 @@ use Mezzio\Twig\TwigRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Twig\Environment;
 
 /**
@@ -37,22 +43,29 @@ use Twig\Environment;
  * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
-class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
+class CheckDetailsAndConsentHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    LoggerAware,
+    WorkflowStep
 {
     use User;
     use CsrfGuard;
     use SessionTrait;
     use Logger;
+    use State;
+
+    private CheckDetailsAndConsent $form;
+    private ?SessionInterface $session;
+    private ?UserInterface $user;
+
+    /** @var array<string, int|string|bool|DateTimeInterface|null>  */
+    private array $data;
 
     private CleanseLpa $cleanseLPA;
     private EmailClient $emailClient;
-    private Environment $environment;
-    private CheckDetailsAndConsent $form;
     private LocalisedDate $localisedDate;
-    private ?SessionInterface $session;
-    private ?UserInterface $user;
-    private array $data;
-    private ?string $identity;
+    private Environment $environment;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -76,56 +89,49 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckDetailsAndConsent($this->getCsrfGuard($request));
+
         $this->user = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
-        $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        if (!$this->hasRequiredSessionValues()) {
-            throw new SessionTimeoutException();
+        if ($this->isMissingPrerequisite($request)) {
+            return $this->redirectToRoute('lpa.add-by-paper');
         }
 
-        if (!empty($telephone = $this->session->get('telephone_option')['telephone'])) {
-            $this->data['telephone'] = $telephone;
-        }
+        $this->data = [
+            'email' => $this->user->getDetail('email'),
+        ];
 
-        if ($this->session->get('telephone_option')['no_phone'] === 'yes') {
-            $this->data['no_phone'] = true;
-        }
+        $state = $this->state($request);
+        $state->noTelephone
+            ? $this->data['no_phone']  = $state->noTelephone
+            : $this->data['telephone'] = $state->telephone;
 
-        if (
-            !($this->session->has('lpa_full_match_but_not_cleansed')) &&
-            !($this->session->has('actor_id'))
-        ) {
-            $this->data['actor_role'] = $this->session->get('actor_role');
+        if (!$state->needsCleansing && $state->actorUid === null) {
+            $this->data['actor_role'] = $state->getActorRole();
 
-            if (strtolower($this->data['actor_role'] ?? null) === 'attorney') {
-                $this->data['donor_first_names'] = $this->session->get('donor_first_names');
-                $this->data['donor_last_name'] = $this->session->get('donor_last_name');
-                $this->data['donor_dob'] = Carbon::create(
-                    $this->session->get('donor_dob')['year'],
-                    $this->session->get('donor_dob')['month'],
-                    $this->session->get('donor_dob')['day']
-                )->toImmutable();
+            if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+                $this->data['donor_first_names'] = $state->donorFirstNames;
+                $this->data['donor_last_name']   = $state->donorLastName;
+                $this->data['donor_dob']         = $state->donorDob;
             }
         }
 
-        $this->data['email'] = $this->user->getDetail('email');
-
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/check-details-and-consent', [
-            'user'  => $this->user,
-            'form'  => $this->form,
-            'data'  => $this->data
-        ]));
+        return new HtmlResponse($this->renderer->render(
+            'actor::request-activation-key/check-details-and-consent',
+            [
+                'user' => $this->user,
+                'form' => $this->form,
+                'data' => $this->data
+            ]
+        ));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -133,51 +139,47 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->data['first_names'] = $this->session->get('first_names');
-            $this->data['last_name'] = $this->session->get('last_name');
-            $this->data['dob'] = Carbon::create(
-                $this->session->get('dob')['year'],
-                $this->session->get('dob')['month'],
-                $this->session->get('dob')['day']
-            )->toImmutable();
-            $this->data['postcode'] = $this->session->get('postcode');
-            $this->data['actor_id'] = $this->session->get('actor_id');
+            $state = $this->state($request);
+
+            $this->data['first_names'] = $state->firstNames;
+            $this->data['last_name']   = $state->lastName;
+            $this->data['dob']         = $state->dob;
+            $this->data['postcode']    = $state->postcode;
+            $this->data['actor_id']    = $state->actorUid;
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
-            $this->logger->notice(
+            $this->getLogger()->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
                 [
                     'id'    => $this->user->getIdentity(),
-                    'role'  => ($this->data['actor_role'] ?? null) === 'donor' ?
+                    'role'  => $state->getActorRole() === RequestActivationKey::ACTOR_DONOR ?
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_DONOR :
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
-                    'phone' => array_key_exists('telephone', $this->data) ?
+                    'phone' => $state->telephone !== null ?
                         EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
                         EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED
                 ]
             );
-            $user = $this->getUser($request);
-            $identity = (!is_null($user)) ? $user->getIdentity() : null;
 
-            $actorId = $this->session->get('actor_id');
             $result = $this->cleanseLPA->cleanse(
-                $identity,
-                (int)$this->session->get('opg_reference_number'),
+                $this->user->getIdentity(),
+                $state->referenceNumber,
                 $additionalInfo,
-                $actorId ? (int)$actorId : null
+                $state->actorUid
             );
 
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
-            if ($result->getResponse() == OlderLpaApiResponse::SUCCESS) {
+            if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
                 $this->emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
-                    $user->getDetails()['Email'],
-                    $this->session->get('opg_reference_number'),
+                    $this->data['email'],
+                    (string) $state->referenceNumber,
                     ($this->localisedDate)($letterExpectedDate)
                 );
+
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::activation-key-request-received',
@@ -188,26 +190,58 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements UserAware
                     )
                 );
             }
+
+            $this->getLogger()->alert(
+                'LPA cleanse request to our API did not return expected response in ' . __METHOD__
+            );
+            throw new RuntimeException('LPA cleanse request to our API did not return expected response');
         }
+
+        $this->getLogger()->alert('Invalid CSRF when submitting to ' . __METHOD__);
+        throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
-    // TODO: This function needs to be revisited as a potential bug : UML-1822
-    private function hasRequiredSessionValues(): bool
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
-        $required = $this->session->has('opg_reference_number')
-            || $this->session->has('first_names')
-            || $this->session->has('last_name')
-            || $this->session->has('dob')
-            || $this->session->has('postcode')
-            || $this->session->has('actor_role')
-            || $this->session->has('telephone_option');
+        return $this->loadState($request, RequestActivationKey::class);
+    }
 
-        if ($this->session->get('actor_role') === 'attorney') {
-            return $required
-                || $this->session->has('donor_first_names')
-                || $this->session->has('donor_last_name')
-                || $this->session->has('donor_dob');
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
+    {
+        $missing = $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->lastName === null
+            || $this->state($request)->dob === null
+            || $this->state($request)->postcode === null
+            || (
+                $this->state($request)->telephone === null
+                && $this->state($request)->noTelephone === null
+            );
+
+        // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
+        if (!$missing && $this->state($request)->needsCleansing) {
+            return $this->state($request)->actorUid === null; // isMissing equals false if actorUid present
         }
-        return $required;
+
+        $missing = $missing || $this->state($request)->getActorRole() === null;
+
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+            return $missing
+                || $this->state($request)->donorFirstNames === null
+                || $this->state($request)->donorLastName === null
+                || $this->state($request)->donorDob === null;
+        }
+
+        return $missing;
+    }
+
+    public function nextPage(WorkflowState $state): string
+    {
+        return 'lpa.add-by-paper';
+    }
+
+    public function lastPage(WorkflowState $state): string
+    {
+        return 'lpa.add.contact-details';
     }
 }
