@@ -1,9 +1,8 @@
-import boto3
 import argparse
-import json
+import os
+import boto3
 from requests_aws4auth import AWS4Auth
 import requests
-import os
 
 
 class APIGatewayCaller:
@@ -13,8 +12,8 @@ class APIGatewayCaller:
     aws_iam_session = ''
     aws_auth = ''
 
-    def __init__(self, target_production):
-        self.choose_target_gateway(target_production)
+    def __init__(self, target_production, dev_endpoint_url):
+        self.choose_target_gateway(target_production, dev_endpoint_url)
         self.aws_iam_role = os.getenv('AWS_IAM_ROLE')
         self.set_iam_role_session()
         self.aws_auth = AWS4Auth(
@@ -24,20 +23,19 @@ class APIGatewayCaller:
             'execute-api',
             session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
-    def choose_target_gateway(self, target_production):
+    def choose_target_gateway(self, target_production, dev_endpoint_url):
         if target_production:
             self.aws_account_id = '690083044361'
             self.api_gateway_url = 'https://lpa.api.opg.service.justice.gov.uk/v1/use-an-lpa/lpas/'
         else:
             self.aws_account_id = '367815980639'
-            self.api_gateway_url = 'https://integration.dev.lpa.api.opg.service.justice.gov.uk/v1/use-an-lpa/lpas/'
+            self.api_gateway_url = f'https://{dev_endpoint_url}/v1/use-an-lpa/lpas/'
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = 'arn:aws:iam::{}:role/ci'.format(self.aws_account_id)
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/ci'
         else:
-            role_arn = 'arn:aws:iam::{0}:role/operator'.format(
-                self.aws_account_id)
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/operator'
 
         sts = boto3.client(
             'sts',
@@ -64,6 +62,9 @@ def main():
     parser = argparse.ArgumentParser(
         description="Look up LPA IDs on the Sirius API Gateway.")
 
+    parser.add_argument("--dev_endpoint_url", type=str,
+                        default='integration.dev.lpa.api.opg.service.justice.gov.uk',
+                        help="endpoint other than integration to use for testing")
     parser.add_argument("lpa_id", type=str,
                         help="LPA ID to look up in API Gateway")
     parser.add_argument('--production', dest='target_production', action='store_const',
@@ -71,7 +72,7 @@ def main():
                         help='target the production sirius api gateway')
 
     args = parser.parse_args()
-    work = APIGatewayCaller(args.target_production)
+    work = APIGatewayCaller(args.target_production, args.dev_endpoint_url)
     work.call_api_gateway(args.lpa_id)
 
 
