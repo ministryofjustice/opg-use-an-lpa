@@ -53,10 +53,6 @@
                         </p>
                     {% endif %}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
-
-                    {{ govuk_form_close() }}
-
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
@@ -65,6 +61,11 @@
                         </strong>
                         <p class="govuk-body-m govuk-!-padding-left-7">{% trans %}If you need to use your lasting power of attorney during this time you can still use the paper LPA document.{% endtrans %}</p>
                     </div>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+
                 </div>
             </div>
         </main>
