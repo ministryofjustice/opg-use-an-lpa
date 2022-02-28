@@ -1,8 +1,10 @@
 import argparse
 import os
+import logging
 import boto3
 from requests_aws4auth import AWS4Auth
 import requests
+logging.basicConfig(encoding='utf-8', level=logging.INFO)
 
 
 class APIGatewayCaller:
@@ -30,6 +32,7 @@ class APIGatewayCaller:
         else:
             self.aws_account_id = '367815980639'
             self.api_gateway_url = f'https://{dev_endpoint_url}/v1/use-an-lpa/lpas/'
+        logging.info('targetting endpoint at: %s', self.api_gateway_url)
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -55,7 +58,8 @@ class APIGatewayCaller:
         url = str(self.api_gateway_url+lpa_id)
         response = requests.request(
             method, url, auth=self.aws_auth, data=body, headers=headers)
-        print(response.text)
+        logging.info(response)
+        return response.text
 
 
 def main():
@@ -73,7 +77,8 @@ def main():
 
     args = parser.parse_args()
     work = APIGatewayCaller(args.target_production, args.dev_endpoint_url)
-    work.call_api_gateway(args.lpa_id)
+    lpa_data = work.call_api_gateway(args.lpa_id)
+    print(lpa_data)
 
 
 if __name__ == "__main__":
