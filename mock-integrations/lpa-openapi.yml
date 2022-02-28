@@ -324,7 +324,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LpaCollection'
+                $ref: '#/components/schemas/Lpa'
         '404':
           description: An LPA with the passed ID Not Found
         '400':
@@ -434,11 +434,6 @@ components:
           maxLength: 1000
         case_uid:
           type: integer
-    LpaCollection:
-      type: array
-      minItems: 0
-      items:
-        $ref: '#/components/schemas/Lpa'
     Lpa:
       type: object
       required:
