@@ -1,6 +1,8 @@
 import argparse
 import os
+import sys
 import logging
+import json
 import boto3
 from requests_aws4auth import AWS4Auth
 import requests
@@ -58,7 +60,13 @@ class APIGatewayCaller:
         url = str(self.api_gateway_url+lpa_id)
         response = requests.request(
             method, url, auth=self.aws_auth, data=body, headers=headers)
-        logging.info('response status: %s', response.status_code)
+        logging.info('status code: %s', response.status_code)
+        if response.status_code == 500:
+            error_message = json.loads(response.text)[
+                "body"]["error"]["message"] or "unknown error"
+            logging.warning(
+                'response: %s', error_message)
+            sys.exit(1)
         return response.text
 
 
