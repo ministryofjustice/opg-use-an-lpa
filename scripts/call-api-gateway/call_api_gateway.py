@@ -58,7 +58,7 @@ class APIGatewayCaller:
         url = str(self.api_gateway_url+lpa_id)
         response = requests.request(
             method, url, auth=self.aws_auth, data=body, headers=headers)
-        logging.info(response)
+        logging.info('response status: %s', response.status_code)
         return response.text
 
 
