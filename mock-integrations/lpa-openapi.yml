@@ -83,7 +83,7 @@ x-amazon-apigateway-gateway-responses:
         {
             "Effect": "Allow",
             "Principal": {
-              "AWS": ["${allowed_roles}"]
+              "AWS": []
             },
             "Action": "execute-api:Invoke",
             "Resource": [
