@@ -6,7 +6,11 @@
     <div class="govuk-width-container">
         {{ include('@partials/account-bar.html.twig') }}
 
-        {{ include('@partials/welsh-switch.html.twig') }}
+        <div class="govuk-clearfix">
+            {{ include('@partials/welsh-switch.html.twig') }}
+        </div>
+
+        {{ include('@actor/partials/lpas-registered-after.html.twig') }}
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
