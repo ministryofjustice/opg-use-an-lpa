@@ -32,14 +32,8 @@ It's possible to invoke the mock endpoints using curl or similar as follows:
 # Valid LPA Uid
 curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/700000000047
 
-# Valid Meris Id with 1 LPA
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/3000000
-
-# Valid Meris Id with many LPAs
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/2000000
-
-# Not found
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/2000001
+# LPA not found
+curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/700000000000
 ```
 
 The URLs above cause Prism to return examples with specific statuses, as shown.
@@ -51,17 +45,12 @@ Yaml examples can be generated from the data-lpa api using yq
 aws-vaul exec identity -- python ./scripts/call-api-gateway/call_api_gateway.py 700000000047 | yq -P
 ```
 
-## Working on the scripts
+## Working on the examples
 
-We use a script to add our own modifications to the Sirius Swagger file
-(for now, at least). These require python3 plus some dependencies. If you're
-working on these scripts (in the `scripts/` directory), follow these
-instructions to set up your environment:
+When there are updates to the openapi spec for opg-data-lpa, or the examples, run an update
 
 ```shell
-virtualenv -p python3 ~/venv/gatewaymock
-source ~/venv/gatewaymock/bin/activate
-pip install -r requirements.txt
+make update_mock
 ```
 
-You should now be able to work on the scripts in the `scripts/` directory.
+This will generate a new swagger.yaml file and
