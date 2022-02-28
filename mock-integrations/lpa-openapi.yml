@@ -83,7 +83,7 @@ x-amazon-apigateway-gateway-responses:
         {
             "Effect": "Allow",
             "Principal": {
-              "AWS": []
+              "AWS": ["${allowed_roles}"]
             },
             "Action": "execute-api:Invoke",
             "Resource": [
@@ -303,11 +303,10 @@ paths:
           name: uid
           schema:
             type: string
-            pattern: '(^7\d{11}$|^(2|3)\d{6}$)'
+            pattern: '(^7\d{11}$)'
           required: true
-          description: Reference Number representing either an LPA Uid or a Meris Id
+          description: Reference Number representing an LPA Uid
           examples:
-            meris: 3000000
             lpauid: 700000000054
       responses:
         '200':
@@ -392,7 +391,6 @@ paths:
         '500':
           description: Unexpected error
 
-
 components:
   securitySchemes:
     sigv4:
@@ -434,6 +432,37 @@ components:
           maxLength: 1000
         case_uid:
           type: integer
+    Error400:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              id:
+                type: string
+                example: "A123BCD"
+              code:
+                type: string
+                example: "OPGDATA-API-INVALIDREQUEST"
+              title:
+                type: string
+                example: "Invalid Request"
+              detail:
+                type: string
+                example: "Invalid request, the data is incorrect"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
     Lpa:
       type: object
       required:
@@ -484,36 +513,43 @@ components:
           type: string
           format: date
           description: The date the LPA was created
+          nullable: true
           example: '2018-06-30'
         rejectedDate:
           type: string
           format: date
           description: The date the LPA was rejected
+          nullable: true
           example: '2018-06-30'
         registrationDate:
           type: string
           format: date
           description: The date the LPA was registered
+          nullable: true
           example: '2018-06-30'
         cancellationDate:
           type: string
           format: date
           description: The date the LPA was cancelled
+          nullable: true
           example: '2018-06-30'
         invalidDate:
           type: string
           format: date
           description: The date the LPA was marked invalid
+          nullable: true
           example: '2018-06-30'
         withdrawnDate:
           type: string
           format: date
           description: The date the LPA was withdrawn
+          nullable: true
           example: '2018-06-30'
         dispatchDate:
           type: string
           format: date
           description: The date the LPA was dispatched
+          nullable: true
           example: '2018-06-30'
         status:
           type: string
@@ -541,12 +577,14 @@ components:
         lifeSustainingTreatment:
           type: string
           enum: ['Option A', 'Option B', null]
+          nullable: true
         onlineLpaId:
           type: string
           example: ABC123
         attorneyActDecisions:
           type: string
           enum: ['When Registered', 'Loss of capacity', null]
+          nullable: true
         donor:
           $ref: '#/components/schemas/Donor'
         attorneys:
@@ -639,6 +677,7 @@ components:
         companyName:
           type: string
           description: The case actor's company name (if relevant)
+          nullable: true
           example: ABC Ltd
           maxLength: 255
         systemStatus:
@@ -698,37 +737,6 @@ components:
           type: string
           description: The third line of the address
           maxLength: 255
-    Error400:
-      type: object
-      required:
-        - errors
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            required:
-              - code
-              - title
-            properties:
-              id:
-                type: string
-                example: "A123BCD"
-              code:
-                type: string
-                example: "OPGDATA-API-INVALIDREQUEST"
-              title:
-                type: string
-                example: "Invalid Request"
-              detail:
-                type: string
-                example: "Invalid request, the data is incorrect"
-              meta:
-                type: object
-                properties:
-                  x-ray:
-                    type: string
-                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
     Error401:
       type: object
       required:
