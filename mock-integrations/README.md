@@ -47,10 +47,22 @@ aws-vaul exec identity -- python ./scripts/call-api-gateway/call_api_gateway.py 
 
 ## Working on the examples
 
-When there are updates to the openapi spec for opg-data-lpa, or the examples, run an update
+To start the mock alone, run
+
+```shell
+make up_mock
+```
+
+Or bring up the whole service
+
+```shell
+make up_all
+```
+
+Once started, when there are updates to the openapi spec for opg-data-lpa, or the examples, run an update
 
 ```shell
 make update_mock
 ```
 
-This will generate a new swagger.yaml file and
+This will generate a new openapi.yaml file and restart the mock docker compose services.
