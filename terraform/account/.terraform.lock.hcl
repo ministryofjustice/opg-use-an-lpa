@@ -40,8 +40,8 @@ provider "registry.terraform.io/hashicorp/local" {
 }
 
 provider "registry.terraform.io/pagerduty/pagerduty" {
-  version     = "2.2.1"
-  constraints = "~> 2.2.1"
+  version     = "2.3.0"
+  constraints = "~> 2.3.0"
   hashes = [
     "h1:/NOmfITclc4rTqxZ4ViSaobvLbqXOpvWWHnZK8MbO0A=",
     "zh:1047f05a7bd16407ce58f9be5dc059722034fa17b17b67d6189063b33e01d3b1",
