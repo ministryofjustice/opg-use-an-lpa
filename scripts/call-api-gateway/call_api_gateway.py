@@ -61,7 +61,7 @@ class APIGatewayCaller:
         response = requests.request(
             method, url, auth=self.aws_auth, data=body, headers=headers)
         logging.info('status code: %s', response.status_code)
-        if response.status_code == 500:
+        if response.status_code != 200:
             error_message = json.loads(response.text)[
                 "body"]["error"]["message"] or "unknown error"
             logging.warning(
