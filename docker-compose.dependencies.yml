@@ -64,6 +64,6 @@ services:
     image: stoplight/prism:4
     command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
     volumes:
-      - ./mock-integrations/openapi.yaml:/tmp/openapi.yaml:ro
+      - ./mock-integrations/mock-openapi.yaml:/tmp/openapi.yaml:ro
     ports:
       - 7011:4010
