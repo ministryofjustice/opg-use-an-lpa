@@ -4,7 +4,7 @@ rm -f swagger.yaml
 rm -f temp.yaml
 touch swagger.yaml
 touch temp.yaml
-cat examples_sample.yaml >> temp.yaml
+cat examples-template.yaml >> temp.yaml
 for n in $(cat list.txt )
 do
     echo "Working on $n..."
@@ -15,6 +15,6 @@ do
     temp.yaml >> temp.yaml
 done
 
-yq ea '. as $item ireduce ({}; . * $item )' temp.yaml > openapi-examples.yaml
+yq ea '. as $item ireduce ({}; . * $item )' temp.yaml > mock-openapi-examples.yaml
 
 rm -f temp.yaml
