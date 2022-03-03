@@ -129,7 +129,7 @@ class Lpas implements LpasInterface
                     );
                     break;
                 default:
-                    $this->logger->error(
+                    $this->logger->warning(
                         'Unexpected {status} response from gateway for request of LPA {lpaUid}',
                         [
                             'status' => $statusCode,
