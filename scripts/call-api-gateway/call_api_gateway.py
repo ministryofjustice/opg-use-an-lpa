@@ -75,7 +75,7 @@ def main():
         description="Look up LPA IDs on the Sirius API Gateway.")
 
     parser.add_argument("--dev_endpoint_url", type=str,
-                        default='integration.dev.lpa.api.opg.service.justice.gov.uk',
+                        default='dev.lpa.api.opg.service.justice.gov.uk',
                         help="endpoint other than integration to use for testing")
     parser.add_argument("lpa_id", type=str,
                         help="LPA ID to look up in API Gateway")
