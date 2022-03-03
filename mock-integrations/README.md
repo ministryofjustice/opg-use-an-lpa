@@ -66,7 +66,7 @@ Add LPAs from the Sirius Integration environment to list.txt (each Uid as a new 
 ```shell
 cd ./mock-integrations/generate_examples
 
-aws-vaul exec identity -- ./make_yaml.sh
+aws-vaul exec identity -- ./make_examples.sh
 ```
 
-Review the output in ./mock-integrations/generate_examples/mock-openapi-examples.yaml and if happy copy to ./mock-integrations/mock-openapi-examples.yaml, replacing the old file.
+Review the output in ./mock-integrations/generate_examples/mock-openapi-examples.yaml  and ./mock-integrations/generate_examples/nginx-generated and if happy copy to ./mock-integrations/mock-openapi-examples.yaml, replacing the old file.
