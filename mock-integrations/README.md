@@ -12,6 +12,8 @@ Specifically, the IDs of X LPAs are mapped to examples added in `swagger-example
 The mappings are defined in `nginx.conf`, which associate an Reference ID with a named example.
 The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are then forwarded to the Prism proxy. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct array of LPAs for a given request.
 
+Any changes that are required to the opg-data-lpa openapi spec must be done in [opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
+
 ## Prerequisites
 
 You will need yq and wget to work with this mock!
@@ -40,7 +42,7 @@ Once started, when there are updates to the openapi spec for opg-data-lpa, or th
 make update_mock
 ```
 
-This will generate a new openapi.yaml file and restart the mock docker compose services.
+This will generate a new mock-openapi.yaml file and restart the mock docker compose services.
 
 ## Viewing the examples
 
