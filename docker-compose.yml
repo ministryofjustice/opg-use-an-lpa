@@ -186,8 +186,8 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
-    # depends_on:
-    #   - api-app
+    depends_on:
+      - api-app
     volumes:
       - ./service-api/web/dist:/web
     ports:
