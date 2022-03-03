@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-rm -f swagger.yaml
 rm -f temp.yaml
-touch swagger.yaml
 touch temp.yaml
 cat examples-template.yaml >> temp.yaml
 for n in $(cat list.txt )
