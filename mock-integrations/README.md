@@ -2,15 +2,13 @@
 
 Mock servers which together mimic the data-lpa API.
 
-Runs using [Prism](https://stoplight.io/open-source/prism), delivering
-the API specified in the latest version of the
-[Sirius Swagger doc](https://github.com/ministryofjustice/opg-sirius-api-gateway/blob/master/docs/swagger.v1.yaml).
+Runs using [Prism](https://stoplight.io/open-source/prism), delivering the API specified in the latest version of the
+[OPG Data LPA openapi doc](https://github.com/ministryofjustice/opg-data-lpa/blob/main/lambda_functions/v1/openapi/lpa-openapi.yml).
 
-A Prism instance (data-lpa) and an nginx instance (api-gateway) are spun up as part of the docker-compose service to provide lightweight testing of the Use a Lasting Power of Attorney servicve without a full Sirius stack.
+A Prism instance (data-lpa) and an nginx instance (api-gateway) are spun up as part of the docker-compose service to provide lightweight testing of the Use a Lasting Power of Attorney service without a full Sirius stack.
 
-Specifically, the IDs of X LPAs are mapped to examples added in `mock-openapi-examples.yaml` for the examples themselves.
-The mappings are defined in `nginx.conf`, which associate an Reference ID with a named example.
-The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are then forwarded to the Prism proxy. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct array of LPAs for a given request.
+In `nginx.conf`, the IDs of LPAs are mapped to named examples added in `mock-openapi-examples.yaml`.
+The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are forwarded to Prism. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct LPA for a given request.
 
 Any changes that are required to the opg-data-lpa openapi spec must be done in [opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa).
 
