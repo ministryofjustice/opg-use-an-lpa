@@ -18,15 +18,20 @@
 
 .moj-banner__message h2,
 .moj-banner__message span {
-  margin-bottom: 10px;
+  margin-bottom: govuk-spacing(2);
   margin-top: auto;
-  margin-left: 35px;
+  margin-left: govuk-spacing(7);
 }
 
 .moj-banner__message h2:last-child,
 .moj-banner__message span:last-child,
 .moj-banner__message p:last-child {
   margin-bottom: 0;
+  margin-left: govuk-spacing(7);
+}
+
+.moj-banner__message--assistive {
+  @include govuk-visually-hidden(true);
 }
 
 /* Style variants
@@ -37,8 +42,27 @@
   color: #00823b;
 }
 
-
 .moj-banner--warning {
   border-color: #b10e1e;
   color: #b10e1e;
+}
+
+.moj-banner--page-top {
+  position: relative;
+  top: govuk-spacing(-4);
+  @include govuk-responsive-margin(2, "bottom");
+
+  @include govuk-media-query($from: tablet) {
+    top: govuk-spacing(-7);
+  }
+}
+
+.govuk-notification-banner--pagetop {
+  position: relative;
+  top: govuk-spacing(-4);
+  @include govuk-responsive-margin(2, "bottom");
+
+  @include govuk-media-query($from: tablet) {
+    top: govuk-spacing(-7);
+  }
 }

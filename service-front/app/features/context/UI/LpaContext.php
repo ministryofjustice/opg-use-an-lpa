@@ -542,8 +542,8 @@ class LpaContext implements Context
 
     public function iCanSeeBannerAboutExistingLPAsBefore2019()
     {
-        $this->ui->assertElementOnPage('.moj-banner__message');
-        $this->ui->assertElementContainsText('.moj-banner__message', '2019');
+        $this->ui->assertElementOnPage('.govuk-notification-banner');
+        $this->ui->assertElementContainsText('.govuk-notification-banner', '1 September 2019');
     }
 
     /**
@@ -552,8 +552,8 @@ class LpaContext implements Context
 
     public function iCanSeeBannerAboutExistingLPAsAfter2016()
     {
-        $this->ui->assertElementOnPage('.moj-banner__message');
-        $this->ui->assertElementContainsText('.moj-banner__message', '2016');
+        $this->ui->assertElementOnPage('.govuk-notification-banner');
+        $this->ui->assertElementContainsText('.govuk-notification-banner', '1 January 2016');
     }
 
 
