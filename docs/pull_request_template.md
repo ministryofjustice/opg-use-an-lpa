@@ -21,4 +21,5 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 * [ ] I have added tests to prove my work
 * [ ] I have added welsh translation tags and updated translation files
 * [ ] I have run an accessibility tool on any pages I have made changes to and fixed any issues found
+* [ ] I have notified the Interaction Designer of any content changes so that appropriate screenshots/flow diagram changes can be made
 * [ ] The product team have tested these changes
