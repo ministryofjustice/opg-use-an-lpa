@@ -13,7 +13,6 @@ use Psr\Log\LoggerInterface;
 
 class LpasFactory
 {
-
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
