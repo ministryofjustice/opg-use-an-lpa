@@ -21,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @backupGlobals enabled
@@ -38,6 +39,7 @@ class LpasTest extends TestCase
         $this->httpClientProphecy = $this->prophesize(Client::class);
         $this->signatureV4Prophecy = $this->prophesize(SignatureV4::class);
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
+        $this->loggerInterface = $this->prophesize(LoggerInterface::class);
         $this->apiUrl = 'http://test';
         $this->traceId = '1234-12-12-12-1234';
 
@@ -53,7 +55,8 @@ class LpasTest extends TestCase
             $this->signatureV4Prophecy->reveal(),
             $this->apiUrl,
             $this->traceId,
-            $this->dataSanitiserStrategy->reveal()
+            $this->dataSanitiserStrategy->reveal(),
+            $this->loggerInterface->reveal()
         );
     }
 
