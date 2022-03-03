@@ -22,6 +22,11 @@ variable "accounts" {
         api_key_secretsmanager_name = string
         endpoint_url                = string
       })
+      dns_firewall = object({
+        enabled         = bool
+        domains_allowed = list(string)
+        domains_blocked = list(string)
+      })
     })
   )
 }
