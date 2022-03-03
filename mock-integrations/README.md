@@ -8,11 +8,11 @@ the API specified in the latest version of the
 
 A Prism instance (data-lpa) and an nginx instance (api-gateway) are spun up as part of the docker-compose service to provide lightweight testing of the Use a Lasting Power of Attorney servicve without a full Sirius stack.
 
-Specifically, the IDs of X LPAs are mapped to examples added in `swagger-examples.yaml` for the examples themselves.
+Specifically, the IDs of X LPAs are mapped to examples added in `mock-openapi-examples.yaml` for the examples themselves.
 The mappings are defined in `nginx.conf`, which associate an Reference ID with a named example.
 The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are then forwarded to the Prism proxy. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct array of LPAs for a given request.
 
-Any changes that are required to the opg-data-lpa openapi spec must be done in [opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
+Any changes that are required to the opg-data-lpa openapi spec must be done in [opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa).
 
 ## Prerequisites
 
@@ -71,4 +71,4 @@ cd ./mock-integrations/generate_examples
 aws-vaul exec identity -- ./make_yaml.sh
 ```
 
-Review the output in ./mock-integrations/generate_examples/openapi-examples.yaml and if happy copy to ./mock-integrations/openapi-examples.yaml, replacing the old file.
+Review the output in ./mock-integrations/generate_examples/mock-openapi-examples.yaml and if happy copy to ./mock-integrations/mock-openapi-examples.yaml, replacing the old file.
