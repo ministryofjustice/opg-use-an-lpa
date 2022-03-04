@@ -134,7 +134,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = file("${path.module}/maintenance/viewer_maintenance.html")
+      message_body = file("${path.module}/maintenance/viewer_maintenance_planneddowntime.html")
       status_code  = "503"
     }
   }
@@ -161,7 +161,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = file("${path.module}/maintenance/viewer_maintenance_welsh.html")
+      message_body = file("${path.module}/maintenance/viewer_maintenance_welsh_planneddowntime.html")
       status_code  = "503"
     }
   }
