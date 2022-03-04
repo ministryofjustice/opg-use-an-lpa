@@ -12,6 +12,7 @@ use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class LpasFactoryTest extends TestCase
 {
@@ -36,6 +37,10 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get(SiriusLpaSanitiser::class)->willReturn(
             $this->prophesize(SiriusLpaSanitiser::class)->reveal()
+        );
+
+        $containerProphecy->get(LoggerInterface::class)->willReturn(
+            $this->prophesize(LoggerInterface::class)->reveal()
         );
 
         $factory = new LpasFactory();
