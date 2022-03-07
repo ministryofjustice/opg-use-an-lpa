@@ -4606,5 +4606,5 @@ msgstr ""
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
 #: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
 #: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
-msgid "This service will be unavailable between 3pm on Friday 8 April and 5.30pm on Sunday 10 April 2022."
+msgid "This service will be unavailable between 3pm on Friday 8 April and 6pm on Sunday 10 April 2022."
 msgstr ""

@@ -6640,15 +6640,8 @@ msgstr ""
 #: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
 #: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
 msgid ""
-"This service will be unavailable between 3pm on Friday 8 April and 5.30pm on "
+"This service will be unavailable between 3pm on Friday 8 April and 6pm on "
 "Sunday 10 April 2022."
 msgstr ""
-"Ni fydd y gwasanaeth hwn ar gael rhwng 3pm ar ddydd Gwener 8 Ebrill a 5.30pm "
-"ar ddydd Sul 10 Ebrill 2022."
-
-#~ msgid ""
-#~ "This service will be unavailable between 3pm on Friday 4 March and 6pm on "
-#~ "Sunday 6 March 2022."
-#~ msgstr ""
-#~ "Ni fydd y gwasanaeth hwn ar gael rhwng 3pm ar ddydd Gwener 4 Mawrth a 6pm "
-#~ "ar ddydd Sul 6 Mawrth 2022."
+"Ni fydd y gwasanaeth hwn ar gael rhwng 3pm ar ddydd Gwener 8 Ebrill a 6pm ar "
+"ddydd Sul 10 Ebrill 2022."
