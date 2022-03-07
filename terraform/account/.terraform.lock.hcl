@@ -43,6 +43,7 @@ provider "registry.terraform.io/pagerduty/pagerduty" {
   version     = "2.3.0"
   constraints = "~> 2.3.0"
   hashes = [
+<<<<<<< HEAD
     "h1:/NOmfITclc4rTqxZ4ViSaobvLbqXOpvWWHnZK8MbO0A=",
     "zh:1047f05a7bd16407ce58f9be5dc059722034fa17b17b67d6189063b33e01d3b1",
     "zh:2ac5d8636ac2513a18b615ef67540c6c4fe820bcd1bdcf00acd31c2f18e502e7",
@@ -56,5 +57,20 @@ provider "registry.terraform.io/pagerduty/pagerduty" {
     "zh:bac8408eaf9c9924980236c572292930376187048dd8efc345bff4ed22a300e0",
     "zh:de45857f65e9f98c04405f90554931f091d0764ae575f7a1539cbce65bb81543",
     "zh:e2957a427527aa8626b46b760fe0c76808aae1a00e84cbf054b0914bf1b30f34",
+=======
+    "h1:uWVXY8gArvXm3WNiQv3yYYRgZMj26rszhK5IncNesfE=",
+    "zh:075377a3079ffa75dd1794473a175bf830f5be887ea90f7a616adbe168fbbeed",
+    "zh:115271f316c64e3d03ba0a4ca261d84676cb508b8b58d859293d453a23fecb77",
+    "zh:2b347bfd5fc3c0e847271530bbf739e6cf4a3f57e5d05aaaf6c359a314d5318a",
+    "zh:478991595ed2e6c0b1dcd038e4a9454912dbb02cd737c3da8f8a7b6ce8c67360",
+    "zh:73285c2d06e2d03b1bda25f1ba2c7414177c870370ca85ce5a3efe13f1766f35",
+    "zh:74840c766bc21ea2ee162a8b60676f3a83987b33906f2e1d8e2ab2e3590f83ce",
+    "zh:790537ba799101a11190b006d116f5f7d9c334a8a2ae4461f050026679f791f4",
+    "zh:95704ab5ffef572cb3a1f087122bf2e7af249e40cd18bfc95987541c4386904f",
+    "zh:9dff69d1a25a16bedaf6d4d61c1337b794d348c878233351ae16250032099140",
+    "zh:a1e53ae4a9641c7a3d61bf8f59cebf495f79afa165db98de9682f95dbc3a3477",
+    "zh:e02bc98e4a15f87a3a159b00d478f27b808c5686fcfa42bcc2a302bc4a07028f",
+    "zh:fcd86251c61befe17c26a467241637eb3c95ac81e41b5d7c36dad4386a85d2bb",
+>>>>>>> 0adbcf01 (update lock file)
   ]
 }
