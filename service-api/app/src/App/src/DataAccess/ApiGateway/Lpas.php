@@ -8,6 +8,7 @@ use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
+use App\Service\Log\EventCodes;
 use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
 use Aws\Signature\SignatureV4 as AwsSignatureV4;
