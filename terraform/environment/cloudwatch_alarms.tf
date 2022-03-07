@@ -42,35 +42,14 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   treat_missing_data        = "notBreaching"
 }
 
-locals {
-  function = [
-    "verifyAgainstLpa",
-    "validateCode",
-  ]
-}
 
-resource "aws_cloudwatch_log_metric_filter" "function_errors" {
-  for_each       = toset(local.event_codes)
-  name           = "${local.environment_name}_${lower(each.value)}_errors"
-  pattern        = "{ $.level_name = \"ERROR\" && $.extra.function = \"${each.value}\" }"
-  log_group_name = aws_cloudwatch_log_group.application_logs.name
-
-  metric_transformation {
-    name          = "${lower(each.value)}_event"
-    namespace     = "${local.environment_name}_events"
-    value         = "1"
-    default_value = "0"
-  }
-}
-
-resource "aws_cloudwatch_metric_alarm" "function_errors" {
-  for_each            = toset(local.event_codes)
+resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   actions_enabled     = true
-  alarm_name          = "${local.environment_name}_${lower(each.value)}_errors"
+  alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  alarm_description   = "increase in errors for the function ${lower(each.value)}"
-  namespace           = "application function errors"
-  metric_name         = "${local.environment_name}_${lower(each.value)}_errors"
+  alarm_description   = "increase in unexpected data lpa api resposnes"
+  namespace           = "IntegrationAlarms"
+  metric_name         = "${local.environment_name}_unexpected_data_lpa_api_responses"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = 180
   evaluation_periods  = 1
