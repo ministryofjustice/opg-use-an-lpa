@@ -48,7 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "increase in unexpected data lpa api resposnes"
-  namespace           = "IntegrationAlarms"
+  namespace           = "${local.environment_name}_events"
   metric_name         = "${local.environment_name}_unexpected_data_lpa_api_responses"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = 180
