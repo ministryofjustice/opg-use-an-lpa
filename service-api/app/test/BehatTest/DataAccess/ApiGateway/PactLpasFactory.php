@@ -10,6 +10,7 @@ use App\Service\Log\RequestTracing;
 use Aws\Signature\SignatureV4;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class PactLpasFactory
 {
@@ -28,7 +29,8 @@ class PactLpasFactory
             new SignatureV4('execute-api', 'eu-west-1'),
             $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
-            $container->get(SiriusLpaSanitiser::class)
+            $container->get(SiriusLpaSanitiser::class),
+            $container->get(LoggerInterface::class)
         );
     }
 }
