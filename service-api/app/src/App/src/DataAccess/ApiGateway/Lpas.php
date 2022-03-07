@@ -132,6 +132,7 @@ class Lpas implements LpasInterface
                     $this->logger->warning(
                         'Unexpected {status} response from gateway for request of LPA {lpaUid}',
                         [
+                            'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
                             'status' => $statusCode,
                             'lpaUid' => $uid,
                         ]
