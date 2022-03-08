@@ -339,7 +339,10 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy', $data['UpdateExpression']);
+            $this->assertEquals(
+                'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
+                $data['UpdateExpression']
+            );
 
             return true;
         }))->willReturn($this->createAWSResult([

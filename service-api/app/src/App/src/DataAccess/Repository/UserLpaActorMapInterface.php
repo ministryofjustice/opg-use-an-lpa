@@ -26,7 +26,8 @@ interface UserLpaActorMapInterface
      *                                           If null the record will not expire
      * @param DateInterval|null $intervalTillDue The interval specifying the expected delivery date of correspondence
      *                                           about the LPA
-     * @param string|null       $code            The Activation code which has been used to add the LPA to the users account
+     * @param string|null $code                  The Activation code which has been used to add the LPA to the users
+     *                                           account
      *
      * @return string The lpaActorToken of the newly created mapping
      */
