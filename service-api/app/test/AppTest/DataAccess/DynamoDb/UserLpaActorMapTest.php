@@ -132,11 +132,13 @@ class UserLpaActorMapTest extends TestCase
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
         $testActorId = 1;
+        $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
             $testUserId,
-            $testActorId
+            $testActorId,
+            $testCode
         ) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -157,6 +159,8 @@ class UserLpaActorMapTest extends TestCase
             $this->assertIsString($data['Item']['SiriusUid']['S']);
             $this->assertEquals(['N' => $testActorId], $data['Item']['ActorId']);
             $this->assertIsString($data['Item']['ActorId']['N']);
+            $this->assertEquals(['S' => $testCode], $data['Item']['ActivationCode']);
+            $this->assertIsString($data['Item']['ActivationCode']['S']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
@@ -166,8 +170,50 @@ class UserLpaActorMapTest extends TestCase
 
         $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId);
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode);
     }
+
+    /** @test */
+    public function add_unique_token_without_optional_values()
+    {
+        $testSiriusUid = 'test-uid';
+        $testUserId = 'test-user-id';
+
+        $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
+            $testSiriusUid,
+            $testUserId
+        ) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            //---
+
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertArrayHasKey('Item', $data);
+            $this->assertArrayHasKey('ConditionExpression', $data);
+            $this->assertArrayNotHasKey('ActivateBy', $data);
+            $this->assertArrayNotHasKey('ActorId', $data);
+            $this->assertArrayNotHasKey('ActivationCode', $data);
+
+            $this->assertEquals('attribute_not_exists(Id)', $data['ConditionExpression']);
+
+            $this->assertIsValidUuid($data['Item']['Id']['S']);
+            $this->assertEquals(['S' => $testUserId], $data['Item']['UserId']);
+            $this->assertIsString($data['Item']['UserId']['S']);
+            $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
+            $this->assertIsString($data['Item']['SiriusUid']['S']);
+
+            // Checks 'now' is correct, we a little bit of leeway
+            $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+            return true;
+        }))->shouldBeCalled();
+
+        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->create($testUserId, $testSiriusUid, null);
+    }
+
 
     /** @test */
     public function add_unique_token_with_TTL()
