@@ -26,6 +26,7 @@ interface UserLpaActorMapInterface
      *                                           If null the record will not expire
      * @param DateInterval|null $intervalTillDue The interval specifying the expected delivery date of correspondence
      *                                           about the LPA
+     * @param string|null       $code            The Activation code which has been used to add the LPA to the users account
      *
      * @return string The lpaActorToken of the newly created mapping
      */
@@ -34,7 +35,8 @@ interface UserLpaActorMapInterface
         string $siriusUid,
         ?string $actorId,
         ?DateInterval $expiryInterval = null,
-        ?DateInterval $intervalTillDue = null
+        ?DateInterval $intervalTillDue = null,
+        ?string $code = null
     ): string;
 
     /**
@@ -69,10 +71,11 @@ interface UserLpaActorMapInterface
      *
      * @param string $lpaActorToken
      * @param string $actorId
+     * @param string $activationCode
      *
      * @return array The record that was activated
      */
-    public function activateRecord(string $lpaActorToken, string $actorId): array;
+    public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array;
 
     /**
      * Renews the LPA relation records activation period and due by date using the supplied intervals.
