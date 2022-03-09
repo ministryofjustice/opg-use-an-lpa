@@ -1381,7 +1381,7 @@ jobs:
       - run:
           name: Get Stats
           command: |
-            sudo pip3 install -r scripts/pipeline/requirements.txt
+            pip install -r scripts/pipeline/requirements.txt
             python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
       - slack/notify:
           title: "Service Statistics - Use a Lasting Power of Attorney Production"
@@ -1402,7 +1402,7 @@ jobs:
       - run:
           name: Check ECR Scan Results
           command: |
-            sudo pip3 install -r scripts/pipeline/requirements.txt
+            pip install -r scripts/pipeline/requirements.txt
             export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
             python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
@@ -1419,6 +1419,7 @@ jobs:
       - run:
           name: Cleanup Workspaces
           command: |
+            pip install -r scripts/pipeline/requirements.txt
             cd terraform/environment
             terraform init
             ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
@@ -1435,6 +1436,7 @@ jobs:
       - run:
           name: Cancel Redundant Builds
           command: |
+            pip install -r scripts/pipeline/requirements.txt
             python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
             --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
             --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
