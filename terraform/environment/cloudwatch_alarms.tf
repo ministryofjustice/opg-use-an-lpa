@@ -41,3 +41,20 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   threshold                 = 2
   treat_missing_data        = "notBreaching"
 }
+
+
+resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
+  actions_enabled     = true
+  alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_description   = "increase in unexpected data lpa api resposnes"
+  namespace           = "${local.environment_name}_events"
+  metric_name         = "${local.environment_name}_unexpected_data_lpa_api_responses"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  period              = 180
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
+  statistic           = "Sum"
+  threshold           = 5
+  treat_missing_data  = "notBreaching"
+}
