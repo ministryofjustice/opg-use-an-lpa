@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-03-09T11:28:47+00:00\n"
+"POT-Creation-Date: 2022-03-09T11:39:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4610,4 +4610,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:22
 msgid "What is your name?"
+msgstr ""
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:21
+msgid "Check you entered the right LPA reference number"
 msgstr ""

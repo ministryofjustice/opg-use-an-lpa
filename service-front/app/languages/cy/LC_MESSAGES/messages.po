@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-03-09T11:28:47+00:00\n"
+"POT-Creation-Date: 2022-03-09T11:39:41+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6648,3 +6648,7 @@ msgstr "Dewiswch os oes gennych allwedd cadarnhau cyfrif i ychwanegu LPA"
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:22
 msgid "What is your name?"
 msgstr "Beth yw eich enw?"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:21
+msgid "Check you entered the right LPA reference number"
+msgstr "Gwiriwch eich bod wedi rhoi’r cyfeirnod LPA cywir"
