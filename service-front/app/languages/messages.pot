@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-03-09T10:37:49+00:00\n"
+"POT-Creation-Date: 2022-03-09T11:28:47+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1341,7 +1341,6 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/your-details.html.twig:15
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:22
 #: src/Common/templates/partials/account-bar.html.twig:11
 msgid "Your details"
 msgstr ""
@@ -3458,9 +3457,7 @@ msgctxt "error"
 msgid "The activation key you entered is too short"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:3
-#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:3
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
 msgid "Ask for an activation key"
 msgstr ""
 
@@ -4609,4 +4606,8 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:46
 msgctxt "error"
 msgid "Select if you have an activation key to add an LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:22
+msgid "What is your name?"
 msgstr ""
