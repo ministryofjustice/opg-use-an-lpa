@@ -1319,7 +1319,7 @@ orbs:
 jobs:
   slack_environment_redeploy:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1341,7 +1341,7 @@ jobs:
 
   python_templated_slack_notify:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1369,7 +1369,7 @@ jobs:
 
   slack_notify_stats:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1392,7 +1392,7 @@ jobs:
 
   ecr_scan_results:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
@@ -1425,7 +1425,7 @@ jobs:
 
   cancel_redundant_builds:
     docker:
-      - image: circleci/python
+      - image: cimg/python:3.7
         auth:
           username: $DOCKER_USER
           password: $DOCKER_ACCESS_TOKEN
