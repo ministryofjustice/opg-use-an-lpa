@@ -180,6 +180,11 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     type = "S"
   }
 
+  attribute {
+      name = "ActivationCode"
+      type = "S"
+  }
+
   global_secondary_index {
     name            = "ActivationCodeIndex"
     hash_key        = "ActivationCode"
