@@ -181,6 +181,12 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   }
 
   global_secondary_index {
+    name            = "ActivationCodeIndex"
+    hash_key        = "ActivationCode"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
     name            = "UserIndex"
     hash_key        = "UserId"
     projection_type = "ALL"
