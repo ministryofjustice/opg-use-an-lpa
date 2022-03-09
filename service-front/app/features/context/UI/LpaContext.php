@@ -2401,7 +2401,7 @@ class LpaContext implements Context
      */
     public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
     {
-        $this->ui->assertPageContainsText('Select if you have an activation key to add the LPA');
+        $this->ui->assertPageContainsText('Select if you have an activation key to add an LPA');
     }
 
     /**
