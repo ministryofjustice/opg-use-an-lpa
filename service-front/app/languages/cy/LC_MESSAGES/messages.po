@@ -5737,10 +5737,6 @@ msgstr ""
 "hwn. <a href=\"%link%\" class=\"govuk-link\">Rhowch wybod i ni os ydych wedi "
 "symud.</a>"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
-msgid "Before you begin"
-msgstr "Cyn dechrau"
-
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
 msgid "the LPA was made for use in England and Wales"
 msgstr "gwnaed yr atwrneiaeth arhosol i’w defnyddio yng Nghymru a Lloegr"

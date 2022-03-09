@@ -4030,10 +4030,6 @@ msgstr ""
 msgid "This must be your current postcode and match the one we have on our records. The activation key will be posted to this address. <a href=\"%link%\" class=\"govuk-link\">Let us know if you have moved.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
-msgid "Before you begin"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
 msgid "the LPA was made for use in England and Wales"
 msgstr ""
