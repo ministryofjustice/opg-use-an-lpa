@@ -5251,7 +5251,7 @@ msgstr ""
 # Welsh says ‘we’ve found this lpa’
 #: src/Viewer/templates/viewer/check-code-found.html.twig:22
 msgid "We’ve found %firstname% %surname%'s LPA"
-msgstr "Rydym wedi dod o hyd i’r LPA hwn"
+msgstr "Rydym wedi dod o hyd i LPA %firstname% %surname%"
 
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:17
 msgid ""
