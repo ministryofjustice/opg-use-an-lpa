@@ -373,7 +373,7 @@ class UserLpaActorMapTest extends TestCase
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
-        $testActorId = 1;
+        $testActorId = '1';
         $testActivationCode = "8EFXFEF48WJ4";
         $testAdded = gmdate('c');
 
@@ -403,7 +403,7 @@ class UserLpaActorMapTest extends TestCase
                     'S' => $testAdded,
                 ],
                 'ActorId' => [
-                    'S' => (string) $testActorId
+                    'S' => $testActorId
                 ],
                 'UserId' => [
                     'S' => $testUserId
