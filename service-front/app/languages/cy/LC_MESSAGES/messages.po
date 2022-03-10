@@ -5248,7 +5248,6 @@ msgstr ""
 "Rydym yn anfon yr allwedd i’r cyfeiriad sydd gennym ar ein cofnodion. <a href="
 "\"%link%\" class=\"govuk-link\">Rhowch wybod inni os ydych wedi symud tŷ.</a>"
 
-# Welsh says ‘we’ve found this lpa’
 #: src/Viewer/templates/viewer/check-code-found.html.twig:22
 msgid "We’ve found %firstname% %surname%'s LPA"
 msgstr "Rydym wedi dod o hyd i LPA %firstname% %surname%"
