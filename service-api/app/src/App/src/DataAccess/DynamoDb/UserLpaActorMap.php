@@ -140,7 +140,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function activateRecord(string $lpaActorToken, $actorId, string $activationCode): array
+    public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
         $response = $this->client->updateItem([
           'TableName' => $this->userLpaActorTable,
