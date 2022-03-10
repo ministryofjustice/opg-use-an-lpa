@@ -60,7 +60,8 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $siriusUid,
         ?string $actorId,
         ?DateInterval $expiryInterval = null,
-        ?DateInterval $dueByInterval = null
+        ?DateInterval $dueByInterval = null,
+        ?string $code = null
     ): string {
         $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
@@ -70,8 +71,12 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)]
         ];
 
-        if (isset($actorId)) {
+        if ($actorId !== null) {
             $array['ActorId'] = ['N' => $actorId];
+        }
+
+        if ($code !== null) {
+            $array['ActivationCode'] = ['S' => $code];
         }
 
         // Add ActivateBy field to array if expiry interval is present
@@ -135,7 +140,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function activateRecord(string $lpaActorToken, $actorId): array
+    public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
         $response = $this->client->updateItem([
           'TableName' => $this->userLpaActorTable,
@@ -144,10 +149,13 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                   'S' => $lpaActorToken,
               ],
           ],
-          'UpdateExpression' => 'set ActorId = :a remove ActivateBy, DueBy',
+          'UpdateExpression' => 'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
           'ExpressionAttributeValues' => [
               ':a' => [
                   'N' => $actorId
+              ],
+              ':b' => [
+                  'S' => $activationCode
               ]
           ],
           'ReturnValues' => 'ALL_NEW'

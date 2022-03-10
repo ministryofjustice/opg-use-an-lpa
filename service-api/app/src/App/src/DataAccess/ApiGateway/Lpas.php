@@ -8,6 +8,7 @@ use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
+use App\Service\Log\EventCodes;
 use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
 use Aws\Signature\SignatureV4 as AwsSignatureV4;
@@ -132,6 +133,7 @@ class Lpas implements LpasInterface
                     $this->logger->warning(
                         'Unexpected {status} response from gateway for request of LPA {lpaUid}',
                         [
+                            'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
                             'status' => $statusCode,
                             'lpaUid' => $uid,
                         ]
