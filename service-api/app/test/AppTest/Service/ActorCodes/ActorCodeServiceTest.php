@@ -71,7 +71,10 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            $this->testActorUid
+            $this->testActorUid,
+            null,
+            null,
+            'test-code'
         )
             ->willReturn('00000000-0000-4000-A000-000000000000')
             ->shouldBeCalled();
@@ -94,7 +97,11 @@ class ActorCodeServiceTest extends TestCase
             ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        $this->userLpaActorMapInterfaceProphecy->activateRecord('token-3', $this->testActorUid)->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->activateRecord(
+            'token-3',
+            $this->testActorUid,
+            'test-code'
+        )->shouldBeCalled();
 
         $mapResults = [
             [
@@ -102,7 +109,8 @@ class ActorCodeServiceTest extends TestCase
                 'SiriusUid' => 'test-uid',
                 'ActorId' => 3,
                 'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
-                'Added'   => new DateTime('now')
+                'Added'   => new DateTime('now'),
+                'ActivationCode' => 'test-code'
             ]
         ];
 
@@ -127,7 +135,10 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            $this->testActorUid
+            $this->testActorUid,
+            null,
+            null,
+            'test-code'
         )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')
