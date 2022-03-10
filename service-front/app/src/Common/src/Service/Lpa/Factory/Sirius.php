@@ -102,8 +102,8 @@ final class Sirius implements LpaFactory
         if (isset($data['replacementAttorneys'])) {
             $lpa->setReplacementAttorneys($this->createCaseActorsFromData($data['replacementAttorneys']));
         }
-        if (isset($data['trustCorportations'])) {
-            $lpa->setTrustCorporations($this->createCaseActorsFromData($data['trustCorportations']));
+        if (isset($data['trustCorporations'])) {
+            $lpa->setTrustCorporations($this->createCaseActorsFromData($data['trustCorporations']));
         }
         if (isset($data['certificateProviders'])) {
             $lpa->setCertificateProviders($this->createCaseActorsFromData($data['certificateProviders']));
