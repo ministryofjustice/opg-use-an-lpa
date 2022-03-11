@@ -65,6 +65,12 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             return $this->redirectToRoute('lpa.dashboard');
         }
 
+        //adding active attorney and active trust corporation data to single array
+        $attorneyDetails = $this->lpaService->getAttorneyDetails(
+            $lpaData->lpa->getAttorneys(),
+            $lpaData->lpa->getTrustCorporations()
+        );
+
         return new HtmlResponse(
             $this->renderer->render(
                 'actor::view-lpa-summary',
@@ -73,6 +79,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
                     'user' => $user,
                     'lpa' => $lpaData->lpa,
                     'actor' => $lpaData->actor,
+                    'attorneyDetails' => $attorneyDetails
                 ]
             )
         );

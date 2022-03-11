@@ -151,41 +151,35 @@
                     </dd>
                 </dl>
 
-                {% for tc in lpa.trustCorporations %}
-                    {% if tc.systemStatus %}
-                        <h3 class="govuk-heading-m">{% trans%}Trust corporation {% endtrans %}</h3>
+                {% for attorney in attorneyDetails %}
+                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
+                    {% if attorney.actor == 'Attorney' %}
                         <dl class="govuk-summary-list govuk-summary-list--no-border">
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
-                                <dd class="govuk-summary-list__value">{{ lpa.TrustCorporations[0].CompanyName() }} {{ "(Trust corporation)" }}</dd>
+                                <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
+                                <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
                             </div>
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
-                                <dd class="govuk-summary-list__value">{{ actor_address(lpa.trustCorporations[0]) }}</dd>
+                                <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
+                            </div>
+                        </dl>
+                    {% else %}
+                        <dl class="govuk-summary-list govuk-summary-list--no-border">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
+                                <dd class="govuk-summary-list__value">{{ attorney.companyName }} {{ "(Trust corporation)" }}</dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
+                                <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
                             </div>
                         </dl>
                     {% endif %}
-                {% endfor %}
-
-                {% for attorney in lpa.attorneys %}
-
-                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
-
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
-                        </div>
-                    </dl>
-
                 {% endfor %}
             </div>
         </div>

@@ -220,4 +220,28 @@ class LpaService
 
         return $lpaData;
     }
+
+    /**
+     * @param array $attorneys
+     * @param array $trustCorporations
+     * @return ArrayObject|null
+     */
+    public function getAttorneyDetails(array $attorneys, array $trustCorporations): ?array
+    {
+        $attorneyDetails = array();
+
+        if(!empty($attorneys)) {
+            foreach ($attorneys as $item) {
+                $item->actor = 'Attorney';
+                $attorneyDetails[] = $item;
+            }
+        }
+        if(!empty($trustCorporations)) {
+            foreach ($trustCorporations as $item) {
+                $item->actor = 'Trust';
+                $attorneyDetails[] = $item;
+            }
+        }
+        return $attorneyDetails;
+    }
 }
