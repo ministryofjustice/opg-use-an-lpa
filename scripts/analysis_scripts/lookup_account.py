@@ -67,9 +67,9 @@ class AccountLookup:
             ExpressionAttributeValues={
                 ':email': {'S': email}
             },
-            Select='SPECIFIC_ATTRIBUTES',
             ProjectionExpression='Id,Email,LastLogin,ActivationToken'
         )
+        logging.info(response)
         return response
 
     def get_lpas(self):
