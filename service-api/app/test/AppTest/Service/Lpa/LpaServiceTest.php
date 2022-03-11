@@ -190,10 +190,6 @@ class LpaServiceTest extends TestCase
 
         $result = $service->getByUid($testUid);
 
-       // var_dump($result); die;
-
-        //---
-
         $this->assertEquals($expectedLpaResponse, $result);
     }
 
