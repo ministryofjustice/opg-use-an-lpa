@@ -1,6 +1,9 @@
 import argparse
+import logging
 import json
 import boto3
+logging.basicConfig(encoding='utf-8', level=logging.INFO)
+
 
 class AccountLookup:
     aws_account_id = ''
@@ -53,29 +56,44 @@ class AccountLookup:
         for page in paginator.paginate(
                 TableName='{}-ActorUsers'.format(self.environment),
                 FilterExpression="attribute_exists(Email)",
-                ):
+        ):
             yield from page["Items"]
+
+    def get_actor_users_by_index(self, email):
+        response = self.aws_dynamodb_client.query(
+            IndexName='EmailIndex',
+            TableName='{}-ActorUsers'.format(self.environment),
+            KeyConditionExpression='Email = :email',
+            ExpressionAttributeValues={
+                ':email': {'S': email}
+            },
+            Select='SPECIFIC_ATTRIBUTES',
+            ProjectionExpression='Id,Email,LastLogin,ActivationToken'
+        )
+        return response
 
     def get_lpas(self):
         paginator = self.aws_dynamodb_client.get_paginator("scan")
         for page in paginator.paginate(
                 TableName='{}-UserLpaActorMap'.format(self.environment),
                 FilterExpression="attribute_exists(SiriusUid)",
-                ):
+        ):
             yield from page["Items"]
 
     def get_lpas_by_user_id(self, user_id):
+        logging.info('getting LPAs for user id: %s', user_id)
         response = self.aws_dynamodb_client.query(
             IndexName='UserIndex',
             TableName='{}-UserLpaActorMap'.format(self.environment),
             KeyConditionExpression='UserId = :user_id',
             ExpressionAttributeValues={
                 ':user_id': {'S': user_id}
-            }
+            },
+            ProjectionExpression='SiriusUid,Added,ActorId,DueBy'
         )
         lpas = {}
         for lpa in response['Items']:
-            lpas.update({lpa['SiriusUid']['S']:lpa['Added']['S']})
+            lpas.update(lpa)
         return lpas
 
     def get_users_by_id(self, user_id):
@@ -99,10 +117,10 @@ class AccountLookup:
             activation_status = 'Pending Activation'
 
         account_data = {
-          "email": email,
-          "last_login": last_login,
-          "activation_status": activation_status,
-          "lpas": [lpas]
+            "email": email,
+            "last_login": last_login,
+            "activation_status": activation_status,
+            "lpas": [lpas]
         }
 
         return account_data
@@ -118,6 +136,7 @@ class AccountLookup:
             )
 
     def get_by_lpa(self, lpa_id):
+        logging.info('looking up account for LPA: %s', lpa_id)
         lpas = self.get_lpas()
 
         for item in lpas:
@@ -125,37 +144,39 @@ class AccountLookup:
                 user = self.get_users_by_id(item['UserId']['S'])
                 if user:
                     lpas = self.get_lpas_by_user_id(item['UserId']['S'])
-                    account_data = self.get_structured_account_data(user,lpas)
+                    account_data = self.get_structured_account_data(user, lpas)
                     self.output_json.append(account_data)
 
-    def get_by_email(self,email_address):
-        actor_users = self.get_actor_users()
+    def get_by_email(self, email_address):
+        logging.info('looking up account for user: %s', email_address)
+        actor_users = self.get_actor_users_by_index(email_address)
 
-        for user in actor_users:
-            if user['Email']['S'] in email_address:
-                lpas = self.get_lpas_by_user_id(user['Id']['S'])
-                account_data = self.get_structured_account_data(user,lpas)
-                self.output_json.append(account_data)
+        for user in actor_users['Items']:
+            logging.info('User found: %s', user['Id']['S'])
+            lpas = self.get_lpas_by_user_id(user['Id']['S'])
+            account_data = self.get_structured_account_data(user, lpas)
+            self.output_json.append(account_data)
+            # return logging.info(account_data)
 
 
 def main():
     arguments = argparse.ArgumentParser(
         description="Look up an account by email address.")
     arguments.add_argument("--environment",
-                        default="production",
-                        help="The environment to target. Defaults to production")
+                           default="production",
+                           help="The environment to target. Defaults to production")
 
     arguments.add_argument("--email_address",
-                        default="",
-                        help="Email address to look up")
+                           default="",
+                           help="Email address to look up")
 
     arguments.add_argument("--lpa_id",
-                        default="",
-                        help="Sirius LPA ID to look up")
+                           default="",
+                           help="Sirius LPA ID to look up")
 
     arguments.add_argument('--json', dest='output_json', action='store_const',
-                        const=True, default=False,
-                        help='Output json data instead of plaintext to terminal')
+                           const=True, default=False,
+                           help='Output json data instead of plaintext to terminal')
 
     args = arguments.parse_args()
     work = AccountLookup(args.environment)
