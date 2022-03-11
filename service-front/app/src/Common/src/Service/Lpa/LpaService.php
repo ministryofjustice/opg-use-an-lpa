@@ -228,15 +228,15 @@ class LpaService
      */
     public function getAttorneyDetails(array $attorneys, array $trustCorporations): ?array
     {
-        $attorneyDetails = array();
+        $attorneyDetails = [];
 
-        if(!empty($attorneys)) {
+        if (!empty($attorneys)) {
             foreach ($attorneys as $item) {
                 $item->actor = 'Attorney';
                 $attorneyDetails[] = $item;
             }
         }
-        if(!empty($trustCorporations)) {
+        if (!empty($trustCorporations)) {
             foreach ($trustCorporations as $item) {
                 $item->actor = 'Trust';
                 $attorneyDetails[] = $item;
