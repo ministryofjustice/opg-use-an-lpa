@@ -11,7 +11,7 @@ use Laminas\Validator\NotEmpty;
 
 class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'add_lpa_triage';
+    public const FORM_NAME = 'add_lpa_triage';
 
     /**
      * AddLpaTriage constructor.
@@ -47,7 +47,7 @@ class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Select if you have an activation key to add the LPA',
+                                NotEmpty::IS_EMPTY => 'Select if you have an activation key to add an LPA',
                             ],
                         ],
                     ],
