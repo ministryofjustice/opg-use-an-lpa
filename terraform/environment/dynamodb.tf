@@ -185,10 +185,10 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     type = "S"
   }
 
-  # attribute {
-  #   name = "SiriusUid"
-  #   type = "S"
-  # }
+  attribute {
+    name = "SiriusUid"
+    type = "S"
+  }
 
   global_secondary_index {
     name            = "ActivationCodeIndex"
@@ -202,11 +202,11 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     projection_type = "ALL"
   }
 
-  # global_secondary_index {
-  #   name            = "SiriusUidIndex"
-  #   hash_key        = "SiriusUid"
-  #   projection_type = "ALL"
-  # }
+  global_secondary_index {
+    name            = "SiriusUidIndex"
+    hash_key        = "SiriusUid"
+    projection_type = "ALL"
+  }
 
   ttl {
     attribute_name = "ActivateBy"
