@@ -181,8 +181,13 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   }
 
   attribute {
-      name = "ActivationCode"
-      type = "S"
+    name = "ActivationCode"
+    type = "S"
+  }
+
+  attribute {
+    name = "SiriusUid"
+    type = "S"
   }
 
   global_secondary_index {
@@ -194,6 +199,12 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   global_secondary_index {
     name            = "UserIndex"
     hash_key        = "UserId"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "SiriusUidIndex"
+    hash_key        = "SiriusUid"
     projection_type = "ALL"
   }
 
