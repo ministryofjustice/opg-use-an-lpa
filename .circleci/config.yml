@@ -583,8 +583,8 @@ orbs:
               name: Install Terraform Workspace Manager
               command: |
                 wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.1/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
-                sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
-                sudo chmod +x /usr/local/bin/terraform-workspace-manager
+                tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+                chmod +x /usr/local/bin/terraform-workspace-manager
       install_python:
         steps:
           - run:
@@ -1175,7 +1175,7 @@ orbs:
                 terraform init
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
-                ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
+                terraform-workspace-manager -register-workspace=$TF_WORKSPACE -time-to-protect=24 -aws-account-id=367815980639 -aws-iam-role=opg-use-an-lpa-ci
                 if [ "<<parameters.image_tag_input>>" == "latest" ]; then
                   export IMAGE_TAG="latest"
                 else
