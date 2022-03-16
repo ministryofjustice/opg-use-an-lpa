@@ -59,15 +59,8 @@ class ViewLpaHandler extends AbstractHandler
 
         $lpa = $this->lpaService->getLpaByCode($code, $surname, $organisation);
 
-        //adding active attorney and active trust corporation data to single array
-        $attorneyDetails = $this->lpaService->getAttorneyDetails(
-            $lpa->lpa->getAttorneys(),
-            $lpa->lpa->getTrustCorporations()
-        );
-
         return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
             'lpa' => $lpa->lpa,
-            'attorneyDetails' => $attorneyDetails
         ]));
     }
 }

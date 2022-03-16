@@ -37,3 +37,10 @@ Feature: View an LPA that I have added to my account
      When I request to view an LPA whose status changed to Revoked
      Then I am taken back to the dashboard page
      And The Revoked LPA details are not displayed
+
+  @ui
+  Scenario: The user can view an LPA and see trust corporation details in attorney sections
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which has a trust corporation added
+    Then The full LPA is displayed with ABC Ltd in attorney section

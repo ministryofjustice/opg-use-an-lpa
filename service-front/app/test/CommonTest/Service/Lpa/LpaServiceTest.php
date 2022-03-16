@@ -270,14 +270,4 @@ class LpaServiceTest extends TestCase
 
         $this->lpaService->getLpaById($token, $lpaId);
     }
-
-    /** @test */
-    public function returns_empty_array_when_attorney_and_trust_corporation_details_not_set()
-    {
-        $attorneys = [];
-        $trustCorporations = [];
-
-        $attorneyDetails = $this->lpaService->getAttorneyDetails($attorneys, $trustCorporations);
-        $this->assertEmpty($attorneyDetails);
-    }
 }
