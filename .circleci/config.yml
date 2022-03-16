@@ -1166,6 +1166,7 @@ orbs:
             default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
         steps:
           - checkout
+          - install_workspace_manager
           - run:
               name: Apply Environment Terraform
               command: |
