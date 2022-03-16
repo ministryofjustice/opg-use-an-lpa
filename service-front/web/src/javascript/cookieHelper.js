@@ -24,8 +24,8 @@ const setCookie = (name, value, options) => {
         options = { days: 30 }
     }
 
-    var maxAge = options.days * 24 * 60 * 60;
-    var cookie =`${name}=${encodeURIComponent(value)}` + "; path=/" + "; max-age=" + maxAge + "; Secure";
+    const maxAge = options.days * 24 * 60 * 60;
+    const cookie =`${name}=${encodeURIComponent(value)}` + "; path=/" + "; max-age=" + maxAge + "; Secure";
     document.cookie = cookie;
     return cookie;
 }
