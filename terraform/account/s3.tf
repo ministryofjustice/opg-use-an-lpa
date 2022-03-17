@@ -39,7 +39,6 @@ data "aws_iam_policy_document" "access_log" {
 
 resource "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${local.environment}-lb-access-logs"
-  acl    = "private"
   versioning {
     enabled = true
   }
@@ -50,6 +49,11 @@ resource "aws_s3_bucket" "access_log" {
       }
     }
   }
+}
+
+resource "aws_s3_bucket_acl" "access_log" {
+  bucket = aws_s3_bucket.access_log.id
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "access_log" {
