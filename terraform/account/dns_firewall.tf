@@ -32,8 +32,6 @@ locals {
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
     "${replace(aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address, "master", "*")}.",
     "311462405659.dkr.ecr.eu-west-1.amazonaws.com.",
-    "api.${local.environment}-internal.",
-    "pdf.${local.environment}-internal.",
   ]
 }
 resource "aws_route53_resolver_firewall_domain_list" "egress_allow" {
@@ -63,11 +61,12 @@ resource "aws_route53_resolver_firewall_rule" "egress_allow" {
 }
 
 resource "aws_route53_resolver_firewall_rule" "egress_block" {
-  count  = local.account.dns_firewall.enabled ? 1 : 0
-  name   = "egress_blocked"
-  action = "ALERT"
-  # action                  = "BLOCK"
-  # block_response          = "NODATA"
+  count = local.account.dns_firewall.enabled ? 1 : 0
+  name  = "egress_blocked"
+  # action = "ALERT"
+  action                  = "BLOCK"
+  block_response          = "NODATA"
+  block_override_dns_type = "CNAME"
   firewall_domain_list_id = aws_route53_resolver_firewall_domain_list.egress_block[0].id
   firewall_rule_group_id  = aws_route53_resolver_firewall_rule_group.egress[0].id
   priority                = 300
