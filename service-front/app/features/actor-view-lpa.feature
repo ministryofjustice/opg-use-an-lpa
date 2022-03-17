@@ -43,4 +43,4 @@ Feature: View an LPA that I have added to my account
     Given I have added an LPA to my account
     And I am on the dashboard page
     When I request to view an LPA which has a trust corporation added
-    Then The full LPA is displayed with ABC Ltd in attorney section
+    Then I can see the trust corporation ABC Ltd  in the list of attorneys

@@ -2624,12 +2624,16 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The full LPA is displayed with (.*) in attorney section$/
+     * @Then /^I can see the trust corporation (.*) in the list of attorneys$/
      */
-    public function theFullLPAIsDisplayedWithTrustCorporationDetailsInAttorneySection($companyName)
+    public function ICanSeeTheTrustCorporationInTheListOfAttorneys($companyName)
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText("The attorneys");
+        $this->ui->assertElementContainsText(
+            'dl.govuk-summary-list',
+            'Name'
+        );
         $this->ui->assertPageContainsText($companyName);
     }
 }
