@@ -2630,10 +2630,6 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText("The attorneys");
-        $this->ui->assertElementContainsText(
-            'dl.govuk-summary-list',
-            'Name'
-        );
         $this->ui->assertPageContainsText($companyName);
     }
 }
