@@ -74,7 +74,7 @@ resource "aws_s3_bucket_versioning" "access_log" {
 }
 
 data "aws_s3_bucket" "s3_access_logging" {
-  bucket = "s3-access-logs-opg-opg-use-an-lpa-${local.environment}-eu-west-1"
+  bucket = "s3-access-logs-opg-opg-use-an-lpa-${local.environment}-${data.aws_region.current.name}"
 }
 
 resource "aws_s3_bucket_logging" "access_log" {
