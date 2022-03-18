@@ -73,6 +73,17 @@ resource "aws_s3_bucket_versioning" "access_log" {
   }
 }
 
+data "aws_s3_bucket" "s3_access_logging" {
+  bucket = "s3-access-logs-opg-opg-use-an-lpa-${local.environment}-eu-west-1"
+}
+
+resource "aws_s3_bucket_logging" "access_log" {
+  bucket = aws_s3_bucket.access_log.id
+
+  target_bucket = data.aws_s3_bucket.s3_access_logging.id
+  target_prefix = "lb-access-log/"
+}
+
 resource "aws_s3_bucket_policy" "access_log" {
   bucket = aws_s3_bucket.access_log.id
   policy = data.aws_iam_policy_document.access_log.json
