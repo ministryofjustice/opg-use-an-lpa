@@ -1,5 +1,5 @@
 data "aws_elb_service_account" "main" {
-  region = "eu-west-1"
+  region = data.aws_region.current.name
 }
 
 data "aws_iam_policy_document" "access_log" {
