@@ -18,23 +18,55 @@ data "aws_iam_policy_document" "access_log" {
   }
 
   statement {
-    sid     = "AllowSSLRequestsOnly"
-    effect  = "Deny"
-    actions = ["s3:*"]
+    sid = "accessLogDelivery"
     resources = [
       aws_s3_bucket.access_log.arn,
       "${aws_s3_bucket.access_log.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      values   = ["false"]
-      variable = "aws:SecureTransport"
-    }
+    effect  = "Allow"
+    actions = ["s3:PutObject"]
     principals {
-      identifiers = ["*"]
-      type        = "AWS"
+      identifiers = ["delivery.logs.amazonaws.com"]
+      type        = "Service"
+    }
+    condition {
+      test     = "StringEquals"
+      values   = ["bucket-owner-full-control"]
+      variable = "s3:x-amz-acl"
     }
   }
+
+  statement {
+    sid = "accessGetAcl"
+    resources = [
+      aws_s3_bucket.access_log.arn
+    ]
+    effect  = "Allow"
+    actions = ["s3:GetBucketAcl"]
+    principals {
+      identifiers = ["delivery.logs.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+
+  # statement {
+  #   sid     = "AllowSSLRequestsOnly"
+  #   effect  = "Deny"
+  #   actions = ["s3:*"]
+  #   resources = [
+  #     aws_s3_bucket.access_log.arn,
+  #     "${aws_s3_bucket.access_log.arn}/*",
+  #   ]
+  #   condition {
+  #     test     = "Bool"
+  #     values   = ["false"]
+  #     variable = "aws:SecureTransport"
+  #   }
+  #   principals {
+  #     identifiers = ["*"]
+  #     type        = "AWS"
+  #   }
+  # }
 }
 
 resource "aws_kms_key" "access_log" {
@@ -79,6 +111,7 @@ data "aws_iam_policy_document" "access_log_kms" {
     principals {
       type = "Service"
       identifiers = [
+        "delivery.logs.amazonaws.com",
         "logs.${data.aws_region.current.name}.amazonaws.com",
         "s3.amazonaws.com",
       ]
