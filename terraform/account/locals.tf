@@ -27,6 +27,7 @@ variable "accounts" {
         domains_allowed = list(string)
         domains_blocked = list(string)
       })
+      s3_access_log_bucket_name = string
     })
   )
 }
