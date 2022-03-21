@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "access_log" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     principals {
-      identifiers = [data.aws_elb_service_account.main.id]
+      identifiers = [data.aws_elb_service_account.main.arn]
       type        = "AWS"
     }
   }
@@ -41,12 +41,98 @@ resource "aws_kms_key" "access_log" {
   description             = "S3 bucket encryption key for access_log"
   deletion_window_in_days = 7
   enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.access_log_kms.json
 }
 
 resource "aws_kms_alias" "access_log" {
   name          = "alias/s3-access-log-${local.environment}"
   target_key_id = aws_kms_key.access_log.key_id
 }
+
+data "aws_iam_policy_document" "access_log_kms" {
+  statement {
+    sid       = "Enable Root account permissions on Key"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Allow Key to be used for Encryption"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "logs.${data.aws_region.current.name}.amazonaws.com",
+        "s3.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Allow Key to be used by LB for Encryption"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        data.aws_elb_service_account.main.arn
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Key Administrator"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion"
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
+    }
+  }
+}
+
 resource "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${local.environment}-lb-access-logs"
 }
@@ -60,8 +146,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "access_log" {
   bucket = aws_s3_bucket.access_log.id
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.access_log.arn
-      sse_algorithm     = "aws:kms"
+      # kms_master_key_id = aws_kms_key.access_log.arn
+      sse_algorithm = "aws:kms"
     }
   }
 }
