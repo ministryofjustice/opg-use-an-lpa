@@ -161,7 +161,7 @@ resource "aws_s3_bucket_versioning" "access_log" {
 }
 
 data "aws_s3_bucket" "s3_access_logging" {
-  bucket = local.account.s3_access_log_bucket_name
+  bucket = "${local.account.s3_access_log_bucket_name}-${data.aws_region.current.name}"
 }
 
 resource "aws_s3_bucket_logging" "access_log" {
