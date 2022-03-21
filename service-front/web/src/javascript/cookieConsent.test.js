@@ -1,33 +1,38 @@
 import cookieConsent from './cookieConsent';
 import '@testing-library/jest-dom'
-import { getCookie } from './cookieHelper';
+import { getCookie, setConsentCookie } from './cookieHelper';
 const cookieBannerHtml = `
-<div class="cookie-banner govuk-width-container" role="region" aria-label="cookie banner">
-    <div class="govuk-grid-row">
-        <div class=" govuk-grid-column-two-thirds">
-            <div class="cookie-banner__message">
-                <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
-                <p class="govuk-body">GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us
-                    improve government digital services. Any data collected is anonymised.</p>
+<div class="govuk-cookie-banner " data-nosnippet="" role="region" aria-label="Cookies on Use a lasting power of attorney">
+        <div class="govuk-cookie-banner__message govuk-width-container">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Use a lasting power of attorney</h2>
+
+                    <div class="govuk-cookie-banner__content">
+                        <p class="govuk-body">We use some essential cookies to make this service work.</p>
+                        <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+                    </div>
+                </div>
             </div>
-            <div class="cookie-banner__buttons">
-                <div class="cookie-banner__button cookie-banner__button-accept govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
-                    <button class="govuk-button button--inline" type="submit" role="button">Accept all cookies</button>
-                </div>
-                <div class="cookie-banner__button govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
-                    <a href="/cookies" class="govuk-button govuk-button--secondary button--inline" role="button">Set cookie preferences</a>
-                </div>
+            <div class="govuk-button-group">
+                <button value="accept" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+                    Accept analytics cookies
+                </button>
+                <button value="reject" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+                    Reject analytics cookies
+                </button>
+                <a class="govuk-link" href="/cookies">View cookies</a>
             </div>
         </div>
     </div>
-</div>
 `;
 jest.mock("./cookieHelper", () => ({
   getCookie: jest.fn(),
-  setDefaultConsentCookie: jest.fn(),
-  approveAllCookieTypes: jest.fn(),
-  setCookie: jest.fn()
+  setCookie: jest.fn(),
+  setConsentCookie: jest.fn()
 }));
+
+
 describe('When the cookie banner is initiated', () => {
   describe('and there is no cookie set', () => {
     beforeEach(() => {
@@ -36,9 +41,10 @@ describe('When the cookie banner is initiated', () => {
     });
     test('it should show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
-      new cookieConsent(document.querySelector('.cookie-banner'));
-      const cookieBanner = document.querySelector('.cookie-banner');
-      expect(cookieBanner).toHaveClass('cookie-banner--show');
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).toBe(null);
     });
   });
   describe('and the accept cookies have been set to true', () => {
@@ -48,24 +54,60 @@ describe('When the cookie banner is initiated', () => {
     });
     test('it should not show the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
-      new cookieConsent(document.getElementsByClassName('cookie-banner')[0], false);
-      const cookieBanner = document.querySelector('.cookie-banner');
-      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });
-  describe('and the accept all button has been clicked', () => {
+  describe('and the accept button has been clicked', () => {
     beforeEach(() => {
       getCookie.mockReturnValueOnce(null);
       getCookie.mockReturnValueOnce(null);
     });
     test('it should hide the banner', () => {
       document.body.innerHTML = cookieBannerHtml;
-      new cookieConsent(document.getElementsByClassName('cookie-banner')[0], false);
-      const cookieBanner = document.querySelector('.cookie-banner');
-      expect(cookieBanner).toHaveClass('cookie-banner--show');
-      const button = document.querySelector('button');
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).toBe(null);
+      const button = document.querySelector("button[value='accept']");
       button.click();
-      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+      expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
+      expect(setConsentCookie).toHaveBeenCalledWith(true);
+    });
+  });
+  describe('and the reject button has been clicked', () => {
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+    });
+    test('it should hide the banner', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).toBe(null);
+      const button = document.querySelector("button[value='reject']");
+      button.click();
+      expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
+      expect(setConsentCookie).toHaveBeenCalledWith(false);
+    });
+  });
+  describe('and the no button has been clicked', () => {
+    beforeEach(() => {
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+    });
+    test('nothing happens', () => {
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).toBe(null);
+      cookieBanner.click();
+      expect(cookieBanner.getAttribute('hidden')).toBe(null);
+      expect(setConsentCookie).not.toHaveBeenCalled();
     });
   });
   describe('and the usage option is set to true', () => {
@@ -79,7 +121,7 @@ describe('When the cookie banner is initiated', () => {
     test('it should setup useAnaltics', () => {
       expect(window.useAnalytics).toBeUndefined();
       document.body.innerHTML = cookieBannerHtml;
-      new cookieConsent(document.getElementsByClassName('cookie-banner')[0], false);
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       expect(window.useAnalytics).not.toBeUndefined();
     });
   });
@@ -97,9 +139,10 @@ describe('When the cookie banner is initiated on the cookies page', () => {
     });
     test('it should setup useAnaltics', () => {
       document.body.innerHTML = cookieBannerHtml;
-      new cookieConsent(document.getElementsByClassName('cookie-banner')[0], true);
-      const cookieBanner = document.querySelector('.cookie-banner');
-      expect(cookieBanner).not.toHaveClass('cookie-banner--show');
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'), true);
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+      
+      expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });
   afterEach(() => {
