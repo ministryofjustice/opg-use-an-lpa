@@ -68,6 +68,23 @@ variable "environments" {
       dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
       pdf_container_version                                      = string
       deploy_opentelemetry_sidecar                               = bool
+      dynamodb_tables = object({
+        actor_codes = object({
+          name = string
+        })
+        actor_users = object({
+          name = string
+        })
+        viewer_codes = object({
+          name = string
+        })
+        viewer_activity = object({
+          name = string
+        })
+        user_lpa_actor_map = object({
+          name = string
+        })
+      })
     })
   )
 }
