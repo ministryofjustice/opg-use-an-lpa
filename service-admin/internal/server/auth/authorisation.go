@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/rs/zerolog/log"
 )
 
 type Claims struct {
@@ -46,6 +47,7 @@ func WithAuthorisation(next http.Handler, keyURL string) http.Handler {
 
 		claims, err := ValidateJWT(ctx, r.Header.Get("x-amzn-oidc-data"), sKey)
 		if err != nil {
+			log.Err(err).Msg("failed to validate jwt")
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
