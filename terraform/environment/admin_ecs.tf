@@ -196,16 +196,20 @@ locals {
           value = tostring(local.environment.logging_level)
         },
         {
-          name  = "PORT",
+          name  = "ADMIN_PORT",
           value = tostring(80)
         },
         {
-          name  = "DYNAMODB_TABLE_PREFIX",
+          name  = "ADMIN_DYNAMODB_TABLE_PREFIX",
           value = tostring(local.environment_name)
         },
         {
-          name  = "LOGOUT_URL",
+          name  = "ADMIN_LOGOUT_URL",
           value = "${local.admin_cognito_user_pool_domain_name}/logout"
+        },
+        {
+          name  = "ADMIN_JWT_SIGNING_KEY_URL",
+          value = "https://public-keys.auth.elb.eu-west-1.amazonaws.com"
         }
       ]
     }
