@@ -12,7 +12,8 @@
             "program": "${workspaceFolder}/cmd/admin/main.go",
             "cwd": "${workspaceFolder}",
             "env": {
-                "AWS_DYNAMODB_ENDPOINT": "http://localhost:4569"
+                "AWS_DYNAMODB_ENDPOINT": "http://localhost:8000",
+                "ADMIN_JWT_SIGNING_KEY_URL": "http://localhost:5000"
             }
         }
     ]
