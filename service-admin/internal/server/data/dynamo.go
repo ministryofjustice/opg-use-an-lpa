@@ -1,43 +1,40 @@
 package data
 
 import (
-	"os"
+	"context"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/rs/zerolog/log"
 )
 
-var tablePrefix string
+var prefix string
 
-func NewDynamoConnection() dynamodbiface.DynamoDBAPI {
-	if tp := os.Getenv("DYNAMODB_TABLE_PREFIX"); tp != "" {
-		tablePrefix = tp + "-"
+func NewDynamoConnection(region string, endpoint string, tablePrefix string) *dynamodb.Client {
+	if tablePrefix != "" {
+		prefix = tablePrefix + "-"
 	}
 
-	reg := os.Getenv("AWS_REGION")
-	if reg == "" {
-		reg = "eu-west-1"
-	}
+	conf, err := config.LoadDefaultConfig(context.TODO(), func(lo *config.LoadOptions) error {
+		if region != "" {
+			lo.Region = region
+		}
 
-	conf := aws.NewConfig().WithRegion(reg)
-
-	if ep := os.Getenv("AWS_DYNAMODB_ENDPOINT"); ep != "" {
-		conf = conf.WithEndpoint(ep)
-	}
-
-	session, err := session.NewSession(conf)
+		return nil
+	})
 	if err != nil {
-		log.Panic().Err(err).Msg("unable to create AWS session")
+		log.Panic().Err(err).Msg("unable to create AWS client")
 	}
 
-	svc := dynamodb.New(session)
+	svc := dynamodb.NewFromConfig(conf, func(o *dynamodb.Options) {
+		if endpoint != "" {
+			o.EndpointResolver = dynamodb.EndpointResolverFromURL(endpoint)
+		}
+	})
 
-	return dynamodbiface.DynamoDBAPI(svc)
+	return svc
 }
 
 func prefixedTableName(name string) string {
-	return tablePrefix + name
+	return prefix + name
 }
