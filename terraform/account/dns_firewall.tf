@@ -20,16 +20,33 @@ resource "aws_route53_resolver_query_log_config_association" "egress" {
   resource_id                  = aws_default_vpc.default.id
 }
 
+
+locals {
+  service_id = [
+    "logs",
+    "ecr",
+    "dynamodb",
+    "kms",
+    "secretsmanager"
+  ]
+}
+
+data "aws_service" "services" {
+  for_each   = toset(local.service_id)
+  region     = data.aws_region.current.name
+  service_id = each.value
+}
+
+locals {
+  aws_service_dns_name = [for service in data.aws_service.services : "${service.dns_name}."]
+}
+
 locals {
   interpolated_dns = [
-    "logs.${data.aws_region.current.name}.amazonaws.com.",
-    "logs.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
-    "api.ecr.${data.aws_region.current.name}.amazonaws.com.",
-    "api.ecr.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
-    "dynamodb.${data.aws_region.current.name}.amazonaws.com.",
-    "kms.${data.aws_region.current.name}.amazonaws.com.",
-    "secretsmanager.${data.aws_region.current.name}.amazonaws.com.",
-    "secretsmanager.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    # "logs.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    # "api.ecr.${data.aws_region.current.name}.amazonaws.com.",
+    # "api.ecr.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    # "secretsmanager.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
     "${replace(aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address, "master", "*")}.",
     "311462405659.dkr.ecr.eu-west-1.amazonaws.com.",
     "api.${local.environment}-internal.",
@@ -37,9 +54,13 @@ locals {
   ]
 }
 resource "aws_route53_resolver_firewall_domain_list" "egress_allow" {
-  count   = local.account.dns_firewall.enabled ? 1 : 0
-  name    = "egress_allowed"
-  domains = concat(local.interpolated_dns, local.account.dns_firewall.domains_allowed)
+  count = local.account.dns_firewall.enabled ? 1 : 0
+  name  = "egress_allowed"
+  domains = concat(
+    local.interpolated_dns,
+    local.aws_service_dns_name,
+    local.account.dns_firewall.domains_allowed
+  )
 }
 
 resource "aws_route53_resolver_firewall_domain_list" "egress_block" {
