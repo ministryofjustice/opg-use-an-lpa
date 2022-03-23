@@ -99,7 +99,7 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   count                  = local.account.dns_firewall.enabled ? 1 : 0
   name                   = "egress"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.egress[0].id
-  priority               = 300
+  priority               = 500
   vpc_id                 = aws_default_vpc.default.id
 }
 
