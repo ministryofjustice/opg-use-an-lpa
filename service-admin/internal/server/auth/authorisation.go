@@ -23,6 +23,8 @@ func (c Claims) Valid() error {
 func ValidateJWT(ctx context.Context, token string, key *SigningKey) (*Claims, error) {
 	claims := &Claims{}
 
+	log.Info().Msgf("Token output: %s", token)
+
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		kid := t.Header["kid"].(string)
 
