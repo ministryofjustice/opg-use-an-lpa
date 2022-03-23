@@ -1,10 +1,11 @@
-import { getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes, setConsentCookie } from './cookieHelper';
+import { getCookie, setConsentCookie } from './cookieHelper';
 import GoogleAnalytics from "./googleAnalytics";
 import AnalyticsTracking from "./analyticsTracking";
 import AnalyticsPerformance from "./analyticsPerformance";
 
 export default class CookieConsent {
     constructor(bannerElement, isInCookiesPath) {
+        iePolyfill();
         this.bannerElement = bannerElement;
         const cookiePolicy = getCookie('cookie_policy');
         var isAnalyticsCookieSet = cookiePolicy !== null;
@@ -48,3 +49,25 @@ export default class CookieConsent {
         window.analyticsPerformance = new AnalyticsPerformance();
     }
 }
+function iePolyfill() {
+    if (!Element.prototype.toggleAttribute) {
+        Element.prototype.toggleAttribute = function (name, force) {
+            if (force !== void 0)
+                force = !!force;
+
+            if (this.hasAttribute(name)) {
+                if (force)
+                    return true;
+
+                this.removeAttribute(name);
+                return false;
+            }
+            if (force === false)
+                return false;
+
+            this.setAttribute(name, "");
+            return true;
+        };
+    }
+}
+
