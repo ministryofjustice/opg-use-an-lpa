@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
 )
@@ -22,6 +22,9 @@ func (c Claims) Valid() error {
 
 func ValidateJWT(ctx context.Context, token string, key *SigningKey) (*Claims, error) {
 	claims := &Claims{}
+
+	// Amazon use a non-standand JWT format that include padding in the base64 values.
+	jwt.DecodePaddingAllowed = true
 
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		kid := t.Header["kid"].(string)
