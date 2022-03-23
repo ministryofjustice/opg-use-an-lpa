@@ -1,5 +1,5 @@
 import cookieConsent from './cookieConsent';
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { getCookie, setConsentCookie } from './cookieHelper';
 const cookieBannerHtml = `
 <div class="govuk-cookie-banner " data-nosnippet="" role="region" aria-label="Cookies on Use a lasting power of attorney">
@@ -26,12 +26,11 @@ const cookieBannerHtml = `
         </div>
     </div>
 `;
-jest.mock("./cookieHelper", () => ({
+jest.mock('./cookieHelper', () => ({
   getCookie: jest.fn(),
   setCookie: jest.fn(),
-  setConsentCookie: jest.fn()
+  setConsentCookie: jest.fn(),
 }));
-
 
 describe('When the cookie banner is initiated', () => {
   describe('and there is no cookie set', () => {
@@ -43,7 +42,7 @@ describe('When the cookie banner is initiated', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).toBe(null);
     });
   });
@@ -56,7 +55,7 @@ describe('When the cookie banner is initiated', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });
@@ -69,7 +68,7 @@ describe('When the cookie banner is initiated', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).toBe(null);
       const button = document.querySelector("button[value='accept']");
       button.click();
@@ -86,7 +85,7 @@ describe('When the cookie banner is initiated', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).toBe(null);
       const button = document.querySelector("button[value='reject']");
       button.click();
@@ -103,7 +102,7 @@ describe('When the cookie banner is initiated', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).toBe(null);
       cookieBanner.click();
       expect(cookieBanner.getAttribute('hidden')).toBe(null);
@@ -113,8 +112,8 @@ describe('When the cookie banner is initiated', () => {
   describe('and the usage option is set to true', () => {
     beforeEach(() => {
       window.gaConfig = {
-        uaID: 'UA-12345'
-      }
+        uaID: 'UA-12345',
+      };
       getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
       getCookie.mockReturnValueOnce('true');
     });
@@ -130,7 +129,6 @@ describe('When the cookie banner is initiated', () => {
   });
 });
 
-
 describe('When the cookie banner is initiated on the cookies page', () => {
   describe('and I am on the cookies page but have not seen the message', () => {
     beforeEach(() => {
@@ -141,11 +139,11 @@ describe('When the cookie banner is initiated on the cookies page', () => {
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'), true);
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
-      
+
       expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });
   afterEach(() => {
     jest.clearAllMocks();
   });
-})
+});
