@@ -1,4 +1,4 @@
-resource "random_integer" "environment_egress_rule_group_association_priority" {
+resource "random_integer" "priority" {
   min = 100
   max = 499
 }
@@ -23,9 +23,12 @@ resource "aws_route53_resolver_firewall_rule" "environment_egress_allow" {
   priority                = 300
 }
 
+locals {
+  environment_egress_rule_group_association_priority = local.environment.account_name == "development" ? random_integer.priority.result : 300
+}
 resource "aws_route53_resolver_firewall_rule_group_association" "environment_egress_allow" {
   name                   = "${local.environment_name}_environment_egress_allow"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.environment_egress_allow.id
-  priority               = random_integer.environment_egress_rule_group_association_priority.result
+  priority               = local.environment_egress_rule_group_association_priority
   vpc_id                 = data.aws_vpc.default.id
 }
