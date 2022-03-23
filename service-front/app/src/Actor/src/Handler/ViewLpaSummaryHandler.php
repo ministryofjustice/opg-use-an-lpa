@@ -72,7 +72,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
                     'actorToken' => $actorLpaToken,
                     'user' => $user,
                     'lpa' => $lpaData->lpa,
-                    'actor' => $lpaData->actor,
+                    'actor' => $lpaData->actor
                 ]
             )
         );

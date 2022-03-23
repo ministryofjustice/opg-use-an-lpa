@@ -8,6 +8,7 @@ use App\DataAccess\{ApiGateway\ActorCodes,
     Repository,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
+use App\Service\Lpa\GetTrustCorporationStatus;
 use App\DataAccess\Repository\Response\{Lpa};
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\IsValidLpa;
@@ -68,6 +69,11 @@ class LpaServiceTest extends TestCase
      */
     private $isValidLpaProphecy;
 
+    /**
+     * @var GetTrustCorporationStatus
+     */
+    private $getTrustCorporationStatusProphecy;
+
     public function setUp()
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
@@ -79,6 +85,7 @@ class LpaServiceTest extends TestCase
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
+        $this->getTrustCorporationStatusProphecy = $this->prophesize(GetTrustCorporationStatus::class);
     }
 
     //-------------------------------------------------------------------------
@@ -96,6 +103,7 @@ class LpaServiceTest extends TestCase
             $this->resolveActorProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
+            $this->getTrustCorporationStatusProphecy->reveal(),
         );
     }
 
@@ -123,6 +131,9 @@ class LpaServiceTest extends TestCase
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 5, 'systemStatus' => true],
+            ],
+            'trustCorporations' => [
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
             ]
         ], new DateTime());
         $expectedLpaResponse = new Lpa([
@@ -138,6 +149,9 @@ class LpaServiceTest extends TestCase
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 5, 'systemStatus' => true],
             ],
+            'trustCorporations' => [
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
+            ]
         ], $lpaResponse->getLookupTime());
 
         //---
@@ -166,9 +180,15 @@ class LpaServiceTest extends TestCase
             ->__invoke(['id' => 5, 'systemStatus' => true])
             ->willReturn(1);
 
-        $result = $service->getByUid($testUid);
+        $this->getTrustCorporationStatusProphecy
+            ->__invoke(['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true])
+            ->willReturn(0);
 
-        //---
+        $this->getTrustCorporationStatusProphecy
+            ->__invoke(['id' => 7, 'companyName' => 'ABC Ltd', 'systemStatus' => true])
+            ->willReturn(2);
+
+        $result = $service->getByUid($testUid);
 
         $this->assertEquals($expectedLpaResponse, $result);
     }

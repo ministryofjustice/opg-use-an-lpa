@@ -124,7 +124,6 @@
                 </dl>
 
                 {% for attorney in lpa.attorneys %}
-
                     <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -141,8 +140,25 @@
                             <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
                         </div>
                     </dl>
-
                 {% endfor %}
+
+                {% for tc in lpa.trustCorporations %}
+                    {% set i = loop.index + lpa.attorneys | length %}
+
+                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': i | ordinal } %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
+
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">{{ tc.companyName }} {{ "(Trust corporation)" }}</dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">{{ actor_address(tc) }}</dd>
+                        </div>
+                    </dl>
+                {% endfor %}
+
                 <p class="govuk-body">
                     <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">{% trans %}Need to change an attorney's details?{% endtrans %}</a>
                 </p>
