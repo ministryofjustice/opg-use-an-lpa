@@ -23,8 +23,6 @@ func (c Claims) Valid() error {
 func ValidateJWT(ctx context.Context, token string, key *SigningKey) (*Claims, error) {
 	claims := &Claims{}
 
-	log.Info().Msgf("Token output: %s", token)
-
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		kid := t.Header["kid"].(string)
 
@@ -53,6 +51,9 @@ func WithAuthorisation(next http.Handler, keyURL string) http.Handler {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
+
+		log.Info().Msgf("%s accessed the service", claims.Email)
+
 		ctx = context.WithValue(ctx, handlers.UserContextKey{}, claims)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
