@@ -1,7 +1,7 @@
 variable "description" {
   description = "Description of your Lambda Function (or Layer)"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "lambda_role_policy_document" {
