@@ -36,7 +36,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
-            new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
+            new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld'])
         ];
     }
 
