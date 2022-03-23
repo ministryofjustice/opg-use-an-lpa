@@ -7,7 +7,7 @@ resource "aws_lb_target_group" "admin" {
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
 
-  healthcheck {
+  health_check {
     enabled = true
     path    = "/helloworld"
   }
