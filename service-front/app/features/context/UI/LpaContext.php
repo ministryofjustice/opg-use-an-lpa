@@ -2073,6 +2073,7 @@ class LpaContext implements Context
 
     /**
      * @When /^I request to view an LPA which has a donor signature before 2016$/
+     * @When /^I request to view an LPA which has a trust corporation added$/
      */
     public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016()
     {
@@ -2620,5 +2621,15 @@ class LpaContext implements Context
     public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
     {
         $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
+    }
+
+    /**
+     * @Then /^I can see the trust corporation (.*) in the list of attorneys$/
+     */
+    public function ICanSeeTheTrustCorporationInTheListOfAttorneys($companyName)
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText("The attorneys");
+        $this->ui->assertPageContainsText($companyName);
     }
 }

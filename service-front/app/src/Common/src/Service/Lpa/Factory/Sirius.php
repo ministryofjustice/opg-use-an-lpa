@@ -32,7 +32,9 @@ final class Sirius implements LpaFactory
     public function createLpaFromData(array $data): Lpa
     {
         if (!array_key_exists('uId', $data)) {
-            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid Lpa data");
+            throw new InvalidArgumentException(
+                "The data array passed to " . __METHOD__ . " must contain valid Lpa data"
+            );
         }
 
         $lpa = new Lpa();
@@ -102,8 +104,8 @@ final class Sirius implements LpaFactory
         if (isset($data['replacementAttorneys'])) {
             $lpa->setReplacementAttorneys($this->createCaseActorsFromData($data['replacementAttorneys']));
         }
-        if (isset($data['trustCorportations'])) {
-            $lpa->setTrustCorporations($this->createCaseActorsFromData($data['trustCorportations']));
+        if (isset($data['trustCorporations'])) {
+            $lpa->setTrustCorporations($this->createCaseActorsFromData($data['trustCorporations']));
         }
         if (isset($data['certificateProviders'])) {
             $lpa->setCertificateProviders($this->createCaseActorsFromData($data['certificateProviders']));
@@ -122,7 +124,9 @@ final class Sirius implements LpaFactory
     public function createCaseActorFromData(array $caseActorData): CaseActor
     {
         if (!array_key_exists('uId', $caseActorData)) {
-            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid CaseActor data");
+            throw new InvalidArgumentException(
+                "The data array passed to " . __METHOD__ . " must contain valid CaseActor data"
+            );
         }
 
         $actor = new CaseActor();
@@ -174,7 +178,9 @@ final class Sirius implements LpaFactory
     public function createAddressFromData(array $addressData): Address
     {
         if (!array_key_exists('id', $addressData)) {
-            throw new InvalidArgumentException("The data array passed to " . __METHOD__ . " must contain valid Address data");
+            throw new InvalidArgumentException(
+                "The data array passed to " . __METHOD__ . " must contain valid Address data"
+            );
         }
         $address = new Address();
         if (isset($addressData['id'])) {
