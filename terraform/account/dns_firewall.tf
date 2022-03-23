@@ -47,6 +47,7 @@ locals {
     # "api.ecr.${data.aws_region.current.name}.amazonaws.com.",
     # "api.ecr.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
     # "secretsmanager.${data.aws_region.current.name}.amazonaws.com.${data.aws_region.current.name}.compute.internal.",
+    "public-keys.auth.elb.eu-west-1.amazonaws.com.",
     "${replace(aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address, "master", "*")}.",
     "311462405659.dkr.ecr.eu-west-1.amazonaws.com.",
     "api.${local.environment}-internal.",
