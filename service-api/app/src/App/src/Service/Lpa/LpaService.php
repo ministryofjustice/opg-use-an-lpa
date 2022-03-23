@@ -22,6 +22,7 @@ use RuntimeException;
 class LpaService
 {
     private const ACTIVE_ATTORNEY = 0;
+    private const ACTIVE_TC = 0;
 
     private ViewerCodesInterface $viewerCodesRepository;
     private ViewerCodeActivityInterface $viewerCodeActivityRepository;
@@ -32,6 +33,7 @@ class LpaService
     private ResolveActor $resolveActor;
     private GetAttorneyStatus $getAttorneyStatus;
     private IsValidLpa $isValidLpa;
+    private GetTrustCorporationStatus $getTrustCorporationStatus;
 
     public function __construct(
         ViewerCodesInterface $viewerCodesRepository,
@@ -42,7 +44,8 @@ class LpaService
         ActorCodes $actorCodes,
         ResolveActor $resolveActor,
         GetAttorneyStatus $getAttorneyStatus,
-        IsValidLpa $isValidLpa
+        IsValidLpa $isValidLpa,
+        GetTrustCorporationStatus $getTrustCorporationStatus
     ) {
         $this->viewerCodesRepository = $viewerCodesRepository;
         $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
@@ -53,6 +56,7 @@ class LpaService
         $this->resolveActor = $resolveActor;
         $this->getAttorneyStatus = $getAttorneyStatus;
         $this->isValidLpa = $isValidLpa;
+        $this->getTrustCorporationStatus = $getTrustCorporationStatus;
     }
 
     /**
@@ -76,6 +80,15 @@ class LpaService
             $lpaData['attorneys'] = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
+                })
+            );
+        }
+
+        if ($lpaData['trustCorporations'] !== null) {
+
+            $lpaData['trustCorporations'] = array_values(
+                array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
+                    return ($this->getTrustCorporationStatus)($trustCorporation) === self::ACTIVE_TC;
                 })
             );
         }
