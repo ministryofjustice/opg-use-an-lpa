@@ -366,7 +366,27 @@ paths:
                     replacementAttorneys: []
                     status: Registered
                     statusDate: null
-                    trustCorporations: []
+                    trustCorporations:
+                      - addresses:
+                          - addressLine1: "address line 1"
+                            addressLine2: "address line 2"
+                            addressLine3: "address line 3"
+                            country: ""
+                            county: ""
+                            id: 3207
+                            postcode: "T EST4"
+                            town: ""
+                            type: Primary
+                        companyName: trust corporation
+                        dob: null
+                        email: null
+                        firstname: trust
+                        id: 3485
+                        middlenames: null
+                        salutation: null
+                        surname: test
+                        systemStatus: true
+                        uId: 7000-0015-1998
                     withdrawnDate: null
                 lpa0252:
                   value:
@@ -854,4 +874,117 @@ paths:
                     status: Pending
                     statusDate: null
                     trustCorporations: []
+                    withdrawnDate: null
+                lpa1451:
+                  value:
+                    applicationHasGuidance: false
+                    applicationHasRestrictions: false
+                    applicationType: Classic
+                    attorneyActDecisions: When Registered
+                    attorneys:
+                      - addresses:
+                          - addressLine1: ""
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3193
+                            postcode: b1 1tf
+                            town: ""
+                            type: Primary
+                        companyName: ""
+                        dob: "1989-01-01"
+                        email: null
+                        firstname: ross
+                        id: 3471
+                        middlenames: null
+                        salutation: mr
+                        surname: smith
+                        systemStatus: true
+                        uId: 7000-0015-1485
+                      - addresses:
+                          - addressLine1: "10"
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3194
+                            postcode: b1 1tf
+                            town: ""
+                            type: Primary
+                        companyName: null
+                        dob: "2010-01-02"
+                        email: null
+                        firstname: rachel
+                        id: 3472
+                        middlenames: null
+                        salutation: mr
+                        surname: smith
+                        systemStatus: true
+                        uId: 7000-0015-1519
+                    cancellationDate: null
+                    caseAttorneyJointly: false
+                    caseAttorneyJointlyAndJointlyAndSeverally: false
+                    caseAttorneyJointlyAndSeverally: true
+                    caseAttorneySingular: false
+                    caseSubtype: pfa
+                    certificateProviders: [ ]
+                    dispatchDate: null
+                    donor:
+                      addresses:
+                        - addressLine1: 89 Usebury Lane
+                          addressLine2: ""
+                          addressLine3: ""
+                          country: ""
+                          county: ""
+                          id: 2577
+                          postcode: WR1 1AF
+                          town: Worcester
+                          type: Primary
+                      companyName: null
+                      dob: "1944-08-14"
+                      email: null
+                      firstname: Donald
+                      id: 136
+                      linked:
+                        - id: 136
+                          uId: 7000-0000-2266
+                      middlenames: John
+                      salutation: Mr
+                      surname: Smith
+                      uId: 7000-0000-2266
+                    id: 1863
+                    invalidDate: null
+                    lifeSustainingTreatment: null
+                    lpaDonorSignatureDate: "2010-10-10"
+                    lpaIsCleansed: false
+                    onlineLpaId: null
+                    receiptDate: null
+                    registrationDate: "2019-08-01"
+                    rejectedDate: null
+                    replacementAttorneys: [ ]
+                    status: Registered
+                    statusDate: "2022-02-04"
+                    trustCorporations:
+                      - addresses:
+                          - addressLine1: ""
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3207
+                            postcode: ""
+                            town: ""
+                            type: Primary
+                        companyName: trust corporation
+                        dob: null
+                        email: null
+                        firstname: trust
+                        id: 3485
+                        middlenames: null
+                        salutation: null
+                        surname: test
+                        systemStatus: true
+                        uId: 7000-0015-1998
+                    uId: 7000-0015-1451
                     withdrawnDate: null
