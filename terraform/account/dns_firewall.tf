@@ -28,7 +28,7 @@ locals {
     "dynamodb",
     "kms",
     "secretsmanager",
-    "api.ecr",
+    "ecr.api",
   ]
 }
 
@@ -40,12 +40,10 @@ data "aws_service" "services" {
 
 locals {
   aws_service_dns_name = [for service in data.aws_service.services : "${service.dns_name}."]
-}
-
-locals {
   interpolated_dns = [
     "${replace(aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address, "master", "*")}.",
     "prod-${data.aws_region.current.name}-starport-layer-bucket.s3.${data.aws_region.current.name}.amazonaws.com.",
+    # "s3-r-w.${data.aws_region.current.name}.amazonaws.com.",
     "public-keys.auth.elb.${data.aws_region.current.name}.amazonaws.com.",
     "311462405659.dkr.ecr.${data.aws_region.current.name}.amazonaws.com.",
   ]
