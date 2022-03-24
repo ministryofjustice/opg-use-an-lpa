@@ -5,7 +5,6 @@ import AnalyticsPerformance from './analyticsPerformance';
 
 export default class CookieConsent {
   constructor(bannerElement, isInCookiesPath) {
-    iePolyfill();
     this.bannerElement = bannerElement;
     const cookiePolicy = getCookie('cookie_policy');
     let isAnalyticsCookieSet = cookiePolicy !== null;
@@ -51,25 +50,5 @@ export default class CookieConsent {
     window.useAnalytics = new GoogleAnalytics(window.gaConfig.uaId);
     window.analyticsTracking = new AnalyticsTracking();
     window.analyticsPerformance = new AnalyticsPerformance();
-  }
-}
-
-/* istanbul ignore next */
-function iePolyfill() {
-  if (!Element.prototype.toggleAttribute) {
-    Element.prototype.toggleAttribute = function (name, force) {
-      if (force !== void 0) force = !!force;
-
-      if (this.hasAttribute(name)) {
-        if (force) return true;
-
-        this.removeAttribute(name);
-        return false;
-      }
-      if (force === false) return false;
-
-      this.setAttribute(name, '');
-      return true;
-    };
   }
 }
