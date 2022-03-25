@@ -45,6 +45,8 @@ locals {
     "prod-${data.aws_region.current.name}-starport-layer-bucket.s3.${data.aws_region.current.name}.amazonaws.com.",
     "public-keys.auth.elb.${data.aws_region.current.name}.amazonaws.com.",
     "311462405659.dkr.ecr.${data.aws_region.current.name}.amazonaws.com.",
+    "api.${local.environment}-internal.",
+    "pdf.${local.environment}-internal."
   ]
 }
 resource "aws_route53_resolver_firewall_domain_list" "egress_allow" {
