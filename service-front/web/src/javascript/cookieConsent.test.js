@@ -140,6 +140,7 @@ describe('When the cookie banner is initiated on the cookies page', () => {
       new cookieConsent(document.querySelector('.govuk-cookie-banner'), true);
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
 
+      expect(setConsentCookie).toHaveBeenCalledWith(false);
       expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });

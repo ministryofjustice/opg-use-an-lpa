@@ -11,6 +11,10 @@ export default class CookieConsent {
 
     this._toggleCookieMessage(!isAnalyticsCookieSet && !isInCookiesPath);
 
+    if (isInCookiesPath) { 
+      setConsentCookie(false);
+    }
+
     if (cookiePolicy) {
       if (JSON.parse(cookiePolicy).usage) {
         this._setupAnalytics();
