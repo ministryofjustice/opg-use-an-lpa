@@ -43,7 +43,13 @@ func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
 	router := mux.NewRouter()
 
 	router.Handle("/helloworld", handlers.HelloHandler())
-	router.Handle("/", auth.WithAuthorisation(handlers.SearchHandler(db), keyURL))
+	router.Handle(
+		"/",
+		auth.WithAuthorisation(
+			handlers.SearchHandler(db),
+			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
+		),
+	)
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(

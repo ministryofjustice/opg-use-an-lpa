@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -20,18 +19,22 @@ func (c Claims) Valid() error {
 	return nil
 }
 
-func ValidateJWT(ctx context.Context, token string, key *SigningKey) (*Claims, error) {
-	claims := &Claims{}
+type tokenVerifier interface {
+	Validate(ctx context.Context, token string) (*Claims, error)
+}
 
-	// Amazon use a non-standand JWT format that include padding in the base64 values.
+type Token struct {
+	SigningKey *SigningKey
+}
+
+func (t *Token) Validate(ctx context.Context, token string) (*Claims, error) {
+	var claims = &Claims{}
+
+	// Amazon use a non-standand JWT format that includes padding in the base64 values.
 	jwt.DecodePaddingAllowed = true
 
-	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
-		kid := t.Header["kid"].(string)
-
-		key.URL = fmt.Sprintf("%s/%s", key.URL, kid)
-
-		return key.Fetch(ctx)
+	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		return t.SigningKey.Fetch(ctx, token.Header["kid"].(string))
 	})
 	if err != nil {
 		return nil, err
@@ -40,22 +43,18 @@ func ValidateJWT(ctx context.Context, token string, key *SigningKey) (*Claims, e
 	return claims, nil
 }
 
-func WithAuthorisation(next http.Handler, keyURL string) http.Handler {
+func WithAuthorisation(next http.Handler, token tokenVerifier) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		sKey := &SigningKey{
-			URL: keyURL,
-		}
-
-		claims, err := ValidateJWT(ctx, r.Header.Get("x-amzn-oidc-data"), sKey)
+		claims, err := token.Validate(ctx, r.Header.Get("x-amzn-oidc-data"))
 		if err != nil {
-			log.Err(err).Msg("failed to validate jwt")
+			log.Ctx(ctx).Err(err).Msg("failed to validate jwt")
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 
-		log.Info().Msgf("%s accessed the service", claims.Email)
+		log.Ctx(ctx).Info().Msgf("%s accessed the service", claims.Email)
 
 		ctx = context.WithValue(ctx, handlers.UserContextKey{}, claims)
 

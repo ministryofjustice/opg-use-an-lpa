@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"crypto/ecdsa"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -14,17 +15,19 @@ import (
 )
 
 type SigningKey struct {
-	URL string
+	PublicKeyURL string
 }
 
 var publicKeyCache = &sync.Map{}
 
-func (k *SigningKey) Fetch(ctx context.Context) (*ecdsa.PublicKey, error) {
-	if k.URL == "" {
+func (k *SigningKey) Fetch(ctx context.Context, keyID string) (*ecdsa.PublicKey, error) {
+	if k.PublicKeyURL == "" {
 		return nil, errors.New("key URL not supplied to SigningKey struct")
 	}
 
-	if key, ok := publicKeyCache.Load(k.URL); ok {
+	url := fmt.Sprintf("%s/%s", k.PublicKeyURL, keyID)
+
+	if key, ok := publicKeyCache.Load(url); ok {
 		return key.(*ecdsa.PublicKey), nil
 	}
 
@@ -32,7 +35,7 @@ func (k *SigningKey) Fetch(ctx context.Context) (*ecdsa.PublicKey, error) {
 
 	r := retry.WithMaxDuration(3*time.Second, retry.NewConstant(500*time.Millisecond))
 	if err := retry.Do(ctx, r, func(ctx context.Context) error {
-		pem, err := fetchPEM(ctx, k.URL)
+		pem, err := fetchPEM(ctx, url)
 		if err != nil {
 			return retry.RetryableError(err)
 		}
@@ -45,7 +48,7 @@ func (k *SigningKey) Fetch(ctx context.Context) (*ecdsa.PublicKey, error) {
 
 	publicKey, err := jwt.ParseECPublicKeyFromPEM(*pemBytes)
 
-	publicKeyCache.Store(k.URL, publicKey)
+	publicKeyCache.Store(url, publicKey)
 
 	return publicKey, err
 }
