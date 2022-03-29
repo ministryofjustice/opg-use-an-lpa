@@ -6,7 +6,13 @@ resource "aws_lb_target_group" "admin" {
   target_type          = "ip"
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
-  depends_on           = [aws_lb.admin[0]]
+
+  health_check {
+    enabled = true
+    path    = "/helloworld"
+  }
+
+  depends_on = [aws_lb.admin[0]]
 }
 
 resource "aws_lb" "admin" {

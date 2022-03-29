@@ -1,12 +1,13 @@
 package data
 
 import (
+	"context"
 	"errors"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/rs/zerolog/log"
 )
 
@@ -27,29 +28,23 @@ const (
 
 var ErrActorUserNotFound = errors.New("actoruser not found")
 
-func GetActorUserByEmail(db dynamodbiface.DynamoDBAPI, email string) (aa *ActorUser, err error) {
-	result, err := db.Query(&dynamodb.QueryInput{
-		TableName: aws.String(prefixedTableName(ActorTableName)),
-		IndexName: aws.String(ActorTableEmailIndexName),
-		KeyConditions: map[string]*dynamodb.Condition{
-			"Email": {
-				ComparisonOperator: aws.String("EQ"),
-				AttributeValueList: []*dynamodb.AttributeValue{
-					{
-						S: aws.String(email),
-					},
-				},
-			},
+func GetActorUserByEmail(ctx context.Context, db *dynamodb.Client, email string) (aa *ActorUser, err error) {
+	result, err := db.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(prefixedTableName(ActorTableName)),
+		IndexName:              aws.String(ActorTableEmailIndexName),
+		KeyConditionExpression: aws.String("Email = :e"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":e": &types.AttributeValueMemberS{Value: email},
 		},
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("error whilst searching for email")
 	}
 
-	if *result.Count > 0 {
+	if result.Count > 0 {
 		results := []ActorUser{}
 
-		err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &results)
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &results)
 		if err != nil {
 			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
 		}
