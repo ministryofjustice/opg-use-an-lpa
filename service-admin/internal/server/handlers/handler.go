@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type UserContextKey struct{}
 type TemplateContextKey struct{}
 
 type Template interface {
