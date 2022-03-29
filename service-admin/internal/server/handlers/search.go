@@ -64,6 +64,14 @@ func (s *search) checkEmailOrCode(value interface{}) error {
 	return ErrNotEmailOrCode
 }
 
+func stripUnessesaryCharacters(code string) string {
+	code = strings.ToUpper(code)
+	result := strings.ReplaceAll(code, "C-", "")
+	result = strings.ReplaceAll(result, "-", "")
+
+	return result
+}
+
 func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s := &search{}
@@ -106,11 +114,24 @@ func doSearch(db dynamodbiface.DynamoDBAPI, t queryType, q string) interface{} {
 		return r
 
 	case ActivationCodeQuery:
-		return map[string]interface{}{
-			"Activation key": q,
-			"Used":           "Yes",
-			"DateTime":       "2021-03-01T12:37:12Z+0000",
-			"Email":          "name@email.com",
+		r, err := data.GetLPAByActivationCode(db, stripUnessesaryCharacters(q))
+		if err != nil {
+			return nil
+		}
+
+		email, err := data.GetEmailByUserID(db, r.UserID)
+
+		if email == "" {
+			email = "Not Found"
+		}
+
+		if err == nil {
+			return map[string]interface{}{
+				"Activation key": q,
+				"Used":           "Yes",
+				"Email":          email,
+				"LPA":            r.SiriusUID,
+			}
 		}
 	}
 

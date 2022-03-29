@@ -12,7 +12,9 @@
             "program": "${workspaceFolder}/cmd/admin/main.go",
             "cwd": "${workspaceFolder}",
             "env": {
-                "AWS_DYNAMODB_ENDPOINT": "http://localhost:4569"
+                "AWS_DYNAMODB_ENDPOINT": "http://localhost:8000",
+                "AWS_ACCESS_KEY_ID": "-",
+                "AWS_SECRET_ACCESS_KEY": "-"
             }
         }
     ]

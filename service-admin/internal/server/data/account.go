@@ -20,6 +20,9 @@ type ActorUser struct {
 	LPAs []*LPA
 }
 
+type AccountController interface {
+}
+
 const (
 	ActorTableName           = "ActorUsers"
 	ActorTableEmailIndexName = "EmailIndex"
@@ -46,7 +49,7 @@ func GetActorUserByEmail(db dynamodbiface.DynamoDBAPI, email string) (aa *ActorU
 		log.Error().Err(err).Msg("error whilst searching for email")
 	}
 
-	if *result.Count > 0 {
+	if result != nil && *result.Count > 0 {
 		results := []ActorUser{}
 
 		err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &results)
@@ -59,4 +62,33 @@ func GetActorUserByEmail(db dynamodbiface.DynamoDBAPI, email string) (aa *ActorU
 	}
 
 	return nil, ErrActorUserNotFound
+}
+
+func GetEmailByUserID(db dynamodbiface.DynamoDBAPI, userID string) (email string, err error) {
+	result, err := db.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String(prefixedTableName(ActorTableName)),
+		Key: map[string]*dynamodb.AttributeValue{
+			"Id": {
+				S: aws.String(userID),
+			},
+		},
+	})
+
+	if err != nil {
+		log.Error().Err(err).Msg("Error trying to get email by userID")
+	}
+
+	if result != nil {
+		marshalledResult := ActorUser{}
+
+		err = dynamodbattribute.UnmarshalMap(result.Item, &marshalledResult)
+		if err != nil {
+			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
+		}
+
+		// we'll only ever want the one result
+		return marshalledResult.Email, nil
+	}
+
+	return "", ErrActorUserNotFound
 }
