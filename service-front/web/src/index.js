@@ -8,6 +8,7 @@ import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from './javascript/showHidePassword';
+import addPolyFill from './javascript/polyfill.js';
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
     var newButtonText = expanded ? this.$module.dataset.closetext : this.$module.dataset.opentext;
@@ -18,6 +19,7 @@ Accordion.prototype.updateOpenAllButton = function (expanded) {
 
 initAll();
 jsEnabled(document.body);
+addPolyFill();
 disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(document.getElementsByClassName('cookie-banner')[0], window.location.pathname === '/cookies');
 copyAccessCode();
