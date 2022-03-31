@@ -89,14 +89,14 @@
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
-                        <span class="moj-badge moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
+                        <span class="moj-badge moj-badge--large moj-badge--red">{% trans %}CANCELLED{% endtrans %}</span>
                     </dd>
                 </div>
             {% elseif check_if_code_has_expired(code.Expires) %}
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">{% trans %}Status{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
-                        <span class="moj-badge moj-badge--red">{% trans %}EXPIRED{% endtrans %}</span>
+                        <span class="moj-badge moj-badge--large moj-badge--red">{% trans %}EXPIRED{% endtrans %}</span>
                     </dd>
                 </div>
             {% endif %}
