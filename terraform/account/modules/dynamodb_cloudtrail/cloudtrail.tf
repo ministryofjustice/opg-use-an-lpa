@@ -49,7 +49,7 @@ resource "aws_iam_role_policy" "cloudtrail" {
 data "aws_iam_policy_document" "cloudtrail_role_policy" {
   statement {
     actions = [
-      "logs:CreateLogStream",
+      "logs:CreateLogStream", #tfsec:ignore:aws-iam-no-policy-wildcards
       "logs:PutLogEvents",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
