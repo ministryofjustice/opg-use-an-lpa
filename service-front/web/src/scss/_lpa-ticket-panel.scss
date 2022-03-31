@@ -4,9 +4,14 @@
     color: $higher-contrast-red;
   }
 
+  .moj-badge--red {
+    color: $higher-contrast-red;
+    border-color: $higher-contrast-red;
+  }
+
   @include govuk-media-query($from: desktop) {
 
-    .moj-ticket-panel__row {
+    &__row {
       display: flex;
       justify-content: space-between;
 
@@ -16,11 +21,6 @@
 
       .moj-badge {
         margin-bottom: govuk-spacing(3) !important;
-      }
-
-      .moj-badge--red {
-        color: $higher-contrast-red;
-        border-color: $higher-contrast-red;
       }
 
     }
