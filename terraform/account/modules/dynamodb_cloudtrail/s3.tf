@@ -43,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail" {
 }
 
 resource "aws_s3_bucket_public_access_block" "cloudtrail" {
-  bucket                  = aws_s3_bucket_policy.cloudtrail.bucket
+  bucket                  = aws_s3_bucket.cloudtrail.bucket
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
