@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
 )
@@ -38,11 +39,17 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewServer(db dynamodbiface.DynamoDBAPI) http.Handler {
+func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
 	router := mux.NewRouter()
 
 	router.Handle("/helloworld", handlers.HelloHandler())
-	router.Handle("/", handlers.SearchHandler(db))
+	router.Handle(
+		"/",
+		auth.WithAuthorisation(
+			handlers.SearchHandler(db),
+			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
+		),
+	)
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(
@@ -63,6 +70,8 @@ func withErrorHandling(next http.Handler) http.Handler {
 
 			t := "error.page.gohtml"
 			switch i {
+			case 403:
+				t = "notauthorised.page.gohtml"
 			case 404:
 				t = "notfound.page.gohtml"
 			}

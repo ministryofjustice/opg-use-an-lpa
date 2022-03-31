@@ -6,6 +6,7 @@ namespace BehatTest\Context\UI;
 
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
@@ -109,12 +110,12 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I see a cookie consent banner$/
+     * @Then /^I see a (.*) cookie consent banner$/
      */
-    public function iCanSeeACookieConsentBanner()
+    public function iCanSeeACookieConsentBanner($serviceName)
     {
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Tell us whether you accept cookies');
+        $this->ui->assertPageContainsText('Cookies on ' . $serviceName);
     }
 
     /**
@@ -196,13 +197,12 @@ class CommonContext implements Context
     }
 
     /**
-     * @When /^I click on Accept all cookies$/
+     * @Then /^I click on the view cookies link$/
      */
-    public function iClickOnAcceptAllCookies()
+    public function iClickOnViewCookies()
     {
-        // Not needed for this context
-        //Accept all cookies is <button type="button">, which means there is no associated action, meant to be handled with a JS event listener
-        // Given that BrowserKitDriver does not run the JS, it does not support such button.
+        $this->ui->assertPageContainsText('View cookies');
+        $this->ui->clickLink('View cookies');
     }
 
     /**
@@ -214,7 +214,7 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /I have a cookie named (.*)$/
+     * @Then /^I have a cookie named cookie_policy$/
      */
     public function iHaveACookieNamedSeenCookieMessage()
     {
@@ -222,7 +222,7 @@ class CommonContext implements Context
 
         $session = $this->ui->getSession();
 
-        $seen = $session->getCookie('seen_cookie_message');
+        $seen = $session->getCookie('cookie_policy');
 
         if ($seen === null) {
             throw new \Exception('Cookies not set');
@@ -230,13 +230,13 @@ class CommonContext implements Context
     }
 
     /**
-     * @Given /^I have seen the cookie banner$/
+     * @Given /^I have seen the (.*) cookie banner$/
      */
-    public function iHaveSeenTheCookieBanner()
+    public function iHaveSeenTheCookieBanner($serviceName)
     {
         $this->iWantToViewALastingPowerOfAttorney();
         $this->iAccessTheServiceHomepage();
-        $this->iCanSeeACookieConsentBanner();
+        $this->iCanSeeACookieConsentBanner($serviceName);
     }
 
     /**
@@ -312,8 +312,8 @@ class CommonContext implements Context
         $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($button1);
         $this->ui->assertPageContainsText($button2);
-        $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
-        $this->ui->assertElementContainsText('a[name=set-cookie-preferences]', 'Set cookie preferences');
+        $this->ui->assertElementContainsText('button[value=accept]', 'Accept analytics cookies');
+        $this->ui->assertElementContainsText('button[value=reject]', 'Reject analytics cookies');
     }
 
     /**
@@ -331,7 +331,7 @@ class CommonContext implements Context
      */
     public function iSetMyCookiePreferences()
     {
-        $this->iClickOnButton('Set cookie preferences');
+        $this->iClickOnViewCookies();
         $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse(
             'Use cookies that measure my website use',
             'Do not use cookies that measure my website use'
@@ -370,18 +370,6 @@ class CommonContext implements Context
     {
         $this->ui->assertPageAddress('/home/random');
         $this->ui->assertPageContainsText('Page not found');
-    }
-
-    /**
-     * @Then /^I should not see a cookie banner$/
-     */
-    public function iShouldNotSeeACookieBanner()
-    {
-        $this->ui->assertPageAddress('/home');
-        $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
-        if ($cookieBannerDisplay === null) {
-            $this->ui->assertResponseNotContains('cookie-banner--show');
-        }
     }
 
     /**

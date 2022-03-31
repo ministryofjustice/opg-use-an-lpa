@@ -1,19 +1,21 @@
 package data
 
 import (
+	"context"
 	"errors"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/rs/zerolog/log"
 )
 
 type LPA struct {
-	SiriusUID string `json:"SiriusUid"`
-	Added     string
-	UserID    string `json:"UserId"`
+	SiriusUID  string `json:"SiriusUid"`
+	Added      string
+	UserID     string `json:"UserId"`
+	ActivateBy int
 }
 
 type ActivationCodeLPAResult struct {
@@ -28,27 +30,21 @@ const (
 
 var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")
 
-func GetLpasByUserID(db dynamodbiface.DynamoDBAPI, uid string) (lpas []*LPA, err error) {
-	result, err := db.Query(&dynamodb.QueryInput{
-		TableName: aws.String(prefixedTableName(UserLpaActorTableName)),
-		IndexName: aws.String(UserLpaActorUserIndexName),
-		KeyConditions: map[string]*dynamodb.Condition{
-			"UserId": {
-				ComparisonOperator: aws.String("EQ"),
-				AttributeValueList: []*dynamodb.AttributeValue{
-					{
-						S: aws.String(uid),
-					},
-				},
-			},
+func GetLpasByUserID(ctx context.Context, db *dynamodb.Client, uid string) (lpas []*LPA, err error) {
+	result, err := db.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
+		IndexName:              aws.String(UserLpaActorUserIndexName),
+		KeyConditionExpression: aws.String("UserId = :u"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":u": &types.AttributeValueMemberS{Value: uid},
 		},
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("error whilst searching for userId")
 	}
 
-	if *result.Count > 0 {
-		err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &lpas)
+	if result.Count > 0 {
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &lpas)
 		if err != nil {
 			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
 		}

@@ -3,6 +3,12 @@ const DEFAULT_COOKIE_CONSENT = {
     'usage': false
 }
 
+const APPROVED_COOKIE_CONSENT = {
+    'essential': true,
+    'usage': true
+}
+
+
 const getCookie = name => {
     const nameEQ = name + '=';
     const cookies = document.cookie.split(';');
@@ -30,17 +36,8 @@ const setCookie = (name, value, options) => {
     return cookie;
 }
 
-const approveAllCookieTypes = () => {
-    const approvedConsent = {
-        'essential': true,
-        'usage': true
-    }
-
-    setCookie('cookie_policy', JSON.stringify(approvedConsent), { days: 365 });
+const setConsentCookie = (accept) => {
+    setCookie('cookie_policy', JSON.stringify(accept ? APPROVED_COOKIE_CONSENT : DEFAULT_COOKIE_CONSENT), { days: 365 });
 }
 
-const setDefaultConsentCookie = () => {
-    setCookie('cookie_policy', JSON.stringify(DEFAULT_COOKIE_CONSENT), { days: 365 });
-}
-
-export { getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes };
+export { getCookie, setCookie, setConsentCookie };

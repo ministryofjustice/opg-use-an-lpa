@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"regexp"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
@@ -72,7 +73,7 @@ func stripUnessesaryCharacters(code string) string {
 	return result
 }
 
-func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
+func SearchHandler(db *dynamodb.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s := &search{}
 
@@ -88,7 +89,7 @@ func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
 			if err != nil {
 				log.Debug().AnErr("form-error", err).Msg("")
 			} else {
-				s.Result = doSearch(db, s.Type, s.Query)
+				s.Result = doSearch(r.Context(), db, s.Type, s.Query)
 			}
 		}
 
@@ -98,15 +99,15 @@ func SearchHandler(db dynamodbiface.DynamoDBAPI) http.HandlerFunc {
 	}
 }
 
-func doSearch(db dynamodbiface.DynamoDBAPI, t queryType, q string) interface{} {
+func doSearch(ctx context.Context, db *dynamodb.Client, t queryType, q string) interface{} {
 	switch t {
 	case EmailQuery:
-		r, err := data.GetActorUserByEmail(db, q)
+		r, err := data.GetActorUserByEmail(ctx, db, q)
 		if err != nil {
 			return nil
 		}
 
-		r.LPAs, err = data.GetLpasByUserID(db, r.ID)
+		r.LPAs, err = data.GetLpasByUserID(ctx, db, r.ID)
 		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
 			return nil
 		}

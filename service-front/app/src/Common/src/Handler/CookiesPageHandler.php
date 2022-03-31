@@ -91,19 +91,11 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         $cookiePolicy['essential'] = true;
         $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
 
-        $response = FigResponseCookies::set(
+        return FigResponseCookies::set(
             $response,
             SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                 ->withHttpOnly(false)
                 ->withExpires(new \DateTime('+365 days'))
-                ->withPath('/')
-        );
-
-        return FigResponseCookies::set(
-            $response,
-            SetCookie::create(self::SEEN_COOKIE_NAME, 'true')
-                ->withHttpOnly(false)
-                ->withExpires(new \DateTime('+30 days'))
                 ->withPath('/')
         );
     }
