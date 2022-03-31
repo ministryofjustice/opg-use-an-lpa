@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_health_check_alarm" {
 
 resource "aws_route53_health_check" "viewer_health_check" {
   fqdn              = aws_route53_record.viewer-use-my-lpa.fqdn
-  reference_name    = "${local.environment_name}-viewer"
+  reference_name    = "${substr(local.environment_name, 0, 20)}-viewer"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_health_check_alarm" {
 
 resource "aws_route53_health_check" "actor_health_check" {
   fqdn              = aws_route53_record.actor-use-my-lpa.fqdn
-  reference_name    = "${local.environment_name}-actor"
+  reference_name    = "${substr(local.environment_name, 0, 20)}-actor"
   port              = 443
   type              = "HTTPS"
   failure_threshold = 1
