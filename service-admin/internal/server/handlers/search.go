@@ -115,12 +115,12 @@ func doSearch(ctx context.Context, db *dynamodb.Client, t queryType, q string) i
 		return r
 
 	case ActivationCodeQuery:
-		r, err := data.GetLPAByActivationCode(db, stripUnessesaryCharacters(q))
+		r, err := data.GetLPAByActivationCode(ctx, db, stripUnessesaryCharacters(q))
 		if err != nil {
 			return nil
 		}
 
-		email, err := data.GetEmailByUserID(db, r.UserID)
+		email, err := data.GetEmailByUserID(ctx, db, r.UserID)
 
 		if email == "" {
 			email = "Not Found"

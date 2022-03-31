@@ -55,19 +55,13 @@ func GetLpasByUserID(ctx context.Context, db *dynamodb.Client, uid string) (lpas
 	return nil, ErrUserLpaActorMapNotFound
 }
 
-func GetLPAByActivationCode(db dynamodbiface.DynamoDBAPI, activationCode string) (lpa *LPA, err error) {
-	result, err := db.Query(&dynamodb.QueryInput{
-		TableName: aws.String(prefixedTableName(UserLpaActorTableName)),
-		IndexName: aws.String(ActivationCodeIndexName),
-		KeyConditions: map[string]*dynamodb.Condition{
-			"ActivationCode": {
-				ComparisonOperator: aws.String("EQ"),
-				AttributeValueList: []*dynamodb.AttributeValue{
-					{
-						S: aws.String(activationCode),
-					},
-				},
-			},
+func GetLPAByActivationCode(ctx context.Context, db *dynamodb.Client, activationCode string) (lpa *LPA, err error) {
+	result, err := db.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
+		IndexName:              aws.String(ActivationCodeIndexName),
+		KeyConditionExpression: aws.String("ActivationCode = :a"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":a": &types.AttributeValueMemberS{Value: activationCode},
 		},
 	})
 
@@ -75,10 +69,10 @@ func GetLPAByActivationCode(db dynamodbiface.DynamoDBAPI, activationCode string)
 		log.Error().Err(err).Msg("error while searching for activationCode")
 	}
 
-	if *result.Count > 0 {
+	if result.Count > 0 {
 		var lpas []*LPA
 
-		err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &lpas)
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &lpas)
 		if err != nil {
 			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
 		}

@@ -59,13 +59,11 @@ func GetActorUserByEmail(ctx context.Context, db *dynamodb.Client, email string)
 	return nil, ErrActorUserNotFound
 }
 
-func GetEmailByUserID(db dynamodbiface.DynamoDBAPI, userID string) (email string, err error) {
-	result, err := db.GetItem(&dynamodb.GetItemInput{
+func GetEmailByUserID(ctx context.Context, db *dynamodb.Client, userID string) (email string, err error) {
+	result, err := db.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: aws.String(prefixedTableName(ActorTableName)),
-		Key: map[string]*dynamodb.AttributeValue{
-			"Id": {
-				S: aws.String(userID),
-			},
+		Key: map[string]types.AttributeValue{
+			"Id": &types.AttributeValueMemberS{Value: userID},
 		},
 	})
 
@@ -76,7 +74,7 @@ func GetEmailByUserID(db dynamodbiface.DynamoDBAPI, userID string) (email string
 	if result != nil {
 		marshalledResult := ActorUser{}
 
-		err = dynamodbattribute.UnmarshalMap(result.Item, &marshalledResult)
+		err = attributevalue.UnmarshalMap(result.Item, &marshalledResult)
 		if err != nil {
 			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
 		}
