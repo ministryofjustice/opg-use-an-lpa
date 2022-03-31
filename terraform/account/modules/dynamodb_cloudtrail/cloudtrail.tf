@@ -20,7 +20,8 @@ resource "aws_cloudtrail" "cloudtrail" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  name       = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  kms_key_id = aws_kms_key.cloudtrail_log_group_key.key_id
 }
 
 resource "aws_iam_role" "cloudtrail" {
