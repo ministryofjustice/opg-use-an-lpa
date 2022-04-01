@@ -20,8 +20,9 @@ resource "aws_cloudtrail" "cloudtrail" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name       = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
-  kms_key_id = aws_kms_alias.cloudtrail_log_group_key.target_key_arn
+  name              = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_alias.cloudtrail_log_group_key.target_key_arn
 }
 
 resource "aws_iam_role" "cloudtrail" {
@@ -47,7 +48,6 @@ resource "aws_iam_role_policy" "cloudtrail" {
 }
 
 data "aws_iam_policy_document" "cloudtrail_role_policy" {
-  #tfsec:ignore:aws-iam-no-policy-wildcards
   statement {
     actions = [
       "logs:CreateLogStream",
@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "cloudtrail_role_policy" {
       "logs:DescribeLogStreams"
     ]
 
-    resources = ["*"]
+    resources = [aws_cloudtrail.cloudtrail.arn]
     effect    = "Allow"
   }
 }
