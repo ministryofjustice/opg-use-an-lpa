@@ -9,7 +9,7 @@ resource "aws_cloudtrail" "cloudtrail" {
   s3_bucket_name                = aws_s3_bucket.cloudtrail.bucket
 
   event_selector {
-    include_management_events = true
+    include_management_events = false
     read_write_type           = "All"
 
     data_resource {
@@ -21,7 +21,7 @@ resource "aws_cloudtrail" "cloudtrail" {
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   name       = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
-  kms_key_id = aws_kms_key.cloudtrail_log_group_key.key_id
+  kms_key_id = aws_kms_alias.cloudtrail_log_group_key.target_key_arn
 }
 
 resource "aws_iam_role" "cloudtrail" {

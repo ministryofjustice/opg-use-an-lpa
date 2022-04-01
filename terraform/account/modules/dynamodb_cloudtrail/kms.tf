@@ -81,7 +81,7 @@ resource "aws_kms_key" "cloudtrail_log_group_key" {
 }
 
 resource "aws_kms_alias" "cloudtrail_log_group_key" {
-  name          = "alias/cloudtrail_log_group_key_encryption"
+  name          = "alias/ddb_cloudtrail_log_group_key_encryption"
   target_key_id = aws_kms_key.cloudtrail_log_group_key.key_id
 }
 
