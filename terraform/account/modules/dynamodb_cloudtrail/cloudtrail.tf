@@ -60,3 +60,12 @@ data "aws_iam_policy_document" "cloudtrail_role_policy" {
     effect    = "Allow"
   }
 }
+
+resource "aws_cloudwatch_query_definition" "dns_firewall_statistics" {
+  name            = "Cloudtrail/DynamoDB Data Plane Events"
+  log_group_names = [aws_cloudwatch_log_group.cloudtrail.name]
+  query_string    = <<EOF
+fields eventTime, eventName, requestParameters.tableName as table, requestParameters.indexName as index, userIdentity.sessionContext.sessionIssuer.userName as iam_user
+| sort eventTime desc
+EOF
+}
