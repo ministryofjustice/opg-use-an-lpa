@@ -48,8 +48,11 @@ data "aws_iam_policy_document" "cloudtrail_s3_key" {
     ]
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ci"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci"
+      ]
     }
   }
 
@@ -145,8 +148,11 @@ data "aws_iam_policy_document" "cloudtrail_log_group_key" {
     ]
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci"
+      ]
     }
   }
 }
