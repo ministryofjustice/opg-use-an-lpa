@@ -27,6 +27,11 @@ variable "accounts" {
         domains_allowed = list(string)
         domains_blocked = list(string)
       })
+      dynamodb_cloudtrail = object({
+        enabled            = bool
+        trail_name_suffix  = string
+        bucket_name_suffix = string
+      })
       s3_access_log_bucket_name = string
     })
   )
