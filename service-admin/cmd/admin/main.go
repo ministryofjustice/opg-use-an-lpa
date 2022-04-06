@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"time"
@@ -44,16 +45,32 @@ func main() {
 			env.Get("ADMIN_JWT_SIGNING_KEY_URL", ""),
 			"The baseURL at which the public key used by the authentication JWT will be found",
 		)
+		cognitoLogoutURL = flag.String(
+			"logout-url",
+			env.Get("ADMIN_LOGOUT_URL", ""),
+			"The redirect url to logout user",
+		)
+		cognitoClientId = flag.String(
+			"client-id",
+			env.Get("ADMIN_CLIENT_ID", ""),
+			"The aws cloient id for user",
+		)
 	)
 
 	flag.Parse()
+
+	v := url.Values{}
+	v.Set("client_id", *cognitoClientId)
+
+	u, _ := url.Parse(*cognitoLogoutURL)
+	u.RawQuery = v.Encode()
 
 	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
 	srv := &http.Server{
-		Handler:      server.NewServer(dynamoDB, *keyURL),
+		Handler:      server.NewServer(dynamoDB, *keyURL, u),
 		Addr:         ":" + *port,
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
