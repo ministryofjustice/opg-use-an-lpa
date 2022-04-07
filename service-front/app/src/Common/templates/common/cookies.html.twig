@@ -14,48 +14,107 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <h1 class="govuk-heading-xl">{% trans %}Cookies{% endtrans %}</h1>
-            <p class="govuk-body">{% trans %}Cookies are files saved on your phone, tablet or computer when you visit a website.{% endtrans %}</p>
+            <p class="govuk-body">{% trans %}Cookies are small files saved on your phone, tablet or computer when you visit a website.{% endtrans %}</p>
 
             <p class="govuk-body">
             {% if application == "actor" %}
-                {% trans %}We use cookies to store information about how you use the Use a lasting power of attorney service, such as the pages you visit.{% endtrans %}
+                {% trans %}We use cookies to make the Use a lasting power of attorney service work and collect information about how you use our service.{% endtrans %}
             {% elseif application == "viewer" %}
-                {% trans %}We use cookies to store information about how you use the View a lasting power of attorney service, such as the pages you visit.{% endtrans %}
+                {% trans %}We use cookies to make the View a lasting power of attorney service work and collect information about how you use our service.{% endtrans %}
             {% endif %}
             </p>
 
             {{ govuk_form_open(form) }}
             {{ govuk_form_element(form.get('__csrf')) }}
 
-            <h2 class="govuk-heading-l">{% trans %}Cookie settings{% endtrans %}</h2>
-            <p class="govuk-body">{% trans %}We use two types of cookie. One type is strictly necessary and the other type of cookie is optional.{% endtrans %}</p>
+            <h2 class="govuk-heading-l">{% trans %}Essential cookies{% endtrans %}</h2>
+            <p class="govuk-body">
+                {% trans %}
+                    Essential cookies keep your information secure while you use this service. We do not need to ask permission to use them.
+                {% endtrans %}
+            </p>
+            <table class="govuk-table">
+                <caption class="govuk-visually-hidden">Essential cookies</caption>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Name</th>
+                    <th class="govuk-table__header">Purpose</th>
+                    <th class="govuk-table__header">Expires after</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">cookie_policy</td>
+                    <td class="govuk-table__cell">Saves your cookie consent settings</td>
+                    <td class="govuk-table__cell">1 month</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">seen_cookie_message</td>
+                    <td class="govuk-table__cell">Tells us whether you have seen the cookie banner</td>
+                    <td class="govuk-table__cell">1 month</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">session</td>
+                    <td class="govuk-table__cell">Used to keep you signed in and to remember your progress through the service</td>
+                    <td class="govuk-table__cell">24 hours</td>
+                </tr>
+                </tbody>
+            </table>
 
-            <h3 class="govuk-heading-m">{% trans %}Cookies that measure website use{% endtrans %}</h3>
-            <p class="govuk-body">{% trans %}OPG and Government Digital Services use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:{% endtrans %}</p>
-
-            <ul class="govuk-list govuk-list--bullet">
-                <li>{% trans %}what pages you visit and how long you spend on each{% endtrans %}</li>
-                <li>{% trans %}what you click on while you're visiting the site{% endtrans %}</li>
-            </ul>
+            <h2 class="govuk-heading-l">{% trans %}Analytics cookies (optional){% endtrans %}</h2>
+            <p class="govuk-body">
+            {% if application == "actor" %}
+                {% trans %}
+                    With your permission, we use Google Analytics to collect data about how you use the Use a lasting power of attorney service. This information helps us to improve our service.
+                {% endtrans %}
+            {% elseif application == "viewer" %}
+                {% trans %}
+                    With your permission, we use Google Analytics to collect data about how you use the View a lasting power of attorney service. This information helps us to improve our service.
+                {% endtrans %}
+            {% endif %}
+            </p>
 
             <p class="govuk-body">
-                {% trans %}We do not allow Google to use or share the data about how you use this site.{% endtrans %}
+                {% trans %}
+                    Google is not allowed to use or share our analytics data with anyone.
+                {% endtrans %}
             </p>
+            <p class="govuk-body">
+                {% trans %}
+                    No personal details are stored with this information, so you can’t be identified.
+                {% endtrans %}
+            </p>
+            <p class="govuk-body">
+                {% trans %}
+                    Google Analytics stores anonymised information about:
+                {% endtrans %}
+            </p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                {% if application == "actor" %}
+                    <li>{% trans %}how you got to the Use a lasting power of attorney service{% endtrans %}</li>
+                {% elseif application == "viewer" %}
+                    <li>{% trans %}how you got to the View a lasting power of attorney service{% endtrans %}</li>
+                {% endif %}
+                <li>{% trans %}the pages you visit on the service and how long you spend on them{% endtrans %}</li>
+                <li>{% trans %}any errors you see while using the service{% endtrans %}</li>
+            </ul>
 
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <span class="govuk-visually-hidden question-text">{% trans %}Allow use of non-essential Cookies?{% endtrans %}</span>
+                        <span class="">{% trans %}Do you want to accept analytics cookies?{% endtrans %}</span>
                     </legend>
 
                     {{ govuk_form_element(form.get('usageCookies'), {'value_options':
                         [
                             {
-                                'label': 'Use cookies that measure my website use' | trans,
+                                'label': 'Yes' | trans,
                                 'value': 'yes'
                             },
+
                             {
-                                'label': 'Do not use cookies that measure my website use' | trans,
+                                'label': 'No' | trans,
                                 'value': 'no'
                             }
                         ]}
@@ -64,8 +123,6 @@
 
                 </fieldset>
             </div>
-            <h3 class="govuk-heading-m">{% trans %}Strictly necessary cookies{% endtrans %}</h3>
-            <p class="govuk-body">{% trans %}These essential cookies allow you to log in to the service. They always need to be on.{% endtrans %}</p>
 
             <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Save changes{% endtrans %}</button>
             {{ govuk_form_close() }}
