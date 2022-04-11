@@ -80,9 +80,9 @@ class AccountLookup:
             },
             ProjectionExpression='SiriusUid,Added,ActorId,DueBy'
         )
+        logging.info('found :%s', response['Count'])
         lpas = {}
-        for lpa in response['Items']:
-            lpas.update(lpa)
+        lpas['Items'] = response['Items']
         return lpas
 
     def get_users_by_id(self, user_id):
