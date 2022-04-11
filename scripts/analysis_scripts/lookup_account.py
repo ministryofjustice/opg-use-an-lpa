@@ -61,14 +61,6 @@ class AccountLookup:
         logging.info(response)
         return response
 
-    def get_lpas(self):
-        paginator = self.aws_dynamodb_client.get_paginator("scan")
-        for page in paginator.paginate(
-                TableName=f'{self.environment}-UserLpaActorMap',
-                FilterExpression="attribute_exists(SiriusUid)",
-        ):
-            yield from page["Items"]
-
     def get_lpas_by_index(self, sirius_uid):
         logging.info('getting User for LPA: %s', sirius_uid)
         response = self.aws_dynamodb_client.query(
@@ -78,10 +70,10 @@ class AccountLookup:
             ExpressionAttributeValues={
                 ':sirius_uid': {'S': sirius_uid}
             },
-            ProjectionExpression='SiriusUid,Added,ActorId,DueBy'
+            ProjectionExpression='SiriusUid,Added,ActorId,DueBy,UserId'
         )
         logging.info(response)
-        return response
+        return response['Items']
 
     def get_lpas_by_user_id(self, user_id):
         logging.info('getting LPAs for user id: %s', user_id)
@@ -145,10 +137,6 @@ class AccountLookup:
         output_json = []
         logging.info('looking up account for LPA: %s', lpa_id)
         lpas = self.get_lpas_by_index(lpa_id)
-        logging.info(lpas)
-        exit()
-        # lpas = self.get_lpas()
-
         for item in lpas:
             if item['SiriusUid']['S'] in lpa_id:
                 user = self.get_users_by_id(item['UserId']['S'])
