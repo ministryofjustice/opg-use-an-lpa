@@ -92,41 +92,45 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         $form->setData($request->getParsedBody());
 
+        $response = new RedirectResponse(
+            $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
+        );
+
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
+        $cookiePolicy = [];
+        $cookiePolicy['essential'] = true;
+        $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
+
+        $response = FigResponseCookies::set(
+            $response,
+            SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
+                ->withHttpOnly(false)
+                ->withExpires(new \DateTime('+365 days'))
+                ->withPath('/')
+        );
+
         $message = $this->translator->translate(
-            "You’ve set your cookie preferences. Go back to the page you were looking at.",
+            "You've set your cookie preferences. Go back to the page you were looking at.",
             [
+
             ],
             null,
             'flashMessage'
         );
         $flash->flash(self::COOKIES_SET_FLASH_MSG, $message);
 
-        return new HtmlResponse($this->renderer->render('common::cookies', [
-            'form'        => $form,
-        ]));
-
-//        $response = new RedirectResponse(
-//            $this->urlHelper->generate(
-//                'common::cookies'
-//            )
-//           // $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
+//        return new RedirectResponse(
+//            $this->urlHelper->generate('lpa.dashboard')
 //        );
-
-       // var_dump($form->get('referer')->getValue()); die;
-
-        $cookiePolicy = [];
-        $cookiePolicy['essential'] = true;
-        $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
 
         return FigResponseCookies::set(
             $response,
-            SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
+            SetCookie::create(self::SEEN_COOKIE_NAME, 'true')
                 ->withHttpOnly(false)
-                ->withExpires(new \DateTime('+365 days'))
-                ->withPath('/')
+                ->withExpires(new \DateTime('+30 days'))
+                //->withPath('/')
         );
     }
 }
