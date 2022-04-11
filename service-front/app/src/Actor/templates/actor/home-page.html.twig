@@ -14,7 +14,9 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    
+
+                    {{ include('@actor/partials/lpas-registered-after.html.twig') }}
+
                     {{ govuk_error_summary(form) }}
                     {{ govuk_form_open(form) }}
 
