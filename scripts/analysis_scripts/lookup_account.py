@@ -58,7 +58,7 @@ class AccountLookup:
             },
             ProjectionExpression='Id,Email,LastLogin,ActivationToken'
         )
-        logging.info(response)
+        logging.info('found: %s', response['Count'])
         return response
 
     def get_lpas_by_index(self, sirius_uid):
@@ -72,7 +72,7 @@ class AccountLookup:
             },
             ProjectionExpression='SiriusUid,Added,ActorId,DueBy,UserId'
         )
-        logging.info(response)
+        logging.info('found: %s', response['Count'])
         return response['Items']
 
     def get_lpas_by_user_id(self, user_id):
@@ -86,10 +86,8 @@ class AccountLookup:
             },
             ProjectionExpression='SiriusUid,Added,ActorId,DueBy'
         )
-        logging.info('found :%s', response['Count'])
-        lpas = {}
-        lpas['Items'] = response['Items']
-        return lpas
+        logging.info('found: %s', response['Count'])
+        return response['Items']
 
     def get_users_by_id(self, user_id):
         response = self.aws_dynamodb_client.query(
