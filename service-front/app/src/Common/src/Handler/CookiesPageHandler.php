@@ -90,11 +90,15 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
 
+      //  var_dump("-------------------------------- 1");
+
         $form->setData($request->getParsedBody());
 
         $response = new RedirectResponse(
             $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
         );
+
+       // var_dump("-------------------------------- 2");
 
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
@@ -103,6 +107,8 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         $cookiePolicy['essential'] = true;
         $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
 
+      //  var_dump("-------------------------------- 3");
+
         $response = FigResponseCookies::set(
             $response,
             SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
@@ -110,6 +116,10 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
                 ->withExpires(new \DateTime('+365 days'))
                 ->withPath('/')
         );
+
+       //r_dump($response);
+
+     //   var_dump("-------------------------------- 4");
 
         $message = $this->translator->translate(
             "You've set your cookie preferences. Go back to the page you were looking at.",
@@ -121,16 +131,26 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         );
         $flash->flash(self::COOKIES_SET_FLASH_MSG, $message);
 
+     //   var_dump("-------------------------------- 5");
+
 //        return new RedirectResponse(
 //            $this->urlHelper->generate('lpa.dashboard')
 //        );
 
-        return FigResponseCookies::set(
+        FigResponseCookies::set(
             $response,
             SetCookie::create(self::SEEN_COOKIE_NAME, 'true')
                 ->withHttpOnly(false)
                 ->withExpires(new \DateTime('+30 days'))
-                //->withPath('/')
+                ->withPath('/')
         );
+
+       // var_dump("-------------------------------- 6"); die;
+
+        return $this->redirectToRoute('cookies');
+
+//        return new RedirectResponse(
+//            $this->urlHelper->generate('cookies')
+//        );
     }
 }
