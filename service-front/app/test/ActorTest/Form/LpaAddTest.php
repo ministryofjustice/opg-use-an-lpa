@@ -27,7 +27,7 @@ class LpaAddTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'lpa_add';
+        return 'lpa_add_activation_code';
     }
 
     public function getFormElements(): array
@@ -35,8 +35,6 @@ class LpaAddTest extends TestCase implements TestsLaminasForm
         return [
             '__csrf'           => Csrf::class,
             'passcode'         => Text::class,
-            'reference_number' => Text::class,
-            'dob'              => Date::class,
         ];
     }
 

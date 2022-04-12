@@ -79,93 +79,93 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn($this->sessionProphecy->reveal());
     }
 
-    public function testGetReturnsHtmlResponse()
-    {
-        $this->requestProphecy->getMethod()
-            ->willReturn('GET');
+//    public function testGetReturnsHtmlResponse()
+//    {
+//        $this->requestProphecy->getMethod()
+//            ->willReturn('GET');
+//
+//        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
+//                $this->assertIsArray($options);
+//                $this->assertArrayHasKey('form', $options);
+//                $this->assertInstanceOf(ActivationCode::class, $options['form']);
+//
+//                return true;
+//            }))
+//            ->willReturn('');
+//
+//        //  Set up the handler
+//        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+//
+//        $response = $handler->handle($this->requestProphecy->reveal());
+//
+//        $this->assertInstanceOf(HtmlResponse::class, $response);
+//    }
 
-        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
-                $this->assertIsArray($options);
-                $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(ActivationCode::class, $options['form']);
+//    public function testPostInvalidData()
+//    {
+//        $this->requestProphecy->getMethod()
+//            ->willReturn('POST');
+//
+//        $this->requestProphecy->getParsedBody()
+//            ->willReturn([
+//                '__csrf' => self::CSRF_CODE,
+//                'passcode' => '',
+//                'reference_number' => '',
+//                'dob' => [
+//                    'day' => '',
+//                    'month' => '',
+//                    'year' => '',
+//                ],
+//            ]);
+//
+//        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
+//                $this->assertIsArray($options);
+//                $this->assertArrayHasKey('form', $options);
+//                $this->assertInstanceOf(ActivationCode::class, $options['form']);
+//
+//                return true;
+//            }))
+//            ->willReturn('');
+//
+//        //  Set up the handler
+//        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+//
+//        $response = $handler->handle($this->requestProphecy->reveal());
+//
+//        $this->assertInstanceOf(HtmlResponse::class, $response);
+//    }
 
-                return true;
-            }))
-            ->willReturn('');
-
-        //  Set up the handler
-        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
-
-        $response = $handler->handle($this->requestProphecy->reveal());
-
-        $this->assertInstanceOf(HtmlResponse::class, $response);
-    }
-
-    public function testPostInvalidData()
-    {
-        $this->requestProphecy->getMethod()
-            ->willReturn('POST');
-
-        $this->requestProphecy->getParsedBody()
-            ->willReturn([
-                '__csrf' => self::CSRF_CODE,
-                'passcode' => '',
-                'reference_number' => '',
-                'dob' => [
-                    'day' => '',
-                    'month' => '',
-                    'year' => '',
-                ],
-            ]);
-
-        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
-                $this->assertIsArray($options);
-                $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(ActivationCode::class, $options['form']);
-
-                return true;
-            }))
-            ->willReturn('');
-
-        //  Set up the handler
-        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
-
-        $response = $handler->handle($this->requestProphecy->reveal());
-
-        $this->assertInstanceOf(HtmlResponse::class, $response);
-    }
-
-    /**
-     * @dataProvider validSubmissions
-     * @test
-     */
-    public function redirects_with_all_valid_submissions(array $expected, string $dob)
-    {
-        $this->requestProphecy->getMethod()
-            ->willReturn('POST');
-
-        $this->sessionProphecy->set('passcode', $expected['passcode']);
-        $this->sessionProphecy->set('reference_number', $expected['reference_number']);
-        $this->sessionProphecy->set('dob_by_code', $dob);
-
-        $this->requestProphecy->getParsedBody()
-            ->willReturn($expected);
-
-        $this->urlHelperProphecy->generate('lpa.check', [], [])
-            ->willReturn('/lpa/check');
-
-        //  Set up the handler
-        $handler = new ActivationCodeHandler(
-            $this->rendererProphecy->reveal(),
-            $this->urlHelperProphecy->reveal(),
-            $this->authenticatorProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
-        );
-
-        $response = $handler->handle($this->requestProphecy->reveal());
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-    }
+//    /**
+//     * @dataProvider validSubmissions
+//     * @test
+//     */
+//    public function redirects_with_all_valid_submissions(array $expected, string $dob)
+//    {
+//        $this->requestProphecy->getMethod()
+//            ->willReturn('POST');
+//
+//        $this->sessionProphecy->set('passcode', $expected['passcode']);
+//        $this->sessionProphecy->set('reference_number', $expected['reference_number']);
+//        $this->sessionProphecy->set('dob_by_code', $dob);
+//
+//        $this->requestProphecy->getParsedBody()
+//            ->willReturn($expected);
+//
+//        $this->urlHelperProphecy->generate('lpa.check', [], [])
+//            ->willReturn('/lpa/check');
+//
+//        //  Set up the handler
+//        $handler = new ActivationCodeHandler(
+//            $this->rendererProphecy->reveal(),
+//            $this->urlHelperProphecy->reveal(),
+//            $this->authenticatorProphecy->reveal(),
+//            $this->lpaServiceProphecy->reveal()
+//        );
+//
+//        $response = $handler->handle($this->requestProphecy->reveal());
+//
+//        $this->assertInstanceOf(RedirectResponse::class, $response);
+//    }
 
     public function validSubmissions(): array
     {
