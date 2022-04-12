@@ -20,7 +20,7 @@ services:
       - webpack_dist:/dist
 
   # ---------------------------
-  # Viewer Front
+  # PDF Generator
 
   service-pdf:
     container_name: service-pdf
