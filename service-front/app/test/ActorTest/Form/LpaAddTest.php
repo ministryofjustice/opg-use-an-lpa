@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form;
 
-use Actor\Form\LpaAdd;
+use Actor\Form\AddLpa\ActivationCode;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Common\Form\Fieldset\Date;
@@ -17,7 +17,7 @@ class LpaAddTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
-    /** @var LpaAdd */
+    /** @var ActivationCode */
     protected $form;
 
     public function getForm(): AbstractForm
@@ -43,6 +43,6 @@ class LpaAddTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new LpaAdd($guardProphecy->reveal());
+        $this->form = new ActivationCode($guardProphecy->reveal());
     }
 }

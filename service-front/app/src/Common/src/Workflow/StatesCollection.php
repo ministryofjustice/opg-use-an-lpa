@@ -29,12 +29,14 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param class-string $workflowStateClass
+     * @param class-string<T> $workflowStateClass
      *
-     * @return WorkflowState
+     * @return T
      * @throws StateNotInitialisedException
+     *
+     *  @template T of WorkflowState
      */
-    public function get(string $workflowStateClass): WorkflowState
+    public function get(string $workflowStateClass): mixed
     {
         if (! $this->has($workflowStateClass)) {
             throw new StateNotInitialisedException('State not available in state collection');

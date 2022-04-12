@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler;
 
-use Actor\Form\LpaAdd;
-use Actor\Handler\LpaAddHandler;
+use Actor\Form\AddLpa\ActivationCode;
+use Actor\Handler\AddLpa\ActivationCodeHandler;
 use Common\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -84,17 +84,17 @@ class LpaAddHandlerTest extends TestCase
         $this->requestProphecy->getMethod()
             ->willReturn('GET');
 
-        $this->rendererProphecy->render('actor::lpa-add', new CallbackToken(function($options) {
+        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
                 $this->assertIsArray($options);
                 $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(LpaAdd::class, $options['form']);
+                $this->assertInstanceOf(ActivationCode::class, $options['form']);
 
                 return true;
             }))
             ->willReturn('');
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -118,17 +118,17 @@ class LpaAddHandlerTest extends TestCase
                 ],
             ]);
 
-        $this->rendererProphecy->render('actor::lpa-add', new CallbackToken(function($options) {
+        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
                 $this->assertIsArray($options);
                 $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(LpaAdd::class, $options['form']);
+                $this->assertInstanceOf(ActivationCode::class, $options['form']);
 
                 return true;
             }))
             ->willReturn('');
 
         //  Set up the handler
-        $handler = new LpaAddHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
+        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
@@ -155,7 +155,7 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('/lpa/check');
 
         //  Set up the handler
-        $handler = new LpaAddHandler(
+        $handler = new ActivationCodeHandler(
             $this->rendererProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
             $this->authenticatorProphecy->reveal(),

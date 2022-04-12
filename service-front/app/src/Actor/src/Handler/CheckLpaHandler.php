@@ -21,6 +21,7 @@ use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
+use Common\Workflow\State;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -46,6 +47,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 {
     use CsrfGuard;
     use SessionTrait;
+    use State;
     use User;
     use Logger;
 
@@ -56,6 +58,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private LpaService $lpaService;
     private RateLimitService $rateLimitService;
     private ?SessionInterface $session;
+    private \Actor\Workflow\AddLpa $state;
     private TranslatorInterface $translator;
     private ?UserInterface $user;
     private AddLpa $addLpa;
@@ -98,6 +101,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->state = (object) $this->loadState($request, \Actor\Workflow\AddLpa::class);
+
         $this->session = $this->getSession($request, 'session');
 
         $this->form = new LpaConfirm($this->getCsrfGuard($request));
@@ -105,9 +110,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user = $this->getUser($request);
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        $passcode = $this->session->get('passcode');
-        $referenceNumber = $this->session->get('reference_number');
-        $dob = $this->session->get('dob_by_code');
+        $passcode = $this->state->activationCode;
+        $referenceNumber = $this->state->lpaReferenceNumber;
+        $dob = $this->state->dateOfBirth->format('Y-m-d');
 
         if (
             !isset($this->identity)
@@ -121,12 +126,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             throw new SessionTimeoutException();
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request, $passcode, $referenceNumber, $dob);
-            default:
-                return $this->handleGet($request, $passcode, $referenceNumber, $dob);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request, $passcode, $referenceNumber, $dob),
+            default => $this->handleGet($request, $passcode, $referenceNumber, $dob),
+        };
     }
 
     /**

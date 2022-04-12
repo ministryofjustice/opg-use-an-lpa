@@ -17,7 +17,6 @@ class RequestActivationKey implements WorkflowState
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
-
     /**
      * Lovely constructor promotion
      */
