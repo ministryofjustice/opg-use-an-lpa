@@ -1,4 +1,4 @@
-{% extends '@actor/layout.html.twig' %}
+{% extends '@layout/default.html.twig' %}
 
 {% block html_title %}{% trans %}Cookies{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
 
@@ -13,8 +13,7 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             {{ include('@partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Common\\Handler\\CookiesPageHandler::COOKIES_SET_FLASH_MSG'}) }}
-
-            <h1 class="govuk-heading-xl">{% trans %}Cookies{% endtrans %}</h1>
+            service-front/app/features/actor-cookie-banner.feature            <h1 class="govuk-heading-xl">{% trans %}Cookies{% endtrans %}</h1>
             <p class="govuk-body">{% trans %}Cookies are small files saved on your phone, tablet or computer when you visit a website.{% endtrans %}</p>
 
             <p class="govuk-body">

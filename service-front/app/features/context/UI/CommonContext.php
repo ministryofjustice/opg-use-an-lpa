@@ -115,6 +115,9 @@ class CommonContext implements Context
     public function iCanSeeACookieConsentBanner($serviceName)
     {
         $this->ui->assertPageAddress('/home');
+
+        //var_dump($serviceName); die;
+        $this->ui->assertPageContainsText($serviceName);
         $this->ui->assertPageContainsText('Cookies on ' . $serviceName);
     }
 
@@ -128,11 +131,11 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /I choose an (.*) and save my choice$/
+     * @Then /I choose (.*) and save my choice$/
      */
     public function iChooseAnOptionAndSaveMyChoice($options)
     {
-        if ($options === 'Use cookies that measure my website use') {
+        if ($options === 'Yes') {
             $this->ui->fillField('usageCookies', 'yes');
         } else {
             $this->ui->fillField('usageCookies', 'no');
@@ -218,10 +221,9 @@ class CommonContext implements Context
      */
     public function iHaveACookieNamedSeenCookieMessage()
     {
-        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageAddress('/cookies');
 
         $session = $this->ui->getSession();
-
         $seen = $session->getCookie('cookie_policy');
 
         if ($seen === null) {
@@ -317,11 +319,13 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I see options to (.*) and (.*)$/
+     * @Then /^I see options (.*) and (.*) to accept analytics cookies$/
      */
-    public function iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse($option1, $option2)
+    public function iSeeOptionsToAcceptAnalyticsCookies($option1, $option2)
     {
-        $this->ui->assertPageContainsText("Cookies that measure website use");
+        $this->ui->assertPageContainsText("Do you want to accept analytics cookiesw");
+        $this->ui->assertPageContainsText($option1);
+        $this->ui->assertPageContainsText($option2);
         $this->ui->assertElementContains('input[id=usageCookies-1]', '');
         $this->ui->assertElementContains('input[id=usageCookies-2]', '');
     }
@@ -332,11 +336,11 @@ class CommonContext implements Context
     public function iSetMyCookiePreferences()
     {
         $this->iClickOnViewCookies();
-        $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse(
-            'Use cookies that measure my website use',
-            'Do not use cookies that measure my website use'
+        $this->iSeeOptionsToAcceptAnalyticsCookies(
+            'Yes',
+            'No'
         );
-        $this->iChooseAnOptionAndSaveMyChoice('Use cookies that measure my website use');
+        $this->iChooseAnOptionAndSaveMyChoice('Yes');
     }
 
     /**
@@ -345,6 +349,14 @@ class CommonContext implements Context
     public function iShouldBeOnTheHomePageOfTheService()
     {
         $this->ui->assertPageAddress('/home');
+    }
+
+    /**
+     * @Then /^I should be on the cookies page of the service$/
+     */
+    public function iShouldBeOnTheCookiesPageOfTheService()
+    {
+        $this->ui->assertPageAddress('/cookies');
     }
 
     /**

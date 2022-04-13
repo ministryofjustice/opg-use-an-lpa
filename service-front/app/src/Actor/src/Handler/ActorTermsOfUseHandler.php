@@ -40,7 +40,6 @@ class ActorTermsOfUseHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        var_dump("hello..."); die;
         return new HtmlResponse($this->renderer->render('actor::actor-terms-of-use'));
     }
 }

@@ -61,6 +61,9 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         $form = new CookieConsent($this->getCsrfGuard($request));
 
         if ($request->getMethod() == 'POST') {
@@ -82,32 +85,34 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         return new HtmlResponse($this->renderer->render('common::cookies', [
             'form'        => $form,
-            'application' => $this->application
+            'application' => $this->application,
+            'flash'       => $flash
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
-
-      //  var_dump("-------------------------------- 1");
-
         $form->setData($request->getParsedBody());
 
         $response = new RedirectResponse(
             $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
         );
 
-       // var_dump("-------------------------------- 2");
-
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
+        $message = $this->translator->translate(
+            "%referer%",
+            ['%referer%' => $form->get('referer')->getValue()],
+            null,
+            'flashMessage'
+        );
+        $flash->flash(self::COOKIES_SET_FLASH_MSG, $message);
 
         $cookiePolicy = [];
         $cookiePolicy['essential'] = true;
         $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
-
-      //  var_dump("-------------------------------- 3");
 
         $response = FigResponseCookies::set(
             $response,
@@ -117,26 +122,6 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
                 ->withPath('/')
         );
 
-       //r_dump($response);
-
-     //   var_dump("-------------------------------- 4");
-
-        $message = $this->translator->translate(
-            "You've set your cookie preferences. Go back to the page you were looking at.",
-            [
-
-            ],
-            null,
-            'flashMessage'
-        );
-        $flash->flash(self::COOKIES_SET_FLASH_MSG, $message);
-
-     //   var_dump("-------------------------------- 5");
-
-//        return new RedirectResponse(
-//            $this->urlHelper->generate('lpa.dashboard')
-//        );
-
         FigResponseCookies::set(
             $response,
             SetCookie::create(self::SEEN_COOKIE_NAME, 'true')
@@ -145,12 +130,6 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
                 ->withPath('/')
         );
 
-       // var_dump("-------------------------------- 6"); die;
-
-        return $this->redirectToRoute('cookies');
-
-//        return new RedirectResponse(
-//            $this->urlHelper->generate('cookies')
-//        );
+        return new RedirectResponse($this->urlHelper->generate('cookies'));
     }
 }
