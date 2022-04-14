@@ -7,7 +7,8 @@
         </div>
         <div class="govuk-notification-banner__content">
             <p class="govuk-notification-banner__heading">
-                You’ve set your cookie preferences. <a class="govuk-notification-banner__link" href="{{ flash.getFlash(constant(flash_key)) }}">Go back to the page you were looking at</a>.
+                {% trans %}You’ve set your cookie preferences.{% endtrans %}
+                <a class="govuk-notification-banner__link" href="{{ flash.getFlash(constant(flash_key)) }}">{% trans %}Go back to the page you were looking at{% endtrans %}</a>.
             </p>
         </div>
     </div>
