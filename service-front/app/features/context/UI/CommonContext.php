@@ -350,7 +350,7 @@ class CommonContext implements Context
             'Yes',
             'No'
         );
-       $this->iChooseAnOptionAndSaveMyChoice('Yes');
+        $this->iChooseAnOptionAndSaveMyChoice('Yes');
     }
 
     /**
@@ -471,5 +471,5 @@ class CommonContext implements Context
         $this->ui->assertPageAddress('/cookies');
         $this->ui->clickLink($link);
     }
-
 }
+
