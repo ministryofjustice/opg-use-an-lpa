@@ -645,7 +645,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $expectedUrl = 'http://localhost/forgot-password/' . $this->userPasswordResetToken;
+        $expectedUrl = 'http://localhost/reset-password/' . $this->userPasswordResetToken;
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
 
         // API call for Notify

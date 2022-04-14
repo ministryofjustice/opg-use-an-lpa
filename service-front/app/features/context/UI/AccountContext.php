@@ -439,7 +439,7 @@ class AccountContext implements Context
      */
     public function iAmToldThatMyInstructionsHaveExpired()
     {
-        $this->ui->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/reset-password/123456');
 
         $this->ui->assertPageContainsText('invalid or has expired');
     }
@@ -459,7 +459,7 @@ class AccountContext implements Context
      */
     public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason)
     {
-        $this->ui->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/reset-password/123456');
 
         $this->ui->assertPageContainsText($reason);
     }
@@ -491,7 +491,7 @@ class AccountContext implements Context
         $email = 'test@example.com',
         $email_confirmation = 'test@example.com'
     ) {
-        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/reset-password');
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
@@ -537,7 +537,7 @@ class AccountContext implements Context
         $email,
         $email_confirmation
     ) {
-        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/reset-password');
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
@@ -671,7 +671,7 @@ class AccountContext implements Context
      */
     public function iChooseANewInvalid($password)
     {
-        $this->ui->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/reset-password/123456');
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
@@ -686,7 +686,7 @@ class AccountContext implements Context
      */
     public function iChooseANewPassword()
     {
-        $this->ui->assertPageAddress('/forgot-password/123456');
+        $this->ui->assertPageAddress('/reset-password/123456');
 
         // API fixture for reset token check
         $this->apiFixtures->get('/v1/can-password-reset')
@@ -1105,7 +1105,7 @@ class AccountContext implements Context
         $this->apiFixtures->get('/v1/can-password-reset')
             ->respondWith(new Response(StatusCodeInterface::STATUS_GONE));
 
-        $this->ui->visit('/forgot-password/123456');
+        $this->ui->visit('/reset-password/123456');
     }
 
     /**
@@ -1125,7 +1125,7 @@ class AccountContext implements Context
      */
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword()
     {
-        $this->ui->visit('/forgot-password/123456');
+        $this->ui->visit('/reset-password/123456');
 
         $this->ui->assertPageContainsText('Change your password');
     }
@@ -1427,7 +1427,7 @@ class AccountContext implements Context
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/reset-password');
 
         $this->ui->assertPageContainsText('We\'ve emailed a link to test@example.com');
 
@@ -1439,7 +1439,7 @@ class AccountContext implements Context
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPasswordToMyProvidedEmail($email)
     {
-        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/reset-password');
         $this->ui->assertPageContainsText('emailed a link to ' . strtolower($email));
     }
 
@@ -1787,7 +1787,7 @@ class AccountContext implements Context
      */
     public function iShouldSeeTheErrorMessage($error)
     {
-        $this->ui->assertPageAddress('/forgot-password');
+        $this->ui->assertPageAddress('/reset-password');
         $this->ui->assertPageContainsText($error);
     }
 

@@ -98,13 +98,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User management
     $app->route(
-        '/forgot-password',
+        '/reset-password',
         Actor\Handler\PasswordResetRequestPageHandler::class,
         ['GET', 'POST'],
         'password-reset'
     );
     $app->route(
-        '/forgot-password/{token}',
+        '/reset-password/{token}',
         Actor\Handler\PasswordResetPageHandler::class,
         ['GET', 'POST'],
         'password-reset-token'
