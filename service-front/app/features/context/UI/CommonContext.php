@@ -232,6 +232,17 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I am shown cookie preferences has been set$/
+     */
+    public function iAmShownCookiePreferencesHasBeenSet()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText("You’ve set your cookie preferences");
+
+        $this->ui->assertElementContains('h2[id=govuk-notification-banner-title]', '');
+    }
+
+    /**
      * @Given /^I have seen the (.*) cookie banner$/
      */
     public function iHaveSeenTheCookieBanner($serviceName)
@@ -323,7 +334,7 @@ class CommonContext implements Context
      */
     public function iSeeOptionsToAcceptAnalyticsCookies($option1, $option2)
     {
-        $this->ui->assertPageContainsText("Do you want to accept analytics cookiesw");
+        $this->ui->assertPageContainsText("Do you want to accept analytics cookies");
         $this->ui->assertPageContainsText($option1);
         $this->ui->assertPageContainsText($option2);
         $this->ui->assertElementContains('input[id=usageCookies-1]', '');
@@ -340,7 +351,7 @@ class CommonContext implements Context
             'Yes',
             'No'
         );
-        $this->iChooseAnOptionAndSaveMyChoice('Yes');
+       $this->iChooseAnOptionAndSaveMyChoice('Yes');
     }
 
     /**
