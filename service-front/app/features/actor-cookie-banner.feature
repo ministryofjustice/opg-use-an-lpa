@@ -35,19 +35,29 @@ Feature: Cookie consent
   @ui
   Scenario: Check cookie_policy set
     Given I have seen the Use a lasting power of attorney cookie banner
+    And I set my cookie preferences
+    Then I have a cookie named cookie_policy
+
+  @ui
+  Scenario: Check user is shown cookie preferences has been set
+    Given I have seen the Use a lasting power of attorney cookie banner
     When I set my cookie preferences
     Then I am taken to the actor cookies page
     And I am shown cookie preferences has been set
 
   @ui
-  Scenario: Check cookie_policy set
+  Scenario: Check user is taken to cookies page after setting cookies
     Given I have seen the Use a lasting power of attorney cookie banner
-    And I set my cookie preferences
-    Then I have a cookie named cookie_policy
+    And I chose to ignore setting cookies and I am on the dashboard page
+    When I set my cookie preferences
+    Then I am taken to the actor cookies page
 
   @ui
   Scenario: Check user is referred back to the relevant page after setting cookies
     Given I have seen the Use a lasting power of attorney cookie banner
     And I chose to ignore setting cookies and I am on the dashboard page
-    When I set my cookie preferences
-    Then I am taken to the actor cookies page
+    And I set my cookie preferences
+    And I am taken to the actor cookies page
+    And I am shown cookie preferences has been set
+    When I click on Go back to the page you were looking at on the cookies page
+    Then I am taken to the dashboard page

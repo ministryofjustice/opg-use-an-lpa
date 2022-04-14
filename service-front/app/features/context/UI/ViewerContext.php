@@ -46,6 +46,7 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I access the viewer service$/
+     * @Then /^I am taken to viewer service home page$/
      */
     public function iAccessTheViewerService()
     {

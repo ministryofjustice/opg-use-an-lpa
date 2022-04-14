@@ -237,8 +237,7 @@ class CommonContext implements Context
     public function iAmShownCookiePreferencesHasBeenSet()
     {
         $this->ui->assertPageAddress('/cookies');
-        $this->ui->assertPageContainsText("You’ve set your cookie preferences");
-
+        $this->ui->assertPageContainsText("You’ve set your cookie preferences. Go back to the page you were looking at.");
         $this->ui->assertElementContains('h2[id=govuk-notification-banner-title]', '');
     }
 
@@ -463,4 +462,14 @@ class CommonContext implements Context
     {
         $this->basePath = '/';
     }
+
+    /**
+     * @When /^I click on (.*) on the cookies page$/
+     */
+    public function iClickOnLinkOnTheCookiesPage($link): void
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->clickLink($link);
+    }
+
 }

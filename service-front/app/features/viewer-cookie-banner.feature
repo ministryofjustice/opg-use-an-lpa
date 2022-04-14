@@ -39,3 +39,12 @@ Feature: Cookie consent
     Given I have seen the View a lasting power of attorney cookie banner
     And I set my cookie preferences
     Then I have a cookie named cookie_policy
+
+  @ui
+  Scenario: Check user is referred back to the relevant page after setting cookies
+    Given I have seen the View a lasting power of attorney cookie banner
+    And I click on the view cookies link
+    And I set my cookie preferences
+    And I should be on the cookies page of the service
+    When I click on Go back to the page you were looking at on the cookies page
+    Then I am taken to viewer service home page
