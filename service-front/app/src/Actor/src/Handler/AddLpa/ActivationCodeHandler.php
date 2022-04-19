@@ -16,6 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class LpaAddHandler
+ *
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -44,15 +45,17 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
     {
         $this->form->setData(
             [
-                'passcode' => $this->state($request)->activationCode
+                'passcode' => $this->state($request)->activationCode,
             ]
         );
-        
-        return new HtmlResponse($this->renderer->render('actor::add-lpa/activation-code', [
-            'form' => $this->form->prepare(),
-            'user' => $this->getUser($request),
-            'back' => $this->lastPage($this->state($request))
-        ]));
+
+        return new HtmlResponse(
+            $this->renderer->render('actor::add-lpa/activation-code', [
+                'form' => $this->form->prepare(),
+                'user' => $this->getUser($request),
+                'back' => $this->lastPage($this->state($request)),
+            ])
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -70,7 +73,7 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
             $this->renderer->render('actor::add-lpa/activation-code', [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ])
         );
     }

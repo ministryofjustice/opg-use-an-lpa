@@ -17,6 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class LpaAddHandler
+ *
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
@@ -54,14 +55,16 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
 
         $this->form->setData($data);
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::add-lpa/date-of-birth',
-            [
-                'user' => $this->user,
-                'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
-            ]
-        ));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::add-lpa/date-of-birth',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -71,22 +74,24 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
             $postData = $this->form->getData();
 
             $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
-                (int) $postData['dob']['year'],
-                (int) $postData['dob']['month'],
-                (int) $postData['dob']['day']
+                (int)$postData['dob']['year'],
+                (int)$postData['dob']['month'],
+                (int)$postData['dob']['day']
             );
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::add-lpa/date-of-birth',
-            [
-                'user' => $this->user,
-                'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
-            ]
-        ));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::add-lpa/date-of-birth',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form->prepare(),
+                    'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
