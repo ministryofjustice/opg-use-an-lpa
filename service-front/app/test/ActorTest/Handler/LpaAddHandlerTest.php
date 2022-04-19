@@ -6,7 +6,11 @@ namespace ActorTest\Handler;
 
 use Actor\Form\AddLpa\ActivationCode;
 use Actor\Handler\AddLpa\ActivationCodeHandler;
+use Actor\Workflow\AddLpa;
+use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Common\Service\Lpa\LpaService;
+use Common\Workflow\StatesCollection;
+use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -18,6 +22,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
@@ -53,6 +58,21 @@ class LpaAddHandlerTest extends TestCase
      */
     private $sessionProphecy;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $loggerProphecy;
+
+    /**
+     * @var StatesCollection
+     */
+    private $statesProphecy;
+
+    /**
+     * @var WorkflowState
+     */
+    private $stateProphecy;
+
     public function setUp(): void
     {
         $this->rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
@@ -67,6 +87,12 @@ class LpaAddHandlerTest extends TestCase
 
         $this->sessionProphecy = $this->prophesize(SessionInterface::class);
 
+        $this->statesProphecy = $this->prophesize(StatesCollection::class);
+
+
+        $this->statesProphecy->has(AddLpa::class)->willReturn(true);
+        $this->statesProphecy->get(AddLpa::class)->willReturn(new AddLpa());
+
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
             ->willReturn(self::CSRF_CODE);
@@ -77,151 +103,40 @@ class LpaAddHandlerTest extends TestCase
 
         $this->requestProphecy->getAttribute('session', null)
             ->willReturn($this->sessionProphecy->reveal());
+
+        $this->requestProphecy->getAttribute(StatePersistenceMiddleware::WORKFLOW_STATE_ATTRIBUTE)
+            ->willReturn($this->statesProphecy->reveal());
+
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
-//    public function testGetReturnsHtmlResponse()
-//    {
-//        $this->requestProphecy->getMethod()
-//            ->willReturn('GET');
-//
-//        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
-//                $this->assertIsArray($options);
-//                $this->assertArrayHasKey('form', $options);
-//                $this->assertInstanceOf(ActivationCode::class, $options['form']);
-//
-//                return true;
-//            }))
-//            ->willReturn('');
-//
-//        //  Set up the handler
-//        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
-//
-//        $response = $handler->handle($this->requestProphecy->reveal());
-//
-//        $this->assertInstanceOf(HtmlResponse::class, $response);
-//    }
-
-//    public function testPostInvalidData()
-//    {
-//        $this->requestProphecy->getMethod()
-//            ->willReturn('POST');
-//
-//        $this->requestProphecy->getParsedBody()
-//            ->willReturn([
-//                '__csrf' => self::CSRF_CODE,
-//                'passcode' => '',
-//                'reference_number' => '',
-//                'dob' => [
-//                    'day' => '',
-//                    'month' => '',
-//                    'year' => '',
-//                ],
-//            ]);
-//
-//        $this->rendererProphecy->render('actor::add-lpa/activation-code', new CallbackToken(function($options) {
-//                $this->assertIsArray($options);
-//                $this->assertArrayHasKey('form', $options);
-//                $this->assertInstanceOf(ActivationCode::class, $options['form']);
-//
-//                return true;
-//            }))
-//            ->willReturn('');
-//
-//        //  Set up the handler
-//        $handler = new ActivationCodeHandler($this->rendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->authenticatorProphecy->reveal(), $this->lpaServiceProphecy->reveal());
-//
-//        $response = $handler->handle($this->requestProphecy->reveal());
-//
-//        $this->assertInstanceOf(HtmlResponse::class, $response);
-//    }
-
-//    /**
-//     * @dataProvider validSubmissions
-//     * @test
-//     */
-//    public function redirects_with_all_valid_submissions(array $expected, string $dob)
-//    {
-//        $this->requestProphecy->getMethod()
-//            ->willReturn('POST');
-//
-//        $this->sessionProphecy->set('passcode', $expected['passcode']);
-//        $this->sessionProphecy->set('reference_number', $expected['reference_number']);
-//        $this->sessionProphecy->set('dob_by_code', $dob);
-//
-//        $this->requestProphecy->getParsedBody()
-//            ->willReturn($expected);
-//
-//        $this->urlHelperProphecy->generate('lpa.check', [], [])
-//            ->willReturn('/lpa/check');
-//
-//        //  Set up the handler
-//        $handler = new ActivationCodeHandler(
-//            $this->rendererProphecy->reveal(),
-//            $this->urlHelperProphecy->reveal(),
-//            $this->authenticatorProphecy->reveal(),
-//            $this->lpaServiceProphecy->reveal()
-//        );
-//
-//        $response = $handler->handle($this->requestProphecy->reveal());
-//
-//        $this->assertInstanceOf(RedirectResponse::class, $response);
-//    }
-
-    public function validSubmissions(): array
+    public function testGetReturnsHtmlResponse()
     {
-        return [
-            [
-               [
-                    '__csrf' => self::CSRF_CODE,
-                    'passcode' => '100000000001',
-                    'reference_number' => '700000072400',
-                    'dob' => [
-                        'day' => '01',
-                        'month' => '01',
-                        'year' => '1980',
-                    ]
-                ],
-                '1980-01-01'
-            ],
-            [
-                [
-                    '__csrf' => self::CSRF_CODE,
-                    'passcode' => '100000000001',
-                    'reference_number' => '700000072400',
-                    'dob' => [
-                        'day' => '1',
-                        'month' => '01',
-                        'year' => '1980',
-                    ]
-                ],
-                '1980-01-01'
-            ],
-            [
-                [
-                    '__csrf' => self::CSRF_CODE,
-                    'passcode' => '100000000001',
-                    'reference_number' => '700000072400',
-                    'dob' => [
-                        'day' => '01',
-                        'month' => '1',
-                        'year' => '1980',
-                    ]
-                ],
-                '1980-01-01'
-            ],
-            [
-                [
-                    '__csrf' => self::CSRF_CODE,
-                    'passcode' => '100000000001',
-                    'reference_number' => '700000072400',
-                    'dob' => [
-                        'day' => '10',
-                        'month' => '11',
-                        'year' => '1980',
-                    ]
-                ],
-                '1980-11-10'
-            ]
-        ];
+        $this->requestProphecy->getMethod()
+            ->willReturn('GET');
+
+        $this->rendererProphecy->render(
+            'actor::add-lpa/activation-code',
+            new CallbackToken(function ($options) {
+                $this->assertIsArray($options);
+                $this->assertArrayHasKey('form', $options);
+                $this->assertInstanceOf(ActivationCode::class, $options['form']);
+
+                return true;
+            })
+        )
+            ->willReturn('');
+
+        //  Set up the handler
+        $handler = new ActivationCodeHandler(
+            $this->rendererProphecy->reveal(),
+            $this->authenticatorProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $response = $handler->handle($this->requestProphecy->reveal());
+
+        $this->assertInstanceOf(HtmlResponse::class, $response);
     }
 }

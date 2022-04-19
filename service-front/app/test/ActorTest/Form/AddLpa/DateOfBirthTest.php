@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Form;
+namespace ActorTest\Form\AddLpa;
 
 use Actor\Form\AddLpa\ActivationCode;
+use Actor\Form\AddLpa\DateOfBirth;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Common\Form\Fieldset\Date;
+use Laminas\Form\Element\Date;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
-use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class LpaAddTest extends TestCase implements TestsLaminasForm
+class DateOfBirthTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
-    /** @var ActivationCode */
+    /** @var DateOfBirth */
     protected $form;
 
     public function getForm(): AbstractForm
@@ -27,20 +27,20 @@ class LpaAddTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'lpa_add_activation_code';
+        return 'lpa_add_dob';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'passcode'         => Text::class,
+            '__csrf' => Csrf::class,
+            'dob'    => Date::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActivationCode($guardProphecy->reveal());
+        $this->form = new DateOfBirth($guardProphecy->reveal());
     }
 }
