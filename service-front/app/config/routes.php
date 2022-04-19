@@ -349,4 +349,3 @@ switch (getenv('CONTEXT')) {
     default:
         throw new Error('Unknown context');
 }
-
