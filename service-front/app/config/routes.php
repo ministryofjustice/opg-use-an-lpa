@@ -339,7 +339,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
                 $defaultNotFoundPage
             )
         ], ['GET', 'POST'], 'lpa.remove-lpa');
-
 };
 
 switch (getenv('CONTEXT')) {
@@ -350,3 +349,4 @@ switch (getenv('CONTEXT')) {
     default:
         throw new Error('Unknown context');
 }
+
