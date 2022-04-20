@@ -1,44 +1,43 @@
 package handlers_test
 
-import (
-	"os"
-	"testing"
+// import (
+// 	"testing"
 
-	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
-	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
-	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
-)
+// 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
+// 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+// 	"github.com/spf13/afero"
+// 	"github.com/stretchr/testify/assert"
+// )
 
-func TestLogoutHandler(t *testing.T) {
-	t.Parallel()
+// func TestLogoutHandler(t *testing.T) {
+// 	t.Parallel()
 
-	handler := server.WithTemplates(
-		LogoutHandler(),
-		server.LoadTemplates(os.DirFS("../../../web/templates")),
-	)
+// 	handler := server.WithTemplates(
+// 		LogoutHandler(),
+// 		server.LoadTemplates(os.DirFS("../../../web/templates")),
+// 	)
 
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
-	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/logout", nil, "You are logged out")
-}
+// 	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
+// 	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/logout", nil, "You are logged out")
+// }
 
-func TestLogoutHandler_WithBadTemplate(t *testing.T) {
-	t.Parallel()
+// func TestLogoutHandler_WithBadTemplate(t *testing.T) {
+// 	t.Parallel()
 
-	memfs := afero.NewMemMapFs()
+// 	memfs := afero.NewMemMapFs()
 
-	err := afero.WriteFile(memfs, "test.page.gohtml", []byte(""), 0644)
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
+// 	err := afero.WriteFile(memfs, "test.page.gohtml", []byte(""), 0644)
+// 	if err != nil {
+// 		t.Fatalf("%v", err)
+// 	}
 
-	fs := afero.NewIOFS(memfs)
+// 	fs := afero.NewIOFS(memfs)
 
-	handler := server.WithTemplates(
-		LogoutHandler(),
-		server.LoadTemplates(fs), // bad template location loads no templates
-	)
+// 	handler := server.WithTemplates(
+// 		LogoutHandler(),
+// 		server.LoadTemplates(fs), // bad template location loads no templates
+// 	)
 
-	// the handler panics but that is handled upstream so it claims success at this point
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
-}
+// 	// the handler panics but that is handled upstream so it claims success at this point
+// 	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
+// }
