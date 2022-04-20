@@ -33,7 +33,7 @@ class ActivationKeyTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'activation_key'         => Text::class,
+            'activation_key'   => Text::class,
         ];
     }
 
