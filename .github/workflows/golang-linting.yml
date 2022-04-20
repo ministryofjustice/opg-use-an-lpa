@@ -2,9 +2,9 @@ name: Golang Linting for Admin App
 on:
   pull_request:
     branches: [ main ]
-    paths:
-    # only run when service-admin is changed
-      - 'service-admin/**'
+    # paths:
+    # # only run when service-admin is changed
+    #   - 'service-admin/**'
 jobs:
   golangci:
     name: lint
