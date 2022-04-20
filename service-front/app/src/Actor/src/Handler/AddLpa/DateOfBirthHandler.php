@@ -101,11 +101,11 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-code.lpa-reference-number';
+        return 'lpa.add-by-key.lpa-reference-number';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-code';
+        return 'lpa.add-by-key';
     }
 }

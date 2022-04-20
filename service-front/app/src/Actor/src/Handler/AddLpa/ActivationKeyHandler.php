@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\AddLpa;
 
-use Actor\Form\AddLpa\ActivationCode;
+use Actor\Form\AddLpa\ActivationKey;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
@@ -20,13 +20,13 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class ActivationCodeHandler extends AbstractAddLpaHandler
+class ActivationKeyHandler extends AbstractAddLpaHandler
 {
     use CsrfGuard;
     use SessionTrait;
     use User;
 
-    private ActivationCode $form;
+    private ActivationKey $form;
 
     /**
      * @param ServerRequestInterface $request
@@ -37,7 +37,7 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new ActivationCode($this->getCsrfGuard($request));
+        $this->form = new ActivationKey($this->getCsrfGuard($request));
         return parent::handle($request);
     }
 
@@ -45,12 +45,12 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
     {
         $this->form->setData(
             [
-                'passcode' => $this->state($request)->activationCode,
+                'activation_key' => $this->state($request)->activationCode,
             ]
         );
 
         return new HtmlResponse(
-            $this->renderer->render('actor::add-lpa/activation-code', [
+            $this->renderer->render('actor::add-lpa/activation-key', [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),
@@ -65,12 +65,12 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
         if ($this->form->isValid()) {
             //  Attempt to retrieve an LPA using the form data
             $postData = $this->form->getData();
-            $this->state($request)->activationCode = $postData['passcode'];
+            $this->state($request)->activationCode = $postData['activation_key'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
         return new HtmlResponse(
-            $this->renderer->render('actor::add-lpa/activation-code', [
+            $this->renderer->render('actor::add-lpa/activation-key', [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),
@@ -85,7 +85,7 @@ class ActivationCodeHandler extends AbstractAddLpaHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-code.date-of-birth';
+        return 'lpa.add-by-key.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string

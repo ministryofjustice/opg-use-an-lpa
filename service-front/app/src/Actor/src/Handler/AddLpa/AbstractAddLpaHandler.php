@@ -69,7 +69,7 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
-            return $this->redirectToRoute('lpa.add-by-code');
+            return $this->redirectToRoute('lpa.add-by-key');
         }
 
         return match ($request->getMethod()) {

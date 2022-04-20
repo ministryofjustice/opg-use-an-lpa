@@ -90,6 +90,6 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.add-by-code.date-of-birth';
+        return 'lpa.add-by-key.date-of-birth';
     }
 }

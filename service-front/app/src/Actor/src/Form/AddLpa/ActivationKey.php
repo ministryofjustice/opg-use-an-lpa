@@ -18,9 +18,9 @@ use Mezzio\Csrf\CsrfGuardInterface;
  *
  * @package Actor\Form
  */
-class ActivationCode extends AbstractForm implements InputFilterProviderInterface
+class ActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_add_activation_code';
+    public const FORM_NAME = 'lpa_add_activation_key';
 
     /**
      * LpaAdd constructor.
@@ -33,7 +33,7 @@ class ActivationCode extends AbstractForm implements InputFilterProviderInterfac
 
         $this->add(
             [
-                'name' => 'passcode',
+                'name' => 'activation_key',
                 'type' => 'Text',
             ]
         );
@@ -46,7 +46,7 @@ class ActivationCode extends AbstractForm implements InputFilterProviderInterfac
     public function getInputFilterSpecification(): array
     {
         return [
-            'passcode' => [
+            'activation_key' => [
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => ActorViewerCodeFilter::class],

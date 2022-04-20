@@ -190,20 +190,20 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], 'lpa.change-lpa-details');
 
     //Add by code routes
-    $app->route('/lpa/add-by-code/activation-code', [
+    $app->route('/lpa/add-by-key/activation-key', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\AddLpa\ActivationCodeHandler::class,
-    ], ['GET', 'POST'], 'lpa.add-by-code');
+        \Actor\Handler\AddLpa\ActivationKeyHandler::class,
+    ], ['GET', 'POST'], 'lpa.add-by-key');
 
-    $app->route('/lpa/add-by-code/date-of-birth', [
+    $app->route('/lpa/add-by-key/date-of-birth', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\DateOfBirthHandler::class,
-    ], ['GET', 'POST'], 'lpa.add-by-code.date-of-birth');
+    ], ['GET', 'POST'], 'lpa.add-by-key.date-of-birth');
 
-    $app->route('/lpa/add-by-code/lpa-reference-number', [
+    $app->route('/lpa/add-by-key/lpa-reference-number', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
-    ], ['GET', 'POST'], 'lpa.add-by-code.lpa-reference-number');
+    ], ['GET', 'POST'], 'lpa.add-by-key.lpa-reference-number');
 
     // Access for All Journey
     $app->route('/lpa/add/contact-details', [
@@ -254,7 +254,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\AddLpaTriageHandler::class,
-                \Actor\Handler\AddLpa\ActivationCodeHandler::class
+                \Actor\Handler\AddLpa\ActivationKeyHandler::class
             )
         ], ['GET', 'POST'], 'lpa.add');
 

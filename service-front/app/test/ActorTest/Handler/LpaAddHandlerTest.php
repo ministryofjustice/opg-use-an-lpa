@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler;
 
-use Actor\Form\AddLpa\ActivationCode;
-use Actor\Handler\AddLpa\ActivationCodeHandler;
+use Actor\Form\AddLpa\ActivationKey;
+use Actor\Handler\AddLpa\ActivationKeyHandler;
 use Actor\Workflow\AddLpa;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Common\Service\Lpa\LpaService;
@@ -116,11 +116,11 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('GET');
 
         $this->rendererProphecy->render(
-            'actor::add-lpa/activation-code',
+            'actor::add-lpa/activation-key',
             new CallbackToken(function ($options) {
                 $this->assertIsArray($options);
                 $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(ActivationCode::class, $options['form']);
+                $this->assertInstanceOf(ActivationKey::class, $options['form']);
 
                 return true;
             })
@@ -128,7 +128,7 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn('');
 
         //  Set up the handler
-        $handler = new ActivationCodeHandler(
+        $handler = new ActivationKeyHandler(
             $this->rendererProphecy->reveal(),
             $this->authenticatorProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),

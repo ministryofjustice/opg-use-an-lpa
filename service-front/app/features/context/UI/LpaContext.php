@@ -219,8 +219,8 @@ class LpaContext implements Context
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        $this->ui->visit('/lpa/add-by-code/activation-code');
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->visit('/lpa/add-by-key/activation-key');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
     }
 
     /**
@@ -1296,7 +1296,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->pressButton('Continue');
@@ -1725,7 +1725,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')
@@ -1753,7 +1753,7 @@ class LpaContext implements Context
     {
         $this->lpa->status = $status;
 
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')
@@ -1785,7 +1785,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->ui->fillField('passcode', 'T3STPA22C0D3');
         $this->ui->pressButton('Continue');
 
@@ -1800,7 +1800,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->ui->fillField('passcode', $passcode);
         $this->ui->pressButton('Continue');
     }
@@ -1810,7 +1810,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->fillAddLpaPages('T3STPA22C0D3', '05', '10', '1975', $referenceNo);
     }
 
@@ -1884,7 +1884,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code/activation-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')

@@ -13,24 +13,19 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
+        {{ govuk_error_summary(form) }}
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}What is the LPA reference number?{% endtrans %}</h1>
 
                 {{ govuk_form_open(form) }}
 
-                    {{ govuk_form_element(form.get('__csrf')) }}
-
-                    {{ govuk_form_element(form.get('reference_number'), {
-                        'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000'| trans,
-                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
-                    }) }}
-
                     <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Reference Number" data-gaLabel="Where to find the reference number">
                         <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                {% trans %}Where to find the reference number{% endtrans %}
-                            </span>
+                                <span class="govuk-details__summary-text">
+                                    {% trans %}Where to find the reference number{% endtrans %}
+                                </span>
                         </summary>
                         <div class="govuk-details__text">
                             <ul class="govuk-list govuk-list--bullet">
@@ -40,6 +35,14 @@
                             </ul>
                         </div>
                     </details>
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    {{ govuk_form_element(form.get('reference_number'), {
+                        'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000'| trans,
+                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
+                        'aria_labelledby': 'ref_number_heading'
+                    }) }}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 

@@ -55,7 +55,7 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
             $selected = $form->getData()['activation_key_triage'];
 
             if ($selected === 'Yes') {
-                return $this->redirectToRoute('lpa.add-by-code');
+                return $this->redirectToRoute('lpa.add-by-key');
             }
             return $this->redirectToRoute('lpa.add-by-paper-information');
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\AddLpa;
 
-use Actor\Form\AddLpa\ActivationCode;
+use Actor\Form\AddLpa\ActivationKey;
 use Actor\Form\AddLpa\DateOfBirth;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
