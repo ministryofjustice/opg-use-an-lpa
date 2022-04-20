@@ -200,7 +200,7 @@ locals {
           value = tostring(80)
         },
         {
-          name  = "ADMIN_DYNAMODB_TABLE_PREFIX",cogn
+          name  = "ADMIN_DYNAMODB_TABLE_PREFIX",
           value = tostring(local.environment_name)
         },
         {
