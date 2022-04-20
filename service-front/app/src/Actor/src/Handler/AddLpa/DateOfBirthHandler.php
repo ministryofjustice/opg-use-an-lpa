@@ -108,5 +108,4 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
     {
         return 'lpa.add-by-code';
     }
-
 }
