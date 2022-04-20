@@ -21,9 +21,6 @@ type ActorUser struct {
 	LPAs []*LPA
 }
 
-type AccountController interface {
-}
-
 const (
 	ActorTableName           = "ActorUsers"
 	ActorTableEmailIndexName = "EmailIndex"

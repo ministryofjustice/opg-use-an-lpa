@@ -18,10 +18,6 @@ type LPA struct {
 	ActivateBy int
 }
 
-type ActivationCodeLPAResult struct {
-	SiriusUID string `json:"SiriusUid"`
-}
-
 const (
 	UserLpaActorTableName     = "UserLpaActorMap"
 	UserLpaActorUserIndexName = "UserIndex"
