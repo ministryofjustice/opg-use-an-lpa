@@ -296,23 +296,23 @@ locals {
         },
         {
           name  = "USE_OLDER_LPA_JOURNEY",
-          value = tostring(local.environment.use_older_lpa_journey)
+          value = tostring(local.environment.application_flags.use_older_lpa_journey)
         },
         {
           name  = "DELETE_LPA_FEATURE",
-          value = tostring(local.environment.delete_lpa_feature)
+          value = tostring(local.environment.application_flags.delete_lpa_feature)
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.environment.allow_older_lpas)
+          value = tostring(local.environment.application_flags.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.allow_meris_lpas)
+          value = tostring(local.environment.application_flags.allow_meris_lpas)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
       ]
   })
