@@ -51,13 +51,17 @@ data "aws_iam_policy_document" "cloudtrail_role_policy" {
   statement {
     actions = [
       "logs:CreateLogStream",
+      "logs:CreateLogGroup",
       "logs:PutLogEvents",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
     ]
 
-    resources = [aws_cloudtrail.cloudtrail.arn]
-    effect    = "Allow"
+    resources = [
+      aws_cloudtrail.cloudtrail.arn,
+      aws_cloudwatch_log_group.cloudtrail.arn
+    ]
+    effect = "Allow"
   }
 }
 

@@ -58,16 +58,22 @@ class AccountLookup:
             },
             ProjectionExpression='Id,Email,LastLogin,ActivationToken'
         )
-        logging.info(response)
+        logging.info('found: %s', response['Count'])
         return response
 
-    def get_lpas(self):
-        paginator = self.aws_dynamodb_client.get_paginator("scan")
-        for page in paginator.paginate(
-                TableName=f'{self.environment}-UserLpaActorMap',
-                FilterExpression="attribute_exists(SiriusUid)",
-        ):
-            yield from page["Items"]
+    def get_lpas_by_index(self, sirius_uid):
+        logging.info('getting User for LPA: %s', sirius_uid)
+        response = self.aws_dynamodb_client.query(
+            IndexName='SiriusUidIndex',
+            TableName=f'{self.environment}-UserLpaActorMap',
+            KeyConditionExpression='SiriusUid = :sirius_uid',
+            ExpressionAttributeValues={
+                ':sirius_uid': {'S': sirius_uid}
+            },
+            ProjectionExpression='SiriusUid,Added,ActorId,DueBy,UserId'
+        )
+        logging.info('found: %s', response['Count'])
+        return response['Items']
 
     def get_lpas_by_user_id(self, user_id):
         logging.info('getting LPAs for user id: %s', user_id)
@@ -80,10 +86,8 @@ class AccountLookup:
             },
             ProjectionExpression='SiriusUid,Added,ActorId,DueBy'
         )
-        lpas = {}
-        for lpa in response['Items']:
-            lpas.update(lpa)
-        return lpas
+        logging.info('found: %s', response['Count'])
+        return response['Items']
 
     def get_users_by_id(self, user_id):
         response = self.aws_dynamodb_client.query(
@@ -130,8 +134,7 @@ class AccountLookup:
     def get_by_lpa(self, lpa_id):
         output_json = []
         logging.info('looking up account for LPA: %s', lpa_id)
-        lpas = self.get_lpas()
-
+        lpas = self.get_lpas_by_index(lpa_id)
         for item in lpas:
             if item['SiriusUid']['S'] in lpa_id:
                 user = self.get_users_by_id(item['UserId']['S'])

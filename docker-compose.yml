@@ -20,11 +20,11 @@ services:
       - webpack_dist:/dist
 
   # ---------------------------
-  # Viewer Front
+  # PDF Generator
 
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:v1.37.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:latest
     ports:
       - 9004:80
 
@@ -80,16 +80,6 @@ services:
       COOKIE_SECURE: "false"
     depends_on:
       - redis
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   # ---------------------------
   # Actor Front
@@ -149,16 +139,6 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
       NOTIFY_API_KEY:
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   # ---------------------------
   # Front Composer (Shared)
@@ -239,16 +219,6 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   api-composer:
     image: api-app
