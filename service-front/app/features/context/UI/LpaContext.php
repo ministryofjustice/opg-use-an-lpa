@@ -1298,7 +1298,7 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
-        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
         $this->ui->pressButton('Continue');
 
         $this->ui->fillField('dob[day]', '05');
@@ -1307,7 +1307,7 @@ class LpaContext implements Context
         $this->ui->pressButton('Continue');
 
         $this->ui->fillField('reference_number', '700000000001');
-        $this->ui->clickLink('Cancel');
+        $this->ui->clickLink('Your LPAs');
     }
 
     /**
@@ -1786,7 +1786,7 @@ class LpaContext implements Context
     public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
-        $this->ui->fillField('passcode', 'T3STPA22C0D3');
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
         $this->ui->pressButton('Continue');
 
         $this->ui->fillField('dob[day]', $day);
@@ -1798,10 +1798,10 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with an invalid passcode format of "([^"]*)"$/
      */
-    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
+    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($activation_key)
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
-        $this->ui->fillField('passcode', $passcode);
+        $this->ui->fillField('activation_key', $activation_key);
         $this->ui->pressButton('Continue');
     }
 
@@ -1819,7 +1819,7 @@ class LpaContext implements Context
      *       and I will have an Id of ([^"]*)$/
      */
     public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
-        $passcode,
+        $activation_key,
         $firstName,
         $secondName,
         $id
@@ -1876,7 +1876,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->fillAddLpaPages($passcode, '05', '10', '1975', '700000000054');
+        $this->fillAddLpaPages($activation_key, '05', '10', '1975', '700000000054');
     }
 
     /**
@@ -2611,7 +2611,7 @@ class LpaContext implements Context
      */
     private function fillAddLpaPages(string $code, string $day, string $month, string $year, string $reference_number): void
     {
-        $this->ui->fillField('passcode', $code);
+        $this->ui->fillField('activation_key', $code);
         $this->ui->pressButton('Continue');
 
         $this->ui->fillField('dob[day]', $day);

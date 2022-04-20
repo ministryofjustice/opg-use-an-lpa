@@ -110,13 +110,13 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user = $this->getUser($request);
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        $passcode = $this->state->activationCode;
+        $activation_key = $this->state->activationCode;
         $referenceNumber = $this->state->lpaReferenceNumber;
         $dob = $this->state->dateOfBirth->format('Y-m-d');
 
         if (
             !isset($this->identity)
-            || !isset($passcode)
+            || !isset($activation_key)
             || !isset($referenceNumber)
             || !isset($dob)
         ) {
@@ -127,14 +127,14 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
 
         return match ($request->getMethod()) {
-            'POST' => $this->handlePost($request, $passcode, $referenceNumber, $dob),
-            default => $this->handleGet($request, $passcode, $referenceNumber, $dob),
+            'POST' => $this->handlePost($request, $activation_key, $referenceNumber, $dob),
+            default => $this->handleGet($request, $activation_key, $referenceNumber, $dob),
         };
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param string                 $passcode
+     * @param string                 $activation_key
      * @param string                 $referenceNumber
      * @param string                 $dob
      *
@@ -143,13 +143,13 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handleGet(
         ServerRequestInterface $request,
-        string $passcode,
+        string $activation_key,
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
         $result = $this->addLpa->validate(
             $this->identity,
-            $passcode,
+            $activation_key,
             $referenceNumber,
             $dob
         );
@@ -179,7 +179,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                             'user' => $this->user,
                             'dob' => $dob,
                             'referenceNumber' => $referenceNumber,
-                            'passcode' => $passcode
+                            'activation_key' => $activation_key
                         ]
                     )
                 );
@@ -224,7 +224,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
     /**
      * @param ServerRequestInterface $request
-     * @param string                 $passcode
+     * @param string                 $activation_key
      * @param string                 $referenceNumber
      * @param string                 $dob
      *
@@ -232,7 +232,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handlePost(
         ServerRequestInterface $request,
-        string $passcode,
+        string $activation_key,
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
@@ -241,7 +241,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         if ($this->form->isValid()) {
             $result = $this->addLpa->confirm(
                 $this->identity,
-                $passcode,
+                $activation_key,
                 $referenceNumber,
                 $dob
             );
@@ -274,7 +274,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             'user'              => $this->user,
             'dob'               => $dob,
             'referenceNumber'   => $referenceNumber,
-            'passcode'          => $passcode
+            'activation_key'          => $activation_key
         ]));
     }
 }
