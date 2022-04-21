@@ -19,13 +19,15 @@
 
                 {{ govuk_error_summary(form) }}
 
-                <h1 class="govuk-heading-xl">{% trans %}Add a lasting power of attorney{% endtrans %}</h1>
+                <h1 class="govuk-heading-xl">{% trans %}What is your activation key?{% endtrans %}</h1>
 
                 {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}If you’re named on 2 or more LPAs, you have a different activation key for each LPA.{% endtrans %}</p>
 
                     {{ govuk_form_element(form.get('activation_key'), {
                         'label': 'Your activation key'| trans,
