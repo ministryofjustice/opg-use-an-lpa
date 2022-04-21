@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 	"net/url"
-	"fmt"
 
 	"github.com/rs/zerolog/log"
 )
