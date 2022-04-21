@@ -7,7 +7,6 @@ use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 
-
 /**
  * Setup routes with a single request method:
  *
