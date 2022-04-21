@@ -9,8 +9,8 @@ import (
 )
 
 func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {                
-		log.Ctx(r.Context()).Debug().Msg("Admin logged out")
+	return func(w http.ResponseWriter, r *http.Request) {   
+		log.Ctx(r.Context()).Debug().Msg("Redirecting to cognito logout URL")
 
 		l := &url.URL{
 			Scheme: "https",
@@ -21,13 +21,7 @@ func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
 		v := cognitoLogoutURL.Query()
 		v.Set("logout_uri", l.String())
 		cognitoLogoutURL.RawQuery = v.Encode()
-
-		fmt.Println(cognitoLogoutURL)
-		
+	
 		http.Redirect(w, r, cognitoLogoutURL.String(), 301)
-
-		if err := RenderTemplate(w, r.Context(), "logout.page.gohtml", nil); err != nil {
-			log.Panic().Err(err).Msg(err.Error())
-		}
 	}
 }
