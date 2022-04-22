@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-04-21T10:50:24+00:00\n"
+"POT-Creation-Date: 2022-04-22T06:39:40+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4646,4 +4646,10 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
 msgid "If you’re named on 2 or more LPAs, you have a different activation key for each LPA."
+msgstr ""
+
+#. Add LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:47
+msgctxt "error"
+msgid "The LPA reference number provided is not correct"
 msgstr ""
