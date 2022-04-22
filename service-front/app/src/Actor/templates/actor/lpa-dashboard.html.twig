@@ -11,9 +11,6 @@
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-
-            {{ include('@actor/partials/upcoming-service-downtime.html.twig') }}
-
             {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
             {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\RemoveLpaHandler::REMOVE_LPA_FLASH_MSG'}) }}
 
