@@ -31,7 +31,7 @@ func GetTemplate(ctx context.Context, name string) (*template.Template, error) {
 
 	t, is := i.(Templates)
 	if !is {
-		err := fmt.Errorf("%w, templates not found at context value", ErrTemplateNotFound)
+		err := fmt.Errorf("%v, templates not found at context value", ErrTemplateNotFound)
 		log.Error().Err(err).Msg("")
 
 		return nil, err
@@ -39,7 +39,7 @@ func GetTemplate(ctx context.Context, name string) (*template.Template, error) {
 
 	tmpl, err := t.Get(name)
 	if err != nil {
-		err := fmt.Errorf("%w, template \"%s\" not in available templates", err, name)
+		err := fmt.Errorf("%v, template \"%s\" not in available templates", err, name)
 		log.Error().Err(err).Msg("")
 
 		return nil, err

@@ -43,7 +43,7 @@ func TestLoadTemplates(t *testing.T) {
 
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	ts := LoadTemplates(fs)
@@ -59,7 +59,7 @@ func TestTemplates_Get(t *testing.T) {
 
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	tests := []struct {
@@ -114,7 +114,7 @@ func TestWithTemplates(t *testing.T) {
 
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	sut := WithTemplates(next, LoadTemplates(fs))

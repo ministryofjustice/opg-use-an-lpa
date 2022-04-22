@@ -24,7 +24,7 @@ func (t *Templates) Get(name string) (*template.Template, error) {
 	if tpl, isMapContains := t.tmpls[name]; isMapContains {
 		return tpl, nil
 	} else {
-		return nil, fmt.Errorf("%w, \"%s\"", ErrTemplateNotFound, name)
+		return nil, fmt.Errorf("%v, \"%s\"", ErrTemplateNotFound, name)
 	}
 }
 
