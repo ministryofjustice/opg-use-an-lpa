@@ -6,7 +6,6 @@ namespace Actor\Handler\AddLpa;
 
 use Actor\Form\AddLpa\LpaReferenceNumber;
 use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
@@ -23,7 +22,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 {
     use CsrfGuard;
-    use SessionTrait;
     use User;
 
     private LpaReferenceNumber $form;

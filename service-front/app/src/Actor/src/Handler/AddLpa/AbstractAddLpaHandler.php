@@ -20,7 +20,6 @@ use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
-use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
@@ -43,7 +42,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     use Logger;
     use State;
 
-    protected ?SessionInterface $session;
     protected ?UserInterface $user;
 
     public function __construct(
@@ -66,7 +64,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->user = $this->getUser($request);
-        $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-key');
