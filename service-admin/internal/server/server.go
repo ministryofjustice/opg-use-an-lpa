@@ -87,7 +87,7 @@ func withErrorHandling(next http.Handler) http.Handler {
 				var err error
 				switch t := r.(type) {
 				case string:
-					err = fmt.Errorf("%v, %s", ErrPanicRecovery, t)
+					err = fmt.Errorf("%w, %s", ErrPanicRecovery, t)
 				}
 				log.Error().Err(err).Stack().Msg("error handler recovering from panic()")
 
