@@ -115,9 +115,9 @@ class FindActorInLpa
         $match = self::MATCH;
 
         $match = $actor['dob'] !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
-        $match = $actor['first_names'] !== $matchData['first_names'] ? $match | self::NO_MATCH__FIRSTNAMES : $match;
-        $match = $actor['last_name'] !== $matchData['last_name'] ? $match | self::NO_MATCH__SURNAME : $match;
-        $match = $actor['postcode'] !== $matchData['postcode'] ? $match | self::NO_MATCH__POSTCODE : $match;
+        $match = $actorData['first_names'] !== $matchData['first_names'] ? $match | self::NO_MATCH__FIRSTNAMES : $match;
+        $match = $actorData['last_name'] !== $matchData['last_name'] ? $match | self::NO_MATCH__SURNAME : $match;
+        $match = $actorData['postcode'] !== $matchData['postcode'] ? $match | self::NO_MATCH__POSTCODE : $match;
 
         if ($match === self::MATCH) {
             $this->logger->info(
