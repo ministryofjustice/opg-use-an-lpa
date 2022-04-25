@@ -1,12 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-use Common\Middleware\Routing\ConditionalRoutingMiddleware;
-use Mezzio\Application;
-use Mezzio\MiddlewareFactory;
-use Psr\Container\ContainerInterface;
-
 /**
  * Setup routes with a single request method:
  *
@@ -33,6 +26,13 @@ use Psr\Container\ContainerInterface;
  *     'contact'
  * );
  */
+
+declare(strict_types=1);
+
+use Common\Middleware\Routing\ConditionalRoutingMiddleware;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
