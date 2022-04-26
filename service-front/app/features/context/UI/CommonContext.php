@@ -116,7 +116,6 @@ class CommonContext implements Context
     {
         $this->ui->assertPageAddress('/home');
 
-        //var_dump($serviceName); die;
         $this->ui->assertPageContainsText($serviceName);
         $this->ui->assertPageContainsText('Cookies on ' . $serviceName);
     }
