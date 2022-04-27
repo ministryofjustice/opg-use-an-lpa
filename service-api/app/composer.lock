@@ -612,16 +612,16 @@
         },
         {
             "name": "laminas/laminas-component-installer",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-component-installer.git",
-                "reference": "33c35798f72a1efbb6aeef154d09290319c22a22"
+                "reference": "8597c23af6f69a28be80ee2ab6dbc1b6d3d80772"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-component-installer/zipball/33c35798f72a1efbb6aeef154d09290319c22a22",
-                "reference": "33c35798f72a1efbb6aeef154d09290319c22a22",
+                "url": "https://api.github.com/repos/laminas/laminas-component-installer/zipball/8597c23af6f69a28be80ee2ab6dbc1b6d3d80772",
+                "reference": "8597c23af6f69a28be80ee2ab6dbc1b6d3d80772",
                 "shasum": ""
             },
             "require": {
@@ -632,7 +632,7 @@
                 "zendframework/zend-component-installer": "*"
             },
             "require-dev": {
-                "composer/composer": "^2.1.9",
+                "composer/composer": "^2.1.9@RC",
                 "laminas/laminas-coding-standard": "~2.3.0",
                 "malukenho/docheader": "^0.1.6",
                 "mikey179/vfsstream": "^1.6.10",
@@ -676,7 +676,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-12-02T17:34:54+00:00"
+            "time": "2022-03-22T14:28:35+00:00"
         },
         {
             "name": "laminas/laminas-config-aggregator",
