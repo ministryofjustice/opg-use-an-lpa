@@ -18,7 +18,7 @@ class AddLpa implements WorkflowState
      * @throws Exception
      */
     public function __construct(
-        public ?string $activationCode = null,
+        public ?string $activationKey = null,
         ?string $dateOfBirth = null,
         public ?string $lpaReferenceNumber = null,
     ) {
@@ -27,13 +27,10 @@ class AddLpa implements WorkflowState
 
     /**
      * Reset the workflow to the start.
-     *
-     * This does not clear the name, date of birth or postcode as it is likely a repeat journey would use
-     * identical information.
      */
     public function reset(): void
     {
-        $this->activationCode = null;
+        $this->activationKey = null;
         $this->dateOfBirth = null;
         $this->lpaReferenceNumber = null;
     }

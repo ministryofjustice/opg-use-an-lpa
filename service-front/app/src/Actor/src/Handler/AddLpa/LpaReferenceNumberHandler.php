@@ -77,7 +77,7 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->activationCode === null
+        return $this->state($request)->activationKey === null
             || $this->state($request)->dateOfBirth === null;
     }
 

@@ -6,6 +6,7 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
+use Actor\Workflow\AddLpa as AddLpaState;
 use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -34,7 +35,6 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use ArrayObject;
 
 /**
  * Class CheckLpaHandler
@@ -58,7 +58,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private LpaService $lpaService;
     private RateLimitService $rateLimitService;
     private ?SessionInterface $session;
-    private \Actor\Workflow\AddLpa $state;
+    private AddLpaState $state;
     private TranslatorInterface $translator;
     private ?UserInterface $user;
     private AddLpa $addLpa;
@@ -101,7 +101,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state = (object) $this->loadState($request, \Actor\Workflow\AddLpa::class);
 
         $this->session = $this->getSession($request, 'session');
 
@@ -110,7 +109,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user = $this->getUser($request);
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        $activation_key = $this->state->activationCode;
+        $activation_key = $this->state->activationKey;
         $referenceNumber = $this->state->lpaReferenceNumber;
         $dob = $this->state->dateOfBirth->format('Y-m-d');
 
@@ -276,5 +275,16 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             'referenceNumber'   => $referenceNumber,
             'activation_key'          => $activation_key
         ]));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return AddLpaState
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): AddLpaState
+    {
+        return $this->loadState($request, AddLpaState::class);
     }
 }

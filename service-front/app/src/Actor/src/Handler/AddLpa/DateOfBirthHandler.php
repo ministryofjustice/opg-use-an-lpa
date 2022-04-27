@@ -94,7 +94,7 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->activationCode === null;
+        return $this->state($request)->activationKey === null;
     }
 
     public function nextPage(WorkflowState $state): string

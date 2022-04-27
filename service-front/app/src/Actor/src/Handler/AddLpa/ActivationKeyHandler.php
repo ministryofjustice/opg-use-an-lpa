@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler\AddLpa;
 
 use Actor\Form\AddLpa\ActivationKey;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\User;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -21,8 +19,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ActivationKeyHandler extends AbstractAddLpaHandler
 {
-    use CsrfGuard;
-    use User;
 
     private ActivationKey $form;
 
@@ -43,7 +39,7 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
     {
         $this->form->setData(
             [
-                'activation_key' => $this->state($request)->activationCode,
+                'activation_key' => $this->state($request)->activationKey,
             ]
         );
 
@@ -63,7 +59,7 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
         if ($this->form->isValid()) {
             //  Attempt to retrieve an LPA using the form data
             $postData = $this->form->getData();
-            $this->state($request)->activationCode = $postData['activation_key'];
+            $this->state($request)->activationKey = $postData['activation_key'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
