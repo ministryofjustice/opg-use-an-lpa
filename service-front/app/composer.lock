@@ -2875,16 +2875,16 @@
         },
         {
             "name": "mezzio/mezzio-authentication-session",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-authentication-session.git",
-                "reference": "a87d92c424432ea6abd06033d77e86f1e477031d"
+                "reference": "3a0d1de3dd245eb3e70774928d82c5752ea544c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-authentication-session/zipball/a87d92c424432ea6abd06033d77e86f1e477031d",
-                "reference": "a87d92c424432ea6abd06033d77e86f1e477031d",
+                "url": "https://api.github.com/repos/mezzio/mezzio-authentication-session/zipball/3a0d1de3dd245eb3e70774928d82c5752ea544c9",
+                "reference": "3a0d1de3dd245eb3e70774928d82c5752ea544c9",
                 "shasum": ""
             },
             "require": {
@@ -2892,7 +2892,9 @@
                 "mezzio/mezzio-session": "^1.6",
                 "php": "^7.4 || ~8.0.0 || ~8.1.0",
                 "psr/container": "^1.0 || ^2.0",
-                "psr/http-message": "^1.0.1"
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0.1",
+                "webmozart/assert": "^1.10"
             },
             "conflict": {
                 "zendframework/zend-expressive-authentication-session": "*"
@@ -2938,7 +2940,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-01-07T18:49:22+00:00"
+            "time": "2022-03-30T20:01:12+00:00"
         },
         {
             "name": "mezzio/mezzio-csrf",
@@ -5294,7 +5296,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -5356,7 +5358,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.25.0"
             },
             "funding": [
                 {
