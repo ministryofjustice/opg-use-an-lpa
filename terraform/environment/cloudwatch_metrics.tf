@@ -62,7 +62,7 @@ locals {
 resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
   for_each       = toset(local.rate_limit_events)
   name           = "${local.environment_name}_${lower(each.value)}"
-  pattern        = "{ $.context.code = \"429\" & \"${each.value}\" }"
+  pattern        = "{ $.context.code = \"429\" && $.context.message = \"${each.value}*\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
