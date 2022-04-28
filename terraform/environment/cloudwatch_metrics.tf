@@ -67,7 +67,7 @@ resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
 
   metric_transformation {
     name          = "${lower(each.value)}_rate_limit_event"
-    namespace     = "${local.environment_name}_rate_limit_events"
+    namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
   }
