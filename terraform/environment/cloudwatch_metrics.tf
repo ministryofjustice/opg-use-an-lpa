@@ -50,3 +50,25 @@ resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
     default_value = "0"
   }
 }
+
+locals {
+  rate_limit_events = [
+    "actor_login_failure",
+    "viewer_code_failure",
+    "actor_code_failure",
+  ]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
+  for_each       = toset(local.rate_limit_events)
+  name           = "${local.environment_name}_${lower(each.value)}"
+  pattern        = "{ $.context.code = \"429\" & \"${each.value}\" }"
+  log_group_name = aws_cloudwatch_log_group.application_logs.name
+
+  metric_transformation {
+    name          = "${lower(each.value)}_rate_limit_event"
+    namespace     = "${local.environment_name}_rate_limit_events"
+    value         = "1"
+    default_value = "0"
+  }
+}
