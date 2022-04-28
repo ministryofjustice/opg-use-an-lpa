@@ -349,7 +349,7 @@ locals {
         },
         {
           name  = "USE_LEGACY_CODES_SERVICE",
-          value = tostring(local.environment.use_legacy_codes_service)
+          value = tostring(local.environment.application_flags.use_legacy_codes_service)
         },
         {
           name  = "LOGGING_LEVEL",
@@ -357,19 +357,19 @@ locals {
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.environment.allow_older_lpas)
+          value = tostring(local.environment.application_flags.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.allow_meris_lpas)
+          value = tostring(local.environment.application_flags.allow_meris_lpas)
         },
         {
           name  = "SAVE_OLDER_LPA_REQUESTS",
-          value = tostring(local.environment.save_older_lpa_requests)
+          value = tostring(local.environment.application_flags.save_older_lpa_requests)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         }
       ]
   })

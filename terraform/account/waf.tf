@@ -54,7 +54,7 @@ resource "aws_wafv2_web_acl" "main" {
     priority = 2
 
     override_action {
-      count {}
+      none {}
     }
 
     statement {
@@ -62,6 +62,11 @@ resource "aws_wafv2_web_acl" "main" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
+
+        excluded_rule {
+          name = "NoUserAgent_HEADER"
+        }
+
       }
     }
     visibility_config {

@@ -51,6 +51,7 @@ data "aws_iam_policy_document" "cloudtrail_role_policy" {
   statement {
     actions = [
       "logs:CreateLogStream",
+      "logs:CreateLogGroup",
       "logs:PutLogEvents",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
