@@ -1707,7 +1707,7 @@ class AccountContext implements Context
         } elseif ($page == 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
         } elseif ($page == 'add by code') {
-            $this->ui->assertPageAddress('/lpa/add-by-code');
+            $this->ui->assertPageAddress('/lpa/add-by-key');
         }
     }
 
