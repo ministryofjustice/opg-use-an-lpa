@@ -8,6 +8,13 @@ use Psr\Log\LoggerInterface;
 
 class FindActorInLpa
 {
+    public const MATCH = 0;
+    public const NO_MATCH__MULTIPLE_ADDRESSES = 1;
+    public const NO_MATCH__DOB = 2;
+    public const NO_MATCH__FIRSTNAMES = 4;
+    public const NO_MATCH__SURNAME = 8;
+    public const NO_MATCH__POSTCODE = 16;
+
     private GetAttorneyStatus $getAttorneyStatus;
     private LoggerInterface $logger;
 
@@ -27,8 +34,8 @@ class FindActorInLpa
                 if (($this->getAttorneyStatus)($attorney) === GetAttorneyStatus::ACTIVE_ATTORNEY) {
                     $actorMatchResponse = $this->checkForActorMatch($attorney, $matchData);
                     // if not null, an actor match has been found
-                    if ($actorMatchResponse !== null) {
-                        $actor = $actorMatchResponse;
+                    if ($actorMatchResponse === self::MATCH) {
+                        $actor = $attorney;
                         $role = 'attorney';
                         break;
                     }
@@ -48,8 +55,8 @@ class FindActorInLpa
         if ($actor === null && isset($lpa['donor']) && is_array($lpa['donor'])) {
             $donorMatchResponse = $this->checkForActorMatch($lpa['donor'], $matchData);
 
-            if ($donorMatchResponse !== null) {
-                $actor = $donorMatchResponse;
+            if ($donorMatchResponse === self::MATCH) {
+                $actor = $lpa['donor'];
                 $role = 'donor';
             }
         }
@@ -72,9 +79,9 @@ class FindActorInLpa
      * @param array $actor     The actor details being compared against
      * @param array $matchData The user provided data we're searching for a match against
      *
-     * @return ?array A data structure containing the matched actor id and lpa id
+     * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
      */
-    private function checkForActorMatch(array $actor, array $matchData): ?array
+    private function checkForActorMatch(array $actor, array $matchData): int
     {
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {
@@ -84,7 +91,7 @@ class FindActorInLpa
                     'id' => $actor['uId'],
                 ]
             );
-            return null;
+            return self::NO_MATCH__MULTIPLE_ADDRESSES;
         }
 
         $matchData = $this->normaliseComparisonData($matchData);
@@ -105,22 +112,33 @@ class FindActorInLpa
             ]
         );
 
-        if (
-            $actor['dob'] === $matchData['dob'] &&
-            $actorData['first_names'] === $matchData['first_names'] &&
-            $actorData['last_name'] === $matchData['last_name'] &&
-            $actorData['postcode'] === $matchData['postcode']
-        ) {
+        $match = self::MATCH;
+
+        $match = $actor['dob'] !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
+        $match = $actorData['first_names'] !== $matchData['first_names'] ? $match | self::NO_MATCH__FIRSTNAMES : $match;
+        $match = $actorData['last_name'] !== $matchData['last_name'] ? $match | self::NO_MATCH__SURNAME : $match;
+        $match = $actorData['postcode'] !== $matchData['postcode'] ? $match | self::NO_MATCH__POSTCODE : $match;
+
+        if ($match === self::MATCH) {
             $this->logger->info(
                 'User entered data matches for LPA {uId}',
                 [
                     'uId' => $matchData['reference_number'],
                 ]
             );
-            return $actor;
+        } else {
+            $this->logger->info(
+                'User entered data failed to match for LPA {uId} and actor {actor_id}. '
+                    . 'Fields in error: {fields_in_error}',
+                [
+                    'uId' => $matchData['reference_number'],
+                    'actor_id' => $actor['uId'],
+                    'fields_in_error' => $match
+                ]
+            );
         }
 
-        return null;
+        return $match;
     }
 
     /**
