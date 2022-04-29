@@ -19,7 +19,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ActivationKeyHandler extends AbstractAddLpaHandler
 {
-
     private ActivationKey $form;
 
     /**

@@ -12,7 +12,7 @@ use Exception;
 class AddLpa implements WorkflowState
 {
     use JsonSerializable;
-    
+
     public ?DateTimeImmutable $dateOfBirth;
 
     /**
@@ -37,5 +37,4 @@ class AddLpa implements WorkflowState
         $this->dateOfBirth = null;
         $this->lpaReferenceNumber = null;
     }
-
 }

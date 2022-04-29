@@ -47,44 +47,44 @@ class ActivationKey extends AbstractForm implements InputFilterProviderInterface
     {
         return [
             'activation_key' => [
-                'filters'    => [
+                'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => ActorViewerCodeFilter::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
+                        'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
-                        'options'                => [
+                        'options' => [
                             'message' => 'Enter your activation key',
                         ],
                     ],
                     [
-                        'name'                   => Regex::class,
+                        'name' => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options'                => [
+                        'options' => [
                             'pattern' => "/^(?![Cc][[:alnum:]]{12,}).*$/",
                             'message' => 'The activation key you entered is too long. '
                                 . 'Check that you only entered the 12 letters and numbers that follow the C-',
                         ],
                     ],
                     [
-                        'name'                   => StringLength::class,
+                        'name' => StringLength::class,
                         'break_chain_on_failure' => true,
-                        'options'                => [
+                        'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 12,
-                            'max'      => 12,
+                            'min' => 12,
+                            'max' => 12,
                             'messages' => [
-                                StringLength::TOO_LONG  => 'The activation key you entered is too long',
+                                StringLength::TOO_LONG => 'The activation key you entered is too long',
                                 StringLength::TOO_SHORT => 'The activation key you entered is too short',
                             ],
                         ],
                     ],
                     [
-                        'name'                   => Regex::class,
+                        'name' => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options'                => [
+                        'options' => [
                             'pattern' => "/^[[:alnum:]]{12}$/",
                             'message' => 'Enter an activation key in the correct format',
                         ],
