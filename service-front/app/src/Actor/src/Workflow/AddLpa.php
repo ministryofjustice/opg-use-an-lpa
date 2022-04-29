@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Workflow;
 
+use Actor\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use Exception;
 
 class AddLpa implements WorkflowState
 {
+    use JsonSerializable;
+    
     public ?DateTimeImmutable $dateOfBirth;
 
     /**
@@ -35,23 +38,4 @@ class AddLpa implements WorkflowState
         $this->lpaReferenceNumber = null;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): array
-    {
-        $serialized = [];
-
-        foreach (get_object_vars($this) as $prop => $value) {
-            if ($value !== null) {
-                if ($value instanceof DateTimeImmutable) {
-                    $serialized[$prop] = $value->format('c');
-                } else {
-                    $serialized[$prop] = $value;
-                }
-            }
-        }
-
-        return $serialized;
-    }
 }

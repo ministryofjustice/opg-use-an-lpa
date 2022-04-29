@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Actor\Workflow;
 
+use Actor\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use RuntimeException;
 
 class RequestActivationKey implements WorkflowState
 {
+    use JsonSerializable;
+
     // TODO replace with enums at PHP 8.1
     public const ACTOR_DONOR = 'donor';
     public const ACTOR_ATTORNEY = 'attorney';
@@ -92,25 +95,5 @@ class RequestActivationKey implements WorkflowState
         }
 
         $this->actorType = $role;
-    }
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): array
-    {
-        $serialized = [];
-
-        foreach (get_object_vars($this) as $prop => $value) {
-            if ($value !== null) {
-                if ($value instanceof DateTimeImmutable) {
-                    $serialized[$prop] = $value->format('c');
-                } else {
-                    $serialized[$prop] = $value;
-                }
-            }
-        }
-
-        return $serialized;
     }
 }

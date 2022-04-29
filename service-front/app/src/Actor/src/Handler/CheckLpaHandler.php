@@ -101,7 +101,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-
         $this->session = $this->getSession($request, 'session');
 
         $this->form = new LpaConfirm($this->getCsrfGuard($request));
@@ -109,9 +108,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user = $this->getUser($request);
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        $activation_key = $this->state->activationKey;
-        $referenceNumber = $this->state->lpaReferenceNumber;
-        $dob = $this->state->dateOfBirth->format('Y-m-d');
+        $activation_key = $this->state($request)->activationKey;
+        $referenceNumber = $this->state($request)->lpaReferenceNumber;
+        $dob = $this->state($request)->dateOfBirth->format('Y-m-d');
 
         if (
             !isset($this->identity)
