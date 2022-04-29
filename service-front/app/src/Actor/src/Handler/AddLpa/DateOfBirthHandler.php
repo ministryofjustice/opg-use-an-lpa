@@ -22,9 +22,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class DateOfBirthHandler extends AbstractAddLpaHandler
 {
-    use CsrfGuard;
-    use User;
-
     private DateOfBirth $form;
 
     /**

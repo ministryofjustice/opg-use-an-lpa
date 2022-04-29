@@ -21,9 +21,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 {
-    use CsrfGuard;
-    use User;
-
     private LpaReferenceNumber $form;
 
     /**
