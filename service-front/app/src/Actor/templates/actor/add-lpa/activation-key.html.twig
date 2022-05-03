@@ -1,0 +1,47 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Your activation key{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    {{ include('@partials/account-bar.html.twig') }}
+    {{ include('@partials/welsh-switch.html.twig') }}
+
+    <div role="navigation" aria-labelledby="back-link-navigation">
+        <a href="{{ feature_enabled('use_older_lpa_journey') ? path(back) : path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+    </div>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-two-thirds">
+
+                {{ govuk_error_summary(form) }}
+
+                <h1 class="govuk-heading-xl">{% trans %}What is your activation key?{% endtrans %}</h1>
+
+                {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}If you’re named on 2 or more LPAs, you have a different activation key for each LPA.{% endtrans %}</p>
+
+                    {{ govuk_form_element(form.get('activation_key'), {
+                        'label': 'Your activation key'| trans,
+                        'input_prefix' : 'C -',
+                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-'| trans,
+                        'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'} }) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                {{ govuk_form_close() }}
+
+            </div>
+        </div>
+    </main>
+    {{ include('@actor/partials/new-use-service.html.twig') }}
+</div>
+{% endblock %}

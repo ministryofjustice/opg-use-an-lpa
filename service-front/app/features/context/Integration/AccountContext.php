@@ -33,7 +33,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string lpa
  * @property string lpaJson
  * @property string lpaData
- * @property string passcode
+ * @property string activation_key
  * @property string referenceNo
  * @property string userDob
  * @property string userIdentity
