@@ -40,6 +40,8 @@ func GetTemplate(ctx context.Context, name string) (*template.Template, error) {
 	tmpl, err := t.Get(name)
 	if err != nil {
 		err := fmt.Errorf("%w, template \"%s\" not in available templates", err, name)
+		log.Error().Err(err).Msg("")
+
 		return nil, err
 	}
 
