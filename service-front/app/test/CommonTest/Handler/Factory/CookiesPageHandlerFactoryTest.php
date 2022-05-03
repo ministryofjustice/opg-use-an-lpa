@@ -12,6 +12,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Acpr\I18n\TranslatorInterface;
 
 class CookiesPageHandlerFactoryTest extends TestCase
 {
@@ -31,6 +32,9 @@ class CookiesPageHandlerFactoryTest extends TestCase
         $containerProphecy
             ->get(UrlValidityCheckService::class)
             ->willReturn($this->prophesize(UrlValidityCheckService::class)->reveal());
+        $containerProphecy
+            ->get(TranslatorInterface::class)
+            ->willReturn($this->prophesize(TranslatorInterface::class)->reveal());
 
         $factory = new CookiesPageHandlerFactory();
 

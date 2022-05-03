@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\Form\CookieConsent;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Url\UrlValidityCheckService;
@@ -11,6 +12,8 @@ use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -28,8 +31,11 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
     private UrlValidityCheckService $urlValidityCheckService;
 
+    private TranslatorInterface $translator;
+
     private const COOKIE_POLICY_NAME = 'cookie_policy';
     private const SEEN_COOKIE_NAME   = 'seen_cookie_message';
+    public const COOKIES_SET_FLASH_MSG = 'cookies_set_flash_msg';
 
     /**
      * CreateAccountHandler constructor.
@@ -37,21 +43,27 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UrlValidityCheckService $urlValidityCheckService
+     * @param TranslatorInterface $translator
      * @param string $application
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UrlValidityCheckService $urlValidityCheckService,
+        TranslatorInterface $translator,
         string $application = 'actor'
     ) {
         parent::__construct($renderer, $urlHelper);
         $this->urlValidityCheckService = $urlValidityCheckService;
+        $this->translator = $translator;
         $this->application = $application;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         $form = new CookieConsent($this->getCsrfGuard($request));
 
         if ($request->getMethod() == 'POST') {
@@ -73,19 +85,21 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         return new HtmlResponse($this->renderer->render('common::cookies', [
             'form'        => $form,
-            'application' => $this->application
+            'application' => $this->application,
+            'flash'       => $flash
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $form = new CookieConsent($this->getCsrfGuard($request));
-
         $form->setData($request->getParsedBody());
 
-        $response = new RedirectResponse(
-            $this->urlValidityCheckService->setValidReferer($form->get('referer')->getValue())
-        );
+        $response = new RedirectResponse($this->urlHelper->generate('cookies'));
+
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+        $flash->flash(self::COOKIES_SET_FLASH_MSG, $form->get('referer')->getValue());
 
         $cookiePolicy = [];
         $cookiePolicy['essential'] = true;

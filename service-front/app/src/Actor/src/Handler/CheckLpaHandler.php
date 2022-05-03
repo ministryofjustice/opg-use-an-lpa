@@ -6,6 +6,7 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\LpaConfirm;
+use Actor\Workflow\AddLpa as AddLpaState;
 use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -21,6 +22,7 @@ use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
+use Common\Workflow\State;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -33,7 +35,6 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use ArrayObject;
 
 /**
  * Class CheckLpaHandler
@@ -46,6 +47,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 {
     use CsrfGuard;
     use SessionTrait;
+    use State;
     use User;
     use Logger;
 
@@ -56,6 +58,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     private LpaService $lpaService;
     private RateLimitService $rateLimitService;
     private ?SessionInterface $session;
+    private AddLpaState $state;
     private TranslatorInterface $translator;
     private ?UserInterface $user;
     private AddLpa $addLpa;
@@ -105,13 +108,13 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user = $this->getUser($request);
         $this->identity = (!is_null($this->user)) ? $this->user->getIdentity() : null;
 
-        $passcode = $this->session->get('passcode');
-        $referenceNumber = $this->session->get('reference_number');
-        $dob = $this->session->get('dob_by_code');
+        $activation_key = $this->state($request)->activationKey;
+        $referenceNumber = $this->state($request)->lpaReferenceNumber;
+        $dob = $this->state($request)->dateOfBirth->format('Y-m-d');
 
         if (
             !isset($this->identity)
-            || !isset($passcode)
+            || !isset($activation_key)
             || !isset($referenceNumber)
             || !isset($dob)
         ) {
@@ -121,17 +124,15 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             throw new SessionTimeoutException();
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request, $passcode, $referenceNumber, $dob);
-            default:
-                return $this->handleGet($request, $passcode, $referenceNumber, $dob);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request, $activation_key, $referenceNumber, $dob),
+            default => $this->handleGet($request, $activation_key, $referenceNumber, $dob),
+        };
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param string                 $passcode
+     * @param string                 $activation_key
      * @param string                 $referenceNumber
      * @param string                 $dob
      *
@@ -140,13 +141,13 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handleGet(
         ServerRequestInterface $request,
-        string $passcode,
+        string $activation_key,
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
         $result = $this->addLpa->validate(
             $this->identity,
-            $passcode,
+            $activation_key,
             $referenceNumber,
             $dob
         );
@@ -176,7 +177,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                             'user' => $this->user,
                             'dob' => $dob,
                             'referenceNumber' => $referenceNumber,
-                            'passcode' => $passcode
+                            'activation_key' => $activation_key
                         ]
                     )
                 );
@@ -221,7 +222,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
     /**
      * @param ServerRequestInterface $request
-     * @param string                 $passcode
+     * @param string                 $activation_key
      * @param string                 $referenceNumber
      * @param string                 $dob
      *
@@ -229,7 +230,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      */
     public function handlePost(
         ServerRequestInterface $request,
-        string $passcode,
+        string $activation_key,
         string $referenceNumber,
         string $dob
     ): ResponseInterface {
@@ -238,7 +239,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         if ($this->form->isValid()) {
             $result = $this->addLpa->confirm(
                 $this->identity,
-                $passcode,
+                $activation_key,
                 $referenceNumber,
                 $dob
             );
@@ -271,7 +272,18 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             'user'              => $this->user,
             'dob'               => $dob,
             'referenceNumber'   => $referenceNumber,
-            'passcode'          => $passcode
+            'activation_key'          => $activation_key
         ]));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return AddLpaState
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): AddLpaState
+    {
+        return $this->loadState($request, AddLpaState::class);
     }
 }
