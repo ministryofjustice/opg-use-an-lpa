@@ -21,7 +21,7 @@ func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
 		l := &url.URL{
 			Scheme: "https",
 			Host: r.Host,
-			Path: "/logged-out",
+			Path: "/",
 		}
 		
 		v := cognitoLogoutURL.Query()

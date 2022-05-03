@@ -45,7 +45,6 @@ func NewServer(db *dynamodb.Client, keyURL string, cognitoLogoutURL *url.URL) ht
 	router := mux.NewRouter()
 
 	router.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
-	router.Handle("/logged-out", handlers.LoggedoutHandler())
 	router.Handle("/helloworld", handlers.HelloHandler())
 
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(db), data.NewLPAService(db), handlers.NewTemplateWriterService())
