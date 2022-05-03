@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-05-03T09:59:05+00:00\n"
+"POT-Creation-Date: 2022-05-03T11:00:34+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -207,7 +207,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:12
 #: src/Actor/templates/actor/request-email-change-success.html.twig:11
 #: src/Common/templates/common/contact-us.html.twig:9
-#: src/Common/templates/common/cookies.html.twig:11
+#: src/Common/templates/common/cookies.html.twig:12
 #: src/Common/templates/common/instructions-preferences-signed-before-2016.html.twig:10
 #: src/Viewer/templates/viewer/check-code-found.html.twig:10
 msgid "Back"
@@ -855,6 +855,7 @@ msgstr "Y rhoddwr"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:50
 #: src/Actor/templates/actor/check-your-answers.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:152
+#: src/Common/templates/common/cookies.html.twig:104
 #: src/Common/templates/partials/full-lpa-display.html.twig:180
 msgid "Name"
 msgstr "Enw"
@@ -950,6 +951,7 @@ msgstr ""
 "\"atwrneiaeth arhosol\">LPA</abbr> papur"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:201
+#: src/Common/templates/common/cookies.html.twig:137
 #: src/Common/templates/partials/full-lpa-display.html.twig:225
 msgid "No"
 msgstr "Nac oes"
@@ -2625,6 +2627,7 @@ msgid "Not viewed"
 msgstr "Heb weld LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:78
+#: src/Common/templates/common/cookies.html.twig:106
 msgid "Expires"
 msgstr "Daw i ben"
 
@@ -3156,7 +3159,7 @@ msgstr "Mae problem"
 msgid "Error:"
 msgstr "Gwall:"
 
-#: src/Common/templates/common/cookies.html.twig:16
+#: src/Common/templates/common/cookies.html.twig:18
 #: src/Common/templates/layout/default.html.twig:131
 msgid "Cookies"
 msgstr "Cwcis"
@@ -3257,7 +3260,7 @@ msgstr ""
 "Mae’r cwcis hanfodol hyn yn caniatáu i chi fewngofnodi i’r gwasanaeth. Mae "
 "gofyn iddynt fod yn weithredol drwy’r amser."
 
-#: src/Common/templates/common/cookies.html.twig:70
+#: src/Common/templates/common/cookies.html.twig:147
 msgid "Save changes"
 msgstr "Arbed newidiadau"
 
@@ -6725,3 +6728,188 @@ msgstr ""
 "ffolder sbam, swmp neu sothach &mdash; efallai bod eich system e-bost wedi ei "
 "rwystro ar gam. Os nad oes cyfrif gyda’r cyfeiriad e-bost hwn, byddwn yn rhoi "
 "gwybod i chi am hynny hefyd."
+
+#: src/Common/templates/common/cookies.html.twig:19
+#, fuzzy
+#| msgid ""
+#| "Cookies are files saved on your phone, tablet or computer when you visit a "
+#| "website."
+msgid ""
+"Cookies are small files saved on your phone, tablet or computer when you visit "
+"a website."
+msgstr ""
+"Ffeiliau a arbedir ar eich ffôn, eich tabled neu eich cyfrifiadur pan fyddwch "
+"yn ymweld â gwefan yw cwcis."
+
+#: src/Common/templates/common/cookies.html.twig:23
+#, fuzzy
+#| msgid ""
+#| "We use cookies to store information about how you use the Use a lasting "
+#| "power of attorney service, such as the pages you visit."
+msgid ""
+"We use cookies to make the Use a lasting power of attorney service work and "
+"collect information about how you use our service."
+msgstr ""
+"Rydym yn defnyddio cwcis i storio gwybodaeth am sut yr ydych yn defnyddio’r "
+"gwasanaeth Defnyddio atwrneiaeth arhosol, er enghraifft y tudalennau y byddwch "
+"yn ymweld â hwy."
+
+#: src/Common/templates/common/cookies.html.twig:25
+#, fuzzy
+#| msgid ""
+#| "We use cookies to store information about how you use the View a lasting "
+#| "power of attorney service, such as the pages you visit."
+msgid ""
+"We use cookies to make the View a lasting power of attorney service work and "
+"collect information about how you use our service."
+msgstr ""
+"Rydym yn defnyddio cwcis i storio gwybodaeth am sut yr ydych yn defnyddio’r "
+"gwasanaeth Gweld atwrneiaeth arhosol, er enghraifft y tudalennau y byddwch yn "
+"ymweld â hwy."
+
+#: src/Common/templates/common/cookies.html.twig:32
+msgid "Essential cookies"
+msgstr "Cwcis hanfodol"
+
+#: src/Common/templates/common/cookies.html.twig:34
+msgid ""
+"Essential cookies keep your information secure while you use this service. We "
+"do not need to ask permission to use them."
+msgstr ""
+"Mae cwcis hanfodol yn cadw eich gwybodaeth yn ddiogel wrth i chi ddefnyddio’r "
+"gwasanaeth hwn. Nid oes angen i ni ofyn am ganiatâd i’w defnyddio."
+
+#: src/Common/templates/common/cookies.html.twig:105
+msgid "Purpose"
+msgstr "Pwrpas"
+
+#: src/Common/templates/common/cookies.html.twig:44
+msgid "Expires after"
+msgstr "Yn dod i ben ar ôl"
+
+#: src/Common/templates/common/cookies.html.twig:49
+msgid "cookie_policy"
+msgstr "cookie_policy"
+
+#: src/Common/templates/common/cookies.html.twig:50
+msgid "Saves your cookie consent settings"
+msgstr "Mae’n cadw eich gosodiadau caniatâd cwcis"
+
+#: src/Common/templates/common/cookies.html.twig:51
+msgid "1 year"
+msgstr "1 flwyddyn"
+
+#: src/Common/templates/common/cookies.html.twig:54
+msgid "session"
+msgstr "session"
+
+#: src/Common/templates/common/cookies.html.twig:55
+msgid "Used to remember your progress through the service"
+msgstr "Fe’i defnyddir i gofio eich cynnydd drwy’r gwasanaeth"
+
+#: src/Common/templates/common/cookies.html.twig:118
+msgid "24 hours"
+msgstr "24 awr"
+
+#: src/Common/templates/common/cookies.html.twig:61
+msgid "Analytics cookies (optional)"
+msgstr "Cwcis dadansoddeg (dewisol)"
+
+#: src/Common/templates/common/cookies.html.twig:64
+msgid ""
+"With your permission, we use Google Analytics to collect data about how you "
+"use the Use a lasting power of attorney service. This information helps us to "
+"improve our service."
+msgstr ""
+"Gyda’ch caniatâd chi, rydym yn defnyddio Google Analytics i gasglu data am sut "
+"rydych chi’n defnyddio’r gwasanaeth Defnyddio atwrneiaeth arhosol. Mae’r "
+"wybodaeth hon yn ein helpu ni i wella ein gwasanaeth."
+
+#: src/Common/templates/common/cookies.html.twig:68
+msgid ""
+"With your permission, we use Google Analytics to collect data about how you "
+"use the View a lasting power of attorney service. This information helps us to "
+"improve our service."
+msgstr ""
+"Gyda’ch caniatâd chi, rydym yn defnyddio Google Analytics i gasglu data am sut "
+"rydych chi’n defnyddio’r gwasanaeth Gweld atwrneiaeth arhosol. Mae’r wybodaeth "
+"hon yn ein helpu ni i wella ein gwasanaeth."
+
+#: src/Common/templates/common/cookies.html.twig:75
+msgid "Google is not allowed to use or share our analytics data with anyone."
+msgstr ""
+"Nid yw Google yn cael defnyddio na rhannu ein data dadansoddeg ag unrhyw un."
+
+#: src/Common/templates/common/cookies.html.twig:80
+msgid ""
+"No personal details are stored with this information, so you can’t be "
+"identified."
+msgstr ""
+"Ni chedwir manylion personol gyda’r wybodaeth hon, felly ni ellir eich adnabod."
+
+#: src/Common/templates/common/cookies.html.twig:85
+msgid "Google Analytics stores anonymised information about:"
+msgstr "Mae Google Analytics yn storio gwybodaeth ddienw am y canlynol:"
+
+#: src/Common/templates/common/cookies.html.twig:92
+msgid "how you got to the Use a lasting power of attorney service"
+msgstr "sut cyrhaeddoch chi’r Gwasanaeth defnyddio atwrneiaeth arhosol"
+
+#: src/Common/templates/common/cookies.html.twig:94
+msgid "how you got to the View a lasting power of attorney service"
+msgstr "sut cyrhaeddoch chi’r Gwasanaeth defnyddio atwrneiaeth arhosol"
+
+#: src/Common/templates/common/cookies.html.twig:96
+msgid "the pages you visit on the service and how long you spend on them"
+msgstr ""
+"y tudalennau y byddwch chi’n ymweld â nhw ar y gwasanaeth a faint o amser y "
+"byddwch chi’n ei dreulio arnynt"
+
+#: src/Common/templates/common/cookies.html.twig:97
+msgid "any errors you see while using the service"
+msgstr "unrhyw wall a welwch wrth ddefnyddio’r gwasanaeth"
+
+#: src/Common/templates/common/cookies.html.twig:111
+msgid "_ga"
+msgstr "_ga"
+
+#: src/Common/templates/common/cookies.html.twig:112
+msgid ""
+"Checks if you’ve visited the service before. This helps us count how many "
+"people visit the service."
+msgstr ""
+"Mae’n gwirio a ydych chi wedi ymweld â’r gwasanaeth o’r blaen. Mae hyn yn ein "
+"helpu i gyfrif faint o bobl sy’n ymweld â’r gwasanaeth."
+
+#: src/Common/templates/common/cookies.html.twig:113
+msgid "2 years"
+msgstr "2 flynedd"
+
+#: src/Common/templates/common/cookies.html.twig:116
+msgid "_gid"
+msgstr "_gid"
+
+#: src/Common/templates/common/cookies.html.twig:117
+msgid ""
+"Tells us how you got to the service and how you use it. This helps us "
+"understand how well the service is working."
+msgstr ""
+"Mae’n dweud wrthym sut gwnaethoch chi gyrraedd y gwasanaeth a sut rydych chi’n "
+"ei ddefnyddio. Mae hyn yn ein helpu ni i ddeall pa mor dda mae’r gwasanaeth yn "
+"gweithio."
+
+#: src/Common/templates/common/cookies.html.twig:126
+msgid "Do you want to accept analytics cookies?"
+msgstr "Ydych chi eisiau derbyn cwcis dadansoddeg?"
+
+#: src/Common/templates/common/cookies.html.twig:132
+msgid "Yes"
+msgstr "Oes"
+
+#: src/Common/templates/partials/flash-message.html.twig:10
+msgid "You’ve set your cookie preferences."
+msgstr "Rydych chi wedi gosod eich dewisiadau cwcis."
+
+#: src/Common/templates/partials/flash-message.html.twig:11
+msgid "Go back to the page you were looking at"
+msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni."
