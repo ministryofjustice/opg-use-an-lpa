@@ -1,12 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-use Common\Middleware\Routing\ConditionalRoutingMiddleware;
-use Mezzio\Application;
-use Mezzio\MiddlewareFactory;
-use Psr\Container\ContainerInterface;
-
 /**
  * Setup routes with a single request method:
  *
@@ -33,6 +26,13 @@ use Psr\Container\ContainerInterface;
  *     'contact'
  * );
  */
+
+declare(strict_types=1);
+
+use Common\Middleware\Routing\ConditionalRoutingMiddleware;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -61,8 +61,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     );
 };
 
-$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void
-{
+$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $ALLOW_OLDER_LPAS = 'allow_older_lpas';
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
@@ -98,13 +97,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User management
     $app->route(
-        '/forgot-password',
+        '/reset-password',
         Actor\Handler\PasswordResetRequestPageHandler::class,
         ['GET', 'POST'],
         'password-reset'
     );
     $app->route(
-        '/forgot-password/{token}',
+        '/reset-password/{token}',
         Actor\Handler\PasswordResetPageHandler::class,
         ['GET', 'POST'],
         'password-reset-token'
@@ -339,7 +338,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
                 $defaultNotFoundPage
             )
         ], ['GET', 'POST'], 'lpa.remove-lpa');
-
 };
 
 switch (getenv('CONTEXT')) {

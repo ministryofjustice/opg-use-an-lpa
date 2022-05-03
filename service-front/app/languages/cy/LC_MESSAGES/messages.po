@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-04-22T06:39:40+00:00\n"
+"POT-Creation-Date: 2022-05-03T09:59:05+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,11 +12,11 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
-msgstr "Eich cod mynediad yr LPA newydd"
+msgstr "Ailosod eich cyfrinair"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:37
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:25
@@ -4167,7 +4167,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:256
+#: src/Actor/src/Handler/CheckLpaHandler.php:254
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -6698,3 +6698,30 @@ msgstr ""
 msgctxt "error"
 msgid "The LPA reference number provided is not correct"
 msgstr "Nid yw’r cyfeirnod LPA a ddarparwyd yn gywir"
+
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:17
+#: src/Actor/templates/actor/password-reset-request.html.twig:3
+msgid "Resetting your password"
+msgstr "Ailosod eich cyfrinair"
+
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:18
+msgid ""
+"We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</"
+"strong> so that you can reset your password for your Use a lasting power of "
+"attorney account."
+msgstr ""
+"Rydym wedi e-bostio dolen i <strong class=\"govuk-!-font-weight-bold\">%email"
+"%</strong> er mwyn i chi allu ailosod eich cyfrinair ar gyfer eich cyfrif "
+"Defnyddio atwrneiaeth arhosol."
+
+#: src/Actor/templates/actor/password-reset-request-done.html.twig:20
+msgid ""
+"If you have not received an email within a few minutes, please check your "
+"spam, bulk or junk email folder &mdash; your email system may have blocked it "
+"by mistake. If there’s no account with this email address we’ll also let you "
+"know."
+msgstr ""
+"Os na fyddwch wedi derbyn e-bost o fewn ychydig funudau, edrychwch yn eich "
+"ffolder sbam, swmp neu sothach &mdash; efallai bod eich system e-bost wedi ei "
+"rwystro ar gam. Os nad oes cyfrif gyda’r cyfeiriad e-bost hwn, byddwn yn rhoi "
+"gwybod i chi am hynny hefyd."
