@@ -18,7 +18,7 @@ func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
 		
 		http.SetCookie(w,cookie)
 
-		w.Header().Add("Cache-Control", "no-store, no-cache, must-revalidate") // HTTP 1.1.
+		w.Header().Add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0") // HTTP 1.1.
 		w.Header().Add("Pragma", "no-cache"); // HTTP 1.0.
 		w.Header().Add("Expires", "0"); // Proxies.
 
