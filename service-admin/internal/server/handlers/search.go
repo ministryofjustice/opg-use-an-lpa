@@ -65,7 +65,7 @@ func (s *search) checkEmailOrCode(value interface{}) error {
 	return ErrNotEmailOrCode
 }
 
-func stripUnessesaryCharacters(code string) string {
+func stripUnnecessaryCharacters(code string) string {
 	code = strings.ToUpper(code)
 	result := strings.ReplaceAll(code, "C-", "")
 	result = strings.ReplaceAll(result, "-", "")
@@ -115,7 +115,7 @@ func doSearch(ctx context.Context, db *dynamodb.Client, t queryType, q string) i
 		return r
 
 	case ActivationCodeQuery:
-		r, err := data.GetLPAByActivationCode(ctx, db, stripUnessesaryCharacters(q))
+		r, err := data.GetLPAByActivationCode(ctx, db, stripUnnecessaryCharacters(q))
 		if err != nil {
 			return nil
 		}
