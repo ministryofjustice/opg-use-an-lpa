@@ -99,7 +99,6 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-
         $flash->flash(self::COOKIES_SET_FLASH_MSG, $form->get('referer')->getValue());
 
         $cookiePolicy = [];
