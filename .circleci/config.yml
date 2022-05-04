@@ -1270,7 +1270,7 @@ orbs:
                 if [ "<<parameters.admin_image_tag_input>>" == "latest" ]; then
                   export ADMIN_IMAGE_TAG="latest"
                 else
-                  export ADMIN_IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
+                  export ADMIN_IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.admin_image_tag_input>>) >> $BASH_ENV
                 fi
                 echo $ADMIN_IMAGE_TAG
 
