@@ -1242,6 +1242,10 @@ orbs:
             description: Inputs to use for setting image tags
             type: string
             default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
+          admin_image_tag_input:
+            description: Inputs to use for setting admin app image tags
+            type: string
+            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
         steps:
           - checkout
           - run:
