@@ -14,6 +14,7 @@ workflows:
           name: demo_apply_environment_terraform
           workspace: demo
           image_tag_input: latest
+          admin_image_tag_input: latest
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
           environment: demo
@@ -203,6 +204,7 @@ workflows:
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
             image_tag_input: latest
+            admin_image_tag_input: latest
             filters:
               branches:
                 only: [
