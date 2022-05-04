@@ -14,12 +14,14 @@ import (
 type LPA struct {
 	SiriusUID  string `json:"SiriusUid"`
 	Added      string
+	UserID     string `json:"UserId"`
 	ActivateBy int
 }
 
 const (
 	UserLpaActorTableName     = "UserLpaActorMap"
 	UserLpaActorUserIndexName = "UserIndex"
+	ActivationCodeIndexName   = "ActivationCodeIndex"
 )
 
 var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")
@@ -44,6 +46,34 @@ func GetLpasByUserID(ctx context.Context, db *dynamodb.Client, uid string) (lpas
 		}
 
 		return lpas, nil
+	}
+
+	return nil, ErrUserLpaActorMapNotFound
+}
+
+func GetLPAByActivationCode(ctx context.Context, db *dynamodb.Client, activationCode string) (lpa *LPA, err error) {
+	result, err := db.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
+		IndexName:              aws.String(ActivationCodeIndexName),
+		KeyConditionExpression: aws.String("ActivationCode = :a"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":a": &types.AttributeValueMemberS{Value: activationCode},
+		},
+	})
+
+	if err != nil {
+		log.Error().Err(err).Msg("error while searching for activationCode")
+	}
+
+	if result.Count > 0 {
+		var lpas []*LPA
+
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &lpas)
+		if err != nil {
+			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
+		}
+
+		return lpas[0], nil
 	}
 
 	return nil, ErrUserLpaActorMapNotFound

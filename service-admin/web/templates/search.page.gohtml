@@ -49,6 +49,7 @@
   <div class="govuk-grid-row govuk-!-margin-top-6">
     <div class="govuk-grid-column-two-thirds">
       <p class="govuk-hint">Showing results for "<strong>{{ .Query }}</strong>"</p>
+      {{ template "result_code" .Result }}
     </div>
   </div>
   {{ end }}
