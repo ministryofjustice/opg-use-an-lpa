@@ -1,25 +1,24 @@
 package handlers_test
 
-// import (
-// 	"testing"
+import (
+	"os"
+	"testing"
 
-// 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
-// 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
-// 	"github.com/spf13/afero"
-// 	"github.com/stretchr/testify/assert"
-// )
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
+	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/stretchr/testify/assert"
+ )
 
-// func TestLogoutHandler(t *testing.T) {
-// 	t.Parallel()
+ func TestLogoutHandler(t *testing.T) {
+ 	t.Parallel()
 
-// 	handler := server.WithTemplates(
-// 		LogoutHandler(),
-// 		server.LoadTemplates(os.DirFS("../../../web/templates")),
-// 	)
+ 	handler := server.WithTemplates(
+		LogoutHandler(),
+ 		server.LoadTemplates(os.DirFS("../../../web/templates")),
+ 	)
 
-// 	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
-// 	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/logout", nil, "You are logged out")
-// }
+ 	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/logout", nil)
+ }
 
 // func TestLogoutHandler_WithBadTemplate(t *testing.T) {
 // 	t.Parallel()

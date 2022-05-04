@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"fmt"
 
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -53,7 +54,7 @@ func main() {
 		cognitoClientId = flag.String(
 			"client-id",
 			env.Get("ADMIN_CLIENT_ID", ""),
-			"The aws cloient id for user",
+			"The aws client id for user",
 		)
 	)
 
@@ -63,6 +64,7 @@ func main() {
 	v.Set("client_id", *cognitoClientId)
 
 	u, _ := url.Parse(*cognitoLogoutURL)
+
 	u.RawQuery = v.Encode()
 
 	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
