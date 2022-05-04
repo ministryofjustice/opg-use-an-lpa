@@ -131,16 +131,28 @@ describe('When the cookie banner is initiated', () => {
 
 describe('When the cookie banner is initiated on the cookies page', () => {
   describe('and I am on the cookies page but have not seen the message', () => {
-    beforeEach(() => {
-      getCookie.mockReturnValueOnce(null);
-      getCookie.mockReturnValueOnce(null);
-    });
     test('it should setup useAnaltics', () => {
+
+      getCookie.mockReturnValueOnce(null);
+      getCookie.mockReturnValueOnce(null);
+
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'), true);
       const cookieBanner = document.querySelector('.govuk-cookie-banner');
 
       expect(setConsentCookie).toHaveBeenCalledWith(false);
+      expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
+    });
+    test('When analytics is already set up nothing is called', () => {
+
+      getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
+      getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
+
+      document.body.innerHTML = cookieBannerHtml;
+      new cookieConsent(document.querySelector('.govuk-cookie-banner'), true);
+      const cookieBanner = document.querySelector('.govuk-cookie-banner');
+
+      expect(setConsentCookie).not.toHaveBeenCalled();
       expect(cookieBanner.getAttribute('hidden')).not.toBe(null);
     });
   });

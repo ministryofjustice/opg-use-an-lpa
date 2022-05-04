@@ -14,6 +14,7 @@ workflows:
           name: demo_apply_environment_terraform
           workspace: demo
           image_tag_input: latest
+          admin_image_tag_input: latest
       - use-my-lpa/redeploy_latest:
           name: redeploy_demo
           environment: demo
@@ -203,6 +204,7 @@ workflows:
         - use-my-lpa/apply_environment_terraform:
             name: dev_apply_environment_terraform
             image_tag_input: latest
+            admin_image_tag_input: latest
             filters:
               branches:
                 only: [
@@ -212,7 +214,6 @@ workflows:
             requires:
               [
                 cancel_previous_jobs,
-                dev_plan_shared_terraform,
               ]
 
         - use-my-lpa/seed_database:
@@ -246,6 +247,108 @@ workflows:
                   ]
             requires: [dev_run_behat_tests]
 
+  admin_only_pr:
+      jobs:
+        - cancel_redundant_builds:
+            name: cancel_previous_jobs
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+
+        - use-my-lpa/lint_terraform:
+            name: lint_terraform
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires:
+              [
+                admin_app_test,
+              ]
+
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires:
+              [
+                admin_app_test,
+              ]
+
+            # Provision and test development
+        - use-my-lpa/plan_shared_terraform:
+            name: dev_plan_shared_terraform
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires: [cancel_previous_jobs,lint_terraform]
+
+        - use-my-lpa/apply_environment_terraform:
+            name: dev_apply_environment_terraform
+            image_tag_input: latest
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires:
+              [
+                cancel_previous_jobs,
+                admin_app_build
+              ]
+
+        - use-my-lpa/seed_database:
+            name: dev_seed_database
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires: [dev_apply_environment_terraform]
+
+        - use-my-lpa/run_behat_suite:
+            name: dev_run_behat_tests
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires: [dev_seed_database]
+
+        # Required end of workflow job
+        - use-my-lpa/end_of_workflow:
+            name: end_of_workflow
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires: [dev_run_behat_tests]
+
   pr_build:
       jobs:
         - cancel_redundant_builds:
@@ -253,7 +356,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/lint_terraform:
@@ -261,7 +365,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/node_test_web:
@@ -269,7 +374,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/node_build_web:
@@ -277,7 +383,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [test_web]
 
@@ -286,7 +393,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [build_web]
 
@@ -295,7 +403,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [build_web]
 
@@ -304,7 +413,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/docker_build_api_web:
@@ -312,7 +422,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/docker_test_admin:
@@ -320,7 +431,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/docker_build_admin:
@@ -328,7 +440,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
 
         - use-my-lpa/codecov_upload:
@@ -336,7 +449,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires:
               [
@@ -352,7 +466,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -361,7 +476,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires:
               [
@@ -379,7 +495,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires:
               [
@@ -395,7 +512,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [dev_apply_environment_terraform]
 
@@ -404,7 +522,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [dev_seed_database]
 
@@ -415,7 +534,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [dev_run_behat_tests]
 
@@ -425,7 +545,8 @@ workflows:
             filters: { branches: { ignore: [
               main,
               /dependabot\/.*/,
-              /tf\/.*/
+              /tf\/.*/,
+              /admin\/.*/
               ] } }
             requires: [post_environment_domains]
 
@@ -1156,6 +1277,10 @@ orbs:
             description: Inputs to use for setting image tags
             type: string
             default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
+          admin_image_tag_input:
+            description: Inputs to use for setting admin app image tags
+            type: string
+            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
         steps:
           - checkout
           - run:
@@ -1167,13 +1292,22 @@ orbs:
                 export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
                 echo $TF_WORKSPACE
                 ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
+
                 if [ "<<parameters.image_tag_input>>" == "latest" ]; then
                   export IMAGE_TAG="latest"
                 else
                   export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
                 fi
-                echo $IMAGE_TAG
-                terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG}
+                echo "deploying service version ${IMAGE_TAG}"
+
+                if [ "<<parameters.admin_image_tag_input>>" == "latest" ]; then
+                  export ADMIN_IMAGE_TAG="latest"
+                else
+                  export ADMIN_IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.admin_image_tag_input>>) >> $BASH_ENV
+                fi
+                echo "deploying admin app version ${ADMIN_IMAGE_TAG}"
+
+                terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG} -var admin_container_version=${ADMIN_IMAGE_TAG}
                 mv cluster_config.json /tmp/
           - persist_to_workspace:
               root: /tmp
