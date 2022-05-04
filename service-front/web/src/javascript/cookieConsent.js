@@ -11,7 +11,7 @@ export default class CookieConsent {
 
     this._toggleCookieMessage(!isAnalyticsCookieSet && !isInCookiesPath);
 
-    if (isInCookiesPath) { 
+    if (!isAnalyticsCookieSet && isInCookiesPath) { 
       setConsentCookie(false);
     }
 
