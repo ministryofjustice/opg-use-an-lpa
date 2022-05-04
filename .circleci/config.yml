@@ -265,6 +265,34 @@ workflows:
                   /admin\/.*/
                   ]
 
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload
+            filters:
+              branches:
+                only: [
+                  /admin\/.*/
+                  ]
+            requires:
+              [
+                admin_app_test,
+              ]
+
             # Provision and test development
         - use-my-lpa/plan_shared_terraform:
             name: dev_plan_shared_terraform
@@ -286,6 +314,7 @@ workflows:
             requires:
               [
                 cancel_previous_jobs,
+                admin_app_build
               ]
 
         - use-my-lpa/seed_database:
