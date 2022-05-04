@@ -285,7 +285,6 @@ workflows:
             requires:
               [
                 cancel_previous_jobs,
-                dev_plan_shared_terraform,
               ]
 
         - use-my-lpa/seed_database:
