@@ -7,7 +7,7 @@ resource "aws_cloudwatch_log_group" "application_logs" {
   }
 }
 
-resource "aws_cloudwatch_query_definition" "dns_firewall_statistics" {
+resource "aws_cloudwatch_query_definition" "app_container_messages" {
   name            = "Application Logs/${local.environment_name} app container messages"
   log_group_names = [aws_cloudwatch_log_group.application_logs.name]
 
