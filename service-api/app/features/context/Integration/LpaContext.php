@@ -1910,16 +1910,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
-     */
-    public function after2019NotMatch()
-    {
-        $this->lpa->registrationDate = '2019-10-31';
-        $this->lpa->lpaIsCleansed = false;
-    }
-
-
-    /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
      * @When /^I request to remove an LPA from my account that is (.*)$/
      */
@@ -2747,7 +2737,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When I confirm the incorrect details of the found LPA are correct and flag is turned :flagStatus
+     * @When I confirm the incorrect details of the found LPA and flag is turned :flagStatus
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
