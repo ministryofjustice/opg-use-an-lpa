@@ -6,3 +6,17 @@ resource "aws_cloudwatch_log_group" "application_logs" {
     "Name" = "${local.environment_name}_application_logs"
   }
 }
+
+resource "aws_cloudwatch_query_definition" "dns_firewall_statistics" {
+  name            = "Application Logs/${local.environment_name} app container messages"
+  log_group_names = [aws_cloudwatch_log_group.application_logs.name]
+
+  query_string = <<EOF
+fields @timestamp, coalesce(message, request) as logged
+| parse @logStream ".*-app" as service
+| display @timestamp, service, logged
+| filter @message not like /(Identity of incoming request|ELB-HealthChecker|\/session-check|\/session-refresh|GET \/healthcheck|GET - -)/
+| filter @logStream like /-app\./
+| sort @timestamp desc
+EOF
+}
