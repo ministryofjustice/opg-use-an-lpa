@@ -1,0 +1,43 @@
+{{ define "result_code" }}
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Used
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .Used }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Date Used
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{ if .DateTime }}
+          {{ .DateTime | readableDateTime }}
+        {{ else }}
+          N/A
+        {{ end }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        LPA
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .LPA }}
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Email
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .Email }}
+      </dd>
+    </div>
+  </dl>
+{{ end }}

@@ -7,8 +7,17 @@ variable "container_version" {
   default = "latest"
 }
 
+variable "admin_container_version" {
+  type    = string
+  default = "latest"
+}
+
 output "container_version" {
   value = var.container_version
+}
+
+output "admin_container_version" {
+  value = var.admin_container_version
 }
 
 output "workspace_name" {
