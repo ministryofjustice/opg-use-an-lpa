@@ -184,17 +184,6 @@ Feature: Add an older LPA
     And I will receive an email confirming this information
 
   @acceptance @integration @pact @ff:allow_older_lpas:true
-  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is partial match
-    Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
-    And I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
-    And I provide the additional details asked
-    And I am asked to consent and confirm my details
-    When I confirm that the data is correct and click the confirm and submit button
-    Then I am told my activation key request has been received
-    And I should expect it within 6 weeks time
-    And I will receive an email confirming this information
-
-  @acceptance @integration @pact @ff:allow_older_lpas:true
   Scenario: User receives a confirmation that key will be sent in 2 weeks, when lpa trying to be added is cleansed and full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     And I provide the details from a valid paper LPA document
@@ -206,15 +195,27 @@ Feature: Add an older LPA
   @acceptance @integration @pact @ff:allow_older_lpas:true
   @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
-    Given I am on the add an older LPA page
-    And I provide details of LPA registered after 1st September 2019 which do not match a valid paper document
-    When I confirm the details of the found LPA are correct and flag is turned "ON"
+    Given My LPA was registered 'after' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm the incorrect details of the found LPA are correct and flag is turned "ON"
+    Then I am informed that an LPA could not be found with these details
+
+  @acceptance @integration @pact @ff:allow_older_lpas:true
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
+  Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm the incorrect details of the found LPA are correct and flag is turned "ON"
     Then I am informed that an LPA could not be found with these details
 
   @acceptance @integration @pact @ff:allow_older_lpas:true
   @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
+  Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned off
+    Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
+    When I confirm the incorrect details of the found LPA are correct and flag is turned "OFF"
+    Then I am asked for my role on the LPA
+
+  @acceptance @integration @pact @ff:allow_older_lpas:true
+  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user is asked for their role on the LPA when request for cleansing streamlining flag tuned off
-    Given I am on the add an older LPA page
-    And I provide details of LPA registered after 1st September 2019 which do not match a valid paper document
-    When I confirm the details of the found LPA are correct and flag is turned "OFF"
+    Given My LPA was registered 'after' 1st September 2019 and LPA is 'not marked' as clean
+    When I confirm the incorrect details of the found LPA are correct and flag is turned "OFF"
     Then I am asked for my role on the LPA

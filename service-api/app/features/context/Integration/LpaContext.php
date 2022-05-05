@@ -1678,9 +1678,9 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
-        } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA details do not match', $ex->getMessage());
+        } catch (NotFoundException $ex) {
+            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            assertEquals('LPA not found', $ex->getMessage());
             return;
         }
 
@@ -1902,13 +1902,22 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I request to go back and try again$/
-     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
      * @Then /^I am asked for my role on the LPA$/
      */
     public function iRequestToGoBackAndTryAgain()
     {
         // Not needed for this context
     }
+
+    /**
+     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
+     */
+    public function after2019NotMatch()
+    {
+        $this->lpa->registrationDate = '2019-10-31';
+        $this->lpa->lpaIsCleansed = false;
+    }
+
 
     /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
@@ -2738,13 +2747,12 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
+     * @When I confirm the incorrect details of the found LPA are correct and flag is turned :flagStatus
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
-        $this->lpa->status = 'Registered';
-        $this->lpa->registrationDate = '2019-10-31';
 
+        $this->lpa->status = 'Registered';
         $data = [
             'reference_number' => $this->lpaUid,
             'dob'              => $this->userDob,
