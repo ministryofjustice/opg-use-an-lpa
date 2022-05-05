@@ -50,6 +50,7 @@ Feature: Add an older LPA
     Then I am informed that an LPA could not be found with these details
 
   @integration @acceptance @pact @ff:allow_older_lpas:false
+    @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario Outline: The user cannot add an older LPA to their account as the data does not match
     Given I am on the add an older LPA page
     When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
