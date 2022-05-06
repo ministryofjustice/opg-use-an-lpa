@@ -14,9 +14,13 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
 }
 
 resource "aws_service_discovery_private_dns_namespace" "internal" {
+  name = "${local.environment_name}-internal"
+  vpc  = data.aws_vpc.default.id
+}
+
+resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
   name = "${local.environment_name}.ual.internal.ecs"
-  # name = "${local.environment_name}-internal"
-  vpc = data.aws_vpc.default.id
+  vpc  = data.aws_vpc.default.id
 }
 
 //-------------------------------------------------------------
