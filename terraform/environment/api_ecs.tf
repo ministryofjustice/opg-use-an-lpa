@@ -17,14 +17,14 @@ resource "aws_ecs_service" "api" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.api.arn
+    registry_arn = aws_service_discovery_service.api_ecs.arn
   }
 
   wait_for_steady_state = true
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
 }
 
 //-----------------------------------------------
