@@ -48,6 +48,25 @@ resource "aws_service_discovery_service" "pdf" {
   }
 }
 
+resource "aws_service_discovery_service" "pdf_ecs" {
+  name = "pdf"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+}
+
 //
 locals {
   pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal.name}"

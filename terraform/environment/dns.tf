@@ -18,6 +18,11 @@ resource "aws_service_discovery_private_dns_namespace" "internal" {
   vpc  = data.aws_vpc.default.id
 }
 
+resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
+  name = "${local.environment_name}.ual.internal.ecs"
+  vpc  = data.aws_vpc.default.id
+}
+
 //-------------------------------------------------------------
 // View
 
