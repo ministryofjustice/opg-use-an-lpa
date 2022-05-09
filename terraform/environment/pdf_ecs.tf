@@ -16,13 +16,13 @@ resource "aws_ecs_service" "pdf" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.pdf.arn
+    registry_arn = aws_service_discovery_service.pdf_ecs.arn
   }
 
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
@@ -69,7 +69,7 @@ resource "aws_service_discovery_service" "pdf_ecs" {
 
 //
 locals {
-  pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+  pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------
