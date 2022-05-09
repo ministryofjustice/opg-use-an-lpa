@@ -13,6 +13,7 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
   name     = "view-lasting-power-of-attorney.service.gov.uk"
 }
 
+# remove this after UML-2293 is merged
 resource "aws_service_discovery_private_dns_namespace" "internal" {
   name = "${local.environment_name}-internal"
   vpc  = data.aws_vpc.default.id
