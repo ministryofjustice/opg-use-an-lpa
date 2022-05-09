@@ -69,7 +69,11 @@ resource "aws_service_discovery_service" "pdf_ecs" {
 
 //
 locals {
+<<<<<<< HEAD
   pdf_service_fqdn = "${aws_service_discovery_service.pdf_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+=======
+  pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+>>>>>>> da07e822 (destroy before create for this PR)
 }
 
 //----------------------------------
