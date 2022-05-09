@@ -23,31 +23,12 @@ resource "aws_ecs_service" "api" {
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 }
 
 //-----------------------------------------------
 // Api service discovery
-
-resource "aws_service_discovery_service" "api" {
-  name = "api"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
 
 resource "aws_service_discovery_service" "api_ecs" {
   name = "api"
@@ -71,10 +52,14 @@ resource "aws_service_discovery_service" "api_ecs" {
 //
 locals {
 <<<<<<< HEAD
+<<<<<<< HEAD
   api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 =======
   api_service_fqdn = "${aws_service_discovery_service.api.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 >>>>>>> da07e822 (destroy before create for this PR)
+=======
+  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+>>>>>>> 4c393fd9 (delete old service discovery resources)
 }
 
 //----------------------------------
