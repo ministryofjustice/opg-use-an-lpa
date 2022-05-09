@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-05-03T11:00:34+00:00\n"
+"POT-Creation-Date: 2022-05-09T13:00:57+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -312,7 +312,7 @@ msgstr "Newid eich cyfrinair"
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
 
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:47
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
@@ -1714,7 +1714,7 @@ msgstr ""
 "Nodwch eich cyfeiriad e-bost isod. Os oes yna gyfrif ar gyfer y cyfeiriad e-"
 "bost hwn, byddwn yn anfon dolen atoch i ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/login.html.twig:42
+#: src/Actor/templates/actor/login.html.twig:44
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
 msgid "Email address"
@@ -1788,7 +1788,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:49
+#: src/Actor/templates/actor/login.html.twig:51
 msgid "Sign in"
 msgstr "Mewngofnodi"
 
@@ -2343,7 +2343,7 @@ msgstr ""
 "dal angen i chi <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a> i allu "
 "defnyddio’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/login.html.twig:55
+#: src/Actor/templates/actor/login.html.twig:57
 msgid "Forgotten your password?"
 msgstr "Wedi anghofio eich cyfrinair?"
 
@@ -6913,3 +6913,11 @@ msgstr "Rydych chi wedi gosod eich dewisiadau cwcis."
 #: src/Common/templates/partials/flash-message.html.twig:11
 msgid "Go back to the page you were looking at"
 msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni."
+
+#: src/Actor/templates/actor/login.html.twig:40
+msgid ""
+"If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link"
+"%>Make a lasting power of attorney service.</a>"
+msgstr ""
+"Os ydych chi eisiau gwneud atwrneiaeth arhosol ar-lein, ewch i <a class=\"govuk-"
+"link\" href=%link%>Gwasanaeth gwneud atwrneiaeth arhosol.</a>"
