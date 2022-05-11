@@ -74,21 +74,34 @@ resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
 }
 
 locals {
-  login_attempt_status = [
-    "403",
-    "404",
-    "401",
+  login_attempt_message = [
+    "User not found for email",
+    "Authentication failed for",
   ]
 }
 
-resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
-  for_each       = toset(local.login_attempt_status)
-  name           = "${local.environment_name}_${lower(each.value)}"
-  pattern        = "{ $.logStream = \"*api-app*\" && $.request = \"*/v1/auth*\" && $.status = \"${each.value}\" }"
+resource "aws_cloudwatch_log_metric_filter" "login_attempt_user_not_found" {
+  for_each       = toset(local.login_attempt_message)
+  name           = "${local.environment_name}_login_attempt_user_not_found"
+  pattern        = "{ $.message = \"User not found for email\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
-    name          = "${lower(each.value)}_login_attempt_failures"
+    name          = "login_attempt_user_not_found"
+    namespace     = "${local.environment_name}_events"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "login_attempt_authentication_failure" {
+  for_each       = toset(local.login_attempt_message)
+  name           = "${local.environment_name}_login_attempt_authentication_failure"
+  pattern        = "{ $.message = \"Authentication failed for*\" }"
+  log_group_name = aws_cloudwatch_log_group.application_logs.name
+
+  metric_transformation {
+    name          = "login_attempt_authentication_failure"
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
