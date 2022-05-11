@@ -7,8 +7,17 @@ variable "container_version" {
   default = "latest"
 }
 
+variable "admin_container_version" {
+  type    = string
+  default = "latest"
+}
+
 output "container_version" {
   value = var.container_version
+}
+
+output "admin_container_version" {
+  value = var.admin_container_version
 }
 
 output "workspace_name" {
@@ -92,7 +101,7 @@ variable "environments" {
 }
 
 locals {
-  environment_name  = lower(terraform.workspace)
+  environment_name  = lower(replace(terraform.workspace, "_", "-"))
   environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
   dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
   dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."

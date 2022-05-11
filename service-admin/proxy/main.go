@@ -34,12 +34,12 @@ func loadPrivateKey(pemPath string) (*ecdsa.PrivateKey, error) {
 
 	pem, err := ioutil.ReadFile(pemPath)
 	if err != nil {
-		return nil, fmt.Errorf("unable to load private key pem file from %s, %w", pemPath, err)
+		return nil, fmt.Errorf("unable to load private key pem file from %s, %v", pemPath, err)
 	}
 
 	privateKey, err := jwt.ParseECPrivateKeyFromPEM(pem)
 	if err != nil {
-		return nil, fmt.Errorf("unable to parse ec private key from data in %s, %w", pemPath, err)
+		return nil, fmt.Errorf("unable to parse ec private key from data in %s, %v", pemPath, err)
 	}
 
 	privateKeyCache.Store(pemPath, privateKey)
@@ -62,7 +62,7 @@ func createToken(keyPath string, name string, email string) (string, error) {
 
 	key, err := loadPrivateKey(keyPath)
 	if err != nil {
-		return "", fmt.Errorf("unable to load key, %w", err)
+		return "", fmt.Errorf("unable to load key, %v", err)
 	}
 
 	return t.SignedString(key)

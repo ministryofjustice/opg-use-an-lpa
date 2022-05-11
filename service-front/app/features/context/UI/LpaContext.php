@@ -219,8 +219,8 @@ class LpaContext implements Context
      */
     public function iAmOnTheAddAnLPAPage()
     {
-        $this->ui->visit('/lpa/add-by-code');
-        $this->ui->assertPageAddress('/lpa/add-by-code');
+        $this->ui->visit('/lpa/add-by-key/activation-key');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
     }
 
     /**
@@ -423,12 +423,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->fillField('passcode', 'XYUPHWQRECHV');
-        $this->ui->fillField('reference_number', '700000000054');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->fillAddLpaPages('XYUPHWQRECHV', '05', '10', '1975', '700000000054');
     }
 
     /**
@@ -1301,13 +1296,18 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->assertPageAddress('/lpa/add-by-code');
-        $this->ui->fillField('passcode', 'T3STPA22C0D3');
-        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
+        $this->ui->pressButton('Continue');
+
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');
-        $this->ui->clickLink('Cancel');
+        $this->ui->pressButton('Continue');
+
+        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->clickLink('Your LPAs');
     }
 
     /**
@@ -1725,7 +1725,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAThatDoesNotExist()
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')
@@ -1743,12 +1743,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->fillField('passcode', 'ABC321GHI567');
-        $this->ui->fillField('reference_number', '700000000278');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->fillAddLpaPages('ABC321GHI567', '05', '10', '1975', '700000000278');
     }
 
     /**
@@ -1758,7 +1753,7 @@ class LpaContext implements Context
     {
         $this->lpa->status = $status;
 
-        $this->ui->assertPageAddress('/lpa/add-by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')
@@ -1782,12 +1777,7 @@ class LpaContext implements Context
                 }
             );
 
-        $this->ui->fillField('passcode', $code);
-        $this->ui->fillField('reference_number', '700000000054');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->fillAddLpaPages($code, '05', '10', '1975', '700000000054');
     }
 
     /**
@@ -1795,9 +1785,10 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
-        $this->ui->fillField('passcode', 'T3STPA22C0D3');
-        $this->ui->fillField('reference_number', '700000000001');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
+        $this->ui->pressButton('Continue');
+
         $this->ui->fillField('dob[day]', $day);
         $this->ui->fillField('dob[month]', $month);
         $this->ui->fillField('dob[year]', $year);
@@ -1807,14 +1798,10 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with an invalid passcode format of "([^"]*)"$/
      */
-    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($passcode)
+    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($activation_key)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
-        $this->ui->fillField('passcode', $passcode);
-        $this->ui->fillField('reference_number', '700000000001');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+        $this->ui->fillField('activation_key', $activation_key);
         $this->ui->pressButton('Continue');
     }
 
@@ -1823,13 +1810,8 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
-        $this->ui->fillField('passcode', 'T3STPA22C0D3');
-        $this->ui->fillField('reference_number', $referenceNo);
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+        $this->fillAddLpaPages('T3STPA22C0D3', '05', '10', '1975', $referenceNo);
     }
 
     /**
@@ -1837,7 +1819,7 @@ class LpaContext implements Context
      *       and I will have an Id of ([^"]*)$/
      */
     public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
-        $passcode,
+        $activation_key,
         $firstName,
         $secondName,
         $id
@@ -1894,12 +1876,7 @@ class LpaContext implements Context
                 )
             );
 
-        $this->ui->fillField('passcode', $passcode);
-        $this->ui->fillField('reference_number', '700000000054');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->fillAddLpaPages($activation_key, '05', '10', '1975', '700000000054');
     }
 
     /**
@@ -1907,7 +1884,7 @@ class LpaContext implements Context
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
     {
-        $this->ui->assertPageAddress('/lpa/add-by-code');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
         $this->apiFixtures->post('/v1/add-lpa/validate')
@@ -1926,12 +1903,7 @@ class LpaContext implements Context
                 }
             );
 
-        $this->ui->fillField('passcode', $code);
-        $this->ui->fillField('reference_number', '700000000054');
-        $this->ui->fillField('dob[day]', '05');
-        $this->ui->fillField('dob[month]', '10');
-        $this->ui->fillField('dob[year]', '1975');
-        $this->ui->pressButton('Continue');
+        $this->fillAddLpaPages($code, '05', '10', '1975', '700000000054');
     }
 
     /**
@@ -2631,5 +2603,23 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText("The attorneys");
         $this->ui->assertPageContainsText($companyName);
+    }
+
+    /**
+     * @param string $code
+     * @return void
+     */
+    private function fillAddLpaPages(string $code, string $day, string $month, string $year, string $reference_number): void
+    {
+        $this->ui->fillField('activation_key', $code);
+        $this->ui->pressButton('Continue');
+
+        $this->ui->fillField('dob[day]', $day);
+        $this->ui->fillField('dob[month]', $month);
+        $this->ui->fillField('dob[year]', $year);
+        $this->ui->pressButton('Continue');
+
+        $this->ui->fillField('reference_number', $reference_number);
+        $this->ui->pressButton('Continue');
     }
 }

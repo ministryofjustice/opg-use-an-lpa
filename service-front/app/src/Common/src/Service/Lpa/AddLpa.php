@@ -40,12 +40,12 @@ class AddLpa
 
     public function validate(
         string $userToken,
-        string $passcode,
+        string $activation_key,
         string $lpaUid,
         string $dob
     ): AddLpaApiResponse {
         $data = [
-            'actor-code' => $passcode,
+            'actor-code' => $activation_key,
             'uid' => $lpaUid,
             'dob' => $dob
         ];
@@ -89,14 +89,14 @@ class AddLpa
 
     public function confirm(
         string $userToken,
-        string $passcode,
+        string $activation_key,
         string $lpaUid,
         string $dob
     ): AddLpaApiResponse {
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
-            'actor-code' => $passcode,
+            'actor-code' => $activation_key,
             'uid'        => $lpaUid,
             'dob'        => $dob,
         ]);

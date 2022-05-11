@@ -19,28 +19,32 @@ Feature: Cookie consent
   @ui
   Scenario: Navigates to cookie preference page when I click on Set cookie preferences
     Given I want to view a lasting power of attorney
-    When I access the service home page
-    Then I see a View a lasting power of attorney cookie consent banner
-    And I click on the view cookies link
+    And I access the service home page
+    And I see a View a lasting power of attorney cookie consent banner
+    When I click on the view cookies link
     Then I am on the cookie preferences page
 
   @ui
-  Scenario Outline: Save changes option in cookie preferences page
+  Scenario: Save changes option in cookie preferences page
     Given I have seen the View a lasting power of attorney cookie banner
     And I click on the view cookies link
-    When I am on the cookie preferences page
-    Then I see options to Use cookies that measure my website use and Do not use cookies that measure my website use
-    And I choose an <option> and save my choice
-    Then I should be on the home page of the service
-    Then I have a cookie named cookie_policy
-
-    Examples:
-      |option|
-      |Use cookies that measure my website use        |
-      |Do not use cookies that measure my website use |
+    And I am on the cookie preferences page
+    And I see options Yes and No to accept analytics cookies
+    When I set my cookie preferences
+    Then I should be on the cookies page of the service
+    And I am shown cookie preferences has been set
 
   @ui
   Scenario: Check cookie-seen-policy set
     Given I have seen the View a lasting power of attorney cookie banner
     And I set my cookie preferences
     Then I have a cookie named cookie_policy
+
+  @ui
+  Scenario: Check user is referred back to the relevant page after setting cookies
+    Given I have seen the View a lasting power of attorney cookie banner
+    And I click on the view cookies link
+    And I set my cookie preferences
+    And I should be on the cookies page of the service
+    When I click on Go back to the page you were looking at on the cookies page
+    Then I am taken to viewer service home page

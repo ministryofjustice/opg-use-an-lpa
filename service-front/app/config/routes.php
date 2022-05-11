@@ -1,12 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-use Common\Middleware\Routing\ConditionalRoutingMiddleware;
-use Mezzio\Application;
-use Mezzio\MiddlewareFactory;
-use Psr\Container\ContainerInterface;
-
 /**
  * Setup routes with a single request method:
  *
@@ -33,6 +26,13 @@ use Psr\Container\ContainerInterface;
  *     'contact'
  * );
  */
+
+declare(strict_types=1);
+
+use Common\Middleware\Routing\ConditionalRoutingMiddleware;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -61,8 +61,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     );
 };
 
-$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void
-{
+$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $ALLOW_OLDER_LPAS = 'allow_older_lpas';
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
@@ -98,13 +97,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User management
     $app->route(
-        '/forgot-password',
+        '/reset-password',
         Actor\Handler\PasswordResetRequestPageHandler::class,
         ['GET', 'POST'],
         'password-reset'
     );
     $app->route(
-        '/forgot-password/{token}',
+        '/reset-password/{token}',
         Actor\Handler\PasswordResetPageHandler::class,
         ['GET', 'POST'],
         'password-reset-token'
@@ -189,6 +188,22 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\ChangeLpaDetailsHandler::class
     ], 'lpa.change-lpa-details');
 
+    //Add by code routes
+    $app->route('/lpa/add-by-key/activation-key', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        \Actor\Handler\AddLpa\ActivationKeyHandler::class,
+    ], ['GET', 'POST'], 'lpa.add-by-key');
+
+    $app->route('/lpa/add-by-key/date-of-birth', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+            \Actor\Handler\AddLpa\DateOfBirthHandler::class,
+    ], ['GET', 'POST'], 'lpa.add-by-key.date-of-birth');
+
+    $app->route('/lpa/add-by-key/lpa-reference-number', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+            \Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
+    ], ['GET', 'POST'], 'lpa.add-by-key.lpa-reference-number');
+
     // Access for All Journey
     $app->route('/lpa/add/contact-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
@@ -238,19 +253,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
                 Actor\Handler\AddLpaTriageHandler::class,
-                Actor\Handler\LpaAddHandler::class
+                \Actor\Handler\AddLpa\ActivationKeyHandler::class
             )
         ], ['GET', 'POST'], 'lpa.add');
-
-        $app->route('/lpa/add-by-code', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
-            new ConditionalRoutingMiddleware(
-                $container,
-                $USE_OLDER_LPA_JOURNEY,
-                Actor\Handler\LpaAddHandler::class,
-                $defaultNotFoundPage
-            )
-        ], ['GET', 'POST'], 'lpa.add-by-code');
 
         $app->route('/lpa/add-by-paper-information', [
             Mezzio\Authentication\AuthenticationMiddleware::class,
@@ -333,7 +338,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
                 $defaultNotFoundPage
             )
         ], ['GET', 'POST'], 'lpa.remove-lpa');
-
 };
 
 switch (getenv('CONTEXT')) {

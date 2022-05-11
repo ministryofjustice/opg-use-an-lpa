@@ -34,7 +34,7 @@ use Psr\Http\Message\RequestInterface;
  * @property array lpa
  * @property string lpaJson
  * @property string lpaData
- * @property string passcode
+ * @property string activation_key
  * @property string referenceNo
  * @property string userDob
  * @property string userIdentity
@@ -267,7 +267,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAlreadyHaveAValidActivationKeyForMyLPA()
     {
-        $this->passcode = 'XYUPHWQRECHV';
+        $this->activation_key = 'XYUPHWQRECHV';
         $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
     }
 
@@ -923,7 +923,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
-        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->passcode, $this->passcode);
+        $this->iRequestToAddAnLPAWithValidDetailsUsing($this->activation_key, $this->activation_key);
         $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
         $this->theLPAIsSuccessfullyAdded();
     }
@@ -941,7 +941,7 @@ class LpaContext extends BaseIntegrationContext
         // sets up the normal properties needed for an lpa
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
-        $this->passcode = ''; // reset this to blank as we won't have one normally
+        $this->activation_key = ''; // reset this to blank as we won't have one normally
     }
 
     /**
@@ -952,7 +952,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpaJson = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
         $this->lpa = json_decode($this->lpaJson, true);
 
-        $this->passcode = 'XYUPHWQRECHV';
+        $this->activation_key = 'XYUPHWQRECHV';
         $this->referenceNo = '700000000138';
         $this->userDob = '1975-10-05';
         $this->actorLpaToken = '24680';
@@ -1416,7 +1416,7 @@ class LpaContext extends BaseIntegrationContext
 
         $response = $addLpa->validate(
             $this->userIdentity,
-            $this->passcode,
+            $this->activation_key,
             $this->referenceNo,
             $this->userDob
         );
@@ -1445,7 +1445,7 @@ class LpaContext extends BaseIntegrationContext
         $addLpa = $this->container->get(AddLpa::class);
         $response = $addLpa->confirm(
             $this->userIdentity,
-            $this->passcode,
+            $this->activation_key,
             $this->referenceNo,
             $this->userDob
         );
@@ -1653,7 +1653,7 @@ class LpaContext extends BaseIntegrationContext
 
         $response = $addLpa->validate(
             $this->userIdentity,
-            $this->passcode,
+            $this->activation_key,
             $this->referenceNo,
             $this->userDob
         );
