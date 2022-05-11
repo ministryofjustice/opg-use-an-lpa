@@ -1,13 +1,12 @@
 import os
 import sys
+from decimal import Decimal
+import datetime
 import botocore
 import boto3
 import simplejson as json
 from passlib.hash import sha256_crypt
-import time
-import datetime
 import pytz
-from decimal import Decimal
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -18,11 +17,10 @@ if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
 else:
 
     if os.getenv('CI'):
-        role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
-            os.environ['AWS_ACCOUNT_ID'])
+        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/opg-use-an-lpa-ci"
+
     else:
-        role_arn = 'arn:aws:iam::{}:role/operator'.format(
-            os.environ['AWS_ACCOUNT_ID'])
+        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/operator"
 
     # Get a auth token
     session = boto3.client(
@@ -30,7 +28,7 @@ else:
         region_name='eu-west-1',
     ).assume_role(
         RoleArn=role_arn,
-        RoleSessionName='db_seeding',
+        RoleSessionName="db_seeding",
         DurationSeconds=900
     )
 
