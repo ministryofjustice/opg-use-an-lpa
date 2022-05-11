@@ -170,7 +170,7 @@ userLpaActorMap = [
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivateBy': activateBy,
-        'Comment': 'Seeded data: '
+        'Comment': 'Seeded data: Code available to use'
     },
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',
