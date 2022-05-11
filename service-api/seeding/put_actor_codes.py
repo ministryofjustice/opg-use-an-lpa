@@ -24,7 +24,8 @@ class LpaCodesSeeder:
             self.create_dynamodb_resources()
 
         self.lpa_codes_table = self.dynamodb.Table(
-            'lpa-codes-{}'.format(self.environment))
+            f"lpa-codes-{self.environment}"
+        )
 
     def set_account_id(self):
         aws_account_ids = {
@@ -37,8 +38,7 @@ class LpaCodesSeeder:
             self.environment, "288342028542")
 
     def set_iam_role_session(self, iam_role_name):
-        role_arn = 'arn:aws:iam::{0}:role/{1}'.format(
-            self.aws_account_id, iam_role_name)
+        role_arn = f"arn:aws:iam::{self.aws_account_id}:role/{iam_role_name}"
 
         sts = boto3.client(
             'sts',
@@ -70,7 +70,7 @@ class LpaCodesSeeder:
             aws_access_key_id="",
             aws_secret_access_key="",
             aws_session_token="",
-            endpoint_url="http://{}:8000".format(url)
+            endpoint_url=f"http://{url}:8000"
         )
 
     def put_actor_codes(self):
