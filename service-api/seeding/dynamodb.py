@@ -28,7 +28,7 @@ else:
         region_name='eu-west-1',
     ).assume_role(
         RoleArn=role_arn,
-        RoleSessionName="db_seeding",
+        RoleSessionName='db_seeding',
         DurationSeconds=900
     )
 
