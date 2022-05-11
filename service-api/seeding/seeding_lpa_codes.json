@@ -8,7 +8,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "8EFXFEF48WJ4",
@@ -19,7 +20,8 @@
     "dob": "1948-11-01",
     "expiry_date": "1631180477",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "3JHKF3C6D9W8",
@@ -30,7 +32,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "CXAY6GPCQ4X3",
@@ -41,7 +44,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "EEWNGCGW6LWU",
@@ -52,7 +56,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "QRTXRCFRLK46",
@@ -63,7 +68,8 @@
     "dob": "1990-03-17",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "E9YRUTPM6RBW",
@@ -74,7 +80,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "6HFCLATAGLEY",
@@ -85,7 +92,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "W7D4MT7HAQEH",
@@ -96,7 +104,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "4UAL33PEQNAY",
@@ -107,7 +116,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "3YKAJNDD8P3N",
@@ -118,7 +128,8 @@
     "dob": "1990-05-04",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "6CFKNNFLPCP4",
@@ -129,7 +140,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "RQ3W8G4EYRQJ",
@@ -140,7 +152,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "44THDVFJ4P4Y",
@@ -151,7 +164,8 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "XW34H3HYFDDL",
@@ -162,7 +176,8 @@
     "dob": "1948-11-01",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   },
   {
     "code": "PEYBDGT6AJ7U",
@@ -173,6 +188,7 @@
     "dob": "1975-10-05",
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
-    "status_details": "Imported"
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
   }
 ]

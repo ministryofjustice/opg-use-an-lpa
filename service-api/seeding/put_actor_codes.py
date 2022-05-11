@@ -26,7 +26,6 @@ class LpaCodesSeeder:
         self.lpa_codes_table = self.dynamodb.Table(
             'lpa-codes-{}'.format(self.environment))
 
-
     def set_account_id(self):
         aws_account_ids = {
             'production': "649098267436",
@@ -77,7 +76,7 @@ class LpaCodesSeeder:
     def put_actor_codes(self):
         today = datetime.datetime.now()
         next_week = today + datetime.timedelta(days=7)
-        with open(self.input_json_path) as seeding_file:
+        with open(self.input_json_path, encoding='utf-8') as seeding_file:
             actor_lpa_codes = json.load(seeding_file)
 
         for actor_lpa_code in actor_lpa_codes:
@@ -105,7 +104,7 @@ def main():
                         help="Set to true if running inside a Docker container.")
     args = parser.parse_args()
 
-    if args.e =="production":
+    if args.e == "production":
         print("this script will not run on production unless modified.")
         print("exiting...")
         exit()
