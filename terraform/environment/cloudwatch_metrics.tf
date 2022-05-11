@@ -84,7 +84,7 @@ locals {
 resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
   for_each       = toset(local.login_attempt_status)
   name           = "${local.environment_name}_${lower(each.value)}"
-  pattern        = "{ $.request = \"*/v1/auth*\" && $.status = each.vaule }"
+  pattern        = "{ $.request = \"*/v1/auth*\" && $.status = \"${each.value}\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
