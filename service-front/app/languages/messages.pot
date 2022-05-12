@@ -1791,7 +1791,7 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:46
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:53
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -4800,4 +4800,28 @@ msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:40
 msgid "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link%>Make a lasting power of attorney service.</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
+msgid "I am the 'donor'"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
+msgid "The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
+msgid "I am an 'attorney'"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:40
+msgid "An attorney is appointed by the donor to make decisions on the donor's behalf."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:44
+msgid "I am an 'replacement attorney'"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:45
+msgid "A replacement attorney is appointed by the donor to step in for an attorney if they cannot act on the donor's behalf anymore."
 msgstr ""

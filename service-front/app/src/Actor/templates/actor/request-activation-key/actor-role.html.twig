@@ -31,11 +31,13 @@
                             {{ govuk_form_element(form.get('actor_role_radio'), {'value_options':
                                 [
                                     {
-                                        'label': 'The donor - the person who made the LPA'| trans,
+                                        'label': 'I am the \'donor\''|trans,
+                                        'hint': 'The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf.'| trans,
                                         'value': 'Donor'
                                     },
                                     {
-                                        'label': 'An attorney - a person appointed to make decisions on the donor\'s behalf'| trans,
+                                        'label': 'I am an \'attorney\''|trans,
+                                        'hint': 'An attorney is appointed by the donor to make decisions on the donor\'s behalf.'| trans,
                                         'value': 'Attorney'
                                     }
                                 ]}
