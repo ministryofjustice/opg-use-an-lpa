@@ -51,7 +51,6 @@ func (m *mockLPAService) GetLPAByActivationCode(ctx context.Context, code string
 }
 
 func Test_doSearch(t *testing.T) {
-
 	t.Parallel()
 
 	testLPA := &data.LPA{
@@ -103,6 +102,7 @@ func Test_doSearch(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := doSearch(tt.args.ctx, tt.args.accountService, tt.args.lpaService, tt.args.queryType, tt.args.q); !reflect.DeepEqual(got, tt.want) {
