@@ -144,7 +144,7 @@ func Test_doSearch(t *testing.T) {
 							}, nil
 						}
 						t.Errorf("expected test@email.com got %v", s)
-						return nil, nil //Is there a better way to stop test executing here?
+						return nil, nil
 					},
 				},
 				lpaService: &mockLPAService{
@@ -155,7 +155,83 @@ func Test_doSearch(t *testing.T) {
 				queryType: 0, //Email query
 				q:         "test@email.com",
 			},
-			want: &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: []*data.LPA{}},
+			want: &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: nil},
+		},
+		{
+			name: "Test standard activation key query",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					EmailByUserID: func(ctx context.Context, s string) (string, error) {
+						return "test@email.com", nil
+					},
+				},
+				lpaService: &mockLPAService{
+					LPAByActivationCode: func(ctx context.Context, s string) (*data.LPA, error) {
+						return testLPA, nil
+					},
+				},
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			want: map[string]interface{}{"Activation key": "WWFCCH41R123", "Used": "Yes", "Email": "test@email.com", "LPA": testLPA.SiriusUID},
+		},
+		{
+			name: "Test activation key query with email not found",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					EmailByUserID: func(ctx context.Context, s string) (string, error) {
+						return "", nil
+					},
+				},
+				lpaService: &mockLPAService{
+					LPAByActivationCode: func(ctx context.Context, s string) (*data.LPA, error) {
+						return testLPA, nil
+					},
+				},
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			want: map[string]interface{}{"Activation key": "WWFCCH41R123", "Used": "Yes", "Email": "Not Found", "LPA": testLPA.SiriusUID},
+		},
+		{
+			name: "Test activation key query with error finding email result by a UID",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					EmailByUserID: func(ctx context.Context, s string) (string, error) {
+						return "", errors.New("Error")
+					},
+				},
+				lpaService: &mockLPAService{
+					LPAByActivationCode: func(ctx context.Context, s string) (*data.LPA, error) {
+						return testLPA, nil
+					},
+				},
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			want: nil,
+		},
+		{
+			name: "Test activation key query with error finding activation code",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					EmailByUserID: func(ctx context.Context, s string) (string, error) {
+						return "test@email.com", nil
+					},
+				},
+				lpaService: &mockLPAService{
+					LPAByActivationCode: func(ctx context.Context, s string) (*data.LPA, error) {
+						return nil, errors.New("This is a test error")
+					},
+				},
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			want: nil,
 		},
 	}
 
