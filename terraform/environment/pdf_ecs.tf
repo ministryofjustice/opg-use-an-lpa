@@ -16,7 +16,7 @@ resource "aws_ecs_service" "pdf" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.pdf.arn
+    registry_arn = aws_service_discovery_service.pdf_ecs.arn
   }
 
   wait_for_steady_state = true
@@ -28,25 +28,6 @@ resource "aws_ecs_service" "pdf" {
 
 //-----------------------------------------------
 // pdf service discovery
-
-resource "aws_service_discovery_service" "pdf" {
-  name = "pdf"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
 
 resource "aws_service_discovery_service" "pdf_ecs" {
   name = "pdf"
@@ -69,7 +50,7 @@ resource "aws_service_discovery_service" "pdf_ecs" {
 
 //
 locals {
-  pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+  pdf_service_fqdn = "${aws_service_discovery_service.pdf_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------

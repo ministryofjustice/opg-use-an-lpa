@@ -17,7 +17,7 @@ resource "aws_ecs_service" "api" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.api.arn
+    registry_arn = aws_service_discovery_service.api_ecs.arn
   }
 
   wait_for_steady_state = true
@@ -29,25 +29,6 @@ resource "aws_ecs_service" "api" {
 
 //-----------------------------------------------
 // Api service discovery
-
-resource "aws_service_discovery_service" "api" {
-  name = "api"
-
-  dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-
-    routing_policy = "MULTIVALUE"
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
-  }
-}
 
 resource "aws_service_discovery_service" "api_ecs" {
   name = "api"
@@ -70,7 +51,7 @@ resource "aws_service_discovery_service" "api_ecs" {
 
 //
 locals {
-  api_service_fqdn = "${aws_service_discovery_service.api.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------

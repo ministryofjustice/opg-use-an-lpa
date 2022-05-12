@@ -101,7 +101,7 @@ variable "environments" {
 }
 
 locals {
-  environment_name  = lower(terraform.workspace)
+  environment_name  = lower(replace(terraform.workspace, "_", "-"))
   environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
   dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
   dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
