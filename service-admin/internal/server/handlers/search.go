@@ -7,12 +7,21 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/rs/zerolog/log"
 )
+
+type AccountService interface {
+	GetActorUserByEmail(context.Context, string) (*data.ActorUser, error)
+	GetEmailByUserID(context.Context, string) (string, error)
+}
+
+type LPAService interface {
+	GetLpasByUserID(context.Context, string) ([]*data.LPA, error)
+	GetLPAByActivationCode(context.Context, string) (*data.LPA, error)
+}
 
 const (
 	EmailQuery queryType = iota
@@ -73,7 +82,7 @@ func stripUnnecessaryCharacters(code string) string {
 	return result
 }
 
-func SearchHandler(db *dynamodb.Client) http.HandlerFunc {
+func SearchHandler(accountService AccountService, lpaService LPAService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s := &search{}
 
@@ -89,7 +98,7 @@ func SearchHandler(db *dynamodb.Client) http.HandlerFunc {
 			if err != nil {
 				log.Debug().AnErr("form-error", err).Msg("")
 			} else {
-				s.Result = doSearch(r.Context(), db, s.Type, s.Query)
+				s.Result = doSearch(r.Context(), accountService, lpaService, s.Type, s.Query)
 			}
 		}
 
@@ -99,15 +108,15 @@ func SearchHandler(db *dynamodb.Client) http.HandlerFunc {
 	}
 }
 
-func doSearch(ctx context.Context, db *dynamodb.Client, t queryType, q string) interface{} {
+func doSearch(ctx context.Context, accountService AccountService, lpaService LPAService, t queryType, q string) interface{} {
 	switch t {
 	case EmailQuery:
-		r, err := data.GetActorUserByEmail(ctx, db, q)
+		r, err := accountService.GetActorUserByEmail(ctx, q)
 		if err != nil {
 			return nil
 		}
 
-		r.LPAs, err = data.GetLpasByUserID(ctx, db, r.ID)
+		r.LPAs, err = lpaService.GetLpasByUserID(ctx, r.ID)
 		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
 			return nil
 		}
@@ -115,12 +124,12 @@ func doSearch(ctx context.Context, db *dynamodb.Client, t queryType, q string) i
 		return r
 
 	case ActivationCodeQuery:
-		r, err := data.GetLPAByActivationCode(ctx, db, stripUnnecessaryCharacters(q))
+		r, err := lpaService.GetLPAByActivationCode(ctx, stripUnnecessaryCharacters(q))
 		if err != nil {
 			return nil
 		}
 
-		email, err := data.GetEmailByUserID(ctx, db, r.UserID)
+		email, err := accountService.GetEmailByUserID(ctx, r.UserID)
 
 		if email == "" {
 			email = "Not Found"

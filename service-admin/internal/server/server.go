@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
 )
@@ -46,7 +47,7 @@ func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
 	router.Handle(
 		"/",
 		auth.WithAuthorisation(
-			handlers.SearchHandler(db),
+			handlers.SearchHandler(data.NewAccountService(db), data.NewLPAService(db)),
 			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
 		),
 	)

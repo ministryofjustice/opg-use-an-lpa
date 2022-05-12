@@ -11,6 +11,10 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type lpaService struct {
+	db *dynamodb.Client
+}
+
 type LPA struct {
 	SiriusUID  string `json:"SiriusUid"`
 	Added      string
@@ -26,8 +30,12 @@ const (
 
 var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")
 
-func GetLpasByUserID(ctx context.Context, db *dynamodb.Client, uid string) (lpas []*LPA, err error) {
-	result, err := db.Query(ctx, &dynamodb.QueryInput{
+func NewLPAService(db *dynamodb.Client) *lpaService {
+	return &lpaService{db: db}
+}
+
+func (l *lpaService) GetLpasByUserID(ctx context.Context, uid string) (lpas []*LPA, err error) {
+	result, err := l.db.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
 		IndexName:              aws.String(UserLpaActorUserIndexName),
 		KeyConditionExpression: aws.String("UserId = :u"),
@@ -51,8 +59,8 @@ func GetLpasByUserID(ctx context.Context, db *dynamodb.Client, uid string) (lpas
 	return nil, ErrUserLpaActorMapNotFound
 }
 
-func GetLPAByActivationCode(ctx context.Context, db *dynamodb.Client, activationCode string) (lpa *LPA, err error) {
-	result, err := db.Query(ctx, &dynamodb.QueryInput{
+func (l *lpaService) GetLPAByActivationCode(ctx context.Context, activationCode string) (lpa *LPA, err error) {
+	result, err := l.db.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
 		IndexName:              aws.String(ActivationCodeIndexName),
 		KeyConditionExpression: aws.String("ActivationCode = :a"),
