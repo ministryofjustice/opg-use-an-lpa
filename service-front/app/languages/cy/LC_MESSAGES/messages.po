@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-05-03T11:00:34+00:00\n"
+"POT-Creation-Date: 2022-05-09T09:45:58+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -2450,7 +2450,7 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:46
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:53
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -6913,3 +6913,38 @@ msgstr "Rydych chi wedi gosod eich dewisiadau cwcis."
 #: src/Common/templates/partials/flash-message.html.twig:11
 msgid "Go back to the page you were looking at"
 msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni."
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
+msgid "I am the 'donor'"
+msgstr "Fi yw’r ‘rhoddwr’"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
+msgid ""
+"The donor is the person the LPA is made for. They appoint attorneys to make "
+"decisions on their behalf."
+msgstr ""
+"Y rhoddwr yw’r unigolyn y gwneir yr LPA ar ei gyfer. Mae’n penodi atwrneiod i "
+"wneud penderfyniadau ar ei ran."
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
+msgid "I am an 'attorney'"
+msgstr "Rwy’n ‘atwrnai’"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:40
+msgid ""
+"An attorney is appointed by the donor to make decisions on the donor's behalf."
+msgstr ""
+"Mae atwrnai yn cael ei benodi gan y rhoddwr i wneud penderfyniadau ar ran y "
+"rhoddwr."
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:44
+msgid "I am an 'replacement attorney'"
+msgstr "Rwy’n ‘atwrnai wrth gefn’"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:45
+msgid ""
+"A replacement attorney is appointed by the donor to step in for an attorney if "
+"they cannot act on the donor's behalf anymore."
+msgstr ""
+"Mae atwrnai wrth gefn yn cael ei benodi gan y rhoddwr i gymryd lle atwrnai os "
+"nad yw’n gallu gweithredu ar ran y rhoddwr mwyach."
