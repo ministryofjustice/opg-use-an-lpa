@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"testing"
 
@@ -98,6 +99,63 @@ func Test_doSearch(t *testing.T) {
 				q:         "test@email.com",
 			},
 			want: &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: []*data.LPA{testLPA}},
+		},
+		{
+			name: "Test email query with error on account lookup",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					ActorByUserEmail: func(ctx context.Context, s string) (*data.ActorUser, error) {
+						return nil, errors.New("this is an error")
+					},
+				},
+				lpaService: &mockLPAService{},
+				queryType:  0, //Email query
+				q:          "test@email.com",
+			},
+			want: nil,
+		},
+		{
+			name: "Test email query with error on LPA lookup",
+			args: args{
+				ctx:            context.TODO(),
+				accountService: &mockAccountService{},
+				lpaService: &mockLPAService{
+					LPAsByUserID: func(ctx context.Context, s string) ([]*data.LPA, error) {
+						return nil, errors.New("this is an error")
+					},
+				},
+				queryType: 0, //Email query
+				q:         "test@email.com",
+			},
+			want: nil,
+		},
+		{
+			name: "Test email query with not found error on LPA lookup returns empty result not nil",
+			args: args{
+				ctx: context.TODO(),
+				accountService: &mockAccountService{
+					ActorByUserEmail: func(ctx context.Context, s string) (*data.ActorUser, error) {
+						if s == "test@email.com" {
+							return &data.ActorUser{
+								ID:        "TestID",
+								LastLogin: "TestTime",
+								Email:     "test@email.com",
+							}, nil
+						}
+						t.Errorf("expected test@email.com got %v", s)
+						return nil, nil //Is there a better way to stop test executing here?
+					},
+				},
+				lpaService: &mockLPAService{
+					LPAsByUserID: func(ctx context.Context, s string) ([]*data.LPA, error) {
+						return nil, data.ErrUserLpaActorMapNotFound
+					},
+				},
+				queryType: 0, //Email query
+				q:         "test@email.com",
+			},
+			want: &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: []*data.LPA{}},
 		},
 	}
 
