@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-05-09T09:45:58+00:00\n"
+"POT-Creation-Date: 2022-05-09T13:00:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -267,7 +267,7 @@ msgstr ""
 msgid "Your password needs to have:"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:47
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
@@ -1181,7 +1181,7 @@ msgstr ""
 msgid "Enter your email address below. If there's an account associated with the address, we'll send you a link to reset your password."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:42
+#: src/Actor/templates/actor/login.html.twig:44
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
 msgid "Email address"
@@ -1233,7 +1233,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:49
+#: src/Actor/templates/actor/login.html.twig:51
 msgid "Sign in"
 msgstr ""
 
@@ -1699,7 +1699,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:55
+#: src/Actor/templates/actor/login.html.twig:57
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -4796,6 +4796,10 @@ msgstr ""
 
 #: src/Common/templates/partials/flash-message.html.twig:11
 msgid "Go back to the page you were looking at"
+msgstr ""
+
+#: src/Actor/templates/actor/login.html.twig:40
+msgid "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link%>Make a lasting power of attorney service.</a>"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34

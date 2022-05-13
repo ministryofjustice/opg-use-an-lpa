@@ -498,7 +498,7 @@ class LpaContext implements Context
         }
 
         if ($regDate == 'before') {
-            $this->lpa->registrationDate = '2019-08-31';
+            $this->lpa->registrationDate = '2018-08-31';
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
@@ -2460,7 +2460,6 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the add an older LPA page$/
      * @Given /^I am on the Check we've found the right LPA page$/
-     * @Given /^I provide details of LPA registered after 1st September 2019 which do not match a valid paper document$/
      */
     public function iAmOnTheAddAnOlderLPAPage()
     {
@@ -2753,7 +2752,7 @@ class LpaContext implements Context
             ]
         );
 
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
     /**
@@ -3521,12 +3520,11 @@ class LpaContext implements Context
     }
 
     /**
-     * @When I confirm the details of the found LPA are correct and flag is turned :flagStatus
+     * @When I confirm the incorrect details of the found LPA and flag is turned :flagStatus
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
         $this->lpa->status = 'Registered';
-        $this->lpa->registrationDate = '2019-10-31';
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
