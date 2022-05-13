@@ -5,9 +5,9 @@
         <li class="govuk-list trans-switch__list govuk-body-s">
             {% if path() matches '/(^\\/cy.*)/' %}
                 {% if actorToken is defined and actorToken != 'null' %}
-                    <a href="{{ path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) }}" class="govuk-link">English</a>
+                    <a href="{{ path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) }}" class="govuk-link" lang="en">English</a>
                 {% else %}
-                    <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link">English</a>
+                    <a href="{{ path() | replace({'/cy':''}) }}" class="govuk-link" lang="en">English</a>
                 {% endif %}
             {% else %}
                 English
@@ -17,9 +17,9 @@
         <li class="govuk-list trans-switch__list govuk-body-s">
             {% if '/cy' not in path() %}
                 {% if actorToken is defined and actorToken != 'null' %}
-                    <a href="{{ '/cy' ~ path(route_name, {}, {'lpa': actorToken }) }}" class="govuk-link">Cymraeg</a>
+                    <a href="{{ '/cy' ~ path(route_name, {}, {'lpa': actorToken }) }}" class="govuk-link" lang="cy">Cymraeg</a>
                 {% else %}
-                    <a href="{{ '/cy' ~ path() }}" class="govuk-link">Cymraeg</a>
+                    <a href="{{ '/cy' ~ path() }}" class="govuk-link" lang="cy">Cymraeg</a>
                 {% endif %}
             {% else %}
                 Cymraeg
