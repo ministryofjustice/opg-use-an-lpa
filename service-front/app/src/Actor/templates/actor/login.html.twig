@@ -37,6 +37,8 @@
                             </strong>
                         </div>
 
+                        <p class="govuk-body">{% trans with {'%link%': "https://www.lastingpowerofattorney.service.gov.uk/home"} %}If you want to make an LPA online go to the <a class="govuk-link" href=%link%>Make a lasting power of attorney service.</a>{% endtrans %}</p>
+
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('email'), { 'label': 'Email address' | trans, 'attr': { 'class': 'govuk-!-width-three-quarters' } })  }}

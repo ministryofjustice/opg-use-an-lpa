@@ -1,8 +1,8 @@
-FROM node:15-alpine
+FROM node:14-alpine
 
 RUN apk add --no-cache \
       chromium \
-      python \
+      python3 \
       make \
       g++ \
       nss \
