@@ -5,14 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\DonorDetails;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\Session as SessionTrait;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
-use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
-use Common\Workflow\WorkflowStep;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -23,13 +16,8 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class DonorDetailsHandler extends AbstractCleansingDetailsHandler implements UserAware, CsrfGuardAware, WorkflowStep
+class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 {
-    use User;
-    use CsrfGuard;
-    use SessionTrait;
-    use State;
-
     private DonorDetails $form;
 
     /**
