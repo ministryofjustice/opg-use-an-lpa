@@ -10,7 +10,7 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
 
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
-  count             = local.account.opg_metrics.enabled == true ? 1 : 0
+  count             = local.account.opg_metrics.enabled ? 1 : 0
   lambda_name       = "clsf-to-sqs"
   description       = "Function to take Cloudwatch Logs Subscription Filters and send them to SQS"
   working_directory = "/var/task"
@@ -28,7 +28,7 @@ module "clsf_to_sqs" {
 }
 
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
-  count = local.account.opg_metrics.enabled == true ? 1 : 0
+  count = local.account.opg_metrics.enabled ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
@@ -42,14 +42,14 @@ data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
 }
 
 data "aws_secretsmanager_secret_version" "opg_metrics_api_key" {
-  count         = local.account.opg_metrics.enabled == true ? 1 : 0
+  count         = local.account.opg_metrics.enabled ? 1 : 0
   secret_id     = data.aws_secretsmanager_secret.opg_metrics_api_key[0].id
   version_stage = "AWSCURRENT"
   provider      = aws.shared
 }
 
 data "aws_secretsmanager_secret" "opg_metrics_api_key" {
-  count    = local.account.opg_metrics.enabled == true ? 1 : 0
+  count    = local.account.opg_metrics.enabled ? 1 : 0
   name     = local.account.opg_metrics.api_key_secretsmanager_name
   provider = aws.shared
 }
@@ -61,7 +61,7 @@ data "aws_kms_alias" "opg_metrics_api_key_encryption" {
 
 module "ship_to_opg_metrics" {
   source            = "./modules/lambda_function"
-  count             = local.account.opg_metrics.enabled == true ? 1 : 0
+  count             = local.account.opg_metrics.enabled ? 1 : 0
   lambda_name       = "ship-to-opg-metrics"
   description       = "Function to take metrics from SQS and PUT them to OPG Metrics"
   working_directory = "/var/task"
@@ -76,7 +76,7 @@ module "ship_to_opg_metrics" {
 }
 
 data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
-  count = local.account.opg_metrics.enabled == true ? 1 : 0
+  count = local.account.opg_metrics.enabled ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
