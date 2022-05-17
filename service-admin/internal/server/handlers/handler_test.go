@@ -154,8 +154,8 @@ func TestRenderTemplate(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-
-			if err := RenderTemplate(tt.args.w, tt.args.ctx, tt.args.name, tt.args.data); (err != nil) != tt.wantErr {
+			templateWriterService := NewTemplateWriterService()
+			if err := templateWriterService.RenderTemplate(tt.args.w, tt.args.ctx, tt.args.name, tt.args.data); (err != nil) != tt.wantErr {
 				t.Errorf("RenderTemplate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
