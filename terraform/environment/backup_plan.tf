@@ -1,5 +1,5 @@
 resource "aws_backup_plan" "main" {
-  count = local.environment.have_a_backup_plan == true ? 1 : 0
+  count = local.environment.have_a_backup_plan ? 1 : 0
   name  = "${local.environment_name}_main_backup_plan"
 
   rule {
@@ -39,7 +39,7 @@ data "aws_iam_role" "aws_backup_role" {
 }
 
 resource "aws_backup_selection" "main" {
-  count        = local.environment.have_a_backup_plan == true ? 1 : 0
+  count        = local.environment.have_a_backup_plan ? 1 : 0
   iam_role_arn = data.aws_iam_role.aws_backup_role.arn
   name         = "${local.environment_name}_main_backup_selection"
   plan_id      = aws_backup_plan.main[0].id
