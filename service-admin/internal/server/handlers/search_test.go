@@ -382,7 +382,6 @@ func Test_SearchHandler(t *testing.T) {
 			server.SearchHandler(w, req)
 
 		})
-
 	}
 }
 
