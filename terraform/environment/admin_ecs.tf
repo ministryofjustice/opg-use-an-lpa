@@ -2,7 +2,7 @@
 // admin ECS Service level config
 
 resource "aws_ecs_service" "admin" {
-  count            = local.environment.build_admin == true ? 1 : 0
+  count            = local.environment.build_admin ? 1 : 0
   name             = "admin-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
@@ -35,7 +35,7 @@ resource "aws_ecs_service" "admin" {
 // The service's Security Groups
 
 resource "aws_security_group" "admin_ecs_service" {
-  count       = local.environment.build_admin == true ? 1 : 0
+  count       = local.environment.build_admin ? 1 : 0
   name_prefix = "${local.environment_name}-admin-ecs-service"
   description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
@@ -46,7 +46,7 @@ resource "aws_security_group" "admin_ecs_service" {
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
-  count                    = local.environment.build_admin == true ? 1 : 0
+  count                    = local.environment.build_admin ? 1 : 0
   description              = "Allow Port 80 ingress from the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
 
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
-  count             = local.environment.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin ? 1 : 0
   description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
@@ -78,7 +78,7 @@ resource "aws_security_group_rule" "admin_ecs_service_egress" {
 // admin ECS Service Task level config
 
 resource "aws_ecs_task_definition" "admin" {
-  count                    = local.environment.build_admin == true ? 1 : 0
+  count                    = local.environment.build_admin ? 1 : 0
   family                   = "${local.environment_name}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -93,13 +93,13 @@ resource "aws_ecs_task_definition" "admin" {
 // Permissions
 
 resource "aws_iam_role" "admin_task_role" {
-  count              = local.environment.build_admin == true ? 1 : 0
+  count              = local.environment.build_admin ? 1 : 0
   name               = "${local.environment_name}-admin-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
-  count  = local.environment.build_admin == true ? 1 : 0
+  count  = local.environment.build_admin ? 1 : 0
   name   = "${local.environment_name}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
   role   = aws_iam_role.admin_task_role[0].id
@@ -218,7 +218,7 @@ locals {
 }
 
 locals {
-  admin_domain = local.environment.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
+  admin_domain = local.environment.build_admin ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
 }
 
 output "admin_domain" {
