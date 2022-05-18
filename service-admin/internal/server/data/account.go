@@ -11,6 +11,10 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type accountService struct {
+	db *dynamodb.Client
+}
+
 type ActorUser struct {
 	ID              string `json:"Id"`
 	Email           string
@@ -28,8 +32,12 @@ const (
 
 var ErrActorUserNotFound = errors.New("actoruser not found")
 
-func GetActorUserByEmail(ctx context.Context, db *dynamodb.Client, email string) (aa *ActorUser, err error) {
-	result, err := db.Query(ctx, &dynamodb.QueryInput{
+func NewAccountService(db *dynamodb.Client) *accountService {
+	return &accountService{db: db}
+}
+
+func (a *accountService) GetActorUserByEmail(ctx context.Context, email string) (aa *ActorUser, err error) {
+	result, err := a.db.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(prefixedTableName(ActorTableName)),
 		IndexName:              aws.String(ActorTableEmailIndexName),
 		KeyConditionExpression: aws.String("Email = :e"),
@@ -56,8 +64,8 @@ func GetActorUserByEmail(ctx context.Context, db *dynamodb.Client, email string)
 	return nil, ErrActorUserNotFound
 }
 
-func GetEmailByUserID(ctx context.Context, db *dynamodb.Client, userID string) (email string, err error) {
-	result, err := db.GetItem(ctx, &dynamodb.GetItemInput{
+func (a *accountService) GetEmailByUserID(ctx context.Context, userID string) (email string, err error) {
+	result, err := a.db.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: aws.String(prefixedTableName(ActorTableName)),
 		Key: map[string]types.AttributeValue{
 			"Id": &types.AttributeValueMemberS{Value: userID},

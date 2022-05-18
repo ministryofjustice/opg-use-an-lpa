@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog/log"
 )
@@ -41,15 +42,17 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 
 func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
 	router := mux.NewRouter()
-
 	router.Handle("/helloworld", handlers.HelloHandler())
+
+	searchServer := *handlers.NewSearchServer(data.NewAccountService(db), data.NewLPAService(db), handlers.NewTemplateWriterService())
 	router.Handle(
 		"/",
 		auth.WithAuthorisation(
-			handlers.SearchHandler(db),
+			http.HandlerFunc(searchServer.SearchHandler),
 			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
 		),
 	)
+
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(
@@ -76,7 +79,8 @@ func withErrorHandling(next http.Handler) http.Handler {
 				t = "notfound.page.gohtml"
 			}
 
-			if err := handlers.RenderTemplate(w, r.Context(), t, nil); err != nil {
+			ws := handlers.NewTemplateWriterService()
+			if err := ws.RenderTemplate(w, r.Context(), t, nil); err != nil {
 				log.Panic().Err(err).Msg("")
 			}
 		}

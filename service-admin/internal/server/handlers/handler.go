@@ -13,6 +13,7 @@ import (
 
 type UserContextKey struct{}
 type TemplateContextKey struct{}
+type templateWriterService struct{}
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
@@ -48,7 +49,11 @@ func GetTemplate(ctx context.Context, name string) (*template.Template, error) {
 	return tmpl, nil
 }
 
-func RenderTemplate(w http.ResponseWriter, ctx context.Context, name string, data interface{}) error {
+func NewTemplateWriterService() *templateWriterService {
+	return &templateWriterService{}
+}
+
+func (t *templateWriterService) RenderTemplate(w http.ResponseWriter, ctx context.Context, name string, data interface{}) error {
 	template, err := GetTemplate(ctx, name)
 	if err != nil {
 		return err
