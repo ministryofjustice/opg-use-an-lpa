@@ -91,6 +91,7 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
                 } catch (ApiException $ae) {
                     // the password reset request returned a 404 indicating the user did not exist
+                    $this->emailClient->sendNoAccountExistsEmail($data['email']);
                 }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [

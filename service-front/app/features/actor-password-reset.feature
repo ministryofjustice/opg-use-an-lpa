@@ -28,6 +28,12 @@ Feature: Password Reset
     And I am unable to continue to reset my password
 
   @integration @ui
+  Scenario: The user cannot reset password for an account that doesn't exist
+    Given I have forgotten my password
+    When I ask for my password to be reset on an account that doesn't exist
+    And I receive an email telling me I do not have an account
+
+  @integration @ui
   Scenario Outline: The user cannot set an invalid new password
     Given I have asked for my password to be reset
     When I follow my unique instructions on how to reset my password

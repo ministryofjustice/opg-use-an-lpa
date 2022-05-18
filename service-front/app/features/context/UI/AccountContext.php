@@ -484,6 +484,41 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I ask for my password to be reset on an account that doesn't exist$/
+     */
+    public function iAskForMyPasswordToBeResetWithAccountThatDoesntExist(
+        $email = 'test@example.com',
+        $email_confirmation = 'test@example.com'
+    ) {
+        $this->ui->assertPageAddress('/reset-password');
+
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_NOT_FOUND
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertArrayHasKey('template_id', $params);
+                    assertEquals('36a86dbf-27a3-448c-a743-5f915e1733c3', $params['template_id']);
+
+                }
+            );
+
+        $this->ui->fillField('email', $email);
+        $this->ui->fillField('email_confirm', $email_confirmation);
+        $this->ui->pressButton('Email me the link');
+    }
+
+    /**
      * @When /^I ask for my password to be reset$/
      * @When /^I ask for my password to be reset with below correct (.*) and (.*) details$/
      */
@@ -529,7 +564,6 @@ class AccountContext implements Context
         $this->ui->fillField('email_confirm', $email_confirmation);
         $this->ui->pressButton('Email me the link');
     }
-
     /**
      * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
      */
@@ -1424,6 +1458,7 @@ class AccountContext implements Context
 
     /**
      * @Then /^I receive unique instructions on how to reset my password$/
+     * @Then /^I receive an email telling me I do not have an account$/
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
