@@ -509,7 +509,6 @@ class AccountContext implements Context
 
                     assertArrayHasKey('template_id', $params);
                     assertEquals('36a86dbf-27a3-448c-a743-5f915e1733c3', $params['template_id']);
-
                 }
             );
 

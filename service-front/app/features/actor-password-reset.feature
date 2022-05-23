@@ -31,7 +31,7 @@ Feature: Password Reset
   Scenario: The user cannot reset password for an account that doesn't exist
     Given I have forgotten my password
     When I ask for my password to be reset on an account that doesn't exist
-    And I receive an email telling me I do not have an account
+    Then I receive an email telling me I do not have an account
 
   @integration @ui
   Scenario Outline: The user cannot set an invalid new password
