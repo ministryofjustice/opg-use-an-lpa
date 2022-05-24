@@ -314,6 +314,10 @@ locals {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
           value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
+        # {
+        #   name  = "CURLOPT_DNS_CACHE_TIMEOUT",
+        #   value = "0"
+        # },
       ]
   })
 
