@@ -58,3 +58,55 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   threshold           = 5
   treat_missing_data  = "notBreaching"
 }
+
+resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
+  alarm_name          = "ActorDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.actor.arn
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
+  alarm_name          = "ViewerDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.viewer.arn
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
+  count               = local.environment.build_admin ? 1 : 0
+  alarm_name          = "AdminDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.admin[0].arn
+  }
+}
