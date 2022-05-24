@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"time"
-	"fmt"
 
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
