@@ -32,6 +32,6 @@ func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
 		v.Set("logout_uri", l.String())
 		cognitoLogoutURL.RawQuery = v.Encode()
 	
-		http.Redirect(w, r, cognitoLogoutURL.String(), 301)
+		http.Redirect(w, r, cognitoLogoutURL.String(), http.StatusMovedPermanently)
 	}
 }
