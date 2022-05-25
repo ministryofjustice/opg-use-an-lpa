@@ -50,7 +50,7 @@ func main() {
 			env.Get("ADMIN_LOGOUT_URL", ""),
 			"The redirect url to logout user",
 		)
-		cognitoClientId = flag.String(
+		cognitoClientID = flag.String(
 			"client-id",
 			env.Get("ADMIN_CLIENT_ID", ""),
 			"The aws client id for user",
@@ -60,7 +60,7 @@ func main() {
 	flag.Parse()
 
 	v := url.Values{}
-	v.Set("client_id", *cognitoClientId)
+	v.Set("client_id", *cognitoClientID)
 
 	u, _ := url.Parse(*cognitoLogoutURL)
 
