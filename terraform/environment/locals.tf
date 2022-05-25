@@ -70,6 +70,7 @@ variable "environments" {
       associate_alb_with_waf_web_acl_enabled    = bool
       pdf_container_version                     = string
       deploy_opentelemetry_sidecar              = bool
+      fargate_spot                              = bool
       application_flags = object({
         use_legacy_codes_service                                   = bool
         use_older_lpa_journey                                      = bool
