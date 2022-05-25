@@ -6,7 +6,6 @@ resource "aws_ecs_service" "pdf" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
   desired_count    = local.environment.autoscaling.pdf.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
@@ -19,10 +18,15 @@ resource "aws_ecs_service" "pdf" {
     registry_arn = aws_service_discovery_service.pdf_ecs.arn
   }
 
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 

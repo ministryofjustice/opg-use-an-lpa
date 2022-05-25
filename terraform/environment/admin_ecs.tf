@@ -7,7 +7,6 @@ resource "aws_ecs_service" "admin" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
@@ -22,10 +21,15 @@ resource "aws_ecs_service" "admin" {
     container_port   = 80
   }
 
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 
   depends_on = [aws_lb.admin]
