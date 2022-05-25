@@ -21,6 +21,11 @@ resource "aws_ecs_service" "actor" {
     container_port   = 80
   }
 
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
   wait_for_steady_state = true
 
   lifecycle {
