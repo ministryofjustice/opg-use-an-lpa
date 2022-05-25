@@ -27,7 +27,7 @@ resource "aws_ecs_service" "api" {
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 }
 

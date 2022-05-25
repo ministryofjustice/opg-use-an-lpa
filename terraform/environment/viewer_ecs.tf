@@ -28,7 +28,7 @@ resource "aws_ecs_service" "viewer" {
   wait_for_steady_state = true
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 
   depends_on = [aws_lb.viewer]
