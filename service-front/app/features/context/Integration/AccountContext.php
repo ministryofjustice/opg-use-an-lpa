@@ -486,6 +486,15 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I ask for my password to be reset on an account that doesn't exist$/
+     */
+    public function iAskForMyPasswordToBeResetOnAnAccountThatDoesntExist()
+    {
+        $this->apiFixtures->get('/v1/can-password-reset')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_NOT_FOUND));
+    }
+
+    /**
      * @When /^I follow the instructions on how to activate my account$/
      */
     public function iFollowTheInstructionsOnHowToActivateMyAccount()
@@ -662,6 +671,26 @@ class AccountContext extends BaseIntegrationContext
 
 
         $this->emailClient->sendPasswordResetEmail($this->userEmail, $expectedUrl);
+    }
+
+    /**
+     * @Then /^I receive an email telling me I do not have an account$/
+     */
+    public function iReceiveAnEmailTellingMeIDoNotHaveAnAccount()
+    {
+        $expectedTemplateId = '36a86dbf-27a3-448c-a743-5f915e1733c3';
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request, array $options) use ($expectedTemplateId) {
+                    $requestBody = $request->getBody()->getContents();
+                    assertContains($expectedTemplateId, $requestBody);
+                }
+            );
+
+        $this->emailClient->sendNoAccountExistsEmail($this->userEmail);
     }
 
     /**
