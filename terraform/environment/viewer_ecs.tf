@@ -6,7 +6,6 @@ resource "aws_ecs_service" "viewer" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
   desired_count    = local.environment.autoscaling.view.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
@@ -20,6 +19,12 @@ resource "aws_ecs_service" "viewer" {
     container_name   = "web"
     container_port   = 80
   }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
 
   wait_for_steady_state = true
 
