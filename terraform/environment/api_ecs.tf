@@ -6,7 +6,6 @@ resource "aws_ecs_service" "api" {
   cluster                           = aws_ecs_cluster.use-an-lpa.id
   task_definition                   = aws_ecs_task_definition.api.arn
   desired_count                     = local.environment.autoscaling.api.minimum
-  launch_type                       = "FARGATE"
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
@@ -18,6 +17,11 @@ resource "aws_ecs_service" "api" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.api_ecs.arn
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
   }
 
   wait_for_steady_state = true

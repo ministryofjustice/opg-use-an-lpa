@@ -7,7 +7,6 @@ resource "aws_ecs_service" "admin" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
@@ -20,6 +19,11 @@ resource "aws_ecs_service" "admin" {
     target_group_arn = aws_lb_target_group.admin[0].arn
     container_name   = "app"
     container_port   = 80
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
   }
 
   wait_for_steady_state = true

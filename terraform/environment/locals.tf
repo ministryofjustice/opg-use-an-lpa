@@ -70,6 +70,7 @@ variable "environments" {
       associate_alb_with_waf_web_acl_enabled    = bool
       pdf_container_version                     = string
       deploy_opentelemetry_sidecar              = bool
+      fargate_spot                              = bool
       application_flags = object({
         use_legacy_codes_service                                   = bool
         use_older_lpa_journey                                      = bool
@@ -106,6 +107,7 @@ locals {
   dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
   dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
   dev_wildcard      = local.environment.account_name == "production" ? "" : "*."
+  capacity_provider = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
