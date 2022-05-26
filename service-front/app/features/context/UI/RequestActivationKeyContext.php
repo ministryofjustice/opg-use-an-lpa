@@ -543,7 +543,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iConfirmThatIAmThe('Attorney');
-        $this->iProvideTheDonorSDetails();
+        $this->iProvideTheDonorsDetails();
         $this->whenIEnterMyTelephoneNumber();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
@@ -769,7 +769,7 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I provide the donor's details$/
      */
-    public function iProvideTheDonorSDetails()
+    public function iProvideTheDonorsDetails()
     {
         $this->ui->assertPageAddress('/lpa/add/donor-details');
         $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);

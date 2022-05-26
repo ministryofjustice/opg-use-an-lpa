@@ -20,6 +20,7 @@ class RequestActivationKey implements WorkflowState
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
+
     /**
      * Lovely constructor promotion
      */
@@ -40,6 +41,7 @@ class RequestActivationKey implements WorkflowState
         // not used for entered data but to track workflow path
         public ?int $actorUid = null,
         public ?bool $needsCleansing = null,
+        public ?string $addressOnPaper = null,
     ) {
         if ($actorType !== null) { // TODO replace with enums at PHP 8.1
             $this->setActorRole($actorType);
@@ -65,6 +67,7 @@ class RequestActivationKey implements WorkflowState
         $this->donorDob = null;
         $this->telephone = null;
         $this->noTelephone = null;
+        $this->addressOnPaper = null;
 
         $this->actorUid = null;
         $this->needsCleansing = false;

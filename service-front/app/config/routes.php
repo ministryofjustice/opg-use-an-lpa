@@ -245,6 +245,16 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         )
     ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
 
+    $app->route('/lpa/add/address-on-paper', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.address-on-paper');
+
     // Older LPA journey
         // if flag true, send user to triage page as entry point
         $app->route('/lpa/add', [
