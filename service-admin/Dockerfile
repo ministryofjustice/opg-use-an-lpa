@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci && node_modules/.bin/webpack -p
 
 # Build Go app
-FROM golang:1.16.4 as build-env
+FROM golang:1.18.2 as build-env
 
 WORKDIR /app
 
