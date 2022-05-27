@@ -256,6 +256,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
 
         - use-my-lpa/lint_terraform:
@@ -265,6 +266,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
 
         - use-my-lpa/docker_test_admin:
@@ -274,6 +276,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
 
         - use-my-lpa/docker_build_admin:
@@ -283,6 +286,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires:
               [
@@ -296,6 +300,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires:
               [
@@ -310,6 +315,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -321,6 +327,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires:
               [
@@ -335,6 +342,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires: [dev_apply_environment_terraform]
 
@@ -345,6 +353,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires: [dev_seed_database]
 
@@ -356,6 +365,7 @@ workflows:
                 only: [
                   /admin\/.*/,
                   /dependabot\/go_modules\/.*/,
+                  /dependabot\/docker\/service-admin\/.*/,
                   ]
             requires: [dev_run_behat_tests]
 
@@ -369,6 +379,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/lint_terraform:
@@ -379,6 +390,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/node_test_web:
@@ -389,6 +401,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/node_build_web:
@@ -399,6 +412,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [test_web]
 
@@ -410,6 +424,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [build_web]
 
@@ -421,6 +436,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [build_web]
 
@@ -432,6 +448,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/docker_build_api_web:
@@ -442,6 +459,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/docker_test_admin:
@@ -452,6 +470,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/docker_build_admin:
@@ -462,6 +481,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
         - use-my-lpa/codecov_upload:
@@ -472,6 +492,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires:
               [
@@ -490,6 +511,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [cancel_previous_jobs,lint_terraform]
 
@@ -501,6 +523,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires:
               [
@@ -521,6 +544,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires:
               [
@@ -539,6 +563,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [dev_apply_environment_terraform]
 
@@ -550,6 +575,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [dev_seed_database]
 
@@ -563,6 +589,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [dev_run_behat_tests]
 
@@ -575,6 +602,7 @@ workflows:
               /tf\/.*/,
               /admin\/.*/,
               /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
               ] } }
             requires: [post_environment_domains]
 
