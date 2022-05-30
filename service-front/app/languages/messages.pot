@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-05-09T13:00:57+00:00\n"
+"POT-Creation-Date: 2022-05-30T09:07:47+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -168,6 +168,7 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset-request.html.twig:10
 #: src/Actor/templates/actor/password-reset.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:12
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:11
@@ -1525,49 +1526,49 @@ msgid "Check your date of birth is correct - you cannot be an attorney or donor 
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:64
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:68
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:68
+#: src/Actor/templates/actor/form-error-messages.html.twig:69
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:69
+#: src/Actor/templates/actor/form-error-messages.html.twig:70
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:70
+#: src/Actor/templates/actor/form-error-messages.html.twig:71
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:71
+#: src/Actor/templates/actor/form-error-messages.html.twig:72
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:74
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:75
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -1791,7 +1792,8 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:53
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -4824,4 +4826,14 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:45
 msgid "A replacement attorney is appointed by the donor to step in for an attorney if they cannot act on the donor's behalf anymore."
+msgstr ""
+
+#. Additional information
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
+msgctxt "error"
+msgid "Enter your address on the paper LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:22
+msgid "What is your address on the paper LPA?"
 msgstr ""

@@ -15,7 +15,7 @@ Requester: {{ data.first_names }} {{ data.last_name }}
 {% if data.actor_role is defined and data.actor_role == 'attorney' %}
 Donor: {{ data.donor_first_names }} {{ data.donor_last_name }} {{ data.donor_dob.format('d/m/Y') }}
 {% endif %}
-{% if data.paperAddress is defined %}
+{% if data.address_on_paper is defined %}
 Address on LPA
-{{ data.paperAddress }}
+{{ data.address_on_paper }}
 {% endif %}

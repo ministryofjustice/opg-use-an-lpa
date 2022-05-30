@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-05-09T13:00:57+00:00\n"
+"POT-Creation-Date: 2022-05-30T09:07:47+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -198,6 +198,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/password-reset-request.html.twig:10
 #: src/Actor/templates/actor/password-reset.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:12
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:11
@@ -2117,50 +2118,50 @@ msgstr ""
 "neu’n rhoddwr os ydych o dan 18 oed"
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:64
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr "Nodwch enw sefydliad"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:68
 msgctxt "error"
 msgid "Enter your current password"
 msgstr "Teipiwch eich cyfrinair cyfredol"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:68
+#: src/Actor/templates/actor/form-error-messages.html.twig:69
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr "Mae’r cyfrinair cyfredol yn anghywir"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:69
+#: src/Actor/templates/actor/form-error-messages.html.twig:70
 msgctxt "error"
 msgid "Enter your new password"
 msgstr "Teipiwch eich cyfrinair newydd"
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:70
+#: src/Actor/templates/actor/form-error-messages.html.twig:71
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 "Nid yw eich cyfrinair newydd a’r cyfrinair i gadarnhau eich cyfrif yn cyfateb"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:71
+#: src/Actor/templates/actor/form-error-messages.html.twig:72
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr "Teipiwch eich cyfrinair eto i’w gadarnhau"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:74
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr "Cadarnhau eich cyfeiriad e-bost"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:75
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "The emails did not match"
 msgstr "Nid oedd y cyfeiriadau e-bost yn cyfateb"
@@ -2450,7 +2451,8 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:53
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -6919,8 +6921,8 @@ msgid ""
 "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link"
 "%>Make a lasting power of attorney service.</a>"
 msgstr ""
-"Os ydych chi eisiau gwneud atwrneiaeth arhosol ar-lein, ewch i <a class=\"govuk-"
-"link\" href=%link%>Gwasanaeth gwneud atwrneiaeth arhosol.</a>"
+"Os ydych chi eisiau gwneud atwrneiaeth arhosol ar-lein, ewch i <a class="
+"\"govuk-link\" href=%link%>Gwasanaeth gwneud atwrneiaeth arhosol.</a>"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
 msgid "I am the 'donor'"
@@ -6956,3 +6958,13 @@ msgid ""
 msgstr ""
 "Mae atwrnai wrth gefn yn cael ei benodi gan y rhoddwr i gymryd lle atwrnai os "
 "nad yw’n gallu gweithredu ar ran y rhoddwr mwyach."
+
+#. Additional information
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
+msgctxt "error"
+msgid "Enter your address on the paper LPA"
+msgstr "Rhowch y cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
+
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:22
+msgid "What is your address on the paper LPA?"
+msgstr "Beth yw eich cyfeiriad ar yr atwrneiaeth arhosol bapur?"
