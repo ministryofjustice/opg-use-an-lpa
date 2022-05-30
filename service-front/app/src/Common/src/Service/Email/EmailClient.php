@@ -26,6 +26,7 @@ class EmailClient
     public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '4674b106-c9eb-4314-a68c-ea4ba78808c5';
     public const TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING
                                                                      = 'e88d7f4d-a6fb-4dfb-a8a0-8f1c3df52744';
+    public const TEMPLATE_ID_NO_EXISTING_ACCOUNT                     = '36a86dbf-27a3-448c-a743-5f915e1733c3';
 
     /**
      * Welsh template IDs for the notify client
@@ -41,6 +42,8 @@ class EmailClient
     public const WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION     = '712625ce-241f-45d9-bb51-13b89f6c7748';
     public const WELSH_TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING
                                                                            = '1abc3673-1764-48c5-a870-07e1064212d1';
+    public const WELSH_TEMPLATE_ID_NO_EXISTING_ACCOUNT                     = '4966311d-9abb-4b39-8403-0a4be36756e6';
+
 
     private NotifyClient $notifyClient;
 
@@ -248,6 +251,20 @@ class EmailClient
                     'date'              => $letterExpectedDate,
                 ]
             );
+        }
+    }
+
+    /**
+     * Send an email to a user to inform them that no account exists under the email provided
+     *
+     * @param string $recipient
+     */
+    public function sendNoAccountExistsEmail(string $recipient)
+    {
+        if ($this->locale === 'cy') {
+            $this->notifyClient->sendEmail($recipient, self::WELSH_TEMPLATE_ID_NO_EXISTING_ACCOUNT);
+        } else {
+            $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_NO_EXISTING_ACCOUNT);
         }
     }
 }

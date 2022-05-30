@@ -6,7 +6,6 @@ resource "aws_ecs_service" "actor" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
   desired_count    = local.environment.autoscaling.use.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
@@ -19,6 +18,11 @@ resource "aws_ecs_service" "actor" {
     target_group_arn = aws_lb_target_group.actor.arn
     container_name   = "web"
     container_port   = 80
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
   }
 
   wait_for_steady_state = true
