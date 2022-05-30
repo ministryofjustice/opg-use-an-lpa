@@ -16,8 +16,8 @@ export default class GoogleAnalytics {
         window.gtag('js', new Date());
         window.gtag('set', {
           'cookie_flags': 'SameSite=None;Secure'
-        });
-        window.gtag('config', this.analyticsId, {
+        },
+          'config', this.analyticsId, {
             'linker': {
                 'domains': ['www.gov.uk']
             },
