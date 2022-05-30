@@ -22,14 +22,16 @@ describe('given Google Analytics is enabled', () => {
     test('it should have the correct config setup', () => {
         expect(global.dataLayer).toEqual(
             expect.arrayContaining([
+                // expect.objectContaining({
+                //     '0': 'set',
+                //     '1': { cookie_flags: 'SameSite=None;Secure' }
+                // }),
                 expect.objectContaining({
                     '0': 'set',
-                    '1': { cookie_flags: 'SameSite=None;Secure' }
-                }),
-                expect.objectContaining({
-                    '0': 'config',
-                    '1': 'UA-12345',
-                    '2': {
+                    '1': { cookie_flags: 'SameSite=None;Secure' },
+                    '2': 'config',
+                    '3': 'UA-12345',
+                    '4': {
                         'linker': { 'domains': ['www.gov.uk'] },
                         'transport_type': 'beacon',
                         'anonymize_ip': true,
