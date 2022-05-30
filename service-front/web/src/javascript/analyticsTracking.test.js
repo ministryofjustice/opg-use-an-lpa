@@ -70,8 +70,10 @@ describe('given Google Analytics datalayer is not setup', () => {
         expect(global.dataLayer).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    '0': 'config',
-                    '1': 'UA-12345'
+                  '0': 'set',
+                  '1': { cookie_flags: 'SameSite=None;Secure' },
+                  '2': 'config',
+                  '3': 'UA-12345',
                 })
             ])
         )
