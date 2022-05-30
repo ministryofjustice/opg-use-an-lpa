@@ -172,7 +172,7 @@ describe('given Google Analytics is enabled', () => {
                 expect.objectContaining({
                     '2': {
                         'linker': { 'domains': ['www.gov.uk'] },
-                        'cookie_flags': 'SameSite=None;Secure',
+                        'cookie_flags': 'SameSite=Strict;Secure',
                         'transport_type': 'beacon',
                         'anonymize_ip': true,
                         'allow_google_signals': false,

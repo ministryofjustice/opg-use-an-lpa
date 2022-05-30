@@ -19,7 +19,7 @@ export default class GoogleAnalytics {
             'linker': {
               'domains': ['www.gov.uk']
             },
-            'cookie_flags': 'SameSite=None;Secure',
+            'cookie_flags': 'SameSite=Strict;Secure',
             'transport_type': 'beacon',
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features
