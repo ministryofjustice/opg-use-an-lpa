@@ -172,7 +172,7 @@ describe('given Google Analytics is enabled', () => {
         expect(global.dataLayer).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    '2': {
+                    '4': {
                         'linker': { 'domains': ['www.gov.uk'] },
                         'transport_type': 'beacon',
                         'anonymize_ip': true,
