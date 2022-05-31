@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}The Attorney's details{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Attorney details{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -22,6 +22,10 @@
                     <p class="govuk-body">
                         {% trans %}
                             Tell us the details of an attorney named on the LPA.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
                             If you  only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them.
                         {% endtrans %}
                     </p>
