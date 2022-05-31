@@ -133,6 +133,14 @@ Feature: Add an older LPA
     Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true
+  Scenario: The user is asked for their contact details if they are the donor on the LPA
+    Given My LPA has been found but my details did not match
+    And I have provided my current address
+    And I am asked for my role on the LPA
+    When I confirm that I am the Donor
+    Then I am asked for the attorney details
+
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
@@ -168,6 +176,7 @@ Feature: Add an older LPA
     Given My LPA has been found but my details did not match
     And I have provided my current address
     And I confirm that I am the Donor
+    And I provide the attorney details
     When I enter my telephone number
     Then I am asked to consent and confirm my details
     And I can see my donor role and telephone number
@@ -177,6 +186,7 @@ Feature: Add an older LPA
     Given My LPA has been found but my details did not match
     And I have provided my current address
     And I confirm that I am the Donor
+    And I provide the attorney details
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
     And I can see my donor role and that I have not provided a telephone number
@@ -241,6 +251,7 @@ Feature: Add an older LPA
     Given I have reached the check details and consent page as the Attorney
     And I request to change my role
     When I confirm that I am the Donor
+    And I provide the attorney details
     Then I am taken back to the consent and check details page
     And I can see my role is now correctly set as the Donor
 

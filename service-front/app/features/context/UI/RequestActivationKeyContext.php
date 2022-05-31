@@ -70,6 +70,8 @@ class RequestActivationKeyContext implements Context
         $this->iHaveProvidedMyCurrentAddress();
         $this->iAmAskedForMyRoleOnTheLPA();
         $this->iConfirmThatIAmThe('Donor');
+        $this->iAmAskedForTheAttorneyDetails();
+        $this->iProvideTheAttorneyDetails();
     }
 
     /**
@@ -79,6 +81,30 @@ class RequestActivationKeyContext implements Context
     {
         $this->activationCode = 'ACTVATIONCOD';
         $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
+    }
+
+    /**
+     * @Then /^I am asked for the attorney details$/
+     */
+    public function iAmAskedForTheAttorneyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/attorney-details');
+        $this->ui->assertPageContainsText('Attorney details');
+    }
+
+    /**
+     * @When /^I provide the attorney details$/
+     */
+    public function iProvideTheAttorneyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/attorney-details');
+        $this->ui->fillField('attorney_first_names', $this->lpa->attorneys[0]->firstname);
+        $this->ui->fillField('attorney_last_name', $this->lpa->attorneys[0]->surname);
+        $attorneyDob = new DateTime($this->lpa->attorneys[0]->dob);
+        $this->ui->fillField('attorney_dob[day]', $attorneyDob->format('d'));
+        $this->ui->fillField('attorney_dob[month]', $attorneyDob->format('m'));
+        $this->ui->fillField('attorney_dob[year]', $attorneyDob->format('Y'));
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -617,6 +643,7 @@ class RequestActivationKeyContext implements Context
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
         $this->iConfirmThatIAmThe('Donor');
+        $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber();
@@ -1350,6 +1377,7 @@ class RequestActivationKeyContext implements Context
     public function iProvideTheAdditionalDetailsAsked()
     {
         $this->iConfirmThatIAmThe('Donor');
+        $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
     }
 }
