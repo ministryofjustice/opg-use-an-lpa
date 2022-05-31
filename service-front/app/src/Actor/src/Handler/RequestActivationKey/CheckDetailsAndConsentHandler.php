@@ -208,7 +208,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        $missing = $this->state($request)->referenceNumber === null
+        $alwaysRequired = $this->state($request)->referenceNumber === null
             || $this->state($request)->firstNames === null
             || $this->state($request)->lastName === null
             || $this->state($request)->dob === null
@@ -219,20 +219,22 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             );
 
         // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
-        if (!$missing && $this->state($request)->needsCleansing) {
+        if (!$alwaysRequired && $this->state($request)->needsCleansing) {
             return $this->state($request)->actorUid === null; // isMissing equals false if actorUid present
         }
 
-        $missing = $missing || $this->state($request)->getActorRole() === null;
+        $alwaysRequired = $alwaysRequired || $this->state($request)->getActorRole() === null
+            || $this->state($request)->actorAddress1 === null
+            || $this->state($request)->actorAddressTown === null;
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            return $missing
+            return $alwaysRequired
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null
                 || $this->state($request)->donorDob === null;
         }
 
-        return $missing;
+        return $alwaysRequired;
     }
 
     public function nextPage(WorkflowState $state): string

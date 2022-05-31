@@ -222,7 +222,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {
-                        return $this->redirectToRoute('lpa.add.actor-role');
+                        return $this->redirectToRoute('lpa.add.actor-address');
                     } else {
                         return new HtmlResponse($this->renderer->render(
                             'actor::cannot-find-lpa',
