@@ -29,10 +29,10 @@ class ActorAddressTest extends TestCase
     public function getFormElements(): array
     {
         return [
-            '__csrf'        => Csrf::class,
-            'actor_address_1'   => Text::class,
-            'actor_address_2'     => Text::class,
-            'actor_address_town'     => Text::class
+            '__csrf'             => Csrf::class,
+            'actor_address_1'    => Text::class,
+            'actor_address_2'    => Text::class,
+            'actor_address_town' => Text::class
         ];
     }
 
