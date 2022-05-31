@@ -100,7 +100,6 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        var_dump("i am hetre..."); die;
         return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.actor-role';
     }
 }

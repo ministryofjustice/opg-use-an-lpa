@@ -114,6 +114,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['donor_last_name']   = $state->donorLastName;
                 $this->data['donor_dob']         = $state->donorDob;
             }
+
+            if ($state->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+                $this->data['attorney_first_names'] = $state->attorneyFirstNames;
+                $this->data['attorney_last_name']   = $state->attorneyLastName;
+                $this->data['attorney_dob']         = $state->attorneyDob;
+            }
         }
 
         return match ($request->getMethod()) {
@@ -150,7 +156,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
-
+            
             $this->getLogger()->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
