@@ -4,21 +4,33 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\RequestActivationKey\DonorDetails;
+use Actor\Form\RequestActivationKey\AttorneyDetails;
+use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session as SessionTrait;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
+use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
+use Common\Workflow\WorkflowStep;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class DonorDetailsHandler
+ * Class AttorneyDetailsHandler
  * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class DonorDetailsHandler extends AbstractCleansingDetailsHandler
+class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
-    private DonorDetails $form;
+    use User;
+    use CsrfGuard;
+    use SessionTrait;
+    use State;
+
+    private AttorneyDetails $form;
 
     /**
      * @param ServerRequestInterface $request
@@ -26,19 +38,19 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new DonorDetails($this->getCsrfGuard($request));
+        $this->form = new AttorneyDetails($this->getCsrfGuard($request));
         return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $data = [
-            'donor_first_names' => $this->state($request)->donorFirstNames,
-            'donor_last_name' => $this->state($request)->donorLastName
+            'attorney_first_names' => $this->state($request)->attorneyFirstNames,
+            'attorney_last_name' => $this->state($request)->attorneyLastName
         ];
 
-        if (($dob = $this->state($request)->donorDob) !== null) {
-            $data['donor_dob'] = [
+        if (($dob = $this->state($request)->attorneyDob) !== null) {
+            $data['attorney_dob'] = [
                 'day' => $dob->format('d'),
                 'month' => $dob->format('m'),
                 'year' => $dob->format('Y'),
@@ -48,7 +60,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
         $this->form->setData($data);
 
         return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/donor-details',
+            'actor::request-activation-key/attorney-details',
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
@@ -63,12 +75,12 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            $this->state($request)->donorFirstNames = $postData['donor_first_names'];
-            $this->state($request)->donorLastName = $postData['donor_last_name'];
-            $this->state($request)->donorDob = (new DateTimeImmutable())->setDate(
-                (int) $postData['donor_dob']['year'],
-                (int) $postData['donor_dob']['month'],
-                (int) $postData['donor_dob']['day']
+            $this->state($request)->attorneyFirstNames = $postData['attorney_first_names'];
+            $this->state($request)->attorneyLastName = $postData['attorney_last_name'];
+            $this->state($request)->attorneyDob = (new DateTimeImmutable())->setDate(
+                (int) $postData['attorney_dob']['year'],
+                (int) $postData['attorney_dob']['month'],
+                (int) $postData['attorney_dob']['day']
             );
 
             $nextPageName = $this->nextPage($this->state($request));
@@ -77,7 +89,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/donor-details',
+            'actor::request-activation-key/attorney-details',
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
@@ -89,7 +101,6 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         return parent::isMissingPrerequisite($request)
-            || $this->state($request)->actorAddress1 === null
             || $this->state($request)->getActorRole() === null;
     }
 
@@ -100,7 +111,6 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        var_dump("i am hetre..."); die;
         return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.actor-role';
     }
 }
