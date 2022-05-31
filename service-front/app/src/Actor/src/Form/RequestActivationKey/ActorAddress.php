@@ -56,7 +56,7 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => NotEmpty::class,
                         'options' => [
-                            'message'  => 'Enter your building and street',
+                            'message'  => 'Enter your address',
                         ],
                     ],
                 ]
