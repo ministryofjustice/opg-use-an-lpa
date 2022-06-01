@@ -107,15 +107,19 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
      */
     protected function hasFutureAnswersInState(RequestActivationKey $state): bool
     {
-        $alwaysRequired = $state->telephone !== null || $state->noTelephone;
+        // address 1 is a required field on it's page so only need to check that.
+        $alwaysRequired = $state->actorAddress1 !== null;
+
+        $alwaysRequired = $alwaysRequired && $state->getActorRole() !== null;
 
         if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            return $alwaysRequired &&
+            $alwaysRequired =  $alwaysRequired &&
                 $state->donorFirstNames !== null &&
                 $state->donorLastName !== null &&
                 $state->donorDob !== null;
         }
 
-        return $alwaysRequired;
+        return $alwaysRequired
+            && ($state->telephone !== null || $state->noTelephone);
     }
 }

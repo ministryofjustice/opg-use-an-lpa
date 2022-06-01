@@ -197,7 +197,6 @@ class Lpas implements LpasInterface
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
 

@@ -6,9 +6,9 @@ Feature: Enter address on the Paper LPA
 
   Background:
     Given I am a user of the lpa application
-    Given I am currently signed in
-    Given I have been given access to use an LPA via a paper document
-    Given My LPA has been found but my details did not match
+    And I am currently signed in
+    And I have been given access to use an LPA via a paper document
+    And My LPA has been found but my details did not match
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
 
   @ui

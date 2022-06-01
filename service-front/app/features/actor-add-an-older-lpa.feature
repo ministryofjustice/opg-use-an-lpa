@@ -122,6 +122,11 @@ Feature: Add an older LPA
     Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
+  Scenario: An attorney user is asked for their address if they have a partial match
+    Given My LPA has been found but my details did not match
+    Then I will be asked for my full address
+
+  @ui @ff:allow_older_lpas:true
   Scenario: The attorney is asked for their contact details after providing donor details
     Given I am on the donor details page
     When I provide the donor's details
@@ -161,6 +166,7 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
+    And I have provided my current address
     And I confirm that I am the Donor
     When I enter my telephone number
     Then I am asked to consent and confirm my details
@@ -169,6 +175,7 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
+    And I have provided my current address
     And I confirm that I am the Donor
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
@@ -177,6 +184,7 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
+    And I have provided my current address
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I enter my telephone number
@@ -186,6 +194,7 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
+    And I have provided my current address
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I select that I cannot take calls
@@ -206,6 +215,7 @@ Feature: Add an older LPA
     Given I am on the add an older LPA page
     And I provide details that do not match a valid paper document
     When I confirm that those details are correct
+    And I have provided my current address
     Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
@@ -265,6 +275,7 @@ Feature: Add an older LPA
   @ui @ff:allow_older_lpas:true
   Scenario Outline: The user is shown an error message when entering invalid donor details
     Given My LPA has been found but my details did not match
+    And I have provided my current address
     And I am asked for my role on the LPA
     And I confirm that I am the Attorney
     When I provide invalid donor details of <firstnames> <surname> <dob>
@@ -317,6 +328,7 @@ Feature: Add an older LPA
   Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is partial match
     Given My LPA has been found but my details did not match
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I have provided my current address
     And I provide the additional details asked
     And I am asked to consent and confirm my details
     When I confirm that the data is correct and click the confirm and submit button
