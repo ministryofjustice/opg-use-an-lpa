@@ -10,6 +10,7 @@ Feature: Enter address on the Paper LPA
     And I have been given access to use an LPA via a paper document
     And My LPA has been found but my details did not match
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I have provided my current address
 
   @ui
     Scenario: The user can enter the address on their paper lpa successfully

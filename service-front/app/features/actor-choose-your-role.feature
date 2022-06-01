@@ -9,26 +9,23 @@ Feature: Choose your role
     And I am a user of the lpa application
     And I am currently signed in
     And My LPA has been found but my details did not match
+    And I have provided my current address
 
-
- @ui @ff:allow_older_lpas:true
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given I am asked for my role on the LPA
-    And I have provided my current address
     When I confirm that I am the Attorney
     Then I am asked to provide the donor's details to verify that I am the attorney
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given I am asked for my role on the LPA
-    And I have provided my current address
     When I confirm that I am the Donor
     Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given I am asked for my role on the LPA
-    And I have provided my current address
     And I have given the address on the paper LPA
     When I click the Back link on the page
     Then I am asked for the address on the paper LPA
@@ -36,10 +33,9 @@ Feature: Choose your role
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given I am asked for my role on the LPA
-    And I have provided my current address
     And I have not given the address on the paper LPA
     When I click the Back link on the page
-    Then I am taken to the check answers page
+    Then I will be asked for my full address
 
 
 
