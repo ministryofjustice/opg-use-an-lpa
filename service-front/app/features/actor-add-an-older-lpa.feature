@@ -127,20 +127,6 @@ Feature: Add an older LPA
     Then I will be asked for my full address
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The attorney is asked for their contact details after providing donor details
-    Given I am on the donor details page
-    When I provide the donor's details
-    Then I am asked for my contact details
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for their contact details if they are the donor on the LPA
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked for my role on the LPA
-    When I confirm that I am the Donor
-    Then I am asked for the attorney details
-
-  @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
