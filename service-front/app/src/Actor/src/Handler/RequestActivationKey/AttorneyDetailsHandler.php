@@ -98,7 +98,8 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         return parent::isMissingPrerequisite($request)
-            || $this->state($request)->getActorRole() === null;
+            || $this->state($request)->getActorRole() === null
+            || $this->state($request)->getActorRole() != 'donor';
     }
 
     public function nextPage(WorkflowState $state): string

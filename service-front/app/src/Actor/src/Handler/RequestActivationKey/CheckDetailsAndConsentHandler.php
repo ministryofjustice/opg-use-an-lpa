@@ -156,7 +156,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
-            
+
             $this->getLogger()->notice(
                 'User {id} has requested an activation key for their OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
