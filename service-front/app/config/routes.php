@@ -235,6 +235,16 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         )
     ], ['GET', 'POST'], 'lpa.add.donor-details');
 
+    $app->route('/lpa/add/actor-address', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\ActorAddressHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.actor-address');
+
     $app->route('/lpa/add/check-details-and-consent', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
