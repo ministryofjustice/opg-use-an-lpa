@@ -20,6 +20,7 @@ class RequestActivationKey implements WorkflowState
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
+
     /**
      * Lovely constructor promotion
      */
@@ -35,6 +36,9 @@ class RequestActivationKey implements WorkflowState
         public ?string $donorFirstNames = null,
         public ?string $donorLastName = null,
         ?string $donorDob = null,
+        public ?string $actorAddress1 = null,
+        public ?string $actorAddress2 = null,
+        public ?string $actorAddressTown = null,
         public ?string $telephone = null,
         public ?bool $noTelephone = null,
         // not used for entered data but to track workflow path
@@ -63,6 +67,9 @@ class RequestActivationKey implements WorkflowState
         $this->donorFirstNames = null;
         $this->donorLastName = null;
         $this->donorDob = null;
+        $this->actorAddress1 = null;
+        $this->actorAddress2 = null;
+        $this->actorAddressTown = null;
         $this->telephone = null;
         $this->noTelephone = null;
 
