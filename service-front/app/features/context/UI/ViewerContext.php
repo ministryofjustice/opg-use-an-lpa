@@ -513,37 +513,58 @@ class ViewerContext implements Context
     {
         $this->lpaData['status'] = 'Cancelled';
 
-        $this->ui->assertPageAddress('/home');
-
-        // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
-            )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                }
-            );
-
-        $this->ui->fillField('donor_surname', $this->lpaSurname);
-        $this->ui->fillField('lpa_code', $this->lpaShareCode);
-        $this->ui->pressButton('Continue');
+        $this->giveAValidLpaShareCode();
     }
 
+    /**
+     * @Given /^The LPA has instructions and preferences$/
+     */
+    public function theLPAHasInstructionsAndPreferences()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = true;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has instructions$/
+     */
+    public function theLPAHasInstructions()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = false;
+        $this->lpaData['applicationHasRestrictions'] = true;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has preferences$/
+     */
+    public function theLPAHasPreferences()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = false;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences and is signed before 2016$/
+     */
+    public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016()
+    {
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = true;
+
+        $this->lpaData['lpaDonorSignatureDate'] = '2015-01-01';
+
+        $this->giveAValidLpaShareCode();
+    }
+    
     /**
      * @When /^I give a valid LPA share code$/
      */
@@ -551,35 +572,7 @@ class ViewerContext implements Context
     {
         $this->lpaData['status'] = 'Registered';
 
-        $this->ui->assertPageAddress('/home');
-
-        // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
-            )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                }
-            );
-
-        $this->ui->fillField('donor_surname', $this->lpaSurname);
-        $this->ui->fillField('lpa_code', $this->lpaShareCode);
-        $this->ui->pressButton('Continue');
+        $this->giveAValidLpaShareCode();
     }
 
     /**
@@ -591,6 +584,40 @@ class ViewerContext implements Context
         $this->lpaStoredCode = $storedCode;
         $this->iGiveAValidLPAShareCode();
     }
+
+    /**
+     * @Then /^I can clearly see the lpa has instructions and preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+    }
+
+    /**
+     * @Then /^I can clearly see the lpa has preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
+    }
+
+
+    /**
+     * @Then /^I can clearly see the lpa has instructions$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructions()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
+    }
+
+    /**
+     * @Then /^I can clearly see the lpa has instructions andor preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+    }
+
 
     /**
      * @When /^I give an invalid (.*) and (.*)$/
@@ -905,5 +932,41 @@ class ViewerContext implements Context
     public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
     {
         $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
+    }
+
+    /**
+     * @return void
+     */
+    private function giveAValidLpaShareCode(): void
+    {
+        $this->ui->assertPageAddress('/home');
+
+        // API call for lpa summary check
+        $this->apiFixtures->post('/v1/viewer-codes/summary')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'lpa' => $this->lpaData,
+                            'expires' => (new DateTime('+30 days'))->format('c'),
+                        ]
+                    )
+                )
+            )
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertEquals($params['name'], $this->lpaSurname);
+                    assertEquals($params['code'], $this->lpaStoredCode);
+                }
+            );
+
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->lpaShareCode);
+        $this->ui->pressButton('Continue');
     }
 }
