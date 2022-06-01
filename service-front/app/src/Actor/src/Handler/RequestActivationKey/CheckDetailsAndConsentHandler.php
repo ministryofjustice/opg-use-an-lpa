@@ -158,7 +158,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
             $this->getLogger()->notice(
-                'User {id} has requested an activation key for their OOLPA ' .
+                'User {id} has requested an activation key for their {match} OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
                 [
                     'id'    => $this->user->getIdentity(),
@@ -167,7 +167,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
                     'phone' => $state->telephone !== null ?
                         EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
-                        EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED
+                        EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED,
+                    'match' => $this->data['actor_id'] === null ? 'part match' : 'full match'
                 ]
             );
 
