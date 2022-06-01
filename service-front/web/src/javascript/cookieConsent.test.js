@@ -2,7 +2,7 @@ import cookieConsent from './cookieConsent';
 import '@testing-library/jest-dom';
 import { getCookie, setConsentCookie } from './cookieHelper';
 const cookieBannerHtml = `
-<div class="govuk-cookie-banner " data-nosnippet="" role="region" aria-label="Cookies on Use a lasting power of attorney">
+<div class="govuk-cookie-banner " data-nosnippet="" role="region" aria-label="Cookies on Use a lasting power of attorney" hidden>
         <div class="govuk-cookie-banner__message govuk-width-container">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
