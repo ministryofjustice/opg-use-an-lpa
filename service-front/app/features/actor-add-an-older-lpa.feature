@@ -122,14 +122,6 @@ Feature: Add an older LPA
     Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for the donor's details if they are the attorney on the LPA
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked for my role on the LPA
-    When I confirm that I am the Attorney
-    Then I am asked to provide the donor's details to verify that I am the attorney
-
-  @ui @ff:allow_older_lpas:true
   Scenario: An attorney user is asked for their address if they have a partial match
     Given My LPA has been found but my details did not match
     Then I will be asked for my full address
@@ -138,14 +130,6 @@ Feature: Add an older LPA
   Scenario: The attorney is asked for their contact details after providing donor details
     Given I am on the donor details page
     When I provide the donor's details
-    Then I am asked for my contact details
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for their contact details if they are the donor on the LPA
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked for my role on the LPA
-    When I confirm that I am the Donor
     Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true

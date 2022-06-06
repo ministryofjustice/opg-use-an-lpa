@@ -39,6 +39,7 @@ class RequestActivationKey implements WorkflowState
         public ?string $actorAddress1 = null,
         public ?string $actorAddress2 = null,
         public ?string $actorAddressTown = null,
+        public ?string $addressOnPaper = null,
         public ?string $telephone = null,
         public ?bool $noTelephone = null,
         // not used for entered data but to track workflow path
@@ -72,6 +73,7 @@ class RequestActivationKey implements WorkflowState
         $this->actorAddressTown = null;
         $this->telephone = null;
         $this->noTelephone = null;
+        $this->addressOnPaper = null;
 
         $this->actorUid = null;
         $this->needsCleansing = false;
