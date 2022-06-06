@@ -21,14 +21,14 @@ Feature: Choose your role
   Scenario: The user is asked for their contact details if they are the donor on the LPA
     Given I am asked for my role on the LPA
     When I confirm that I am the Donor
-    Then I am asked for my contact details
+    Then I am asked for the attorney details
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is navigated to paper address page when clicking back and it has been previously filled in
     Given I am asked for my role on the LPA
     And I have given the address on the paper LPA
     When I click the Back link on the page
-    Then I am asked for the address on the paper LPA
+    Then I am asked for my address from the paper LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is navigated to full address page when clicking back and address on paper LPA has not been filled in
