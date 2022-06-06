@@ -36,6 +36,14 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I am taken to the check answers page$/
+     */
+    public function iAmTakenToTheCheckAnswersPage()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+    }
+
+    /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
      */
     public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA()
@@ -106,6 +114,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked for my role on the LPA$/
+     * @Given /^I have not given the address on the paper LPA$/
      */
     public function iAmAskedForMyRoleOnTheLPA()
     {
@@ -487,6 +496,16 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I have given the address on the paper LPA$/
+     */
+    public function iHaveGivenTheAddressOnThePaperLPA()
+    {
+        $this->iAmAskedForMyAddressFromThePaperLPA();
+        $this->iInputAValidPaperLPAAddress();
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @Given /^starts the Add an Older LPA journey$/
      */
     public function startsTheAddAnOlderLPAJourney()
@@ -584,7 +603,7 @@ class RequestActivationKeyContext implements Context
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
         $this->iConfirmThatIAmThe('Attorney');
-        $this->iProvideTheDonorSDetails();
+        $this->iProvideTheDonorsDetails();
         $this->whenIEnterMyTelephoneNumber();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
@@ -811,7 +830,7 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I provide the donor's details$/
      */
-    public function iProvideTheDonorSDetails()
+    public function iProvideTheDonorsDetails()
     {
         $this->ui->assertPageAddress('/lpa/add/donor-details');
         $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
@@ -1006,6 +1025,32 @@ class RequestActivationKeyContext implements Context
         $this->iProvideDetailsThatDoNotMatchAValidPaperDocument();
         $this->iConfirmTheDetailsIProvidedAreCorrect();
     }
+
+    /**
+     * @Given /^I am asked for my address from the paper LPA$/
+     */
+    public function iAmAskedForMyAddressFromThePaperLPA()
+    {
+        $this->ui->visit('/lpa/add/address-on-paper');
+    }
+
+    /**
+     * @Then /^I am shown an error telling me to input the paper address$/
+     */
+    public function iAmShownAnErrorTellingMeToInputThePaperAddress()
+    {
+        $this->ui->assertPageContainsText('Enter your address on the paper LPA');
+    }
+
+    /**
+     * @When /^I input a valid paper LPA address$/
+     */
+    public function iInputAValidPaperLPAAddress()
+    {
+        $this->ui->fillField('address_on_paper_area', "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA");
+        $this->ui->pressButton('Continue');
+    }
+
 
     protected function fillAndSubmitOlderLpaForm()
     {

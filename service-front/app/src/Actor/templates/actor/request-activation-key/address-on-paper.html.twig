@@ -1,0 +1,41 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}What is your address on the paper LPA?{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl" id="address-on-paper-heading">{% trans %}What is your address on the paper LPA?{% endtrans %}</h1>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        {{ govuk_form_element(form.get('address_on_paper_area'), {
+                            'aria_labelledby' : 'address-on-paper-heading',
+                            'autocomplete' : 'street-address'
+                        })}}
+                    </div>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
+{% endblock %}

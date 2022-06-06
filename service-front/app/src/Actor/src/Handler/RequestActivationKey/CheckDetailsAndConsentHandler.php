@@ -141,11 +141,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         if ($this->form->isValid()) {
             $state = $this->state($request);
 
-            $this->data['first_names'] = $state->firstNames;
-            $this->data['last_name']   = $state->lastName;
-            $this->data['dob']         = $state->dob;
-            $this->data['postcode']    = $state->postcode;
-            $this->data['actor_id']    = $state->actorUid;
+            $this->data['first_names']      = $state->firstNames;
+            $this->data['last_name']        = $state->lastName;
+            $this->data['dob']              = $state->dob;
+            $this->data['postcode']         = $state->postcode;
+            $this->data['actor_id']         = $state->actorUid;
+            $this->data['address_on_paper'] = $state->addressOnPaper;
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
