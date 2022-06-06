@@ -500,7 +500,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iHaveGivenTheAddressOnThePaperLPA()
     {
-        $this->iAmAskedForTheAddressOnThePaperLPA();
+        $this->iAmAskedForMyAddressFromThePaperLPA();
         $this->iInputAValidPaperLPAAddress();
         $this->ui->pressButton('Continue');
     }
@@ -1027,9 +1027,9 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I am asked for the address on the paper LPA$/
+     * @Given /^I am asked for my address from the paper LPA$/
      */
-    public function iAmAskedForTheAddressOnThePaperLPA()
+    public function iAmAskedForMyAddressFromThePaperLPA()
     {
         $this->ui->visit('/lpa/add/address-on-paper');
     }

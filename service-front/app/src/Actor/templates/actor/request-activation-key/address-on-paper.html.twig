@@ -27,7 +27,8 @@
 
                     <div class="govuk-form-group">
                         {{ govuk_form_element(form.get('address_on_paper_area'), {
-                            'aria_labelledby' : 'address-on-paper-heading'
+                            'aria_labelledby' : 'address-on-paper-heading',
+                            'autocomplete' : 'street-address'
                         })}}
                     </div>
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>

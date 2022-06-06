@@ -251,7 +251,7 @@
         <textarea class="govuk-textarea"
                   id="{{ element.getName() }}" name="{{ element.getName() }}"
                   rows="{% if rows is defined %}{{ rows }}{% else %}5{% endif %}"
-                  autocomplete="street-address"
+                  {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
                   {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}
         ></textarea>
 {%- endblock form_input_area -%}

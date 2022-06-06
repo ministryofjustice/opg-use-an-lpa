@@ -34,6 +34,9 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        if ($this->state($request)->addressOnPaper) {
+            $this->form->setData(['address_on_paper_area' => $this->state($request)->addressOnPaper]);
+        }
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/address-on-paper',
             [

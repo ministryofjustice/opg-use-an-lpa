@@ -14,12 +14,12 @@ Feature: Enter address on the Paper LPA
 
   @ui
     Scenario: The user can enter the address on their paper lpa successfully
-      Given I am asked for the address on the paper LPA
+    Given I am asked for my address from the paper LPA
       When I input a valid paper LPA address
       Then I am asked for my role on the LPA
 
   @ui
    Scenario: The User is told to enter an address if they have left the field empty
-     Given I am asked for the address on the paper LPA
+     Given I am asked for my address from the paper LPA
      When I enter nothing
      Then I am shown an error telling me to input the paper address
