@@ -245,6 +245,16 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         )
     ], ['GET', 'POST'], 'lpa.add.actor-address');
 
+    $app->route('/lpa/add/actor-address-as-on-paper-lpa-check', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\CheckAddressAsOnPaperLpaHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.actor-address-as-on-paper-lpa-check');
+
     $app->route('/lpa/add/attorney-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(

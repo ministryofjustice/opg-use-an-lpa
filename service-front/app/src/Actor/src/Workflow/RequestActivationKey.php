@@ -49,9 +49,14 @@ class RequestActivationKey implements WorkflowState
         // not used for entered data but to track workflow path
         public ?int $actorUid = null,
         public ?bool $needsCleansing = null,
+        public ?string $actorAddressResponse = null
     ) {
         if ($actorType !== null) { // TODO replace with enums at PHP 8.1
             $this->setActorRole($actorType);
+        }
+
+        if ($actorAddressResponse !== null) { // TODO replace with enums at PHP 8.1
+            $this->setActorAddressResponse($actorAddressResponse);
         }
 
         // if only constructor promotion allowed data transformers
@@ -112,5 +117,32 @@ class RequestActivationKey implements WorkflowState
         }
 
         $this->actorType = $role;
+    }
+
+    /**
+     * TODO replace with enums at PHP 8.1
+     *
+     * @return string|null
+     */
+    public function getActorAddressCheckResponse(): ?string
+    {
+        return $this->actorAddressResponse;
+    }
+
+    /**
+     * TODO replace with enums at PHP 8.1
+     *
+     * @param string $addressResponse
+     * @psalm-param self::ACTOR_* $addressResponse
+     *
+     * @throws RuntimeException
+     */
+    public function setActorAddressResponse(string $addressResponse): void
+    {
+        if (!in_array($addressResponse, ['Yes', 'No', 'Not sure'])) {
+            throw new RuntimeException("Actor address response '$addressResponse' not recognised");
+        }
+
+        $this->actorAddressResponse = $addressResponse;
     }
 }

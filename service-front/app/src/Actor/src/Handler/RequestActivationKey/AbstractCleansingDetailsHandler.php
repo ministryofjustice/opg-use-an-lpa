@@ -127,6 +127,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         }
 
         return $alwaysRequired
-            && ($state->telephone !== null || $state->noTelephone);
+            && ($state->telephone !== null || $state->noTelephone)
+            && ($state->addressOnPaper);
     }
 }
