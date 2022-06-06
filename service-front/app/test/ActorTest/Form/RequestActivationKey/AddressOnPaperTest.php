@@ -13,7 +13,7 @@ use Laminas\Form\Element\Textarea;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 
-class AddressOnPaperTest  extends TestCase implements TestsLaminasForm
+class AddressOnPaperTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
 
