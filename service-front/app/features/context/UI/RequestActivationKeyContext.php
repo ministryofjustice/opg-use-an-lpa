@@ -742,19 +742,33 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I provide invalid donor details of (.*) (.*) (.*)$/
+     * @When /^I provide invalid (.*) details of (.*) (.*) (.*)$/
      */
-    public function iProvideInvalidDonorDetailsOf($firstnames, $surname, $dob)
+    public function iProvideInvalidDonorDetailsOf($actor, $firstnames, $surname, $dob)
     {
-        $this->ui->assertPageAddress('/lpa/add/donor-details');
-        $this->ui->fillField('donor_first_names', $firstnames);
-        $this->ui->fillField('donor_last_name', $surname);
+        if($actor === 'donor') {
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+            $this->ui->fillField('donor_first_names', $firstnames);
+            $this->ui->fillField('donor_last_name', $surname);
 
-        if (!empty($dob)) {
-            $dobParts = explode('-', $dob);
-            $this->ui->fillField('donor_dob[day]', $dobParts[0]);
-            $this->ui->fillField('donor_dob[month]', $dobParts[1]);
-            $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+            if (!empty($dob)) {
+                $dobParts = explode('-', $dob);
+                $this->ui->fillField('donor_dob[day]', $dobParts[0]);
+                $this->ui->fillField('donor_dob[month]', $dobParts[1]);
+                $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+            }
+        }
+        if($actor === 'attorney') {
+            $this->ui->assertPageAddress('/lpa/add/attorney-details');
+            $this->ui->fillField('attorney_first_names', $firstnames);
+            $this->ui->fillField('attorney_last_name', $surname);
+
+            if (!empty($dob)) {
+                $dobParts = explode('-', $dob);
+                $this->ui->fillField('attorney_dob[day]', $dobParts[0]);
+                $this->ui->fillField('attorney_dob[month]', $dobParts[1]);
+                $this->ui->fillField('attorney_dob[year]', $dobParts[2]);
+            }
         }
 
         $this->ui->pressButton('Continue');

@@ -206,15 +206,6 @@ Feature: Add an older LPA
     Then I am informed that an LPA could not be found with this reference number
 
   @ui @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
-  Scenario: The user is asked for their role on the LPA if the data does not match
-    Given I am on the add an older LPA page
-    And I provide details that do not match a valid paper document
-    When I confirm that those details are correct
-    And I have provided my current address
-    Then I am asked for my role on the LPA
-
-  @ui @ff:allow_older_lpas:true
   @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given I am on the add an older LPA page
@@ -268,22 +259,6 @@ Feature: Add an older LPA
     Given I have reached the contact details page
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
-
-  @ui @ff:allow_older_lpas:true
-  Scenario Outline: The user is shown an error message when entering invalid donor details
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked for my role on the LPA
-    And I confirm that I am the Attorney
-    When I provide invalid donor details of <firstnames> <surname> <dob>
-    Then I am told that my input is invalid because <reason>
-
-    Examples:
-      | firstnames | surname | dob        | reason                            |
-      | Donor      | Person  |            | Enter the donor's date of birth   |
-      |            | Person  | 01-01-1980 | Enter the donor's first names     |
-      | Donor      |         | 01-01-1980 | Enter the donor's last name       |
-      | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed
