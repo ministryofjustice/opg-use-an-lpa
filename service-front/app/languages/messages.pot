@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-06-06T12:55:42+00:00\n"
+"POT-Creation-Date: 2022-06-07T15:30:12+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1651,7 +1651,7 @@ msgstr ""
 msgid "Check your answers"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:24
+#: src/Actor/templates/actor/lpa-not-found.html.twig:27
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 msgstr ""
 
@@ -1667,16 +1667,12 @@ msgstr ""
 msgid "Make sure this is the activation key we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 msgid "Date of birth:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:27
-msgid "The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth."
-msgstr ""
-
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:89
-#: src/Actor/templates/actor/lpa-not-found.html.twig:33
+#: src/Actor/templates/actor/lpa-not-found.html.twig:34
 msgid "What to do if you’re sure you entered the right information"
 msgstr ""
 
@@ -1689,7 +1685,7 @@ msgid ""
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:100
-#: src/Actor/templates/actor/lpa-not-found.html.twig:43
+#: src/Actor/templates/actor/lpa-not-found.html.twig:44
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:19
 msgid "Try again"
 msgstr ""
@@ -3969,7 +3965,7 @@ msgid "If you cannot find it, please call us:"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:93
-#: src/Actor/templates/actor/lpa-not-found.html.twig:37
+#: src/Actor/templates/actor/lpa-not-found.html.twig:38
 msgid "If you're sure you entered the right information, please call us:"
 msgstr ""
 
@@ -4916,4 +4912,16 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:50
 msgid "For example, 08 04 2004"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:25
+msgid "The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth. If your date of birth is wrong on the LPA, use the date that appears on the paper LPA. If you do not have the LPA, check with the person who does."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+msgid "You must then contact us so we can correct the date on our records."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:28
+msgid "If you’re named on more than one LPA, you may have entered the reference number for a different LPA. The letter with the activation key will also have the matching LPA reference number on it."
 msgstr ""
