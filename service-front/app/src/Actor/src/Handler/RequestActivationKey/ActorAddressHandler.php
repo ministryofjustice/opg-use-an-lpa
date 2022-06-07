@@ -80,7 +80,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : 'lpa.add.actor-address-as-on-paper-lpa-check';
+            : 'lpa.add.actor-check-given-address-on-paper';
     }
 
     public function lastPage(WorkflowState $state): string

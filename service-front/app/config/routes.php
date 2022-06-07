@@ -245,7 +245,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         )
     ], ['GET', 'POST'], 'lpa.add.actor-address');
 
-    $app->route('/lpa/add/actor-address-as-on-paper-lpa-check', [
+    $app->route('/lpa/add/actor-check-given-address-on-paper', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
@@ -253,7 +253,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             \Actor\Handler\RequestActivationKey\CheckAddressAsOnPaperLpaHandler::class,
             $defaultNotFoundPage
         )
-    ], ['GET', 'POST'], 'lpa.add.actor-address-as-on-paper-lpa-check');
+    ], ['GET', 'POST'], 'lpa.add.actor-check-given-address-on-paper');
 
     $app->route('/lpa/add/attorney-details', [
         Mezzio\Authentication\AuthenticationMiddleware::class,

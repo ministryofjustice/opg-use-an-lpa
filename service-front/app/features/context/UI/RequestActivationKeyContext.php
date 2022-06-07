@@ -504,6 +504,15 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I am asked if it's the same as in paper LPA$/
+     */
+    public function iAmAskedIfItsTheSameAsInPaperLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-check-given-address-on-paper');
+        $this->ui->assertPageContainsText('Is this the same address as your address on the paper LPA?');
+    }
+
+    /**
      * @Given /^I provide details of the donor to verify that I am an attorney$/
      */
     public function iProvideDetailsOfTheDonorToVerifyThatIAmAnAttorney()
@@ -1393,5 +1402,16 @@ class RequestActivationKeyContext implements Context
         $this->iConfirmThatIAmThe('Donor');
         $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
+    }
+
+    /**
+     * @Given /^I select (.*) the address same as on paper LPA$/
+     */
+    public function iSelectThatThisIsTheSameAddressAsOnTheLPA($selection)
+    {
+        if($selection === 'this is' || $selection === 'this is not' || $selection === 'not sure') {
+            $this->ui->fillField('actor_address_check_radio', 'Yes');
+            $this->ui->pressButton('Continue');
+        }
     }
 }

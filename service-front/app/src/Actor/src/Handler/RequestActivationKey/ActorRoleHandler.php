@@ -103,6 +103,6 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     private function lastPageByPreviousAnswers(bool $filledAddressOnPaper): string
     {
-        return $filledAddressOnPaper ? 'lpa.add.address-on-paper' : 'lpa.add.actor-address-as-on-paper-lpa-check';
+        return $filledAddressOnPaper ? 'lpa.add.address-on-paper' : 'lpa.add.actor-check-given-address-on-paper';
     }
 }

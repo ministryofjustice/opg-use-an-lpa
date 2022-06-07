@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\RequestActivationKey\CheckAddress;
+use Actor\Form\RequestActivationKey\CheckAddressOnPaper;
 use Actor\Workflow\RequestActivationKey;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -17,7 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
 {
-    private CheckAddress $form;
+    private CheckAddressOnPaper $form;
 
     /**
      * @param ServerRequestInterface $request
@@ -25,7 +25,7 @@ class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new CheckAddress($this->getCsrfGuard($request));
+        $this->form = new CheckAddressOnPaper($this->getCsrfGuard($request));
         return parent::handle($request);
     }
 
@@ -40,7 +40,7 @@ class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-address-as-on-paper-lpa-check',
+            'actor::request-activation-key/actor-check-given-address-on-paper',
             [
                 'user'  => $this->user,
                 'form'  => $this->form,
@@ -63,7 +63,7 @@ class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
         }
 
         return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-address-as-on-paper-lpa-check',
+            'actor::request-activation-key/actor-check-given-address-on-paper',
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
