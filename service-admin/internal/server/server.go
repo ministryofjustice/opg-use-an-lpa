@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -40,8 +41,10 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
+func NewServer(db *dynamodb.Client, keyURL string, cognitoLogoutURL *url.URL) http.Handler {
 	router := mux.NewRouter()
+
+	router.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 	router.Handle("/helloworld", handlers.HelloHandler())
 
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(db), data.NewLPAService(db), handlers.NewTemplateWriterService())
@@ -52,7 +55,6 @@ func NewServer(db *dynamodb.Client, keyURL string) http.Handler {
 			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
 		),
 	)
-
 	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(

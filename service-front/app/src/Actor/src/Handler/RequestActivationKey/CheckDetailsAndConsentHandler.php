@@ -114,6 +114,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['donor_last_name']   = $state->donorLastName;
                 $this->data['donor_dob']         = $state->donorDob;
             }
+
+            if ($state->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+                $this->data['attorney_first_names'] = $state->attorneyFirstNames;
+                $this->data['attorney_last_name']   = $state->attorneyLastName;
+                $this->data['attorney_dob']         = $state->attorneyDob;
+            }
         }
 
         return match ($request->getMethod()) {
@@ -141,17 +147,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         if ($this->form->isValid()) {
             $state = $this->state($request);
 
-            $this->data['first_names'] = $state->firstNames;
-            $this->data['last_name']   = $state->lastName;
-            $this->data['dob']         = $state->dob;
-            $this->data['postcode']    = $state->postcode;
-            $this->data['actor_id']    = $state->actorUid;
+            $this->data['first_names']      = $state->firstNames;
+            $this->data['last_name']        = $state->lastName;
+            $this->data['dob']              = $state->dob;
+            $this->data['postcode']         = $state->postcode;
+            $this->data['actor_id']         = $state->actorUid;
+            $this->data['address_on_paper'] = $state->addressOnPaper;
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
             $this->getLogger()->notice(
-                'User {id} has requested an activation key for their OOLPA ' .
+                'User {id} has requested an activation key for their {match} OOLPA ' .
                 'and provided the following contact information: {role}, {phone}',
                 [
                     'id'    => $this->user->getIdentity(),
@@ -160,7 +167,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
                     'phone' => $state->telephone !== null ?
                         EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
-                        EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED
+                        EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED,
+                    'match' => $this->data['actor_id'] === null ? 'part match' : 'full match'
                 ]
             );
 
@@ -208,7 +216,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        $missing = $this->state($request)->referenceNumber === null
+        $alwaysRequired = $this->state($request)->referenceNumber === null
             || $this->state($request)->firstNames === null
             || $this->state($request)->lastName === null
             || $this->state($request)->dob === null
@@ -219,20 +227,22 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             );
 
         // If lpa is a full match and not cleansed then we need to short circuit the pre-requisite check
-        if (!$missing && $this->state($request)->needsCleansing) {
+        if (!$alwaysRequired && $this->state($request)->needsCleansing) {
             return $this->state($request)->actorUid === null; // isMissing equals false if actorUid present
         }
 
-        $missing = $missing || $this->state($request)->getActorRole() === null;
+        $alwaysRequired = $alwaysRequired || $this->state($request)->getActorRole() === null
+            || $this->state($request)->actorAddress1 === null
+            || $this->state($request)->actorAddressTown === null;
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            return $missing
+            return $alwaysRequired
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null
                 || $this->state($request)->donorDob === null;
         }
 
-        return $missing;
+        return $alwaysRequired;
     }
 
     public function nextPage(WorkflowState $state): string

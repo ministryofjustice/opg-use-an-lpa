@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
+use Actor\Form\RequestActivationKey\AddressOnPaper;
 use Actor\Workflow\RequestActivationKey;
+use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -16,9 +18,9 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
-class ActorRoleHandler extends AbstractCleansingDetailsHandler
+class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
 {
-    private ActorRole $form;
+    private AddressOnPaper $form;
 
     /**
      * @param ServerRequestInterface $request
@@ -26,20 +28,17 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new ActorRole($this->getCsrfGuard($request));
+        $this->form = new AddressOnPaper($this->getCsrfGuard($request));
         return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
-            $this->form->setData(['actor_role_radio' => 'Donor']);
-        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            $this->form->setData(['actor_role_radio' => 'Attorney']);
+        if ($this->state($request)->addressOnPaper) {
+            $this->form->setData(['address_on_paper_area' => $this->state($request)->addressOnPaper]);
         }
-
         return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-role',
+            'actor::request-activation-key/address-on-paper',
             [
                 'user'  => $this->user,
                 'form'  => $this->form,
@@ -50,35 +49,27 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
+     * @throws StateNotInitialisedException
      */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $selected = $this->form->getData()['actor_role_radio'];
+            $address = $this->form->getData()['address_on_paper_area'];
 
-            if ($selected === 'Donor') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_DONOR);
-            } elseif ($selected === 'Attorney') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_ATTORNEY);
-            }
+            $this->state($request)->addressOnPaper = $address;
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
+        return new HtmlResponse($this->renderer->render('actor::request-activation-key/address-on-paper', [
             'user' => $this->user,
             'form' => $this->form,
             'back' => $this->lastPage($this->state($request))
         ]));
-    }
-
-    public function isMissingPrerequisite(ServerRequestInterface $request): bool
-    {
-        return parent::isMissingPrerequisite($request)
-            || $this->state($request)->actorAddress1 === null;
     }
 
     public function nextPage(WorkflowState $state): string
@@ -90,7 +81,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
             ? 'lpa.add.donor-details'
-            : 'lpa.add.attorney-details';
+            : 'lpa.add.contact-details';
     }
 
     public function lastPage(WorkflowState $state): string
@@ -98,11 +89,6 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : $this->lastPageByPreviousAnswers($state->addressOnPaper !== null);
-    }
-
-    private function lastPageByPreviousAnswers(bool $filledAddressOnPaper): string
-    {
-        return $filledAddressOnPaper ? 'lpa.add.address-on-paper' : 'lpa.add.actor-address';
+            : 'lpa.check-answers';
     }
 }
