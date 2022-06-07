@@ -162,6 +162,8 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
     And I confirm that I am the Donor
     And I provide the attorney details
     When I enter my telephone number
@@ -172,6 +174,8 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
     And I confirm that I am the Donor
     And I provide the attorney details
     When I select that I cannot take calls
@@ -182,6 +186,8 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I enter my telephone number
@@ -192,6 +198,8 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I select that I cannot take calls
@@ -221,6 +229,7 @@ Feature: Add an older LPA
     Given I have reached the check details and consent page as the Attorney
     And I request to change the donors name
     When I change the donors name
+    And I enter my telephone number
     Then I am taken back to the consent and check details page
     And I can see the donors name is now correct
 
@@ -230,6 +239,7 @@ Feature: Add an older LPA
     And I request to change my role
     When I confirm that I am the Donor
     And I provide the attorney details
+    And I enter my telephone number
     Then I am taken back to the consent and check details page
     And I can see my role is now correctly set as the Donor
 
@@ -239,6 +249,7 @@ Feature: Add an older LPA
     And I request to change my role
     When I confirm that I am the Attorney
     And I provide the donor's details
+    And I select that I cannot take calls
     Then I am taken back to the consent and check details page
     And I can see my role is now correctly set as the Attorney
 

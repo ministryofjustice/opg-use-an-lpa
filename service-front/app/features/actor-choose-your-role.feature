@@ -10,6 +10,8 @@ Feature: Choose your role
     And I am currently signed in
     And My LPA has been found but my details did not match
     And I have provided my current address
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
@@ -35,7 +37,7 @@ Feature: Choose your role
     Given I am asked for my role on the LPA
     And I have not given the address on the paper LPA
     When I click the Back link on the page
-    Then I will be asked for my full address
+    Then I am taken to the page that checks if address provided is same as on paper LPA
 
 
 

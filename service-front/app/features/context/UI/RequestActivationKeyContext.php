@@ -68,6 +68,8 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
+        $this->iAmAskedIfItsTheSameAsInPaperLPA();
+        $this->iSelectThatThisIsTheSameAddressAsOnTheLPA('this is');
         $this->iAmAskedForMyRoleOnTheLPA();
         $this->iConfirmThatIAmThe('Donor');
         $this->iAmAskedForTheAttorneyDetails();
@@ -210,6 +212,8 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
+        $this->iAmAskedIfItsTheSameAsInPaperLPA();
+        $this->iSelectThatThisIsTheSameAddressAsOnTheLPA('this is');
         $this->iConfirmThatIAmThe('Attorney');
         $this->ui->assertPageAddress('/lpa/add/donor-details');
     }
@@ -505,6 +509,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked if it's the same as in paper LPA$/
+     * @Then /^I am taken to the page that checks if address provided is same as on paper LPA$/
      */
     public function iAmAskedIfItsTheSameAsInPaperLPA()
     {
@@ -637,6 +642,8 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
+        $this->iAmAskedIfItsTheSameAsInPaperLPA();
+        $this->iSelectThatThisIsTheSameAddressAsOnTheLPA('this is');
         $this->iConfirmThatIAmThe('Attorney');
         $this->iProvideTheDonorsDetails();
         $this->whenIEnterMyTelephoneNumber();
@@ -651,6 +658,8 @@ class RequestActivationKeyContext implements Context
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
         $this->iHaveProvidedMyCurrentAddress();
+        $this->iAmAskedIfItsTheSameAsInPaperLPA();
+        $this->iSelectThatThisIsTheSameAddressAsOnTheLPA('this is');
         $this->iConfirmThatIAmThe('Donor');
         $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
@@ -1399,6 +1408,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheAdditionalDetailsAsked()
     {
+        $this->iAmAskedIfItsTheSameAsInPaperLPA();
+        $this->iSelectThatThisIsTheSameAddressAsOnTheLPA('this is');
         $this->iConfirmThatIAmThe('Donor');
         $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();

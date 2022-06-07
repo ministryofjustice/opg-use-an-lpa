@@ -10,7 +10,8 @@ Feature: Provide role details when adding an older LPA
     And I have been given access to use an LPA via a paper document
     And My LPA has been found but my details did not match
     And I have provided my current address
-    And I am asked for my role on the LPA
+    And I am asked if it's the same as in paper LPA
+    And I select this is the address same as on paper LPA
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
