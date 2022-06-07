@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-06-01T13:39:51+00:00\n"
+"POT-Creation-Date: 2022-06-06T12:55:42+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -170,6 +170,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:12
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:11
@@ -1527,49 +1528,49 @@ msgid "Check your date of birth is correct - you cannot be an attorney or donor 
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:70
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:70
+#: src/Actor/templates/actor/form-error-messages.html.twig:73
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:71
+#: src/Actor/templates/actor/form-error-messages.html.twig:74
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:72
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:73
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:74
+#: src/Actor/templates/actor/form-error-messages.html.twig:77
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:77
+#: src/Actor/templates/actor/form-error-messages.html.twig:80
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:78
+#: src/Actor/templates/actor/form-error-messages.html.twig:81
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -1795,7 +1796,8 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
-#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -2308,11 +2310,11 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:160
+#: src/Common/templates/partials/govuk_form.html.twig:161
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:170
+#: src/Common/templates/partials/govuk_form.html.twig:172
 msgid "Year"
 msgstr ""
 
@@ -2944,12 +2946,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:234
+#: src/Common/templates/partials/govuk_form.html.twig:237
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:235
+#: src/Common/templates/partials/govuk_form.html.twig:238
 msgid "Hide"
 msgstr ""
 
@@ -3477,11 +3479,13 @@ msgstr ""
 msgid "Find out what to do if you've <a href=\"%link%\" class=\"govuk-link\">changed address and not told us</a>."
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:39
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:28
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
 msgid "First names"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:32
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:34
 msgid "Last name"
@@ -4870,4 +4874,46 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:22
 msgid "What is your address on the paper LPA?"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
+msgctxt "error"
+msgid "Enter the attorney's first names"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:66
+msgctxt "error"
+msgid "Enter the attorney's last name"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:67
+msgctxt "error"
+msgid "Enter the attorney's date of birth"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:21
+msgid "Attorney details"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:23
+msgid "Tell us the details of an attorney named on the LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:28
+msgid "If you  only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:37
+msgid "Attorney's name"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:49
+msgid "Attorney's date of birth"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:50
+msgid "For example, 08 04 2004"
 msgstr ""

@@ -119,6 +119,13 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
                 $state->donorDob !== null;
         }
 
+        if ($state->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+            $alwaysRequired =  $alwaysRequired &&
+                $state->attorneyFirstNames !== null &&
+                $state->attorneyLastName !== null &&
+                $state->attorneyDob !== null;
+        }
+
         return $alwaysRequired
             && ($state->telephone !== null || $state->noTelephone);
     }
