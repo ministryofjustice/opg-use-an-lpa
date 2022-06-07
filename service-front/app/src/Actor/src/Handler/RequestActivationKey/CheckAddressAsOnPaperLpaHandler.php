@@ -59,6 +59,7 @@ class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
             $this->state($request)->setActorAddressResponse($selected);
 
             $nextPageName = $this->nextPage($this->state($request));
+
             return $this->redirectToRoute($nextPageName);
         }
 
@@ -75,8 +76,12 @@ class CheckAddressAsOnPaperLpaHandler extends AbstractCleansingDetailsHandler
     public function nextPage(WorkflowState $state): string
     {
         /** @var RequestActivationKey $state **/
-        return $this->hasFutureAnswersInState($state)
-            ? 'lpa.add.check-details-and-consent'
+        if ($this->hasFutureAnswersInState($state)) {
+            return 'lpa.add.check-details-and-consent';
+        }
+
+        return $state->getActorAddressCheckResponse() === 'No'
+            ? 'lpa.add.address-on-paper'
             : 'lpa.add.actor-role';
     }
 
