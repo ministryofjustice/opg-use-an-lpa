@@ -31,7 +31,7 @@ class GenericGlobalVariableExtension extends AbstractExtension implements Global
     {
         return [
             "application"   => $this->application,
-            "currentLocale" => \Locale::getDefault()
+            "currentLocale" => \strtolower(\str_replace('_', '-', \Locale::getDefault()))
         ];
     }
 }
