@@ -120,6 +120,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['attorney_last_name']   = $state->attorneyLastName;
                 $this->data['attorney_dob']         = $state->attorneyDob;
             }
+
+            $this->data['actor_address_1'] = $state->actorAddress1;
+            $this->data['actor_address_2'] = $state->actorAddress2;
+            $this->data['actor_address_town'] = $state->actorAddressTown;
+
+            $this->data['address_on_paper'] = $state->addressOnPaper;
         }
 
         return match ($request->getMethod()) {
