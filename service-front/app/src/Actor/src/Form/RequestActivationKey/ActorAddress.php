@@ -96,13 +96,14 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
                 ]
             ],
             'actor_address_check_radio' => [
-                'required'   => true,
+                'required' => true,
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Select whether this is the same address as your address on the paper LPA',
+                        'name' => NotEmpty::class,
+                        'options' => [
+                            'messages' => [
+                                NotEmpty::IS_EMPTY =>
+                                    'Select whether this is the same address as your address on the paper LPA',
                             ],
                         ],
                     ],
