@@ -144,12 +144,12 @@ class RequestActivationKey implements WorkflowState
     public function setActorAddressResponse(string $addressResponse): void
     {
         if (!in_array($addressResponse,
-                      [
-                          self::ACTOR_ADDRESS_SELECTION_YES,
-                          self::ACTOR_ADDRESS_SELECTION_NO,
-                          self::ACTOR_ADDRESS_SELECTION_NOT_SURE,
-                      ]
-        )) {
+            [
+                self::ACTOR_ADDRESS_SELECTION_YES,
+                self::ACTOR_ADDRESS_SELECTION_NO,
+                self::ACTOR_ADDRESS_SELECTION_NOT_SURE,
+            ])
+        ) {
             throw new RuntimeException("Actor address response '$addressResponse' not recognised");
         }
 
