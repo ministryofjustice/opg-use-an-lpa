@@ -24,7 +24,7 @@ Feature: Say if the given address is on paper LPA
   @ui @ff:allow_older_lpas:true
   Scenario: A user is taken to selecting their role page when they are not sure of address on paper provided
     Given My LPA has been found but my details did not match
-    When  I select I am not the address is same as on paper LPA
+    When  I select I am not sure the address is same as on paper LPA
     Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
