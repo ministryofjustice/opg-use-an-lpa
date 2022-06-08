@@ -17,6 +17,10 @@ class RequestActivationKey implements WorkflowState
     public const ACTOR_DONOR = 'donor';
     public const ACTOR_ATTORNEY = 'attorney';
 
+    public const ACTOR_ADDRESS_SELECTION_YES = 'Yes';
+    public const ACTOR_ADDRESS_SELECTION_NO = 'No';
+    public const ACTOR_ADDRESS_SELECTION_NOT_SURE = 'Not sure';
+
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
@@ -139,7 +143,13 @@ class RequestActivationKey implements WorkflowState
      */
     public function setActorAddressResponse(string $addressResponse): void
     {
-        if (!in_array($addressResponse, ['Yes', 'No', 'Not sure'])) {
+        if (!in_array($addressResponse,
+                      [
+                          self::ACTOR_ADDRESS_SELECTION_YES,
+                          self::ACTOR_ADDRESS_SELECTION_NO,
+                          self::ACTOR_ADDRESS_SELECTION_NOT_SURE,
+                      ]
+        )) {
             throw new RuntimeException("Actor address response '$addressResponse' not recognised");
         }
 

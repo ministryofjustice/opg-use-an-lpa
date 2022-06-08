@@ -521,12 +521,13 @@ class RequestActivationKeyContext implements Context
      */
     public function iSelectIAmNotSureTheAddressIsSameAsOnPaperLPA($selection)
     {
-        if ($selection === 'I am not sure')
-        $this->ui->assertPageAddress('/lpa/add/actor-address');
-        $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
-        $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
-        $this->ui->fillField('actor_address_check_radio', 'Not sure');
-        $this->ui->pressButton('Continue');
+        if ($selection === 'I am not sure') {
+            $this->ui->assertPageAddress('/lpa/add/actor-address');
+            $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+            $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+            $this->ui->fillField('actor_address_check_radio', 'Not sure');
+            $this->ui->pressButton('Continue');
+        }
     }
 
     /**
