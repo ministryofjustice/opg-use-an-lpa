@@ -89,6 +89,6 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : 'lpa.add.actor-check-given-address-on-paper';
+            : 'lpa.add.actor-address';
     }
 }

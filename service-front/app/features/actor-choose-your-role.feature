@@ -9,38 +9,34 @@ Feature: Choose your role
     And I am a user of the lpa application
     And I am currently signed in
     And My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked if it's the same as in paper LPA
-    And I select this is the address same as on paper LPA
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for the donor's details if they are the attorney on the LPA
-    Given I am asked for my role on the LPA
-    When I confirm that I am the Attorney
-    Then I am asked to provide the donor's details to verify that I am the attorney
+  Scenario: The user is navigated to role page when they are not sure the provided address is as on paper LPA
+    Given I select I am not sure the address is same as on paper LPA
+    Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is asked for their contact details if they are the donor on the LPA
-    Given I am asked for my role on the LPA
-    When I confirm that I am the Donor
-    Then I am asked for the attorney details
+  Scenario: The user is navigated to role page when they provide address as on paper LPA
+    Given I select the address is same as on paper LPA
+    Then I am asked for my role on the LPA
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is navigated to paper address page when clicking back and it has been previously filled in
-    Given I am asked for my role on the LPA
-    And I have given the address on the paper LPA
+  Scenario: The user is navigated back to correct address page from role page
+    Given I select the address is same as on paper LPA
+    And I am asked for my role on the LPA  
     When I click the Back link on the page
-    Then I am asked for my address from the paper LPA
+    Then I will be navigated back to more details page
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user is navigated to full address page when clicking back and address on paper LPA has not been filled in
-    Given I am asked for my role on the LPA
-    And I have not given the address on the paper LPA
+  Scenario: The user is navigated back to correct address page from role page
+    Given I select I am not sure the address is same as on paper LPA
+    And I am asked for my role on the LPA
     When I click the Back link on the page
-    Then I am taken to the page that checks if address provided is same as on paper LPA
+    Then I will be navigated back to more details page
 
-
-
-
-
-
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is shown an error message when user does not make a selection on role page
+    Given I select the address is same as on paper LPA
+    And I am asked for my role on the LPA
+    When I do not provide any selections for my role on the LPA
+    Then I am shown an error telling me to select my role on the LPA

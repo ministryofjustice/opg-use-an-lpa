@@ -159,11 +159,9 @@ Feature: Add an older LPA
     Then I am told that I must enter a phone number or select that I cannot take calls
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user can is shown the correct information on the check and consent page
+  Scenario: The user is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
-    And I am asked if it's the same as in paper LPA
-    And I select this is the address same as on paper LPA
     And I confirm that I am the Donor
     And I provide the attorney details
     When I enter my telephone number
@@ -174,8 +172,6 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
-    And I am asked if it's the same as in paper LPA
-    And I select this is the address same as on paper LPA
     And I confirm that I am the Donor
     And I provide the attorney details
     When I select that I cannot take calls
@@ -186,8 +182,6 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
-    And I am asked if it's the same as in paper LPA
-    And I select this is the address same as on paper LPA
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I enter my telephone number
@@ -198,8 +192,6 @@ Feature: Add an older LPA
   Scenario: The user can is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
-    And I am asked if it's the same as in paper LPA
-    And I select this is the address same as on paper LPA
     And I confirm that I am the Attorney
     And I provide the donor's details
     When I select that I cannot take calls

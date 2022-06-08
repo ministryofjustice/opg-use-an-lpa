@@ -6,6 +6,7 @@ use Actor\Form\RequestActivationKey\ActorAddress;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;
+use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +33,8 @@ class ActorAddressTest extends TestCase
             '__csrf'             => Csrf::class,
             'actor_address_1'    => Text::class,
             'actor_address_2'    => Text::class,
-            'actor_address_town' => Text::class
+            'actor_address_town' => Text::class,
+            'actor_address_check_radio' => Radio::class
         ];
     }
 
