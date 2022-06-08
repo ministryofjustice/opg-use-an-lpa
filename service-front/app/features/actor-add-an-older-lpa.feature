@@ -127,12 +127,6 @@ Feature: Add an older LPA
     Then I will be asked for my full address
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The attorney is asked for their contact details after providing donor details
-    Given I am on the donor details page
-    When I provide the donor's details
-    Then I am asked for my contact details
-
-  @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document
@@ -168,6 +162,7 @@ Feature: Add an older LPA
     Given My LPA has been found but my details did not match
     And I have provided my current address
     And I confirm that I am the Donor
+    And I provide the attorney details
     When I enter my telephone number
     Then I am asked to consent and confirm my details
     And I can see my donor role and telephone number
@@ -177,6 +172,7 @@ Feature: Add an older LPA
     Given My LPA has been found but my details did not match
     And I have provided my current address
     And I confirm that I am the Donor
+    And I provide the attorney details
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
     And I can see my donor role and that I have not provided a telephone number
@@ -210,15 +206,6 @@ Feature: Add an older LPA
     Then I am informed that an LPA could not be found with this reference number
 
   @ui @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
-  Scenario: The user is asked for their role on the LPA if the data does not match
-    Given I am on the add an older LPA page
-    And I provide details that do not match a valid paper document
-    When I confirm that those details are correct
-    And I have provided my current address
-    Then I am asked for my role on the LPA
-
-  @ui @ff:allow_older_lpas:true
   @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given I am on the add an older LPA page
@@ -241,6 +228,7 @@ Feature: Add an older LPA
     Given I have reached the check details and consent page as the Attorney
     And I request to change my role
     When I confirm that I am the Donor
+    And I provide the attorney details
     Then I am taken back to the consent and check details page
     And I can see my role is now correctly set as the Donor
 
@@ -271,22 +259,6 @@ Feature: Add an older LPA
     Given I have reached the contact details page
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
-
-  @ui @ff:allow_older_lpas:true
-  Scenario Outline: The user is shown an error message when entering invalid donor details
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I am asked for my role on the LPA
-    And I confirm that I am the Attorney
-    When I provide invalid donor details of <firstnames> <surname> <dob>
-    Then I am told that my input is invalid because <reason>
-
-    Examples:
-      | firstnames | surname | dob        | reason                            |
-      | Donor      | Person  |            | Enter the donor's date of birth   |
-      |            | Person  | 01-01-1980 | Enter the donor's first names     |
-      | Donor      |         | 01-01-1980 | Enter the donor's last name       |
-      | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is taken back to the check answers page when lpa details match but is not cleansed

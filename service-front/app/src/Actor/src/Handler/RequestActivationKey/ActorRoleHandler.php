@@ -90,7 +90,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
             ? 'lpa.add.donor-details'
-            : 'lpa.add.contact-details';
+            : 'lpa.add.attorney-details';
     }
 
     public function lastPage(WorkflowState $state): string

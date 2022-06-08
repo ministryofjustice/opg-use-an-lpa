@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-01T13:39:51+00:00\n"
+"POT-Creation-Date: 2022-06-06T12:55:42+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -200,6 +200,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:12
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:11
@@ -2119,50 +2120,50 @@ msgstr ""
 "neu’n rhoddwr os ydych o dan 18 oed"
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:70
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr "Nodwch enw sefydliad"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:70
+#: src/Actor/templates/actor/form-error-messages.html.twig:73
 msgctxt "error"
 msgid "Enter your current password"
 msgstr "Teipiwch eich cyfrinair cyfredol"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:71
+#: src/Actor/templates/actor/form-error-messages.html.twig:74
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr "Mae’r cyfrinair cyfredol yn anghywir"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:72
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Enter your new password"
 msgstr "Teipiwch eich cyfrinair newydd"
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:73
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 "Nid yw eich cyfrinair newydd a’r cyfrinair i gadarnhau eich cyfrif yn cyfateb"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:74
+#: src/Actor/templates/actor/form-error-messages.html.twig:77
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr "Teipiwch eich cyfrinair eto i’w gadarnhau"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:77
+#: src/Actor/templates/actor/form-error-messages.html.twig:80
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr "Cadarnhau eich cyfeiriad e-bost"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:78
+#: src/Actor/templates/actor/form-error-messages.html.twig:81
 msgctxt "error"
 msgid "The emails did not match"
 msgstr "Nid oedd y cyfeiriadau e-bost yn cyfateb"
@@ -2454,7 +2455,8 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
-#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:70
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
@@ -3147,11 +3149,11 @@ msgstr "Rwyf am wirio LPA arall"
 msgid "Day"
 msgstr "Dydd"
 
-#: src/Common/templates/partials/govuk_form.html.twig:160
+#: src/Common/templates/partials/govuk_form.html.twig:161
 msgid "Month"
 msgstr "Mis"
 
-#: src/Common/templates/partials/govuk_form.html.twig:170
+#: src/Common/templates/partials/govuk_form.html.twig:172
 msgid "Year"
 msgstr "Blwyddyn"
 
@@ -4184,12 +4186,12 @@ msgid "Cancelled on %cancellationDate%"
 msgstr "Diddymwyd ar %cancellationDate%"
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:234
+#: src/Common/templates/partials/govuk_form.html.twig:237
 msgid "Show"
 msgstr "Dangos"
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:235
+#: src/Common/templates/partials/govuk_form.html.twig:238
 msgid "Hide"
 msgstr "Cuddio"
 
@@ -4967,11 +4969,13 @@ msgstr ""
 "Beth i’w wneud os ydych <a href=\"%link%\" class=\"govuk-link\">wedi newid "
 "cyfeiriad ac nad ydych wedi dweud wrthym</a>."
 
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:39
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:28
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
 msgid "First names"
 msgstr "Enwau cyntaf"
 
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:32
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:34
 msgid "Last name"
@@ -7006,3 +7010,49 @@ msgstr "Rhowch y cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:22
 msgid "What is your address on the paper LPA?"
 msgstr "Beth yw eich cyfeiriad ar yr atwrneiaeth arhosol bapur?"
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
+msgctxt "error"
+msgid "Enter the attorney's first names"
+msgstr "Rhowch enwau cyntaf yr atwrnai"
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:66
+msgctxt "error"
+msgid "Enter the attorney's last name"
+msgstr "Rhowch enw olaf yr atwrnai"
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:67
+msgctxt "error"
+msgid "Enter the attorney's date of birth"
+msgstr "Rhowch ddyddiad geni’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:21
+msgid "Attorney details"
+msgstr "Manylion yr atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:23
+msgid "Tell us the details of an attorney named on the LPA."
+msgstr "Dywedwch wrthym fanylion yr atwrnai a enwir ar yr LPA."
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:28
+msgid ""
+"If you  only have one attorney, enter their details here. If you have more "
+"than one attorney, enter the details of any one of them."
+msgstr ""
+"Os mai dim ond un atwrnai sydd gennych, rhowch ei fanylion yma. Os oes gennych "
+"fwy nag un atwrnai, nodwch eu manylion."
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:37
+msgid "Attorney's name"
+msgstr "Enw’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:49
+msgid "Attorney's date of birth"
+msgstr "Dyddiad geni’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:50
+msgid "For example, 08 04 2004"
+msgstr "Er enghraifft, 08 04 2004"
