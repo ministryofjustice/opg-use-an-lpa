@@ -17,6 +17,7 @@ variable "accounts" {
       is_production          = bool
       retention_in_days      = number
       pagerduty_service_name = string
+      pagerduty_service_id   = string
       opg_metrics = object({
         enabled                     = bool
         api_key_secretsmanager_name = string
