@@ -35,7 +35,11 @@
                                 {% trans %}Address on paper LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ data.address_on_paper ? data.address_on_paper : 'Same as above' }}
+                                {%  if data.address_on_paper %}
+                                    <pre class="govuk-body">{{ data.address_on_paper }}</pre>
+                                {% else %}
+                                    Same as above
+                                {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
                                 <a class="govuk-link" id="change-donors-name" href="{{ data.address_on_paper ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">

@@ -35,6 +35,8 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
+    const TEST_PAPER_ADDRESS = "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA";
+
     /**
      * @Then /^I am taken to the check answers page$/
      */
@@ -327,10 +329,12 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I can see my attorney role, donor details and telephone number$/
+     * @Given /^I can see my address, attorney role, donor details and telephone number$/
      */
-    public function iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber()
+    public function iCanSeeMyAddressAttorneyRoleDonorDetailsAndTelephoneNumber()
     {
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
         $this->ui->assertPageContainsText('Attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
@@ -338,10 +342,12 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I can see my attorney role, donor details and that I have not provided a telephone number$/
+     * @Given /^I can see my address, attorney role, donor details and that I have not provided a telephone number$/
      */
-    public function iCanSeeMyAttorneyRoleDonorDetailsAndThatIHaveNotProvidedATelephoneNumber()
+    public function iCanSeeMyAddressAttorneyRoleDonorDetailsAndThatIHaveNotProvidedATelephoneNumber()
     {
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
         $this->ui->assertPageContainsText('Attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
@@ -349,11 +355,23 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I can see my donor role and telephone number$/
+     * @Then /^I can see the paper address I have input$/
      */
-    public function iCanSeeMyDonorRoleAndTelephoneNumber()
+    public function iCanSeeThePaperAddressIHaveInput()
     {
+        $this->ui->assertPageContainsText(trim(preg_replace('/\s+/', ' ', self::TEST_PAPER_ADDRESS)));
+    }
+
+    /**
+     * @Given /^I can see my address, donor role, attorney details and telephone number$/
+     */
+    public function iCanSeeMyAddressDonorRoleAttorneyDetailsAndTelephoneNumber()
+    {
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
         $this->ui->assertPageContainsText('Donor');
+        $this->ui->assertPageContainsText($this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->attorneys[0]->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('0123456789');
     }
 
@@ -369,10 +387,14 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I can see my donor role and that I have not provided a telephone number$/
+     * @Given /^I can see my address, donor role, attorney details and that I have not provided a telephone number$/
      */
-    public function iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber()
+    public function iCanSeeMyAddressDonorRoleAttorneyDetailsAndThatIHaveNotProvidedATelephoneNumber()
     {
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
+        $this->ui->assertPageContainsText($this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->attorneys[0]->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('Donor');
         $this->ui->assertPageContainsText('Not provided');
     }
@@ -632,7 +654,7 @@ class RequestActivationKeyContext implements Context
         $this->iProvideTheDonorsDetails();
         $this->whenIEnterMyTelephoneNumber();
         $this->iAmAskedToConsentAndConfirmMyDetails();
-        $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
+        $this->iCanSeeMyAddressAttorneyRoleDonorDetailsAndTelephoneNumber();
     }
 
     /**
@@ -646,7 +668,7 @@ class RequestActivationKeyContext implements Context
         $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
         $this->iAmAskedToConsentAndConfirmMyDetails();
-        $this->iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber();
+        $this->iCanSeeMyAddressDonorRoleAttorneyDetailsAndThatIHaveNotProvidedATelephoneNumber();
     }
 
     /**
@@ -1088,7 +1110,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iInputAValidPaperLPAAddress()
     {
-        $this->ui->fillField('address_on_paper_area', "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA");
+        $this->ui->fillField('address_on_paper_area', self::TEST_PAPER_ADDRESS);
         $this->ui->pressButton('Continue');
     }
 
