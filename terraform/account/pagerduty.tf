@@ -68,9 +68,9 @@ data "aws_iam_policy_document" "pagerduty_sns_kms" {
 
 
 
-data "pagerduty_service" "pagerduty" {
-  name = local.account.pagerduty_service_name
-}
+# data "pagerduty_service" "pagerduty" {
+#   name = local.account.pagerduty_service_name
+# }
 
 data "pagerduty_vendor" "cloudwatch" {
   name = "Cloudwatch"
@@ -78,8 +78,9 @@ data "pagerduty_vendor" "cloudwatch" {
 
 resource "pagerduty_service_integration" "cloudwatch_integration" {
   name    = "${data.pagerduty_vendor.cloudwatch.name} ${local.environment} Account"
-  service = data.pagerduty_service.pagerduty.id
-  vendor  = data.pagerduty_vendor.cloudwatch.id
+  service = local.account.pagerduty_service_id
+  # service = data.pagerduty_service.pagerduty.id
+  vendor = data.pagerduty_vendor.cloudwatch.id
 }
 
 resource "aws_sns_topic" "cloudwatch_to_pagerduty" {
