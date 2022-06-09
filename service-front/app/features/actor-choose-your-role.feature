@@ -40,3 +40,11 @@ Feature: Choose your role
     And I am asked for my role on the LPA
     When I do not provide any selections for my role on the LPA
     Then I am shown an error telling me to select my role on the LPA
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is navigated to paper address page when clicking back and it has been previously filled in
+    Given I select the address not same as on paper LPA
+    And I have given the address on the paper LPA
+    When I am asked for my role on the LPA
+    And I click the Back link on the page
+    Then I am asked for my address from the paper LPA

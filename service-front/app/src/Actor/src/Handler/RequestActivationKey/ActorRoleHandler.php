@@ -98,7 +98,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : $this->lastPageByPreviousAnswers($state->addressOnPaper !== null);
+            : $this->lastPageByPreviousAnswers($state->actorAddressResponse === 'No' );
     }
 
     private function lastPageByPreviousAnswers(bool $filledAddressOnPaper): string
