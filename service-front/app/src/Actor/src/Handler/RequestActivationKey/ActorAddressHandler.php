@@ -36,6 +36,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
                 'actor_address_1' => $this->state($request)->actorAddress1,
                 'actor_address_2' => $this->state($request)->actorAddress2,
                 'actor_address_town' => $this->state($request)->actorAddressTown,
+                'actor_address_county' => $this->state($request)->actorAddressCounty,
             ]
         );
 
@@ -52,7 +53,6 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             [
                 'user'     => $this->user,
                 'form'     => $this->form->prepare(),
-                'postcode' => $this->state($request)->postcode,
                 'back'     => $this->lastPage($this->state($request))
             ]
         ));
@@ -67,6 +67,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             $this->state($request)->actorAddress1 = $postData['actor_address_1'];
             $this->state($request)->actorAddress2 = $postData['actor_address_2'];
             $this->state($request)->actorAddressTown = $postData['actor_address_town'];
+            $this->state($request)->actorAddressCounty = $postData['actor_address_county'];
             $this->state($request)->actorAddressResponse = $postData['actor_address_check_radio'];
 
             $nextPageName = $this->nextPage($this->state($request));

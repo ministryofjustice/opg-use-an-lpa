@@ -30,10 +30,11 @@ class ActorAddressTest extends TestCase
     public function getFormElements(): array
     {
         return [
-            '__csrf'             => Csrf::class,
-            'actor_address_1'    => Text::class,
-            'actor_address_2'    => Text::class,
-            'actor_address_town' => Text::class,
+            '__csrf'               => Csrf::class,
+            'actor_address_1'      => Text::class,
+            'actor_address_2'      => Text::class,
+            'actor_address_town'   => Text::class,
+            'actor_address_county' => Text::class,
             'actor_address_check_radio' => Radio::class
         ];
     }

@@ -41,12 +41,10 @@
                         'autocomplete': 'address-level1'
                     }) }}
 
-                    <div class="govuk-form-group">
-                        <span class="govuk-label">
-                            Postcode
-                        </span>
-                        <p class="govuk-body govuk-!-font-weight-bold">{{ postcode }}</p>
-                    </div>
+                    {{ govuk_form_element(form.get('actor_address_county'), {
+                        'label': 'County (optional)' | trans,
+                        'autocomplete': 'actor-address-county',
+                    }) }}
 
                     <h2 class="govuk-heading-l">{% trans %}Is this the same address as your address on the paper LPA?{% endtrans %}</h2>
 

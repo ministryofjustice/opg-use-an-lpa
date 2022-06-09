@@ -44,6 +44,7 @@ class RequestActivationKey implements WorkflowState
         public ?string $actorAddress1 = null,
         public ?string $actorAddress2 = null,
         public ?string $actorAddressTown = null,
+        public ?string $actorAddressCounty = null,
         public ?string $attorneyFirstNames = null,
         public ?string $attorneyLastName = null,
         ?string $attorneyDob = null,
@@ -88,6 +89,7 @@ class RequestActivationKey implements WorkflowState
         $this->actorAddress1 = null;
         $this->actorAddress2 = null;
         $this->actorAddressTown = null;
+        $this->actorAddressCounty = null;
         $this->telephone = null;
         $this->noTelephone = null;
         $this->addressOnPaper = null;
