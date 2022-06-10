@@ -25,7 +25,7 @@
                                 {{ data.actor_address_town }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.actor-address') }}">
+                                <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -42,7 +42,7 @@
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-donors-name" href="{{ data.address_on_paper ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
+                                <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
                                     {% if data.address_on_paper %}
                                         {% trans %}Change<span class="govuk-visually-hidden"> address on paper</span>{% endtrans %}
                                     {% else %}
@@ -108,7 +108,7 @@
                                         {{ data.attorney_first_names ~ ' ' ~  data.attorney_last_name }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.attorney-details') }}">
+                                        <a class="govuk-link" id="change-attorney-name" href="{{ path('lpa.add.attorney-details') }}">
                                             {% trans %}Change<span class="govuk-visually-hidden"> attorney's name</span>{% endtrans %}
                                         </a>
                                     </dd>
@@ -121,7 +121,7 @@
                                         {{ code_date(data.attorney_dob) }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" id="change-donors-date-of-birth" href="{{ path('lpa.add.attorney-details') }}">
+                                        <a class="govuk-link" id="change-attorney-date-of-birth" href="{{ path('lpa.add.attorney-details') }}">
                                             {% trans %}Change<span class="govuk-visually-hidden"> attorney's date of birth</span>{% endtrans %}
                                         </a>
                                     </dd>
