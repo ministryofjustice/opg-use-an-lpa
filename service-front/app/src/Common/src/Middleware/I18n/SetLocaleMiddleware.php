@@ -36,13 +36,13 @@ class SetLocaleMiddleware implements MiddlewareInterface
         $path = $uri->getPath();
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
-            Locale::setDefault($this->defaultLocale ?: $this->fallbackLocale);
+            Locale::setDefault($this->defaultLocale ?? $this->fallbackLocale);
 
             return $handler->handle($request->withAttribute('locale', Locale::getDefault()));
         }
 
         $locale = $matches['locale'];
-        Locale::setDefault(Locale::canonicalize($locale));
+        Locale::setDefault(Locale::canonicalize($locale . '_GB'));
         $this->translator->setLocale(Locale::getDefault());
         $this->helper->setBasePath($locale);
 

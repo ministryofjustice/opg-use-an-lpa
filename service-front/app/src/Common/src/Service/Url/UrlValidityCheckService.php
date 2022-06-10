@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Common\Service\Url;
 
 use Laminas\Diactoros\ServerRequestFactory;
+use Locale;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouterInterface;
-use Locale;
 
 /**
  * Class UrlValidityCheckService
@@ -63,8 +63,7 @@ class UrlValidityCheckService
     public function checkRefererRouteValid(string $refererUrl): bool
     {
         if ($refererUrl !== null) {
-
-            if ($this->locale === 'cy') {
+            if ($this->locale === 'cy_GB') {
                 $refererUrl = str_replace('/cy', '', $refererUrl);
             }
 
@@ -93,7 +92,7 @@ class UrlValidityCheckService
 
     public function generateHomeUrlForCurrentLocale(): string
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy_GB') {
             $homeUrl = $this->urlHelper->generate('home');
             return str_replace('/home', '/cy/home', $homeUrl);
         } else {
