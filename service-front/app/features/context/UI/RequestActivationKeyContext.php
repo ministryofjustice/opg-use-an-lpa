@@ -35,7 +35,7 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    const TEST_PAPER_ADDRESS = "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA";
+    private const TEST_PAPER_ADDRESS = "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA";
 
     /**
      * @Then /^I am taken to the check answers page$/
@@ -370,7 +370,9 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
         $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
         $this->ui->assertPageContainsText('Donor');
-        $this->ui->assertPageContainsText($this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname);
+        $this->ui->assertPageContainsText(
+            $this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname
+        );
         $this->ui->assertPageContainsText((new DateTime($this->lpa->attorneys[0]->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('0123456789');
     }
@@ -393,7 +395,9 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
         $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
-        $this->ui->assertPageContainsText($this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname);
+        $this->ui->assertPageContainsText(
+            $this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname
+        );
         $this->ui->assertPageContainsText((new DateTime($this->lpa->attorneys[0]->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('Donor');
         $this->ui->assertPageContainsText('Not provided');
@@ -768,7 +772,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideInvalidDonorDetailsOf($actor, $firstnames, $surname, $dob)
     {
-        if($actor === 'donor') {
+        if ($actor === 'donor') {
             $this->ui->assertPageAddress('/lpa/add/donor-details');
             $this->ui->fillField('donor_first_names', $firstnames);
             $this->ui->fillField('donor_last_name', $surname);
@@ -780,7 +784,7 @@ class RequestActivationKeyContext implements Context
                 $this->ui->fillField('donor_dob[year]', $dobParts[2]);
             }
         }
-        if($actor === 'attorney') {
+        if ($actor === 'attorney') {
             $this->ui->assertPageAddress('/lpa/add/attorney-details');
             $this->ui->fillField('attorney_first_names', $firstnames);
             $this->ui->fillField('attorney_last_name', $surname);
