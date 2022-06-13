@@ -36,6 +36,14 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @Then /^I am taken to the check answers page$/
+     */
+    public function iAmTakenToTheCheckAnswersPage()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+    }
+
+    /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
      */
     public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA()
@@ -59,8 +67,11 @@ class RequestActivationKeyContext implements Context
     public function givenIHaveReachedTheContactDetailsPage()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iHaveProvidedMyCurrentAddress();
         $this->iAmAskedForMyRoleOnTheLPA();
         $this->iConfirmThatIAmThe('Donor');
+        $this->iAmAskedForTheAttorneyDetails();
+        $this->iProvideTheAttorneyDetails();
     }
 
     /**
@@ -70,6 +81,30 @@ class RequestActivationKeyContext implements Context
     {
         $this->activationCode = 'ACTVATIONCOD';
         $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
+    }
+
+    /**
+     * @Then /^I am asked for the attorney details$/
+     */
+    public function iAmAskedForTheAttorneyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/attorney-details');
+        $this->ui->assertPageContainsText('Attorney details');
+    }
+
+    /**
+     * @When /^I provide the attorney details$/
+     */
+    public function iProvideTheAttorneyDetails()
+    {
+        $this->ui->assertPageAddress('/lpa/add/attorney-details');
+        $this->ui->fillField('attorney_first_names', $this->lpa->attorneys[0]->firstname);
+        $this->ui->fillField('attorney_last_name', $this->lpa->attorneys[0]->surname);
+        $attorneyDob = new DateTime($this->lpa->attorneys[0]->dob);
+        $this->ui->fillField('attorney_dob[day]', $attorneyDob->format('d'));
+        $this->ui->fillField('attorney_dob[month]', $attorneyDob->format('m'));
+        $this->ui->fillField('attorney_dob[year]', $attorneyDob->format('Y'));
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -105,6 +140,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked for my role on the LPA$/
+     * @Given /^I have not given the address on the paper LPA$/
      */
     public function iAmAskedForMyRoleOnTheLPA()
     {
@@ -173,6 +209,7 @@ class RequestActivationKeyContext implements Context
     public function iAmOnTheDonorDetailsPage()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iHaveProvidedMyCurrentAddress();
         $this->iConfirmThatIAmThe('Attorney');
         $this->ui->assertPageAddress('/lpa/add/donor-details');
     }
@@ -384,6 +421,15 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I confirm my role on the LPA as an (.*)$/
+     */
+    public function iConfirmMyRoleOnTheLPAAsAn($role)
+    {
+        $this->iAmAskedForMyRoleOnTheLPA();
+        $this->iConfirmThatIAmThe($role);
+    }
+
+    /**
      * @Given /^I confirm that I am the (.*)$/
      */
     public function iConfirmThatIAmThe($role)
@@ -444,6 +490,45 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->assertFieldNotContains('first_names', 'The Attorney');
         $this->ui->assertFieldNotContains('last_name', 'Person');
+    }
+
+    /**
+     * @Given /^I have provided my current address$/
+     */
+    public function iHaveProvidedMyCurrentAddress()
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-address');
+        $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I provide details of the donor to verify that I am an attorney$/
+     */
+    public function iProvideDetailsOfTheDonorToVerifyThatIAmAnAttorney()
+    {
+        $this->iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney();
+        $this->iProvideTheDonorSDetails();
+    }
+
+    /**
+     * @Then /^I will be asked for my full address$/
+     */
+    public function iWillBeAskedForMyFullAddress()
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-address');
+        $this->ui->assertPageContainsText('What is your address?');
+    }
+
+    /**
+     * @Given /^I have given the address on the paper LPA$/
+     */
+    public function iHaveGivenTheAddressOnThePaperLPA()
+    {
+        $this->iAmAskedForMyAddressFromThePaperLPA();
+        $this->iInputAValidPaperLPAAddress();
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -542,8 +627,9 @@ class RequestActivationKeyContext implements Context
     public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorney()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iHaveProvidedMyCurrentAddress();
         $this->iConfirmThatIAmThe('Attorney');
-        $this->iProvideTheDonorSDetails();
+        $this->iProvideTheDonorsDetails();
         $this->whenIEnterMyTelephoneNumber();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyAttorneyRoleDonorDetailsAndTelephoneNumber();
@@ -555,7 +641,9 @@ class RequestActivationKeyContext implements Context
     public function iHaveReachedTheCheckDetailsAndConsentPageAsTheDonor()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iHaveProvidedMyCurrentAddress();
         $this->iConfirmThatIAmThe('Donor');
+        $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyDonorRoleAndThatIHaveNotProvidedATelephoneNumber();
@@ -654,19 +742,33 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I provide invalid donor details of (.*) (.*) (.*)$/
+     * @When /^I provide invalid (.*) details of (.*) (.*) (.*)$/
      */
-    public function iProvideInvalidDonorDetailsOf($firstnames, $surname, $dob)
+    public function iProvideInvalidDonorDetailsOf($actor, $firstnames, $surname, $dob)
     {
-        $this->ui->assertPageAddress('/lpa/add/donor-details');
-        $this->ui->fillField('donor_first_names', $firstnames);
-        $this->ui->fillField('donor_last_name', $surname);
+        if($actor === 'donor') {
+            $this->ui->assertPageAddress('/lpa/add/donor-details');
+            $this->ui->fillField('donor_first_names', $firstnames);
+            $this->ui->fillField('donor_last_name', $surname);
 
-        if (!empty($dob)) {
-            $dobParts = explode('-', $dob);
-            $this->ui->fillField('donor_dob[day]', $dobParts[0]);
-            $this->ui->fillField('donor_dob[month]', $dobParts[1]);
-            $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+            if (!empty($dob)) {
+                $dobParts = explode('-', $dob);
+                $this->ui->fillField('donor_dob[day]', $dobParts[0]);
+                $this->ui->fillField('donor_dob[month]', $dobParts[1]);
+                $this->ui->fillField('donor_dob[year]', $dobParts[2]);
+            }
+        }
+        if($actor === 'attorney') {
+            $this->ui->assertPageAddress('/lpa/add/attorney-details');
+            $this->ui->fillField('attorney_first_names', $firstnames);
+            $this->ui->fillField('attorney_last_name', $surname);
+
+            if (!empty($dob)) {
+                $dobParts = explode('-', $dob);
+                $this->ui->fillField('attorney_dob[day]', $dobParts[0]);
+                $this->ui->fillField('attorney_dob[month]', $dobParts[1]);
+                $this->ui->fillField('attorney_dob[year]', $dobParts[2]);
+            }
         }
 
         $this->ui->pressButton('Continue');
@@ -769,7 +871,7 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I provide the donor's details$/
      */
-    public function iProvideTheDonorSDetails()
+    public function iProvideTheDonorsDetails()
     {
         $this->ui->assertPageAddress('/lpa/add/donor-details');
         $this->ui->fillField('donor_first_names', $this->lpa->donor->firstname);
@@ -964,6 +1066,32 @@ class RequestActivationKeyContext implements Context
         $this->iProvideDetailsThatDoNotMatchAValidPaperDocument();
         $this->iConfirmTheDetailsIProvidedAreCorrect();
     }
+
+    /**
+     * @Given /^I am asked for my address from the paper LPA$/
+     */
+    public function iAmAskedForMyAddressFromThePaperLPA()
+    {
+        $this->ui->visit('/lpa/add/address-on-paper');
+    }
+
+    /**
+     * @Then /^I am shown an error telling me to input the paper address$/
+     */
+    public function iAmShownAnErrorTellingMeToInputThePaperAddress()
+    {
+        $this->ui->assertPageContainsText('Enter your address on the paper LPA');
+    }
+
+    /**
+     * @When /^I input a valid paper LPA address$/
+     */
+    public function iInputAValidPaperLPAAddress()
+    {
+        $this->ui->fillField('address_on_paper_area', "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA");
+        $this->ui->pressButton('Continue');
+    }
+
 
     protected function fillAndSubmitOlderLpaForm()
     {
@@ -1263,6 +1391,7 @@ class RequestActivationKeyContext implements Context
     public function iProvideTheAdditionalDetailsAsked()
     {
         $this->iConfirmThatIAmThe('Donor');
+        $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
     }
 }

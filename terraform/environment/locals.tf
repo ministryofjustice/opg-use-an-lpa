@@ -59,6 +59,7 @@ variable "environments" {
       lpa_codes_endpoint                        = string
       lpas_collection_endpoint                  = string
       pagerduty_service_name                    = string
+      pagerduty_service_id                      = string
       session_expires_use                       = number
       session_expires_view                      = number
       session_expires_admin                     = number

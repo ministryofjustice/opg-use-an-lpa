@@ -148,6 +148,7 @@
 
                     {{ govuk_form_element(fieldset.get('day'), {
                         'label': 'Day' | trans,
+                        'autocomplete': 'bday-day',
                         'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
                         'inputmode': 'numeric',
                         'pattern': '[0-9]*'
@@ -158,6 +159,7 @@
 
                     {{ govuk_form_element(fieldset.get('month'), {
                         'label': 'Month' | trans,
+                        'autocomplete': 'bday-month',
                         'attr' : {'class': 'govuk-date-input__input govuk-input--width-2', 'label_class': 'govuk-date-input__label'},
                         'inputmode': 'numeric',
                         'pattern': '[0-9]*'
@@ -168,6 +170,7 @@
 
                     {{ govuk_form_element(fieldset.get('year'), {
                         'label': 'Year' | trans,
+                        'autocomplete': 'bday-year',
                         'attr' : {'class': 'govuk-date-input__input govuk-input--width-4', 'label_class': 'govuk-date-input__label'},
                         'inputmode': 'numeric',
                         'pattern': '[0-9]*'
@@ -246,3 +249,12 @@
             {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
             {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}/>
 {%- endblock form_input -%}
+
+{%- block form_input_area -%}
+        <textarea class="govuk-textarea"
+                  id="{{ element.getName() }}" name="{{ element.getName() }}"
+                  rows="{% if rows is defined %}{{ rows }}{% else %}5{% endif %}"
+                  {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
+                  {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}
+        ></textarea>
+{%- endblock form_input_area -%}

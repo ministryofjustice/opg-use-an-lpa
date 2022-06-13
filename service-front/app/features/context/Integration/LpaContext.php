@@ -318,6 +318,7 @@ class LpaContext extends BaseIntegrationContext
      * @Given /^I am on the add an LPA page$/
      * @Given /^I provide the additional details asked$/
      * @Given /^I am asked to consent and confirm my details$/
+     * @Given /^I have provided my current address$/
      */
     public function iAmOnTheAddAnLPAPage()
     {

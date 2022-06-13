@@ -20,6 +20,8 @@ class RequestActivationKey implements WorkflowState
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
+    public ?DateTimeImmutable $attorneyDob;
+
     /**
      * Lovely constructor promotion
      */
@@ -35,6 +37,13 @@ class RequestActivationKey implements WorkflowState
         public ?string $donorFirstNames = null,
         public ?string $donorLastName = null,
         ?string $donorDob = null,
+        public ?string $actorAddress1 = null,
+        public ?string $actorAddress2 = null,
+        public ?string $actorAddressTown = null,
+        public ?string $attorneyFirstNames = null,
+        public ?string $attorneyLastName = null,
+        ?string $attorneyDob = null,
+        public ?string $addressOnPaper = null,
         public ?string $telephone = null,
         public ?bool $noTelephone = null,
         // not used for entered data but to track workflow path
@@ -48,6 +57,7 @@ class RequestActivationKey implements WorkflowState
         // if only constructor promotion allowed data transformers
         $this->dob = $dob !== null ? new DateTimeImmutable($dob) : null;
         $this->donorDob = $donorDob !== null ? new DateTimeImmutable($donorDob) : null;
+        $this->attorneyDob = $attorneyDob !== null ? new DateTimeImmutable($attorneyDob) : null;
     }
 
     /**
@@ -63,8 +73,15 @@ class RequestActivationKey implements WorkflowState
         $this->donorFirstNames = null;
         $this->donorLastName = null;
         $this->donorDob = null;
+        $this->attorneyFirstNames = null;
+        $this->attorneyLastName = null;
+        $this->attorneyDob = null;
+        $this->actorAddress1 = null;
+        $this->actorAddress2 = null;
+        $this->actorAddressTown = null;
         $this->telephone = null;
         $this->noTelephone = null;
+        $this->addressOnPaper = null;
 
         $this->actorUid = null;
         $this->needsCleansing = false;
