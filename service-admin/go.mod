@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-use-an-lpa/service-admin
 
-go 1.16
+go 1.18
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
