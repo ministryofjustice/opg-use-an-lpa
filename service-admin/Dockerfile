@@ -22,7 +22,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o admin cmd/admin/main.go
 
 # Bundle all
-FROM alpine:3.12 as production
+FROM alpine:3.16.0 as production
 
 WORKDIR /go/bin
 
