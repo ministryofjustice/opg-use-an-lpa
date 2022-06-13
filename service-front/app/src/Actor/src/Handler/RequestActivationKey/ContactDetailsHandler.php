@@ -79,6 +79,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
         }
 
         $required = parent::isMissingPrerequisite($request)
+            || $this->state($request)->actorAddress1 === null
             || $this->state($request)->getActorRole() === null;
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
@@ -99,14 +100,12 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
     public function lastPage(WorkflowState $state): string
     {
         /** @var RequestActivationKey $state **/
-        if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
-            return 'lpa.add.donor-details';
-        }
-
         if ($state->needsCleansing) {
             return 'lpa.check-answers';
         }
 
-        return 'lpa.add.actor-role';
+        return ($state->telephone !== null || $state->noTelephone)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.actor-role';
     }
 }

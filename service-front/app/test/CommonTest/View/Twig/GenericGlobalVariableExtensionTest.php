@@ -24,7 +24,7 @@ class GenericGlobalVariableExtensionTest extends TestCase
 
         $expectedConfig = [
             'application' => 'actor',
-            'currentLocale' => 'cy',
+            'currentLocale' => 'cy-gb',
         ];
 
         $this->assertEquals($expectedConfig, $genericConfig);
