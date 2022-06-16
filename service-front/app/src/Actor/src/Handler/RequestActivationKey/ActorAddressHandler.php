@@ -40,12 +40,12 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             ]
         );
 
-        if ($this->state($request)->getActorAddressCheckResponse() === 'Yes') {
-            $this->form->setData(['actor_address_check_radio' => 'Yes']);
-        } elseif ($this->state($request)->getActorAddressCheckResponse() === 'No') {
-            $this->form->setData(['actor_address_check_radio' => 'No']);
-        } elseif ($this->state($request)->getActorAddressCheckResponse() === 'Not sure') {
-            $this->form->setData(['actor_address_check_radio' => 'Not sure']);
+        if ($this->state($request)->getActorAddressCheckResponse() !== null) {
+            $this->form->setData(
+                [
+                    'actor_address_check_radio' => $this->state($request)->getActorAddressCheckResponse()
+                ]
+            );
         }
 
         return new HtmlResponse($this->renderer->render(
@@ -92,7 +92,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             return 'lpa.add.check-details-and-consent';
         }
 
-        return $state->getActorAddressCheckResponse() === 'No'
+        return $state->getActorAddressCheckResponse() === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO
             ? 'lpa.add.address-on-paper'
             : 'lpa.add.actor-role';
     }
