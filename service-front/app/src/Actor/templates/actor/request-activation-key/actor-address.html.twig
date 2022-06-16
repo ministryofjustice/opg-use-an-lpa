@@ -48,6 +48,10 @@
 
                     <h2 class="govuk-heading-l">{% trans %}Is this the same address as your address on the paper LPA?{% endtrans %}</h2>
 
+                    {% set value_yes =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_YES')  %}
+                    {% set value_no =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO')  %}
+                    {% set value_not_sure =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE')  %}
+
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
 
@@ -55,15 +59,15 @@
                                 [
                                     {
                                         'label': 'Yes, it is the same as my address on the paper LPA'|trans,
-                                        'value': 'Yes'
+                                        'value':  value_yes
                                     },
                                     {
                                         'label': 'No, it is different than my address on the paper LPA'|trans,
-                                        'value': 'No'
+                                        'value': value_no
                                     },
                                     {
                                         'label': 'I am not sure if it\'s the same address on the paper LPA'|trans,
-                                        'value': 'Not sure'
+                                        'value': value_not_sure
                                     }
                                 ]}
                             )}}
