@@ -139,7 +139,7 @@ class RequestActivationKey implements WorkflowState
      * TODO replace with enums at PHP 8.1
      *
      * @param string $addressResponse
-     * @psalm-param self::ACTOR_* $addressResponse
+     * @psalm-param self::ACTOR_ADDRESS_SELECTION_* $addressResponse
      *
      * @throws RuntimeException
      */
