@@ -122,9 +122,10 @@ Feature: Add an older LPA
     Then I can only see my telephone number
 
   @ui @ff:allow_older_lpas:true
-  Scenario: An attorney user is asked for their address if they have a partial match
-    Given My LPA has been found but my details did not match
-    Then I will be asked for my full address
+  Scenario: The attorney is asked for their contact details after providing donor details
+    Given I am on the donor details page
+    When I provide the donor's details
+    Then I am asked for my contact details
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is not shown a warning on the check answers page if allow older lpas flag is on
@@ -158,7 +159,7 @@ Feature: Add an older LPA
     Then I am told that I must enter a phone number or select that I cannot take calls
 
   @ui @ff:allow_older_lpas:true
-  Scenario: The user can is shown the correct information on the check and consent page
+  Scenario: The user is shown the correct information on the check and consent page
     Given My LPA has been found but my details did not match
     And I have provided my current address
     And I confirm that I am the Donor

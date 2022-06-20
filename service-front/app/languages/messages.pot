@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-06-07T15:30:12+00:00\n"
+"POT-Creation-Date: 2022-06-16T16:32:22+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1528,49 +1528,49 @@ msgid "Check your date of birth is correct - you cannot be an attorney or donor 
 msgstr ""
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:70
+#: src/Actor/templates/actor/form-error-messages.html.twig:72
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:73
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Enter your current password"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:74
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:75
+#: src/Actor/templates/actor/form-error-messages.html.twig:77
 msgctxt "error"
 msgid "Enter your new password"
 msgstr ""
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:76
+#: src/Actor/templates/actor/form-error-messages.html.twig:78
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:77
+#: src/Actor/templates/actor/form-error-messages.html.twig:79
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:80
+#: src/Actor/templates/actor/form-error-messages.html.twig:82
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr ""
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:81
+#: src/Actor/templates/actor/form-error-messages.html.twig:83
 msgctxt "error"
 msgid "The emails did not match"
 msgstr ""
@@ -1790,7 +1790,7 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:49
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:74
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:54
@@ -4850,15 +4850,15 @@ msgstr ""
 msgid "What is your address?"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
 msgid "Address line 1"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:35
 msgid "Address line 2 (optional)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:40
 msgid "Town or city"
 msgstr ""
 
@@ -4924,4 +4924,46 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:28
 msgid "If you’re named on more than one LPA, you may have entered the reference number for a different LPA. The letter with the activation key will also have the matching LPA reference number on it."
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:68
+msgctxt "error"
+msgid "Select whether this is the same address as your address on the paper LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
+msgid "We need some more details"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:21
+msgid "We need a few extra details to make sure we have the right LPA for your activation key request."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:22
+msgid "What is your current address?"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:23
+msgid "Your activation key will be posted to this address."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:45
+msgid "County (optional)"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:49
+msgid "Is this the same address as your address on the paper LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:57
+msgid "Yes, it is the same as my address on the paper LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:61
+msgid "No, it is different than my address on the paper LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:65
+msgid "I am not sure if it's the same address on the paper LPA"
 msgstr ""

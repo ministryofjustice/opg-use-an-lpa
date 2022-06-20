@@ -75,9 +75,9 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
     public function nextPage(WorkflowState $state): string
     {
         /** @var RequestActivationKey $state **/
-        if ($this->hasFutureAnswersInState($state)) {
-            return 'lpa.add.check-details-and-consent';
-        }
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.actor-role';
 
         return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
             ? 'lpa.add.donor-details'
@@ -89,6 +89,6 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : 'lpa.check-answers';
+            : 'lpa.add.actor-address';
     }
 }
