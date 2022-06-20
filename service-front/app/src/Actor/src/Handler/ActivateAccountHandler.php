@@ -98,6 +98,7 @@ class ActivateAccountHandler extends AbstractHandler
                     'flashMessage'
                 );
                 $flash->flash(self::ACCOUNT_ACTIVATED_FLASH_MSG, $message);
+
                 return $this->redirectToRoute('login');
             }
         }
