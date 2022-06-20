@@ -36,6 +36,12 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @var RequestInterface Used to store external requests made to a mocked handler for
+     *                       subsequent "Then" step verification.
+     */
+    private RequestInterface $requestBody;
+
+    /**
      * @Then /^I am taken to the check answers page$/
      */
     public function iAmTakenToTheCheckAnswersPage()
@@ -593,6 +599,22 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^My current address is recorded in the Sirius task$/
+     */
+    public function myCurrentAddressIsRecordedInTheSiriusTask()
+    {
+        assertStringContainsString(
+            sprintf(
+                'Current postal address: %s, %s, %s\n',
+                ($this->lpa->donor->addresses[0])->addressLine1,
+                ($this->lpa->donor->addresses[0])->town,
+                strtoupper(($this->lpa->donor->addresses[0])->postcode)
+            ),
+            $this->requestBody->getBody()->getContents()
+        );
+    }
+
+    /**
      * @Given /^starts the Add an Older LPA journey$/
      */
     public function startsTheAddAnOlderLPAJourney()
@@ -1110,6 +1132,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @When /^I enter my telephone number$/
+     * @Given I provide my telephone number
      */
     public function whenIEnterMyTelephoneNumber()
     {
@@ -1429,6 +1452,10 @@ class RequestActivationKeyContext implements Context
                     [],
                     json_encode($data)
                 )
+            )->inspectRequest(
+                function (RequestInterface $request) {
+                    $this->requestBody = $request;
+                }
             );
 
         // API call for Notify
