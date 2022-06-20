@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\Handler\AbstractHandler;
 use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
@@ -31,6 +34,9 @@ class ActivateAccountHandler extends AbstractHandler
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
 
+    private TranslatorInterface $translator;
+    public const ACCOUNT_ACTIVATED_FLASH_MSG = 'account_activated_flash_msg';
+
     /**
      * ActivateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
@@ -38,19 +44,22 @@ class ActivateAccountHandler extends AbstractHandler
      * @param UserService $userService
      * @param EmailClient $emailClient
      * @param ServerUrlHelper $serverUrlHelper
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
         EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper
+        ServerUrlHelper $serverUrlHelper,
+        TranslatorInterface $translator
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
         $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -73,13 +82,23 @@ class ActivateAccountHandler extends AbstractHandler
             /** @var bool|string $activated */
             $activated = $this->userService->activate($activationToken);
 
+            /** @var FlashMessagesInterface $flash */
+            $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
             if (is_string($activated)) {
                 $loginUrl = $this->urlHelper->generate('login');
                 $signInLink = $this->serverUrlHelper->generate($loginUrl);
 
                 $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
 
-                return new HtmlResponse($this->renderer->render('actor::activate-account'));
+                $message = $this->translator->translate(
+                    'Account activated successfully',
+                    [],
+                    null,
+                    'flashMessage'
+                );
+                $flash->flash(self::ACCOUNT_ACTIVATED_FLASH_MSG, $message);
+                return $this->redirectToRoute('login');
             }
         }
 
