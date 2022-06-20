@@ -1889,7 +1889,8 @@ class AccountContext implements Context
      */
     public function myAccountIsActivatedAndIReceiveAConfirmationEmail()
     {
-        $this->ui->assertPageContainsText('Account activated');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Account activated successfully');
         $this->ui->assertPageContainsText('sign in');
     }
 

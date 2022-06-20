@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-16T16:32:22+00:00\n"
+"POT-Creation-Date: 2022-06-20T15:28:30+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -174,7 +174,6 @@ msgstr ""
 msgid "Confirm your new email address"
 msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 
-#: src/Actor/templates/actor/activate-account.html.twig:10
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:11
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:11
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:11
@@ -253,20 +252,6 @@ msgstr ""
 "cyfeiriad e-bost newydd i <a href=\"%link%\" class=\"govuk-link\">fewngofnodi</"
 "a>."
 
-#: src/Actor/templates/actor/activate-account.html.twig:18
-msgid "Account activated"
-msgstr "Cyfrif wedi’i gadarnhau"
-
-#: src/Actor/templates/actor/activate-account.html.twig:23
-msgid "Thank you. We've now activated your account."
-msgstr "Diolch yn fawr. Rydym wedi cadarnhau eich cyfrif."
-
-#: src/Actor/templates/actor/activate-account.html.twig:24
-msgid "Please <a href=\"%link%\" class=\"govuk-link\">sign in</a>"
-msgstr ""
-"Gallwch nawr <a href=\"%link%\" class=\"govuk-link\">fewngofnodi i’ch cyfrif</"
-"a>"
-
 #: src/Actor/templates/actor/create-account.html.twig:27
 msgid "Create an account"
 msgstr "Creu cyfrif"
@@ -315,7 +300,7 @@ msgstr "Newid eich cyfrinair"
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
 
-#: src/Actor/templates/actor/login.html.twig:47
+#: src/Actor/templates/actor/login.html.twig:48
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
@@ -1717,7 +1702,7 @@ msgstr ""
 "Nodwch eich cyfeiriad e-bost isod. Os oes yna gyfrif ar gyfer y cyfeiriad e-"
 "bost hwn, byddwn yn anfon dolen atoch i ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/login.html.twig:44
+#: src/Actor/templates/actor/login.html.twig:45
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
 msgid "Email address"
@@ -1791,7 +1776,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:51
+#: src/Actor/templates/actor/login.html.twig:52
 msgid "Sign in"
 msgstr "Mewngofnodi"
 
@@ -2322,7 +2307,7 @@ msgstr ""
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
 
-#: src/Actor/templates/actor/login.html.twig:27
+#: src/Actor/templates/actor/login.html.twig:28
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr "Mewngofnodi i’ch cyfrif Defnyddio atwrneiaeth arhosol"
 
@@ -2336,7 +2321,7 @@ msgstr ""
 "dal angen i chi <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a> i allu "
 "defnyddio’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/login.html.twig:57
+#: src/Actor/templates/actor/login.html.twig:58
 msgid "Forgotten your password?"
 msgstr "Wedi anghofio eich cyfrinair?"
 
@@ -2443,7 +2428,7 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:74
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:78
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:48
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:54
@@ -6175,7 +6160,7 @@ msgstr ""
 "Nid ydym wedi gallu dod o hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-"
 "bost a’r cyfrinair hwnnw. Gwiriwch eich manylion a rhowch gynnig arall arni."
 
-#: src/Actor/templates/actor/login.html.twig:31
+#: src/Actor/templates/actor/login.html.twig:32
 msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
 msgstr "Mewngofnodi neu <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a>."
 
@@ -6205,7 +6190,7 @@ msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf:"
 msgid "8 characters"
 msgstr "8 o nodau"
 
-#: src/Actor/templates/actor/login.html.twig:36
+#: src/Actor/templates/actor/login.html.twig:37
 msgid ""
 "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
 "you'll still need to create an account on this service to use the LPA online."
@@ -6912,7 +6897,7 @@ msgstr "Rydych chi wedi gosod eich dewisiadau cwcis."
 msgid "Go back to the page you were looking at"
 msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni."
 
-#: src/Actor/templates/actor/login.html.twig:40
+#: src/Actor/templates/actor/login.html.twig:41
 msgid ""
 "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link"
 "%>Make a lasting power of attorney service.</a>"
@@ -7116,16 +7101,29 @@ msgid "Is this the same address as your address on the paper LPA?"
 msgstr ""
 "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr atwrneiaeth arhosol bapur?"
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:57
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:61
 msgid "Yes, it is the same as my address on the paper LPA"
 msgstr "Ydy, mae’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol bapur"
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:61
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:65
 msgid "No, it is different than my address on the paper LPA"
 msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr atwrneiaeth arhosol bapur"
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:65
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:69
 msgid "I am not sure if it's the same address on the paper LPA"
 msgstr ""
 "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol "
 "bapur"
+
+#: src/Actor/src/Handler/ActivateAccountHandler.php:94
+msgctxt "flashMessage"
+msgid "Account activated successfully"
+msgstr "Cyfrif wedi’i actifadu’n llwyddiannus"
+
+#~ msgid "Thank you. We've now activated your account."
+#~ msgstr "Diolch yn fawr. Rydym wedi cadarnhau eich cyfrif."
+
+#~ msgid "Please <a href=\"%link%\" class=\"govuk-link\">sign in</a>"
+#~ msgstr ""
+#~ "Gallwch nawr <a href=\"%link%\" class=\"govuk-link\">fewngofnodi i’ch "
+#~ "cyfrif</a>"
