@@ -35,8 +35,6 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const TEST_PAPER_ADDRESS = "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA";
-
     /**
      * @Then /^I am taken to the check answers page$/
      */
@@ -359,7 +357,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iCanSeeThePaperAddressIHaveInput()
     {
-        $this->ui->assertPageContainsText(trim(preg_replace('/\s+/', ' ', self::TEST_PAPER_ADDRESS)));
+        $this->ui->assertPageContainsText("Unit 18 Peacock Avenue Boggy Bottom Hertfordshire DE65 AAA");
     }
 
     /**
@@ -1114,7 +1112,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iInputAValidPaperLPAAddress()
     {
-        $this->ui->fillField('address_on_paper_area', self::TEST_PAPER_ADDRESS);
+        $this->ui->fillField('address_on_paper_area', "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA");
         $this->ui->pressButton('Continue');
     }
 
