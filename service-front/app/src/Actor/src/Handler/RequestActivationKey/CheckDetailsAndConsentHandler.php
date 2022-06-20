@@ -177,8 +177,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 ]
             );
 
-            $this->getLogger()->debug('Request cleanse task note contents', ['note' => $additionalInfo]);
-
             $result = $this->cleanseLPA->cleanse(
                 $this->user->getIdentity(),
                 $state->referenceNumber,
