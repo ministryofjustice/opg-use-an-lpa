@@ -25,18 +25,19 @@
 
         {% endif %}
 
-        {% if input_prefix is defined %}
-
-            <span class="govuk-body-l govuk-!-font-weight-bold">
-                {{ input_prefix }}
-            </span>
-
-        {% endif %}
-
         {%- if attr is defined and attr['class'] is defined and 'moj-password-reveal' in attr['class'] -%}
             {{- block('input_show_hide_password') -}}
         {% else %}
+            {% if input_prefix is defined %}
+                <div class="govuk-input__wrapper">
+                    <div class="govuk-input__prefix" aria-hidden="true">{{ input_prefix }}</div>
+            {% endif %}
+
             {{- block('form_input') -}}
+
+            {% if input_prefix is defined %}
+                </div>
+            {% endif %}
         {% endif %}
 
     </div>
