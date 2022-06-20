@@ -96,6 +96,7 @@ class RequestActivationKey implements WorkflowState
 
         $this->actorUid = null;
         $this->needsCleansing = false;
+        $this->actorAddressResponse = null;
     }
 
     /**
