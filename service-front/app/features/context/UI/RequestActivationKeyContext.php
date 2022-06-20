@@ -1131,6 +1131,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^The address given on the paper LPA is recorded in the Sirius task$/
+     */
+    public function theAddressGivenOnThePaperLPAIsRecordedInTheSiriusTask()
+    {
+        assertStringContainsString(
+            'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
+            $this->requestBody->getBody()->getContents()
+        );
+    }
+
+    /**
      * @When /^I enter my telephone number$/
      * @Given I provide my telephone number
      */

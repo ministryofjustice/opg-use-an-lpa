@@ -19,3 +19,15 @@ Feature: Add an older LPA creates Sirius task
       And I provide my telephone number
     When I confirm that the data is correct and click the confirm and submit button
     Then My current address is recorded in the Sirius task
+
+  @ui
+  Scenario: The user can specify that their address is different
+    Given My LPA has been found but my details did not match
+      And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+      And I select the address not same as on paper LPA
+      And I have given the address on the paper LPA
+      And I confirm that I am the Attorney
+      And I provide the donor's details
+      And I provide my telephone number
+    When I confirm that the data is correct and click the confirm and submit button
+    Then The address given on the paper LPA is recorded in the Sirius task
