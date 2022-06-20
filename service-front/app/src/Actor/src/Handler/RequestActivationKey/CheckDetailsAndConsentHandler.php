@@ -155,6 +155,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $state->actorAddress1,
                 $state->actorAddress2,
                 $state->actorAddressTown,
+                $state->actorAddressCounty,
                 $state->postcode
             ]);
             $this->data['address_on_paper']      = $state->addressOnPaper;
