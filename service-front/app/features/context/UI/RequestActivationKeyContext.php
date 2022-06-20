@@ -573,7 +573,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I will be asked for my full address$/
+     * @Then /^I am asked for my full address$/
      * @Then /^I will be navigated back to more details page$/
      */
     public function iWillBeAskedForMyFullAddress()
