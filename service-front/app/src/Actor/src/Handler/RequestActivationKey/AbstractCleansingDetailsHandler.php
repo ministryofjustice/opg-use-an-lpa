@@ -126,6 +126,10 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
                 $state->attorneyDob !== null;
         }
 
+        if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+            $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;
+        }
+
         return $alwaysRequired
             && ($state->telephone !== null || $state->noTelephone);
     }
