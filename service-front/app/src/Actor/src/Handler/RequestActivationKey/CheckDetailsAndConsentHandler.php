@@ -125,7 +125,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->data['actor_address_2'] = $state->actorAddress2;
             $this->data['actor_address_town'] = $state->actorAddressTown;
 
-            $this->data['address_on_paper'] = $state->addressOnPaper;
+            if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+                $this->data['address_on_paper'] = $state->addressOnPaper;
+            }
         }
 
         return match ($request->getMethod()) {
