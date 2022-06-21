@@ -8,6 +8,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Common\Service\Email\EmailClient;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -880,8 +881,10 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+        $request = $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->setLastRequest($request);
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
@@ -1453,6 +1456,17 @@ class AccountContext implements Context
 
         assertInternalType('string', $this->activationToken);
         assertEquals(true, $this->apiFixtures->isEmpty());
+    }
+
+    /**
+     * @Then /^I receive unique instructions on how to activate my account in Welsh$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccountInWelsh()
+    {
+        $request = $this->getLastRequest();
+
+        $requestBody = $request->getRequest()->getRequest()->getBody()->getContents();
+        assertStringContainsString(EmailClient::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION, $requestBody);
     }
 
     /**
