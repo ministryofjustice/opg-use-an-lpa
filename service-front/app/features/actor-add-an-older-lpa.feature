@@ -164,46 +164,6 @@ Feature: Add an older LPA
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
 
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user is shown the correct information on the check and consent page
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I confirm that I am the Donor
-    And I provide the attorney details
-    When I enter my telephone number
-    Then I am asked to consent and confirm my details
-    And I can see my donor role and telephone number
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user can is shown the correct information on the check and consent page
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I confirm that I am the Donor
-    And I provide the attorney details
-    When I select that I cannot take calls
-    Then I am asked to consent and confirm my details
-    And I can see my donor role and that I have not provided a telephone number
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user can is shown the correct information on the check and consent page
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I confirm that I am the Attorney
-    And I provide the donor's details
-    When I enter my telephone number
-    Then I am asked to consent and confirm my details
-    And I can see my attorney role, donor details and telephone number
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user can is shown the correct information on the check and consent page
-    Given My LPA has been found but my details did not match
-    And I have provided my current address
-    And I confirm that I am the Attorney
-    And I provide the donor's details
-    When I select that I cannot take calls
-    Then I am asked to consent and confirm my details
-    And I can see my attorney role, donor details and that I have not provided a telephone number
-
   @ui @integration @ff:allow_older_lpas:true
   @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user cannot add an old LPA to their account as the LPA reference number could not be found
