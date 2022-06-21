@@ -70,6 +70,14 @@ class ResolveActor
             return null;
         }
 
+        $this->logger->info(
+            'RETURNING ACTOR TYPE {type} AND ACTOR DETAILS {details} ........ TESTING',
+            [
+                'type' => $actorType,
+                'details' => $actor,
+            ]
+        );
+
         return [
             'type' => $actorType,
             'details' => $actor,

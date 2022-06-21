@@ -43,7 +43,34 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
 
+            $this->logger->notice(
+                '==================================================================================',
+            );
+            $this->logger->notice(
+                'ACTOR CODE.......{code}....... TESTING.....',
+                [
+                    'code' => $actorCode->getData()
+                ]
+            );
+            $this->logger->notice(
+                '==================================================================================',
+            );
+
             $actorUid = !empty($actorCode->getData()['actor']) ? $actorCode->getData()['actor'] : null;
+
+            $this->logger->notice(
+                '.....................................................',
+            );
+            $this->logger->notice(
+                'ACTOR ID.......{id}....... TESTING.....',
+                [
+                    'id' => $actorUid
+                ]
+            );
+            $this->logger->notice(
+                '.....................................................',
+            );
+
             if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
                 return $actorUid;
             }
