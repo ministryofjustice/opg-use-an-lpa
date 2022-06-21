@@ -8,22 +8,22 @@ use Alphagov\Notifications\Client as NotifyClient;
 use Carbon\Carbon;
 use Common\Service\Email\EmailClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class EmailClientTest extends TestCase
 {
-    /**
-     * @var NotifyClient
-     */
-    private $notifyClientProphecy;
-    /**
-     * @var string
-     */
-    private $locale;
+    /** @var ObjectProphecy|NotifyClient */
+    private ObjectProphecy $notifyClientProphecy;
+
+    private string $locale;
+
+    private const EN_LOCALE = 'en_GB';
+    private const CY_LOCALE = 'cy_GB';
 
     public function setUp(): void
     {
         $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
-        $this->locale = "en_GB";
+        $this->locale = self::EN_LOCALE;
     }
 
     /** @test */
@@ -172,7 +172,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -192,7 +192,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activated_confirmation_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -212,7 +212,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_already_registered_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
 
         $this->notifyClientProphecy->sendEmail($recipient, EmailClient::WELSH_TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED)
@@ -226,7 +226,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_password_reset_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -246,7 +246,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_password_change_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -263,7 +263,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_change_email_to_current_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'current@email.com';
         $newEmail = 'new@email.com';
 
@@ -284,7 +284,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_change_email_verify_to_new_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'new@email.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -307,7 +307,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_someone_tried_to_use_your_email_for_email_change_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'new@email.com';
 
         $this->notifyClientProphecy->sendEmail(
@@ -323,7 +323,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
         $referenceNumber = "700000000138";
         $postCode = "HS8 2YB";
@@ -398,7 +398,7 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = self::CY_LOCALE;
         $recipient = 'a@b.com';
         $referenceNumber = "700000000138";
         $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
