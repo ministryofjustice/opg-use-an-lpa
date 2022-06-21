@@ -1466,7 +1466,7 @@ class AccountContext implements Context
         $request = $this->getLastRequest();
 
         $requestBody = $request->getRequest()->getRequest()->getBody()->getContents();
-        assertStringContainsString(EmailClient::WELSH_TEMPLATE_ID_ACCOUNT_ACTIVATION, $requestBody);
+        assertStringContainsString(EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION[EmailClient::CY_LOCALE], $requestBody);
     }
 
     /**
