@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-21T08:32:53+00:00\n"
+"POT-Creation-Date: 2022-06-21T14:09:23+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5852,7 +5852,8 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:97
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
+msgstr ""
+"Newid<span class=\"govuk-visually-hidden\"> dyddiad geni’r rhoddwr</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:133
 msgid "Telephone number"
@@ -7124,26 +7125,27 @@ msgstr "Cyfrif wedi’i actifadu’n llwyddiannus"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:20
 msgid "Current address"
-msgstr "Cyfeiriad ar hyn o bryd"
+msgstr "Cyfeiriad presennol"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:49
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> address</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:35
 msgid "Address on paper LPA"
-msgstr "Cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
+msgstr "Cyfeiriad ar yr LPA papur"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:47
 msgid "Change<span class=\"govuk-visually-hidden\"> address on paper</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> address on paper</span>"
+msgstr ""
+"Newid<span class=\"govuk-visually-hidden\"> cyfeiriad ar yr LPA papur</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:112
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> attorney’s name</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:125
 msgid ""
 "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
 msgstr ""
-"Newid<span class=\"govuk-visually-hidden\"> attorney’s date of birth</span>"
+"Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni’r atwrnai</span>"
