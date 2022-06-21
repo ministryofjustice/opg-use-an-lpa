@@ -78,10 +78,6 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.add.actor-role';
-
-        return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
-            ? 'lpa.add.donor-details'
-            : 'lpa.add.contact-details';
     }
 
     public function lastPage(WorkflowState $state): string

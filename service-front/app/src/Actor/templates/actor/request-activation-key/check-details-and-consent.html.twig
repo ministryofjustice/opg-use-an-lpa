@@ -35,15 +35,15 @@
                                 {% trans %}Address on paper LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {%  if data.address_on_paper %}
+                                {%  if data.address_on_paper is defined %}
                                     <pre class="govuk-body">{{ data.address_on_paper }}</pre>
                                 {% else %}
                                     Same as above
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
-                                    {% if data.address_on_paper %}
+                                <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper is defined ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
+                                    {% if data.address_on_paper is defined %}
                                         {% trans %}Change<span class="govuk-visually-hidden"> address on paper</span>{% endtrans %}
                                     {% else %}
                                         {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
