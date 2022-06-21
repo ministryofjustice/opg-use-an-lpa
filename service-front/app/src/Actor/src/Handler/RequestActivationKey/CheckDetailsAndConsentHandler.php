@@ -59,7 +59,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     private ?SessionInterface $session;
     private ?UserInterface $user;
 
-    /** @var array<string, int|string|bool|DateTimeInterface|null>  */
+    /** @var array<string, int|string|bool|DateTimeInterface|array|null>  */
     private array $data;
 
     private CleanseLpa $cleanseLPA;
@@ -153,12 +153,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         if ($this->form->isValid()) {
             $state = $this->state($request);
 
-            $this->data['first_names']      = $state->firstNames;
-            $this->data['last_name']        = $state->lastName;
-            $this->data['dob']              = $state->dob;
-            $this->data['postcode']         = $state->postcode;
-            $this->data['actor_id']         = $state->actorUid;
-            $this->data['address_on_paper'] = $state->addressOnPaper;
+            $this->data['first_names']           = $state->firstNames;
+            $this->data['last_name']             = $state->lastName;
+            $this->data['dob']                   = $state->dob;
+            $this->data['actor_id']              = $state->actorUid;
+            $this->data['actor_current_address'] = array_filter([
+                $state->actorAddress1,
+                $state->actorAddress2,
+                $state->actorAddressTown,
+                $state->actorAddressCounty,
+                $state->postcode
+            ]);
+            $this->data['address_on_paper']      = $state->addressOnPaper;
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);

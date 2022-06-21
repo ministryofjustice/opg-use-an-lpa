@@ -36,6 +36,12 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     /**
+     * @var RequestInterface Used to store external requests made to a mocked handler for
+     *                       subsequent "Then" step verification.
+     */
+    private RequestInterface $requestBody;
+
+    /**
      * @Then /^I am taken to the check answers page$/
      */
     public function iAmTakenToTheCheckAnswersPage()
@@ -140,7 +146,6 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked for my role on the LPA$/
-     * @Given /^I have not given the address on the paper LPA$/
      */
     public function iAmAskedForMyRoleOnTheLPA()
     {
@@ -148,6 +153,19 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageContainsText('What is your role on the LPA?');
     }
 
+    /**
+     * @Given /^I do not provide any selections (.*) on the LPA$/
+     */
+    public function iDoNotProvideAnySelectionsForMyRoleOnTheLPA($selection)
+    {
+        if ($selection == 'for my role') {
+            $this->ui->assertPageAddress('/lpa/add/actor-role');
+            $this->ui->pressButton('Continue');
+        } elseif ($selection == 'for current address') {
+            $this->ui->assertPageAddress('/lpa/add/actor-address');
+            $this->ui->pressButton('Continue');
+        }
+    }
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
      */
@@ -524,6 +542,54 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/add/actor-address');
         $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
         $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+        $this->ui->fillField('actor_address_check_radio', 'Yes');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I select (.*) the address is same as on paper LPA$/
+     */
+    public function iSelectIAmNotSureTheAddressIsSameAsOnPaperLPA($selection)
+    {
+        if ($selection === 'I am not sure') {
+            $this->ui->assertPageAddress('/lpa/add/actor-address');
+            $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+            $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+            $this->ui->fillField('actor_address_check_radio', 'Not sure');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @Given /^I select the address (.*) as on paper LPA$/
+     */
+    public function iSelectTheAddressIsNotSameAsOnPaperLPA($selection)
+    {
+        if ($selection == 'not same') {
+            $this->ui->assertPageAddress('/lpa/add/actor-address');
+            $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+            $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+            $this->ui->fillField('actor_address_check_radio', 'No');
+            $this->ui->pressButton('Continue');
+        } elseif ($selection == 'is same') {
+            $this->ui->assertPageAddress('/lpa/add/actor-address');
+            $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+            $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+            $this->ui->fillField('actor_address_check_radio', 'Yes');
+            $this->ui->pressButton('Continue');
+        }
+    }
+
+    /**
+     * @Given /^I select this is not the address same as on paper LPA$/
+     * @When /^I click the Continue button$/
+     */
+    public function iHaveNotGivenTheAddressOnThePaperLPA()
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-address');
+        $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
+        $this->ui->fillField('actor_address_check_radio', 'No');
         $this->ui->pressButton('Continue');
     }
 
@@ -537,12 +603,13 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I will be asked for my full address$/
+     * @Then /^I am asked for my full address$/
+     * @Then /^I will be navigated back to more details page$/
      */
     public function iWillBeAskedForMyFullAddress()
     {
         $this->ui->assertPageAddress('/lpa/add/actor-address');
-        $this->ui->assertPageContainsText('What is your address?');
+        $this->ui->assertPageContainsText('We need some more details');
     }
 
     /**
@@ -553,6 +620,22 @@ class RequestActivationKeyContext implements Context
         $this->iAmAskedForMyAddressFromThePaperLPA();
         $this->iInputAValidPaperLPAAddress();
         $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^My current address is recorded in the Sirius task$/
+     */
+    public function myCurrentAddressIsRecordedInTheSiriusTask()
+    {
+        assertStringContainsString(
+            sprintf(
+                'Current postal address: %s, %s, %s\n',
+                ($this->lpa->donor->addresses[0])->addressLine1,
+                ($this->lpa->donor->addresses[0])->town,
+                strtoupper(($this->lpa->donor->addresses[0])->postcode)
+            ),
+            $this->requestBody->getBody()->getContents()
+        );
     }
 
     /**
@@ -1072,7 +1155,19 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^The address given on the paper LPA is recorded in the Sirius task$/
+     */
+    public function theAddressGivenOnThePaperLPAIsRecordedInTheSiriusTask()
+    {
+        assertStringContainsString(
+            'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
+            $this->requestBody->getBody()->getContents()
+        );
+    }
+
+    /**
      * @When /^I enter my telephone number$/
+     * @Given I provide my telephone number
      */
     public function whenIEnterMyTelephoneNumber()
     {
@@ -1093,6 +1188,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked for my address from the paper LPA$/
+     * @Then /^I will be navigated back to address on paper page$/
      */
     public function iAmAskedForMyAddressFromThePaperLPA()
     {
@@ -1108,11 +1204,28 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am shown an error telling me to (.*) on the LPA$/
+     */
+    public function iAmShownAnErrorTellingMeToMakeEntriesOnTheLPA($selection)
+    {
+        if ($selection == 'select my role') {
+            $this->ui->assertPageContainsText('Select whether you are the donor or an attorney on the LPA');
+        } elseif ($selection == 'select if current address') {
+            $this->ui->assertPageContainsText(
+                'Select whether this is the same address as your address on the paper LPA'
+            );
+        }
+    }
+
+    /**
      * @When /^I input a valid paper LPA address$/
      */
     public function iInputAValidPaperLPAAddress()
     {
-        $this->ui->fillField('address_on_paper_area', "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA");
+        $this->ui->fillField(
+            'address_on_paper_area',
+            "Unit 18 \n Peacock Avenue \n Boggy Bottom \n Hertfordshire \n DE65 AAA"
+        );
         $this->ui->pressButton('Continue');
     }
 
@@ -1374,6 +1487,10 @@ class RequestActivationKeyContext implements Context
                     [],
                     json_encode($data)
                 )
+            )->inspectRequest(
+                function (RequestInterface $request) {
+                    $this->requestBody = $request;
+                }
             );
 
         // API call for Notify
@@ -1417,5 +1534,18 @@ class RequestActivationKeyContext implements Context
         $this->iConfirmThatIAmThe('Donor');
         $this->iProvideTheAttorneyDetails();
         $this->iSelectThatICannotTakeCalls();
+    }
+
+    /**
+     * @When /^I do not provide required entries for (.*) (.*) (.*) on the LPA$/
+     */
+    public function iDoNotProvideRequiredEntriesForAddressPage($address_line_1, $town, $address_as_on_lpa)
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-address');
+        $this->ui->fillField('actor_address_1', $address_line_1);
+        $this->ui->fillField('actor_address_town', $town);
+        $this->ui->fillField('actor_address_check_radio', $address_as_on_lpa);
+
+        $this->ui->pressButton('Continue');
     }
 }
