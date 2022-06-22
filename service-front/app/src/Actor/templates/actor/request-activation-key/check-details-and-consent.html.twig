@@ -15,42 +15,44 @@
                     <h1 class="govuk-heading-xl">{% trans %}Check your details{% endtrans %}</h1>
 
                     <dl class="govuk-summary-list govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {% trans %}Current address{% endtrans %}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {% for line in data.actor_current_address %}
-                                    {{ line }}<br>
-                                {% endfor %}
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">
-                                    {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
-                                </a>
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {% trans %}Address on paper LPA{% endtrans %}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {%  if data.address_on_paper is defined %}
-                                    <pre class="govuk-body">{{ data.address_on_paper }}</pre>
-                                {% else %}
-                                    {% trans %}Same as above{% endtrans %}
-                                {% endif %}
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper is defined ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
-                                    {% if data.address_on_paper is defined %}
-                                        {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
-                                    {% else %}
+                        {% if data.actor_current_address is defined %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Current address{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {% for line in data.actor_current_address %}
+                                        {{ line }}<br>
+                                    {% endfor %}
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">
                                         {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Address on paper LPA{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {%  if data.address_on_paper is defined %}
+                                        <pre class="govuk-body">{{ data.address_on_paper }}</pre>
+                                    {% else %}
+                                        {% trans %}Same as above{% endtrans %}
                                     {% endif %}
-                                </a>
-                            </dd>
-                        </div>
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper is defined ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
+                                        {% if data.address_on_paper is defined %}
+                                            {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
+                                        {% else %}
+                                            {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
+                                        {% endif %}
+                                    </a>
+                                </dd>
+                            </div>
+                        {% endif %}
                         {% if data.actor_role is defined %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
