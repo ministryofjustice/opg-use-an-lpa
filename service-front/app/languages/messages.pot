@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-06-22T10:20:00+00:00\n"
+"POT-Creation-Date: 2022-06-22T10:33:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4974,10 +4974,6 @@ msgstr ""
 msgid "Address on paper LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:47
-msgid "Change<span class=\"govuk-visually-hidden\"> address on paper</span>"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:112
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgstr ""
@@ -4988,4 +4984,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:41
 msgid "Same as above"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:47
+msgid "Change<span class=\"govuk-visually-hidden\"> address on paper LPA</span>"
 msgstr ""

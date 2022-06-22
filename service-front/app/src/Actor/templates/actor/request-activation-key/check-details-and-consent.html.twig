@@ -44,7 +44,7 @@
                             <dd class="govuk-summary-list__actions">
                                 <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper is defined ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
                                     {% if data.address_on_paper is defined %}
-                                        {% trans %}Change<span class="govuk-visually-hidden"> address on paper</span>{% endtrans %}
+                                        {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
                                     {% else %}
                                         {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
                                     {% endif %}
