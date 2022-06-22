@@ -110,6 +110,10 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         // address 1 is a required field on it's page so only need to check that.
         $alwaysRequired = $state->actorAddress1 !== null;
 
+        if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+            $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;
+        }
+
         $alwaysRequired = $alwaysRequired && $state->getActorRole() !== null;
 
         if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
@@ -124,10 +128,6 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
                 $state->attorneyFirstNames !== null &&
                 $state->attorneyLastName !== null &&
                 $state->attorneyDob !== null;
-        }
-
-        if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
-            $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;
         }
 
         return $alwaysRequired
