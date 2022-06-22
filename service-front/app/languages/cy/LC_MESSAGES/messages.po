@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-21T14:09:23+00:00\n"
+"POT-Creation-Date: 2022-06-22T10:20:00+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6967,11 +6967,11 @@ msgstr "Beth yw eich cyfeiriad?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
 msgid "Address line 1"
-msgstr ""
+msgstr "Llinell cyfeiriad 1"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:35
 msgid "Address line 2 (optional)"
-msgstr ""
+msgstr "Llinell cyfeiriad 2 (dewisol)"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:40
 msgid "Town or city"
@@ -7149,3 +7149,7 @@ msgid ""
 "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
 msgstr ""
 "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni’r atwrnai</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:41
+msgid "Same as above"
+msgstr "Yr un peth ag uchod"

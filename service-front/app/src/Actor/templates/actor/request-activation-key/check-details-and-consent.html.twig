@@ -38,7 +38,7 @@
                                 {%  if data.address_on_paper is defined %}
                                     <pre class="govuk-body">{{ data.address_on_paper }}</pre>
                                 {% else %}
-                                    Same as above
+                                    {% trans %}Same as above{% endtrans %}
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">

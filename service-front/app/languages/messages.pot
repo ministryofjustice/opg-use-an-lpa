@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-06-21T14:09:23+00:00\n"
+"POT-Creation-Date: 2022-06-22T10:20:00+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -4984,4 +4984,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:125
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:41
+msgid "Same as above"
 msgstr ""
