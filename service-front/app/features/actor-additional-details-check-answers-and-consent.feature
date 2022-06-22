@@ -48,7 +48,7 @@ Feature: Additional details check answers and consent
 
   @ui @ff:allow_older_lpas:true
   Scenario: The user is shown the correct information on the check and consent page when they have added an address that is on the paper lpa
-    Given I have provided my current address
+    Given I select the address is not the same as on paper LPA
     And I am asked for my address from the paper LPA
     And I input a valid paper LPA address
     And I confirm that I am the Attorney

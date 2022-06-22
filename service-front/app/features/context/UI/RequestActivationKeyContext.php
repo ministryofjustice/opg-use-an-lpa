@@ -561,17 +561,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I select the address (.*) as on paper LPA$/
+     * @Given /^I select the address is (.*) as on paper LPA$/
      */
     public function iSelectTheAddressIsNotSameAsOnPaperLPA($selection)
     {
-        if ($selection == 'not same') {
+        if ($selection == 'not the same') {
             $this->ui->assertPageAddress('/lpa/add/actor-address');
             $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
             $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
             $this->ui->fillField('actor_address_check_radio', 'No');
             $this->ui->pressButton('Continue');
-        } elseif ($selection == 'is same') {
+        } elseif ($selection == 'the same') {
             $this->ui->assertPageAddress('/lpa/add/actor-address');
             $this->ui->fillField('actor_address_1', ($this->lpa->donor->addresses[0])->addressLine1);
             $this->ui->fillField('actor_address_town', ($this->lpa->donor->addresses[0])->town);
