@@ -166,7 +166,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $state->actorAddressCounty,
                 $state->postcode
             ]);
-            $this->data['address_on_paper']      = $state->addressOnPaper;
+            if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+                $this->data['address_on_paper'] = $state->addressOnPaper;
+            }
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
