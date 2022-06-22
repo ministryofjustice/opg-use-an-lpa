@@ -20,9 +20,9 @@
                                 {% trans %}Current address{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ data.actor_address_1 }}<br>
-                                {{ data.actor_address_2 }} {{ data.actor_address_2 ? "<br>" : "" | raw }}
-                                {{ data.actor_address_town }}
+                                {% for line in data.actor_current_address %}
+                                    {{ line }}<br>
+                                {% endfor %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
                                 <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">

@@ -121,9 +121,14 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['attorney_dob']         = $state->attorneyDob;
             }
 
-            $this->data['actor_address_1'] = $state->actorAddress1;
-            $this->data['actor_address_2'] = $state->actorAddress2;
-            $this->data['actor_address_town'] = $state->actorAddressTown;
+            $this->data['actor_current_address'] = array_filter(
+                [
+                    $state->actorAddress1,
+                    $state->actorAddress2,
+                    $state->actorAddressTown,
+                    $state->actorAddressCounty
+                ]
+            );
 
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
                 $this->data['address_on_paper'] = $state->addressOnPaper;
@@ -159,13 +164,15 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->data['last_name']             = $state->lastName;
             $this->data['dob']                   = $state->dob;
             $this->data['actor_id']              = $state->actorUid;
-            $this->data['actor_current_address'] = array_filter([
-                $state->actorAddress1,
-                $state->actorAddress2,
-                $state->actorAddressTown,
-                $state->actorAddressCounty,
-                $state->postcode
-            ]);
+            $this->data['actor_current_address'] = array_filter(
+                [
+                    $state->actorAddress1,
+                    $state->actorAddress2,
+                    $state->actorAddressTown,
+                    $state->actorAddressCounty,
+                    $state->postcode
+                ]
+            );
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
                 $this->data['address_on_paper'] = $state->addressOnPaper;
             }
