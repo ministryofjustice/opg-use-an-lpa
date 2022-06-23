@@ -32,6 +32,12 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+            $this->form->setData(['actor_role_radio' => 'Donor']);
+        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+            $this->form->setData(['actor_role_radio' => 'Attorney']);
+        }
+
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-role',
             [
@@ -69,6 +75,12 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         ]));
     }
 
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
+    {
+        return parent::isMissingPrerequisite($request)
+            || $this->state($request)->actorAddress1 === null;
+    }
+
     public function nextPage(WorkflowState $state): string
     {
         /** @var RequestActivationKey $state **/
@@ -78,7 +90,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
             ? 'lpa.add.donor-details'
-            : 'lpa.add.contact-details';
+            : 'lpa.add.attorney-details';
     }
 
     public function lastPage(WorkflowState $state): string
@@ -86,6 +98,13 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
-            : 'lpa.check-answers';
+            : $this->lastPageByPreviousAnswers(
+                $state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO
+            );
+    }
+
+    private function lastPageByPreviousAnswers(bool $filledAddressOnPaper): string
+    {
+        return $filledAddressOnPaper ? 'lpa.add.address-on-paper' : 'lpa.add.actor-address';
     }
 }

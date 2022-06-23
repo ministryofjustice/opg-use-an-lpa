@@ -202,7 +202,7 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
     {
-        $this->locale = 'cy';
+        $this->locale = 'cy_GB';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
         $homeUrl = 'https://localhost:9002/home';
         $welshHomeUrl = 'https://localhost:9002/cy/home';
@@ -238,7 +238,7 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_valid_welsh_referer_if_locale_is_cy()
     {
-        $this->locale = "cy";
+        $this->locale = 'cy_GB';
         $refererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/cy/login';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
 

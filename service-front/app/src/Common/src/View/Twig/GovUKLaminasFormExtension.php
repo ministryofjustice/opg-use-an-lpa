@@ -34,6 +34,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         CustomEmail ::class     => 'form_input_email',
         Element\Text::class     => 'form_input_text',
         Element\Radio::class    => 'form_input_radio',
+        Element\Textarea::class => 'form_input_area',
         //  Fieldsets
         Date::class             => 'form_fieldset_date',
     ];

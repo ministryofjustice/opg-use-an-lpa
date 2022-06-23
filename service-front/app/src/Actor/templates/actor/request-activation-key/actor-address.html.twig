@@ -1,0 +1,87 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We need some more details{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-three-quarters">
+                    <h1 class="govuk-heading-xl">{% trans %}We need some more details{% endtrans %}</h1>
+                    <p class="govuk-body">{% trans %}We need a few extra details to make sure we have the right LPA for your activation key request.{% endtrans %}</p>
+                    <h2 class="govuk-heading-l">{% trans %}What is your current address?{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}Your activation key will be posted to this address.{% endtrans %}</p>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    {{ govuk_form_element(form.get('actor_address_1'), {
+                        'label': 'Address line 1' | trans,
+                        'autocomplete': 'address-line1',
+                    }) }}
+
+                    {{ govuk_form_element(form.get('actor_address_2'), {
+                        'label': 'Address line 2 (optional)' | trans,
+                        'autocomplete': 'address-line2',
+                    }) }}
+
+                    {{ govuk_form_element(form.get('actor_address_town'), {
+                        'label': 'Town or city' | trans,
+                        'attr': { 'class': 'govuk-input govuk-!-width-two-thirds', 'autocomplete': 'address-level1'}
+                    }) }}
+
+                    {{ govuk_form_element(form.get('actor_address_county'), {
+                        'label': 'County (optional)' | trans,
+                        'attr': { 'class': 'govuk-input govuk-!-width-two-thirds', 'autocomplete': 'address-level2'}
+                    }) }}
+
+                    <h2 class="govuk-heading-l">{% trans %}Is this the same address as your address on the paper LPA?{% endtrans %}</h2>
+
+                    {% set value_yes =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_YES')  %}
+                    {% set value_no =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO')  %}
+                    {% set value_not_sure =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE')  %}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+
+                            {{ govuk_form_element(form.get('actor_address_check_radio'), {'value_options':
+                                [
+                                    {
+                                        'label': 'Yes, it is the same as my address on the paper LPA'|trans,
+                                        'value':  value_yes
+                                    },
+                                    {
+                                        'label': 'No, it is different than my address on the paper LPA'|trans,
+                                        'value': value_no
+                                    },
+                                    {
+                                        'label': 'I am not sure if it\'s the same address on the paper LPA'|trans,
+                                        'value': value_not_sure
+                                    }
+                                ]}
+                            )}}
+
+                        </fieldset>
+                    </div>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+
+                </div>
+            </div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
+{% endblock %}

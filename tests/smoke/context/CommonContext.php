@@ -109,7 +109,7 @@ class CommonContext implements Context
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
 
-        if ($htmlElement->getAttribute('lang') !== 'en_GB') {
+        if ($htmlElement->getAttribute('lang') !== 'en-gb') {
             throw new ExpectationException(
                 'Language not specified in html tag',
                 $this->ui->getMink()->getSession()->getDriver()
@@ -124,7 +124,7 @@ class CommonContext implements Context
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
 
-        if ($htmlElement->getAttribute('lang') !== 'cy') {
+        if ($htmlElement->getAttribute('lang') !== 'cy-gb') {
             throw new ExpectationException(
                 'Language not specified in html tag',
                 $this->ui->getMink()->getSession()->getDriver()

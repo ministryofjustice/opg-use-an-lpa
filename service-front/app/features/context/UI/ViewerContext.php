@@ -309,7 +309,7 @@ class ViewerContext implements Context
                 }
             );
 
-        $this->ui->clickLink('Download this LPA summary');
+        $this->ui->pressButton('Download this LPA summary');
     }
 
     /**

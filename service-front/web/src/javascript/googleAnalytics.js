@@ -14,10 +14,12 @@ export default class GoogleAnalytics {
             window.dataLayer.push(arguments);
         }
         window.gtag('js', new Date());
-        window.gtag('config', this.analyticsId, {
+        window.gtag(
+          'config', this.analyticsId, {
             'linker': {
-                'domains': ['www.gov.uk']
+              'domains': ['www.gov.uk']
             },
+            'cookie_flags': 'SameSite=Strict;Secure',
             'transport_type': 'beacon',
             'anonymize_ip': true, // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
             'allow_google_signals': false, // https://developers.google.com/analytics/devguides/collection/gtagjs/display-features

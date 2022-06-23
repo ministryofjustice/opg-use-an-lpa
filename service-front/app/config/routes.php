@@ -235,6 +235,26 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         )
     ], ['GET', 'POST'], 'lpa.add.donor-details');
 
+    $app->route('/lpa/add/actor-address', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\ActorAddressHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.actor-address');
+
+    $app->route('/lpa/add/attorney-details', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.attorney-details');
+
     $app->route('/lpa/add/check-details-and-consent', [
         Mezzio\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
@@ -244,6 +264,16 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $defaultNotFoundPage
         )
     ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
+
+    $app->route('/lpa/add/address-on-paper', [
+        Mezzio\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_OLDER_LPAS,
+            \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class,
+            $defaultNotFoundPage
+        )
+    ], ['GET', 'POST'], 'lpa.add.address-on-paper');
 
     // Older LPA journey
         // if flag true, send user to triage page as entry point

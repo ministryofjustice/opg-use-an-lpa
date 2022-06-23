@@ -72,7 +72,7 @@ class SetLocaleMiddlewareTest extends TestCase
             ->getUri()
             ->willReturn($uriInterfaceProphecy->reveal());
         $requestProphecy
-            ->withAttribute('locale', 'cy')
+            ->withAttribute('locale', 'cy_GB')
             ->willReturn($requestProphecy->reveal());
         $requestProphecy
             ->withUri($uriInterfaceProphecy->reveal())

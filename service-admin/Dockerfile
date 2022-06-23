@@ -1,4 +1,4 @@
-FROM node:14.13.1-alpine3.12 as asset-env
+FROM node:16-alpine as asset-env
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci && node_modules/.bin/webpack -p
 
 # Build Go app
-FROM golang:1.16.4 as build-env
+FROM golang:1.18-alpine as build-env
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o admin cmd/admin/main.go
 
 # Bundle all
-FROM alpine:3.12 as production
+FROM alpine:3 as production
 
 WORKDIR /go/bin
 

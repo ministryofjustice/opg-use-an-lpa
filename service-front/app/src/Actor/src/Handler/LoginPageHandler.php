@@ -17,6 +17,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
@@ -119,10 +121,14 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             return $this->redirectToRoute('lpa.dashboard');
         }
 
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         $this->rateLimitService->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
         return new HtmlResponse($this->renderer->render('actor::login', [
-            'form' => $form
+            'form'  => $form,
+            'flash' => $flash
         ]));
     }
 }

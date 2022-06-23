@@ -11,6 +11,7 @@
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\ActivateAccountHandler::ACCOUNT_ACTIVATED_FLASH_MSG'}) }}
 
         <div class="govuk-grid-row">
 
