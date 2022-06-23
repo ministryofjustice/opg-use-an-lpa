@@ -46,25 +46,25 @@ describe('When I create a cookie', () => {
   describe('with no days specified', () => {
         test('it should return the correct format for 30 days ahead', () => {
             const cookieValue = setCookie('test_cookie', 'test value');
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure');
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
   describe('with 10 days specified', () => {
         test('it should return the correct format for 10 days ahead', () => {
             const cookieValue = setCookie('test_cookie', 'test value', { days: 10 });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=864000; Secure');
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=864000; Secure; SameSite=Strict;');
         });
     });
   describe('with an empty options parameter', () => {
         test('it should return the correct format for 30 days ahead', () => {
             const cookieValue = setCookie('test_cookie', 'test value', { });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure');
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
   describe('with an incorrect options parameter', () => {
         test('it should return the correct format for 30 days ahead', () => {
             const cookieValue = setCookie('test_cookie', 'test value', { wrongOption: '' });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure');
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
 });
@@ -92,7 +92,7 @@ describe('When I call setCookie', () => {
         setCookie('test_cookie', 'test value');
         const cookieValue = getCookie('test_cookie');
         expect(cookieValue).toBe('test value');
-        expect(document.cookie).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure');
+        expect(document.cookie).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
     });
 });
 
