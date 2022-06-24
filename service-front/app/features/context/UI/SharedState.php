@@ -18,8 +18,14 @@ final class SharedState
     {
         if (self::$instance === null) {
             self::$instance = new SharedState();
+            self::$instance->reset();
         }
 
         return self::$instance;
+    }
+
+    public function reset(): void
+    {
+        $this->basePath = '';
     }
 }
