@@ -15,21 +15,9 @@ use Mezzio\Router\RouterInterface;
  */
 class UrlValidityCheckService
 {
-    /**
-     * @var ServerRequestFactory
-     */
-    private $serverRequestFactory;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var UrlHelper
-     */
+    private ServerRequestFactory $serverRequestFactory;
+    private RouterInterface $router;
     private UrlHelper $urlHelper;
-
     private string $locale;
 
     public function __construct(
@@ -43,38 +31,25 @@ class UrlValidityCheckService
         $this->locale               = Locale::getDefault();
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
-    public function isValid(string $refererUrl): bool
+    public function isValid(string $referrerUrl): bool
     {
-        // Remove all illegal characters from a url
-        $url = filter_var($refererUrl, FILTER_SANITIZE_URL);
+        // Remove all illegal characters from a URL
+        $url = filter_var($referrerUrl, FILTER_SANITIZE_URL);
 
         // Validate url
-        if (filter_var($url, FILTER_VALIDATE_URL) !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
     public function checkRefererRouteValid(string $refererUrl): bool
     {
-        if ($refererUrl !== null) {
-            if ($this->locale === 'cy_GB') {
-                $refererUrl = str_replace('/cy', '', $refererUrl);
-            }
-
-            $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
-            $result = $this->router->match($request);
-
-            if ($result->isSuccess()) {
-                return true;
-            }
+        if ($this->locale === 'cy_GB') {
+            $refererUrl = str_replace('/cy', '', $refererUrl);
         }
-        return false;
+
+        $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
+        $result = $this->router->match($request);
+
+        return $result->isSuccess();
     }
 
     public function setValidReferer(?string $referer): string
