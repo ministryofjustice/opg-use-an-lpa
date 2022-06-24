@@ -79,8 +79,8 @@ class AccountContext implements Context
      */
     public function iAccessTheAccountCreationPage()
     {
-        $this->ui->visit('/create-account');
-        $this->ui->assertPageAddress('/create-account');
+        $this->ui->visit($this->sharedState()->basePath . '/create-account');
+        $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
     }
 
     /**
@@ -862,7 +862,7 @@ class AccountContext implements Context
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
 
-        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
@@ -889,7 +889,13 @@ class AccountContext implements Context
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
-        $this->ui->pressButton('Create account');
+
+        // grab the button by selector as the button text might be in welsh or english.
+        $button = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            "//form[@name='create_account']//button[@type='submit']"
+        );
+        $button->press();
     }
 
     /**
