@@ -80,11 +80,11 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         $form->get('usageCookies')->setValue($usageCookies);
 
         //if flash message is displayed we have been redirected. We need to change to the previous referer
-        //if ($flash->getFlash($this::COOKIES_SET_FLASH_MSG) !== null) {
-         //   $cookiesPageReferer = $flash->getFlash($this::COOKIES_SET_FLASH_MSG);
-       // } else {
+        if ($flash->getFlash($this::COOKIES_SET_FLASH_MSG) !== null) {
+            $cookiesPageReferer = $flash->getFlash($this::COOKIES_SET_FLASH_MSG);
+        } else {
             $cookiesPageReferer = $request->getHeaders()['referer'][0] ?? null;
-      //  }
+        }
 
         $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferer($cookiesPageReferer));
 
