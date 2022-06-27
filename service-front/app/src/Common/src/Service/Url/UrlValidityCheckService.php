@@ -40,26 +40,26 @@ class UrlValidityCheckService
         return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
-    public function checkRefererRouteValid(string $refererUrl): bool
+    public function checkReferrerRouteValid(string $referrerUrl): bool
     {
         if ($this->locale === 'cy_GB') {
-            $refererUrl = str_replace('/cy', '', $refererUrl);
+            $referrerUrl = str_replace('/cy', '', $referrerUrl);
         }
 
-        $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
+        $request = $this->serverRequestFactory->createServerRequest('GET', $referrerUrl);
         $result = $this->router->match($request);
 
         return $result->isSuccess();
     }
 
-    public function setValidReferer(?string $referer): string
+    public function setValidReferrer(?string $referrer): string
     {
-        if (!empty($referer)) {
-            $validUrl = $this->isValid($referer);
+        if (!empty($referrer)) {
+            $validUrl = $this->isValid($referrer);
 
-            $isValidRefererRoute = $this->checkRefererRouteValid($referer);
+            $isValidRefererRoute = $this->checkReferrerRouteValid($referrer);
 
-            return ($validUrl && $isValidRefererRoute ? $referer : $this->generateHomeUrlForCurrentLocale());
+            return ($validUrl && $isValidRefererRoute ? $referrer : $this->generateHomeUrlForCurrentLocale());
         }
 
         return $this->generateHomeUrlForCurrentLocale();
