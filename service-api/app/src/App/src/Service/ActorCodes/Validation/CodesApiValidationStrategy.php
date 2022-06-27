@@ -43,33 +43,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
 
-            $this->logger->notice(
-                '==================================================================================',
-            );
-            $this->logger->notice(
-                'ACTOR CODE.......{code}....... TESTING.....',
-                [
-                    'code' => $actorCode->getData()
-                ]
-            );
-            $this->logger->notice(
-                '==================================================================================',
-            );
-
             $actorUid = !empty($actorCode->getData()['actor']) ? $actorCode->getData()['actor'] : null;
-
-            $this->logger->notice(
-                '.....................................................',
-            );
-            $this->logger->notice(
-                'ACTOR ID.......{id}....... TESTING.....',
-                [
-                    'id' => $actorUid
-                ]
-            );
-            $this->logger->notice(
-                '.....................................................',
-            );
 
             if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
                 return $actorUid;
@@ -159,16 +133,22 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('Actor not in LPA');
         }
 
-        if ($dob !== $actor['details']['dob']) {
-            $this->logger->error(
-                'Dob {dob} did not match {expected} when validating actor code',
-                [
-                    'dob' => $dob,
-                    'expected' => $actor['details']['dob'],
-                ]
-            );
-            throw new ActorCodeValidationException('Bad date of birth');
+        if($actor['type'] != 'trust-corporation') {
+            if ($dob !== $actor['details']['dob']) {
+                $this->logger->error(
+                    'Dob {dob} did not match {expected} when validating actor code',
+                    [
+                        'dob' => $dob,
+                        'expected' => $actor['details']['dob'],
+                    ]
+                );
+                throw new ActorCodeValidationException('Bad date of birth');
+            }
         }
+
+        $this->logger->notice(
+            'RETURNING TRUE FROM verifyAgainstLpa............ TESTING.....',
+        );
 
         return true;
     }

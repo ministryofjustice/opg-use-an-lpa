@@ -60,7 +60,17 @@ class ResolveActor
             }
         }
 
-        // If not an attorney, check if they're the donor.
+        // Determine if the actor is a trust corporation
+        if (isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
+            foreach ($lpa['trustCorporations'] as $tc) {
+                if ((string)$tc['id'] === $actorId || $tc['uId'] === $actorId) {
+                    $actor = $tc;
+                    $actorType = 'trust-corporation';
+                }
+            }
+        }
+
+        // If not an attorney or tc, check if they're the donor.
         if (is_null($actor) && $this->isDonor($lpa, $actorId)) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
@@ -69,14 +79,6 @@ class ResolveActor
         if (is_null($actor)) {
             return null;
         }
-
-        $this->logger->info(
-            'RETURNING ACTOR TYPE {type} AND ACTOR DETAILS {details} ........ TESTING',
-            [
-                'type' => $actorType,
-                'details' => $actor,
-            ]
-        );
 
         return [
             'type' => $actorType,
