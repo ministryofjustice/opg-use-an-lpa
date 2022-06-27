@@ -44,7 +44,7 @@
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {% if userRole == "Trust corporation" %}
-                                    {{ user.companyName }}
+                                    {{ user.companyName }} {{ "(Trust corporation)" }}
                                 {% else %}
                                     {{ actor_name(user) }}
                                 {% endif %}
