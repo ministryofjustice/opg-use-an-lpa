@@ -299,4 +299,68 @@ class CodesApiValidationStrategyTest extends TestCase
         $this->expectException(ActorCodeMarkAsUsedException::class);
         $strategy->flagCodeAsUsed('actor-code');
     }
+
+    /** @test */
+    public function it_wont_validate_a_code_with_a_bad_dob_for_trust_corporation(): void
+    {
+        $this->initDependencies();
+
+        $actor = new ActorCode(
+            [
+                'actor' => 'actor-uid',
+            ],
+            new \DateTime('now')
+        );
+
+        $this->actorCodeApiProphecy
+            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->willReturn($actor);
+
+        $lpa = new Lpa(
+            [
+                'donor' => [
+                    'id' => 1,
+                    'uId' => 'donor-uid',
+                    'dob' => 'donor-dob',
+                    'salutation' => 'Mr',
+                    'firstname' => 'Test',
+                    'middlenames' => '',
+                    'surname' => 'User',
+                    'addresses' => [
+                        0 => [],
+                    ],
+                ],
+                'uId' => 'lpa-uid',
+            ],
+            new \DateTime('now')
+        );
+
+        $this->lpaServiceProphecy
+            ->getByUid('lpa-uid')
+            ->shouldBeCalled()
+            ->willReturn($lpa);
+
+        $this->resolveActorProphecy
+            ->__invoke($lpa->getData(), 'actor-uid')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'type' => 'trust-corporation',
+                    'details' => [
+                        'id' => 9,
+                        'uId' => 'actor-uid',
+                        'firstname' => 'trust',
+                        'surname' => 'corporation',
+                        'companyName' => 'trust corporation ltd',
+                        'systemStatus' => true
+                    ]
+                ]
+            );
+
+        $strategy = $this->getCodesApiValidationStrategy();
+
+        $this->expectException(ActorCodeValidationException::class);
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+    }
+
 }
