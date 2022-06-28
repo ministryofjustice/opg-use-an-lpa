@@ -2522,7 +2522,7 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
 
         $this->ui->assertPageContainsText('Is this the LPA you want to add?');
-        if($role === 'Trust corporation') {
+        if ($role === 'Trust corporation') {
             $this->ui->assertPageContainsText(sprintf('%s', $this->companyName));
         } else {
             $this->ui->assertPageContainsText(sprintf('Mr %s %s', $this->userFirstName, $this->userSurname));
@@ -2677,8 +2677,13 @@ class LpaContext implements Context
      * @param string $code
      * @return void
      */
-    private function fillAddLpaPages(string $code, string $day, string $month, string $year, string $reference_number): void
-    {
+    private function fillAddLpaPages(
+        string $code,
+        string $day,
+        string $month,
+        string $year,
+        string $reference_number
+    ): void {
         $this->ui->fillField('activation_key', $code);
         $this->ui->pressButton('Continue');
 
