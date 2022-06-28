@@ -133,8 +133,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('Actor not in LPA');
         }
 
-        if($actor['type'] != 'trust-corporation') {
-            if ($dob !== $actor['details']['dob']) {
+        if($actor['type'] !== 'trust-corporation' && $dob !== $actor['details']['dob']) {
                 $this->logger->error(
                     'Dob {dob} did not match {expected} when validating actor code',
                     [
@@ -143,12 +142,18 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
                     ]
                 );
                 throw new ActorCodeValidationException('Bad date of birth');
-            }
         }
 
-        $this->logger->notice(
-            'RETURNING TRUE FROM verifyAgainstLpa............ TESTING.....',
-        );
+        if($actor['type'] === 'trust-corporation' && $dob !== $lpa->getData()['donor']['dob']) {
+            $this->logger->error(
+                'Dob {dob} did not match {expected} when validating actor code',
+                [
+                    'dob' => $dob,
+                    'expected' => $lpa->getData()['donor']['dob'],
+                ]
+            );
+            throw new ActorCodeValidationException('Bad date of birth');
+        }
 
         return true;
     }
