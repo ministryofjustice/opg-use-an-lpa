@@ -316,7 +316,14 @@ class ResolveActorTest extends TestCase
                 'id' => 1,
             ],
             'trustCorporations' => [
-                ['id' => 9, 'uId' => '700000151998', 'firstname' => 'trust', 'surname' => 'corporation', 'companyName' => 'trust corporation ltd', 'systemStatus' => true],
+                [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true,
+                ],
             ],
         ];
 

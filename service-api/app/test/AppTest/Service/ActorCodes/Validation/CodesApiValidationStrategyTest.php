@@ -362,5 +362,4 @@ class CodesApiValidationStrategyTest extends TestCase
         $this->expectException(ActorCodeValidationException::class);
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
-
 }
