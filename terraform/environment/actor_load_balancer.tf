@@ -131,7 +131,7 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
   priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
     redirect {
       host = "https://maintenance.opg.service.justice.gov.uk"
