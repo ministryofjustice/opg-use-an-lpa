@@ -133,10 +133,13 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
   action {
     type = "fixed-response"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/actor_maintenance.html")
-      status_code  = "503"
+    redirect {
+      host = "https://maintenance.opg.service.justice.gov.uk"
+      path = "/maintenance"
+      # query       = "#{query}"
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
   condition {
