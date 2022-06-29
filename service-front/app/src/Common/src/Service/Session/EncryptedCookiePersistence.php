@@ -19,6 +19,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
@@ -172,7 +173,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
             ->withDomain($this->cookieDomain)
             ->withPath($this->cookiePath)
             ->withSecure($this->cookieSecure)
-            ->withHttpOnly($this->cookieHttpOnly);
+            ->withHttpOnly($this->cookieHttpOnly)
+            ->withSameSite(SameSite::strict());
 
         $persistenceDuration = $this->getCookieLifetime($session);
         if ($persistenceDuration) {

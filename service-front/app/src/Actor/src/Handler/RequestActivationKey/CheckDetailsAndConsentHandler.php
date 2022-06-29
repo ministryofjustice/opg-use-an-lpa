@@ -120,6 +120,19 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['attorney_last_name']   = $state->attorneyLastName;
                 $this->data['attorney_dob']         = $state->attorneyDob;
             }
+
+            $this->data['actor_current_address'] = array_filter(
+                [
+                    $state->actorAddress1,
+                    $state->actorAddress2,
+                    $state->actorAddressTown,
+                    $state->actorAddressCounty
+                ]
+            );
+
+            if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+                $this->data['address_on_paper'] = $state->addressOnPaper;
+            }
         }
 
         return match ($request->getMethod()) {
@@ -151,14 +164,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->data['last_name']             = $state->lastName;
             $this->data['dob']                   = $state->dob;
             $this->data['actor_id']              = $state->actorUid;
-            $this->data['actor_current_address'] = array_filter([
-                $state->actorAddress1,
-                $state->actorAddress2,
-                $state->actorAddressTown,
-                $state->actorAddressCounty,
-                $state->postcode
-            ]);
-            $this->data['address_on_paper']      = $state->addressOnPaper;
+            $this->data['actor_current_address'] = array_filter(
+                [
+                    $state->actorAddress1,
+                    $state->actorAddress2,
+                    $state->actorAddressTown,
+                    $state->actorAddressCounty,
+                    $state->postcode
+                ]
+            );
+            if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+                $this->data['address_on_paper'] = $state->addressOnPaper;
+            }
 
             $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
