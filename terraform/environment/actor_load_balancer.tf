@@ -134,7 +134,7 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
     type = "redirect"
 
     redirect {
-      host = "https://maintenance.opg.service.justice.gov.uk"
+      host = "maintenance.opg.service.justice.gov.uk"
       path = "/maintenance"
       # query       = "#{query}"
       port        = "443"
