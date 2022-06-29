@@ -15,54 +15,120 @@
                     <h1 class="govuk-heading-xl">{% trans %}Check your details{% endtrans %}</h1>
 
                     <dl class="govuk-summary-list govuk-summary-list">
-                        {% if data.actor_role is defined %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {% trans %}Your role{% endtrans %}
-                            </dt>
-                            {% if data.actor_role|lower == 'donor' %}
-                                <dd class="govuk-summary-list__value">
-                                    {% trans %}Donor{% endtrans %}
-                                </dd>
-                            {% else %}
-                                <dd class="govuk-summary-list__value">
-                                    {% trans %}Attorney{% endtrans %}
-                                </dd>
-                            {% endif %}
-                            <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" id="change-your-role" href="{{ path('lpa.add.actor-role') }}">
-                                    {% trans %}Change<span class="govuk-visually-hidden"> role</span>{% endtrans %}
-                                </a>
-                            </dd>
-                        </div>
-                        {% if data.actor_role|lower == 'attorney' %}
+                        {% if data.actor_current_address is defined %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Donor's name{% endtrans %}
+                                    {% trans %}Current address{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{ data.donor_first_names ~ ' ' ~  data.donor_last_name }}
+                                    {% for line in data.actor_current_address %}
+                                        {{ line }}<br>
+                                    {% endfor %}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.donor-details') }}">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> donor's name</span>{% endtrans %}
+                                    <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
                                     </a>
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Donor's date of birth{% endtrans %}
+                                    {% trans %}Address on paper LPA{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{ code_date(data.donor_dob) }}
+                                    {%  if data.address_on_paper is defined %}
+                                        <pre class="govuk-body">{{ data.address_on_paper }}</pre>
+                                    {% else %}
+                                        {% trans %}Same as above{% endtrans %}
+                                    {% endif %}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" id="change-donors-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> donor's date of birth</span>{% endtrans %}
+                                    <a class="govuk-link" id="change-address-on-paper" href="{{ data.address_on_paper is defined ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
+                                        {% if data.address_on_paper is defined %}
+                                            {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
+                                        {% else %}
+                                            {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
+                                        {% endif %}
                                     </a>
                                 </dd>
                             </div>
                         {% endif %}
+                        {% if data.actor_role is defined %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Your role{% endtrans %}
+                                </dt>
+                                {% if data.actor_role|lower == 'donor' %}
+                                    <dd class="govuk-summary-list__value">
+                                        {% trans %}Donor{% endtrans %}
+                                    </dd>
+                                {% else %}
+                                    <dd class="govuk-summary-list__value">
+                                        {% trans %}Attorney{% endtrans %}
+                                    </dd>
+                                {% endif %}
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" id="change-your-role" href="{{ path('lpa.add.actor-role') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> role</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                            {% if data.actor_role|lower == 'attorney' %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Donor's name{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ data.donor_first_names ~ ' ' ~  data.donor_last_name }}
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.donor-details') }}">
+                                            {% trans %}Change<span class="govuk-visually-hidden"> donor's name</span>{% endtrans %}
+                                        </a>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Donor's date of birth{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ code_date(data.donor_dob) }}
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" id="change-donors-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
+                                            {% trans %}Change<span class="govuk-visually-hidden"> donor's date of birth</span>{% endtrans %}
+                                        </a>
+                                    </dd>
+                                </div>
+                            {% endif %}
+                            {% if data.actor_role|lower == 'donor' %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Attorney's name{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ data.attorney_first_names ~ ' ' ~  data.attorney_last_name }}
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" id="change-attorney-name" href="{{ path('lpa.add.attorney-details') }}">
+                                            {% trans %}Change<span class="govuk-visually-hidden"> attorney's name</span>{% endtrans %}
+                                        </a>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Attorney's date of birth{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ code_date(data.attorney_dob) }}
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        <a class="govuk-link" id="change-attorney-date-of-birth" href="{{ path('lpa.add.attorney-details') }}">
+                                            {% trans %}Change<span class="govuk-visually-hidden"> attorney's date of birth</span>{% endtrans %}
+                                        </a>
+                                    </dd>
+                                </div>
+                            {% endif %}
                         {% endif %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">

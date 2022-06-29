@@ -189,11 +189,12 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $patternPath = "Path={$cookiePath};";
                     $patternExpires = "Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);";
                     $patternSecure = "Secure;";
-                    $patternHttpOnly = "HttpOnly$";
+                    $patternHttpOnly = "HttpOnly;";
+                    $patternSameSite = "SameSite=Strict$";
 
                     // Validate the full pattern
                     $this->assertRegExp(
-                        "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly}|",
+                        "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly} {$patternSameSite}|",
                         $input
                     );
 

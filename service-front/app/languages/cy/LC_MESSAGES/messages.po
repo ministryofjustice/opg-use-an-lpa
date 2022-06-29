@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-22T17:58:30+00:00\n"
+"POT-Creation-Date: 2022-06-29T11:10:26+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -273,7 +273,7 @@ msgstr "Cadarnhau eich cyfrinair"
 #: src/Actor/templates/actor/check-your-answers.html.twig:76
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:59
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:89
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:155
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:270
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
@@ -2386,13 +2386,13 @@ msgstr "Eich swyddogaeth yn yr LPA hon"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:55
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:40
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
 msgid "Attorney"
 msgstr "Atwrnai"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:57
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
 msgid "Donor"
 msgstr "Rhoddwr"
 
@@ -5803,7 +5803,7 @@ msgstr "Rhowch ddyddiad geni’r rhoddwr"
 msgid "The donor's details"
 msgstr "Manylion y rhoddwr"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:54
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:36
 msgid "Donor's date of birth"
 msgstr "Dyddiad geni’r rhoddwr"
@@ -5838,35 +5838,35 @@ msgstr "cofrestrwyd yr atwrneiaeth arhosol ar 1 Ionawr 2016 neu ar ôl hynny"
 msgid "Check your details"
 msgstr "Gwiriwch eich manylion"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:59
 msgid "Your role"
 msgstr "Eich rôl"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> rôl</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:79
 msgid "Donor's name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:86
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:61
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:69
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:135
 msgid "Telephone number"
 msgstr "Rhif ffôn"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:80
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:146
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:90
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:156
 msgid ""
 "I understand that the information I've given will be stored securely and used "
 "to process my activation key request."
@@ -5874,7 +5874,7 @@ msgstr ""
 "Rwy’n deall y bydd y wybodaeth a roddais yn cael ei storio’n ddiogel a’i "
 "defnyddio i brosesu fy nghais am allwedd cadarnhau cyfrif."
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:98
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:164
 msgid "Confirm and submit request"
 msgstr "Cadarnhau a chyflwyno’r cais"
 
@@ -5886,7 +5886,7 @@ msgid ""
 msgstr ""
 "Rhowch eich rhif ffôn neu ticiwch y blwch i ddweud na allwch dderbyn galwadau"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:75
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:141
 msgid "Not provided"
 msgstr "Heb ei ddarparu"
 
@@ -7025,10 +7025,12 @@ msgstr ""
 "fwy nag un atwrnai, nodwch eu manylion."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:37
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:107
 msgid "Attorney's name"
 msgstr "Enw’r atwrnai"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:49
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:120
 msgid "Attorney's date of birth"
 msgstr "Dyddiad geni’r atwrnai"
 
@@ -7152,3 +7154,34 @@ msgstr "Mae gan yr atwrneiaeth arhosol hon gyfarwyddiadau"
 #: src/Common/templates/partials/full-lpa-display.html.twig:289
 msgid "Date summary viewed"
 msgstr "Dyddiad gweld y crynodeb"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:21
+msgid "Current address"
+msgstr "Cyfeiriad presennol"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:36
+msgid "Address on paper LPA"
+msgstr "Cyfeiriad ar yr LPA papur"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:114
+msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:127
+msgid ""
+"Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
+msgstr ""
+"Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni’r atwrnai</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:42
+msgid "Same as above"
+msgstr "Yr un peth ag uchod"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+msgid "Change<span class=\"govuk-visually-hidden\"> address on paper LPA</span>"
+msgstr ""
+"Newid<span class=\"govuk-visually-hidden\"> cyfeiriad ar yr LPA papur</span>"

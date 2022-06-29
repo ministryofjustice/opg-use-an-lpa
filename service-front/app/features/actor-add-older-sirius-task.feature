@@ -24,7 +24,7 @@ Feature: Add an older LPA creates Sirius task
   Scenario: The user can specify that their address is different
     Given My LPA has been found but my details did not match
       And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
-      And I select the address not same as on paper LPA
+      And I select the address is not the same as on paper LPA
       And I have given the address on the paper LPA
       And I confirm that I am the Attorney
       And I provide the donor's details
