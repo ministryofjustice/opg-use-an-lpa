@@ -105,8 +105,8 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
-module "whitelist" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git?ref=v1.4.0"
+module "allow_list" {
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v1.7.0"
 }
 
 data "aws_secretsmanager_secret" "notify_api_key" {
