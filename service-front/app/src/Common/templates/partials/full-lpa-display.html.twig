@@ -38,31 +38,25 @@
 
             <div class="govuk-grid-column-full">
 
-                {% if is_lpa_cancelled(lpa) %}
+                <div class="govuk-panel govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
 
-                    <div class="govuk-panel govuk-panel--failed">
+                    {% if is_lpa_cancelled(lpa) %}
 
-                        <h1 class="govuk-panel__title">
-                            {% if lpa.caseSubtype|lower == "pfa" %}
-                                {% trans %}This property and finance LPA has been cancelled{% endtrans %}
-                            {% else %}
-                                {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
+                            <h1 class="govuk-panel__title">
+                                {% if lpa.caseSubtype|lower == "pfa" %}
+                                    {% trans %}This property and finance LPA has been cancelled{% endtrans %}
+                                {% else %}
+                                    {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
+                                {% endif %}
+                            </h1>
+                            {% if lpa.cancellationDate is not null %}
+                                <div class="govuk-panel__body govuk-!-font-size-24">
+                                    <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
+                                </div>
                             {% endif %}
-                        </h1>
-                        {% if lpa.cancellationDate is not null %}
-                            <div class="govuk-panel__body govuk-!-font-size-24">
-                                <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
-                            </div>
-                        {% endif %}
-                        <div class="govuk-panel__body govuk-!-font-size-24">
-                            <strong>{% trans with {'%date%': lpa_date("today")} %}The information on this LPA summary was correct on %date%{% endtrans %}</strong>
-                        </div>
 
-                    </div>
+                    {% else %}
 
-                {% else %}
-
-                    <div class="govuk-panel govuk-panel--confirmation">
 
                         <h1 class="govuk-panel__title">
                             {% if lpa.caseSubtype|lower == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
@@ -94,15 +88,25 @@
                                 {% endif %}
                             </p>
 
-                            <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
-                                {% trans with {'%date%': lpa_date("today")} %}This LPA summary was correct on %date%{% endtrans %}
-                            </p>
-                        </div>
+                         </div>
 
-                    </div>
+                    {% endif %}
 
-                {% endif %}
+                    {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
+                        <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
+                            {% if is_donor_signature_date_too_old(lpa) %}
+                                {% trans %}This LPA has instructions and/or preferences{% endtrans %}
+                            {% elseif lpa.applicationHasGuidance and lpa.applicationHasRestrictions %}
+                                {% trans %}This LPA has instructions and preferences{% endtrans %}
+                            {% elseif lpa.applicationHasGuidance %}
+                                {% trans %}This LPA has preferences{% endtrans %}
+                            {% elseif lpa.applicationHasRestrictions %}
+                                {% trans %}This LPA has instructions{% endtrans %}
+                            {% endif %}
+                        </p>
 
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="govuk-grid-row">
@@ -202,33 +206,41 @@
                 <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
 
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">
-                            {% if is_donor_signature_date_too_old(lpa) %}
-                                {% trans with {'%link%': path('lpa.instructions-preferences-before-2016')} %}
-                                    We cannot show whether or not this <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions. <a class="govuk-link" href="%link%">Read more</a>
-                                {% endtrans %}
-                            {% elseif lpa.applicationHasGuidance %}
-                                {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
-                            {% else %}
-                                {% trans %}No{% endtrans %}
-                            {% endif %}
-                        </dd>
-                    </div>
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">
-                            {% if is_donor_signature_date_too_old(lpa) %}
-                                {% trans %}Unknown{% endtrans %}
-                            {% elseif lpa.applicationHasRestrictions %}
-                                {% trans %}Yes, the donor set instructions on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
-                            {% else %}
-                                {% trans %}No{% endtrans %}
-                            {% endif %}
-                        </dd>
-                    </div>
+                    {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">
+                                {% trans %}Yes, the donor made instructions and/or preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
+                            </dd>
+                        </div>
+
+                    {% else %}
+
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if lpa.applicationHasGuidance %}
+                                    {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
+                                {% else %}
+                                    {% trans %}No{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if lpa.applicationHasRestrictions %}
+                                    {% trans %}Yes, the donor set instructions on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
+                                {% else %}
+                                    {% trans %}No{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+
+                    {% endif %}
 
                     {% if lpa.caseSubtype == "pfa" %}
                         <div class="govuk-summary-list__row">
@@ -271,6 +283,11 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">{% trans %}LPA reference number{% endtrans %}</dt>
                         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
+                    </div>
+
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
                     </div>
                 </dl>
             </div>
