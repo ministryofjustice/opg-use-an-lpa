@@ -60,7 +60,7 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
-  alarm_name          = "ActorDDoSDetected"
+  alarm_name          = "${local.environment_name}_ActorDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -77,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
-  alarm_name          = "ViewerDDoSDetected"
+  alarm_name          = "${local.environment_name}_ViewerDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -95,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   count               = local.environment.build_admin ? 1 : 0
-  alarm_name          = "AdminDDoSDetected"
+  alarm_name          = "${local.environment_name}_AdminDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
