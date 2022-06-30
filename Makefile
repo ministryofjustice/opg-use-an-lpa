@@ -120,10 +120,12 @@ unit_test_api_app:
 	$(COMPOSE) run api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app
 
-development_mode:
-	$(COMPOSE) run front-composer composer development-enable
-	$(COMPOSE) run api-composer composer development-enable
-	clear_config_cache
+enable_development_mode:
+	$(COMPOSE) run front-composer development-enable
+	$(COMPOSE) run api-composer development-enable
+.PHONY: enable_development_mode
+
+development_mode: | enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 run_front_composer:
