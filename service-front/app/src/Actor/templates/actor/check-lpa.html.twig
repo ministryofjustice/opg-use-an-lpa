@@ -43,7 +43,11 @@
                                 {% trans %}Your name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ actor_name(user) }}
+                                {% if userRole == "Trust corporation" %}
+                                    {{ user.companyName }} {{ "(Trust corporation)" }}
+                                {% else %}
+                                    {{ actor_name(user) }}
+                                {% endif %}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -53,8 +57,10 @@
                             <dd class="govuk-summary-list__value">
                                 {% if userRole == "Attorney" %}
                                     {% trans %}Attorney{% endtrans %}
-                                {% else %}
+                                {% elseif userRole == "Donor" %}
                                     {% trans %}Donor{% endtrans %}
+                                {%  else %}
+                                    {% trans %}Trust corporation{% endtrans %}
                                 {% endif %}
                             </dd>
                         </div>

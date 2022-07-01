@@ -183,9 +183,16 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
             case AddLpaApiResponse::ADD_LPA_FOUND:
                 $lpaData = $result->getData();
+
                 $lpa = $lpaData['lpa'];
                 $actor = $lpaData['actor']['details'];
-                $actorRole = ($lpaData['actor']['type'] === 'donor') ? 'Donor' : 'Attorney';
+
+                $actorRole =
+                    (
+                        $lpaData['actor']['type'] === 'donor') ? 'Donor'
+                        : (($lpaData['actor']['type'] === 'primary-attorney') ? 'Attorney'
+                        : 'Trust corporation'
+                    );
 
                 $this->logger->debug(
                     'Account with Id {id} identified as Role {role} on LPA with Id {uId}',

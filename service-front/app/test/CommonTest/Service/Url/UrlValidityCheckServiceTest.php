@@ -111,7 +111,7 @@ class UrlValidityCheckServiceTest extends TestCase
             $this->urlHelperProphecy->reveal()
         );
 
-        $valid = $service->checkRefererRouteValid($refererUrl);
+        $valid = $service->checkReferrerRouteValid($refererUrl);
 
         $this->assertIsBool($valid);
         $this->assertTrue($valid);
@@ -143,7 +143,7 @@ class UrlValidityCheckServiceTest extends TestCase
             $this->urlHelperProphecy->reveal()
         );
 
-        $resultReferer = $service->setValidReferer($refererUrl);
+        $resultReferer = $service->setValidReferrer($refererUrl);
         $this->assertEquals($refererUrl, $resultReferer);
     }
 
@@ -176,7 +176,7 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
 
-        $resultReferer = $service->setValidReferer($refererUrl);
+        $resultReferer = $service->setValidReferrer($refererUrl);
 
         $this->assertEquals($homeUrl, $resultReferer);
     }
@@ -194,7 +194,7 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
 
-        $resultReferer = $service->setValidReferer(null);
+        $resultReferer = $service->setValidReferrer(null);
 
         $this->assertEquals($homeUrl, $resultReferer);
     }
@@ -230,7 +230,7 @@ class UrlValidityCheckServiceTest extends TestCase
 
         $this->urlHelperProphecy->generate('home')->willReturn($homeUrl);
 
-        $resultReferer = $service->setValidReferer($englishRefererUrl);
+        $resultReferer = $service->setValidReferrer($englishRefererUrl);
 
         $this->assertEquals($welshHomeUrl, $resultReferer);
     }
@@ -263,7 +263,7 @@ class UrlValidityCheckServiceTest extends TestCase
             $this->urlHelperProphecy->reveal()
         );
 
-        $resultReferer = $service->setValidReferer($refererUrl);
+        $resultReferer = $service->setValidReferrer($refererUrl);
         $this->assertEquals($refererUrl, $resultReferer);
     }
 }
