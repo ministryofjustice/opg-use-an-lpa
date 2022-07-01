@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
-use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
@@ -29,7 +28,6 @@ use Mezzio\Session\SessionPersistenceInterface;
  * @package BehatTest\Context\UI
  *
  * @property $traceId  The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
- * @property $basePath The base part of the URL, typically '/' but could be a language prefix i.e. '/cy'
  */
 class CommonContext implements Context
 {
@@ -40,7 +38,7 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceHomepage(): void
     {
-        $this->ui->visit($this->basePath . '/home');
+        $this->ui->visit($this->sharedState()->basePath . '/home');
     }
 
     /**
@@ -273,7 +271,7 @@ class CommonContext implements Context
      */
     public function iPrefixAUrlWithTheWelshLanguageCode()
     {
-        $this->basePath = '/cy';
+        $this->sharedState()->basePath = '/cy';
     }
 
     /**
@@ -461,7 +459,7 @@ class CommonContext implements Context
      */
     public function setupDefaultContextVariables(): void
     {
-        $this->basePath = '/';
+        $this->sharedState()->basePath = '/';
     }
 
     /**
