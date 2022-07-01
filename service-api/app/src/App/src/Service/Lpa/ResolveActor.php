@@ -28,8 +28,6 @@ class ResolveActor
      * database id's (UserActorLpa lookup) so it checks both fields for the id. This is not ideal but we now have
      * many thousands of live data rows with database id's at this point.
      *
-     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear
-     *       in `attorneys`.
      *
      * @param array $lpa An LPA data structure
      * @param string $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
