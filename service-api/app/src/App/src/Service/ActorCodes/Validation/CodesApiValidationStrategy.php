@@ -133,15 +133,17 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('Actor not in LPA');
         }
 
-        if (($actor['type'] !== 'trust-corporation' && $dob !== $actor['details']['dob']) ||
-            ($actor['type'] === 'trust-corporation' && $dob !== $lpa->getData()['donor']['dob'])){
-                $this->logger->error(
-                    'Provided dob {dob} did not match the expected when validating actor code',
-                    [
-                        'dob' => $dob
-                    ]
-                );
-                throw new ActorCodeValidationException('Bad date of birth');
+        if (
+            ($actor['type'] !== 'trust-corporation' && $dob !== $actor['details']['dob']) ||
+            ($actor['type'] === 'trust-corporation' && $dob !== $lpa->getData()['donor']['dob'])
+        ) {
+            $this->logger->error(
+                'Provided dob {dob} did not match the expected when validating actor code',
+                [
+                    'dob' => $dob,
+                ]
+            );
+            throw new ActorCodeValidationException('Bad date of birth');
         }
 
         return true;
