@@ -1,0 +1,29 @@
+{
+  "code": {
+    "S": "KMQRAQWTAAAA"
+  },
+  "active": {
+    "BOOL": true
+  },
+  "actor": {
+    "S": "700000138102"
+  },
+  "dob": {
+    "S": "1999-06-10"
+  },
+  "expiry_date": {
+    "N": "1719583034"
+  },
+  "generated_date": {
+    "S": "2022-06-28"
+  },
+  "last_updated_date": {
+    "S": "2022-06-28"
+  },
+  "lpa": {
+    "S": "700000136452"
+  },
+  "status_details": {
+    "S": "Imported"
+  }
+}
