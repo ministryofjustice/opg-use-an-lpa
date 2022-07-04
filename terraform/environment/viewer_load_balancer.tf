@@ -171,7 +171,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
   }
   condition {
     path_pattern {
-      values = ["/maintenance-cy"]
+      values = ["/cy/maintenance"]
     }
   }
   lifecycle {
