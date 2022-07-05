@@ -305,4 +305,62 @@ class ResolveActorTest extends TestCase
         $result = $resolver($lpa, '234567890123');
         $this->assertNull($result);
     }
+
+    /**
+     * @test
+     */
+    public function can_find_actor_who_is_a_trust_corporation()
+    {
+        $lpa = [
+            'donor' => [
+                'id' => 1,
+            ],
+            'trustCorporations' => [
+                [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true,
+                ],
+            ],
+        ];
+
+        $resolver = $this->getActorResolver();
+
+        $result = $resolver($lpa, '700000151998');
+
+        $this->assertEquals(
+            [
+                'type' => 'trust-corporation',
+                'details' => [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
+
+        $result = $resolver($lpa, '9');
+
+        $this->assertEquals(
+            [
+                'type' => 'trust-corporation',
+                'details' => [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
+    }
 }

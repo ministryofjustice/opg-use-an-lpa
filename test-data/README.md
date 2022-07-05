@@ -49,3 +49,9 @@ aws-vault exec identity -- python3 put_actor_codes.py
 ```
 
 Finally add the codes to the codes api tables for usage.
+
+```shell script
+aws-vault exec sirius-dev -- aws dynamodb put-item --table-name lpa-codes-integration --item file://trust_corp_activation_code.json
+```
+To add an activation code for trust corporation [for a LPA] in lpa-codes-integration table in sirius-dev DB. 
+Executing the aws-vault script will add/replace the exiting record in table. 

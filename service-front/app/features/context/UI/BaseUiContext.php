@@ -67,4 +67,12 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
             )
         );
     }
+
+    /**
+     * @AfterScenario
+     */
+    public function resetSharedState(): void
+    {
+        SharedState::getInstance()->reset();
+    }
 }
