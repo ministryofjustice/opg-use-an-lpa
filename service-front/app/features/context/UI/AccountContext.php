@@ -8,6 +8,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Common\Service\Email\EmailClient;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -78,8 +79,8 @@ class AccountContext implements Context
      */
     public function iAccessTheAccountCreationPage()
     {
-        $this->ui->visit('/create-account');
-        $this->ui->assertPageAddress('/create-account');
+        $this->ui->visit($this->sharedState()->basePath . '/create-account');
+        $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
     }
 
     /**
@@ -861,7 +862,7 @@ class AccountContext implements Context
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
 
-        $this->ui->assertPageAddress('/create-account');
+        $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
 
         // API call for password reset request
         $this->apiFixtures->post('/v1/user')
@@ -880,13 +881,21 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+        $request = $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+
+        $this->setLastRequest($request);
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
         $this->ui->fillField('terms', 1);
-        $this->ui->pressButton('Create account');
+
+        // grab the button by selector as the button text might be in welsh or english.
+        $button = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            "//form[@name='create_account']//button[@type='submit']"
+        );
+        $button->press();
     }
 
     /**
@@ -1456,6 +1465,17 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I receive unique instructions on how to activate my account in Welsh$/
+     */
+    public function iReceiveUniqueInstructionsOnHowToActivateMyAccountInWelsh()
+    {
+        $request = $this->getLastRequest();
+
+        $requestBody = $request->getRequest()->getRequest()->getBody()->getContents();
+        assertStringContainsString(EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION[EmailClient::CY_LOCALE], $requestBody);
+    }
+
+    /**
      * @Then /^I receive unique instructions on how to reset my password$/
      * @Then /^I receive an email telling me I do not have an account$/
      */
@@ -1889,7 +1909,8 @@ class AccountContext implements Context
      */
     public function myAccountIsActivatedAndIReceiveAConfirmationEmail()
     {
-        $this->ui->assertPageContainsText('Account activated');
+        $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Account activated successfully');
         $this->ui->assertPageContainsText('sign in');
     }
 

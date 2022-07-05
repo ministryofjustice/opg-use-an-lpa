@@ -27,6 +27,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string $userSurname
  * @property string $activationCode
  * @property string $codeCreatedDate
+ * @property string $companyName
  */
 class LpaContext implements Context
 {
@@ -1880,6 +1881,69 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I as trust corporation request to add an LPA with the code "([^"]*)" that is for "([^"]*)" \
+     *       and I will have an Id of ([^"]*)$/
+     */
+    public function iAsTrustCorporationRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
+        $activation_key,
+        $companyName,
+        $id
+    ) {
+        $this->userId = $this->actorId = (int)$id;
+
+        $this->companyName = $companyName;
+
+        // API Response for LPA data request, configured with our specified details
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date' => 'today',
+            'actor' => [
+                'type' => 'trust-corporation',
+                'details' => [
+                    'addresses' => [
+                        '0' => [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country' => '',
+                            'county' => '',
+                            'id' => 0,
+                            'postcode' => '',
+                            'town' => '',
+                            'type' => 'Primary',
+                        ],
+                    ],
+                    'companyName' => 'trust corporation',
+                    'dob' => null,
+                    'email' => 'string',
+                    'firstname' => 'trust',
+                    'id' => $this->actorId,
+                    'middlenames' => null,
+                    'salutation' => 'Mr',
+                    'surname' => 'corporation',
+                    'systemStatus' => true,
+                    'uId' => '700000151998',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance' => false,
+            'lpa' => $this->lpa,
+        ];
+
+        // API call for checking LPA
+        $this->apiFixtures->post('/v1/add-lpa/validate')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpaData)
+                )
+            );
+
+        $this->fillAddLpaPages($activation_key, '05', '10', '1975', '700000151998');
+    }
+
+    /**
      * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
     public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
@@ -2458,7 +2522,11 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
 
         $this->ui->assertPageContainsText('Is this the LPA you want to add?');
-        $this->ui->assertPageContainsText(sprintf('Mr %s %s', $this->userFirstName, $this->userSurname));
+        if ($role === 'Trust corporation') {
+            $this->ui->assertPageContainsText(sprintf('%s', $this->companyName));
+        } else {
+            $this->ui->assertPageContainsText(sprintf('Mr %s %s', $this->userFirstName, $this->userSurname));
+        }
         $this->ui->assertPageContainsText($role);
 
         $this->ui->pressButton('Continue');
@@ -2609,8 +2677,13 @@ class LpaContext implements Context
      * @param string $code
      * @return void
      */
-    private function fillAddLpaPages(string $code, string $day, string $month, string $year, string $reference_number): void
-    {
+    private function fillAddLpaPages(
+        string $code,
+        string $day,
+        string $month,
+        string $year,
+        string $reference_number
+    ): void {
         $this->ui->fillField('activation_key', $code);
         $this->ui->pressButton('Continue');
 

@@ -8,6 +8,7 @@ use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\UI\BaseUiContext;
+use BehatTest\Context\UI\SharedState;
 use JSHayes\FakeRequests\MockHandler;
 use JSHayes\FakeRequests\RequestHandler;
 
@@ -20,30 +21,15 @@ use JSHayes\FakeRequests\RequestHandler;
  */
 trait BaseUiContextTrait
 {
-    /**
-     * @var BaseUiContext
-     */
-    protected $base;
-
-    /**
-     * @var MinkContext
-     */
-    protected $ui;
-
-    /**
-     * @var MockHandler
-     */
-    protected $apiFixtures;
-
-    /**
-     * @var AwsMockHandler
-     */
-    protected $awsFixtures;
+    protected BaseUiContext $base;
+    protected MinkContext $ui;
+    protected MockHandler $apiFixtures;
+    protected AwsMockHandler $awsFixtures;
 
     /**
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
 
@@ -97,11 +83,19 @@ trait BaseUiContextTrait
      *
      * @return bool
      */
-    public function elementisOpen(string $searchStr)
+    public function elementIsOpen(string $searchStr): bool
     {
         $page = $this->ui->getSession()->getPage();
         $element = $page->find('css', $searchStr);
         $elementHtml = $element->getOuterHtml();
         return str_contains($elementHtml, ' open');
+    }
+
+    /**
+     * @return SharedState
+     */
+    public function sharedState(): SharedState
+    {
+        return SharedState::getInstance();
     }
 }

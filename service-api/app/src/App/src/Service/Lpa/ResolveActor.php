@@ -28,8 +28,6 @@ class ResolveActor
      * database id's (UserActorLpa lookup) so it checks both fields for the id. This is not ideal but we now have
      * many thousands of live data rows with database id's at this point.
      *
-     * TODO: Confirm if we need to look in Trust Corporations, or if an active Trust Corporation would appear
-     *       in `attorneys`.
      *
      * @param array $lpa An LPA data structure
      * @param string $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
@@ -60,7 +58,17 @@ class ResolveActor
             }
         }
 
-        // If not an attorney, check if they're the donor.
+        // Determine if the actor is a trust corporation
+        if (isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
+            foreach ($lpa['trustCorporations'] as $tc) {
+                if ((string)$tc['id'] === $actorId || $tc['uId'] === $actorId) {
+                    $actor = $tc;
+                    $actorType = 'trust-corporation';
+                }
+            }
+        }
+
+        // If not an attorney or tc, check if they're the donor.
         if (is_null($actor) && $this->isDonor($lpa, $actorId)) {
             $actor = $lpa['donor'];
             $actorType = 'donor';
