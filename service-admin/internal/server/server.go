@@ -12,6 +12,7 @@ import (
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
@@ -55,26 +56,41 @@ func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Ha
 	a.r.Handle("/helloworld", handlers.HelloHandler())
 	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 
+	authHandler := NewAuthorisationHandler(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService())
-	a.r.Handle(
-		"/",
-		auth.WithAuthorisation(
-			http.HandlerFunc(searchServer.SearchHandler),
-			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
-		),
-	)
+	a.r.Handle("/", authHandler(http.HandlerFunc(searchServer.SearchHandler)))
 
 	a.r.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
-	wrap := WithJSONLogging(
-		WithTemplates(
-			withErrorHandling(a.r, a.tw),
-			LoadTemplates(os.DirFS("web/templates")),
-		),
-		log.Logger,
-	)
+	JSONHandler := NewJSONHandler(log.Logger)
+	templateHandler := NewTemplateHandler(LoadTemplates(os.DirFS("web/templates")))
+	errorHandler := NewErrorHandler(a.tw)
 
-	return wrap
+	return JSONHandler(templateHandler(errorHandler(a.r)))
+}
+
+func NewAuthorisationHandler(token *auth.Token) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return auth.WithAuthorisation(h, token)
+	}
+}
+
+func NewErrorHandler(tw handlers.TemplateWriterService) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return withErrorHandling(h, tw)
+	}
+}
+
+func NewTemplateHandler(templates *Templates) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WithTemplates(h, templates)
+	}
+}
+
+func NewJSONHandler(logger zerolog.Logger) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WithJSONLogging(h, logger)
+	}
 }
 
 func withErrorHandling(next http.Handler, templateWriter handlers.TemplateWriterService) http.Handler {
