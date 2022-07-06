@@ -22,6 +22,12 @@ type errorInterceptResponseWriter struct {
 	h ErrorHandler
 }
 
+type app struct {
+	db *dynamodb.Client
+	r  *mux.Router
+	tw handlers.TemplateWriterService
+}
+
 var ErrPanicRecovery = errors.New("error handler recovering from panic()")
 
 func (w *errorInterceptResponseWriter) WriteHeader(status int) {
@@ -41,25 +47,28 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewServer(db *dynamodb.Client, keyURL string, cognitoLogoutURL *url.URL) http.Handler {
-	router := mux.NewRouter()
+func NewAdminApp(db *dynamodb.Client, r *mux.Router, tw handlers.TemplateWriterService) *app {
+	return &app{db, r, tw}
+}
 
-	router.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
-	router.Handle("/helloworld", handlers.HelloHandler())
+func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Handler {
+	a.r.Handle("/helloworld", handlers.HelloHandler())
+	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 
-	searchServer := *handlers.NewSearchServer(data.NewAccountService(db), data.NewLPAService(db), handlers.NewTemplateWriterService())
-	router.Handle(
+	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService())
+	a.r.Handle(
 		"/",
 		auth.WithAuthorisation(
 			http.HandlerFunc(searchServer.SearchHandler),
 			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
 		),
 	)
-	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
+
+	a.r.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
 	wrap := WithJSONLogging(
 		WithTemplates(
-			withErrorHandling(router),
+			withErrorHandling(a.r, a.tw),
 			LoadTemplates(os.DirFS("web/templates")),
 		),
 		log.Logger,
@@ -68,7 +77,7 @@ func NewServer(db *dynamodb.Client, keyURL string, cognitoLogoutURL *url.URL) ht
 	return wrap
 }
 
-func withErrorHandling(next http.Handler) http.Handler {
+func withErrorHandling(next http.Handler, templateWriter handlers.TemplateWriterService) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
 			w.WriteHeader(i)
@@ -81,7 +90,7 @@ func withErrorHandling(next http.Handler) http.Handler {
 				t = "notfound.page.gohtml"
 			}
 
-			ws := handlers.NewTemplateWriterService()
+			ws := templateWriter
 			if err := ws.RenderTemplate(w, r.Context(), t, nil); err != nil {
 				log.Panic().Err(err).Msg("")
 			}
