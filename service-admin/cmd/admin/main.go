@@ -9,9 +9,11 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
@@ -52,8 +54,10 @@ func main() {
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
+	app := server.NewAdminApp(dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService())
+
 	srv := &http.Server{
-		Handler:      server.NewServer(dynamoDB, *keyURL),
+		Handler:      app.InitialiseServer(*keyURL),
 		Addr:         ":" + *port,
 		WriteTimeout: 10 * time.Second,
 		ReadTimeout:  10 * time.Second,
