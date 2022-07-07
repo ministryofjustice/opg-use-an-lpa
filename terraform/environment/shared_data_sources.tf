@@ -6,6 +6,21 @@ data "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${local.environment.account_name}-lb-access-logs"
 }
 
+# data "aws_subnet_ids" "private" {
+#   vpc_id = data.aws_vpc.default.id
+
+#   tags = {
+#     Name = "private"
+#   }
+# }
+# data "aws_subnet_ids" "public" {
+#   vpc_id = data.aws_vpc.default.id
+
+#   tags = {
+#     Name = "public"
+#   }
+# }
+
 data "aws_subnets" "private" {
   filter {
     name   = "vpc-id"
@@ -13,7 +28,7 @@ data "aws_subnets" "private" {
   }
 
   tags = {
-    Tier = "private"
+    Name = "private"
   }
 }
 
@@ -24,7 +39,7 @@ data "aws_subnets" "public" {
   }
 
   tags = {
-    Tier = "public"
+    Name = "public"
   }
 }
 
