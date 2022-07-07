@@ -77,7 +77,7 @@ func NewAuthorisationHandler(token *auth.Token) func(http.Handler) http.Handler 
 
 func NewErrorHandler(tw handlers.TemplateWriterService) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
-		return withErrorHandling(h, tw)
+		return WithErrorHandling(h, tw)
 	}
 }
 
@@ -93,11 +93,9 @@ func NewJSONHandler(logger zerolog.Logger) func(http.Handler) http.Handler {
 	}
 }
 
-func withErrorHandling(next http.Handler, templateWriter handlers.TemplateWriterService) http.Handler {
+func WithErrorHandling(next http.Handler, templateWriter handlers.TemplateWriterService) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
-			w.WriteHeader(i)
-
 			t := "error.page.gohtml"
 			switch i {
 			case 403:
@@ -110,6 +108,8 @@ func withErrorHandling(next http.Handler, templateWriter handlers.TemplateWriter
 			if err := ws.RenderTemplate(w, r.Context(), t, nil); err != nil {
 				log.Panic().Err(err).Msg("")
 			}
+
+			w.WriteHeader(i) //Write header can only be done once, it needs to be last to ensure it is correct
 		}
 
 		// panic recovery
