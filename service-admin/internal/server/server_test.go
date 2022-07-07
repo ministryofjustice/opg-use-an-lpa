@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -115,7 +116,7 @@ func Test_app_InitialiseServer(t *testing.T) {
 				r:  tt.fields.r,
 				tw: tt.fields.tw,
 			}
-			a.InitialiseServer(tt.args.keyURL)
+			a.InitialiseServer(tt.args.keyURL, &url.URL{})
 		})
 	}
 }
