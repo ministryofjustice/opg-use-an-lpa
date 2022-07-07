@@ -2758,16 +2758,16 @@
         },
         {
             "name": "mezzio/mezzio",
-            "version": "3.10.0",
+            "version": "3.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio.git",
-                "reference": "7da0c2e454cb55ccded99bb9699db478486fed5f"
+                "reference": "d5bf81f0caee6cf4b682a4bf1f8d693288bf217d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio/zipball/7da0c2e454cb55ccded99bb9699db478486fed5f",
-                "reference": "7da0c2e454cb55ccded99bb9699db478486fed5f",
+                "url": "https://api.github.com/repos/mezzio/mezzio/zipball/d5bf81f0caee6cf4b682a4bf1f8d693288bf217d",
+                "reference": "d5bf81f0caee6cf4b682a4bf1f8d693288bf217d",
                 "shasum": ""
             },
             "require": {
@@ -2795,7 +2795,7 @@
             "require-dev": {
                 "filp/whoops": "^2.14.4",
                 "laminas/laminas-coding-standard": "~2.3.0",
-                "laminas/laminas-diactoros": "^2.8.0",
+                "laminas/laminas-diactoros": "^2.11.2",
                 "laminas/laminas-servicemanager": "^3.10",
                 "malukenho/docheader": "^0.1.8",
                 "mezzio/mezzio-aurarouter": "^3.3.0",
@@ -2863,7 +2863,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-02-05T17:44:06+00:00"
+            "time": "2022-06-29T21:47:57+00:00"
         },
         {
             "name": "mezzio/mezzio-authentication",
