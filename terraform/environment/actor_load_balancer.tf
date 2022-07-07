@@ -13,7 +13,7 @@ resource "aws_lb" "actor" {
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnet_ids.public.ids
+  subnets                    = data.aws_subnets.public.ids
 
   enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
