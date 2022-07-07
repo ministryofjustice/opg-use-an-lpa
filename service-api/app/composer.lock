@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.224.3",
+            "version": "3.231.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "52f45dfe0d1e5a77f33c050bde5134901fc54a57"
+                "reference": "6222f9e77df8142ec1cbf60337871ef73859bea9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/52f45dfe0d1e5a77f33c050bde5134901fc54a57",
-                "reference": "52f45dfe0d1e5a77f33c050bde5134901fc54a57",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6222f9e77df8142ec1cbf60337871ef73859bea9",
+                "reference": "6222f9e77df8142ec1cbf60337871ef73859bea9",
                 "shasum": ""
             },
             "require": {
@@ -75,9 +75,9 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^5.3.3 || ^6.2.1 || ^7.0",
+                "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
                 "guzzlehttp/promises": "^1.4.0",
-                "guzzlehttp/psr7": "^1.7.0 || ^2.1.1",
+                "guzzlehttp/psr7": "^1.8.5 || ^2.3",
                 "mtdowling/jmespath.php": "^2.6",
                 "php": ">=5.5"
             },
@@ -85,6 +85,7 @@
                 "andrewsville/php-token-reflection": "^1.4",
                 "aws/aws-php-sns-message-validator": "~1.0",
                 "behat/behat": "~3.0",
+                "composer/composer": "^1.10.22",
                 "doctrine/cache": "~1.4",
                 "ext-dom": "*",
                 "ext-openssl": "*",
@@ -143,9 +144,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.224.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.231.0"
             },
-            "time": "2022-06-02T18:22:57+00:00"
+            "time": "2022-07-06T18:15:37+00:00"
         },
         {
             "name": "brick/varexporter",
