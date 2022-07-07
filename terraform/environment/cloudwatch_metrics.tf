@@ -50,6 +50,7 @@ resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }
 
@@ -72,6 +73,7 @@ resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }
 
@@ -94,5 +96,6 @@ resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }
