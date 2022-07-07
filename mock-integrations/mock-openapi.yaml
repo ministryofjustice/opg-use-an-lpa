@@ -358,7 +358,7 @@ paths:
                     invalidDate: null
                     lifeSustainingTreatment: Option B
                     lpaDonorSignatureDate: "2016-01-01"
-                    lpaIsCleansed: false
+                    lpaIsCleansed: true
                     onlineLpaId: A15527329531
                     receiptDate: "2014-09-26"
                     registrationDate: "2020-05-15"

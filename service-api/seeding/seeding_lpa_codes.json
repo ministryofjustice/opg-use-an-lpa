@@ -120,6 +120,18 @@
     "Comment": "Seeded Data:"
   },
   {
+    "code": "5VBM44QFRMBZ",
+    "active": true,
+    "actor": "700000151998",
+    "last_updated_date": "2020-06-22",
+    "lpa": "700000000138",
+    "dob": "1948-11-01",
+    "expiry_date": "valid",
+    "generated_date": "2020-06-22",
+    "status_details": "Imported",
+    "Comment": "Seeded Data:"
+  },
+  {
     "code": "3YKAJNDD8P3N",
     "active": true,
     "actor": "700000000815",

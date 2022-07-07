@@ -139,3 +139,14 @@ Feature: Add an LPA
       | id  | passcode     | firstName | secondName | role     |
       | 164 | TYUPHWQRECHV | Harold    | Stallman   | Attorney |
       | 64  | AYUPHWQRECHV | Simon     | Matthews   | Attorney |
+
+  @ui
+  Scenario Outline: I can add a LPA as a trust corporation
+    Given I am on the add an LPA page
+    When I as trust corporation request to add an LPA with the code "<passcode>" that is for "<companyName>" and I will have an Id of <id>
+    Then The correct LPA is found and I can see the correct name which will have a role of "<role>"
+    And The LPA is successfully added
+
+    Examples:
+      | id  | passcode     | companyName       | role              |
+      | 164 | TYUPHWQRECHV | trust corporation | Trust corporation |
