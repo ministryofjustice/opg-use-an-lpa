@@ -1,15 +1,18 @@
-package server
+package server_test
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockTemplateWriterService struct {
@@ -23,7 +26,10 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 
 	return nil
 }
+
 func Test_withErrorHandling(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		next http.Handler
 	}
@@ -65,8 +71,16 @@ func Test_withErrorHandling(t *testing.T) {
 
 			wantedTemplateName: "error.page.gohtml",
 		},
+		{
+			name: "writing ok header does not error",
+			args: args{
+				next: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) }),
+			},
+			wantedTemplateName: "",
+		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		tw := &mockTemplateWriterService{
 			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if s != tt.wantedTemplateName {
@@ -76,22 +90,135 @@ func Test_withErrorHandling(t *testing.T) {
 			}}
 
 		t.Run(tt.name, func(t *testing.T) {
-			got := withErrorHandling(tt.args.next, tw)
+			t.Parallel()
+			got := server.WithErrorHandling(tt.args.next, tw)
 			got.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest("GET", "/", nil))
 
 		})
 	}
 }
 
+func Test_withErrorHandlingWriter(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		next http.Handler
+	}
+
+	tests := []struct {
+		name               string
+		args               args
+		wantedTemplateName string
+		expected           string
+	}{
+		{
+			name: "writing ok header still writes correctly",
+			args: args{
+				next: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					w.WriteHeader(200)
+					_, err := w.Write([]byte("This body has been written"))
+					if err != nil {
+						t.Errorf("Error writing body")
+					}
+				}),
+			},
+			wantedTemplateName: "",
+			expected:           "This body has been written",
+		},
+		{
+			name: "error header no longer outputs normal written material",
+			args: args{
+				next: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					w.WriteHeader(400)
+					_, err := w.Write([]byte("This body has been written"))
+					if err != nil {
+						t.Errorf("Error writing body")
+					}
+				}),
+			},
+			wantedTemplateName: "error.page.gohtml",
+			expected:           "",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		tw := &mockTemplateWriterService{
+			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
+				if s != tt.wantedTemplateName {
+					t.Errorf("expected %v recieved %v", tt.wantedTemplateName, s)
+				}
+				return nil
+			}}
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			recorder := httptest.NewRecorder()
+			got := server.WithErrorHandling(tt.args.next, tw)
+			got.ServeHTTP(recorder, httptest.NewRequest("GET", "/", nil))
+
+			if recorder.Body.String() != tt.expected {
+				t.Errorf("expected %v recieved %v", tt.expected, recorder.Body.String())
+			}
+		})
+	}
+}
+
+func Test_withErrorHandlingTemplateError(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		next http.Handler
+	}
+
+	tests := []struct {
+		name           string
+		args           args
+		expectedStatus int
+	}{
+		{
+			name: "template error causes panic",
+			args: args{
+				next: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(404) }),
+			},
+			expectedStatus: 500,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		tw := &mockTemplateWriterService{
+			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
+				if s == "notfound.page.gohtml" {
+					return errors.New("")
+				}
+				return nil
+			}}
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			defer func() { _ = recover() }()
+
+			got := server.WithErrorHandling(tt.args.next, tw)
+			assert.HTTPStatusCode(t, got.ServeHTTP, "GET", "/", nil, tt.expectedStatus)
+
+		})
+	}
+}
+
 func Test_app_InitialiseServer(t *testing.T) {
+	t.Parallel()
+
 	type fields struct {
 		db *dynamodb.Client
 		r  *mux.Router
 		tw handlers.TemplateWriterService
 	}
+
 	type args struct {
 		keyURL string
 	}
+
 	tests := []struct {
 		name   string
 		fields fields
@@ -108,14 +235,16 @@ func Test_app_InitialiseServer(t *testing.T) {
 			args: args{""},
 		},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			a := &app{
-				db: tt.fields.db,
-				r:  tt.fields.r,
-				tw: tt.fields.tw,
-			}
-			a.InitialiseServer(tt.args.keyURL)
+			t.Parallel()
+
+			tt.fields.r.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
+			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw)
+			handler := a.InitialiseServer(tt.args.keyURL)
+			assert.HTTPStatusCode(t, handler.ServeHTTP, "GET", "/hello", nil, 200)
 		})
 	}
 }
