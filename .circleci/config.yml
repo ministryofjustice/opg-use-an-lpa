@@ -815,7 +815,7 @@ orbs:
         resource_class: small
       node-browsers:
         docker:
-          - image: cimg/node:14.18-browsers
+          - image: cimg/node:14.19-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
