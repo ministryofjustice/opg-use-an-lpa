@@ -134,7 +134,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
 
     redirect {
       host        = "maintenance.opg.service.justice.gov.uk"
-      path        = "/en-gb/view-a-lasting-power-of-attorney"
+      path        = "/en-gb/view-a-lasting-power-of-attorney/planned"
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_302"
@@ -163,7 +163,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
     redirect {
       host        = "maintenance.opg.service.justice.gov.uk"
-      path        = "/cy/gweld-atwrneiaeth-arhosol"
+      path        = "/cy/gweld-atwrneiaeth-arhosol/planned"
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_302"
