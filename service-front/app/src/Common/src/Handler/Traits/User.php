@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Common\Handler\Traits;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 trait User
 {
-    /** @var AuthenticationInterface */
-    private $authenticator;
+    private ?AuthenticationInterface $authenticator = null;
 
     /**
      * @param AuthenticationInterface $authenticator
