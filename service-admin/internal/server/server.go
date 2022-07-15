@@ -54,40 +54,40 @@ func NewAdminApp(db *dynamodb.Client, r *mux.Router, tw handlers.TemplateWriterS
 
 func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Handler {
 	a.r.Handle("/helloworld", handlers.HelloHandler())
-	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 
-	authHandler := NewAuthorisationHandler(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
+	authMiddleware := NewAuthorisationMiddleware(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService())
-	a.r.Handle("/", authHandler(http.HandlerFunc(searchServer.SearchHandler)))
+	JSONLoggingMiddleware := NewJSONLoggingMiddleware(log.Logger)
+	templateMiddleware := NewTemplateMiddleware(LoadTemplates(os.DirFS("web/templates")))
+	errorHandlingMiddleware := NewErrorHandlingMiddleware(a.tw)
 
+	a.r.Handle("/helloworld", handlers.HelloHandler())
+	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 	a.r.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
+	a.r.Handle("/", authMiddleware(http.HandlerFunc(searchServer.SearchHandler)))
 
-	JSONHandler := NewJSONHandler(log.Logger)
-	templateHandler := NewTemplateHandler(LoadTemplates(os.DirFS("web/templates")))
-	errorHandler := NewErrorHandler(a.tw)
-
-	return JSONHandler(templateHandler(errorHandler(a.r)))
+	return JSONLoggingMiddleware(templateMiddleware(errorHandlingMiddleware(a.r)))
 }
 
-func NewAuthorisationHandler(token *auth.Token) func(http.Handler) http.Handler {
+func NewAuthorisationMiddleware(token *auth.Token) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return auth.WithAuthorisation(h, token)
 	}
 }
 
-func NewErrorHandler(tw handlers.TemplateWriterService) func(http.Handler) http.Handler {
+func NewErrorHandlingMiddleware(tw handlers.TemplateWriterService) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return WithErrorHandling(h, tw)
 	}
 }
 
-func NewTemplateHandler(templates *Templates) func(http.Handler) http.Handler {
+func NewTemplateMiddleware(templates *Templates) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return WithTemplates(h, templates)
 	}
 }
 
-func NewJSONHandler(logger zerolog.Logger) func(http.Handler) http.Handler {
+func NewJSONLoggingMiddleware(logger zerolog.Logger) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return WithJSONLogging(h, logger)
 	}

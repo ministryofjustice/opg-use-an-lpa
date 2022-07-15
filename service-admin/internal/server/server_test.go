@@ -198,8 +198,6 @@ func Test_withErrorHandlingTemplateError(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			defer func() { _ = recover() }()
-
 			got := server.WithErrorHandling(tt.args.next, tw)
 			assert.HTTPStatusCode(t, got.ServeHTTP, "GET", "/", nil, tt.expectedStatus)
 
