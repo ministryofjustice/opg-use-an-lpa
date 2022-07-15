@@ -34,6 +34,9 @@ func TestHelloHandler_WithBadTemplate(t *testing.T) {
 
 	fs := afero.NewIOFS(memfs)
 
+	//stop panic from failing tests
+	defer func() { _ = recover() }()
+
 	handler := server.WithTemplates(
 		HelloHandler(),
 		server.LoadTemplates(fs), // bad template location loads no templates
@@ -41,4 +44,6 @@ func TestHelloHandler_WithBadTemplate(t *testing.T) {
 
 	// the handler panics but that is handled upstream so it claims success at this point
 	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/helloworld", nil)
+
+	t.Errorf("did not panic")
 }
