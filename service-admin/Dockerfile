@@ -11,6 +11,8 @@ RUN npm ci && node_modules/.bin/webpack -p
 # Build Go app
 FROM golang:1.18-alpine as build-env
 
+RUN apk --update --no-cache add build-base
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
@@ -28,8 +30,8 @@ WORKDIR /go/bin
 
 RUN apk --update --no-cache add \
   ca-certificates \
+  tzdata \
   && rm -rf /var/cache/apk/*
-RUN apk --no-cache add tzdata
 
 COPY --from=build-env /app/admin admin
 COPY --from=build-env /app/web/templates web/templates
