@@ -11,8 +11,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type DynamoDBClient interface {
+	Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+}
+
 type accountService struct {
-	db *dynamodb.Client
+	db DynamoDBClient
 }
 
 type ActorUser struct {
@@ -32,7 +37,7 @@ const (
 
 var ErrActorUserNotFound = errors.New("actoruser not found")
 
-func NewAccountService(db *dynamodb.Client) *accountService {
+func NewAccountService(db DynamoDBClient) *accountService {
 	return &accountService{db: db}
 }
 
@@ -74,9 +79,7 @@ func (a *accountService) GetEmailByUserID(ctx context.Context, userID string) (e
 
 	if err != nil {
 		log.Error().Err(err).Msg("Error trying to get email by userID")
-	}
-
-	if result != nil {
+	} else if result != nil {
 		marshalledResult := ActorUser{}
 
 		err = attributevalue.UnmarshalMap(result.Item, &marshalledResult)
