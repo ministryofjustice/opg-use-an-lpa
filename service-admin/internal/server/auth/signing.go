@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/rs/zerolog/log"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -14,11 +16,23 @@ import (
 	"github.com/sethvargo/go-retry"
 )
 
+type HTTPClient interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
 type SigningKey struct {
 	PublicKeyURL string
 }
 
-var publicKeyCache = &sync.Map{}
+var (
+	PublicKeyCache *sync.Map
+	Client         HTTPClient
+)
+
+func init() {
+	PublicKeyCache = &sync.Map{}
+	Client = &http.Client{}
+}
 
 func (k *SigningKey) Fetch(ctx context.Context, keyID string) (*ecdsa.PublicKey, error) {
 	if k.PublicKeyURL == "" {
@@ -27,7 +41,7 @@ func (k *SigningKey) Fetch(ctx context.Context, keyID string) (*ecdsa.PublicKey,
 
 	url := fmt.Sprintf("%s/%s", k.PublicKeyURL, keyID)
 
-	if key, ok := publicKeyCache.Load(url); ok {
+	if key, ok := PublicKeyCache.Load(url); ok {
 		return key.(*ecdsa.PublicKey), nil
 	}
 
@@ -48,7 +62,7 @@ func (k *SigningKey) Fetch(ctx context.Context, keyID string) (*ecdsa.PublicKey,
 
 	publicKey, err := jwt.ParseECPublicKeyFromPEM(*pemBytes)
 
-	publicKeyCache.Store(url, publicKey)
+	PublicKeyCache.Store(url, publicKey)
 
 	return publicKey, err
 }
@@ -59,14 +73,17 @@ func fetchPEM(ctx context.Context, url string) (*[]byte, error) {
 		return nil, errors.Wrapf(err, "not able to create request for public key")
 	}
 
-	client := &http.Client{}
-
-	res, err := client.Do(req)
+	res, err := Client.Do(req)
 	if err != nil {
 		return nil, errors.Wrapf(err, "not able to fetch key from %s", url)
 	}
 
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Err(err).Msg("unable to close body of response after reading")
+		}
+	}(res.Body)
 
 	pem, err := ioutil.ReadAll(res.Body)
 	if err != nil {
