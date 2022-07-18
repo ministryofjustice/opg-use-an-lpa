@@ -44,6 +44,7 @@ func TestSigningKey_Fetch(t *testing.T) {
 		ctx   context.Context
 		keyID string
 	}
+
 	tests := []struct {
 		name           string
 		args           args
@@ -114,6 +115,7 @@ func TestSigningKey_Fetch(t *testing.T) {
 			wantErr:        assert.NoError,
 		},
 	}
+
 	for _, tt := range tests {
 		tt := tt
 
