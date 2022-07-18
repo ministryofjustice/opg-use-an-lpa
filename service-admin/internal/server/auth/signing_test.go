@@ -116,7 +116,7 @@ func TestSigningKey_Fetch(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:paralleltest
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
