@@ -13,7 +13,12 @@
         {%  endif %}
         {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
             <p class="govuk-body govuk-!-margin-bottom-1">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
-                <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
+                <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+                   data-gaEventType="onClick"
+                   data-gaAction="Clicked Link"
+                   data-gaCategory="Read More"
+                   data-gaLabel="Read More - instructions and preferences"
+                > {% trans %}Read more{% endtrans %}</a>
             </p>
         {% endif %}
     </div>
