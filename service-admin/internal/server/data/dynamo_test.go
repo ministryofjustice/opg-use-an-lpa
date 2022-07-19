@@ -8,6 +8,8 @@ import (
 )
 
 func TestNewDynamoConnection(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		region      string
 		endpoint    string
@@ -36,11 +38,10 @@ func TestNewDynamoConnection(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := data.NewDynamoConnection(tt.args.region, tt.args.endpoint, tt.args.tablePrefix)
-			if got == nil {
-				t.Errorf("Error nil dynamodb recieved")
-			}
 			v := reflect.ValueOf(*got)
 			gotOptions := v.FieldByName("options")
 			if gotOptions.FieldByName("Region").String() != tt.args.region {
@@ -52,9 +53,12 @@ func TestNewDynamoConnection(t *testing.T) {
 }
 
 func TestPrefixedTableName(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		name string
 	}
+	
 	tests := []struct {
 		name   string
 		args   args
@@ -69,7 +73,9 @@ func TestPrefixedTableName(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			data.NewDynamoConnection("", "", tt.prefix)
 			assert.Equalf(t, tt.want, data.PrefixedTableName(tt.args.name), "PrefixedTableName(%v)", tt.args.name)
 		})
