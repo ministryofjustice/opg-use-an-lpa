@@ -35,6 +35,6 @@ func NewDynamoConnection(region string, endpoint string, tablePrefix string) *dy
 	return svc
 }
 
-func prefixedTableName(name string) string {
+func PrefixedTableName(name string) string {
 	return prefix + name
 }
