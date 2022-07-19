@@ -25,8 +25,9 @@ type SigningKey struct {
 }
 
 var (
-	PublicKeyCache *sync.Map
-	Client         HTTPClient
+	PublicKeyCache      *sync.Map
+	Client              HTTPClient
+	ErrUnableToFetchKey = errors.New("unable to fetch key")
 )
 
 func init() {
@@ -51,6 +52,7 @@ func (k *SigningKey) Fetch(ctx context.Context, keyID string) (*ecdsa.PublicKey,
 	if err := retry.Do(ctx, r, func(ctx context.Context) error {
 		pem, err := fetchPEM(ctx, url)
 		if err != nil {
+			log.Err(err)
 			return retry.RetryableError(err)
 		}
 
@@ -84,6 +86,10 @@ func fetchPEM(ctx context.Context, url string) (*[]byte, error) {
 			log.Err(err).Msg("unable to close body of response after reading")
 		}
 	}(res.Body)
+
+	if res.StatusCode >= http.StatusBadRequest {
+		return nil, errors.Wrapf(ErrUnableToFetchKey, "status code %d when fetching %s", res.StatusCode, url)
+	}
 
 	pem, err := ioutil.ReadAll(res.Body)
 	if err != nil {

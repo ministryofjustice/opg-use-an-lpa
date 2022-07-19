@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/ecdsa"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -23,7 +22,7 @@ type mockHTTPClient struct {
 
 func (m *mockHTTPClient) Do(request *http.Request) (*http.Response, error) {
 	response, err := m.doFunc(request, m.retryCount)
-	m.retryCount++
+	m.retryCount--
 
 	return response, err
 }
@@ -93,19 +92,19 @@ func TestSigningKey_Fetch(t *testing.T) {
 			requestFunc: func(r *http.Request, count int) (*http.Response, error) {
 				switch count {
 				case 0:
-					// 404 response
-					return &http.Response{
-						StatusCode: 404,
-						Body:       io.NopCloser(bytes.NewReader([]byte(""))),
-					}, nil
-				case 1:
-					// issue with underlying connection
-					return &http.Response{}, errors.New("connectivity error")
-				default:
 					// success
 					return &http.Response{
 						StatusCode: 200,
 						Body:       io.NopCloser(bytes.NewReader([]byte(goodKeyPem))),
+					}, nil
+				case 1:
+					// issue with underlying connection
+					return &http.Response{}, http.ErrServerClosed
+				default:
+					// 404 response
+					return &http.Response{
+						StatusCode: 404,
+						Body:       io.NopCloser(bytes.NewReader([]byte(""))),
 					}, nil
 				}
 			},
