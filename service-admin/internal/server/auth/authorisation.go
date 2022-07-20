@@ -30,7 +30,7 @@ type Token struct {
 func (t *Token) Validate(ctx context.Context, token string) (*Claims, error) {
 	var claims = &Claims{}
 
-	// Amazon use a non-standand JWT format that includes padding in the base64 values.
+	// Amazon uses a non-standard JWT format that includes padding in the base64 values.
 	jwt.DecodePaddingAllowed = true
 
 	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {

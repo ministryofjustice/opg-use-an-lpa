@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Admin Service" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="service-admin" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-i" />
+    <envs>
+      <env name="AWS_DYNAMODB_ENDPOINT" value="http://localhost:8000" />
+      <env name="ADMIN_JWT_SIGNING_KEY_URL" value="http://localhost:5000" />
+    </envs>
+    <kind value="FILE" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/admin/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

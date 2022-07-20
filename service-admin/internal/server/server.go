@@ -97,9 +97,9 @@ func WithErrorHandling(next http.Handler, templateWriter handlers.TemplateWriter
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
 			t := "error.page.gohtml"
 			switch i {
-			case 403:
+			case http.StatusForbidden:
 				t = "notauthorised.page.gohtml"
-			case 404:
+			case http.StatusNotFound:
 				t = "notfound.page.gohtml"
 			}
 
