@@ -3,7 +3,6 @@ package data_test
 import (
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/stretchr/testify/assert"
-	"reflect"
 	"testing"
 )
 
@@ -42,10 +41,8 @@ func TestNewDynamoConnection(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := data.NewDynamoConnection(tt.args.region, tt.args.endpoint, tt.args.tablePrefix)
-			v := reflect.ValueOf(*got)
-			gotOptions := v.FieldByName("options")
-			if gotOptions.FieldByName("Region").String() != tt.args.region {
-				t.Errorf("expected options %v got %v", gotOptions.FieldByName("Region").String(), tt.args.region)
+			if got.Prefix != tt.args.tablePrefix+"-" {
+				t.Errorf("expected prefix %v got %v", got.Prefix, tt.args.tablePrefix)
 			}
 
 		})
@@ -58,7 +55,7 @@ func TestPrefixedTableName(t *testing.T) {
 	type args struct {
 		name string
 	}
-	
+
 	tests := []struct {
 		name   string
 		args   args
@@ -76,8 +73,8 @@ func TestPrefixedTableName(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			data.NewDynamoConnection("", "", tt.prefix)
-			assert.Equalf(t, tt.want, data.PrefixedTableName(tt.args.name), "PrefixedTableName(%v)", tt.args.name)
+			dynamodbConnection := data.NewDynamoConnection("", "", tt.prefix)
+			assert.Equalf(t, tt.want, dynamodbConnection.PrefixedTableName(tt.args.name), "PrefixedTableName(%v)", tt.args.name)
 		})
 	}
 }

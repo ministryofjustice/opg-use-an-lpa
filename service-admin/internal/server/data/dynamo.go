@@ -8,9 +8,18 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var prefix string
+type DynamoDBClient interface {
+	Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+}
 
-func NewDynamoConnection(region string, endpoint string, tablePrefix string) *dynamodb.Client {
+type DynamoConnection struct {
+	Prefix string
+	Client DynamoDBClient
+}
+
+func NewDynamoConnection(region string, endpoint string, tablePrefix string) *DynamoConnection {
+	prefix := ""
 	if tablePrefix != "" {
 		prefix = tablePrefix + "-"
 	}
@@ -32,9 +41,9 @@ func NewDynamoConnection(region string, endpoint string, tablePrefix string) *dy
 		}
 	})
 
-	return svc
+	return &DynamoConnection{Prefix: prefix, Client: svc}
 }
 
-func PrefixedTableName(name string) string {
-	return prefix + name
+func (dc *DynamoConnection) PrefixedTableName(name string) string {
+	return dc.Prefix + name
 }

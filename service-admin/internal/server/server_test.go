@@ -3,12 +3,12 @@ package server_test
 import (
 	"context"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
 
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
@@ -26,6 +26,19 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 	}
 
 	return nil
+}
+
+type mockDynamoDBClent struct {
+	QueryFunc   func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	GetItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+}
+
+func (m *mockDynamoDBClent) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
+	return m.QueryFunc(ctx, params, optFns...)
+}
+
+func (m *mockDynamoDBClent) GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
+	return m.GetItemFunc(ctx, params, optFns...)
 }
 
 func Test_withErrorHandling(t *testing.T) {
@@ -209,7 +222,7 @@ func Test_app_InitialiseServer(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
-		db *dynamodb.Client
+		db data.DynamoConnection
 		r  *mux.Router
 		tw handlers.TemplateWriterService
 	}
@@ -227,7 +240,9 @@ func Test_app_InitialiseServer(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				db: data.NewDynamoConnection("", "", ""),
+				db: data.DynamoConnection{
+					Client: &mockDynamoDBClent{},
+				},
 				r:  mux.NewRouter(),
 				tw: &mockTemplateWriterService{},
 			},
