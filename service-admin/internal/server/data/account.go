@@ -38,7 +38,7 @@ func NewAccountService(db DynamoConnection) *accountService {
 
 func (a *accountService) GetActorUserByEmail(ctx context.Context, email string) (aa *ActorUser, err error) {
 	result, err := a.db.Client.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(a.db.PrefixedTableName(ActorTableName)),
+		TableName:              aws.String(a.db.prefixedTableName(ActorTableName)),
 		IndexName:              aws.String(ActorTableEmailIndexName),
 		KeyConditionExpression: aws.String("Email = :e"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -66,7 +66,7 @@ func (a *accountService) GetActorUserByEmail(ctx context.Context, email string) 
 
 func (a *accountService) GetEmailByUserID(ctx context.Context, userID string) (email string, err error) {
 	result, err := a.db.Client.GetItem(ctx, &dynamodb.GetItemInput{
-		TableName: aws.String(a.db.PrefixedTableName(ActorTableName)),
+		TableName: aws.String(a.db.prefixedTableName(ActorTableName)),
 		Key: map[string]types.AttributeValue{
 			"Id": &types.AttributeValueMemberS{Value: userID},
 		},

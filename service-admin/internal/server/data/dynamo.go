@@ -44,6 +44,6 @@ func NewDynamoConnection(region string, endpoint string, tablePrefix string) *Dy
 	return &DynamoConnection{Prefix: prefix, Client: svc}
 }
 
-func (dc *DynamoConnection) PrefixedTableName(name string) string {
+func (dc *DynamoConnection) prefixedTableName(name string) string {
 	return dc.Prefix + name
 }
