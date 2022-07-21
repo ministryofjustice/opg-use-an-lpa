@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
@@ -24,7 +23,7 @@ type errorInterceptResponseWriter struct {
 }
 
 type app struct {
-	db *dynamodb.Client
+	db data.DynamoConnection
 	r  *mux.Router
 	tw handlers.TemplateWriterService
 }
@@ -48,7 +47,7 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewAdminApp(db *dynamodb.Client, r *mux.Router, tw handlers.TemplateWriterService) *app {
+func NewAdminApp(db data.DynamoConnection, r *mux.Router, tw handlers.TemplateWriterService) *app {
 	return &app{db, r, tw}
 }
 

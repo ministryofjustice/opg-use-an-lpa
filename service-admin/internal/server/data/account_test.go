@@ -43,7 +43,7 @@ func TestGetActorUserByEmail(t *testing.T) {
 				return &dynamodb.QueryOutput{
 					Count: 1,
 					Items: []map[string]types.AttributeValue{
-						{ "Email": &types.AttributeValueMemberS{ Value: "test@example.com" }, },
+						{"Email": &types.AttributeValueMemberS{Value: "test@example.com"}},
 					},
 				}, nil
 			},
@@ -82,11 +82,14 @@ func TestGetActorUserByEmail(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			mockDynamoDBClent := &mockDynamoDBClent{
-				QueryFunc: tt.queryFunc,
+			dynamodbConnection := DynamoConnection{
+				Client: &mockDynamoDBClent{
+					QueryFunc: tt.queryFunc,
+				},
+				Prefix: "",
 			}
 
-			client := NewAccountService(mockDynamoDBClent)
+			client := NewAccountService(dynamodbConnection)
 
 			actorUser, err := client.GetActorUserByEmail(context.Background(), tt.email)
 
@@ -102,48 +105,50 @@ func TestGetEmailByUserID(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name      string
-		userId     string
+		name        string
+		userId      string
 		getItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
-		want     string
-		wantErr   assert.ErrorAssertionFunc
+		want        string
+		wantErr     assert.ErrorAssertionFunc
 	}{
 		{
-			name:  "Get email by userID",
+			name:   "Get email by userID",
 			userId: "1",
 			getItemFunc: func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
-				return &dynamodb.GetItemOutput{		
+				return &dynamodb.GetItemOutput{
 					Item: map[string]types.AttributeValue{
 						"userId": &types.AttributeValueMemberS{Value: "1"},
 					},
 				}, nil
 			},
-			want: "test@example.com",
+			want:    "test@example.com",
 			wantErr: assert.NoError,
 		},
 		{
-			name:  "Error trying to get email by userID",
+			name:   "Error trying to get email by userID",
 			userId: "1",
 			getItemFunc: func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
-				return nil,  errors.New("some error")
+				return nil, errors.New("some error")
 			},
-			want: "",
+			want:    "",
 			wantErr: assert.Error,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			mockDynamoDBClent := &mockDynamoDBClent{
-				GetItemFunc: tt.getItemFunc,
+			connection := DynamoConnection{
+				Client: &mockDynamoDBClent{
+					GetItemFunc: tt.getItemFunc,
+				},
 			}
 
-			client := NewAccountService(mockDynamoDBClent)
-			
+			client := NewAccountService(connection)
+
 			actorUser, err := client.GetEmailByUserID(context.Background(), tt.userId)
 
 			if tt.wantErr(t, err, fmt.Sprintf("GetEmailByUserID(%v)", tt.userId)) {

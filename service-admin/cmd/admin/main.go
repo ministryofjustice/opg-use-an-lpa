@@ -72,7 +72,7 @@ func main() {
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	app := server.NewAdminApp(dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService())
+	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService())
 
 	srv := &http.Server{
 		Handler:      app.InitialiseServer(*keyURL, u),
