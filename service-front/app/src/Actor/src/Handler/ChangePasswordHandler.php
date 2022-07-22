@@ -40,7 +40,7 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
     use User;
     use Session;
 
-    public const PASSWORD_CHANGED_FLASH_MSG = "password_changed_flash_msg";
+    public const PASSWORD_CHANGED_FLASH_MSG = 'password_changed_flash_msg';
 
     private TranslatorInterface $translator;
 

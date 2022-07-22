@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Actor\Form\PasswordReset;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\User\UserService;
+use Mezzio\Flash\FlashMessageMiddleware;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,6 +29,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
 
+    private TranslatorInterface $translator;
+
     /** @var UserService */
     private $userService;
 
@@ -42,17 +46,20 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
      * @param UrlHelper $urlHelper
      * @param UserService $userService
      * @param ServerUrlHelper $serverUrlHelper
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        ServerUrlHelper $serverUrlHelper
+        ServerUrlHelper $serverUrlHelper,
+        TranslatorInterface $translator
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
         $this->serverUrlHelper = $serverUrlHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -65,6 +72,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
     {
         $form = new PasswordReset($this->getCsrfGuard($request));
 
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         $tokenValid = $this->userService->canPasswordReset($request->getAttribute('token'));
 
         if ($request->getMethod() === 'POST') {
@@ -73,7 +82,18 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                $this->userService->completePasswordReset($request->getAttribute('token'), new HiddenString($data['password']));
+                $this->userService->completePasswordReset(
+                    $request->getAttribute('token'),
+                    new HiddenString($data['password'])
+                );
+
+                $message = $this->translator->translate(
+                    'Password changed successfully',
+                    [],
+                    null,
+                    'flashMessage'
+                );
+                $flash->flash(ChangePasswordHandler::PASSWORD_CHANGED_FLASH_MSG, $message);
 
                 //  Redirect to the login screen with success flash message
                 return $this->redirectToRoute('login');
