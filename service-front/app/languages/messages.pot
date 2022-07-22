@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-07-22T12:41:08+00:00\n"
+"POT-Creation-Date: 2022-07-22T15:17:32+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1778,7 +1778,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:70
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:71
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:83
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:52
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
@@ -5023,3 +5023,11 @@ msgstr ""
 msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once you've requested an activation key for an LPA, you'll always be able to use the LPA on this service."
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
+msgid "This is a new service, check that the organisation will accept an online summary of the<abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:5
+#: src/Viewer/templates/viewer/new-view-service.html.twig:5
+msgid "Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to improve"
+msgstr ""
