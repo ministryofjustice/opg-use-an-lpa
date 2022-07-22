@@ -45,7 +45,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/
 
 RUN set -xe \
-  && install-php-extensions xdebug \
+  && install-php-extensions xdebug-stable \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Development images are only ever run using compose so will have this mounted in as a volume
