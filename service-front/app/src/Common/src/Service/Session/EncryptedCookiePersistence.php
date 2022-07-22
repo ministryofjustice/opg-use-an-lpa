@@ -21,6 +21,7 @@ use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
@@ -168,13 +169,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Encode to string
         $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
+        $sameSite = $session->has(UserInterface::class) ? SameSite::strict() : SameSite::lax();
+
         $sessionCookie = SetCookie::create($this->cookieName)
             ->withValue($sessionData)
             ->withDomain($this->cookieDomain)
             ->withPath($this->cookiePath)
             ->withSecure($this->cookieSecure)
             ->withHttpOnly($this->cookieHttpOnly)
-            ->withSameSite(SameSite::strict());
+            ->withSameSite($sameSite);
 
         $persistenceDuration = $this->getCookieLifetime($session);
         if ($persistenceDuration) {
