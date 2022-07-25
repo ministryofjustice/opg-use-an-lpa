@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-22T10:47:20+00:00\n"
+"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2429,7 +2429,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:70
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:71
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:83
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:52
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
@@ -6433,17 +6433,6 @@ msgstr ""
 "Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich "
 "cyfer yn ein cofnodion. Dylai fod wedi cyrraedd erbyn %dueDate%."
 
-#: src/Actor/templates/actor/home-page.html.twig:51
-msgid ""
-"Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
-"basis only, and may be paused temporarily. However, once your LPA is added you "
-"will always be able to use it in this service."
-msgstr ""
-"Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 ar sail "
-"treial yn unig, a gellir eu oedi dros dro. Fodd bynnag, unwaith y bydd eich "
-"LPA yn cael ei ychwanegu, byddwch bob amser yn gallu ei ddefnyddio yn y "
-"gwasanaeth hwn."
-
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:10
 msgid ""
 "You can only use this service if your LPA was registered on or after 1 January "
@@ -7190,16 +7179,51 @@ msgstr ""
 msgid "Trust corporation"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
-msgid ""
-"This is a new service, check that the organisation will accept an online "
-"summary of the\n"
-"                                <abbr title=\"lasting power of attorney\">LPA</"
-"abbr> and how they want to receive the access code you make for them."
-msgstr ""
-
 #: src/Actor/src/Handler/ChangePasswordHandler.php:118
 #: src/Actor/src/Handler/PasswordResetPageHandler.php:90
 msgctxt "flashMessage"
 msgid "Password changed successfully"
 msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
+
+#: src/Actor/templates/actor/home-page.html.twig:51
+msgid ""
+"Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
+"basis only, and may be paused temporarily. However, once you've requested an "
+"activation key for an LPA, you'll always be able to use the LPA on this "
+"service."
+msgstr ""
+"Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 yn digwydd "
+"fel prawf yn unig, ac efallai y byddir yn rhoi’r gorau i wneud hynny dros dro. "
+"Fodd bynnag, unwaith y byddwch wedi gofyn am allwedd cadarnhau cyfrif ar gyfer "
+"LPA, byddwch bob amser yn gallu defnyddio’r LPA ar y gwasanaeth hwn."
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
+msgid ""
+"This is a new service, check that the organisation will accept an online "
+"summary of the<abbr title=\"lasting power of attorney\">LPA</abbr> and how "
+"they want to receive the access code you make for them."
+msgstr ""
+"Gwasanaeth newydd yw hwn. Gwiriwch a fydd y sefydliad yn derbyn crynodeb ar-"
+"lein o’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> a sut maen nhw "
+"eisiau cael y cod mynediad y byddwch yn ei greu iddynt."
+
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:5
+#: src/Viewer/templates/viewer/new-view-service.html.twig:5
+msgid ""
+"Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span "
+"class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to "
+"improve"
+msgstr ""
+"Bydd eich <a class=\\\"govuk-link\\\" href=\\\"{link}\\\" target=\\\"_blank\\"
+"\">adborth<span class=“govuk-visually-hidden”>(yn agor mewn tab newydd)</"
+"span></a> yn ein helpu wella"
+
+#~ msgid ""
+#~ "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a "
+#~ "trial basis only, and may be paused temporarily. However, once your LPA is "
+#~ "added you will always be able to use it in this service."
+#~ msgstr ""
+#~ "Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 ar sail "
+#~ "treial yn unig, a gellir eu oedi dros dro. Fodd bynnag, unwaith y bydd eich "
+#~ "LPA yn cael ei ychwanegu, byddwch bob amser yn gallu ei ddefnyddio yn y "
+#~ "gwasanaeth hwn."

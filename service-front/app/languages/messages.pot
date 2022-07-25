@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-07-22T10:47:20+00:00\n"
+"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1778,7 +1778,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:70
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:71
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:83
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:52
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
@@ -4504,10 +4504,6 @@ msgstr ""
 msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:51
-msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once your LPA is added you will always be able to use it in this service."
-msgstr ""
-
 #: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:10
 msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
 msgstr ""
@@ -5023,14 +5019,21 @@ msgstr ""
 msgid "Trust corporation"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
-msgid ""
-"This is a new service, check that the organisation will accept an online summary of the\n"
-"                                <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
-msgstr ""
-
 #: src/Actor/src/Handler/ChangePasswordHandler.php:118
 #: src/Actor/src/Handler/PasswordResetPageHandler.php:90
 msgctxt "flashMessage"
 msgid "Password changed successfully"
+msgstr ""
+
+#: src/Actor/templates/actor/home-page.html.twig:51
+msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once you've requested an activation key for an LPA, you'll always be able to use the LPA on this service."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
+msgid "This is a new service, check that the organisation will accept an online summary of the<abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/new-use-service.html.twig:5
+#: src/Viewer/templates/viewer/new-view-service.html.twig:5
+msgid "Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to improve"
 msgstr ""
