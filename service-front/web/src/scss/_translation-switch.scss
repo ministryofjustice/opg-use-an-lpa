@@ -1,14 +1,19 @@
 .trans-switch {
   overflow: auto;
   display: inline;
+
   &__list {
     display: inline;
-  }
 
-  &__partition {
-    display: inline;
-    margin-right: 10px;
-    margin-left: 10px;
+    &:after {
+      padding: 0 5px;
+      content: " | ";
+    }
+
+    &:last-child:after {
+      padding-right: 0;
+      content: none;
+    }
   }
 
   &__container {
