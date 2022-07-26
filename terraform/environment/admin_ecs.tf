@@ -163,6 +163,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     resources = [
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/code",
     ]
   }
 }
