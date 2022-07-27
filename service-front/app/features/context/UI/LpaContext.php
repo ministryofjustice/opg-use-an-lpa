@@ -2695,4 +2695,13 @@ class LpaContext implements Context
         $this->ui->fillField('reference_number', $reference_number);
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @When /^I say I have an activation key but it has expired$/
+     */
+    public function iSayIHaveAnActivationKeyButItHasExpired()
+    {
+        $this->ui->fillField('activation_key_triage', 'Expired');
+        $this->ui->pressButton('Continue');
+    }
 }

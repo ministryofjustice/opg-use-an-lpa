@@ -29,7 +29,27 @@
                                 </h1>
                             </legend>
 
-                            <p class="govuk-body">{% trans %}You need an activation key to add an LPA to your account. The donor and each attorney will have their own unique activation key.{% endtrans %}</p>
+                            <p class="govuk-body">
+                                {% trans %}
+                                    You need an activation key to add an LPA to your account. Activation keys expire after 12 months.
+                                {% endtrans %}
+                            </p>
+                            <p class="govuk-body">
+                                {% trans %}
+                                    The donor and all attorneys will each need their own unique activation key.
+                                {% endtrans %}
+                            </p>
+                            <h3 class="govuk-heading-m">
+                                {% trans %}
+                                    Activation key format
+                                {% endtrans %}
+                            </h3>
+                            <p class="govuk-body">
+                                {% trans %}
+                                    Activation keys are 13 letters and numbers long and start with a C.<br>
+                                    For example: C-AB12 CD34 EF56
+                                {% endtrans %}
+                            </p>
 
                             <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick"
                                      data-gaAction="Details" data-gaCategory="ActivationKey"
@@ -39,9 +59,42 @@
                                         {% trans %}Where can I find my activation key?{% endtrans %}
                                     </span>
                                 </summary>
+
                                 <div class="govuk-details__text">
-                                    <p>{% trans %}If your LPA was registered on or after 17 July 2020, the activation key is on the letter that told you the LPA had been registered.{% endtrans %}</p>
-                                    <p>{% trans %}If your LPA was registered before 17 July 2020 and you have asked us for an activation key, you'll find it on the letter or email we sent you.{% endtrans %}</p>
+                                    <p>
+                                    {% trans %}
+                                        Activation keys are sent to donors and attorneys by letter or email.
+                                    {% endtrans %}
+                                    </p>
+                                </div>
+                                <div class="govuk-details__text">
+                                    <h3 class="govuk-heading-s">
+                                        {% trans %}
+                                            For LPAs registered on or after 17 July 2020
+                                        {% endtrans %}
+                                    </h3>
+                                </div>
+
+                                <div class="govuk-details__text">
+                                    <p>{% trans %}Your activation key is on the letter we sent you that told you the LPA had been registered.{% endtrans %}</p>
+                                    <p>{% trans %}If you’ve lost the letter, or the activation key has expired, you can request a new one below.{% endtrans %}</p>
+                                </div>
+
+                                <div class="govuk-details__text">
+                                    <h3 class="govuk-heading-s">
+                                            {% trans %}
+                                                For LPAs registered before 17 July 2020
+                                            {% endtrans %}
+                                    </h3>
+                                </div>
+
+                                <div class="govuk-details__text">
+                                    <p>{% trans %}You have to request an activation key from us. {% endtrans %}</p>
+                                    <p>
+                                        {% trans %}
+                                            If you’ve already requested an activation key, you'll find it on the letter or email we sent you. If you’ve lost it, or it’s expired, you can request a new one below.
+                                        {% endtrans %}
+                                    </p>
                                 </div>
                             </details>
 
@@ -54,6 +107,10 @@
                                     {
                                         'label': 'No, I do not have an activation key'| trans,
                                         'value': 'No'
+                                    },
+                                    {
+                                        'label': 'I have an activation key but it has expired'| trans,
+                                        'value': 'Expired'
                                     }
                                 ]}
                             ) }}

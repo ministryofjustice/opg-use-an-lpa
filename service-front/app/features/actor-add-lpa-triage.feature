@@ -41,6 +41,7 @@ Feature: Add an LPA triage page
       | option | page                             |
       | Yes    | What is your activation key?     |
       | No     | Ask for an activation key        |
+      | Expired| Ask for an activation key        |
 
   @ui
   Scenario: The user is shown an error message if they do not select either option
@@ -58,6 +59,12 @@ Feature: Add an LPA triage page
   Scenario: The user is taken to information about requesting an activation key
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
+    Then I am taken to page giving me information about asking for an activation key
+
+  @ui
+  Scenario: The user is taken to information about requesting an activation key
+    Given I am on the add an LPA triage page
+    When I say I have an activation key but it has expired
     Then I am taken to page giving me information about asking for an activation key
 
   @ui
