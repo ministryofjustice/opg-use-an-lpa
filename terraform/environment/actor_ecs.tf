@@ -25,19 +25,14 @@ resource "aws_ecs_service" "actor" {
     weight            = 100
   }
 
-  # deployment_circuit_breaker {
-  #   enable   = false
-  #   rollback = false
-  # }
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
 
-  # deployment_controller {
-  #   type = "ECS"
-  # }
-
-  # service_registries {
-  #   container_port = 0
-  #   port           = 0
-  # }
+  deployment_controller {
+    type = "ECS"
+  }
 
   wait_for_steady_state = true
 
