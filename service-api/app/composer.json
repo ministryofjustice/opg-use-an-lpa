@@ -31,33 +31,29 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:ministryofjustice/behat-psr-extension.git"
-        },
-        {
-            "type": "vcs",
             "url": "git@github.com:cooperaj/pact-behat-extension.git"
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^8.1",
         "ext-apcu": "*",
         "aws/aws-sdk-php": "^3.93",
-        "elie29/zend-phpdi-config": "^3.0",
+        "elie29/zend-phpdi-config": "^8.0",
         "guzzlehttp/guzzle": "^6.3",
         "paragonie/constant_time_encoding": "^2.2",
         "paragonie/hidden-string": "^1.0",
         "php-http/guzzle6-adapter": "^2.0",
         "psr/http-client-implementation": "^1.0",
         "ramsey/uuid": "^3.8",
-        "symfony/console": "^4.3",
-        "wshafer/psr11-monolog": "^3.0",
+        "symfony/console": "^6.1",
         "laminas/laminas-component-installer": "^2.1.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-diactoros": "^1.7.1 || ^2.0",
         "mezzio/mezzio": "^3.0.1",
         "mezzio/mezzio-fastroute": "^3.0",
         "mezzio/mezzio-helpers": "^5.0",
-        "laminas/laminas-stdlib": "^3.1"
+        "laminas/laminas-stdlib": "^3.1",
+        "blazon/psr11-monolog": "^4.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -65,12 +61,12 @@
         "filp/whoops": "^2.1.12",
         "jshayes/fake-requests": "^2.3",
         "laminas/laminas-development-mode": "^3.1",
-        "mezzio/mezzio-tooling": "^1.0",
-        "phpunit/phpunit": "^7.0",
+        "mezzio/mezzio-tooling": "^2.5",
+        "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
-        "smart-gamma/pact-behat-extension": "^2.1.0",
+        "smart-gamma/pact-behat-extension": "^3.0",
         "squizlabs/php_codesniffer": "^3.0",
-        "vimeo/psalm": "^3.0"
+        "vimeo/psalm": "^4.19"
     },
     "autoload": {
         "psr-4": {
