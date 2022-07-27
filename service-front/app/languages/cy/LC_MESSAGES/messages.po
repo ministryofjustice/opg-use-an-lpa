@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-22T15:17:32+00:00\n"
+"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.1\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -300,7 +300,7 @@ msgstr "Newid eich cyfrinair"
 msgid "Your password needs to have:"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
 
-#: src/Actor/templates/actor/login.html.twig:48
+#: src/Actor/templates/actor/login.html.twig:49
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
@@ -1704,7 +1704,7 @@ msgstr ""
 "Nodwch eich cyfeiriad e-bost isod. Os oes yna gyfrif ar gyfer y cyfeiriad e-"
 "bost hwn, byddwn yn anfon dolen atoch i ailosod eich cyfrinair."
 
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:46
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
 msgid "Email address"
@@ -1778,7 +1778,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:52
+#: src/Actor/templates/actor/login.html.twig:53
 msgid "Sign in"
 msgstr "Mewngofnodi"
 
@@ -2309,7 +2309,7 @@ msgstr ""
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
 
-#: src/Actor/templates/actor/login.html.twig:28
+#: src/Actor/templates/actor/login.html.twig:29
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr "Mewngofnodi i’ch cyfrif Defnyddio atwrneiaeth arhosol"
 
@@ -2323,7 +2323,7 @@ msgstr ""
 "dal angen i chi <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a> i allu "
 "defnyddio’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/login.html.twig:58
+#: src/Actor/templates/actor/login.html.twig:59
 msgid "Forgotten your password?"
 msgstr "Wedi anghofio eich cyfrinair?"
 
@@ -6164,7 +6164,7 @@ msgstr ""
 "Nid ydym wedi gallu dod o hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-"
 "bost a’r cyfrinair hwnnw. Gwiriwch eich manylion a rhowch gynnig arall arni."
 
-#: src/Actor/templates/actor/login.html.twig:32
+#: src/Actor/templates/actor/login.html.twig:33
 msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
 msgstr "Mewngofnodi neu <a href=\"%link%\" class=\"govuk-link\">greu cyfrif</a>."
 
@@ -6194,7 +6194,7 @@ msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf:"
 msgid "8 characters"
 msgstr "8 o nodau"
 
-#: src/Actor/templates/actor/login.html.twig:37
+#: src/Actor/templates/actor/login.html.twig:38
 msgid ""
 "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, "
 "you'll still need to create an account on this service to use the LPA online."
@@ -6890,7 +6890,7 @@ msgstr "Rydych chi wedi gosod eich dewisiadau cwcis."
 msgid "Go back to the page you were looking at"
 msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni."
 
-#: src/Actor/templates/actor/login.html.twig:41
+#: src/Actor/templates/actor/login.html.twig:42
 msgid ""
 "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link"
 "%>Make a lasting power of attorney service.</a>"
@@ -7179,6 +7179,12 @@ msgstr ""
 msgid "Trust corporation"
 msgstr ""
 
+#: src/Actor/src/Handler/ChangePasswordHandler.php:118
+#: src/Actor/src/Handler/PasswordResetPageHandler.php:90
+msgctxt "flashMessage"
+msgid "Password changed successfully"
+msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
+
 #: src/Actor/templates/actor/home-page.html.twig:51
 msgid ""
 "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
@@ -7211,3 +7217,13 @@ msgstr ""
 "Bydd eich <a class=\\\"govuk-link\\\" href=\\\"{link}\\\" target=\\\"_blank\\"
 "\">adborth<span class=“govuk-visually-hidden”>(yn agor mewn tab newydd)</"
 "span></a> yn ein helpu wella"
+
+#~ msgid ""
+#~ "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a "
+#~ "trial basis only, and may be paused temporarily. However, once your LPA is "
+#~ "added you will always be able to use it in this service."
+#~ msgstr ""
+#~ "Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 ar sail "
+#~ "treial yn unig, a gellir eu oedi dros dro. Fodd bynnag, unwaith y bydd eich "
+#~ "LPA yn cael ei ychwanegu, byddwch bob amser yn gallu ei ddefnyddio yn y "
+#~ "gwasanaeth hwn."

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Actor\Handler\ChangePasswordHandler;
 use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
@@ -422,7 +423,8 @@ class AccountContext implements Context
      */
     public function iAmToldMyPasswordWasChanged()
     {
-        $this->ui->assertPageAddress('your-details');
+        $this->ui->assertPageAddress('login');
+        $this->ui->assertPageContainsText('Password changed successfully');
     }
 
     /**

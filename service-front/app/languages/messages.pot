@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-07-22T15:17:32+00:00\n"
+"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -257,7 +257,7 @@ msgstr ""
 msgid "Your password needs to have:"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:48
+#: src/Actor/templates/actor/login.html.twig:49
 #: src/Actor/templates/actor/password-reset.html.twig:49
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
@@ -1173,7 +1173,7 @@ msgstr ""
 msgid "Enter your email address below. If there's an account associated with the address, we'll send you a link to reset your password."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:45
+#: src/Actor/templates/actor/login.html.twig:46
 #: src/Actor/templates/actor/password-reset-request.html.twig:32
 #: src/Actor/templates/actor/your-details.html.twig:21
 msgid "Email address"
@@ -1225,7 +1225,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:15
 #: src/Actor/templates/actor/email-reset-not-found.html.twig:20
-#: src/Actor/templates/actor/login.html.twig:52
+#: src/Actor/templates/actor/login.html.twig:53
 msgid "Sign in"
 msgstr ""
 
@@ -1679,7 +1679,7 @@ msgstr ""
 msgid "Try again"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:28
+#: src/Actor/templates/actor/login.html.twig:29
 msgid "Sign in to your Use a lasting power of attorney account"
 msgstr ""
 
@@ -1687,7 +1687,7 @@ msgstr ""
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to <a href=\"%link%\" class=\"govuk-link\">create an account</a> to use this service."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:58
+#: src/Actor/templates/actor/login.html.twig:59
 msgid "Forgotten your password?"
 msgstr ""
 
@@ -4341,7 +4341,7 @@ msgctxt "error"
 msgid "We could not find a Use a lasting power of attorney account with that email address and password. Check your details and try again."
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:32
+#: src/Actor/templates/actor/login.html.twig:33
 msgid "Sign in or <a href=\"%link%\" class=\"govuk-link\">create an account</a>."
 msgstr ""
 
@@ -4367,7 +4367,7 @@ msgstr ""
 msgid "8 characters"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:37
+#: src/Actor/templates/actor/login.html.twig:38
 msgid "If you made an <abbr title=\"lasting power of attorney\"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online."
 msgstr ""
 
@@ -4789,7 +4789,7 @@ msgstr ""
 msgid "Go back to the page you were looking at"
 msgstr ""
 
-#: src/Actor/templates/actor/login.html.twig:41
+#: src/Actor/templates/actor/login.html.twig:42
 msgid "If you want to make an LPA online go to the <a class=\"govuk-link\" href=%link%>Make a lasting power of attorney service.</a>"
 msgstr ""
 
@@ -5017,6 +5017,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:63
 msgid "Trust corporation"
+msgstr ""
+
+#: src/Actor/src/Handler/ChangePasswordHandler.php:118
+#: src/Actor/src/Handler/PasswordResetPageHandler.php:90
+msgctxt "flashMessage"
+msgid "Password changed successfully"
 msgstr ""
 
 #: src/Actor/templates/actor/home-page.html.twig:51
