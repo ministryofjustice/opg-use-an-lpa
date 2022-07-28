@@ -23,6 +23,15 @@ resource "aws_ecs_service" "pdf" {
     weight            = 100
   }
 
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
   wait_for_steady_state = true
 
   lifecycle {
