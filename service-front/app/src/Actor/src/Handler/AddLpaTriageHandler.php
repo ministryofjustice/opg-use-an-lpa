@@ -63,7 +63,8 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
                 'User wants to add a LPA and their activation key status is {key_status}',
                 [
                     'key_status' => ($selected === 'Yes') ? EventCodes::ACTIVATION_KEY_EXISTS :
-                        (($selected === 'No') ? EventCodes::ACTIVATION_KEY_NOT_EXISTS : EventCodes::ACTIVATION_KEY_EXPIRED),
+                        (($selected === 'No') ?
+                            EventCodes::ACTIVATION_KEY_NOT_EXISTS : EventCodes::ACTIVATION_KEY_EXPIRED),
                 ]
             );
 
