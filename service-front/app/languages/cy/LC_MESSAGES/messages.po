@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
+"POT-Creation-Date: 2022-07-28T10:53:09+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
 "X-Domain: messages\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -24,7 +24,7 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:103
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:20
 #: src/Actor/templates/actor/check-access-codes.html.twig:12
-#: src/Actor/templates/actor/instructions-preferences.html.twig:10
+#: src/Actor/templates/actor/instructions-preferences.html.twig:11
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
@@ -1646,13 +1646,13 @@ msgstr ""
 msgid "Last updated: 30 March 2020"
 msgstr "Diweddarwyd diwethaf: 30 Mawrth 2020"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:18
+#: src/Actor/templates/actor/instructions-preferences.html.twig:19
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:181
 #: src/Common/templates/partials/full-lpa-display.html.twig:213
 msgid "Instructions and preferences"
 msgstr "Cyfarwyddiadau a dymuniadau"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:23
+#: src/Actor/templates/actor/instructions-preferences.html.twig:24
 msgid ""
 "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or "
 "preferences we cannot show these online. Organisations might ask to see the "
@@ -1663,14 +1663,6 @@ msgstr ""
 "dymuniadau, ni allwn ddangos y rhain ar-lein. Efallai y bydd sefydliadau yn "
 "gofyn am gael gweld y <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> papur "
 "fel y gallant ddarllen y cyfarwyddiadau a’r dymuniadau."
-
-#: src/Actor/templates/actor/instructions-preferences.html.twig:24
-msgid ""
-"In some older LPA's, instructions and preferences are called 'restrictions and "
-"conditions'."
-msgstr ""
-"Mewn rhai LPA hŷn, gelwir cyfarwyddiadau a dymuniadau yn ‘cyfyngiadau ac "
-"amodau’."
 
 #: src/Actor/templates/actor/create-account-success.html.twig:5
 msgid "Account already exists"
@@ -7218,12 +7210,10 @@ msgstr ""
 "\">adborth<span class=“govuk-visually-hidden”>(yn agor mewn tab newydd)</"
 "span></a> yn ein helpu wella"
 
-#~ msgid ""
-#~ "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a "
-#~ "trial basis only, and may be paused temporarily. However, once your LPA is "
-#~ "added you will always be able to use it in this service."
-#~ msgstr ""
-#~ "Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 ar sail "
-#~ "treial yn unig, a gellir eu oedi dros dro. Fodd bynnag, unwaith y bydd eich "
-#~ "LPA yn cael ei ychwanegu, byddwch bob amser yn gallu ei ddefnyddio yn y "
-#~ "gwasanaeth hwn."
+#: src/Actor/templates/actor/instructions-preferences.html.twig:25
+msgid ""
+"In some older LPAs, instructions and preferences are called 'restrictions and "
+"conditions'."
+msgstr ""
+"Mewn rhai LPA hŷn, gelwir cyfarwyddiadau a dymuniadau yn ‘cyfyngiadau ac "
+"amodau’."
