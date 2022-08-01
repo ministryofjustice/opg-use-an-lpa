@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-07-29T08:17:21+00:00\n"
+"POT-Creation-Date: 2022-08-01T08:59:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -14,7 +14,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:103
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:20
 #: src/Actor/templates/actor/check-access-codes.html.twig:12
-#: src/Actor/templates/actor/instructions-preferences.html.twig:10
+#: src/Actor/templates/actor/instructions-preferences.html.twig:11
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
@@ -1131,18 +1131,14 @@ msgstr ""
 msgid "Last updated: 30 March 2020"
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:18
+#: src/Actor/templates/actor/instructions-preferences.html.twig:19
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:181
 #: src/Common/templates/partials/full-lpa-display.html.twig:213
 msgid "Instructions and preferences"
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:23
-msgid "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or preferences we cannot show these online. Organisations might ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> so that they can read the instructions and preferences."
-msgstr ""
-
 #: src/Actor/templates/actor/instructions-preferences.html.twig:24
-msgid "In some older LPA's, instructions and preferences are called 'restrictions and conditions'."
+msgid "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or preferences we cannot show these online. Organisations might ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> so that they can read the instructions and preferences."
 msgstr ""
 
 #: src/Actor/templates/actor/create-account-success.html.twig:5
@@ -5032,4 +5028,8 @@ msgstr ""
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
 msgid "Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to improve"
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:25
+msgid "In some older LPAs, instructions and preferences are called 'restrictions and conditions'."
 msgstr ""
