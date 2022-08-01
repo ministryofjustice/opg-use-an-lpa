@@ -1,31 +1,29 @@
 {% set route_name = get_route_name() %}
 
-<div class="trans-switch" role="navigation" aria-labelledby="language-switch-en language-switch-cy">
-    <ul class="trans-switch__container" id="language-switch">
-        <li class="govuk-list trans-switch__list govuk-body-s" id="language-switch-en" lang="en-gb">
-            {% if path() matches '/(^\\/cy.*)/' %}
-                {% if actorToken is defined and actorToken != 'null' %}
-                    {% set path = path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) %}
-                {% else %}
-                    {% set path = path() | replace({'/cy':''}) %}
-                {% endif %}
-                <a href="{{ path }}" class="govuk-link">
-                    <span class="govuk-visually-hidden">Change language to </span>English</a>
+<ul class="trans-switch" id="language-switch" role="navigation" aria-label="Change your language">
+    <li class="govuk-list trans-switch__list govuk-body-s" id="language-switch-en" lang="en-gb">
+        {% if path() matches '/(^\\/cy.*)/' %}
+            {% if actorToken is defined and actorToken != 'null' %}
+                {% set path = path(route_name, {}, {'lpa': actorToken }) | replace({'/cy':''}) %}
             {% else %}
-                <span class="govuk-visually-hidden">Current language is </span>English
+                {% set path = path() | replace({'/cy':''}) %}
             {% endif %}
-        </li>
-        <li class="govuk-list trans-switch__list govuk-body-s" id="language-switch-cy" lang="cy-gb">
-            {% if '/cy' not in path() %}
-                {% if actorToken is defined and actorToken != 'null' %}
-                    {% set path = '/cy' ~ path(route_name, {}, {'lpa': actorToken }) %}
-                {% else %}
-                    {% set path = '/cy' ~ path() %}
-                {% endif %}
-                <a href="{{ path }}" class="govuk-link" aria-label="Newid iaith i'r Gymraeg">Cymraeg</a>
+            <a href="{{ path }}" class="govuk-link">
+                <span class="govuk-visually-hidden">Change language to </span>English</a>
+        {% else %}
+            <span class="govuk-visually-hidden">Current language is </span>English
+        {% endif %}
+    </li>
+    <li class="govuk-list trans-switch__list govuk-body-s" id="language-switch-cy" lang="cy-gb">
+        {% if '/cy' not in path() %}
+            {% if actorToken is defined and actorToken != 'null' %}
+                {% set path = '/cy' ~ path(route_name, {}, {'lpa': actorToken }) %}
             {% else %}
-                Cymraeg<span class="govuk-visually-hidden"> yw'r iaith bresennol</span>
+                {% set path = '/cy' ~ path() %}
             {% endif %}
-        </li>
-    </ul>
-</div>
+            <a href="{{ path }}" class="govuk-link" aria-label="Newid iaith i'r Gymraeg">Cymraeg</a>
+        {% else %}
+            Cymraeg<span class="govuk-visually-hidden"> yw'r iaith bresennol</span>
+        {% endif %}
+    </li>
+</ul>
