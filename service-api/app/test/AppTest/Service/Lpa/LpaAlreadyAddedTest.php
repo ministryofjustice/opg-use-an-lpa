@@ -6,7 +6,6 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
-use Laminas\Form\Element\DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -32,7 +31,7 @@ class LpaAlreadyAddedTest extends TestCase
     private string $lpaUid;
     private string $userLpaActorToken;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -70,7 +69,7 @@ class LpaAlreadyAddedTest extends TestCase
                     $this->userLpaActorToken => [
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'lpa' => [
-                            'uid' => $this->lpaUid
+                            'uId' => $this->lpaUid
                         ],
                     ],
                 ]
@@ -130,6 +129,7 @@ class LpaAlreadyAddedTest extends TestCase
                             'middlenames'   => '',
                             'surname'       => 'Person',
                         ],
+                        'activationKeyDueDate' => null
                     ],
                 ]
             );

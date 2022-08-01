@@ -18,7 +18,7 @@ class FindActorInLpaTest extends TestCase
     /** @var ObjectProphecy|LoggerInterface */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -197,6 +197,7 @@ class FindActorInLpaTest extends TestCase
                     'lpa-id'    => '700000012345'
                 ],
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
@@ -220,6 +221,7 @@ class FindActorInLpaTest extends TestCase
                     'lpa-id'    => '700000012345'
                 ],
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1975-10-05',
                     'first_names' => 'Donor',
                     'last_name'   => 'Person',
@@ -229,6 +231,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null,
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1982-01-20', // dob will not match
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
@@ -238,6 +241,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null,
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Wrong', // firstname will not match
                     'last_name'   => 'Testing',
@@ -247,6 +251,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null,
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Incorrect', // surname will not match
@@ -256,6 +261,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null,
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Test Tester',
                     'last_name'   => 'Testing',
@@ -265,6 +271,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null, // will not find a match as this attorney is inactive
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1977-11-21',
                     'first_names' => 'Attorneyone',
                     'last_name'   => 'Person',
@@ -274,6 +281,7 @@ class FindActorInLpaTest extends TestCase
             [
                 null, // will not find a match as this attorney is a ghost
                 [
+                    'reference_number' => '700000000001',
                     'dob'         => '1960-05-05',
                     'first_names' => 'Attorneytwo',
                     'last_name'   => 'Person',

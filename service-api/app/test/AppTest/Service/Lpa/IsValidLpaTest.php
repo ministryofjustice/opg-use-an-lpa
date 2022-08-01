@@ -2,8 +2,8 @@
 
 namespace AppTest\Service\Lpa;
 
-use PHPUnit\Framework\TestCase;
 use App\Service\Lpa\IsValidLpa;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpaTest extends TestCase
@@ -13,7 +13,7 @@ class IsValidLpaTest extends TestCase
      */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
@@ -30,8 +30,9 @@ class IsValidLpaTest extends TestCase
     public function check_if_lpa_valid_when_status_registered()
     {
         $lpa = [
+            'uId'    => '700000000001',
             'status' => 'Registered',
-            'donor' => [
+            'donor'  => [
                 'id' => 1,
             ]
         ];
@@ -45,8 +46,9 @@ class IsValidLpaTest extends TestCase
     public function check_if_lpa_valid_when_status_cancelled()
     {
         $lpa = [
+            'uId'    => '700000000001',
             'status' => 'Cancelled',
-            'donor' => [
+            'donor'  => [
                 'id' => 1,
             ]
         ];
@@ -60,8 +62,9 @@ class IsValidLpaTest extends TestCase
     public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled()
     {
         $lpa = [
+            'uId'    => '700000000001',
             'status' => 'Revoked',
-            'donor' => [
+            'donor'  => [
                 'id' => 1,
             ]
         ];

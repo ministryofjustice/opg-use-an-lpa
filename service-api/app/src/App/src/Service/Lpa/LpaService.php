@@ -85,7 +85,6 @@ class LpaService
         }
 
         if ($lpaData['trustCorporations'] !== null) {
-
             $lpaData['trustCorporations'] = array_values(
                 array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
                     return ($this->getTrustCorporationStatus)($trustCorporation) === self::ACTIVE_TC;
@@ -125,7 +124,7 @@ class LpaService
             'user-lpa-actor-token'  => $map['Id'],
             'date'                  => $lpa->getLookupTime()->format('c'),
             'lpa'                   => $lpaData,
-            'activationKeyDueDate'  => $map['DueBy']
+            'activationKeyDueDate'  => $map['DueBy'] ?? null
         ];
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return

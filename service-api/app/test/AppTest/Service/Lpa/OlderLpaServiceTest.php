@@ -13,8 +13,6 @@ use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
-use Laminas\Diactoros\Response\EmptyResponse;
-use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -51,7 +49,7 @@ class OlderLpaServiceTest extends TestCase
     private DateInterval $twoWeekInterval;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->lpasInterfaceProphecy = $this->prophesize(LpasInterface::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);

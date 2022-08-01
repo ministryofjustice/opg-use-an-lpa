@@ -6,15 +6,15 @@ namespace AppTest\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Handler\HealthcheckHandler;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Handler\HealthcheckHandler;
-use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {
@@ -28,7 +28,7 @@ class HealthcheckHandlerTest extends TestCase
 
     private $version;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->version = 'dev';
         $this->actorUsersProphecy = $this->prophesize(ActorUsersInterface::class);

@@ -8,73 +8,31 @@ use App\DataAccess\{ApiGateway\ActorCodes,
     Repository,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
-use App\Service\Lpa\GetTrustCorporationStatus;
-use App\DataAccess\Repository\Response\{Lpa};
-use App\Service\Lpa\GetAttorneyStatus;
-use App\Service\Lpa\IsValidLpa;
-use App\Service\Lpa\LpaService;
-use App\Service\Lpa\ResolveActor;
+use App\DataAccess\Repository\Response\Lpa;
+use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use stdClass;
 
 class LpaServiceTest extends TestCase
 {
-    /**
-     * @var Repository\ViewerCodesInterface
-     */
-    private $viewerCodesInterfaceProphecy;
+    private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+    private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
+    private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private ActorCodes|ObjectProphecy $actorCodesProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
+    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
+    private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
+    private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
 
-    /**
-     * @var Repository\ViewerCodeActivityInterface
-     */
-    private $viewerCodeActivityInterfaceProphecy;
-
-    /**
-     * @var Repository\LpasInterface
-     */
-    private $lpasInterfaceProphecy;
-
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMapInterfaceProphecy;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
-
-    /**
-     * @var ActorCodes
-     */
-    public $actorCodesProphecy;
-
-    /**
-     * @var ResolveActor
-     */
-    private $resolveActorProphecy;
-
-    /**
-     * @var GetAttorneyStatus
-     */
-    private $getAttorneyStatusProphecy;
-
-    /**
-     * @var IsValidLpa
-     */
-    private $isValidLpaProphecy;
-
-    /**
-     * @var GetTrustCorporationStatus
-     */
-    private $getTrustCorporationStatusProphecy;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
@@ -124,6 +82,7 @@ class LpaServiceTest extends TestCase
     public function can_get_by_id()
     {
         $testUid = '700012349874';
+
         $lpaResponse = new Lpa([
             'attorneys' => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
@@ -136,6 +95,7 @@ class LpaServiceTest extends TestCase
                 ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
             ]
         ], new DateTime());
+
         $expectedLpaResponse = new Lpa([
             'attorneys' => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
@@ -215,7 +175,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => true
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -241,7 +202,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => true
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ], (string) $t->ActorId)
             ->willReturn([
                 'type' => 'primary-attorney',
@@ -291,7 +253,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => false
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -300,7 +263,8 @@ class LpaServiceTest extends TestCase
             [
                 'uId' => $t->SiriusUid,
                 'status' => 'Registered',
-                'attorneys' => []
+                'attorneys' => [],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -321,6 +285,7 @@ class LpaServiceTest extends TestCase
                     'uId' => $t->SiriusUid,
                     'status' => 'Registered',
                     'attorneys' => [],
+                    'trustCorporations' => []
                 ], (string)$t->ActorId)
             ->willReturn(null);
 
@@ -376,7 +341,8 @@ class LpaServiceTest extends TestCase
                     'surname' => 'Test',
                     'systemStatus' => true
                 ]
-            ]
+            ],
+            'trustCorporations' => []
         ], $result['lpa']);
     }
 
@@ -713,7 +679,9 @@ class LpaServiceTest extends TestCase
             'uId' => $t->SiriusUid,
             'donor' => [
                 'surname' => $t->DonorSurname,
-            ]
+            ],
+            'attorneys' => [],
+            'trustCorporations' => []
         ], new DateTime());
 
 
