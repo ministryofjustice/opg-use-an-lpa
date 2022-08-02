@@ -127,7 +127,7 @@ class FindActorInLpa
                 ]
             );
         } else {
-            $this->logger->info(
+            $this->logger->notice(
                 'User entered data failed to match for LPA {uId} and actor {actor_id}. '
                     . 'Fields in error: {fields_in_error}',
                 [
