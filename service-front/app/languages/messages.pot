@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-08-01T08:59:24+00:00\n"
+"POT-Creation-Date: 2022-07-29T09:04:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -1768,7 +1768,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:38
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:47
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:65
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:117
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:86
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
@@ -1783,14 +1783,14 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:64
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:38
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:68
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:120
 #: src/Actor/templates/actor/check-lpa.html.twig:98
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:37
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:71
@@ -3418,7 +3418,7 @@ msgstr ""
 msgid "You need an activation key to add an LPA to your account. The donor and each attorney will have their own unique activation key."
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:39
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:54
 msgid "Where can I find my activation key?"
 msgstr ""
 
@@ -3430,11 +3430,11 @@ msgstr ""
 msgid "If your LPA was registered before 17 July 2020 and you have asked us for an activation key, you'll find it on the letter or email we sent you."
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:99
 msgid "Yes, I have an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:55
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:103
 msgid "No, I do not have an activation key"
 msgstr ""
 
@@ -4293,10 +4293,14 @@ msgid "This must be your current postcode. Your activation key will be posted to
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:25
+msgid "If your current postcode does not match the address we have for you on our records, we’ll contact you to confirm your correct address."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:26
 msgid "You can only ask for an activation key if you live in the UK."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:45
 msgid "Your postcode"
 msgstr ""
 
@@ -4313,12 +4317,12 @@ msgid "If you already have an account on the Use a lasting power of attorney ser
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
 msgid "I do not live in the UK"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
 msgid "If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead."
 msgstr ""
 
@@ -5032,4 +5036,50 @@ msgstr ""
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:25
 msgid "In some older LPAs, instructions and preferences are called 'restrictions and conditions'."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:33
+msgid "You need an activation key to add an LPA to your account. Activation keys expire after 12 months."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid "The donor and all attorneys will each need their own unique activation key."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:43
+msgid ""
+"Activation keys are 13 letters and numbers long and start with a C.<br>\n"
+"                                    For example: C-AB12 CD34 EF56"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:60
+msgid "Activation keys are sent to donors and attorneys by letter or email."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:67
+msgid "For LPAs registered on or after 17 July 2020"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:74
+msgid "Your activation key is on the letter we sent you that told you the LPA had been registered."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:75
+msgid "If you’ve lost the letter, or the activation key has expired, you can request a new one below."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:80
+msgid "For LPAs registered before 17 July 2020"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:87
+msgid "You have to request an activation key from us."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:89
+msgid "If you’ve already requested an activation key, you'll find it on the letter or email we sent you. If you’ve lost it, or it’s expired, you can request a new one below."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:107
+msgid "I have an activation key but it has expired"
 msgstr ""

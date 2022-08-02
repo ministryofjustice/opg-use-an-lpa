@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-25T08:36:50+00:00\n"
+"POT-Creation-Date: 2022-07-29T09:04:46+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2415,7 +2415,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:38
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:47
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:65
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:117
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:86
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
@@ -2430,14 +2430,14 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:64
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:38
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:68
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:120
 #: src/Actor/templates/actor/check-lpa.html.twig:98
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:37
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:71
@@ -4877,7 +4877,7 @@ msgstr ""
 "rhoddwr a phob atwrnai ei god unigryw ei hun."
 
 # Translation is OK. Doesn’t need a ‘?’
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:39
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:54
 msgid "Where can I find my activation key?"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif?"
 
@@ -4898,11 +4898,11 @@ msgstr ""
 "Os cofrestrwyd yr LPA cyn 17 Gorffennaf 2020 a’ch bod eisoes wedi gofyn inni "
 "am allwedd cadarnhau, fe’i gwelwch ar y llythyr neu’r e-bost a gawsoch gennym."
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:99
 msgid "Yes, I have an activation key"
 msgstr "Oes, mae gen i allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:55
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:103
 msgid "No, I do not have an activation key"
 msgstr ""
 "Nac oes, nid oes gennyf allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
@@ -6091,12 +6091,21 @@ msgstr ""
 "cael ei phostio i’r cyfeiriad hwn."
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:25
+msgid ""
+"If your current postcode does not match the address we have for you on our "
+"records, we’ll contact you to confirm your correct address."
+msgstr ""
+"Os nad yw eich cod post presennol yn cyfateb i’r cyfeiriad sydd gennym ar eich "
+"cyfer yn ein cofnodion, byddwn yn cysylltu â chi i gadarnhau eich cyfeiriad "
+"cywir."
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:26
 msgid "You can only ask for an activation key if you live in the UK."
 msgstr ""
 "Dim ond os ydych chi’n byw yn y DU y gallwch chi ofyn am allwedd cadarnhau "
 "cyfrif."
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:45
 msgid "Your postcode"
 msgstr "Eich cod post"
 
@@ -6119,12 +6128,12 @@ msgstr ""
 "<a href=\"%link%\" class=\"govuk-link\"> mewngofnodwch yma</a>."
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
 msgid "I do not live in the UK"
 msgstr "Nid wyf yn byw yn y DU"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
 msgid ""
 "If you do not live in the UK you cannot ask for an activation key through this "
 "service. Please contact us instead."
@@ -7208,3 +7217,73 @@ msgid ""
 msgstr ""
 "Mewn rhai LPA hŷn, gelwir cyfarwyddiadau a dymuniadau yn ‘cyfyngiadau ac "
 "amodau’."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:33
+msgid ""
+"You need an activation key to add an LPA to your account. Activation keys "
+"expire after 12 months."
+msgstr ""
+"Mae angen allwedd cadarnhau cyfrif i ychwanegu LPA at eich cyfrif. Mae’r "
+"allweddi cadarnhau cyfrif yn dod i ben ar ôl 12 mis. "
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid ""
+"The donor and all attorneys will each need their own unique activation key."
+msgstr "Bydd gan y rhoddwr a phob atwrnai allwedd cadarnhau cyfrif unigryw."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:43
+msgid ""
+"Activation keys are 13 letters and numbers long and start with a C.<br>\n"
+"                                    For example: C-AB12 CD34 EF56"
+msgstr ""
+"Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn "
+"dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:60
+msgid "Activation keys are sent to donors and attorneys by letter or email."
+msgstr ""
+"Anfonir allweddi cadarnhau cyfrif at roddwyr ac atwrneiod drwy lythyr neu e-"
+"bost."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:67
+msgid "For LPAs registered on or after 17 July 2020"
+msgstr "Ar gyfer LPAs a gofrestrwyd ar neu ar ôl 17 Gorffennaf 2020"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:74
+msgid ""
+"Your activation key is on the letter we sent you that told you the LPA had "
+"been registered."
+msgstr ""
+"Mae eich allwedd cadarnhau cyfrif yn y llythyr a anfonwyd atoch yn dweud "
+"wrthych fod yr LPA wedi’i chofrestru."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:75
+msgid ""
+"If you’ve lost the letter, or the activation key has expired, you can request "
+"a new one below."
+msgstr ""
+"Os ydych wedi colli’r llythyr, neu os yw’r allwedd cadarnhau cyfrif wedi dod i "
+"ben, gallwch ofyn am un newydd isod."
+
+# Haven’t got a translation for this. Welsh provided says ‘If the LPA was registered before 1 Sept’ which will do for now
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:80
+msgid "For LPAs registered before 17 July 2020"
+msgstr "Ar gyfer LPAs a gofrestrwyd cyn 17 Gorffennaf 2020"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:87
+msgid "You have to request an activation key from us."
+msgstr "Mae’n rhaid i chi ofyn am allwedd cadarnhau cyfrif gennym ni."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:89
+msgid ""
+"If you’ve already requested an activation key, you'll find it on the letter or "
+"email we sent you. If you’ve lost it, or it’s expired, you can request a new "
+"one below."
+msgstr ""
+"Os ydych eisoes wedi gofyn am allwedd cadarnhau cyfrif, fe’i gwelir yn y "
+"llythyr neu’r e-bost a anfonwyd atoch. Os ydych wedi’i golli, neu os yw wedi "
+"dod i ben, gallwch ofyn am un newydd isod."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:107
+msgid "I have an activation key but it has expired"
+msgstr "Mae gen i allwedd cadarnhau, ond mae wedi dod i ben"
