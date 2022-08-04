@@ -90,7 +90,7 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
                     $status = strtolower(($lpa->lpa)->getStatus());
-                    if ($this->canDisplayLPA($status)){
+                    if ($this->canDisplayLPA($status)) {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
@@ -119,7 +119,6 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                     'lpa_access_code' => $code
                 ]
             ));
-
         }
 
         //  We don't have a code so the session has timed out
