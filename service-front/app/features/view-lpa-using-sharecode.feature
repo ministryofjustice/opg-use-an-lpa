@@ -118,10 +118,10 @@ Feature: View an LPA via sharecode
     When I give an invalid <sharecode> and <surname>
     Then I am told that the share code is invalid because <reason>
     Examples:
-      |surname  | sharecode               | reason                                          |
-      | Billson | V-1110-1111-0111        | We could not find an LPA matching those details |
-      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA matching those details |
-      | Billson | 1110-1111-0111          | We could not find an LPA matching those details |
+      |surname  | sharecode               | reason                                      |
+      | Billson | V-1110-1111-0111        | We could not find an LPA with those details |
+      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA with those details |
+      | Billson | 1110-1111-0111          | We could not find an LPA with those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered

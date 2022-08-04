@@ -80,7 +80,7 @@ Feature: View an LPA via share code
     Given I have been given access to an LPA via share code
     And I access the viewer service
     When I give an invalid "1110-1111-0111" and "Billson"
-    Then I am told that the share code is invalid because "We could not find an LPA matching those details"
+    Then I am told that the share code is invalid because "We could not find an LPA with those details"
 
   @acceptance
   Scenario: The user is allowed to re-enter code after an invalid one entered
