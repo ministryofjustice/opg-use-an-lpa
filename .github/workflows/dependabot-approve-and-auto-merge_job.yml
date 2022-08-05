@@ -3,7 +3,7 @@ name: Dependabot Pull Request Approve and Merge
 on:
   workflow_run:
     workflows:
-      ["end_of_workflow"]
+      ["ci/circleci: end_of_workflow"]
     types:
       - completed
 
