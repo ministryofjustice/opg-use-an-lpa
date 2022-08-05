@@ -6,8 +6,8 @@ updates:
     directory: "/service-front/web"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
     versioning-strategy: lockfile-only
 
@@ -16,8 +16,8 @@ updates:
     directory: "/service-pdf/app"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
     versioning-strategy: lockfile-only
 
@@ -26,8 +26,8 @@ updates:
     directory: "/service-front/app"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
     versioning-strategy: lockfile-only
 
@@ -36,8 +36,8 @@ updates:
     directory: "/service-api/app"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
     versioning-strategy: lockfile-only
 
@@ -46,8 +46,8 @@ updates:
     directory: "/tests/smoke"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
     versioning-strategy: lockfile-only
 
@@ -56,8 +56,8 @@ updates:
     directory: "/terraform/account"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
 
     # Enable version updates for environment terraform
@@ -65,22 +65,22 @@ updates:
     directory: "/terraform/environment"
     schedule:
       # Check for updates on the first of each month at 10am UTC
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
 
     # Enable version updates for service-admin gomod
   - package-ecosystem: "gomod"
     directory: "/service-admin"
     schedule:
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
 
     # Enable version updates for service-admin docker
   - package-ecosystem: "docker"
     directory: "/service-admin"
     schedule:
-      interval: "monthly"
-      time: "10:00"
+      interval: "daily"
+      time: "09:00"
       timezone: "Europe/London"
