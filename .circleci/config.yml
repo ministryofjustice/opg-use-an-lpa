@@ -1,5 +1,19 @@
 version: 2.1
 
+parameters:
+  GHA_Event:
+    type: string
+    default: ""
+  GHA_Actor:
+    type: string
+    default: ""
+  GHA_Action:
+    type: string
+    default: ""
+  GHA_Meta:
+    type: string
+    default: ""
+
 workflows:
   keep_demo_environment_up_to_date:
     triggers:
@@ -49,6 +63,7 @@ workflows:
           name: slack_notify_stats
 
   package_update_pr:
+      when: << pipeline.parameters.GHA_Action >>
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
@@ -171,6 +186,7 @@ workflows:
             requires: [codecov_upload]
 
   terraform_only_pr:
+      when: << pipeline.parameters.GHA_Action >>
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
@@ -248,6 +264,7 @@ workflows:
             requires: [dev_run_behat_tests]
 
   admin_only_pr:
+      when: << pipeline.parameters.GHA_Action >>
       jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
@@ -370,7 +387,8 @@ workflows:
             requires: [dev_run_behat_tests]
 
   pr_build:
-      jobs:
+    when: << pipeline.parameters.GHA_Action >>
+    jobs:
         - cancel_redundant_builds:
             name: cancel_previous_jobs
             filters: { branches: { ignore: [
@@ -607,6 +625,7 @@ workflows:
             requires: [post_environment_domains]
 
   path_to_live:
+      when: << pipeline.parameters.GHA_Action >>
       jobs:
         # Common tasks
         - use-my-lpa/node_test_web:

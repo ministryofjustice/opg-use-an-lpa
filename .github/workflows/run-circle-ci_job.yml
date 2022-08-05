@@ -1,0 +1,10 @@
+on: push
+jobs:
+  trigger-circleci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run circle ci
+        id: run circle ci
+        uses: circleci/trigger_circleci_pipeline@v1.0.5
+        env:
+          CCI_TOKEN: ${{ secrets.GITHUB_TOKEN }}
