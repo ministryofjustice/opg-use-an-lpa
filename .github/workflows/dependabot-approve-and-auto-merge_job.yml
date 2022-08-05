@@ -2,6 +2,8 @@ name: Dependabot Pull Request Approve and Merge
 
 on:
   workflow_run:
+    workflows:
+      ["ecr_scan_results"]
     types:
       - completed
 
