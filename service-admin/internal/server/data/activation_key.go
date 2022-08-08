@@ -92,5 +92,9 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	}
 
 	log.Info().Msgf("Bad Response from server %v", resp)
+	readBody, _ := ioutil.ReadAll(resp.Body)
+
+	log.Info().Msgf("Bad Response from server body is %s", string(readBody))
+
 	return nil, errors.New("Key Not Found")
 }
