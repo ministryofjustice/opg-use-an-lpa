@@ -87,6 +87,6 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 		return returnedKeys, nil
 	}
 
-	log.Info().Msgf("Bad Response from server %s", resp)
+	log.Info().Msgf("Bad Response from server %v", resp)
 	return nil, errors.New("Key Not Found")
 }
