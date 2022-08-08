@@ -27,10 +27,15 @@ type TemplateWriterService interface {
 	RenderTemplate(http.ResponseWriter, context.Context, string, interface{}) error
 }
 
+type ActivationKeyService interface {
+	GetActivationKeyFromCodesEndpoint(context.Context, string) (*data.ActivationKeys, error)
+}
+
 type SearchServer struct {
-	accountService  AccountService
-	lpaService      LPAService
-	templateService TemplateWriterService
+	accountService       AccountService
+	lpaService           LPAService
+	templateService      TemplateWriterService
+	activationKeyService ActivationKeyService
 }
 
 const (
@@ -54,8 +59,13 @@ type Search struct {
 	Errors validation.Errors
 }
 
-func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService) *SearchServer {
-	return &SearchServer{accountService: accountService, lpaService: lpaService, templateService: templateWriterService}
+func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService ActivationKeyService) *SearchServer {
+	return &SearchServer{
+		accountService:       accountService,
+		lpaService:           lpaService,
+		templateService:      templateWriterService,
+		activationKeyService: activationKeyService,
+	}
 }
 
 func (s *Search) Validate() error {
@@ -111,7 +121,7 @@ func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.R
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			s.Result = DoSearch(r.Context(), searchServer.accountService, searchServer.lpaService, s.Type, s.Query)
+			s.Result = searchServer.DoSearch(r.Context(), s.Type, s.Query)
 		}
 	}
 
@@ -120,15 +130,15 @@ func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.R
 	}
 }
 
-func DoSearch(ctx context.Context, accountService AccountService, lpaService LPAService, t QueryType, q string) interface{} {
+func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) interface{} {
 	switch t {
 	case EmailQuery:
-		r, err := accountService.GetActorUserByEmail(ctx, q)
+		r, err := s.accountService.GetActorUserByEmail(ctx, q)
 		if err != nil {
 			return nil
 		}
 
-		r.LPAs, err = lpaService.GetLpasByUserID(ctx, r.ID)
+		r.LPAs, err = s.lpaService.GetLpasByUserID(ctx, r.ID)
 		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
 			return nil
 		}
@@ -136,25 +146,54 @@ func DoSearch(ctx context.Context, accountService AccountService, lpaService LPA
 		return r
 
 	case ActivationCodeQuery:
-		r, err := lpaService.GetLPAByActivationCode(ctx, stripUnnecessaryCharacters(q))
-		if err != nil {
-			return nil
-		}
-
-		email, err := accountService.GetEmailByUserID(ctx, r.UserID)
-
-		if email == "" {
-			email = "Not Found"
-		}
+		r, err := s.lpaService.GetLPAByActivationCode(ctx, stripUnnecessaryCharacters(q))
 
 		if err == nil {
-			return map[string]interface{}{
-				"Activation key": q,
-				"Used":           "Yes",
-				"Email":          email,
-				"LPA":            r.SiriusUID,
+			email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
+			if email == "" {
+				email = "Not Found"
 			}
+
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodesEndpoint(ctx, stripUnnecessaryCharacters(q))
+
+			if err != nil {
+				return map[string]interface{}{
+					"Activation key": q,
+					"Used":           "Yes",
+					"Email":          email,
+					"LPA":            r.SiriusUID,
+				}
+			} else {
+
+				for _, value := range *activationKey {
+					return map[string]interface{}{
+						"Activation key": q,
+						"Used":           "Yes",
+						"Email":          email,
+						"LPA":            r.SiriusUID,
+						"Status":         value.StatusDetails,
+						"GeneratedDate":  value.GeneratedDate,
+						"LastUpdated":    value.LastUpdatedDate,
+					}
+				}
+			}
+		} else {
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodesEndpoint(ctx, stripUnnecessaryCharacters(q))
+			if err == nil {
+				for _, value := range *activationKey {
+					return map[string]interface{}{
+						"Activation key": q,
+						"Used":           "No",
+						"LPA":            value.Lpa,
+						"Status":         value.StatusDetails,
+						"GeneratedDate":  value.GeneratedDate,
+						"LastUpdated":    value.LastUpdatedDate,
+					}
+				}
+			}
+
 		}
+
 	}
 
 	return nil

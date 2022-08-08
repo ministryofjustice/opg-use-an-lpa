@@ -10,6 +10,8 @@ import (
 	"os/signal"
 	"time"
 
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -57,6 +59,11 @@ func main() {
 			env.Get("ADMIN_CLIENT_ID", ""),
 			"The aws client id for user",
 		)
+		lpaCodesEndpoint = flag.String(
+			"lpa-codes-endpoint",
+			env.Get("LPA_CODES_API_ENDPOINT", ""),
+			"The codes enpoint",
+		)
 	)
 
 	flag.Parse()
@@ -70,9 +77,19 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
 
+	conf, err := config.LoadDefaultConfig(context.TODO())
+
+	if err != nil {
+		log.Panic()
+	}
+
+	cred, err := conf.Copy().Credentials.Retrieve(context.TODO())
+
+	activationKeyService := data.NewActivationKeyService(v4.NewSigner(), cred, *lpaCodesEndpoint+"/v1/code")
+
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService())
+	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
 
 	srv := &http.Server{
 		Handler:      app.InitialiseServer(*keyURL, u),

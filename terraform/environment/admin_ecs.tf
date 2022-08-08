@@ -228,7 +228,11 @@ locals {
         {
           name  = "ADMIN_CLIENT_ID",
           value = "${aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id}"
-        }
+        },
+        {
+          name  = "LPA_CODES_API_ENDPOINT",
+          value = local.environment.lpa_codes_endpoint
+        },
       ]
     }
   )
