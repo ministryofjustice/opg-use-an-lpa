@@ -12,6 +12,7 @@ import (
 
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -77,15 +78,21 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
 
-	conf, err := config.LoadDefaultConfig(context.TODO())
+	conf, err := config.LoadDefaultConfig(context.TODO(), func(lo *config.LoadOptions) error {
+		if *dbRegion != "" {
+			lo.Region = *dbRegion
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		log.Panic()
 	}
 
-	cred, err := conf.Copy().Credentials.Retrieve(context.TODO())
+	sess := session.Must(session.NewSession(&conf))
 
-	activationKeyService := data.NewActivationKeyService(v4.NewSigner(), cred, *lpaCodesEndpoint+"/v1/code")
+	activationKeyService := data.NewActivationKeyService(v4.NewSigner(), sess.Config.Credentials, *lpaCodesEndpoint+"/v1/code")
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
