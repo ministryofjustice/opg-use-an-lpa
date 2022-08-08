@@ -70,7 +70,11 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	io.Copy(hasher, closer)
 	shaHash := hasher.Sum(nil)
 
-	aks.awsSigner.SignHTTP(ctx, aks.credentials, r, string(shaHash), "execute-api", "eu-west-1", time.Now())
+	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, string(shaHash), "execute-api", "eu-west-1", time.Now())
+
+	if signError != nil {
+		log.Info().Msgf("Error Signing %v", signError)
+	}
 
 	client := http.Client{}
 	resp, err := client.Do(r)
