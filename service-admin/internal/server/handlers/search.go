@@ -150,6 +150,9 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 
 		if err == nil {
 			email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
+			if err != nil {
+				return nil
+			}
 			if email == "" {
 				email = "Not Found"
 			}

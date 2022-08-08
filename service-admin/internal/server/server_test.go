@@ -3,11 +3,12 @@ package server_test
 import (
 	"context"
 	"errors"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -26,6 +27,17 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 	}
 
 	return nil
+}
+
+type mockActivationKeyService struct {
+	GetActivationKeyFromCodesEndpointFunc func(context.Context, string) (*data.ActivationKeys, error)
+}
+
+func (m *mockActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.Context, key string) (*data.ActivationKeys, error) {
+	if m.GetActivationKeyFromCodesEndpointFunc != nil {
+		return m.GetActivationKeyFromCodesEndpoint(ctx, key)
+	}
+	return &data.ActivationKeys{}, nil
 }
 
 type mockDynamoDBClent struct {
@@ -256,7 +268,7 @@ func Test_app_InitialiseServer(t *testing.T) {
 			t.Parallel()
 
 			tt.fields.r.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
-			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw)
+			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw, &mockActivationKeyService{})
 			handler := a.InitialiseServer(tt.args.keyURL, &url.URL{})
 			assert.HTTPStatusCode(t, handler.ServeHTTP, "GET", "/hello", nil, 200)
 		})
