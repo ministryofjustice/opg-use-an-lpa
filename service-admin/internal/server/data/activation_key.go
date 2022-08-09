@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -53,15 +52,17 @@ type ActivationKeys []struct {
 
 func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
 
-	jsonStr := []byte(fmt.Sprintf(`{"code":%s}`, activationKey))
+	jsonStr := []byte(fmt.Sprintf(`{"code":"%s"}`, activationKey))
 
 	r, err := http.NewRequest(http.MethodPost, aks.codesAPIURL, bytes.NewBuffer(jsonStr))
+	print(string(jsonStr))
 
 	//calculate hash of request body
-	closer, err := r.GetBody()
 	hasher := sha256.New()
-	io.Copy(hasher, closer)
+	hasher.Write(jsonStr)
 	shaHash := hex.EncodeToString(hasher.Sum(nil))
+
+	log.Info().Msgf("Sha hash : %s" + shaHash)
 
 	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
 
