@@ -39,5 +39,37 @@
           {{ .Email }}
       </dd>
     </div>
+    {{ if .Status}}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Status
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .Status }}
+      </dd>
+    </div>
+    {{ end }}
+
+    {{ if .GeneratedDate }}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Generated
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .GeneratedDate | readableDateTime }}
+      </dd>
+    </div>
+    {{ end }}
+
+    {{if .LastUpdated}}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Email
+      </dt>
+      <dd class="govuk-summary-list__value">
+          {{ .LastUpdated | readableDateTime }}
+      </dd>
+    </div>
+    {{ end }}
   </dl>
 {{ end }}
