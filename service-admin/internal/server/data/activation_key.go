@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"io"
@@ -68,7 +69,7 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	closer, err := r.GetBody()
 	hasher := sha256.New()
 	io.Copy(hasher, closer)
-	shaHash := hasher.Sum(nil)
+	shaHash := hex.EncodeToString(hasher.Sum(nil))
 
 	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, string(shaHash), "execute-api", "eu-west-1", time.Now())
 
