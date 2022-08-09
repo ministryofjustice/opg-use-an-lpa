@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -52,18 +53,9 @@ type ActivationKeys []struct {
 
 func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
 
-	codePayload := map[string]interface{}{
-		"code": activationKey,
-	}
+	jsonStr := []byte(fmt.Sprintf(`{"code":%s}`, activationKey))
 
-	var buf bytes.Buffer
-
-	err := json.NewEncoder(&buf).Encode(codePayload)
-	if err != nil {
-		return nil, errors.New("Cannot Encode Payload")
-	}
-
-	r, err := http.NewRequest(http.MethodPost, aks.codesAPIURL, &buf)
+	r, err := http.NewRequest(http.MethodPost, aks.codesAPIURL, bytes.NewBuffer(jsonStr))
 
 	//calculate hash of request body
 	closer, err := r.GetBody()
@@ -71,7 +63,7 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	io.Copy(hasher, closer)
 	shaHash := hex.EncodeToString(hasher.Sum(nil))
 
-	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, string(shaHash), "execute-api", "eu-west-1", time.Now())
+	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
 
 	if signError != nil {
 		log.Info().Msgf("Error Signing %v", signError)
