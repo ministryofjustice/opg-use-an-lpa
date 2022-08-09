@@ -44,7 +44,7 @@
         "paragonie/hidden-string": "^1.0",
         "php-http/guzzle6-adapter": "^2.0",
         "psr/http-client-implementation": "^1.0",
-        "ramsey/uuid": "^3.8",
+        "ramsey/uuid": "^4.0",
         "symfony/console": "^6.1",
         "laminas/laminas-component-installer": "^2.1.1",
         "laminas/laminas-config-aggregator": "^1.0",
