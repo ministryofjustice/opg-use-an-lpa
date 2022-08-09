@@ -14,25 +14,26 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\AddOlderLpa;
-use App\Service\Lpa\CheckLpaCleansed;
-use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
+use App\Service\Lpa\RemoveLpa;
 use App\Service\ViewerCodes\ViewerCodeService;
+use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use BehatTest\Context\UsesPactContextTrait;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use PHPUnit\Framework\ExpectationFailedException;
+use Psr\Http\Message\RequestInterface;
 use stdClass;
-use DateTimeImmutable;
-use DateInterval;
 
 /**
  * Class LpaContext
@@ -1201,25 +1202,25 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // ViewerCodeActivity::getStatusesForViewerCodes
-        $this->awsFixtures->append(new Result());
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
+//        // ViewerCodeActivity::getStatusesForViewerCodes
+//        $this->awsFixtures->append(new Result());
+//
+//        // UserLpaActorMap::get
+//        $this->awsFixtures->append(
+//            new Result(
+//                [
+//                    'Item' => $this->marshalAwsResultData(
+//                        [
+//                            'SiriusUid' => $this->lpaUid,
+//                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+//                            'Id' => $this->userLpaActorToken,
+//                            'ActorId' => $this->actorLpaId,
+//                            'UserId' => $this->userId,
+//                        ]
+//                    ),
+//                ]
+//            )
+//        );
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
 
@@ -1372,29 +1373,40 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmCancellationOfTheChosenViewerCode()
     {
+        // Expected fixture calls in this step
+        $fixtureCount = 3;
+
         // UserLpaActorMap::get
         $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
+            function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
+                assertEquals('GetItem', $cmd->getName());
+                $fixtureCount--;
+
+                return new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
+                            ]
+                        ),
+                    ]
+                );
+            }
         );
 
         // ViewerCodes::get
         $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
+            function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
+                assertEquals('GetItem', $cmd->getName());
+                $fixtureCount--;
+
+                return new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
                                 'Added' => '2020-01-05 12:34:56',
@@ -1405,17 +1417,29 @@ class LpaContext extends BaseIntegrationContext
                                 'ViewerCode' => $this->accessCode,
                             ]
                         ),
-                    ],
-                ]
-            )
+                    ]
+                );
+            }
         );
 
-        $this->awsFixtures->append(new Result());
+        // ViewerCodes::cancel
+        $this->awsFixtures->append(
+            function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
+                assertEquals('UpdateItem', $cmd->getName());
+                $fixtureCount--;
+
+                return new Result();
+            }
+        );
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
-        assertEmpty($codeData);
+        assertEquals(
+            0,
+            $fixtureCount,
+            'Not all expected fixtures used, expected 3 got ' . 3 - $fixtureCount
+        );
     }
 
     /**
