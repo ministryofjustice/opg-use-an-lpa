@@ -55,7 +55,7 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	jsonStr := []byte(fmt.Sprintf(`{"code":"%s"}`, activationKey))
 
 	r, err := http.NewRequest(http.MethodPost, aks.codesAPIURL, bytes.NewBuffer(jsonStr))
-	print(string(jsonStr))
+	r.Header.Set("Content-Type", "application/json")
 
 	//calculate hash of request body
 	hasher := sha256.New()
