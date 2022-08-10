@@ -60,6 +60,7 @@ class ConfigProvider
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
+                Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class => DataAccess\DynamoDb\ActorCodesFactory::class,
