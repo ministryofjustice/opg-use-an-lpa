@@ -69,7 +69,6 @@ class ConfigProvider
                 Service\Session\EncryptedCookiePersistence::class =>
                     Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
-                Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
                 Service\User\UserService::class => Service\User\UserServiceFactory::class,
                 Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
                 Service\Session\Encryption\KmsEncryptedCookie::class
