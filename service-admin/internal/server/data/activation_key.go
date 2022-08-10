@@ -14,43 +14,39 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/rs/zerolog/log"
 )
 
-type ActivationKeyService struct {
-	awsSigner   *v4.Signer
-	credentials aws.Credentials
-	codesAPIURL string
+type ActivationKeyService interface {
+	GetActivationKeyFromCodes(context.Context, string) (*ActivationKeys, error)
 }
-
-func NewActivationKeyService(awsSigner *v4.Signer, credentials aws.Credentials, codesAPIURL string) *ActivationKeyService {
-	return &ActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL}
-}
-
-// example:
-//         active: true
-//         code: "YsSu4iAztUXm"
-//         last_updated_date: 2022-08-20
-//         status_details: "Generated"
-//         expiry_date: 2023-08-20
-//         dob: 1983-08-20
-//         generated_date: 2022-08-20
-//         lpa: "eed4f597-fd87-4536-99d0-895778824861"
-//         actor: "12ad81a9-f89d-4804-99f5-7c0c8669ac9b"
 
 type ActivationKeys []struct {
 	Active          bool   `json:"active"`
 	Actor           string `json:"actor"`
 	Code            string `json:"code"`
 	Dob             string `json:"dob"`
-	ExpiryDate      int    `json:"expiry_date"`
-	GeneratedDate   string `json:"generated_date"`
-	LastUpdatedDate string `json:"last_updated_date"`
+	ExpiryDate      int    `json:"expiry_date" dynamodbav:"expiry_date"`
+	GeneratedDate   string `json:"generated_date" dynamodbav:"generated_date"`
+	LastUpdatedDate string `json:"last_updated_date" dynamodbav:"last_updated_date"`
 	Lpa             string `json:"lpa"`
-	StatusDetails   string `json:"status_details"`
+	StatusDetails   string `json:"status_details" dynamodbav:"status_details"`
 }
 
-func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
+type OnlineActivationKeyService struct {
+	awsSigner   *v4.Signer
+	credentials aws.Credentials
+	codesAPIURL string
+}
+
+func NewOnlineActivationKeyService(awsSigner *v4.Signer, credentials aws.Credentials, codesAPIURL string) ActivationKeyService {
+	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL}
+}
+
+func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
 
 	jsonStr := []byte(fmt.Sprintf(`{"code":"%s"}`, activationKey))
 
@@ -91,4 +87,37 @@ func (aks *ActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.C
 	log.Info().Msgf("Bad Response from server body is %s", string(readBody))
 
 	return nil, errors.New("Key Not Found")
+}
+
+type LocalActivationKeyService struct {
+	db DynamoConnection
+}
+
+func NewLocalActivationKeyService(db DynamoConnection) ActivationKeyService {
+	return &LocalActivationKeyService{db}
+}
+
+func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
+
+	result, err := aks.db.Client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(aks.db.prefixedTableName(CodesTableName)),
+		KeyConditionExpression: aws.String("code = :a"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":a": &types.AttributeValueMemberS{Value: activationKey},
+		},
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("error whilst searching for userId")
+	}
+
+	if result.Count > 0 {
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &returnedKeys)
+		if err != nil {
+			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
+		}
+
+		return returnedKeys, nil
+	}
+
+	return nil, errors.New("Not Yet Implemented")
 }

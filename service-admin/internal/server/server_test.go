@@ -30,12 +30,12 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 }
 
 type mockActivationKeyService struct {
-	GetActivationKeyFromCodesEndpointFunc func(context.Context, string) (*data.ActivationKeys, error)
+	GetActivationKeyFromCodesFunc func(context.Context, string) (*data.ActivationKeys, error)
 }
 
-func (m *mockActivationKeyService) GetActivationKeyFromCodesEndpoint(ctx context.Context, key string) (*data.ActivationKeys, error) {
-	if m.GetActivationKeyFromCodesEndpointFunc != nil {
-		return m.GetActivationKeyFromCodesEndpoint(ctx, key)
+func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, key string) (*data.ActivationKeys, error) {
+	if m.GetActivationKeyFromCodesFunc != nil {
+		return m.GetActivationKeyFromCodes(ctx, key)
 	}
 	return &data.ActivationKeys{}, nil
 }

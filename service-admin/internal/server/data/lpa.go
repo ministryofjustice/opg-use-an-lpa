@@ -26,6 +26,7 @@ const (
 	UserLpaActorTableName     = "UserLpaActorMap"
 	UserLpaActorUserIndexName = "UserIndex"
 	ActivationCodeIndexName   = "ActivationCodeIndex"
+	CodesTableName            = "lpa-codes-local"
 )
 
 var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")

@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/gorilla/mux"
@@ -75,7 +76,7 @@ func main() {
 
 	u.RawQuery = v.Encode()
 
-	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(*dbRegion))
 
 	if err != nil {
 		log.Panic()
@@ -83,9 +84,7 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
-	cred, err := config.Credentials.Retrieve(context.TODO())
-
-	activationKeyService := data.NewActivationKeyService(v4.NewSigner(), cred, *lpaCodesEndpoint+"/v1/code")
+	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
@@ -121,5 +120,17 @@ func main() {
 
 	if err := srv.Shutdown(tc); err != nil {
 		log.Error().Stack().Err(err).Msg("failed to shutdown server successfully")
+	}
+}
+
+func createActivationKeyService(endpoint string, dynamo data.DynamoConnection, config aws.Config) data.ActivationKeyService {
+	if endpoint != "" {
+		cred, err := config.Credentials.Retrieve(context.TODO())
+		if err != nil {
+			log.Panic().Msg("Cannot get credentials")
+		}
+		return data.NewOnlineActivationKeyService(v4.NewSigner(), cred, endpoint+"/v1/code")
+	} else {
+		return data.NewLocalActivationKeyService(dynamo)
 	}
 }

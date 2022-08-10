@@ -27,15 +27,11 @@ type TemplateWriterService interface {
 	RenderTemplate(http.ResponseWriter, context.Context, string, interface{}) error
 }
 
-type ActivationKeyService interface {
-	GetActivationKeyFromCodesEndpoint(context.Context, string) (*data.ActivationKeys, error)
-}
-
 type SearchServer struct {
 	accountService       AccountService
 	lpaService           LPAService
 	templateService      TemplateWriterService
-	activationKeyService ActivationKeyService
+	activationKeyService data.ActivationKeyService
 }
 
 const (
@@ -59,7 +55,7 @@ type Search struct {
 	Errors validation.Errors
 }
 
-func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService ActivationKeyService) *SearchServer {
+func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
 	return &SearchServer{
 		accountService:       accountService,
 		lpaService:           lpaService,
@@ -106,8 +102,8 @@ func stripUnnecessaryCharacters(code string) string {
 	return result
 }
 
-func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	s := &Search{}
+func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
+	search := &Search{}
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
@@ -115,17 +111,17 @@ func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.R
 			log.Error().Err(err).Msg("failed to parse form input")
 		}
 
-		s.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
+		search.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
 
-		err = s.Validate()
+		err = search.Validate()
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			s.Result = searchServer.DoSearch(r.Context(), s.Type, s.Query)
+			search.Result = s.DoSearch(r.Context(), search.Type, search.Query)
 		}
 	}
 
-	if err := searchServer.templateService.RenderTemplate(w, r.Context(), "search.page.gohtml", s); err != nil {
+	if err := s.templateService.RenderTemplate(w, r.Context(), "search.page.gohtml", search); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
 }
@@ -153,11 +149,12 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 			if err != nil {
 				return nil
 			}
+
 			if email == "" {
 				email = "Not Found"
 			}
 
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodesEndpoint(ctx, stripUnnecessaryCharacters(q))
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, stripUnnecessaryCharacters(q))
 
 			if err != nil {
 				return map[string]interface{}{
@@ -181,12 +178,15 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 				}
 			}
 		} else {
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodesEndpoint(ctx, stripUnnecessaryCharacters(q))
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, stripUnnecessaryCharacters(q))
 			if err == nil {
 				for _, value := range *activationKey {
+
+					used := isUsed(value.Active, value.StatusDetails)
+
 					return map[string]interface{}{
 						"Activation key": q,
-						"Used":           "No",
+						"Used":           used,
 						"LPA":            value.Lpa,
 						"Status":         value.StatusDetails,
 						"GeneratedDate":  value.GeneratedDate,
@@ -194,10 +194,16 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 					}
 				}
 			}
-
 		}
-
 	}
 
 	return nil
+}
+
+func isUsed(active bool, status string) string {
+	if !active && status == "Revoked" {
+		return "Yes"
+	} else {
+		return "No"
+	}
 }

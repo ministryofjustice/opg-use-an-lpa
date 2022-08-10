@@ -9,18 +9,16 @@
       </dd>
     </div>
 
+    {{ if .DateTime }}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Date Used
       </dt>
       <dd class="govuk-summary-list__value">
-        {{ if .DateTime }}
           {{ .DateTime | readableDateTime }}
-        {{ else }}
-          N/A
-        {{ end }}
       </dd>
     </div>
+    {{ end }}
 
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
@@ -31,6 +29,7 @@
       </dd>
     </div>
 
+    {{ if .Email }}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Email
@@ -39,6 +38,8 @@
           {{ .Email }}
       </dd>
     </div>
+    {{ end }}
+
     {{ if .Status}}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
@@ -64,7 +65,7 @@
     {{if .LastUpdated}}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        Email
+        Last Updated
       </dt>
       <dd class="govuk-summary-list__value">
           {{ .LastUpdated | readableDateTime }}

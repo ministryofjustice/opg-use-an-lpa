@@ -26,7 +26,7 @@ type app struct {
 	db  data.DynamoConnection
 	r   *mux.Router
 	tw  handlers.TemplateWriterService
-	aks handlers.ActivationKeyService
+	aks data.ActivationKeyService
 }
 
 var ErrPanicRecovery = errors.New("error handler recovering from panic()")
@@ -48,7 +48,7 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewAdminApp(db data.DynamoConnection, r *mux.Router, tw handlers.TemplateWriterService, aks handlers.ActivationKeyService) *app {
+func NewAdminApp(db data.DynamoConnection, r *mux.Router, tw handlers.TemplateWriterService, aks data.ActivationKeyService) *app {
 	return &app{db, r, tw, aks}
 }
 
