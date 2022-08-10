@@ -104,4 +104,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     );
 
     $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
+
+    $app->post('/v1/email-user/{emailTemplate}', App\Handler\NotifyHandler::class, 'lpa.user.notify');
 };
