@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service\Email;
+
+use Alphagov\Notifications\Client as NotifyClient;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use RuntimeException;
+
+/**
+ * Class EmailClientFactory
+ * @package App\Service\Email
+ */
+class EmailClientFactory
+{
+    /**
+     * @param ContainerInterface $container
+     * @return EmailClient
+     */
+    public function __invoke(ContainerInterface $container)
+    {
+        $config = $container->get('config');
+
+        if (!isset($config['notify']['api']['key'])) {
+            throw new RuntimeException('Missing notify API key');
+        }
+
+        $notifyClient = new NotifyClient(
+            [
+                'apiKey' => $config['notify']['api']['key'],
+                'httpClient' => $container->get(ClientInterface::class),
+            ]
+        );
+
+        return new EmailClient($notifyClient);
+    }
+}
