@@ -16,7 +16,6 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\Email\EmailClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
@@ -37,6 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Twig\Environment;
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class CheckDetailsAndConsentHandler
@@ -58,12 +58,12 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     private CheckDetailsAndConsent $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
+    private NotifyService $notifyService;
 
     /** @var array<string, int|string|bool|DateTimeInterface|array|null>  */
     private array $data;
 
     private CleanseLpa $cleanseLPA;
-    private EmailClient $emailClient;
     private LocalisedDate $localisedDate;
     private Environment $environment;
 
@@ -73,17 +73,17 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
-        EmailClient $emailClient,
         LocalisedDate $localisedDate,
-        Environment $environment
+        Environment $environment,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
-        $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
         $this->environment = $environment;
+        $this->notifyService = $notifyService;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -205,10 +205,14 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
-                $this->emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
+
+                $this->notifyService->sendEmailToUser(
                     $this->data['email'],
+                    null,
+                    $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing',
                     (string) $state->referenceNumber,
-                    ($this->localisedDate)($letterExpectedDate)
+                    null,
+                    ($this->localisedDate)($letterExpectedDate),
                 );
 
                 return new HtmlResponse(

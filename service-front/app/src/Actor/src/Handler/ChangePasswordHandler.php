@@ -15,7 +15,6 @@ use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\User\UserService;
-use Common\Service\Email\EmailClient;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
@@ -27,6 +26,7 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class ChangePasswordHandler
@@ -47,11 +47,11 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
     /** @var UserService */
     private $userService;
 
-    /** @var EmailClient */
-    private $emailClient;
-
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
+
+    /** @var NotifyService */
+    private $notifyService;
 
     /**
      * PasswordResetPageHandler constructor.
@@ -64,22 +64,23 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
      * @param AuthenticationInterface $authenticator
      * @param ServerUrlHelper $serverUrlHelper
      * @param TranslatorInterface $translator
+     * @param NotifyService $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        EmailClient $emailClient,
         AuthenticationInterface $authenticator,
         ServerUrlHelper $serverUrlHelper,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
-        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
         $this->translator = $translator;
+        $this->notifyService = $notifyService;
 
         $this->setAuthenticator($authenticator);
     }
@@ -109,7 +110,14 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                         new HiddenString($data['new_password'])
                     );
 
-                    $this->emailClient->sendPasswordChangedEmail($user->getDetail('email'));
+                    $this->notifyService->sendEmailToUser(
+                        $user->getDetail('email'),
+                        null,
+                        $emailTemplate = 'PasswordChangedEmail',
+                        null,
+                        null,
+                        null
+                    );
 
                     $session = $this->getSession($request, 'session');
                     $session->unset(UserInterface::class);
