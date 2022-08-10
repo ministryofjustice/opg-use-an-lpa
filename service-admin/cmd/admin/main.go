@@ -75,15 +75,15 @@ func main() {
 
 	u.RawQuery = v.Encode()
 
-	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
-
-	conf, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
 
 	if err != nil {
 		log.Panic()
 	}
 
-	cred, err := conf.Credentials.Retrieve(context.TODO())
+	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
+
+	cred, err := config.Credentials.Retrieve(context.TODO())
 
 	activationKeyService := data.NewActivationKeyService(v4.NewSigner(), cred, *lpaCodesEndpoint+"/v1/code")
 
