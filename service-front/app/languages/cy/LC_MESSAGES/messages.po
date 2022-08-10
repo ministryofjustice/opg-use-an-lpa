@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-07-29T09:04:46+00:00\n"
+"POT-Creation-Date: 2022-08-04T12:06:57+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,6 +28,7 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:86
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
@@ -2244,6 +2245,7 @@ msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol gyda’r wybodaeth a roesoc
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:38
 #: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/lpa-not-found.html.twig:19
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:22
 msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
@@ -2297,7 +2299,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:100
 #: src/Actor/templates/actor/lpa-not-found.html.twig:44
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:19
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:83
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
 
@@ -2364,6 +2366,7 @@ msgstr "Math o LPA"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:35
 #: src/Actor/templates/actor/lpa-already-added.html.twig:24
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:26
 msgid "Donor name"
 msgstr "Enw’r rhoddwr"
 
@@ -2430,7 +2433,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:64
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:51
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:50
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:38
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -3396,14 +3399,6 @@ msgctxt "error"
 msgid "Enter the donor's last name"
 msgstr "Rhowch enw olaf y rhoddwr"
 
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:14
-msgid "We could not find an LPA matching those details"
-msgstr "Ni ellir dod o hyd i LPA sy’n cyfateb i’r manylion hyn"
-
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:16
-msgid "Please check the code and the spelling of the donor's last name"
-msgstr "Gwiriwch y cod a sillafiad enw olaf y rhoddwr"
-
 #: src/Viewer/templates/viewer/enter-code.html.twig:3
 msgid "Enter LPA access code"
 msgstr "Rhowch god mynediad yr LPA"
@@ -3416,6 +3411,7 @@ msgstr "Rhowch god mynediad LPA"
 msgid "Donor's last name"
 msgstr "Enw olaf y rhoddwr"
 
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:34
 #: src/Viewer/templates/viewer/enter-code.html.twig:43
 msgid "LPA access code"
 msgstr "Cod mynediad yr LPA"
@@ -6099,13 +6095,13 @@ msgstr ""
 "cyfer yn ein cofnodion, byddwn yn cysylltu â chi i gadarnhau eich cyfeiriad "
 "cywir."
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:26
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:25
 msgid "You can only ask for an activation key if you live in the UK."
 msgstr ""
 "Dim ond os ydych chi’n byw yn y DU y gallwch chi ofyn am allwedd cadarnhau "
 "cyfrif."
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:45
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
 msgid "Your postcode"
 msgstr "Eich cod post"
 
@@ -6128,12 +6124,12 @@ msgstr ""
 "<a href=\"%link%\" class=\"govuk-link\"> mewngofnodwch yma</a>."
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
 msgid "I do not live in the UK"
 msgstr "Nid wyf yn byw yn y DU"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
 msgid ""
 "If you do not live in the UK you cannot ask for an activation key through this "
 "service. Please contact us instead."
@@ -7287,3 +7283,95 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:107
 msgid "I have an activation key but it has expired"
 msgstr "Mae gen i allwedd cadarnhau, ond mae wedi dod i ben"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:14
+msgid "We could not find an LPA with those details"
+msgstr "Ni lwyddwyd i ddod o hyd i LPA gyda’r manylion hynny"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:17
+msgid ""
+"Although we could not find this LPA, it does not mean it does not exist, or is "
+"not able to be viewed somewhere else."
+msgstr ""
+"Er na lwyddwyd i ddod o hyd i’r LPA hon, nid yw hynny’n golygu nad yw’n "
+"bodoli, neu na ellir ei gweld yn rhywle arall. "
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:42
+msgid "Did you enter the donor’s name correctly?"
+msgstr "Wnaethoch chi roi enw’r rhoddwr yn gywir?"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:44
+msgid ""
+"You may have entered the donor’s details incorrectly. The donor is the person "
+"the LPA was made for."
+msgstr ""
+"Efallai eich bod wedi nodi manylion y rhoddwr yn anghywir. Y rhoddwr yw’r "
+"person y gwnaed yr LPA ar ei gyfer."
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:49
+msgid "Did you enter the LPA access code correctly?"
+msgstr "A wnaethoch chi nodi cod mynediad yr LPA yn gywir?"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:51
+msgid ""
+"You may have entered the code incorrectly, or used another similar number "
+"instead. The access code will be given to you by an attorney or donor. It "
+"should start with a ‘V’ and be followed by 12 numbers and letters, for "
+"example, V-AB12-CD34-EF56."
+msgstr ""
+"Efallai eich bod wedi nodi’r cod yn anghywir, neu wedi defnyddio rhif tebyg "
+"arall yn lle hynny. Bydd y cod mynediad yn cael ei roi i chi gan atwrnai neu "
+"roddwr. Dylai ddechrau gyda ‘V’ a bydd 12 rhif a llythyren yn dilyn, er "
+"enghraifft, V-AB12-CD34-EF56."
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:56
+msgid "It should not be confused with:"
+msgstr "Ni ddylid ei gymysgu â:"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:61
+msgid ""
+"an LPA activation key - normally sent to donors and attorneys  when the LPA is "
+"registered"
+msgstr ""
+"allwedd cadarnhau cyfrif - a anfonir fel arfer at roddwyr ac atwrneiod pan "
+"fydd yr LPA wedi’i chofrestru "
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:62
+msgid "the LPA reference number - a unique number we give to each LPA"
+msgstr "cyfeirnod yr LPA - rhif unigryw a roir i bob LPA "
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:65
+msgid "Are you using the right service?"
+msgstr "Ydych chi’n defnyddio’r gwasanaeth cywir?"
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:67
+msgid ""
+"This is the View a lasting power of attorney service. It is normally used by "
+"organisations such as care homes or banks to view a summary of an LPA. They do "
+"this by using an access code sent to them by attorneys or donors."
+msgstr ""
+"Dyma’r gwasanaeth Gweld atwrneiaeth arhosol. Fe’i defnyddir fel arfer gan "
+"sefydliadau fel cartrefi gofal neu fanciau i weld crynodeb o LPA. Maent yn "
+"gwneud hyn drwy ddefnyddio cod mynediad a anfonir atynt gan atwrneiod neu "
+"roddwyr."
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:72
+msgid ""
+"Attorneys or donors who want to see a summary of an LPA, or give  "
+"organisations access to a summary of an LPA, can do this through the <a class="
+"\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a "
+"lasting power of attorney service</a>."
+msgstr ""
+"Gall atwrneiod neu roddwyr sydd am weld crynodeb o LPA, neu sy’n rhoi mynediad "
+"i sefydliadau at grynodeb o LPA, wneud hyn drwy’r <a class=\"govuk-link\" href="
+"\"https://www.gov.uk/use-lasting-power-of-attorney\">gwasanaeth defnyddio "
+"atwrneiaeth arhosol</a>."
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:77
+msgid ""
+"To do this you will need your own unique LPA activation key.  This is normally "
+"found on the letter that told you the LPA had been registered."
+msgstr ""
+"I wneud hyn, bydd angen eich allwedd cadarnhau cyfrif LPA unigryw eich hun "
+"arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA "
+"wedi’i chofrestru."
