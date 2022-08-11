@@ -20,6 +20,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var ErrActivationKeyNotFound error = errors.New("ActivationKeyNotFound")
+
 type ActivationKeyService interface {
 	GetActivationKeyFromCodes(context.Context, string) (*[]ActivationKey, error)
 }
@@ -47,10 +49,14 @@ func NewOnlineActivationKeyService(awsSigner *v4.Signer, credentials aws.Credent
 }
 
 func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
-
 	jsonStr := []byte(fmt.Sprintf(`{"code":"%s"}`, activationKey))
 
 	r, err := http.NewRequest(http.MethodPost, aks.codesAPIURL, bytes.NewBuffer(jsonStr))
+	if err != nil {
+		log.Error().AnErr("Could not create request in GetActivationKeyFromCodes", err)
+		return nil, ErrActivationKeyNotFound
+	}
+
 	r.Header.Set("Content-Type", "application/json")
 
 	//calculate hash of request body
@@ -58,36 +64,44 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	hasher.Write(jsonStr)
 	shaHash := hex.EncodeToString(hasher.Sum(nil))
 
-	log.Info().Msgf("Sha hash : %s" + shaHash)
+	err = aks.awsSigner.SignHTTP(ctx, aks.credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
 
-	signError := aks.awsSigner.SignHTTP(ctx, aks.credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
-
-	if signError != nil {
-		log.Info().Msgf("Error Signing %v", signError)
+	if err != nil {
+		log.Error().AnErr("Error Signing request for activation key %v", err)
+		return nil, ErrActivationKeyNotFound
 	}
 
 	client := http.Client{}
+
 	resp, err := client.Do(r)
 	if err != nil {
-		return nil, errors.New("Cannot connect to server")
+		log.Error().AnErr("Client could not send request when requesting activation key", err)
+		return nil, ErrActivationKeyNotFound
 	}
 
 	if resp.StatusCode == 200 {
 		data, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			return nil, errors.New("Error parsing response")
+			log.Error().AnErr("Error parsing 200 response from codes service", err)
+
+			return nil, ErrActivationKeyNotFound
 		}
-		json.Unmarshal(data, &returnedKeys)
+
+		err = json.Unmarshal(data, &returnedKeys)
+		if err != nil {
+			log.Error().AnErr("Error unmarshalling json from code service", err)
+			return nil, ErrActivationKeyNotFound
+		}
+
 		return returnedKeys, nil
 	}
 
-	log.Info().Msgf("Bad Response from server %v", resp)
-	readBody, _ := ioutil.ReadAll(resp.Body)
+	log.Error().Msgf("Bad Response from server when requesting activation key %v", resp)
 
-	log.Info().Msgf("Bad Response from server body is %s", string(readBody))
-
-	return nil, errors.New("Key Not Found")
+	return nil, ErrActivationKeyNotFound
 }
+
+//Connect to Local implementation of codes service
 
 type LocalActivationKeyService struct {
 	db DynamoConnection
@@ -98,7 +112,6 @@ func NewLocalActivationKeyService(db DynamoConnection) ActivationKeyService {
 }
 
 func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
-
 	result, err := aks.db.Client.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(aks.db.prefixedTableName(CodesTableName)),
 		KeyConditionExpression: aws.String("code = :a"),
@@ -119,5 +132,5 @@ func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Cont
 		return returnedKeys, nil
 	}
 
-	return nil, errors.New("Not Yet Implemented")
+	return nil, ErrActivationKeyNotFound
 }
