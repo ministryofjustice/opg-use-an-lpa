@@ -34,6 +34,14 @@ type SearchServer struct {
 	activationKeyService data.ActivationKeyService
 }
 
+type SearchResult struct {
+	Query         string
+	Used          string
+	Email         string
+	LPA           string
+	ActivationKey data.ActivationKey
+}
+
 const (
 	EmailQuery QueryType = iota
 	ActivationCodeQuery
@@ -157,23 +165,20 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, stripUnnecessaryCharacters(q))
 
 			if err != nil {
-				return map[string]interface{}{
-					"Activation key": q,
-					"Used":           "Yes",
-					"Email":          email,
-					"LPA":            r.SiriusUID,
+				return &SearchResult{
+					Query: q,
+					Used:  "Yes",
+					Email: email,
+					LPA:   r.SiriusUID,
 				}
 			} else {
 
 				for _, value := range *activationKey {
-					return map[string]interface{}{
-						"Activation key": q,
-						"Used":           "Yes",
-						"Email":          email,
-						"LPA":            r.SiriusUID,
-						"Status":         value.StatusDetails,
-						"GeneratedDate":  value.GeneratedDate,
-						"LastUpdated":    value.LastUpdatedDate,
+					return &SearchResult{
+						Query:         q,
+						Email:         email,
+						LPA:           r.SiriusUID,
+						ActivationKey: value,
 					}
 				}
 			}
@@ -184,13 +189,11 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 
 					used := isUsed(value.Active, value.StatusDetails)
 
-					return map[string]interface{}{
-						"Activation key": q,
-						"Used":           used,
-						"LPA":            value.Lpa,
-						"Status":         value.StatusDetails,
-						"GeneratedDate":  value.GeneratedDate,
-						"LastUpdated":    value.LastUpdatedDate,
+					return &SearchResult{
+						Query:         q,
+						Used:          used,
+						ActivationKey: value,
+						LPA:           value.Lpa,
 					}
 				}
 			}

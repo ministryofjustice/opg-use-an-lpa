@@ -9,17 +9,6 @@
       </dd>
     </div>
 
-    {{ if .DateTime }}
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-        Date Used
-      </dt>
-      <dd class="govuk-summary-list__value">
-          {{ .DateTime | readableDateTime }}
-      </dd>
-    </div>
-    {{ end }}
-
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         LPA
@@ -40,37 +29,35 @@
     </div>
     {{ end }}
 
-    {{ if .Status}}
+    {{ if .ActivationKey }}
+
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Status
       </dt>
       <dd class="govuk-summary-list__value">
-          {{ .Status }}
+          {{ .ActivationKey.StatusDetails }}
       </dd>
     </div>
-    {{ end }}
 
-    {{ if .GeneratedDate }}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Generated
       </dt>
       <dd class="govuk-summary-list__value">
-          {{ .GeneratedDate | readableDateTime }}
+          {{ .ActivationKey.GeneratedDate | readableDateTime }}
       </dd>
     </div>
-    {{ end }}
 
-    {{if .LastUpdated}}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Last Updated
       </dt>
       <dd class="govuk-summary-list__value">
-          {{ .LastUpdated | readableDateTime }}
+          {{ .ActivationKey.LastUpdatedDate | readableDateTime }}
       </dd>
     </div>
+
     {{ end }}
   </dl>
 {{ end }}

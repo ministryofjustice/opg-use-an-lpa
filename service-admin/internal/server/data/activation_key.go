@@ -21,10 +21,10 @@ import (
 )
 
 type ActivationKeyService interface {
-	GetActivationKeyFromCodes(context.Context, string) (*ActivationKeys, error)
+	GetActivationKeyFromCodes(context.Context, string) (*[]ActivationKey, error)
 }
 
-type ActivationKeys []struct {
+type ActivationKey struct {
 	Active          bool   `json:"active"`
 	Actor           string `json:"actor"`
 	Code            string `json:"code"`
@@ -46,7 +46,7 @@ func NewOnlineActivationKeyService(awsSigner *v4.Signer, credentials aws.Credent
 	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL}
 }
 
-func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
+func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
 
 	jsonStr := []byte(fmt.Sprintf(`{"code":"%s"}`, activationKey))
 
@@ -97,7 +97,7 @@ func NewLocalActivationKeyService(db DynamoConnection) ActivationKeyService {
 	return &LocalActivationKeyService{db}
 }
 
-func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *ActivationKeys, returnedErr error) {
+func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
 
 	result, err := aks.db.Client.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(aks.db.prefixedTableName(CodesTableName)),

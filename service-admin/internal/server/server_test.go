@@ -30,14 +30,14 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 }
 
 type mockActivationKeyService struct {
-	GetActivationKeyFromCodesFunc func(context.Context, string) (*data.ActivationKeys, error)
+	GetActivationKeyFromCodesFunc func(context.Context, string) (*[]data.ActivationKey, error)
 }
 
-func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, key string) (*data.ActivationKeys, error) {
+func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, key string) (*[]data.ActivationKey, error) {
 	if m.GetActivationKeyFromCodesFunc != nil {
 		return m.GetActivationKeyFromCodes(ctx, key)
 	}
-	return &data.ActivationKeys{}, nil
+	return nil, nil
 }
 
 type mockDynamoDBClent struct {
