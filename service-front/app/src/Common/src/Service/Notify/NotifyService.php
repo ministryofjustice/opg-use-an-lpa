@@ -35,7 +35,6 @@ class NotifyService
         Locale::getDefault();
     }
 
-    //public function sendAccountActivationEmailToUser(string $recipient, string $activateAccountUrl): void
     public function sendEmailToUser(
         string $recipient,
         ?string $parameter2,
