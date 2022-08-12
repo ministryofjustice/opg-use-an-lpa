@@ -7,11 +7,11 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,6 +20,12 @@ type ErrorHandler func(http.ResponseWriter, int)
 type errorInterceptResponseWriter struct {
 	http.ResponseWriter
 	h ErrorHandler
+}
+
+type app struct {
+	db data.DynamoConnection
+	r  *mux.Router
+	tw handlers.TemplateWriterService
 }
 
 var ErrPanicRecovery = errors.New("error handler recovering from panic()")
@@ -41,50 +47,69 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewServer(db *dynamodb.Client, keyURL string, cognitoLogoutURL *url.URL) http.Handler {
-	router := mux.NewRouter()
-
-	router.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
-	router.Handle("/helloworld", handlers.HelloHandler())
-
-	searchServer := *handlers.NewSearchServer(data.NewAccountService(db), data.NewLPAService(db), handlers.NewTemplateWriterService())
-	router.Handle(
-		"/",
-		auth.WithAuthorisation(
-			http.HandlerFunc(searchServer.SearchHandler),
-			&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}},
-		),
-	)
-	router.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
-
-	wrap := WithJSONLogging(
-		WithTemplates(
-			withErrorHandling(router),
-			LoadTemplates(os.DirFS("web/templates")),
-		),
-		log.Logger,
-	)
-
-	return wrap
+func NewAdminApp(db data.DynamoConnection, r *mux.Router, tw handlers.TemplateWriterService) *app {
+	return &app{db, r, tw}
 }
 
-func withErrorHandling(next http.Handler) http.Handler {
+func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Handler {
+	a.r.Handle("/helloworld", handlers.HelloHandler())
+
+	authMiddleware := NewAuthorisationMiddleware(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
+	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService())
+	JSONLoggingMiddleware := NewJSONLoggingMiddleware(log.Logger)
+	templateMiddleware := NewTemplateMiddleware(LoadTemplates(os.DirFS("web/templates")))
+	errorHandlingMiddleware := NewErrorHandlingMiddleware(a.tw)
+
+	a.r.Handle("/helloworld", handlers.HelloHandler())
+	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
+	a.r.Handle("/", authMiddleware(http.HandlerFunc(searchServer.SearchHandler)))
+
+	a.r.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
+
+	return JSONLoggingMiddleware(templateMiddleware(errorHandlingMiddleware(a.r)))
+}
+
+func NewAuthorisationMiddleware(token *auth.Token) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return auth.WithAuthorisation(h, token)
+	}
+}
+
+func NewErrorHandlingMiddleware(tw handlers.TemplateWriterService) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WithErrorHandling(h, tw)
+	}
+}
+
+func NewTemplateMiddleware(templates *Templates) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WithTemplates(h, templates)
+	}
+}
+
+func NewJSONLoggingMiddleware(logger zerolog.Logger) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return WithJSONLogging(h, logger)
+	}
+}
+
+func WithErrorHandling(next http.Handler, templateWriter handlers.TemplateWriterService) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var eh ErrorHandler = func(w http.ResponseWriter, i int) {
-			w.WriteHeader(i)
-
 			t := "error.page.gohtml"
 			switch i {
-			case 403:
+			case http.StatusForbidden:
 				t = "notauthorised.page.gohtml"
-			case 404:
+			case http.StatusNotFound:
 				t = "notfound.page.gohtml"
 			}
 
-			ws := handlers.NewTemplateWriterService()
+			ws := templateWriter
 			if err := ws.RenderTemplate(w, r.Context(), t, nil); err != nil {
 				log.Panic().Err(err).Msg("")
 			}
+
+			w.WriteHeader(i) //Write header can only be done once, it needs to be last to ensure it is correct
 		}
 
 		// panic recovery

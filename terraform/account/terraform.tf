@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.14, <= 1.0.1"
+  required_version = ">= 0.14, <= 1.2.4"
 
   backend "s3" {
     bucket         = "opg.terraform.state"
@@ -13,7 +13,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.17.1"
+      version = "4.21.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -21,7 +21,7 @@ terraform {
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
-      version = "~> 2.4.0"
+      version = "~> 2.5.1"
     }
   }
 }

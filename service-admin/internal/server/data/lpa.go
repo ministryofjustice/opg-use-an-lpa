@@ -12,7 +12,7 @@ import (
 )
 
 type lpaService struct {
-	db *dynamodb.Client
+	db DynamoConnection
 }
 
 type LPA struct {
@@ -30,13 +30,13 @@ const (
 
 var ErrUserLpaActorMapNotFound = errors.New("userlpaactormap not found")
 
-func NewLPAService(db *dynamodb.Client) *lpaService {
+func NewLPAService(db DynamoConnection) *lpaService {
 	return &lpaService{db: db}
 }
 
 func (l *lpaService) GetLpasByUserID(ctx context.Context, uid string) (lpas []*LPA, err error) {
-	result, err := l.db.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
+	result, err := l.db.Client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(l.db.prefixedTableName(UserLpaActorTableName)),
 		IndexName:              aws.String(UserLpaActorUserIndexName),
 		KeyConditionExpression: aws.String("UserId = :u"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -60,8 +60,8 @@ func (l *lpaService) GetLpasByUserID(ctx context.Context, uid string) (lpas []*L
 }
 
 func (l *lpaService) GetLPAByActivationCode(ctx context.Context, activationCode string) (lpa *LPA, err error) {
-	result, err := l.db.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(prefixedTableName(UserLpaActorTableName)),
+	result, err := l.db.Client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(l.db.prefixedTableName(UserLpaActorTableName)),
 		IndexName:              aws.String(ActivationCodeIndexName),
 		KeyConditionExpression: aws.String("ActivationCode = :a"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{

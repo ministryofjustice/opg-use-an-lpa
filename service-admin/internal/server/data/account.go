@@ -12,7 +12,7 @@ import (
 )
 
 type accountService struct {
-	db *dynamodb.Client
+	db DynamoConnection
 }
 
 type ActorUser struct {
@@ -32,13 +32,13 @@ const (
 
 var ErrActorUserNotFound = errors.New("actoruser not found")
 
-func NewAccountService(db *dynamodb.Client) *accountService {
+func NewAccountService(db DynamoConnection) *accountService {
 	return &accountService{db: db}
 }
 
 func (a *accountService) GetActorUserByEmail(ctx context.Context, email string) (aa *ActorUser, err error) {
-	result, err := a.db.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(prefixedTableName(ActorTableName)),
+	result, err := a.db.Client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(a.db.prefixedTableName(ActorTableName)),
 		IndexName:              aws.String(ActorTableEmailIndexName),
 		KeyConditionExpression: aws.String("Email = :e"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -65,8 +65,8 @@ func (a *accountService) GetActorUserByEmail(ctx context.Context, email string) 
 }
 
 func (a *accountService) GetEmailByUserID(ctx context.Context, userID string) (email string, err error) {
-	result, err := a.db.GetItem(ctx, &dynamodb.GetItemInput{
-		TableName: aws.String(prefixedTableName(ActorTableName)),
+	result, err := a.db.Client.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: aws.String(a.db.prefixedTableName(ActorTableName)),
 		Key: map[string]types.AttributeValue{
 			"Id": &types.AttributeValueMemberS{Value: userID},
 		},
@@ -74,9 +74,7 @@ func (a *accountService) GetEmailByUserID(ctx context.Context, userID string) (e
 
 	if err != nil {
 		log.Error().Err(err).Msg("Error trying to get email by userID")
-	}
-
-	if result != nil {
+	} else if result != nil {
 		marshalledResult := ActorUser{}
 
 		err = attributevalue.UnmarshalMap(result.Item, &marshalledResult)

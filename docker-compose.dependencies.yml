@@ -41,12 +41,12 @@ services:
   # AWS KMS mock service
 
   kms:
-    image: nsmithuk/local-kms:2
+    image: nsmithuk/local-kms:3
     volumes:
       - ./local-config:/init
     environment:
-      REGION: eu-west-1
-      SEED_PATH: /init/kms-seed.yaml
+      KMS_REGION: eu-west-1
+      KMS_SEED_PATH: /init/kms-seed.yaml
 
   # ---------------------------
   # Sirius gateway mock
@@ -64,6 +64,9 @@ services:
   data-lpa:
     container_name: data-lpa
     image: stoplight/prism:4
+    build: # Does not have M1 native / arm64 images as yet but builds fine.
+      context: https://github.com/stoplightio/prism.git#v4.10.1
+      dockerfile: Dockerfile
     command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
     volumes:
       - ./mock-integrations/mock-openapi.yaml:/tmp/openapi.yaml:ro

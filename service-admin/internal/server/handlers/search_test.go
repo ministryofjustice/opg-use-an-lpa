@@ -420,11 +420,12 @@ func Test_TemplateErrorPanic(t *testing.T) {
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		w := httptest.NewRecorder()
 
+		//recover panic
+		defer func() { _ = recover() }()
+
 		server.SearchHandler(w, req)
 
-		if w.Code != http.StatusOK {
-			t.Errorf("Wrong status code in TestTemplateErrorPanic expected %v got %v", http.StatusOK, w.Code)
-		}
+		t.Errorf("did not panic")
 
 	})
 }

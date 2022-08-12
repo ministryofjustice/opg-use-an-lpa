@@ -13,20 +13,18 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Service\Security\RateLimitService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Validator\NotEmpty;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Common\Exception\RateLimitExceededException;
-use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Service\Security\RateLimitService;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CreateAccountHandler
@@ -40,8 +38,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     use CsrfGuard;
     use Logger;
 
-    /** @var RateLimitService */
-    private $rateLimitService;
+    private RateLimitService $rateLimitService;
 
     /**
      * CreateAccountHandler constructor.
@@ -73,6 +70,9 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     {
         $form = new Login($this->getCsrfGuard($request));
 
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
 
@@ -82,7 +82,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 $this->getLogger()->notice('Login form validation failed.', $errors);
 
                 return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form' => $form
+                    'form' => $form,
+                    'flash' => $flash
                 ]));
             }
 
@@ -98,8 +99,10 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 }
 
                 $form->addErrorMessage(Login::NOT_FOUND);
+
                 return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form' => $form
+                    'form' => $form,
+                    'flash' => $flash
                 ]));
             } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
@@ -120,9 +123,6 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         if ($this->getUser($request) !== null) {
             return $this->redirectToRoute('lpa.dashboard');
         }
-
-        /** @var FlashMessagesInterface $flash */
-        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         $this->rateLimitService->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 

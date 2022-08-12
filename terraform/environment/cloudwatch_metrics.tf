@@ -36,6 +36,9 @@ locals {
     "OLDER_LPA_KEY_ALREADY_REQUESTED",
     "OLDER_LPA_NEEDS_CLEANSING",
     "UNEXPECTED_DATA_LPA_API_RESPONSE",
+    "ACTIVATION_KEY_EXISTS",
+    "ACTIVATION_KEY_NOT_EXISTS",
+    "ACTIVATION_KEY_EXPIRED"
   ]
 }
 
@@ -50,6 +53,7 @@ resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }
 
@@ -72,6 +76,7 @@ resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }
 
@@ -94,5 +99,6 @@ resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
+    unit          = "Count"
   }
 }

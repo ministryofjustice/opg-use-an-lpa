@@ -46,7 +46,7 @@ function disable_maintenance() {
 
   aws elbv2 modify-rule \
   --rule-arn $MM_RULE_ARN_WELSH \
-  --conditions Field=path-pattern,Values='/maintenance-cy'
+  --conditions Field=path-pattern,Values='/cy/maintenance'
 }
 
 function parse_args() {
