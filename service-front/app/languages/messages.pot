@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-07-29T09:04:46+00:00\n"
+"POT-Creation-Date: 2022-08-04T12:06:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -18,6 +18,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:86
 msgid "Back to your LPAs"
 msgstr ""
 
@@ -1633,6 +1634,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:38
 #: src/Actor/templates/actor/check-your-answers.html.twig:15
 #: src/Actor/templates/actor/lpa-not-found.html.twig:19
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:22
 msgid "Check your answers"
 msgstr ""
 
@@ -1671,7 +1673,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:100
 #: src/Actor/templates/actor/lpa-not-found.html.twig:44
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:19
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:83
 msgid "Try again"
 msgstr ""
 
@@ -1724,6 +1726,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:35
 #: src/Actor/templates/actor/lpa-already-added.html.twig:24
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:26
 msgid "Donor name"
 msgstr ""
 
@@ -1783,7 +1786,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:36
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:64
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:51
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:50
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:38
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -2505,14 +2508,6 @@ msgctxt "error"
 msgid "Enter the donor's last name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:14
-msgid "We could not find an LPA matching those details"
-msgstr ""
-
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:16
-msgid "Please check the code and the spelling of the donor's last name"
-msgstr ""
-
 #: src/Viewer/templates/viewer/enter-code.html.twig:3
 msgid "Enter LPA access code"
 msgstr ""
@@ -2525,6 +2520,7 @@ msgstr ""
 msgid "Donor's last name"
 msgstr ""
 
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:34
 #: src/Viewer/templates/viewer/enter-code.html.twig:43
 msgid "LPA access code"
 msgstr ""
@@ -4296,11 +4292,11 @@ msgstr ""
 msgid "If your current postcode does not match the address we have for you on our records, we’ll contact you to confirm your correct address."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:26
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:25
 msgid "You can only ask for an activation key if you live in the UK."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:45
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
 msgid "Your postcode"
 msgstr ""
 
@@ -4317,12 +4313,12 @@ msgid "If you already have an account on the Use a lasting power of attorney ser
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
 msgid "I do not live in the UK"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
 msgid "If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead."
 msgstr ""
 
@@ -5082,4 +5078,56 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:107
 msgid "I have an activation key but it has expired"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:14
+msgid "We could not find an LPA with those details"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:17
+msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:42
+msgid "Did you enter the donor’s name correctly?"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:44
+msgid "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:49
+msgid "Did you enter the LPA access code correctly?"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:51
+msgid "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:56
+msgid "It should not be confused with:"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:61
+msgid "an LPA activation key - normally sent to donors and attorneys  when the LPA is registered"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:62
+msgid "the LPA reference number - a unique number we give to each LPA"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:65
+msgid "Are you using the right service?"
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:67
+msgid "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:72
+msgid "Attorneys or donors who want to see a summary of an LPA, or give  organisations access to a summary of an LPA, can do this through the <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a lasting power of attorney service</a>."
+msgstr ""
+
+#: src/Viewer/templates/viewer/check-code-not-found.html.twig:77
+msgid "To do this you will need your own unique LPA activation key.  This is normally found on the letter that told you the LPA had been registered."
 msgstr ""
