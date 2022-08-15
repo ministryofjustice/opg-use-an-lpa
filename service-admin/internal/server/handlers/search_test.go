@@ -353,7 +353,7 @@ func Test_doSearch(t *testing.T) {
 				Query: "WWFCCH41R123",
 				Used:  "No",
 				ActivationKey: data.ActivationKey{
-					Active:          false,
+					Active:          true,
 					Actor:           "700000000111",
 					Code:            "WWFCCH41R123",
 					Dob:             "20-06-1995",
@@ -361,7 +361,7 @@ func Test_doSearch(t *testing.T) {
 					GeneratedDate:   "1-1-2022",
 					LastUpdatedDate: "6-6-2022",
 					Lpa:             "700000000123",
-					StatusDetails:   "Revoked",
+					StatusDetails:   "Imported",
 				},
 				LPA: testLPA.SiriusUID,
 			},
