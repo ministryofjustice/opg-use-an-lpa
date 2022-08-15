@@ -35,7 +35,6 @@
         "ext-redis": "*",
         "ext-intl": "*",
         "ext-json": "*",
-        "alphagov/notifications-php-client": "^4.1.0",
         "aws/aws-sdk-php": "^3.208.9",
         "cooperaj/better-twig-i18n": "^1.1",
         "dflydev/fig-cookies": "^3.0",
