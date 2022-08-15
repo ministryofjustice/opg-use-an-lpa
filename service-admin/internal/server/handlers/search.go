@@ -39,7 +39,7 @@ type SearchResult struct {
 	Used          string
 	Email         string
 	LPA           string
-	ActivationKey data.ActivationKey
+	ActivationKey *data.ActivationKey
 }
 
 const (
@@ -166,10 +166,11 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 
 			if err != nil {
 				return &SearchResult{
-					Query: q,
-					Used:  "Yes",
-					Email: email,
-					LPA:   r.SiriusUID,
+					Query:         q,
+					Used:          "Yes",
+					Email:         email,
+					LPA:           r.SiriusUID,
+					ActivationKey: nil,
 				}
 			} else {
 
@@ -179,7 +180,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 						Used:          "Yes",
 						Email:         email,
 						LPA:           r.SiriusUID,
-						ActivationKey: value,
+						ActivationKey: &value,
 					}
 				}
 			}
@@ -193,7 +194,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 					return &SearchResult{
 						Query:         q,
 						Used:          used,
-						ActivationKey: value,
+						ActivationKey: &value,
 						LPA:           value.Lpa,
 					}
 				}

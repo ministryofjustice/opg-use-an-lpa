@@ -305,7 +305,7 @@ func Test_doSearch(t *testing.T) {
 			want: &SearchResult{
 				Query: "WWFCCH41R123",
 				Used:  "Yes",
-				ActivationKey: data.ActivationKey{
+				ActivationKey: &data.ActivationKey{
 					Active:          false,
 					Actor:           "700000000111",
 					Code:            "WWFCCH41R123",
@@ -352,7 +352,7 @@ func Test_doSearch(t *testing.T) {
 			want: &SearchResult{
 				Query: "WWFCCH41R123",
 				Used:  "No",
-				ActivationKey: data.ActivationKey{
+				ActivationKey: &data.ActivationKey{
 					Active:          true,
 					Actor:           "700000000111",
 					Code:            "WWFCCH41R123",
@@ -404,7 +404,7 @@ func Test_doSearch(t *testing.T) {
 				Query: "WWFCCH41R123",
 				Used:  "Yes",
 				Email: "test@email.com",
-				ActivationKey: data.ActivationKey{
+				ActivationKey: &data.ActivationKey{
 					Active:          false,
 					Actor:           "700000000111",
 					Code:            "WWFCCH41R123",
@@ -477,7 +477,7 @@ func Test_SearchHandler(t *testing.T) {
 				Type:  1,
 				Result: &SearchResult{
 					Query:         "WWFCCH41R123",
-					ActivationKey: data.ActivationKey{},
+					ActivationKey: nil,
 					Used:          "Yes",
 					Email:         "test@email.com",
 					LPA:           testLPA.SiriusUID,
@@ -524,7 +524,7 @@ func Test_SearchHandler(t *testing.T) {
 				Type:  1,
 				Result: &SearchResult{
 					Query:         "WWFCCH41R123",
-					ActivationKey: data.ActivationKey{},
+					ActivationKey: nil,
 					Used:          "Yes",
 					Email:         "Not Found",
 					LPA:           testLPA.SiriusUID,
