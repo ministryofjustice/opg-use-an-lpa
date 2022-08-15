@@ -29,5 +29,5 @@ Feature: The application supports Welsh as a language
       And I am not a user of the lpa application
       And I want to create a new account
       And I access the account creation page
-    When I create an account
-    Then I receive unique instructions on how to activate my account in Welsh
+      When I create an account
+      Then I receive unique instructions on how to activate my account in Welsh

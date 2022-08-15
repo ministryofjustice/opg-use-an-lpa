@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -485,6 +484,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
+
         $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
@@ -495,16 +496,13 @@ class RequestActivationKeyContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
@@ -1034,6 +1032,8 @@ class RequestActivationKeyContext implements Context
      */
     public function iRequestForANewActivationKeyAgain()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
+
         $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
@@ -1044,16 +1044,13 @@ class RequestActivationKeyContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->pressButton('Continue and ask for a new key');
@@ -1473,6 +1470,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $data = [
             'queuedForCleansing' => true
         ];
@@ -1494,17 +1492,15 @@ class RequestActivationKeyContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
+
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
         $this->ui->pressButton('Confirm and submit request');
     }
