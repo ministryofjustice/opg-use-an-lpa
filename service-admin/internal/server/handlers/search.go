@@ -125,7 +125,7 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			search.Result = s.DoSearch(r.Context(), search.Type, search.Query)
+			search.Result = s.DoSearch(r.Context(), search.Type, stripUnnecessaryCharacters(search.Query))
 		}
 	}
 
@@ -150,7 +150,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 		return r
 
 	case ActivationCodeQuery:
-		r, err := s.lpaService.GetLPAByActivationCode(ctx, stripUnnecessaryCharacters(q))
+		r, err := s.lpaService.GetLPAByActivationCode(ctx, q)
 
 		if err == nil {
 			email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
@@ -162,7 +162,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 				email = "Not Found"
 			}
 
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, stripUnnecessaryCharacters(q))
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
 
 			if err != nil {
 				return &SearchResult{

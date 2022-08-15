@@ -22,6 +22,7 @@ func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context
 	if m.GetActivationKeyFromCodesFunc != nil {
 		return m.GetActivationKeyFromCodes(ctx, key)
 	}
+
 	return nil, errors.New("NOT FOUND")
 }
 
@@ -108,7 +109,8 @@ func Test_doSearch(t *testing.T) {
 						}, nil
 					}
 					t.Errorf("expected test@email.com got %v", s)
-					return nil, nil //Is there a better way to stop test executing here?
+					t.FailNow()
+					return nil, nil
 				},
 			},
 			lpaService: &mockLPAService{
@@ -198,7 +200,12 @@ func Test_doSearch(t *testing.T) {
 				},
 			},
 			activationKeyService: &mockActivationKeyService{},
-			want:                 map[string]interface{}{"Activation key": "WWFCCH41R123", "Used": "Yes", "Email": "test@email.com", "LPA": testLPA.SiriusUID},
+			want: &SearchResult{
+				Query: "WWFCCH41R123",
+				Used:  "Yes",
+				Email: "test@email.com",
+				LPA:   testLPA.SiriusUID,
+			},
 		},
 		{
 			name: "Test activation key query with email not found",
@@ -218,7 +225,12 @@ func Test_doSearch(t *testing.T) {
 				},
 			},
 			activationKeyService: &mockActivationKeyService{},
-			want:                 map[string]interface{}{"Activation key": "WWFCCH41R123", "Used": "Yes", "Email": "Not Found", "LPA": testLPA.SiriusUID},
+			want: &SearchResult{
+				Query: "WWFCCH41R123",
+				Used:  "Yes",
+				Email: "Not Found",
+				LPA:   testLPA.SiriusUID,
+			},
 		},
 		{
 			name: "Test activation key query with error finding email result by a UID",
@@ -259,29 +271,6 @@ func Test_doSearch(t *testing.T) {
 			},
 			activationKeyService: &mockActivationKeyService{},
 			want:                 nil,
-		},
-		{
-			name: "Test correct characters are removed",
-			args: args{
-				ctx:       context.TODO(),
-				queryType: 1, //Key query
-				q:         "C-WWFCCH41-R123",
-			},
-			accountService: &mockAccountService{
-				GetEmailByUserIDFunc: func(ctx context.Context, s string) (string, error) {
-					return "test@email.com", nil
-				},
-			},
-			lpaService: &mockLPAService{
-				GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) {
-					if s != "WWFCCH41R123" {
-						t.Errorf("expected WWFCCH41R123 recieved %v", s)
-					}
-					return testLPA, nil
-				},
-			},
-			activationKeyService: &mockActivationKeyService{},
-			want:                 map[string]interface{}{"Activation key": "C-WWFCCH41-R123", "Used": "Yes", "Email": "test@email.com", "LPA": testLPA.SiriusUID},
 		},
 	}
 
@@ -340,11 +329,12 @@ func Test_SearchHandler(t *testing.T) {
 			expected: &Search{
 				Query: "C-WWFCCH41R123",
 				Type:  1,
-				Result: map[string]interface{}{
-					"Activation key": "C-WWFCCH41R123",
-					"Used":           "Yes",
-					"Email":          "test@email.com",
-					"LPA":            testLPA.SiriusUID,
+				Result: &SearchResult{
+					Query:         "WWFCCH41R123",
+					ActivationKey: data.ActivationKey{},
+					Used:          "Yes",
+					Email:         "test@email.com",
+					LPA:           testLPA.SiriusUID,
 				},
 				Errors: nil,
 			},
@@ -376,6 +366,26 @@ func Test_SearchHandler(t *testing.T) {
 			},
 			expected: &Search{Query: "", Type: 0, Result: nil, Errors: validation.Errors{"Query": errors.New("Enter a search query")}},
 		},
+		{
+			name: "Test correct characters are removed",
+			args: args{
+				accountService: &mockAccountService{},
+				lpaService:     &mockLPAService{GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) { return testLPA, nil }},
+				q:              "query=C-WWFCCH41-R123",
+			},
+			expected: &Search{
+				Query: "C-WWFCCH41-R123",
+				Type:  1,
+				Result: &SearchResult{
+					Query:         "WWFCCH41R123",
+					ActivationKey: data.ActivationKey{},
+					Used:          "Yes",
+					Email:         "Not Found",
+					LPA:           testLPA.SiriusUID,
+				},
+				Errors: nil,
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -386,8 +396,6 @@ func Test_SearchHandler(t *testing.T) {
 			ts := &mockTemplateWriterService{RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if !reflect.DeepEqual(i, tt.expected) {
 					t.Errorf("SearchHandler() = %v, want %v", i, tt.expected)
-					got := reflect.ValueOf(i)
-					t.Errorf("got %v ", got)
 				}
 				return nil
 			}}

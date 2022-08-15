@@ -37,6 +37,7 @@ func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context
 	if m.GetActivationKeyFromCodesFunc != nil {
 		return m.GetActivationKeyFromCodes(ctx, key)
 	}
+
 	return nil, nil
 }
 

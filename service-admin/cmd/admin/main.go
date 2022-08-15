@@ -129,6 +129,7 @@ func createActivationKeyService(endpoint string, dynamo data.DynamoConnection, c
 		if err != nil {
 			log.Panic().Msg("Cannot get credentials")
 		}
+
 		return data.NewOnlineActivationKeyService(v4.NewSigner(), cred, endpoint+"/v1/code")
 	} else {
 		return data.NewLocalActivationKeyService(dynamo)

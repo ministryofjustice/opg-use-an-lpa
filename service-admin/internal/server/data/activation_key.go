@@ -38,14 +38,23 @@ type ActivationKey struct {
 	StatusDetails   string `json:"status_details" dynamodbav:"status_details"`
 }
 
+type Signer interface {
+	SignHTTP(context.Context, aws.Credentials, *http.Request, string, string, string, time.Time, ...func(options *v4.SignerOptions)) error
+}
+
+type HTTPClient interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
 type OnlineActivationKeyService struct {
-	awsSigner   *v4.Signer
+	awsSigner   Signer
 	credentials aws.Credentials
 	codesAPIURL string
+	httpClient  HTTPClient
 }
 
 func NewOnlineActivationKeyService(awsSigner *v4.Signer, credentials aws.Credentials, codesAPIURL string) ActivationKeyService {
-	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL}
+	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL, httpClient: &http.Client{}}
 }
 
 func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
@@ -71,15 +80,13 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 		return nil, ErrActivationKeyNotFound
 	}
 
-	client := http.Client{}
-
-	resp, err := client.Do(r)
+	resp, err := aks.httpClient.Do(r)
 	if err != nil {
 		log.Error().AnErr("Client could not send request when requesting activation key", err)
 		return nil, ErrActivationKeyNotFound
 	}
 
-	if resp.StatusCode == 200 {
+	if resp.StatusCode == 200 && resp.Body != nil {
 		data, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			log.Error().AnErr("Error parsing 200 response from codes service", err)
@@ -121,12 +128,14 @@ func (aks *LocalActivationKeyService) GetActivationKeyFromCodes(ctx context.Cont
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("error whilst searching for userId")
+		return nil, ErrActivationKeyNotFound
 	}
 
 	if result.Count > 0 {
 		err = attributevalue.UnmarshalListOfMaps(result.Items, &returnedKeys)
 		if err != nil {
 			log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
+			return nil, ErrActivationKeyNotFound
 		}
 
 		return returnedKeys, nil

@@ -13,27 +13,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockDynamoDBClient struct {
-	QueryFunc func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
-}
-
-func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
-	return m.QueryFunc(ctx, params, optFns...)
-}
-
 func TestGetLpasByUserID(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name      string
-		userId    string
+		userID    string
 		queryFunc func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 		want      *LPA
 		wantErr   assert.ErrorAssertionFunc
 	}{
 		{
 			name:   "find lpas for a user id",
-			userId: "1",
+			userID: "1",
 			queryFunc: func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
 				return &dynamodb.QueryOutput{
 					Count: 1,
@@ -49,7 +41,7 @@ func TestGetLpasByUserID(t *testing.T) {
 		},
 		{
 			name:   "error whilst searching for userId",
-			userId: "1",
+			userID: "1",
 			queryFunc: func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
 				return &dynamodb.QueryOutput{
 					Count: 0,
@@ -75,9 +67,9 @@ func TestGetLpasByUserID(t *testing.T) {
 
 			client := NewLPAService(dynamodbConnection)
 
-			lpas, err := client.GetLpasByUserID(context.Background(), tt.userId)
+			lpas, err := client.GetLpasByUserID(context.Background(), tt.userID)
 
-			if tt.wantErr(t, err, fmt.Sprintf("GetLpasByUserID(%v)", tt.userId)) {
+			if tt.wantErr(t, err, fmt.Sprintf("GetLpasByUserID(%v)", tt.userID)) {
 				return
 			}
 			assert.EqualValues(t, tt.want, lpas)
