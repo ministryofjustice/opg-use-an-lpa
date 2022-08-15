@@ -20,7 +20,7 @@ type mockActivationKeyService struct {
 
 func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, key string) (*[]data.ActivationKey, error) {
 	if m.GetActivationKeyFromCodesFunc != nil {
-		return m.GetActivationKeyFromCodes(ctx, key)
+		return m.GetActivationKeyFromCodesFunc(ctx, key)
 	}
 
 	return nil, errors.New("NOT FOUND")
@@ -271,6 +271,152 @@ func Test_doSearch(t *testing.T) {
 			},
 			activationKeyService: &mockActivationKeyService{},
 			want:                 nil,
+		},
+		{
+			name: "Test standard Actvation key that does not have record in use db",
+			args: args{
+				ctx:       context.TODO(),
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			accountService: &mockAccountService{},
+			lpaService: &mockLPAService{
+				GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) {
+					return nil, errors.New("Error for test")
+				},
+			},
+			activationKeyService: &mockActivationKeyService{
+				GetActivationKeyFromCodesFunc: func(ctx context.Context, s string) (*[]data.ActivationKey, error) {
+					return &[]data.ActivationKey{
+						{
+							Active:          false,
+							Actor:           "700000000111",
+							Code:            "WWFCCH41R123",
+							Dob:             "20-06-1995",
+							ExpiryDate:      1672568225,
+							GeneratedDate:   "1-1-2022",
+							LastUpdatedDate: "6-6-2022",
+							Lpa:             "700000000123",
+							StatusDetails:   "Revoked",
+						},
+					}, nil
+				},
+			},
+			want: &SearchResult{
+				Query: "WWFCCH41R123",
+				Used:  "Yes",
+				ActivationKey: data.ActivationKey{
+					Active:          false,
+					Actor:           "700000000111",
+					Code:            "WWFCCH41R123",
+					Dob:             "20-06-1995",
+					ExpiryDate:      1672568225,
+					GeneratedDate:   "1-1-2022",
+					LastUpdatedDate: "6-6-2022",
+					Lpa:             "700000000123",
+					StatusDetails:   "Revoked",
+				},
+				LPA: testLPA.SiriusUID,
+			},
+		},
+		{
+			name: "Test standard Actvation key that does not have record in use db and code not used",
+			args: args{
+				ctx:       context.TODO(),
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			accountService: &mockAccountService{},
+			lpaService: &mockLPAService{
+				GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) {
+					return nil, errors.New("Error for test")
+				},
+			},
+			activationKeyService: &mockActivationKeyService{
+				GetActivationKeyFromCodesFunc: func(ctx context.Context, s string) (*[]data.ActivationKey, error) {
+					return &[]data.ActivationKey{
+						{
+							Active:          true,
+							Actor:           "700000000111",
+							Code:            "WWFCCH41R123",
+							Dob:             "20-06-1995",
+							ExpiryDate:      1672568225,
+							GeneratedDate:   "1-1-2022",
+							LastUpdatedDate: "6-6-2022",
+							Lpa:             "700000000123",
+							StatusDetails:   "Imported",
+						},
+					}, nil
+				},
+			},
+			want: &SearchResult{
+				Query: "WWFCCH41R123",
+				Used:  "No",
+				ActivationKey: data.ActivationKey{
+					Active:          false,
+					Actor:           "700000000111",
+					Code:            "WWFCCH41R123",
+					Dob:             "20-06-1995",
+					ExpiryDate:      1672568225,
+					GeneratedDate:   "1-1-2022",
+					LastUpdatedDate: "6-6-2022",
+					Lpa:             "700000000123",
+					StatusDetails:   "Revoked",
+				},
+				LPA: testLPA.SiriusUID,
+			},
+		},
+		{
+			name: "Test standard activation key query with code request and email",
+			args: args{
+				ctx:       context.TODO(),
+				queryType: 1, //Key query
+				q:         "WWFCCH41R123",
+			},
+			accountService: &mockAccountService{
+				GetEmailByUserIDFunc: func(ctx context.Context, s string) (string, error) {
+					return "test@email.com", nil
+				},
+			},
+			lpaService: &mockLPAService{
+				GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) {
+					return testLPA, nil
+				},
+			},
+			activationKeyService: &mockActivationKeyService{
+				GetActivationKeyFromCodesFunc: func(ctx context.Context, s string) (*[]data.ActivationKey, error) {
+					return &[]data.ActivationKey{
+						{
+							Active:          false,
+							Actor:           "700000000111",
+							Code:            "WWFCCH41R123",
+							Dob:             "20-06-1995",
+							ExpiryDate:      1672568225,
+							GeneratedDate:   "1-1-2022",
+							LastUpdatedDate: "6-6-2022",
+							Lpa:             "700000000138",
+							StatusDetails:   "Revoked",
+						},
+					}, nil
+				},
+			},
+			want: &SearchResult{
+				Query: "WWFCCH41R123",
+				Used:  "Yes",
+				Email: "test@email.com",
+				ActivationKey: data.ActivationKey{
+					Active:          false,
+					Actor:           "700000000111",
+					Code:            "WWFCCH41R123",
+					Dob:             "20-06-1995",
+					ExpiryDate:      1672568225,
+					GeneratedDate:   "1-1-2022",
+					LastUpdatedDate: "6-6-2022",
+					Lpa:             "700000000138",
+					StatusDetails:   "Revoked",
+				},
+				LPA: testLPA.SiriusUID,
+			},
 		},
 	}
 

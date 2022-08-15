@@ -176,6 +176,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 				for _, value := range *activationKey {
 					return &SearchResult{
 						Query:         q,
+						Used:          "Yes",
 						Email:         email,
 						LPA:           r.SiriusUID,
 						ActivationKey: value,
