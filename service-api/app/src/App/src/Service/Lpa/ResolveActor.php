@@ -59,7 +59,7 @@ class ResolveActor
         }
 
         // Determine if the actor is a trust corporation
-        if (isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
+        if (is_null($actor) && isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
             foreach ($lpa['trustCorporations'] as $tc) {
                 if ((string)$tc['id'] === $actorId || $tc['uId'] === $actorId) {
                     $actor = $tc;
