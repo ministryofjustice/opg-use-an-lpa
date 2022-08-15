@@ -6,6 +6,7 @@ namespace BehatTest\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use PhpPact\Exception\ConnectionException;
 use SmartGamma\Behat\PactExtension\Context\PactContext;
 use SmartGamma\Behat\PactExtension\Exception\NoConsumerRequestDefined;
@@ -14,6 +15,18 @@ use stdClass;
 trait UsesPactContextTrait
 {
     protected PactContext $pact;
+
+    /**
+     * When starting the PACT services containers it can take a few seconds before they're available.
+     * If this was to be done better it would attempt connection and allow the run to continue when
+     * connection is made. For now a sleep suffices.
+     *
+     * @BeforeSuite
+     */
+    public static function waitForPactServices(BeforeSuiteScope $scope)
+    {
+        sleep(3);
+    }
 
     /**
      * @BeforeScenario

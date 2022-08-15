@@ -22,6 +22,7 @@ use Fig\Http\Message\StatusCodeInterface;
  * @property string donorSurname The surname of the donors LPA reference by the share code
  * @property array  lpa          LPA data as returned by the API gateway
  * @property string lpaViewedBy  The organisation that the lpa has been viewed by using the share code
+ * @property string organisation The organisation that the lpa was created for
  */
 class ViewerContext extends BaseIntegrationContext
 {
@@ -53,6 +54,8 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
     {
+        $this->organisation = 'TestOrg';
+
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
@@ -61,10 +64,11 @@ class ViewerContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid' => $this->lpa->uId,
-                            'Added' => (new \DateTime('now'))->format('c'),
-                            'Expires' => $lpaExpiry,
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->organisation
                         ]
                     ),
                 ]
@@ -129,6 +133,8 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iGiveAValidLPAShareCode()
     {
+        $this->organisation = 'TestOrg';
+
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
@@ -137,10 +143,11 @@ class ViewerContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid' => $this->lpa->uId,
-                            'Added' => (new \DateTime('now'))->format('c'),
-                            'Expires' => $lpaExpiry,
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->organisation
                         ]
                     ),
                 ]
