@@ -300,7 +300,7 @@ func TestLocalActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "test local codes connection fails when invalid response recieved",
+			name: "test local codes connection fails when invalid response received",
 			fields: fields{
 				db: DynamoConnection{
 					Prefix: "",

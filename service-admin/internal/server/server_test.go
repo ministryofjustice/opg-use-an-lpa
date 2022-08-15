@@ -111,7 +111,7 @@ func Test_withErrorHandling(t *testing.T) {
 		tw := &mockTemplateWriterService{
 			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if s != tt.wantedTemplateName {
-					t.Errorf("expected %v recieved %v", tt.wantedTemplateName, s)
+					t.Errorf("expected %v received %v", tt.wantedTemplateName, s)
 				}
 				return nil
 			}}
@@ -172,7 +172,7 @@ func Test_withErrorHandlingWriter(t *testing.T) {
 		tw := &mockTemplateWriterService{
 			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if s != tt.wantedTemplateName {
-					t.Errorf("expected %v recieved %v", tt.wantedTemplateName, s)
+					t.Errorf("expected %v received %v", tt.wantedTemplateName, s)
 				}
 				return nil
 			}}
@@ -185,7 +185,7 @@ func Test_withErrorHandlingWriter(t *testing.T) {
 			got.ServeHTTP(recorder, httptest.NewRequest("GET", "/", nil))
 
 			if recorder.Body.String() != tt.expected {
-				t.Errorf("expected %v recieved %v", tt.expected, recorder.Body.String())
+				t.Errorf("expected %v received %v", tt.expected, recorder.Body.String())
 			}
 		})
 	}
