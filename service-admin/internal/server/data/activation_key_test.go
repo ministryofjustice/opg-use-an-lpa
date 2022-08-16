@@ -12,6 +12,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -63,9 +64,11 @@ func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetIt
 func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 	t.Parallel()
 
+	testConfig, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+
 	type fields struct {
 		awsSigner      Signer
-		credentials    aws.Credentials
+		config         aws.Config
 		codesAPIURL    string
 		mockHTTPClient *mockHTTPClient
 	}
@@ -86,7 +89,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			name: "test online activation key service",
 			fields: fields{
 				awsSigner:      &mockSigner{},
-				credentials:    aws.Credentials{},
+				config:         testConfig,
 				codesAPIURL:    "",
 				mockHTTPClient: &mockHTTPClient{},
 			},
@@ -115,7 +118,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 				awsSigner: &mockSigner{SignHTTPFunc: func(ctx context.Context, c aws.Credentials, r *http.Request, s1, s2, s3 string, t time.Time, f ...func(options *v4.SignerOptions)) error {
 					return errors.New("Some Signing Error")
 				}},
-				credentials:    aws.Credentials{},
+				config:         testConfig,
 				codesAPIURL:    "",
 				mockHTTPClient: &mockHTTPClient{},
 			},
@@ -129,7 +132,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			name: "test error when http client fails",
 			fields: fields{
 				awsSigner:   &mockSigner{},
-				credentials: aws.Credentials{},
+				config:      testConfig,
 				codesAPIURL: "",
 				mockHTTPClient: &mockHTTPClient{DoFunc: func(r *http.Request) (*http.Response, error) {
 					return nil, errors.New("Client Do Error")
@@ -145,7 +148,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			name: "test online activation key service error on status code other than 200",
 			fields: fields{
 				awsSigner:   &mockSigner{},
-				credentials: aws.Credentials{},
+				config:      testConfig,
 				codesAPIURL: "",
 				mockHTTPClient: &mockHTTPClient{DoFunc: func(r *http.Request) (*http.Response, error) {
 					return &http.Response{StatusCode: 404}, nil
@@ -161,7 +164,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			name: "error with malformed json",
 			fields: fields{
 				awsSigner:   &mockSigner{},
-				credentials: aws.Credentials{},
+				config:      testConfig,
 				codesAPIURL: "",
 				mockHTTPClient: &mockHTTPClient{DoFunc: func(r *http.Request) (*http.Response, error) {
 					jsonStrReader := strings.NewReader("jsonStr")
@@ -178,7 +181,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 			name: "error no response body",
 			fields: fields{
 				awsSigner:   &mockSigner{},
-				credentials: aws.Credentials{},
+				config:      testConfig,
 				codesAPIURL: "",
 				mockHTTPClient: &mockHTTPClient{DoFunc: func(r *http.Request) (*http.Response, error) {
 					return &http.Response{StatusCode: 200}, nil
@@ -199,7 +202,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 
 			aks := &OnlineActivationKeyService{
 				awsSigner:   tt.fields.awsSigner,
-				credentials: tt.fields.credentials,
+				config:      tt.fields.config,
 				codesAPIURL: tt.fields.codesAPIURL,
 				httpClient:  tt.fields.mockHTTPClient,
 			}

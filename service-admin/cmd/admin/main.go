@@ -125,12 +125,7 @@ func main() {
 
 func createActivationKeyService(endpoint string, dynamo data.DynamoConnection, config aws.Config) data.ActivationKeyService {
 	if endpoint != "" {
-		cred, err := config.Credentials.Retrieve(context.TODO())
-		if err != nil {
-			log.Panic().Msg("Cannot get credentials")
-		}
-
-		return data.NewOnlineActivationKeyService(v4.NewSigner(), cred, endpoint+"/v1/code")
+		return data.NewOnlineActivationKeyService(v4.NewSigner(), config, endpoint+"/v1/code")
 	} else {
 		return data.NewLocalActivationKeyService(dynamo)
 	}

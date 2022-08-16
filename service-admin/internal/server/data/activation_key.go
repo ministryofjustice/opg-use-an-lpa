@@ -48,13 +48,13 @@ type HTTPClient interface {
 
 type OnlineActivationKeyService struct {
 	awsSigner   Signer
-	credentials aws.Credentials
+	config      aws.Config
 	codesAPIURL string
 	httpClient  HTTPClient
 }
 
-func NewOnlineActivationKeyService(awsSigner *v4.Signer, credentials aws.Credentials, codesAPIURL string) ActivationKeyService {
-	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: credentials, codesAPIURL: codesAPIURL, httpClient: &http.Client{}}
+func NewOnlineActivationKeyService(awsSigner *v4.Signer, config aws.Config, codesAPIURL string) ActivationKeyService {
+	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: config, codesAPIURL: codesAPIURL, httpClient: &http.Client{}}
 }
 
 func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
@@ -73,7 +73,14 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	hasher.Write(jsonStr)
 	shaHash := hex.EncodeToString(hasher.Sum(nil))
 
-	err = aks.awsSigner.SignHTTP(ctx, aks.credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
+	credentials, err := aks.config.Credentials.Retrieve(context.Background())
+
+	if err != nil {
+		log.Error().AnErr("Error retrieveing credentials", err)
+		return nil, ErrActivationKeyNotFound
+	}
+
+	err = aks.awsSigner.SignHTTP(ctx, credentials, r, shaHash, "execute-api", "eu-west-1", time.Now())
 
 	if err != nil {
 		log.Error().AnErr("Error Signing request for activation key %v", err)
