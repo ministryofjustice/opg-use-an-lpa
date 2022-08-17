@@ -39,7 +39,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
 
         $userId = $request->getHeader('user-token')[0];
 
-        if (!isset($data['actor-code']) || !isset($data['uid']) || !isset($data['dob'])) {
+        if (empty($data['actor-code']) || empty($data['uid']) || empty($data['dob'])) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 

@@ -37,7 +37,7 @@ class AuthHandler implements RequestHandlerInterface
     {
         $params = $request->getParsedBody();
 
-        if (!isset($params['email']) || !isset($params['password'])) {
+        if (empty($params['email']) || empty($params['password'])) {
             throw new BadRequestException('Email address and password must be provided');
         }
 

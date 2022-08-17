@@ -37,7 +37,7 @@ class CompleteChangeEmailHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['reset_token'])) {
+        if (empty($requestData['reset_token'])) {
             throw new BadRequestException('Email reset token must be provided');
         }
 

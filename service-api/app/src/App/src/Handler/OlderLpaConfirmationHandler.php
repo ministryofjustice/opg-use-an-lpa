@@ -50,11 +50,11 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $userId = $request->getHeader('user-token')[0];
 
         if (
-            !isset($requestData['reference_number']) ||
-            !isset($requestData['dob']) ||
-            !isset($requestData['first_names']) ||
-            !isset($requestData['last_name']) ||
-            !isset($requestData['postcode'])
+            empty($requestData['reference_number']) ||
+            empty($requestData['dob']) ||
+            empty($requestData['first_names']) ||
+            empty($requestData['last_name']) ||
+            empty($requestData['postcode'])
         ) {
             throw new BadRequestException('Required data missing to request an activation key');
         }

@@ -40,15 +40,15 @@ class RequestChangeEmailHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['user-id'])) {
+        if (empty($requestData['user-id'])) {
             throw new BadRequestException('User Id must be provided');
         }
 
-        if (!isset($requestData['new-email'])) {
+        if (empty($requestData['new-email'])) {
             throw new BadRequestException('New email address must be provided');
         }
 
-        if (!isset($requestData['password'])) {
+        if (empty($requestData['password'])) {
             throw new BadRequestException('Current password must be provided');
         }
 

@@ -35,9 +35,9 @@ class AddLpaValidationHandler implements RequestHandlerInterface
         $data = $request->getParsedBody();
 
         if (
-            !isset($data['actor-code']) ||
-            !isset($data['uid']) ||
-            !isset($data['dob'])
+            empty($data['actor-code']) ||
+            empty($data['uid']) ||
+            empty($data['dob'])
         ) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }

@@ -56,7 +56,7 @@ class UserHandler implements RequestHandlerInterface
     {
         $params = $request->getQueryParams();
 
-        if (!isset($params['email'])) {
+        if (empty($params['email'])) {
             throw new BadRequestException('Email address must be provided');
         }
 
@@ -75,7 +75,7 @@ class UserHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['email']) || !isset($requestData['password'])) {
+        if (empty($requestData['email']) || empty($requestData['password'])) {
             throw new BadRequestException('Email address and password must be provided');
         }
 

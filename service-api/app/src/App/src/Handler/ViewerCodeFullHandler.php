@@ -38,7 +38,7 @@ class ViewerCodeFullHandler implements RequestHandlerInterface
     {
         $params = $request->getParsedBody();
 
-        if (!isset($params['code']) || !isset($params['name']) || !isset($params['organisation'])) {
+        if (empty($params['code']) || empty($params['name']) || empty($params['organisation'])) {
             throw new RuntimeException("'code', 'name' and 'organisation' are required fields.");
         }
 

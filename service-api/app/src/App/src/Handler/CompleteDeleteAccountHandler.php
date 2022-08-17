@@ -37,7 +37,7 @@ class CompleteDeleteAccountHandler implements RequestHandlerInterface
     {
         $accountId = $request->getAttribute('account-id');
 
-        if (!isset($accountId)) {
+        if (empty($accountId)) {
             throw new BadRequestException('Account Id must be provided for account deletion');
         }
 

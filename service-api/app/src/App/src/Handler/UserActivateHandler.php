@@ -37,7 +37,7 @@ class UserActivateHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['activation_token'])) {
+        if (empty($requestData['activation_token'])) {
             throw new BadRequestException('Token must be provided');
         }
 

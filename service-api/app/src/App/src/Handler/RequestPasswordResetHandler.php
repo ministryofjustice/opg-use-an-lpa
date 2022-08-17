@@ -38,7 +38,7 @@ class RequestPasswordResetHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['email'])) {
+        if (empty($requestData['email'])) {
             throw new BadRequestException('Email must be provided');
         }
 

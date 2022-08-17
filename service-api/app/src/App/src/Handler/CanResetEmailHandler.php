@@ -37,7 +37,7 @@ class CanResetEmailHandler implements RequestHandlerInterface
     {
         $requestData = $request->getQueryParams();
 
-        if (!isset($requestData['token'])) {
+        if (empty($requestData['token'])) {
             throw new BadRequestException('Email reset token must be provided');
         }
 

@@ -6,10 +6,10 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\User\UserService;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class CanPasswordResetHandler
@@ -38,7 +38,7 @@ class CanPasswordResetHandler implements RequestHandlerInterface
     {
         $requestData = $request->getQueryParams();
 
-        if (!isset($requestData['token'])) {
+        if (empty($requestData['token'])) {
             throw new BadRequestException('Password reset token must be provided');
         }
 

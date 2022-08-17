@@ -10,7 +10,7 @@ use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class ChangePasswordHandler
@@ -39,15 +39,15 @@ class ChangePasswordHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['user-id'])) {
+        if (empty($requestData['user-id'])) {
             throw new BadRequestException('User Id must be provided');
         }
 
-        if (!isset($requestData['password'])) {
+        if (empty($requestData['password'])) {
             throw new BadRequestException('Current password must be provided');
         }
 
-        if (!isset($requestData['new-password'])) {
+        if (empty($requestData['new-password'])) {
             throw new BadRequestException('Replacement password must be provided');
         }
 

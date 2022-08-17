@@ -68,7 +68,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws Exception|BadRequestException|ConflictException|NotFoundException
      */
-    private function handlePost(ServerRequestInterface $request) : ResponseInterface
+    private function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
@@ -79,7 +79,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         }
 
         $data = $request->getParsedBody();
-        if (!isset($data['organisation'])) {
+        if (empty($data['organisation'])) {
             throw new RuntimeException("'organisation' is missing.");
         }
 
@@ -109,7 +109,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws BadRequestException|NotFoundException
      */
-    private function handlePut(ServerRequestInterface $request) : ResponseInterface
+    private function handlePut(ServerRequestInterface $request): ResponseInterface
     {
         $data = $request->getParsedBody();
 
@@ -136,7 +136,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      * @return ResponseInterface
      * @throws BadRequestException|NotFoundException
      */
-    private function handleGet(ServerRequestInterface $request) : ResponseInterface
+    private function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");

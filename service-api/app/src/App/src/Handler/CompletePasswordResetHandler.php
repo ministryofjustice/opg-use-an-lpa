@@ -39,11 +39,11 @@ class CompletePasswordResetHandler implements RequestHandlerInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['token'])) {
+        if (empty($requestData['token'])) {
             throw new BadRequestException('Password reset token must be provided');
         }
 
-        if (!isset($requestData['password'])) {
+        if (empty($requestData['password'])) {
             throw new BadRequestException('Replacement password must be provided');
         }
 

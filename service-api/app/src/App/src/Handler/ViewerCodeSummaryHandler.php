@@ -38,7 +38,7 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
     {
         $params = $request->getParsedBody();
 
-        if (!isset($params['code']) || !isset($params['name'])) {
+        if (empty($params['code']) || empty($params['name'])) {
             throw new RuntimeException("'code' and 'name' are required fields.");
         }
 
