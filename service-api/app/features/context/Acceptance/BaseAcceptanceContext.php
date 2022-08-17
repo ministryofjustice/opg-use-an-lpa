@@ -32,10 +32,7 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
 {
     use RuntimeMinkContext;
 
-    /**
-     * @var ContainerInterface|Container
-     */
-    public $container;
+    public ContainerInterface|Container $container;
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
     public MinkContext $ui;
@@ -60,7 +57,7 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     /**
      * @Given I am a user of the lpa application
      */
-    public function iAmAUserOfTheLpaApplication()
+    public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userAccountId = '123456789';
         $this->userAccountEmail = 'test@example.com';

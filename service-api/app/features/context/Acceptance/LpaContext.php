@@ -9,12 +9,12 @@ use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
-use DateTimeImmutable;
-use DateInterval;
 
 /**
  * @property mixed lpa
@@ -1300,6 +1300,9 @@ class LpaContext implements Context
      */
     public function iClickToCheckMyAccessCodes()
     {
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
+
         // Get the LPA
 
         // UserLpaActorMap::get
@@ -2282,19 +2285,19 @@ class LpaContext implements Context
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                [
-                                    'Viewed' => '2020-10-01T23:59:59+00:00',
-                                    'ViewerCode' => $this->accessCode,
-                                    'ViewedBy' => 'organisation1'
-                                ],
-                                [
-                                    'Viewed' => '2020-10-01T23:59:59+00:00',
-                                    'ViewerCode' => $this->accessCode,
-                                    'ViewedBy' => 'organisation2'
-                                ]
+                                'Viewed' => '2020-10-01T23:59:59+00:00',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy' => 'organisation1'
                             ]
                         ),
-                    ],
+                        $this->marshalAwsResultData(
+                            [
+                                'Viewed' => '2020-10-01T23:59:59+00:00',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy' => 'organisation2'
+                            ]
+                        )
+                    ]
                 ]
             )
         );
@@ -2332,9 +2335,9 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         assertArrayHasKey('Viewed', $response[0]);
-        assertEquals($response[0][0]['ViewerCode'], $this->accessCode);
-        assertEquals($response[0][0]['ViewedBy'], 'organisation1');
-        assertEquals($response[0][1]['ViewedBy'], 'organisation2');
+        assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        assertEquals($response[0]['ViewedBy'], 'organisation1');
+        assertEquals($response[1]['ViewedBy'], 'organisation2');
     }
 
     /**
