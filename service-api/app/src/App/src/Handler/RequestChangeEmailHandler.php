@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Exception\ConflictException;
-use App\Exception\ForbiddenException;
 use App\Service\User\UserService;
+use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
@@ -21,20 +20,15 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class RequestChangeEmailHandler implements RequestHandlerInterface
 {
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        private UserService $userService,
+    ) {
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws BadRequestException|Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -55,7 +49,7 @@ class RequestChangeEmailHandler implements RequestHandlerInterface
         $user = $this->userService->requestChangeEmail(
             $requestData['user-id'],
             $requestData['new-email'],
-            new HiddenString($requestData['password'])
+            new HiddenString($requestData['password']),
         );
 
         return new JsonResponse($user);

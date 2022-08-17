@@ -9,11 +9,12 @@ use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\Response\JsonResponse;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class UserHandler
@@ -22,14 +23,9 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class UserHandler implements RequestHandlerInterface
 {
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        private UserService $userService,
+    ) {
     }
 
     /**
@@ -39,18 +35,16 @@ class UserHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws BadRequestException|NotFoundException
+     * @throws BadRequestException|NotFoundException|Exception
      */
     private function handleGet(ServerRequestInterface $request): ResponseInterface
     {
@@ -69,7 +63,7 @@ class UserHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws Exception|BadRequestException|ConflictException|NotFoundException
+     * @throws BadRequestException|ConflictException|Exception
      */
     private function handlePost(ServerRequestInterface $request): ResponseInterface
     {
@@ -82,6 +76,6 @@ class UserHandler implements RequestHandlerInterface
         $requestData['password'] = new HiddenString($requestData['password']);
         $data = $this->userService->add($requestData);
 
-        return new JsonResponse($data, 201);
+        return new JsonResponse($data, StatusCodeInterface::STATUS_CREATED);
     }
 }

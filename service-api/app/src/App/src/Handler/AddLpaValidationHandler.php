@@ -18,11 +18,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class AddLpaValidationHandler implements RequestHandlerInterface
 {
-    private AddLpa $addLpa;
-
-    public function __construct(AddLpa $addLpa)
-    {
-        $this->addLpa = $addLpa;
+    public function __construct(
+        private AddLpa $addLpa,
+    ) {
     }
 
     /**
@@ -44,6 +42,6 @@ class AddLpaValidationHandler implements RequestHandlerInterface
 
         $response = $this->addLpa->validateAddLpaData($data, $userId);
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response);
     }
 }

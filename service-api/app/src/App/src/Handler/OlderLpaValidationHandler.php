@@ -6,10 +6,10 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Lpa\AddOlderLpa;
+use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
-use Exception;
 
 /**
  * Class OlderLpaValidationHandler
@@ -18,17 +18,15 @@ use Exception;
  */
 class OlderLpaValidationHandler implements RequestHandlerInterface
 {
-    private AddOlderLpa $addOlderLpa;
-
-    public function __construct(AddOlderLpa $addOlderLpa)
-    {
-        $this->addOlderLpa = $addOlderLpa;
+    public function __construct(
+        private AddOlderLpa $addOlderLpa,
+    ) {
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws Exception
+     * @throws BadRequestException|Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -47,6 +45,6 @@ class OlderLpaValidationHandler implements RequestHandlerInterface
 
         $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
 
-        return new JsonResponse($lpaMatchResponse, 200);
+        return new JsonResponse($lpaMatchResponse);
     }
 }

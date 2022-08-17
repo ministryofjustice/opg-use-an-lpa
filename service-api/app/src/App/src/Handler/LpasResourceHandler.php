@@ -6,13 +6,13 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\LpaService;
+use App\Service\Lpa\RemoveLpa;
 use Exception;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class LpasResourceHandler
@@ -22,13 +22,10 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class LpasResourceHandler implements RequestHandlerInterface
 {
-    private LpaService $lpaService;
-    private RemoveLpa $removeLpa;
-
-    public function __construct(LpaService $lpaService, RemoveLpa $removeLpa)
-    {
-        $this->lpaService = $lpaService;
-        $this->removeLpa = $removeLpa;
+    public function __construct(
+        private LpaService $lpaService,
+        private RemoveLpa $removeLpa,
+    ) {
     }
 
     /**
@@ -38,17 +35,16 @@ class LpasResourceHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        switch ($request->getMethod()) {
-            case 'DELETE':
-                return $this->handleDelete($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'DELETE' => $this->handleDelete($request),
+            default => $this->handleGet($request),
+        };
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws BadRequestException|NotFoundException|Exception
      */
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
@@ -62,7 +58,7 @@ class LpasResourceHandler implements RequestHandlerInterface
 
         $result = $this->lpaService->getByUserLpaActorToken(
             $request->getAttribute('user-lpa-actor-token'),
-            $request->getAttribute('actor-id')
+            $request->getAttribute('actor-id'),
         );
 
         if (is_null($result)) {
@@ -75,7 +71,7 @@ class LpasResourceHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws Exception
+     * @throws BadRequestException|Exception
      */
     public function handleDelete(ServerRequestInterface $request): ResponseInterface
     {
