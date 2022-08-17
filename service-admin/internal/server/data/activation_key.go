@@ -54,7 +54,7 @@ type OnlineActivationKeyService struct {
 }
 
 func NewOnlineActivationKeyService(awsSigner *v4.Signer, config aws.Config, codesAPIURL string) ActivationKeyService {
-	return &OnlineActivationKeyService{awsSigner: awsSigner, credentials: config, codesAPIURL: codesAPIURL, httpClient: &http.Client{}}
+	return &OnlineActivationKeyService{awsSigner: awsSigner, config: config, codesAPIURL: codesAPIURL, httpClient: &http.Client{}}
 }
 
 func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, activationKey string) (returnedKeys *[]ActivationKey, returnedErr error) {
