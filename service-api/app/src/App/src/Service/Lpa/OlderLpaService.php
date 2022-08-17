@@ -9,7 +9,6 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
-use Cassandra\Date;
 use DateInterval;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -164,12 +163,12 @@ class OlderLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string      $uid Sirius uId for an LPA
-     * @param string      $userId
-     * @param string      $additionalInfo
+     * @param string $uid Sirius uId for an LPA
+     * @param string $userId
+     * @param string $additionalInfo
      *
-     * @param string|null $actorId
-     * @param string|null $existingRecordId
+     * @param ?int $actorId
+     * @param ?string $existingRecordId
      */
     public function requestAccessAndCleanseByLetter(
         string $uid,
