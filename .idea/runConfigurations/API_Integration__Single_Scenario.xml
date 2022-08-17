@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API Integration: Single Scenario" type="PhpBehatConfigurationType">
-    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" file="$PROJECT_DIR$/service-api/app/features/actor-access-code-cancellation.feature" scenario="As a user be able to view the cancelled viewer codes" scope="Scenario" options="--profile=integration --tags=integration&amp;&amp;wip,integration" use_alternative_configuration_file="true" />
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" file="$PROJECT_DIR$/service-api/app/features/actor-check-access-codes.feature" scenario="As a user I can see which organisations have used access codes to view an LPA" scope="Scenario" options="--profile=integration --tags=integration&amp;&amp;wip,integration" use_alternative_configuration_file="true" />
     <CommandLine>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="test-api-app" />
