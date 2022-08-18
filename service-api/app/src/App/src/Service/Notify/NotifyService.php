@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Notify;
 
-use Alphagov\Notifications\Client;
 use App\Exception\BadRequestException;
 use App\Service\Email\EmailClient;
 use Psr\Log\LoggerInterface;
@@ -32,10 +31,8 @@ class NotifyService
      * @param string $emailTemplate
      * @throws Exception Thrown when parameters do not match
      */
-    public function __invoke(array $requestData, string $emailTemplate): void
+    public function __invoke(array $requestData, string $emailTemplate): bool
     {
-        $this->logger->debug('Am in Notify service in API.....{data}', ['data' => $requestData]);
-
         //Instantiate the reflection object
         $reflector = new ReflectionClass($this->emailClient);
         $properties = $reflector->getMethods();
@@ -55,6 +52,7 @@ class NotifyService
                         $requestData['parameter2']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'AccountActivatedConfirmationEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -66,6 +64,7 @@ class NotifyService
                         $requestData['parameter2']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'AlreadyRegisteredEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -76,6 +75,7 @@ class NotifyService
                         $requestData['locale']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'PasswordResetEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -87,6 +87,7 @@ class NotifyService
                         $requestData['parameter2']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'PasswordChangedEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -97,6 +98,7 @@ class NotifyService
                         $requestData['locale']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'RequestChangeEmailToCurrentEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -108,6 +110,7 @@ class NotifyService
                         $requestData['parameter2']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'RequestChangeEmailToNewEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -119,6 +122,7 @@ class NotifyService
                         $requestData['parameter2']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'SomeoneTriedToUseYourEmailInEmailResetRequest' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -129,6 +133,7 @@ class NotifyService
                         $requestData['locale']
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'ActivationKeyRequestConfirmationEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -142,6 +147,7 @@ class NotifyService
                         $requestData['locale'],
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing' &&
                 str_contains($property->getName(), $emailTemplate)) {
@@ -155,6 +161,7 @@ class NotifyService
                         $requestData['locale'],
                     );
                 }
+                return true;
             }
             if ($emailTemplate === 'NoAccountExistsEmail' && str_contains($property->getName(), $emailTemplate)) {
                 if ($this->validate($requestData, $emailTemplate)) {
@@ -165,6 +172,7 @@ class NotifyService
                         $requestData['locale']
                     );
                 }
+                return true;
             }
 
             $i++;
