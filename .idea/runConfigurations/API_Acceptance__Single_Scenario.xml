@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="API Acceptance: Single Scenario" type="PhpBehatConfigurationType" singleton="false">
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" file="$PROJECT_DIR$/service-api/app/features/actor-check-access-codes.feature" scenario="As a user I can see which organisations have used access codes to view an LPA" scope="Scenario" options="--profile=acceptance --tags=acceptance&amp;&amp;wip,acceptance" use_alternative_configuration_file="true" />
+    <CommandLine>
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="api-app" />
+      </PhpTestInterpreterSettings>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>

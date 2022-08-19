@@ -80,6 +80,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->__invoke($lpa->getData(), 'actor-uid')
             ->willReturn(
                 [
+                    'type' => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
                         'dob' => 'actor-dob'
@@ -236,6 +237,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
+                    'type' => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
                         'dob' => 'different-dob'

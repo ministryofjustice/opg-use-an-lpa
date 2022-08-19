@@ -18,11 +18,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class AddLpaValidationHandler implements RequestHandlerInterface
 {
-    private AddLpa $addLpa;
-
-    public function __construct(AddLpa $addLpa)
-    {
-        $this->addLpa = $addLpa;
+    public function __construct(
+        private AddLpa $addLpa,
+    ) {
     }
 
     /**
@@ -35,15 +33,15 @@ class AddLpaValidationHandler implements RequestHandlerInterface
         $data = $request->getParsedBody();
 
         if (
-            !isset($data['actor-code']) ||
-            !isset($data['uid']) ||
-            !isset($data['dob'])
+            empty($data['actor-code']) ||
+            empty($data['uid']) ||
+            empty($data['dob'])
         ) {
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
         $response = $this->addLpa->validateAddLpaData($data, $userId);
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response);
     }
 }

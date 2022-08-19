@@ -29,7 +29,7 @@ class AddLpaTest extends TestCase
     private string $lpaUid;
     private string $dob;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->actorCodeServiceProphecy = $this->prophesize(ActorCodeService::class);

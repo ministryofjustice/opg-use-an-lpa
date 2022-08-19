@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\OlderLpaService;
@@ -12,7 +13,6 @@ use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use App\Service\Features\FeatureEnabled;
 
 /**
  * Class OlderLpaConfirmationHandler
@@ -21,22 +21,12 @@ use App\Service\Features\FeatureEnabled;
  */
 class OlderLpaConfirmationHandler implements RequestHandlerInterface
 {
-    private AddOlderLpa $addOlderLpa;
-    private OlderLpaService $olderLpaService;
-    private FeatureEnabled $featureEnabled;
-    private CheckLpaCleansed $checkLpaCleansed;
-
-
     public function __construct(
-        AddOlderLpa $addOlderLpa,
-        OlderLpaService $olderLpaService,
-        FeatureEnabled $featureEnabled,
-        CheckLpaCleansed $checkLpaCleansed
+        private AddOlderLpa $addOlderLpa,
+        private OlderLpaService $olderLpaService,
+        private FeatureEnabled $featureEnabled,
+        private CheckLpaCleansed $checkLpaCleansed,
     ) {
-        $this->addOlderLpa = $addOlderLpa;
-        $this->olderLpaService = $olderLpaService;
-        $this->featureEnabled = $featureEnabled;
-        $this->checkLpaCleansed   = $checkLpaCleansed;
     }
 
     /**
@@ -50,11 +40,11 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         $userId = $request->getHeader('user-token')[0];
 
         if (
-            !isset($requestData['reference_number']) ||
-            !isset($requestData['dob']) ||
-            !isset($requestData['first_names']) ||
-            !isset($requestData['last_name']) ||
-            !isset($requestData['postcode'])
+            empty($requestData['reference_number']) ||
+            empty($requestData['dob']) ||
+            empty($requestData['first_names']) ||
+            empty($requestData['last_name']) ||
+            empty($requestData['postcode'])
         ) {
             throw new BadRequestException('Required data missing to request an activation key');
         }
@@ -69,7 +59,7 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
             (string) $requestData['reference_number'],
             $lpaMatchResponse['actor']['uId'],
             $userId,
-            $lpaMatchResponse['lpaActorToken'] ?? null
+            $lpaMatchResponse['lpaActorToken'] ?? null,
         );
 
         return new EmptyResponse();

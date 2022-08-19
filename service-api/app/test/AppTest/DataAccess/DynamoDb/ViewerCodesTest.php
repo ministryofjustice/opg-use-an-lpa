@@ -6,11 +6,11 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\KeyCollisionException;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use DateTime;
 
 class ViewerCodesTest extends TestCase
 {
@@ -20,7 +20,7 @@ class ViewerCodesTest extends TestCase
 
     private $dynamoDbClientProphecy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }

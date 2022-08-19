@@ -6,6 +6,8 @@
         <option name="interpreterName" value="test-api-app" />
       </PhpTestInterpreterSettings>
     </CommandLine>
-    <method v="2" />
+    <method v="2">
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Cleanup PACT containers" />
+    </method>
   </configuration>
 </component>
