@@ -103,21 +103,15 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
                         $this->notifyService->sendEmailToUser(
+                            NotifyService::REQUEST_CHANGE_EMAIL_TO_CURRENT_EMAIL,
                             $data['Email'],
-                            $data['NewEmail'],
-                            $emailTemplate = 'RequestChangeEmailToCurrentEmail',
-                            null,
-                            null,
-                            null
+                            newEmailAddress:$data['NewEmail']
                         );
 
                         $this->notifyService->sendEmailToUser(
+                            NotifyService::REQUEST_CHANGE_EMAIL_TO_NEW_EMAIL,
                             $data['NewEmail'],
-                            $verifyNewEmailUrl,
-                            $emailTemplate = 'RequestChangeEmailToNewEmail',
-                            null,
-                            null,
-                            null
+                            completeEmailChangeUrl:$verifyNewEmailUrl
                         );
 
                         return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
@@ -132,12 +126,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                             // to use their email
 
                             $this->notifyService->sendEmailToUser(
-                                $newEmail,
-                                null,
-                                $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest',
-                                null,
-                                null,
-                                null
+                                NotifyService::SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE,
+                                $newEmail
                             );
 
                             return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [

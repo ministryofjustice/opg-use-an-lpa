@@ -121,8 +121,13 @@ class CreateAccountSuccessHandlerTest extends TestCase
         $this->serverUrlHelperProphecy->generate('/activate-account/activate1234567890')
             ->willReturn('http://localhost/activate-account/activate1234567890');
 
-        $this->notifyServiceProphecy->sendEmailToUser('a@b.com', 'http://localhost/activate-account/activate1234567890','AccountActivationEmail',null,null,null)
-            ->shouldBeCalled();
+        $this->notifyServiceProphecy->sendEmailToUser(
+            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+            'a@b.com',
+            activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
+        )
+            ->shouldBeCalled()->willReturn(true);
+
 
         $this->templateRendererProphecy->render('actor::create-account-success', new CallbackToken(function($options) {
             $this->assertIsArray($options);
@@ -130,11 +135,19 @@ class CreateAccountSuccessHandlerTest extends TestCase
             $this->assertArrayHasKey('email', $options);
             $this->assertEquals('a@b.com', $options['email']);
 
-            return true;
         }))->willReturn('');
 
         //  Set up the handler
-        $handler = new CreateAccountSuccessHandler($this->templateRendererProphecy->reveal(), $this->urlHelperProphecy->reveal(), $this->userServiceProphecy->reveal(), $this->serverUrlHelperProphecy->reveal(),$this->notifyServiceProphecy->reveal());
+        $handler = new CreateAccountSuccessHandler(
+            $this->templateRendererProphecy->reveal(),
+            $this->urlHelperProphecy->reveal(),
+            $this->userServiceProphecy->reveal(),
+            $this->serverUrlHelperProphecy->reveal(),
+            $this->notifyServiceProphecy->reveal()
+        );
+
+        $this->requestProphecy->getQueryParams()
+            ->willReturn(true);
 
         $this->requestProphecy->getQueryParams()
             ->willReturn([
@@ -164,7 +177,11 @@ class CreateAccountSuccessHandlerTest extends TestCase
             ])
             ->willReturn('/create-account');
 
-        $this->notifyServiceProphecy->sendEmailToUser('a@b.com', 'http://localhost/activate-account/activate1234567890','AccountActivationEmail',null,null,null)
+        $this->notifyServiceProphecy->sendEmailToUser(
+            'AccountActivationEmail',
+            'a@b.com',
+            activateAccountUrl:'http://localhost/activate-account/activate1234567890'
+        )
             ->shouldNotBeCalled();
 
         //  Set up the handler

@@ -211,17 +211,17 @@ class EmailClient
      * Email an activation key request confirmation email to a user
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $referenceNumber
      * @param string $postCode
      * @param string $letterExpectedDate
-     * @param string $locale
      */
     public function sendActivationKeyRequestConfirmationEmail(
         string $recipient,
+        string $locale,
         string $referenceNumber,
         string $postCode,
-        string $letterExpectedDate,
-        string $locale
+        string $letterExpectedDate
     ): void {
         $this->notifyClient->sendEmail(
             $recipient,
@@ -238,15 +238,15 @@ class EmailClient
      * Email an activation key request confirmation email to a user when LPA is identified not cleansed
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $referenceNumber
      * @param string $letterExpectedDate
-     * @param string $locale
      */
     public function sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
         string $recipient,
+        string $locale,
         string $referenceNumber,
-        string $letterExpectedDate,
-        string $locale
+        string $letterExpectedDate
     ): void {
         $this->notifyClient->sendEmail(
             $recipient,

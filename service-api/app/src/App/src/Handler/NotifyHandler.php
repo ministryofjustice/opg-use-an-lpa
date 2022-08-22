@@ -54,11 +54,11 @@ class NotifyHandler implements RequestHandlerInterface
         $requestData = $request->getParsedBody();
         $emailTemplate = $request->getAttribute('emailTemplate');
 
-        if (sizeof($requestData) == 0) {
-            throw new BadRequestException("Required parameters not provided to send an email");
+        if (count($requestData) === 0) {
+            throw new BadRequestException('Required parameters not provided to send an email');
         }
 
-        ($this->notifyService)($requestData, $emailTemplate);
+        ($this->notifyService)($emailTemplate, $requestData);
 
         return new JsonResponse([]);
     }

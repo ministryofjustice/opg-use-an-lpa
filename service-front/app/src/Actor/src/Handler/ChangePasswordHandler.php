@@ -111,12 +111,8 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
                     );
 
                     $this->notifyService->sendEmailToUser(
-                        $user->getDetail('email'),
-                        null,
-                        $emailTemplate = 'PasswordChangedEmail',
-                        null,
-                        null,
-                        null
+                        NotifyService::PASSWORD_CHANGE_EMAIL_TEMPLATE,
+                        $user->getDetail('email')
                     );
 
                     $session = $this->getSession($request, 'session');

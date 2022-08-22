@@ -566,7 +566,17 @@ class AccountContext implements Context
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
-        // Not used in this context
+        $emailTemplate = 'AccountActivationEmail';
+
+        $this->apiPost(
+            '/v1/email-user/' . $emailTemplate,
+            [
+                'recipient' => 'test@example.com',
+                'locale' => 'cy_GB',
+                'activateAccountUrl' => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
+            ],
+            []
+        );
     }
 
     /**
