@@ -90,12 +90,9 @@ class ActivateAccountHandler extends AbstractHandler
                 $signInLink = $this->serverUrlHelper->generate($loginUrl);
 
                 $this->notifyService->sendEmailToUser(
+                    NotifyService::ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE,
                     $activated,
-                    $signInLink,
-                    $emailTemplate = 'AccountActivatedConfirmationEmail',
-                    null,
-                    null,
-                    null
+                    signInLink: $signInLink
                 );
 
                 $message = $this->translator->translate(

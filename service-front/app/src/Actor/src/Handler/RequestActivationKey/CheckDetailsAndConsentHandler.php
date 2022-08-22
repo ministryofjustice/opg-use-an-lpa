@@ -212,12 +212,10 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
 
                 $this->notifyService->sendEmailToUser(
+                    NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE,
                     $this->data['email'],
-                    null,
-                    $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing',
-                    (string) $state->referenceNumber,
-                    null,
-                    ($this->localisedDate)($letterExpectedDate),
+                    referenceNumber:(string) $state->referenceNumber,
+                    letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                 );
 
                 return new HtmlResponse(

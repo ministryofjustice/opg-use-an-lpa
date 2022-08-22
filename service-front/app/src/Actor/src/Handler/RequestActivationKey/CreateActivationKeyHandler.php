@@ -93,12 +93,11 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
                     $this->notifyService->sendEmailToUser(
+                        NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE,
                         $user->getDetails()['Email'],
-                        null,
-                        $emailTemplate = 'ActivationKeyRequestConfirmationEmail',
-                        (string) $state->referenceNumber,
-                        strtoupper($state->postcode),
-                        ($this->localisedDate)($letterExpectedDate),
+                        referenceNumber:(string) $state->referenceNumber,
+                        postCode:strtoupper($state->postcode),
+                        letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                     );
 
                     return new HtmlResponse(

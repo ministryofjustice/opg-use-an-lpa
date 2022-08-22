@@ -88,13 +88,10 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
-                    $this->notifyService->sendEmailToUser(
+                    $test = $this->notifyService->sendEmailToUser(
+                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
                         $emailAddress,
-                        $activateAccountUrl,
-                        $emailTemplate = 'AccountActivationEmail',
-                        null,
-                        null,
-                        null
+                        activateAccountUrl: $activateAccountUrl
                     );
 
                     //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes

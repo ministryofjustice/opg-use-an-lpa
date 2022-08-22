@@ -27,6 +27,7 @@ class NotifyServiceTest extends TestCase
         $apiClientProphecy = $this->prophesize(Client::class);
 
         $emailTemplate = 'AccountActivationEmail';
+        $activateAccountUrl = 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=';
         $result = new JsonResponse([]);
 
         $apiClientProphecy->httpPost(
@@ -34,10 +35,7 @@ class NotifyServiceTest extends TestCase
             [
                 'recipient' => 'test@example.com',
                 'locale' => self::CY_LOCALE,
-                'parameter2' => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
-                'referenceNumber' => null,
-                'postcode' => null,
-                'letterExpectedDate' => null
+                'activateAccountUrl' => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
             ]
         )
             ->willReturn([]);
@@ -45,12 +43,9 @@ class NotifyServiceTest extends TestCase
         $service = new NotifyService($apiClientProphecy->reveal(), $loggerProphecy->reveal());
 
         $result = $service->sendEmailToUser(
-            'test@example.com',
-            'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
             $emailTemplate,
-            null,
-            null,
-            null
+            'test@example.com',
+            activateAccountUrl: $activateAccountUrl
         );
 
         $this->assertIsBool($result);

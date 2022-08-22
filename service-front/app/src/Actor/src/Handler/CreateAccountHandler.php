@@ -94,22 +94,15 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
                     $this->notifyService->sendEmailToUser(
+                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
                         $emailAddress,
-                        $activateAccountUrl,
-                        $emailTemplate = 'AccountActivationEmail',
-                        null,
-                        null,
-                        null
+                        activateAccountUrl: $activateAccountUrl
                     );
                 } catch (ApiException $ex) {
                     if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
                         $this->notifyService->sendEmailToUser(
-                            $emailAddress,
-                            null,
-                            $emailTemplate = 'AlreadyRegisteredEmail',
-                            null,
-                            null,
-                            null
+                            NotifyService::ALREADY_REGISTERED_EMAIL_TEMPLATE,
+                            $emailAddress
                         );
                     } else {
                         throw $ex;

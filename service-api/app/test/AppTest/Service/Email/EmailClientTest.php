@@ -367,10 +367,10 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendActivationKeyRequestConfirmationEmail(
             $recipient,
+            self::CY_LOCALE,
             $referenceNumber,
             $postCode,
-            $letterExpectedDate,
-            self::CY_LOCALE
+            $letterExpectedDate
         );
     }
 
@@ -397,10 +397,10 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendActivationKeyRequestConfirmationEmail(
             $recipient,
+            $this->defaultLocale,
             $referenceNumber,
             $postCode,
-            $letterExpectedDate,
-            $this->defaultLocale
+            $letterExpectedDate
         );
     }
 
@@ -425,9 +425,9 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
             $recipient,
+            $this->defaultLocale,
             $referenceNumber,
-            $letterExpectedDate,
-            $this->defaultLocale
+            $letterExpectedDate
         );
     }
 
@@ -452,9 +452,9 @@ class EmailClientTest extends TestCase
 
         $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
             $recipient,
+            self::CY_LOCALE,
             $referenceNumber,
-            $letterExpectedDate,
-            self::CY_LOCALE
+            $letterExpectedDate
         );
     }
 }
