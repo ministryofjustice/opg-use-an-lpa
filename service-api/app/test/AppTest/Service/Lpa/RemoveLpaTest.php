@@ -34,7 +34,7 @@ class RemoveLpaTest extends TestCase
     /** @var ObjectProphecy|ViewerCodesInterface */
     private $viewerCodesInterfaceProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);

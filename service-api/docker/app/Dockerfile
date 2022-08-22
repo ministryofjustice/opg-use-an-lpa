@@ -1,7 +1,7 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM php:7.4-fpm-alpine3.15 AS php-base
+FROM php:8.1-fpm-alpine3.15 AS php-base
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
@@ -45,7 +45,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 COPY --from=composer /usr/bin/composer /usr/bin/
 
 RUN set -xe \
-  && install-php-extensions xdebug \
+  && install-php-extensions xdebug-stable \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Development images are only ever run using compose so will have this mounted in as a volume

@@ -8,7 +8,6 @@ use App\DataAccess\DynamoDb\ActorUsers;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\Result;
 use DateTime;
 use DateTimeInterface;
 use ParagonIE\HiddenString\HiddenString;
@@ -23,7 +22,7 @@ class ActorUsersTest extends TestCase
 
     private $dynamoDbClientProphecy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }

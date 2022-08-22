@@ -20,7 +20,7 @@ class ResolveActorTest extends TestCase
      */
     private $getAttorneyStatusProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
@@ -223,6 +223,7 @@ class ResolveActorTest extends TestCase
         $lpa = [
             'donor' => [
                 'id' => 1,
+                'uId' => '456789012345'
             ],
             'original_attorneys' => [
                 ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
@@ -276,7 +277,8 @@ class ResolveActorTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id' => 1,
+                'id'  => 1,
+                'uId' => '456789012345'
             ],
             'original_attorneys' => [
                 ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],

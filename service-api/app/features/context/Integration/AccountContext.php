@@ -827,7 +827,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id' => '123456789',
                                 'Email' => 'other@user.co.uk',
                                 'Password' => password_hash('passW0rd', PASSWORD_DEFAULT),
                                 'EmailResetExpiry' => (time() + (60 * 60)),

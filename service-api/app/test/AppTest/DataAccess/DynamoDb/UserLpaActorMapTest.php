@@ -30,7 +30,7 @@ class UserLpaActorMapTest extends TestCase
         self::assertRegExp($pattern, $uuid, $message);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }

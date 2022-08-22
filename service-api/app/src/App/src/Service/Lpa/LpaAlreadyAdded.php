@@ -63,9 +63,9 @@ class LpaAlreadyAdded
                             'middlenames' => $lpa['lpa']['donor']['middlenames'],
                             'surname'     => $lpa['lpa']['donor']['surname'],
                         ],
-                        'caseSubtype'   => $lpa['lpa']['caseSubtype'],
-                        'lpaActorToken' => $record['Id'],
-                        'activationKeyDueDate'   => $lpa['activationKeyDueDate']
+                        'caseSubtype'          => $lpa['lpa']['caseSubtype'],
+                        'lpaActorToken'        => $record['Id'],
+                        'activationKeyDueDate' => $lpa['activationKeyDueDate'] ?? null
                     ];
 
                     if (array_key_exists('ActivateBy', $record)) {

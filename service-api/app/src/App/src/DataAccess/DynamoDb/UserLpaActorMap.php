@@ -7,7 +7,6 @@ namespace App\DataAccess\DynamoDb;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
-use Common\Form\Fieldset\Date;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;

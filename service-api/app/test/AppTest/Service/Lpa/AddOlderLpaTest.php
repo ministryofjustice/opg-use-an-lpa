@@ -15,13 +15,13 @@ use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use DateTimeImmutable;
-use DateInterval;
 
 class AddOlderLpaTest extends TestCase
 {
@@ -494,11 +494,12 @@ class AddOlderLpaTest extends TestCase
     public function older_lpa_get_by_uid_response(): Lpa
     {
         $attorney1 = [
-            'uId'       => '700000002222',
-            'dob'       => '1977-11-21',
-            'firstname' => 'Attorneyone',
-            'surname'   => 'Person',
-            'addresses' => [
+            'uId'         => '700000002222',
+            'dob'         => '1977-11-21',
+            'firstname'   => 'Attorneyone',
+            'middlenames' => 'Example',
+            'surname'     => 'Person',
+            'addresses'   => [
                 [
                     'postcode' => 'Gg1 2ff'
                 ]
@@ -507,11 +508,12 @@ class AddOlderLpaTest extends TestCase
         ];
 
         $attorney2 = [
-            'uId'       => '700000055554',
-            'dob'       => '1980-03-01',
-            'firstname' => 'Test',
-            'surname'   => 'Testing',
-            'addresses' => [
+            'uId'         => '700000055554',
+            'dob'         => '1980-03-01',
+            'firstname'   => 'Test',
+            'middlenames' => 'Example',
+            'surname'     => 'Testing',
+            'addresses'   => [
                 [
                     'postcode' => 'Ab1 2Cd'
                 ]

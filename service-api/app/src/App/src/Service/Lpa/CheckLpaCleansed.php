@@ -3,8 +3,8 @@
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
-use Psr\Log\LoggerInterface;
 use DateTimeImmutable;
+use Psr\Log\LoggerInterface;
 
 class CheckLpaCleansed
 {
@@ -38,14 +38,15 @@ class CheckLpaCleansed
                 'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
                 [
                     'userId' => $userId,
-                    'lpaId' => $actorDetailsMatch['lpa-id'],
+                    'lpaId'  => $actorDetailsMatch['lpa-id'],
                 ]
             );
 
+            // TODO fix actor_id !== actor_uid
             throw new BadRequestException(
                 'LPA needs cleansing',
                 [
-                    'actor_id'      => $actorDetailsMatch['actor']['uId']
+                    'actor_id' => $actorDetailsMatch['actor']['uId']
                 ]
             );
         }

@@ -229,7 +229,6 @@ services:
     command:
       - install
       - --prefer-dist
-      - --no-suggest
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader

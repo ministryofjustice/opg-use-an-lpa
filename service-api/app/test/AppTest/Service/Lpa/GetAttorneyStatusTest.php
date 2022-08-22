@@ -13,7 +13,7 @@ class GetAttorneyStatusTest extends TestCase
      */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -33,7 +33,7 @@ class GetAttorneyStatusTest extends TestCase
     /** @test */
     public function returns_1_if_attorney_is_a_ghost()
     {
-        $attorney = ['id' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true];
+        $attorney = ['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true];
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()
@@ -45,7 +45,7 @@ class GetAttorneyStatusTest extends TestCase
     /** @test */
     public function returns_2_if_attorney_is_inactive()
     {
-        $attorney = ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false];
+        $attorney = ['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false];
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()
