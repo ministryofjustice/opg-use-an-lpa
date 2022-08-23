@@ -85,7 +85,7 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAlreadyRegisteredEmail($recipient,$this->defaultLocale);
+        $emailClient->sendAlreadyRegisteredEmail($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -124,7 +124,7 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordChangedEmail($recipient,$this->defaultLocale);
+        $emailClient->sendPasswordChangedEmail($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -182,7 +182,7 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient,$this->defaultLocale);
+        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -341,7 +341,7 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient,self::CY_LOCALE);
+        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient, self::CY_LOCALE);
     }
 
     /** @test */

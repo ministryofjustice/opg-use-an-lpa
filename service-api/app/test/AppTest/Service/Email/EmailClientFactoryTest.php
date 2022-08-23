@@ -18,13 +18,14 @@ class EmailClientFactoryTest extends TestCase
     public function can_create_an_instance_of_the_email_client()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $key = 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012';
 
         $containerProphecy->get('config')
             ->willReturn(
                 [
                     'notify' => [
                         'api' => [
-                            'key' => 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012',
+                            'key' => $key,
                         ],
                     ],
                 ]
