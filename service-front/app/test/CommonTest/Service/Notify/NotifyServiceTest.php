@@ -35,7 +35,7 @@ class NotifyServiceTest extends TestCase
             [
                 'recipient' => 'test@example.com',
                 'locale' => self::CY_LOCALE,
-                'activateAccountUrl' => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
+                'activateAccountUrl' => $activateAccountUrl,
             ]
         )
             ->willReturn([]);

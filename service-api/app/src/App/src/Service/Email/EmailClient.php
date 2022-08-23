@@ -6,7 +6,6 @@ namespace App\Service\Email;
 
 use Alphagov\Notifications\Client;
 
-
 /**
  * Class EmailClient
  * @package App\Service\Email
@@ -164,7 +163,11 @@ class EmailClient
      * @param string $locale
      * @param string $newEmailAddress
      */
-    public function sendRequestChangeEmailToCurrentEmail(string $recipient, string $locale, string $newEmailAddress): void
+    public function sendRequestChangeEmailToCurrentEmail(
+        string $recipient,
+        string $locale,
+        string $newEmailAddress
+    ): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
@@ -182,7 +185,11 @@ class EmailClient
      * @param string $locale
      * @param string $completeEmailChangeUrl
      */
-    public function sendRequestChangeEmailToNewEmail(string $recipient, string $locale, string $completeEmailChangeUrl): void
+    public function sendRequestChangeEmailToNewEmail(
+        string $recipient,
+        string $locale,
+        string $completeEmailChangeUrl
+    ): void
     {
         $this->notifyClient->sendEmail(
             $recipient,

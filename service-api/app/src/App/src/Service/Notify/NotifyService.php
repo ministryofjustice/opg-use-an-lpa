@@ -18,7 +18,6 @@ use ReflectionClass;
  */
 class NotifyService
 {
-
     public function __construct(LoggerInterface $logger, EmailClient $emailClient)
     {
         $this->logger = $logger;
@@ -47,7 +46,10 @@ class NotifyService
                 $parameters = $method->getParameters();
                 foreach ($parameters as $parameter) {
                     if (!array_key_exists($parameter->getName(), $requestData)) {
-                        throw new BadRequestException('Parameter %s not set to send an email', $parameter->getName() );
+                        throw new BadRequestException(
+                            'Parameter %s not set to send an email',
+                            $parameter->getName()
+                        );
                     }
                 }
 

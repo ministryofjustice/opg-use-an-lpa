@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppTest\Service\Notify;
 
 use App\Exception\BadRequestException;
