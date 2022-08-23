@@ -277,8 +277,8 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
             'referenceNumber' => '700000000138',
-            'postcode' =>'HS8 2YB',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y')
+            'postcode' => 'HS8 2YB',
+            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -294,7 +294,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
             'referenceNumber' => '700000000138',
-            'postcode' =>'HS8 2YB'
+            'postcode' =>'HS8 2YB',
         ];
         $notify = $this->getNotifyService();
 

@@ -36,8 +36,7 @@ class NotifyHandler implements RequestHandlerInterface
         EmailClient $emailClient,
         LoggerInterface $logger,
         NotifyService $notifyService
-    )
-    {
+    ) {
         $this->emailClient = $emailClient;
         $this->logger = $logger;
         $this->notifyService = $notifyService;
@@ -45,7 +44,6 @@ class NotifyHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws Exception
      */

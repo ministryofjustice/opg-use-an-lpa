@@ -26,11 +26,13 @@ class NotifyService
     public const ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE = 'AccountActivatedConfirmationEmail';
     public const PASSWORD_CHANGE_EMAIL_TEMPLATE = 'PasswordChangedEmail';
     public const PASSWORD_RESET_EMAIL_TEMPLATE = 'PasswordResetEmail';
-    public const SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
+    public const SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE =
+        'SomeoneTriedToUseYourEmailInEmailResetRequest';
     public const REQUEST_CHANGE_EMAIL_TO_NEW_EMAIL = 'RequestChangeEmailToNewEmail';
     public const REQUEST_CHANGE_EMAIL_TO_CURRENT_EMAIL = 'RequestChangeEmailToCurrentEmail';
     public const ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE = 'ActivationKeyRequestConfirmationEmail';
-    public const ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
+    public const ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE =
+        'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
     public const NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE = 'NoAccountExistsEmail';
 
     /**
@@ -41,7 +43,6 @@ class NotifyService
     public function __construct(
         ApiClient $apiClient,
         LoggerInterface $logger
-
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
@@ -79,7 +80,6 @@ class NotifyService
                     ],
                     $emailData,
                 )
-
             );
 
             $this->logger->notice('Successfully sent user email');
