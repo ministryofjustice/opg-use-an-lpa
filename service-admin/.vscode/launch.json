@@ -17,7 +17,6 @@
                 "AWS_ACCESS_KEY_ID": "-",
                 "AWS_SECRET_ACCESS_KEY": "-",
                 "ADMIN_LOGOUT_URL": "https://login-admin-lastingpowerofattorney.auth.eu-west-1.amazoncognito.com/logout",
-                //"LPA_CODES_API_ENDPOINT": "https://dev.lpa-codes.api.opg.service.justice.gov.uk"
             }
         }
     ]
