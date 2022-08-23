@@ -653,7 +653,12 @@ class AccountContext extends BaseIntegrationContext
                 }
             );
 
-        $result = $this->notifyService->sendEmailToUser($this->userEmail,$expectedUrl,$emailTemplate, null,null,null);
+        $result = $this->notifyService->sendEmailToUser(
+                                $this->userEmail,
+                                $emailTemplate,
+            activateAccountUrl: $expectedUrl
+
+        );
         assertTrue($result);
     }
 
@@ -685,12 +690,9 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-            $this->userEmail,
-            $expectedUrl,
-            $emailTemplate,
-            null,
-            null,
-            null
+                              $this->userEmail,
+                              $emailTemplate,
+            passwordResetUrl: $expectedUrl
         );
 
         assertTrue($result);
@@ -723,11 +725,7 @@ class AccountContext extends BaseIntegrationContext
 
         $result = $this->notifyService->sendEmailToUser(
             $this->userEmail,
-            null,
-            $emailTemplate,
-            null,
-            null,
-            null
+            $emailTemplate
         );
 
         assertTrue($result);
@@ -909,12 +907,9 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-            $this->userEmail,
-            $this->newUserEmail,
-            $emailTemplate1,
-            null,
-            null,
-            null
+                             $this->userEmail,
+                             $emailTemplate1,
+            newEmailAddress: $this->newUserEmail
         );
 
         assertTrue($result);
@@ -930,12 +925,9 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-            $this->newUserEmail,
-            $expectedUrl,
-            $emailTemplate2,
-            null,
-            null,
-            null
+                                    $this->newUserEmail,
+                                    $emailTemplate2,
+            completeEmailChangeUrl: $expectedUrl
         );
 
         assertTrue($result);
