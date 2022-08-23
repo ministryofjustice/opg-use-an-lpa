@@ -303,7 +303,7 @@ class EmailClientTest extends TestCase
 
         $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, self::CY_LOCALE,$newEmail);
+        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, self::CY_LOCALE, $newEmail);
     }
 
     /** @test */
