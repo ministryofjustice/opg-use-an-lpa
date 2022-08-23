@@ -3,9 +3,8 @@ package data
 import (
 	"context"
 
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/rs/zerolog/log"
 )
 
 type DynamoDBClient interface {
@@ -18,21 +17,10 @@ type DynamoConnection struct {
 	Client DynamoDBClient
 }
 
-func NewDynamoConnection(region string, endpoint string, tablePrefix string) *DynamoConnection {
+func NewDynamoConnection(conf aws.Config, endpoint string, tablePrefix string) *DynamoConnection {
 	prefix := ""
 	if tablePrefix != "" {
 		prefix = tablePrefix + "-"
-	}
-
-	conf, err := config.LoadDefaultConfig(context.TODO(), func(lo *config.LoadOptions) error {
-		if region != "" {
-			lo.Region = region
-		}
-
-		return nil
-	})
-	if err != nil {
-		log.Panic().Err(err).Msg("unable to create AWS client")
 	}
 
 	svc := dynamodb.NewFromConfig(conf, func(o *dynamodb.Options) {

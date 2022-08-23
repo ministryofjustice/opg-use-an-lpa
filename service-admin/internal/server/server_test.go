@@ -3,11 +3,12 @@ package server_test
 import (
 	"context"
 	"errors"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -26,6 +27,18 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 	}
 
 	return nil
+}
+
+type mockActivationKeyService struct {
+	GetActivationKeyFromCodesFunc func(context.Context, string) (*[]data.ActivationKey, error)
+}
+
+func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context, key string) (*[]data.ActivationKey, error) {
+	if m.GetActivationKeyFromCodesFunc != nil {
+		return m.GetActivationKeyFromCodes(ctx, key)
+	}
+
+	return nil, nil
 }
 
 type mockDynamoDBClent struct {
@@ -98,7 +111,7 @@ func Test_withErrorHandling(t *testing.T) {
 		tw := &mockTemplateWriterService{
 			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if s != tt.wantedTemplateName {
-					t.Errorf("expected %v recieved %v", tt.wantedTemplateName, s)
+					t.Errorf("expected %v received %v", tt.wantedTemplateName, s)
 				}
 				return nil
 			}}
@@ -159,7 +172,7 @@ func Test_withErrorHandlingWriter(t *testing.T) {
 		tw := &mockTemplateWriterService{
 			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
 				if s != tt.wantedTemplateName {
-					t.Errorf("expected %v recieved %v", tt.wantedTemplateName, s)
+					t.Errorf("expected %v received %v", tt.wantedTemplateName, s)
 				}
 				return nil
 			}}
@@ -172,7 +185,7 @@ func Test_withErrorHandlingWriter(t *testing.T) {
 			got.ServeHTTP(recorder, httptest.NewRequest("GET", "/", nil))
 
 			if recorder.Body.String() != tt.expected {
-				t.Errorf("expected %v recieved %v", tt.expected, recorder.Body.String())
+				t.Errorf("expected %v received %v", tt.expected, recorder.Body.String())
 			}
 		})
 	}
@@ -256,7 +269,7 @@ func Test_app_InitialiseServer(t *testing.T) {
 			t.Parallel()
 
 			tt.fields.r.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
-			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw)
+			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw, &mockActivationKeyService{})
 			handler := a.InitialiseServer(tt.args.keyURL, &url.URL{})
 			assert.HTTPStatusCode(t, handler.ServeHTTP, "GET", "/hello", nil, 200)
 		})

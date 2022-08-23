@@ -10,6 +10,9 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/env"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
@@ -57,6 +60,11 @@ func main() {
 			env.Get("ADMIN_CLIENT_ID", ""),
 			"The aws client id for user",
 		)
+		lpaCodesEndpoint = flag.String(
+			"lpa-codes-endpoint",
+			env.Get("LPA_CODES_API_ENDPOINT", ""),
+			"The codes enpoint",
+		)
 	)
 
 	flag.Parse()
@@ -68,11 +76,19 @@ func main() {
 
 	u.RawQuery = v.Encode()
 
-	dynamoDB := data.NewDynamoConnection(*dbRegion, *dbEndpoint, *dbTablePrefix)
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(*dbRegion))
+
+	if err != nil {
+		log.Panic()
+	}
+
+	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
+
+	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService())
+	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
 
 	srv := &http.Server{
 		Handler:      app.InitialiseServer(*keyURL, u),
@@ -104,5 +120,13 @@ func main() {
 
 	if err := srv.Shutdown(tc); err != nil {
 		log.Error().Stack().Err(err).Msg("failed to shutdown server successfully")
+	}
+}
+
+func createActivationKeyService(endpoint string, dynamo data.DynamoConnection, config aws.Config) data.ActivationKeyService {
+	if endpoint != "" {
+		return data.NewOnlineActivationKeyService(v4.NewSigner(), config, endpoint+"/v1/code")
+	} else {
+		return data.NewLocalActivationKeyService(dynamo)
 	}
 }

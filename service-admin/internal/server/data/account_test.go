@@ -106,14 +106,14 @@ func TestGetEmailByUserID(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		userId      string
+		userID      string
 		getItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 		want        string
 		wantErr     assert.ErrorAssertionFunc
 	}{
 		{
 			name:   "Get email by userID",
-			userId: "1",
+			userID: "1",
 			getItemFunc: func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
 				return &dynamodb.GetItemOutput{
 					Item: map[string]types.AttributeValue{
@@ -126,7 +126,7 @@ func TestGetEmailByUserID(t *testing.T) {
 		},
 		{
 			name:   "Error trying to get email by userID",
-			userId: "1",
+			userID: "1",
 			getItemFunc: func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
 				return nil, errors.New("some error")
 			},
@@ -149,9 +149,9 @@ func TestGetEmailByUserID(t *testing.T) {
 
 			client := NewAccountService(connection)
 
-			actorUser, err := client.GetEmailByUserID(context.Background(), tt.userId)
+			actorUser, err := client.GetEmailByUserID(context.Background(), tt.userID)
 
-			if tt.wantErr(t, err, fmt.Sprintf("GetEmailByUserID(%v)", tt.userId)) {
+			if tt.wantErr(t, err, fmt.Sprintf("GetEmailByUserID(%v)", tt.userID)) {
 				return
 			}
 			assert.EqualValues(t, tt.want, actorUser)
