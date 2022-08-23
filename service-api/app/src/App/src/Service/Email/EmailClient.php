@@ -167,8 +167,7 @@ class EmailClient
         string $recipient,
         string $locale,
         string $newEmailAddress
-    ): void
-    {
+    ): void {
         $this->notifyClient->sendEmail(
             $recipient,
             self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[$locale],
@@ -189,8 +188,7 @@ class EmailClient
         string $recipient,
         string $locale,
         string $completeEmailChangeUrl
-    ): void
-    {
+    ): void {
         $this->notifyClient->sendEmail(
             $recipient,
             self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[$locale],
@@ -267,6 +265,7 @@ class EmailClient
 
     /**
      * Email a user to inform them that no account exists under the email provided
+     *
      * @param string $locale
      * @param string $recipient
      */
@@ -277,5 +276,5 @@ class EmailClient
             self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$locale]
         );
     }
-
 }
+
