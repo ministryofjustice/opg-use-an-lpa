@@ -8,6 +8,7 @@ use Alphagov\Notifications\Client;
 
 /**
  * Class EmailClient
+ *
  * @package App\Service\Email
  */
 class EmailClient
@@ -82,7 +83,6 @@ class EmailClient
      */
     public function sendAccountActivationEmail(string $recipient, string $locale, string $activateAccountUrl): void
     {
-
         $this->notifyClient->sendEmail(
             $recipient,
             self::TEMPLATE_ID_ACCOUNT_ACTIVATION[$locale],
@@ -233,8 +233,8 @@ class EmailClient
             self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[$locale],
             [
                 'reference_number' => $referenceNumber,
-                'postcode'         => $postCode,
-                'date'             => $letterExpectedDate
+                'postcode' => $postCode,
+                'date' => $letterExpectedDate,
             ]
         );
     }
@@ -257,8 +257,8 @@ class EmailClient
             $recipient,
             self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[$locale],
             [
-                'reference_number'  => $referenceNumber,
-                'date'              => $letterExpectedDate,
+                'reference_number' => $referenceNumber,
+                'date' => $letterExpectedDate,
             ]
         );
     }

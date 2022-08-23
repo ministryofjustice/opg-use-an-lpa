@@ -44,7 +44,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'activateAccountUrl' => 'http://localhost/activate-account/activate1234567890'
+            'activateAccountUrl' => 'http://localhost/activate-account/activate1234567890',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -58,7 +58,7 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'AccountActivationEmail';
         $requestData = [
             'locale' => 'en_GB',
-            'activateAccountUrl' => 'http://localhost/activate-account/activate1234567890'
+            'activateAccountUrl' => 'http://localhost/activate-account/activate1234567890',
         ];
         $notify = $this->getNotifyService();
 
@@ -74,7 +74,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'signInLink' => 'http://localhost:9002/login'
+            'signInLink' => 'http://localhost:9002/login',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -88,7 +88,7 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'AccountActivatedConfirmationEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale'    => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
 
@@ -103,7 +103,7 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'AlreadyRegisteredEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -132,7 +132,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'passwordResetUrl' => 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE'
+            'passwordResetUrl' => 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -146,7 +146,7 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'PasswordResetEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
 
@@ -188,7 +188,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'newEmailAddress' => 'new@email.com'
+            'newEmailAddress' => 'new@email.com',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -218,7 +218,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'completeEmailChangeUrl' => 'http://localhost:9002/verify-new-email/verifyNewEmailAABBCCDDEE'
+            'completeEmailChangeUrl' => 'http://localhost:9002/verify-new-email/verifyNewEmailAABBCCDDEE',
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -232,7 +232,7 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'RequestChangeEmailToNewEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
 
@@ -260,7 +260,7 @@ class NotifyServiceTest extends TestCase
     {
         $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
         $requestData = [
-            'locale' => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
 
@@ -311,7 +311,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
             'referenceNumber' => '700000000138',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y')
+            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -325,8 +325,8 @@ class NotifyServiceTest extends TestCase
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $requestData = [
             'recipient' => 'test@test.com',
-              'locale' => 'en-GB',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y')
+            'locale' => 'en-GB',
+            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
 
@@ -342,7 +342,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
-            'referenceNumber' => '700000000138'
+            'referenceNumber' => '700000000138',
         ];
         $notify = $this->getNotifyService();
 
@@ -370,7 +370,7 @@ class NotifyServiceTest extends TestCase
     {
         $emailTemplate = 'NoAccountExistsEmail';
         $requestData = [
-            'locale' => 'en_GB'
+            'locale' => 'en_GB',
         ];
         $notify = $this->getNotifyService();
 
