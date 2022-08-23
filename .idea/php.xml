@@ -170,6 +170,12 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/gettext/gettext" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/gettext/languages" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/aws/aws-crt-php" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/blazon/psr11-monolog" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-redis" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laravel/serializable-closure" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

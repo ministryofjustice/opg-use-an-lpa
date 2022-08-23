@@ -52,5 +52,12 @@
       {{ template "result_code" .Result }}
     </div>
   </div>
+  {{ else if and .Query .Result (eq .Type 2) (not .Errors) }}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-hint">Showing results for "<strong>{{ .Query }}</strong>"</p>
+      {{ template "result_lpa" .Result }}
+    </div>
+  </div>
   {{ end }}
 {{ end }}

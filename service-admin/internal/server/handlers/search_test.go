@@ -50,6 +50,7 @@ func (m *mockAccountService) GetEmailByUserID(ctx context.Context, userID string
 type mockLPAService struct {
 	GetLPAsByUserIDFunc        func(context.Context, string) ([]*data.LPA, error)
 	GetLPAByActivationCodeFunc func(context.Context, string) (*data.LPA, error)
+	GetUsersByLPAIDFunc        func(context.Context, string) ([]*data.LPA, error)
 }
 
 func (m *mockLPAService) GetLpasByUserID(ctx context.Context, userID string) ([]*data.LPA, error) {
@@ -66,6 +67,13 @@ func (m *mockLPAService) GetLPAByActivationCode(ctx context.Context, code string
 	}
 
 	return nil, nil
+}
+
+func (m *mockLPAService) GetLpaRecordBySiriusID(ctx context.Context, lpaID string) (userIDs []*data.LPA, err error) {
+	if m.GetUsersByLPAIDFunc != nil {
+		return m.GetUsersByLPAIDFunc(ctx, lpaID)
+	}
+	return []*data.LPA{}, nil
 }
 
 func Test_doSearch(t *testing.T) {

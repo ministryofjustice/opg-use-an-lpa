@@ -21,6 +21,7 @@ type AccountService interface {
 type LPAService interface {
 	GetLpasByUserID(context.Context, string) ([]*data.LPA, error)
 	GetLPAByActivationCode(context.Context, string) (*data.LPA, error)
+	GetLpaRecordBySiriusID(ctx context.Context, lpaID string) ([]*data.LPA, error)
 }
 
 type TemplateWriterService interface {
@@ -45,6 +46,7 @@ type SearchResult struct {
 const (
 	EmailQuery QueryType = iota
 	ActivationCodeQuery
+	LPANumberQuery
 )
 
 var (
@@ -52,6 +54,7 @@ var (
 	ErrNotEmailOrCode error = errors.New("Enter an email address or activation code")
 
 	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
+	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)[0-9]{12}$`)
 )
 
 type QueryType int
@@ -61,6 +64,11 @@ type Search struct {
 	Type   QueryType
 	Result interface{}
 	Errors validation.Errors
+}
+
+type AddedBy struct {
+	DateAdded string
+	Email     string
 }
 
 func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
@@ -96,6 +104,12 @@ func (s *Search) checkEmailOrCode(value interface{}) error {
 	isCode := validation.Match(activationCodeRegexp).Validate(value)
 	if isCode == nil {
 		s.Type = ActivationCodeQuery
+		return nil
+	}
+
+	isLpaNumber := validation.Match(lpaNumberRegex).Validate(value)
+	if isLpaNumber == nil {
+		s.Type = LPANumberQuery
 		return nil
 	}
 
@@ -136,6 +150,27 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) interface{} {
 	switch t {
+	case LPANumberQuery:
+		r, err := s.lpaService.GetLpaRecordBySiriusID(ctx, q)
+		if err != nil {
+			return nil
+		}
+
+		emails := []AddedBy{}
+
+		for _, userID := range r {
+			email, err := s.accountService.GetEmailByUserID(ctx, userID.UserID)
+			if err == nil {
+				addedBy := AddedBy{Email: email, DateAdded: userID.Added}
+				emails = append(emails, addedBy)
+			}
+		}
+
+		return map[string]interface{}{
+			"LPANumber": q,
+			"AddedBy":   emails,
+		}
+
 	case EmailQuery:
 		r, err := s.accountService.GetActorUserByEmail(ctx, q)
 		if err != nil {
