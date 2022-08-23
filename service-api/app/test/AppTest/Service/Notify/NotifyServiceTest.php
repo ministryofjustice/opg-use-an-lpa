@@ -23,7 +23,7 @@ class NotifyServiceTest extends TestCase
      */
     private $emailClientProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->emailClientProphecy = $this->prophesize(EmailClient::class);
