@@ -128,7 +128,7 @@ class LpaService
         ];
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
-        if ($map['ActorId'] !== null) {
+        if (isset($map['ActorId'])) {
             $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
 
             // If an active attorney is not found then we should not return an lpa
