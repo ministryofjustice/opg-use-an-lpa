@@ -17,7 +17,7 @@ class LogStderrListenerTest extends TestCase
     public function creates_and_pushes_test_message()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $loggerProphecy->error(
+        $loggerProphecy->debug(
             Argument::type('string'),
             Argument::that(function ($exceptionArray) {
                 $this->assertArrayHasKey('message', $exceptionArray);
