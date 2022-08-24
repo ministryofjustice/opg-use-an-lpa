@@ -24,7 +24,7 @@ class LogStderrListenerTest extends TestCase
     public function creates_and_pushes_test_message_without_trace()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $loggerProphecy->debug(
+        $loggerProphecy->error(
             Argument::type('string'),
             Argument::that(function ($exceptionArray) {
                 $this->assertArrayHasKey('message', $exceptionArray);
@@ -63,7 +63,7 @@ class LogStderrListenerTest extends TestCase
     public function creates_and_pushes_test_message_with_trace()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $loggerProphecy->debug(
+        $loggerProphecy->error(
             Argument::type('string'),
             Argument::that(function ($exceptionArray) {
                 $this->assertArrayHasKey('message', $exceptionArray);

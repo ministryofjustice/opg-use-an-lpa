@@ -11,15 +11,8 @@ use Throwable;
 
 class LogStderrListener
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(public LoggerInterface $logger, public bool $includeTrace = false) {}
 
     /**
      * Style and output errors to STDERR (For use with Docker)
@@ -30,15 +23,20 @@ class LogStderrListener
      */
     public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response)
     {
-        $this->logger->debug(
+        $data = [
+            'message' => $error->getMessage(),
+            'line' => $error->getLine(),
+            'file' => $error->getFile(),
+            'code' => $error->getCode(),
+        ];
+
+        if ($this->includeTrace) {
+            $data['trace'] = $error->getTraceAsString();
+        }
+
+        $this->logger->error(
             '{message} on line {line} in {file}',
-            [
-                'message' => $error->getMessage(),
-                'line' => $error->getLine(),
-                'file' => $error->getFile(),
-                'code' => $error->getCode(),
-                'trace' => $error->getTraceAsString(),
-            ]
+            $data
         );
     }
 }
