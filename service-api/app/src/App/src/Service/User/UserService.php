@@ -293,8 +293,8 @@ class UserService
 
         if (!password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException(
-                'Authentication failed for user ID ' .
-                $userId, ['userId' => $userId]
+                'Authentication failed for user ID ' . $userId,
+                ['userId' => $userId]
             );
         }
 
@@ -410,12 +410,15 @@ class UserService
         foreach ($emailResetExists as $otherUser) {
             if (
                 $forAccountCreation &&
-                (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
+                (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))
+            ) {
                 // if the other users email reset token has not expired, this user cannot create an account
                 // with this email
                 return false;
-            } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') &&
-                ($userId !== $otherUser['Id'])) {
+            } elseif (
+                new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') &&
+                ($userId !== $otherUser['Id'])
+            ) {
                 // if the other users email reset token has not expired, and they not the current user, this user
                 // can't request this email
                 return false;
