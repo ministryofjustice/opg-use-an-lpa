@@ -30,7 +30,7 @@ class LogStderrListener
      */
     public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response)
     {
-        $this->logger->error(
+        $this->logger->debug(
             '{message} on line {line} in {file}',
             [
                 'message' => $error->getMessage(),

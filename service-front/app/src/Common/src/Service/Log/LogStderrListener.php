@@ -40,7 +40,7 @@ class LogStderrListener
             $data['trace'] = $error->getTraceAsString();
         }
 
-        $this->logger->error(
+        $this->logger->debug(
             '{message} on line {line} in {file}',
             $data
         );
