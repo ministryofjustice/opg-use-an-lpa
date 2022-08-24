@@ -173,7 +173,7 @@ class UserService
             'Authentication successful for account with Id {id}',
             [
                 'id' => $user['Id'],
-                'last-login' => $user['LastLogin'],
+                'last-login' => isset($user['LastLogin']) ? $user['LastLogin'] : null,
             ]
         );
 
