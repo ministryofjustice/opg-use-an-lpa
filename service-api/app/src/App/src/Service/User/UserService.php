@@ -25,6 +25,7 @@ use function random_bytes;
 
 /**
  * Class UserService
+ *
  * @package App\Service\User
  */
 class UserService
@@ -52,6 +53,7 @@ class UserService
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws Exception|CreationException|ConflictException
      */
@@ -78,15 +80,17 @@ class UserService
 
         $emailResetExists = $this->usersRepository->getUserByNewEmail($data['email']);
 
-        if (!empty($emailResetExists) && ! $this->checkIfEmailResetViable($emailResetExists, true)) {
+        if (!empty($emailResetExists) && !$this->checkIfEmailResetViable($emailResetExists, true)) {
             //checks if the new email chosen has already been requested for reset
             $this->logger->notice(
-                'Could not create account with email {email} as another user has already requested to change their email that email address',
+                'Could not create account with email {email} as another user has already requested to 
+                change their email that email address',
                 ['email' => $data['email']]
             );
 
             throw new ConflictException(
-                'Account creation email conflict - another user has requested to change their email to ' . $data['email'],
+                'Account creation email conflict - another user has requested to change their 
+                email to ' . $data['email'],
                 ['email' => $data['email']]
             );
         }
@@ -115,6 +119,7 @@ class UserService
      * Get an actor user using the email address
      *
      * @param string $email
+     *
      * @return array
      * @throws NotFoundException
      */
@@ -127,6 +132,7 @@ class UserService
      * Activate a user account
      *
      * @param string $activationToken
+     *
      * @return array
      */
     public function activate(string $activationToken): array
@@ -146,6 +152,7 @@ class UserService
      *
      * @param string $email
      * @param string $password
+     *
      * @return array
      * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
@@ -153,8 +160,8 @@ class UserService
     {
         $user = $this->usersRepository->getByEmail($email);
 
-        if (! password_verify($password, $user['Password'])) {
-            throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email ]);
+        if (!password_verify($password, $user['Password'])) {
+            throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email]);
         }
 
         if (array_key_exists('ActivationToken', $user)) {
@@ -185,6 +192,7 @@ class UserService
      * against the actor record alongside its expiry time.
      *
      * @param string $email
+     *
      * @return array
      * @throws Exception
      */
@@ -216,6 +224,7 @@ class UserService
      * Checks to see if a token exists against a user record and it has not expired
      *
      * @param string $resetToken
+     *
      * @return string
      * @throws Exception
      */
@@ -245,8 +254,9 @@ class UserService
      * reset the users password to the new value if the token is found and has
      * not expired.
      *
-     * @param string $resetToken
+     * @param string       $resetToken
      * @param HiddenString $password
+     *
      * @throws Exception
      */
     public function completePasswordReset(string $resetToken, HiddenString $password): void
@@ -273,7 +283,7 @@ class UserService
     }
 
     /**
-     * @param string $userId
+     * @param string       $userId
      * @param HiddenString $password
      * @param HiddenString $newPassword
      */
@@ -281,8 +291,11 @@ class UserService
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password->getString(), $user['Password'])) {
-            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        if (!password_verify($password->getString(), $user['Password'])) {
+            throw new ForbiddenException(
+                'Authentication failed for user ID ' .
+                $userId, ['userId' => $userId]
+            );
         }
 
         $this->usersRepository->resetPassword($userId, $newPassword);
@@ -290,6 +303,7 @@ class UserService
 
     /**
      * @param string $accountId
+     *
      * @return array
      */
     public function deleteUserAccount(string $accountId): array
@@ -308,9 +322,10 @@ class UserService
     }
 
     /**
-     * @param string $userId
-     * @param string $newEmail
+     * @param string       $userId
+     * @param string       $newEmail
      * @param HiddenString $password
+     *
      * @return array
      * @throws Exception
      */
@@ -334,9 +349,10 @@ class UserService
     /**
      * Runs a series of checks on the new email and password
      *
-     * @param string $userId
-     * @param string $newEmail
+     * @param string       $userId
+     * @param string       $newEmail
      * @param HiddenString $password
+     *
      * @return void
      * @throws Exception
      */
@@ -344,17 +360,26 @@ class UserService
     {
         $user = $this->usersRepository->get($userId);
 
-        if (! password_verify($password->getString(), $user['Password'])) {
-            throw new ForbiddenException('Authentication failed for user ID ' . $userId, ['userId' => $userId]);
+        if (!password_verify($password->getString(), $user['Password'])) {
+            throw new ForbiddenException(
+                'Authentication failed for user ID ' . $userId,
+                ['userId' => $userId]
+            );
         }
 
         if ($this->usersRepository->exists($newEmail)) {
-            throw new ConflictException('User already exists with email address ' . $newEmail, ['email' => $newEmail]);
+            throw new ConflictException(
+                'User already exists with email address ' . $newEmail,
+                ['email' => $newEmail]
+            );
         }
 
         $newEmailExists = $this->usersRepository->getUserByNewEmail($newEmail);
 
-        if (!empty($newEmailExists) && ! $this->checkIfEmailResetViable($newEmailExists, false, $userId)) {
+        if (
+            !empty($newEmailExists) &&
+            !$this->checkIfEmailResetViable($newEmailExists, false, $userId)
+        ) {
             $this->logger->notice(
                 'Could not request email change for account with Id {id}
                 as another user has already requested to change their email that email address',
@@ -362,27 +387,37 @@ class UserService
             );
 
             throw new ConflictException(
-                'Change email conflict - another user has already requested to change their email address to ' . $newEmail,
+                'Change email conflict - another user has already requested to change their email 
+                address to ' . $newEmail,
                 ['email' => $newEmail]
             );
         }
     }
 
     /**
-     * @param array $emailResetExists
+     * @param array  $emailResetExists
      * @param string $userId
+     *
      * @return bool
      * @throws Exception
      */
-    private function checkIfEmailResetViable(array $emailResetExists, bool $forAccountCreation, string $userId = null): bool
-    {
+    private function checkIfEmailResetViable(
+        array $emailResetExists,
+        bool $forAccountCreation,
+        string $userId = null
+    ): bool {
         //checks if the new email chosen has already been requested for reset
         foreach ($emailResetExists as $otherUser) {
-            if ($forAccountCreation && (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
-                // if the other users email reset token has not expired, this user cannot create an account with this email
+            if (
+                $forAccountCreation &&
+                (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))) {
+                // if the other users email reset token has not expired, this user cannot create an account
+                // with this email
                 return false;
-            } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') && ($userId !== $otherUser['Id'])) {
-                // if the other users email reset token has not expired, and they not the current user, this user cant request this email
+            } elseif (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') &&
+                ($userId !== $otherUser['Id'])) {
+                // if the other users email reset token has not expired, and they not the current user, this user
+                // can't request this email
                 return false;
             }
         }
@@ -393,6 +428,7 @@ class UserService
      * Checks to see if an email token exists against a user record and it has not expired
      *
      * @param string $resetToken
+     *
      * @return string
      * @throws Exception
      */
@@ -430,6 +466,7 @@ class UserService
 
     /**
      * Get link token
+     *
      * @return string
      * @throws Exception
      */
@@ -440,6 +477,7 @@ class UserService
 
     /**
      * get Expiry TTL
+     *
      * @return float|int
      */
     private function getExpiryTtl()
@@ -449,6 +487,7 @@ class UserService
 
     /**
      * Generate unique id (UUID)
+     *
      * @return string
      * @throws Exception
      */
