@@ -122,8 +122,8 @@ class CreateAccountSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/activate-account/activate1234567890');
 
         $this->notifyServiceProphecy->sendEmailToUser(
-            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
-            'a@b.com',
+                                NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                                'a@b.com',
             activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
         )
             ->shouldBeCalled()->willReturn(true);
@@ -178,9 +178,9 @@ class CreateAccountSuccessHandlerTest extends TestCase
             ->willReturn('/create-account');
 
         $this->notifyServiceProphecy->sendEmailToUser(
-            'AccountActivationEmail',
-            'a@b.com',
-            activateAccountUrl:'http://localhost/activate-account/activate1234567890'
+                                NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                                'a@b.com',
+            activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
         )
             ->shouldNotBeCalled();
 
@@ -218,7 +218,11 @@ class CreateAccountSuccessHandlerTest extends TestCase
             ])
             ->willReturn('/create-account');
 
-        $this->notifyServiceProphecy->sendEmailToUser('a@b.com', 'http://localhost/activate-account/activate1234567890','AccountActivationEmail',null,null,null)
+        $this->notifyServiceProphecy->sendEmailToUser(
+                                NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                                'a@b.com',
+            activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
+        )
             ->shouldNotBeCalled();
 
         //  Set up the handler
