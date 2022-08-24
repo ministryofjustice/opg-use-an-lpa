@@ -62,7 +62,7 @@ func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetIt
 }
 
 func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
-	//t.Parallel()
+	t.Parallel()
 
 	testConfig, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
 
@@ -198,7 +198,7 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			//t.Parallel()
+			t.Parallel()
 
 			aks := &OnlineActivationKeyService{
 				awsSigner:   tt.fields.awsSigner,
