@@ -73,7 +73,7 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	hasher.Write(jsonStr)
 	shaHash := hex.EncodeToString(hasher.Sum(nil))
 
-	credentials, err := aks.config.Credentials.Retrieve(context.TODO())
+	credentials, err := aks.config.Credentials.Retrieve(context.Background())
 
 	if err != nil {
 		log.Error().AnErr("Error retrieveing credentials", err)
