@@ -14,14 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockDynamoDBClient struct {
-	QueryFunc func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
-}
-
-func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
-	return m.QueryFunc(ctx, params, optFns...)
-}
-
 func TestGetLpasByUserID(t *testing.T) {
 	t.Parallel()
 
@@ -151,10 +143,13 @@ func TestGetLPAByActivationCode(t *testing.T) {
 }
 
 func Test_lpaService_GetLPARecordBySiriusID(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		ctx       context.Context
 		lpaNumber string
 	}
+
 	tests := []struct {
 		name      string
 		args      args
@@ -213,6 +208,7 @@ func Test_lpaService_GetLPARecordBySiriusID(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 
 		dynamodbConnection := DynamoConnection{
 			Client: &mockDynamoDBClent{
@@ -222,6 +218,8 @@ func Test_lpaService_GetLPARecordBySiriusID(t *testing.T) {
 		}
 
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			l := NewLPAService(dynamodbConnection)
 			gotLpas, err := l.GetLpaRecordBySiriusID(tt.args.ctx, tt.args.lpaNumber)
 			if (err != nil) != tt.wantErr {

@@ -175,11 +175,9 @@ func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interfac
 		"LPANumber": q,
 		"AddedBy":   emails,
 	}
-
 }
 
 func (s *SearchServer) SearchByEmail(ctx context.Context, q string) interface{} {
-
 	r, err := s.accountService.GetActorUserByEmail(ctx, q)
 	if err != nil {
 		return nil
@@ -194,7 +192,6 @@ func (s *SearchServer) SearchByEmail(ctx context.Context, q string) interface{} 
 }
 
 func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) interface{} {
-
 	r, err := s.lpaService.GetLPAByActivationCode(ctx, q)
 
 	if err == nil {
@@ -248,7 +245,6 @@ func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) int
 	}
 
 	return nil
-
 }
 
 func isUsed(active bool, status string) string {

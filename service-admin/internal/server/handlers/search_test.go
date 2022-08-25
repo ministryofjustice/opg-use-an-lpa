@@ -73,6 +73,7 @@ func (m *mockLPAService) GetLpaRecordBySiriusID(ctx context.Context, lpaID strin
 	if m.GetUsersByLPAIDFunc != nil {
 		return m.GetUsersByLPAIDFunc(ctx, lpaID)
 	}
+
 	return []*data.LPA{}, nil
 }
 
@@ -475,7 +476,7 @@ func Test_SearchByActivationCode(t *testing.T) {
 
 			s := NewSearchServer(tt.accountService, tt.lpaService, tt.templateService, tt.activationKeyService)
 
-			if got := s.DoSearch(tt.args.ctx, tt.args.queryType, tt.args.q); !reflect.DeepEqual(got, tt.want) {
+			if got := s.SearchByActivationCode(tt.args.ctx, tt.args.q); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("doSearch() = %v, want %v", got, tt.want)
 			}
 		})
