@@ -274,66 +274,6 @@ func Test_SearchByLPANumber(t *testing.T) {
 			activationKeyService: &mockActivationKeyService{},
 			want:                 nil,
 		},
-		// {
-		// 	name: "Test email query with error on account lookup",
-		// 	args: args{
-		// 		ctx:       context.TODO(),
-		// 		queryType: 0, //Email query
-		// 		q:         "test@email.com",
-		// 	},
-		// 	accountService: &mockAccountService{
-		// 		GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
-		// 			return nil, errors.New("this is an error")
-		// 		},
-		// 	},
-		// 	lpaService:           &mockLPAService{},
-		// 	activationKeyService: &mockActivationKeyService{},
-		// 	want:                 nil,
-		// },
-		// {
-		// 	name: "Test email query with error on LPA lookup",
-		// 	args: args{
-		// 		ctx:       context.TODO(),
-		// 		queryType: 0, //Email query
-		// 		q:         "test@email.com",
-		// 	},
-		// 	accountService: &mockAccountService{},
-		// 	lpaService: &mockLPAService{
-		// 		GetLPAsByUserIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
-		// 			return nil, errors.New("this is an error")
-		// 		},
-		// 	},
-		// 	activationKeyService: &mockActivationKeyService{},
-		// 	want:                 nil,
-		// },
-		// {
-		// 	name: "Test email query with not found error on LPA lookup returns empty result not nil",
-		// 	args: args{
-		// 		ctx:       context.TODO(),
-		// 		queryType: 0, //Email query
-		// 		q:         "test@email.com",
-		// 	},
-		// 	accountService: &mockAccountService{
-		// 		GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
-		// 			if s == "test@email.com" {
-		// 				return &data.ActorUser{
-		// 					ID:        "TestID",
-		// 					LastLogin: "TestTime",
-		// 					Email:     "test@email.com",
-		// 				}, nil
-		// 			}
-		// 			t.Errorf("expected test@email.com got %v", s)
-		// 			return nil, nil
-		// 		},
-		// 	},
-		// 	lpaService: &mockLPAService{
-		// 		GetLPAsByUserIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
-		// 			return nil, data.ErrUserLpaActorMapNotFound
-		// 		},
-		// 	},
-		// 	activationKeyService: &mockActivationKeyService{},
-		// 	want:                 &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: nil},
-		// },
 	}
 
 	for _, tt := range tests {
