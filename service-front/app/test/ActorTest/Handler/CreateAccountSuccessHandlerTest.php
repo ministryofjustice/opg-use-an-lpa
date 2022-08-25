@@ -125,8 +125,7 @@ class CreateAccountSuccessHandlerTest extends TestCase
                                 NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
                                 'a@b.com',
             activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
-        )
-            ->shouldBeCalled()->willReturn(true);
+        )->shouldBeCalled()->willReturn(true);
 
 
         $this->templateRendererProphecy->render('actor::create-account-success', new CallbackToken(function($options) {
