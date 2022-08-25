@@ -139,7 +139,7 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			search.Result = s.DoSearch(r.Context(), search.Type, stripUnnecessaryCharacters(search.Query))
+			search.Result = s.DoSearch(r.Context(), search.Type, search.Query)
 		}
 	}
 
@@ -149,6 +149,8 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) interface{} {
+	sanitisedQ := stripUnnecessaryCharacters(q)
+
 	switch t {
 	case LPANumberQuery:
 		r, err := s.lpaService.GetLpaRecordBySiriusID(ctx, q)
@@ -185,7 +187,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 		return r
 
 	case ActivationCodeQuery:
-		r, err := s.lpaService.GetLPAByActivationCode(ctx, q)
+		r, err := s.lpaService.GetLPAByActivationCode(ctx, sanitisedQ)
 
 		if err == nil {
 			email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
@@ -197,11 +199,11 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 				email = "Not Found"
 			}
 
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, sanitisedQ)
 
 			if err != nil {
 				return &SearchResult{
-					Query:         q,
+					Query:         sanitisedQ,
 					Used:          "Yes",
 					Email:         email,
 					LPA:           r.SiriusUID,
@@ -211,7 +213,7 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 
 				for _, value := range *activationKey {
 					return &SearchResult{
-						Query:         q,
+						Query:         sanitisedQ,
 						Used:          "Yes",
 						Email:         email,
 						LPA:           r.SiriusUID,
@@ -220,14 +222,14 @@ func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) inte
 				}
 			}
 		} else {
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, stripUnnecessaryCharacters(q))
+			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, sanitisedQ)
 			if err == nil {
 				for _, value := range *activationKey {
 
 					used := isUsed(value.Active, value.StatusDetails)
 
 					return &SearchResult{
-						Query:         q,
+						Query:         sanitisedQ,
 						Used:          used,
 						ActivationKey: &value,
 						LPA:           value.Lpa,
