@@ -76,7 +76,7 @@ func (m *mockLPAService) GetLpaRecordBySiriusID(ctx context.Context, lpaID strin
 	return []*data.LPA{}, nil
 }
 
-func Test_doSearch(t *testing.T) {
+func Test_SearchByEmail(t *testing.T) {
 	t.Parallel()
 
 	testLPA := &data.LPA{
@@ -189,6 +189,46 @@ func Test_doSearch(t *testing.T) {
 			activationKeyService: &mockActivationKeyService{},
 			want:                 &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: nil},
 		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			s := NewSearchServer(tt.accountService, tt.lpaService, tt.templateService, tt.activationKeyService)
+
+			if got := s.SearchByEmail(tt.args.ctx, tt.args.q); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SearchByEmail() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_SearchByActivationCode(t *testing.T) {
+	t.Parallel()
+
+	testLPA := &data.LPA{
+		SiriusUID: "700000000123",
+		Added:     "Date Added",
+		UserID:    "TestID",
+	}
+
+	type args struct {
+		ctx       context.Context
+		queryType QueryType
+		q         string
+	}
+
+	tests := []struct {
+		name                 string
+		args                 args
+		templateService      TemplateWriterService
+		accountService       AccountService
+		lpaService           LPAService
+		activationKeyService data.ActivationKeyService
+		want                 interface{}
+	}{
 		{
 			name: "Test standard activation key query",
 			args: args{
