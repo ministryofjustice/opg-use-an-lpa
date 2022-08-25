@@ -54,7 +54,7 @@ var (
 	ErrNotEmailOrCode error = errors.New("Enter an email address or activation code")
 
 	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
-	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)[0-9]{12}$`)
+	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)(\d[ -]*?){12}$`)
 )
 
 type QueryType int

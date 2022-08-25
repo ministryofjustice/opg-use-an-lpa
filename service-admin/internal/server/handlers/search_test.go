@@ -580,7 +580,7 @@ func Test_SearchHandler(t *testing.T) {
 
 	testLPA := &data.LPA{
 		SiriusUID: "700000000123",
-		Added:     "Date Added",
+		Added:     "2020-08-19T15:22:32.838097Z",
 		UserID:    "TestID",
 	}
 
@@ -601,12 +601,19 @@ func Test_SearchHandler(t *testing.T) {
 				accountService: &mockAccountService{
 					GetEmailByUserIDFunc: func(ctx context.Context, s string) (string, error) { return "test@email.com", nil },
 				},
-				lpaService: &mockLPAService{GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) { return testLPA, nil }},
+				lpaService: &mockLPAService{GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) {
+					if s == "WWFCCH41R123" {
+						return testLPA, nil
+					}
+					t.Errorf("Activation key given %s was not the same as expected WWFCCH41R123", s)
+					t.FailNow()
+					return nil, nil
+				}},
 
-				q: "query=C-WWFCCH41R123",
+				q: "query=C-wWFCcH41R123",
 			},
 			expected: &Search{
-				Query: "C-WWFCCH41R123",
+				Query: "C-wWFCcH41R123",
 				Type:  1,
 				Result: &SearchResult{
 					Query:         "WWFCCH41R123",
@@ -633,6 +640,20 @@ func Test_SearchHandler(t *testing.T) {
 				q:          "query=test@email.com",
 			},
 			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
+		},
+		{
+			name: "Normal LPA number query",
+			args: args{
+				accountService: &mockAccountService{
+					GetEmailByUserIDFunc: func(ctx context.Context, s string) (string, error) { return "test@email.com", nil }},
+				lpaService: &mockLPAService{
+					GetLPARecordByLPAIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
+						return []*data.LPA{testLPA}, nil
+					},
+				},
+				q: "query=7000-0000-0000",
+			},
+			expected: &Search{Query: "7000-0000-0000", Type: 2, Result: map[string]interface{}{"LPANumber": "700000000000", "AddedBy": []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "test@email.com"}}}, Errors: nil},
 		},
 		{
 			name: "Test validation failure",
