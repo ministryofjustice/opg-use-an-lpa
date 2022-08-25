@@ -50,7 +50,7 @@ func (m *mockAccountService) GetEmailByUserID(ctx context.Context, userID string
 type mockLPAService struct {
 	GetLPAsByUserIDFunc        func(context.Context, string) ([]*data.LPA, error)
 	GetLPAByActivationCodeFunc func(context.Context, string) (*data.LPA, error)
-	GetUsersByLPAIDFunc        func(context.Context, string) ([]*data.LPA, error)
+	GetLPARecordByLPAIDFunc    func(context.Context, string) ([]*data.LPA, error)
 }
 
 func (m *mockLPAService) GetLpasByUserID(ctx context.Context, userID string) ([]*data.LPA, error) {
@@ -70,8 +70,8 @@ func (m *mockLPAService) GetLPAByActivationCode(ctx context.Context, code string
 }
 
 func (m *mockLPAService) GetLpaRecordBySiriusID(ctx context.Context, lpaID string) (userIDs []*data.LPA, err error) {
-	if m.GetUsersByLPAIDFunc != nil {
-		return m.GetUsersByLPAIDFunc(ctx, lpaID)
+	if m.GetLPARecordByLPAIDFunc != nil {
+		return m.GetLPARecordByLPAIDFunc(ctx, lpaID)
 	}
 
 	return []*data.LPA{}, nil
@@ -200,6 +200,150 @@ func Test_SearchByEmail(t *testing.T) {
 			s := NewSearchServer(tt.accountService, tt.lpaService, tt.templateService, tt.activationKeyService)
 
 			if got := s.SearchByEmail(tt.args.ctx, tt.args.q); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SearchByEmail() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_SearchByLPANumber(t *testing.T) {
+	t.Parallel()
+
+	testLPA := &data.LPA{
+		SiriusUID: "700000000123",
+		Added:     "2020-08-19T15:22:32.838097Z",
+		UserID:    "TestID",
+	}
+
+	type args struct {
+		ctx       context.Context
+		queryType QueryType
+		q         string
+	}
+
+	tests := []struct {
+		name                 string
+		args                 args
+		templateService      TemplateWriterService
+		accountService       AccountService
+		lpaService           LPAService
+		activationKeyService data.ActivationKeyService
+		want                 interface{}
+	}{
+		{
+			name: "Test standard lpa number query",
+			args: args{
+				ctx:       context.TODO(),
+				queryType: 2, //LPA number query
+				q:         "7000-0000-0000",
+			},
+			accountService: &mockAccountService{
+				GetEmailByUserIDFunc: func(ctx context.Context, s string) (string, error) {
+					if s == testLPA.UserID {
+						return "Test@email.com", nil
+					}
+					t.Errorf("Wrong user id given got %s expected %s", s, testLPA.UserID)
+					t.FailNow()
+					return "", nil
+				},
+			},
+			lpaService: &mockLPAService{
+				GetLPARecordByLPAIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
+					return []*data.LPA{testLPA}, nil
+				},
+			},
+			activationKeyService: &mockActivationKeyService{},
+			want: map[string]interface{}{
+				"LPANumber": "7000-0000-0000",
+				"AddedBy":   []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "Test@email.com"}},
+			},
+		},
+		{
+			name: "Test lpa not found gives nil",
+			args: args{
+				ctx:       context.TODO(),
+				queryType: 2, //LPA number query
+				q:         "7000-0000-0000",
+			},
+			accountService: &mockAccountService{},
+			lpaService: &mockLPAService{
+				GetLPARecordByLPAIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
+					return nil, errors.New("NOT FOUND")
+				},
+			},
+			activationKeyService: &mockActivationKeyService{},
+			want:                 nil,
+		},
+		// {
+		// 	name: "Test email query with error on account lookup",
+		// 	args: args{
+		// 		ctx:       context.TODO(),
+		// 		queryType: 0, //Email query
+		// 		q:         "test@email.com",
+		// 	},
+		// 	accountService: &mockAccountService{
+		// 		GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
+		// 			return nil, errors.New("this is an error")
+		// 		},
+		// 	},
+		// 	lpaService:           &mockLPAService{},
+		// 	activationKeyService: &mockActivationKeyService{},
+		// 	want:                 nil,
+		// },
+		// {
+		// 	name: "Test email query with error on LPA lookup",
+		// 	args: args{
+		// 		ctx:       context.TODO(),
+		// 		queryType: 0, //Email query
+		// 		q:         "test@email.com",
+		// 	},
+		// 	accountService: &mockAccountService{},
+		// 	lpaService: &mockLPAService{
+		// 		GetLPAsByUserIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
+		// 			return nil, errors.New("this is an error")
+		// 		},
+		// 	},
+		// 	activationKeyService: &mockActivationKeyService{},
+		// 	want:                 nil,
+		// },
+		// {
+		// 	name: "Test email query with not found error on LPA lookup returns empty result not nil",
+		// 	args: args{
+		// 		ctx:       context.TODO(),
+		// 		queryType: 0, //Email query
+		// 		q:         "test@email.com",
+		// 	},
+		// 	accountService: &mockAccountService{
+		// 		GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
+		// 			if s == "test@email.com" {
+		// 				return &data.ActorUser{
+		// 					ID:        "TestID",
+		// 					LastLogin: "TestTime",
+		// 					Email:     "test@email.com",
+		// 				}, nil
+		// 			}
+		// 			t.Errorf("expected test@email.com got %v", s)
+		// 			return nil, nil
+		// 		},
+		// 	},
+		// 	lpaService: &mockLPAService{
+		// 		GetLPAsByUserIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
+		// 			return nil, data.ErrUserLpaActorMapNotFound
+		// 		},
+		// 	},
+		// 	activationKeyService: &mockActivationKeyService{},
+		// 	want:                 &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: nil},
+		// },
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			s := NewSearchServer(tt.accountService, tt.lpaService, tt.templateService, tt.activationKeyService)
+
+			if got := s.SearchByLPANumber(tt.args.ctx, tt.args.q); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SearchByEmail() = %v, want %v", got, tt.want)
 			}
 		})
