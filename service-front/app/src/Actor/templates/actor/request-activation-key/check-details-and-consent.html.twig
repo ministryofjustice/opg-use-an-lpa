@@ -36,7 +36,7 @@
                                     {% trans %}Address on paper LPA{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {% if data.actor_address_response is defined %}
+                                    {% if data.actor_address_response == 'Not sure' %}
                                         {% trans %}Not sure{% endtrans %}
                                     {% elseif data.address_on_paper is defined %}
                                         <pre class="govuk-body">{{ data.address_on_paper }}</pre>

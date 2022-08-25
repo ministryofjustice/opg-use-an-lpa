@@ -66,10 +66,4 @@ Feature: Additional details check answers and consent
     And I provide the donor's details
     When I select that I cannot take calls
     Then I am asked to consent and confirm my details
-    And I can see my address, attorney role, donor details and address of paper LPA marked unsure
-
-  @ui @ff:allow_older_lpas:true
-  Scenario: The user skips to final consent page when they go back and change address response
-    Given I have reached the check details and consent page and said I am unsure of my address on paper LPA
-    When I request to change the address response
-    Then I will be navigated back to more details page
+    And I can see my address, attorney role, donor details and address on paper LPA marked unsure

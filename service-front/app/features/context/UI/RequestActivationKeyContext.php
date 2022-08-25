@@ -371,7 +371,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I can see my address, attorney role, donor details and address of paper LPA marked unsure$/
+     * @Given /^I can see my address, attorney role, donor details and address on paper LPA marked unsure$/
      */
     public function iCanSeeMyAddressAttorneyRoleDonorDetailsAndAddressOnPaperLpaAsUnsure()
     {
@@ -775,11 +775,10 @@ class RequestActivationKeyContext implements Context
     public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorneyAndSaidUnsureOfAddressOnPaperLpa()
     {
         $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
-        $this->iSelectIAmNotSureTheAddressIsSameAsOnPaperLPA();
-        $this->iAmAskedForMyRoleOnTheLPA();
+        $this->iSelectIAmNotSureTheAddressIsSameAsOnPaperLPA('I am not sure');
         $this->iConfirmThatIAmThe('Attorney');
         $this->iProvideTheDonorsDetails();
-        $this->whenIEnterMyTelephoneNumber();
+        $this->iSelectThatICannotTakeCalls();
         $this->iAmAskedToConsentAndConfirmMyDetails();
         $this->iCanSeeMyAddressAttorneyRoleDonorDetailsAndAddressOnPaperLpaAsUnsure();
     }

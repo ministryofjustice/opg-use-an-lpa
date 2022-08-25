@@ -132,7 +132,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             );
 
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE) {
-                $this->data['actor_address_response'] = RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE;
+                $this->data['address_on_paper'] = RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE;
             }
 
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
