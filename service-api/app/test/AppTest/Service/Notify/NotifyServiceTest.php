@@ -5,7 +5,6 @@ namespace AppTest\Service\Notify;
 use App\Exception\BadRequestException;
 use App\Service\Email\EmailClient;
 use App\Service\Notify\NotifyService;
-use Carbon\Carbon;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
@@ -278,7 +277,7 @@ class NotifyServiceTest extends TestCase
             'locale' => 'en-GB',
             'referenceNumber' => '700000000138',
             'postcode' => 'HS8 2YB',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
+            'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -311,7 +310,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
             'referenceNumber' => '700000000138',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
+            'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -326,7 +325,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en-GB',
-            'letterExpectedDate' => (new Carbon())->addWeeks(2)->format('j F Y'),
+            'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
 

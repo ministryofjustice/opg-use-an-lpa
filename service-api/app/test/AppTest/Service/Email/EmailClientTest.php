@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace CommonTest\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Carbon\Carbon;
 use App\Service\Email\EmailClient;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
@@ -350,7 +350,7 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
         $postCode = 'HS8 2YB';
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -380,7 +380,7 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
         $postCode = 'HS8 2YB';
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');;
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -409,7 +409,7 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -436,7 +436,7 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
