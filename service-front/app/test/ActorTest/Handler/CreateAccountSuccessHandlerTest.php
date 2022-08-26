@@ -105,36 +105,39 @@ class CreateAccountSuccessHandlerTest extends TestCase
     {
         $this->userServiceProphecy->getByEmail('a@b.com')
             ->willReturn([
-                'Email'           => 'a@b.com',
-                'ActivationToken' => 'activate1234567890',
-            ]);
+                             'Email' => 'a@b.com',
+                             'ActivationToken' => 'activate1234567890',
+                         ]);
 
         $this->urlHelperProphecy->generate('activate-account', [
-                'token' => 'activate1234567890',
-            ])
+            'token' => 'activate1234567890',
+        ])
             ->willReturn('/activate-account/activate1234567890');
         $this->urlHelperProphecy->generate('create-account-success', [], [
-                'email' => 'a@b.com',
-            ])
+            'email' => 'a@b.com',
+        ])
             ->willReturn('/create-account-success?email=a@b.com');
 
         $this->serverUrlHelperProphecy->generate('/activate-account/activate1234567890')
             ->willReturn('http://localhost/activate-account/activate1234567890');
 
         $this->notifyServiceProphecy->sendEmailToUser(
-                                NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
-                                'a@b.com',
-            activateAccountUrl: 'http://localhost/activate-account/activate1234567890'
-        )->shouldBeCalled()->willReturn(true);
+            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+            'a@b.com'
+        )
+            ->shouldBeCalled();
 
+        $this->templateRendererProphecy->render(
+            'actor::create-account-success',
+            new CallbackToken(function ($options) {
+                $this->assertIsArray($options);
 
-        $this->templateRendererProphecy->render('actor::create-account-success', new CallbackToken(function($options) {
-            $this->assertIsArray($options);
+                $this->assertArrayHasKey('email', $options);
+                $this->assertEquals('a@b.com', $options['email']);
 
-            $this->assertArrayHasKey('email', $options);
-            $this->assertEquals('a@b.com', $options['email']);
-
-        }))->willReturn('');
+                return true;
+            })
+        )->willReturn('');
 
         //  Set up the handler
         $handler = new CreateAccountSuccessHandler(
@@ -146,13 +149,10 @@ class CreateAccountSuccessHandlerTest extends TestCase
         );
 
         $this->requestProphecy->getQueryParams()
-            ->willReturn(true);
-
-        $this->requestProphecy->getQueryParams()
             ->willReturn([
-                'email'  => 'a@b.com',
-                'resend' => 'true',
-            ]);
+                             'email' => 'a@b.com',
+                             'resend' => 'true',
+                         ]);
 
         $response = $handler->handle($this->requestProphecy->reveal());
 
