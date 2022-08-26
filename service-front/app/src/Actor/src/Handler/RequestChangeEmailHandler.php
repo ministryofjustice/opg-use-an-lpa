@@ -14,10 +14,12 @@ use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Email\EmailClient;
+use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -101,9 +103,13 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                        $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                       // $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
 
                         $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
+
+                        $session = $this->getSession($request, 'session');
+                        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
+                        $session->regenerate();
 
                         return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                             'user'     => $user,
@@ -116,6 +122,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                             // send email to the other user who has not completed their reset saying someone has tried
                             // to use their email
                             $this->emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($newEmail);
+
                             return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                                 'user'     => $user,
                                 'newEmail' => $newEmail

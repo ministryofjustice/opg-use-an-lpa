@@ -13,7 +13,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\ActivateAccountHandler::ACCOUNT_ACTIVATED_FLASH_MSG'}) }}
         {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\ChangePasswordHandler::PASSWORD_CHANGED_FLASH_MSG'}) }}
-
+        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CompleteChangeEmailHandler::NEW_EMAIL_ACTIVATED_FLASH_MSG'}) }}
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-two-thirds">
