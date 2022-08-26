@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
@@ -77,6 +78,8 @@ func LoadTemplates(folder fs.FS) *Templates {
 }
 
 func readableDateTime(date string) string {
+	date = strings.TrimSpace(date)
+
 	l, err := time.LoadLocation("Europe/London")
 	if err != nil {
 		return date
@@ -84,7 +87,10 @@ func readableDateTime(date string) string {
 
 	t, err := time.Parse(time.RFC3339, date)
 	if err != nil {
-		return date
+		t, err = time.Parse("2006-01-02T15:04:05", date)
+		if err != nil {
+			return date
+		}
 	}
 
 	return t.In(l).Format("2 January 2006 at 3:04PM")
