@@ -21,6 +21,7 @@ type AccountService interface {
 type LPAService interface {
 	GetLpasByUserID(context.Context, string) ([]*data.LPA, error)
 	GetLPAByActivationCode(context.Context, string) (*data.LPA, error)
+	GetLpaRecordBySiriusID(ctx context.Context, lpaID string) ([]*data.LPA, error)
 }
 
 type TemplateWriterService interface {
@@ -45,6 +46,7 @@ type SearchResult struct {
 const (
 	EmailQuery QueryType = iota
 	ActivationCodeQuery
+	LPANumberQuery
 )
 
 var (
@@ -52,6 +54,7 @@ var (
 	ErrNotEmailOrCode error = errors.New("Enter an email address or activation code")
 
 	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
+	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)(\d[ -]*?){12}$`)
 )
 
 type QueryType int
@@ -61,6 +64,11 @@ type Search struct {
 	Type   QueryType
 	Result interface{}
 	Errors validation.Errors
+}
+
+type AddedBy struct {
+	DateAdded string
+	Email     string
 }
 
 func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
@@ -99,6 +107,12 @@ func (s *Search) checkEmailOrCode(value interface{}) error {
 		return nil
 	}
 
+	isLpaNumber := validation.Match(lpaNumberRegex).Validate(value)
+	if isLpaNumber == nil {
+		s.Type = LPANumberQuery
+		return nil
+	}
+
 	return ErrNotEmailOrCode
 }
 
@@ -125,7 +139,14 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			search.Result = s.DoSearch(r.Context(), search.Type, search.Query)
+			switch search.Type {
+			case LPANumberQuery:
+				search.Result = s.SearchByLPANumber(r.Context(), stripUnnecessaryCharacters(search.Query))
+			case EmailQuery:
+				search.Result = s.SearchByEmail(r.Context(), search.Query)
+			case ActivationCodeQuery:
+				search.Result = s.SearchByActivationCode(r.Context(), stripUnnecessaryCharacters(search.Query))
+			}
 		}
 	}
 
@@ -134,74 +155,93 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *SearchServer) DoSearch(ctx context.Context, t QueryType, q string) interface{} {
-	sanitisedQ := stripUnnecessaryCharacters(q)
+func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interface{} {
+	r, err := s.lpaService.GetLpaRecordBySiriusID(ctx, q)
+	if err != nil {
+		return nil
+	}
 
-	switch t {
-	case EmailQuery:
-		r, err := s.accountService.GetActorUserByEmail(ctx, q)
+	emails := []AddedBy{}
+
+	for _, userID := range r {
+		email, err := s.accountService.GetEmailByUserID(ctx, userID.UserID)
+		if err == nil {
+			addedBy := AddedBy{Email: email, DateAdded: userID.Added}
+			emails = append(emails, addedBy)
+		}
+	}
+
+	return map[string]interface{}{
+		"LPANumber": q,
+		"AddedBy":   emails,
+	}
+}
+
+func (s *SearchServer) SearchByEmail(ctx context.Context, q string) interface{} {
+	r, err := s.accountService.GetActorUserByEmail(ctx, q)
+	if err != nil {
+		return nil
+	}
+
+	r.LPAs, err = s.lpaService.GetLpasByUserID(ctx, r.ID)
+	if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
+		return nil
+	}
+
+	return r
+}
+
+func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) interface{} {
+	r, err := s.lpaService.GetLPAByActivationCode(ctx, q)
+
+	if err == nil {
+		email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
 		if err != nil {
 			return nil
 		}
 
-		r.LPAs, err = s.lpaService.GetLpasByUserID(ctx, r.ID)
-		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
-			return nil
+		if email == "" {
+			email = "Not Found"
 		}
 
-		return r
+		activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
 
-	case ActivationCodeQuery:
-		r, err := s.lpaService.GetLPAByActivationCode(ctx, sanitisedQ)
-
-		if err == nil {
-			email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
-			if err != nil {
-				return nil
+		if err != nil {
+			return &SearchResult{
+				Query:         q,
+				Used:          "Yes",
+				Email:         email,
+				LPA:           r.SiriusUID,
+				ActivationKey: nil,
 			}
+		} else {
 
-			if email == "" {
-				email = "Not Found"
-			}
-
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, sanitisedQ)
-
-			if err != nil {
+			for _, value := range *activationKey {
 				return &SearchResult{
-					Query:         sanitisedQ,
+					Query:         q,
 					Used:          "Yes",
 					Email:         email,
 					LPA:           r.SiriusUID,
-					ActivationKey: nil,
-				}
-			} else {
-
-				for _, value := range *activationKey {
-					return &SearchResult{
-						Query:         sanitisedQ,
-						Used:          "Yes",
-						Email:         email,
-						LPA:           r.SiriusUID,
-						ActivationKey: &value,
-					}
-				}
-			}
-		} else {
-			activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, sanitisedQ)
-			if err == nil {
-				for _, value := range *activationKey {
-
-					used := isUsed(value.Active, value.StatusDetails)
-
-					return &SearchResult{
-						Query:         sanitisedQ,
-						Used:          used,
-						ActivationKey: &value,
-						LPA:           value.Lpa,
-					}
+					ActivationKey: &value,
 				}
 			}
 		}
+	} else {
+		activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
+		if err == nil {
+			for _, value := range *activationKey {
+
+				used := isUsed(value.Active, value.StatusDetails)
+
+				return &SearchResult{
+					Query:         q,
+					Used:          used,
+					ActivationKey: &value,
+					LPA:           value.Lpa,
+				}
+			}
+		}
+
 	}
 
 	return nil

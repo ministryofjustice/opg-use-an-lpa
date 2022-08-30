@@ -26,6 +26,7 @@ const (
 	UserLpaActorTableName     = "UserLpaActorMap"
 	UserLpaActorUserIndexName = "UserIndex"
 	ActivationCodeIndexName   = "ActivationCodeIndex"
+	SiriusUIDIndex            = "SiriusUidIndex"
 	CodesTableName            = "lpa-codes-local"
 )
 
@@ -83,6 +84,32 @@ func (l *lpaService) GetLPAByActivationCode(ctx context.Context, activationCode 
 		}
 
 		return lpas[0], nil
+	}
+
+	return nil, ErrUserLpaActorMapNotFound
+}
+
+func (l *lpaService) GetLpaRecordBySiriusID(ctx context.Context, lpaNumber string) (lpas []*LPA, err error) {
+	result, err := l.db.Client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(l.db.prefixedTableName(UserLpaActorTableName)),
+		IndexName:              aws.String(SiriusUIDIndex),
+		KeyConditionExpression: aws.String("SiriusUid = :s"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":s": &types.AttributeValueMemberS{Value: lpaNumber},
+		},
+	})
+
+	if err != nil {
+		log.Error().Err(err).Msg("error while searching for LpaNumber")
+	}
+
+	if result.Count > 0 {
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &lpas)
+		if err != nil {
+			log.Error().Err(err).Msg("unable to convert dynamo result into LPA")
+		} else {
+			return lpas, nil
+		}
 	}
 
 	return nil, ErrUserLpaActorMapNotFound
