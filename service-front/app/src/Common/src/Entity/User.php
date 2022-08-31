@@ -7,6 +7,7 @@ namespace Common\Entity;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use JetBrains\PhpStorm\ArrayShape;
 use Mezzio\Authentication\UserInterface;
 
 /**
@@ -18,14 +19,11 @@ use Mezzio\Authentication\UserInterface;
  */
 class User implements UserInterface
 {
-    /** @var string */
-    protected $identity;
-
-    /** @var string */
-    protected $email;
-
-    /** @var DateTime */
-    protected $lastLogin;
+    protected string $identity;
+    protected string $email;
+    
+    protected bool $passwordNeedsReset;
+    protected ?DateTime $lastLogin;
 
     public function __construct(string $identity, array $roles, array $details)
     {
@@ -33,8 +31,9 @@ class User implements UserInterface
         $this->lastLogin = null;
 
         $this->email = $details['Email'] ?? null;
+        $this->passwordNeedsReset = !empty($details['NeedsReset']);
 
-        if (array_key_exists('LastLogin', $details)) {
+        if (!empty($details['LastLogin'])) {
             $this->setLastLogin($details['LastLogin']);
         }
     }
@@ -65,7 +64,7 @@ class User implements UserInterface
      * @param null $default
      * @return mixed|null
      */
-    public function getDetail(string $name, $default = null)
+    public function getDetail(string $name, $default = null): mixed
     {
         $propertyName = lcfirst($name);
 
@@ -82,18 +81,19 @@ class User implements UserInterface
     public function getDetails(): array
     {
         return [
-            'Email'     => $this->email,
-            'LastLogin' => $this->lastLogin
+            'Email'      => $this->email,
+            'LastLogin'  => $this->lastLogin,
+            'NeedsReset' => $this->passwordNeedsReset,
         ];
     }
 
     /**
      * Attempts to figure out how to construct a valid DateTime from the information made available.
      *
-     * @param mixed $date An array, or string containing a serialised DateTime or ATOM compliant date.
+     * @param array|string $date An array, or string containing a serialised DateTime or ATOM compliant date.
      * @throws Exception
      */
-    public function setLastLogin($date): void
+    public function setLastLogin(array|string $date): void
     {
         // if this is being called via a construction from the database it will be an ISO/ATOM
         // format string.

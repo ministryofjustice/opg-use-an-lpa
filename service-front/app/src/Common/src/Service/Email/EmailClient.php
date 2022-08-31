@@ -65,6 +65,10 @@ class EmailClient
         self::EN_LOCALE => '36a86dbf-27a3-448c-a743-5f915e1733c3',
         self::CY_LOCALE => '4966311d-9abb-4b39-8403-0a4be36756e6',
     ];
+    public const TEMPLATE_ID_FORCE_PASSWORD_RESET = [
+        self::EN_LOCALE => '66ff2917-c9ee-4e40-a714-6acb7b3abae5',
+        self::CY_LOCALE => '66ff2917-c9ee-4e40-a714-6acb7b3abae5',
+    ];
 
     private NotifyClient $notifyClient;
     private string $locale;
@@ -248,5 +252,23 @@ class EmailClient
     public function sendNoAccountExistsEmail(string $recipient): void
     {
         $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$this->locale]);
+    }
+
+    /**
+     * Email a user to ask them to reset their password for security reasons
+     *
+     * @param string $recipient
+     * @param string $resetUrl
+     *
+     */
+    public function sendForcePasswordResetEmail(string $recipient, string $resetUrl): void
+    {
+        $this->notifyClient->sendEmail(
+            $recipient,
+            self::TEMPLATE_ID_FORCE_PASSWORD_RESET[$this->locale],
+            [
+                'password-reset-url' => $resetUrl,
+            ]
+        );
     }
 }
