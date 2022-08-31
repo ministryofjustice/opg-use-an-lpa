@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace CommonTest\Middleware\Authentication;
 
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
+use Mezzio\Csrf\CsrfMiddleware;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -67,12 +70,27 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function it_renders_a_page_if_user_password_needs_reset()
+    public function it_renders_a_page_if_user_password_needs_reset(): void
     {
+        $this->authenticator->expects($this->once())
+            ->method('authenticate')
+            ->with($this->isInstanceOf(ServerRequestInterface::class))
+            ->willReturn($this->user);
+
+        $this->user->method('getDetail')
+            ->withConsecutive(['Email'], ['NeedsReset'])
+            ->willReturnOnConsecutiveCalls('a@b.com', true);
+
+        $csrfGuard = $this->createStub(CsrfGuardInterface::class);
+
+        $this->request->method('getAttribute')
+            ->with(CsrfMiddleware::GUARD_ATTRIBUTE)
+            ->willReturn($csrfGuard);
+
         $sut = new ForcedPasswordResetMiddleware($this->templateRenderer, $this->authenticator, $this->urlHelper);
 
         $result = $sut->process($this->request, $this->handler);
 
-        $this->assertEquals($this->response, $result);
+        $this->assertInstanceOf(HtmlResponse::class, $result);
     }
 }
