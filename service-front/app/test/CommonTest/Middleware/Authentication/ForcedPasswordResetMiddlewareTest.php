@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Middleware\Authentication;
+namespace CommonTest\Middleware\Authentication;
 
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Mezzio\Authentication\AuthenticationInterface;
