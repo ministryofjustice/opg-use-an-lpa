@@ -21,7 +21,6 @@ class AuthenticationMiddleware implements MiddlewareInterface
         ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware
     ) {
         $this->pipe = $middlewarePipe;
-        
         $this->pipe->pipe($authenticationMiddleware);
         $this->pipe->pipe($forcedPasswordResetMiddleware);
     }
