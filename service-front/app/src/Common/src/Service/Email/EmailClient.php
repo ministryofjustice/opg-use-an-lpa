@@ -67,7 +67,7 @@ class EmailClient
     ];
     public const TEMPLATE_ID_FORCE_PASSWORD_RESET = [
         self::EN_LOCALE => '66ff2917-c9ee-4e40-a714-6acb7b3abae5',
-        self::CY_LOCALE => '66ff2917-c9ee-4e40-a714-6acb7b3abae5',
+        self::CY_LOCALE => 'c1e2994e-2346-48b4-ac18-ef9eb26b114d',
     ];
 
     private NotifyClient $notifyClient;
