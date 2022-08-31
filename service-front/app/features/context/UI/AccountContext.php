@@ -419,15 +419,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am told my password was changed$/
-     */
-    public function iAmToldMyPasswordWasChanged()
-    {
-        $this->ui->assertPageAddress('login');
-        $this->ui->assertPageContainsText('Password changed successfully');
-    }
-
-    /**
      * @Then /^I am told my unique instructions to activate my account have expired$/
      */
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired()
@@ -1934,12 +1925,12 @@ class AccountContext implements Context
 
     /**
      * @Then /^my password has been associated with my user account$/
+     * @Then /^I am told my password was changed$/
      */
     public function myPasswordHasBeenAssociatedWithMyUserAccount()
     {
         $this->ui->assertPageAddress('/login');
-        // TODO when flash message are in place
-        //$this->assertPageContainsText('Password successfully reset');
+        $this->ui->assertPageContainsText('Password changed successfully');
 
         assertEquals(true, $this->apiFixtures->isEmpty());
     }

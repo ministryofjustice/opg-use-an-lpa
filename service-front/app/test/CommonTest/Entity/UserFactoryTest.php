@@ -43,9 +43,24 @@ class UserFactoryTest extends TestCase
 
         $callable = $factory($containerProphecy->reveal());
 
-        $user = $callable('test', [], []);
+        $user = $callable('test', [], ['Email' => 'test@email.com']);
 
         $this->assertInstanceOf(UserInterface::class, $user);
         $this->assertEquals('test', $user->getIdentity());
+    }
+
+    /** @test */
+    public function the_callable_will_error_if_no_email_supplied()
+    {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+
+        $factory = new UserFactory();
+
+        $callable = $factory($containerProphecy->reveal());
+
+        $this->expectException(\RuntimeException::class);
+
+        $callable('test', [], []);
+
     }
 }

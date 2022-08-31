@@ -77,7 +77,7 @@ class UserService implements UserRepositoryInterface
                 'event_code' => EventCodes::ACCOUNT_CREATED,
                 'id'         => $data['Id'],
                 'email'      => new Email($email)
-          ]
+            ]
         );
 
         return $data;
@@ -121,8 +121,13 @@ class UserService implements UserRepositoryInterface
                 $filteredDetails = [
                     'Email'     => $userData['Email'],
                 ];
+
                 if (array_key_exists('LastLogin', $userData)) {
                     $filteredDetails['LastLogin'] = $userData['LastLogin'];
+                }
+
+                if (!empty($userData['NeedsReset'])) {
+                    $filteredDetails['NeedsReset'] = $userData['NeedsReset'];
                 }
 
                 return ($this->userModelFactory)(

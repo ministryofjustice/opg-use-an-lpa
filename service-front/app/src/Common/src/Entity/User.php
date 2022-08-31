@@ -7,8 +7,8 @@ namespace Common\Entity;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use JetBrains\PhpStorm\ArrayShape;
 use Mezzio\Authentication\UserInterface;
+use RuntimeException;
 
 /**
  * Class User
@@ -22,7 +22,7 @@ class User implements UserInterface
     protected string $identity;
     protected string $email;
     
-    protected bool $passwordNeedsReset;
+    protected bool $needsReset;
     protected ?DateTime $lastLogin;
 
     public function __construct(string $identity, array $roles, array $details)
@@ -30,8 +30,12 @@ class User implements UserInterface
         $this->identity = $identity;
         $this->lastLogin = null;
 
-        $this->email = $details['Email'] ?? null;
-        $this->passwordNeedsReset = !empty($details['NeedsReset']);
+        if (empty($details['Email'])) {
+            throw new RuntimeException('Expected database value "Email" not returned');
+        }
+        
+        $this->email = $details['Email'];
+        $this->needsReset = !empty($details['NeedsReset']);
 
         if (!empty($details['LastLogin'])) {
             $this->setLastLogin($details['LastLogin']);
@@ -83,7 +87,7 @@ class User implements UserInterface
         return [
             'Email'      => $this->email,
             'LastLogin'  => $this->lastLogin,
-            'NeedsReset' => $this->passwordNeedsReset,
+            'NeedsReset' => $this->needsReset,
         ];
     }
 
@@ -101,7 +105,7 @@ class User implements UserInterface
             $this->lastLogin = new DateTime($date);
         }
 
-        // if this is being called via a reconstruction from the session the the DateTime object
+        // if this is being called via a reconstruction from the session the DateTime object
         // will have been deconstructed to a key/value array. So build a new DateTime from that.
         if (is_array($date) && array_key_exists('date', $date)) {
             $this->lastLogin = new DateTime($date['date'], new DateTimeZone($date['timezone']));

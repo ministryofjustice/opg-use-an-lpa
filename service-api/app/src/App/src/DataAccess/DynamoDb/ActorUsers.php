@@ -245,7 +245,7 @@ class ActorUsers implements ActorUsersInterface
                     'S' => $id,
                 ],
             ],
-            'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
+            'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry, NeedsReset',
             'ExpressionAttributeValues' => [
                 ':p' => [
                     'S' => password_hash($password->getString(), PASSWORD_DEFAULT)
