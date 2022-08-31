@@ -110,6 +110,14 @@ actorUsers = [
         'LastLogin': datetime.datetime.now().isoformat(),
         'Password': sha256_crypt.hash('umlTest1'),
         'Comment': 'Seeded data: Default test user'
+    },
+    {
+        'Id': 'gb9e7e88-f283-49c6-a79c-65d5d309ef88',
+        'Email': 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Password': sha256_crypt.hash('umlTest2'),
+        'Comment': 'Seeded data: Default test user',
+        'NeedsReset': datetime.datetime.now().isoformat()
     }
 ]
 

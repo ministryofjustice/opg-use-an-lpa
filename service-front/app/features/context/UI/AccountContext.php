@@ -1934,4 +1934,104 @@ class AccountContext implements Context
 
         assertEquals(true, $this->apiFixtures->isEmpty());
     }
+
+    /**
+     * @When /^I sign successfully$/
+     */
+    public function iSignInSuccessfully()
+    {
+        $this->ui->fillField('email', $this->userEmail);
+        $this->ui->fillField('password', $this->userPassword);
+
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => $this->userId,
+                            'Email' => $this->userEmail,
+                            'LastLogin' => '2020-01-01',
+                            'NeedsReset' => '2020-10-10',
+                        ]
+                    )
+                )
+            );
+
+        // API call for authentication
+        $this->apiFixtures->patch('/v1/auth')
+            ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+    }
+
+    /**
+     * @Then /^I am requested to reset my password$/
+     */
+    public function iAmRequestedToResetMyPassword()
+    {
+        $this->ui->pressButton('Sign in');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('We would like you to reset your password');
+    }
+
+    /**
+     * @Then /^My password security is compromised and requested to reset my password on login$/
+     */
+    public function myPasswordSecurityIsCompromisedAndRequestedToReset()
+    {
+        $this->iAccessTheLoginForm();
+        $this->iSignInSuccessfully();
+        $this->iAmRequestedToResetMyPassword();
+    }
+
+    /**
+     * @Then /^I request for my password to be reset$/
+     */
+    public function iRequestForMyPasswordToBeReset(
+        $email = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
+        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk')
+    {
+        // API call for password reset request
+        $this->apiFixtures->patch('/v1/request-password-reset')
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'Id' => $this->userId,
+                            'PasswordResetToken' => '123456',
+                        ]
+                    )
+                )
+            );
+
+        // API call for Notify
+        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
+            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+            ->inspectRequest(
+                function (RequestInterface $request) {
+                    $params = json_decode($request->getBody()->getContents(), true);
+
+                    assertInternalType('array', $params);
+                    assertArrayHasKey('template_id', $params);
+                    assertArrayHasKey('email_address', $params);
+                    assertArrayHasKey('personalisation', $params);
+                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                }
+            );
+        $this->ui->pressButton('Email me the link');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to');
+    }
+
+    /**
+     * @Then /^I receive an email and shown unique instructions on how to reset my password$/
+     */
+    public function iReceiveAnEmailAndShownUniqueInstructionsOnHowToResetMyPassword()
+    {
+        $this->ui->assertPageAddress('/reset-password');
+        $this->ui->assertPageContainsText('We\'ve emailed a link to ');
+    }
 }
