@@ -19,8 +19,7 @@ Feature: Password Reset
     When I follow my unique instructions on how to reset my password
     And I choose a new password
     Then my password has been associated with my user account
-    And I am told my password was changed
-
+    
   @integration @ui
   Scenario: The user cannot follow expired instructions to supply a new password
     Given I have asked for my password to be reset

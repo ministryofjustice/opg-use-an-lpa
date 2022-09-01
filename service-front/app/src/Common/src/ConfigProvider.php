@@ -51,6 +51,8 @@ class ConfigProvider
                 \Mezzio\Authentication\AuthenticationInterface::class =>
                     \Mezzio\Authentication\Session\PhpSession::class,
 
+                \Laminas\Stratigility\MiddlewarePipeInterface::class => \Laminas\Stratigility\MiddlewarePipe::class,
+
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,

@@ -88,7 +88,11 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
 
                     $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
 
-                    $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
+                    if (!empty($data['forced'])) {
+                        $this->emailClient->sendForcePasswordResetEmail($data['email'], $passwordResetUrl);
+                    } else {
+                        $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
+                    }
                 } catch (ApiException $ae) {
                     // the password reset request returned a 404 indicating the user did not exist
                     $this->emailClient->sendNoAccountExistsEmail($data['email']);
