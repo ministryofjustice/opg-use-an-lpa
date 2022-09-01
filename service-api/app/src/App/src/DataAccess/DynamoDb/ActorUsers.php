@@ -39,8 +39,13 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
-    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array
-    {
+    public function add(
+        string $id,
+        string $email,
+        HiddenString $password,
+        string $activationToken,
+        int $activationTtl
+    ): array {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
