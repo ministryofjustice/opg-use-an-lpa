@@ -15,18 +15,10 @@ class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
 
-    private DynamoDbClient $client;
-    private string $actorUsersTable;
-
-    /**
-     * ViewerCodeActivity constructor.
-     * @param DynamoDbClient $client
-     * @param string $actorUsersTable
-     */
-    public function __construct(DynamoDbClient $client, string $actorUsersTable)
-    {
-        $this->client = $client;
-        $this->actorUsersTable = $actorUsersTable;
+    public function __construct(
+        private DynamoDbClient $client,
+        private string $actorUsersTable,
+    ) {
     }
 
     /**
