@@ -15,15 +15,8 @@ class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $actorUsersTable;
+    private DynamoDbClient $client;
+    private string $actorUsersTable;
 
     /**
      * ViewerCodeActivity constructor.
