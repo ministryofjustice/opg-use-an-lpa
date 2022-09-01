@@ -1973,7 +1973,9 @@ class AccountContext implements Context
     {
         $this->ui->pressButton('Sign in');
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText('We would like you to reset your password');
+
+        //Using first line of body to make sure this step is distinguished from other change password pages
+        $this->ui->assertPageContainsText('Keeping our online services secure is very important to us');
     }
 
     /**
