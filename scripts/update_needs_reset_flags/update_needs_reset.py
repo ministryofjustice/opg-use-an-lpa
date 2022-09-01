@@ -1,15 +1,19 @@
 import boto3
 import time
+import click
 
 class DynamodbUpdate:
     wait_time = 0
 
-    def __init__(self):
+    def __init__(self, dry_run):
         self.region = 'eu-west-1'
         self.dynamodb_resource = boto3.resource('dynamodb', region_name=self.region)
         self.user_list = self.get_user_emails()
         self.users_to_flag = []
         self.environment = 'demo'
+        print(dry_run.lower())
+        self.dry_run = False if dry_run.lower() == "false" else True
+        print(self.dry_run)
 
     @staticmethod
     def get_user_emails():
@@ -68,36 +72,48 @@ class DynamodbUpdate:
 
         print(f"Count of users to flag: {len(self.users_to_flag)}")
 
-        self.update_each_with_new_field(table)
+        if self.dry_run:
+            print("Dry run -- no updates to process")
+        else:
+            print("Real run -- updating users")
+            self.update_each_with_new_field(table)
 
     def list_updated_user_records(self):
-        query_keys = []
-        for u in self.users_to_flag:
-            query_keys.append({"Id": u["Id"]})
-        response = self.dynamodb_resource.batch_get_item(
-            RequestItems={
-                f'{self.environment}-ActorUsers': {
-                    'Keys': query_keys,
-                    'ConsistentRead': True
-                }
-            },
-            ReturnConsumedCapacity='TOTAL'
-        )
+        rng = len(self.users_to_flag) // 99 + 1
+        query_keys = [[] for i in range(rng)]
+
+        count = 0
         updated_users_csv = open("updated_users.csv", "w")
+        for u in self.users_to_flag:
+            count += 1
+            query_keys[count // 99].append({"Id": u["Id"]})
+
         count_of_needs_reset = 0
-        for item in response["Responses"][f"{self.environment}-ActorUsers"]:
-            needs_reset = ''
-            if item.get('NeedsReset'):
-                count_of_needs_reset =+ 1
-                needs_reset = item['NeedsReset']
-            updated_users_csv.write(str(f"{item['Id']}, {item['Email']}, {needs_reset}\n"))
+        for items in query_keys:
+            response = self.dynamodb_resource.batch_get_item(
+                RequestItems={
+                    f'{self.environment}-ActorUsers': {
+                        'Keys': items,
+                        'ConsistentRead': True
+                    }
+                },
+                ReturnConsumedCapacity='TOTAL'
+            )
+
+            for item in response["Responses"][f"{self.environment}-ActorUsers"]:
+                needs_reset = ''
+                if item.get('NeedsReset'):
+                    count_of_needs_reset += 1
+                    needs_reset = item['NeedsReset']
+                updated_users_csv.write(str(f"{item['Id']},{item['Email']},{needs_reset}\n"))
 
         print(f"Count of users successfully updated: {count_of_needs_reset}")
         updated_users_csv.close()
 
-
-def main():
-    dynamodb_update = DynamodbUpdate()
+@click.command()
+@click.option("-d", "--dry_run", default="true")
+def main(dry_run):
+    dynamodb_update = DynamodbUpdate(dry_run)
     dynamodb_update.update_users()
     dynamodb_update.list_updated_user_records()
 
