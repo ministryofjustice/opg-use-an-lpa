@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-08-04T12:06:57+00:00\n"
+"POT-Creation-Date: 2022-09-02T14:49:29+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,7 +28,6 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:86
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
@@ -189,6 +188,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/create-account-success.html.twig:10
 #: src/Actor/templates/actor/create-account.html.twig:10
 #: src/Actor/templates/actor/death-notification.html.twig:17
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:12
 #: src/Actor/templates/actor/login.html.twig:10
 #: src/Actor/templates/actor/lpa-already-added.html.twig:11
 #: src/Actor/templates/actor/lpa-removed.html.twig:12
@@ -208,7 +208,6 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:12
-#: src/Actor/templates/actor/request-email-change-success.html.twig:11
 #: src/Common/templates/common/contact-us.html.twig:9
 #: src/Common/templates/common/cookies.html.twig:12
 #: src/Common/templates/common/instructions-preferences-signed-before-2016.html.twig:10
@@ -216,15 +215,15 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 msgid "Back"
 msgstr "Yn ôl"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:20
+#: src/Actor/templates/actor/request-email-change-success.html.twig:15
 msgid "Updating your email address"
 msgstr "Diweddaru eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:22
+#: src/Actor/templates/actor/request-email-change-success.html.twig:17
 msgid "You’ve asked us to change your email address."
 msgstr "Rydych wedi gofyn i ni newid eich cyfeiriad e-bost."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:24
+#: src/Actor/templates/actor/request-email-change-success.html.twig:19
 msgid ""
 "We've emailed a link to %email% – please follow the link in the email to "
 "confirm the change."
@@ -232,7 +231,7 @@ msgstr ""
 "Rydym wedi anfon dolen i %email% - cliciwch ar y ddolen yn y neges e-bost i "
 "gadarnhau’r newid."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:26
+#: src/Actor/templates/actor/request-email-change-success.html.twig:21
 msgid ""
 "The email should arrive in a few minutes, check your spam, bulk and junk "
 "folders."
@@ -240,11 +239,11 @@ msgstr ""
 "Dylai’r neges e-bost gyrraedd ymhen ychydig funudau, gwiriwch eich ffolderi "
 "spam, bulk a junk."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:28
+#: src/Actor/templates/actor/request-email-change-success.html.twig:23
 msgid "The link will work for 48 hours."
 msgstr "Mae gennych 48 awr i glicio ar y ddolen."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:30
+#: src/Actor/templates/actor/request-email-change-success.html.twig:25
 msgid ""
 "If you’ve already confirmed the change, you can use your new email address to "
 "<a href=\"%link%\" class=\"govuk-link\">sign in</a> now."
@@ -291,6 +290,7 @@ msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 msgid "Create account"
 msgstr "Creu cyfrif"
 
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:18
 #: src/Actor/templates/actor/password-change.html.twig:24
 #: src/Actor/templates/actor/password-reset.html.twig:28
 msgid "Change your password"
@@ -1707,6 +1707,7 @@ msgstr "Cyfeiriad e-bost"
 msgid "Confirm your email address"
 msgstr "Cadarnhewch eich cyfeiriad e-bost"
 
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:35
 #: src/Actor/templates/actor/password-reset-request.html.twig:37
 msgid "Email me the link"
 msgstr "Anfon y ddolen ataf drwy e-bost"
@@ -7168,10 +7169,10 @@ msgid "Trust corporation"
 msgstr ""
 
 #: src/Actor/src/Handler/ChangePasswordHandler.php:118
-#: src/Actor/src/Handler/PasswordResetPageHandler.php:90
+#: src/Actor/src/Handler/PasswordResetPageHandler.php:96
 msgctxt "flashMessage"
 msgid "Password changed successfully"
-msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
+msgstr "Cyfeiriad ebost newid yn llwyddiannus"
 
 #: src/Actor/templates/actor/home-page.html.twig:51
 msgid ""
@@ -7375,3 +7376,11 @@ msgstr ""
 "I wneud hyn, bydd angen eich allwedd cadarnhau cyfrif LPA unigryw eich hun "
 "arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA "
 "wedi’i chofrestru."
+
+#: src/Actor/src/Handler/CompleteChangeEmailHandler.php:92
+#, fuzzy
+#| msgctxt "flashMessage"
+#| msgid "Password changed successfully"
+msgctxt "flashMessage"
+msgid "Email address changed successfully"
+msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
