@@ -58,7 +58,7 @@ Feature: Change email
     And My email reset token is still valid
     When I click the link to verify my new email address
     Then My account email address should be reset
-    And I am affirmed my email address has been changed
+    And I see a flash message confirming my email address has been changed
 
   @ui @integration
   Scenario: The user can change their email address with a valid email token

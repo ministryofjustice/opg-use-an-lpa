@@ -1723,7 +1723,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I should be able to login with my new email address$/
-     * @Then /^I am affirmed my email address has been changed$/
+     * @Then /^I see a flash message confirming my email address has been changed$/
      */
     public function iShouldBeAbleToLoginWithMyNewEmailAddress()
     {
