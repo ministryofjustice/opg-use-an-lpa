@@ -2537,6 +2537,14 @@ class LpaContext implements Context
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
+        // In some way which I am not able to understand *at all* when this step is hit on Circle CI
+        // the apiFixtures contain a left-over item from a previous step. This does not happen when
+        // run locally. So the quick and dirty fix is to just ensure the queue is always cleared.
+        if ($this->apiFixtures->count() > 0) {
+            echo "WARNING apiFixtures should be empty and isn't";
+            $this->apiFixtures->reset();
+        }
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
