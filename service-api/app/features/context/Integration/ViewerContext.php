@@ -12,6 +12,7 @@ use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use BehatTest\Context\UsesPactContextTrait;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class ViewerContext
@@ -81,8 +82,8 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is a string when doing a full check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, $this->lpaViewedBy);
 
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($lpaExpiry, $lpaData['expires']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($lpaExpiry, $lpaData['expires']);
     }
 
     /**
@@ -165,8 +166,8 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($lpaExpiry, $lpaData['expires']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($lpaExpiry, $lpaData['expires']);
     }
 
     /**

@@ -16,6 +16,7 @@ use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use Exception;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -105,8 +106,8 @@ class AccountContext extends BaseIntegrationContext
 
         $user = $us->authenticate($this->userAccountEmail, $this->password);
 
-        assertEquals($this->userAccountId, $user['Id']);
-        assertEquals($this->userAccountEmail, $user['Email']);
+        Assert::assertEquals($this->userAccountId, $user['Id']);
+        Assert::assertEquals($this->userAccountEmail, $user['Email']);
     }
 
     /**
@@ -115,7 +116,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmInformedAboutAnExistingAccount()
     {
-        assertEquals('activate1234567890', $this->actorAccountCreateData['ActivationToken']);
+        Assert::assertEquals('activate1234567890', $this->actorAccountCreateData['ActivationToken']);
     }
 
     /**
@@ -207,11 +208,11 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->authenticate($this->userAccountEmail, $this->userAccountPassword);
         } catch (UnauthorizedException $ex) {
-            assertEquals(
+            Assert::assertEquals(
                 'Authentication attempted against inactive account with Id ' . $this->userAccountId,
                 $ex->getMessage()
             );
-            assertEquals(401, $ex->getCode());
+            Assert::assertEquals(401, $ex->getCode());
             return;
         }
 
@@ -246,8 +247,8 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->authenticate($this->userAccountEmail, '1nc0rr3ctPa33w0rd');
         } catch (ForbiddenException $fe) {
-            assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
-            assertEquals(403, $fe->getCode());
+            Assert::assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
+            Assert::assertEquals(403, $fe->getCode());
             return;
         }
 
@@ -380,9 +381,9 @@ class AccountContext extends BaseIntegrationContext
 
         $command = $this->awsFixtures->getLastCommand();
 
-        assertEquals('actor-users', $command['TableName']);
-        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
-        assertEquals('UpdateItem', $command->getName());
+        Assert::assertEquals('actor-users', $command['TableName']);
+        Assert::assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        Assert::assertEquals('UpdateItem', $command->getName());
     }
 
     /**
@@ -444,7 +445,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $userService->canResetEmail($this->userEmailResetToken);
         } catch (GoneException $ex) {
-            assertEquals(410, $ex->getCode());
+            Assert::assertEquals(410, $ex->getCode());
             return;
         }
 
@@ -501,7 +502,7 @@ class AccountContext extends BaseIntegrationContext
 
         $userId = $userService->canResetEmail($this->userEmailResetToken);
 
-        assertEquals($this->userAccountId, $userId);
+        Assert::assertEquals($this->userAccountId, $userId);
 
         //completeChangeEmail
 
@@ -549,7 +550,7 @@ class AccountContext extends BaseIntegrationContext
 
         $reset = $userService->completeChangeEmail($this->userEmailResetToken);
 
-        assertNull($reset);
+        Assert::assertNull($reset);
     }
 
     /**
@@ -601,7 +602,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $userService->canResetEmail($this->userEmailResetToken);
         } catch (GoneException $ex) {
-            assertEquals(410, $ex->getCode());
+            Assert::assertEquals(410, $ex->getCode());
             return;
         }
 
@@ -712,7 +713,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->add(['email' => $userAccountCreateData['email'], 'password' => $userAccountCreateData['password']]);
         } catch (ConflictException $ex) {
-            assertEquals(409, $ex->getCode());
+            Assert::assertEquals(409, $ex->getCode());
             return;
         }
 
@@ -796,7 +797,7 @@ class AccountContext extends BaseIntegrationContext
                 'password' => new HiddenString($userAccountCreateData['Password']),
             ]
         );
-        assertEquals($result['Email'], $userAccountCreateData['Email']);
+        Assert::assertEquals($result['Email'], $userAccountCreateData['Email']);
     }
 
     /**
@@ -846,7 +847,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->add(['email' => $userAccountCreateData['Email'], 'password' => $userAccountCreateData['Password']]);
         } catch (ConflictException $ex) {
-            assertEquals(409, $ex->getCode());
+            Assert::assertEquals(409, $ex->getCode());
             return;
         }
 
@@ -911,7 +912,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->activate($this->actorAccountCreateData['ActivationToken']);
         } catch (Exception $ex) {
-            assertEquals('User not found for token', $ex->getMessage());
+            Assert::assertEquals('User not found for token', $ex->getMessage());
         }
     }
 
@@ -956,7 +957,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->canResetPassword($this->passwordResetData['PasswordResetToken']);
         } catch (GoneException $gex) {
-            assertEquals('Reset token not found', $gex->getMessage());
+            Assert::assertEquals('Reset token not found', $gex->getMessage());
         }
     }
 
@@ -1001,7 +1002,7 @@ class AccountContext extends BaseIntegrationContext
 
         $userId = $us->canResetPassword($this->passwordResetData['PasswordResetToken']);
 
-        assertEquals($this->userAccountId, $userId);
+        Assert::assertEquals($this->userAccountId, $userId);
     }
 
     /**
@@ -1044,7 +1045,7 @@ class AccountContext extends BaseIntegrationContext
 
         $userData = $us->activate($this->actorAccountCreateData['ActivationToken']);
 
-        assertNotNull($userData);
+        Assert::assertNotNull($userData);
     }
 
     /**
@@ -1149,9 +1150,9 @@ class AccountContext extends BaseIntegrationContext
 
         $command = $this->awsFixtures->getLastCommand();
 
-        assertEquals('actor-users', $command['TableName']);
-        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
-        assertEquals('UpdateItem', $command->getName());
+        Assert::assertEquals('actor-users', $command['TableName']);
+        Assert::assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        Assert::assertEquals('UpdateItem', $command->getName());
     }
 
     /**
@@ -1159,7 +1160,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
-        assertEquals('123456789', $this->userActivationToken);
+        Assert::assertEquals('123456789', $this->userActivationToken);
     }
 
     /**
@@ -1167,7 +1168,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        assertArrayHasKey('PasswordResetToken', $this->passwordResetData);
+        Assert::assertArrayHasKey('PasswordResetToken', $this->passwordResetData);
     }
 
     /**
@@ -1332,7 +1333,7 @@ class AccountContext extends BaseIntegrationContext
                     new HiddenString($this->userAccountPassword)
                 );
             } catch (ConflictException $ex) {
-                assertEquals(409, $ex->getCode());
+                Assert::assertEquals(409, $ex->getCode());
                 return;
             }
 
@@ -1366,7 +1367,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($password));
         } catch (ForbiddenException $ex) {
-            assertEquals(403, $ex->getCode());
+            Assert::assertEquals(403, $ex->getCode());
             return;
         }
 
@@ -1437,12 +1438,12 @@ class AccountContext extends BaseIntegrationContext
             new HiddenString($this->userAccountPassword)
         );
 
-        assertEquals($this->userAccountId, $response['Id']);
-        assertEquals($this->userAccountEmail, $response['Email']);
-        assertEquals($this->newEmail, $response['NewEmail']);
-        assertEquals($this->userAccountPassword, $response['Password']);
-        assertEquals($this->userEmailResetToken, $response['EmailResetToken']);
-        assertArrayHasKey('EmailResetExpiry', $response);
+        Assert::assertEquals($this->userAccountId, $response['Id']);
+        Assert::assertEquals($this->userAccountEmail, $response['Email']);
+        Assert::assertEquals($this->newEmail, $response['NewEmail']);
+        Assert::assertEquals($this->userAccountPassword, $response['Password']);
+        Assert::assertEquals($this->userEmailResetToken, $response['EmailResetToken']);
+        Assert::assertArrayHasKey('EmailResetExpiry', $response);
     }
 
     /**
@@ -1466,8 +1467,8 @@ class AccountContext extends BaseIntegrationContext
         try {
             $us->authenticate('incorrect@email.com', $this->userAccountPassword);
         } catch (NotFoundException $ex) {
-            assertEquals('User not found for email', $ex->getMessage());
-            assertEquals(404, $ex->getCode());
+            Assert::assertEquals('User not found for email', $ex->getMessage());
+            Assert::assertEquals(404, $ex->getCode());
             return;
         }
 
@@ -1530,8 +1531,8 @@ class AccountContext extends BaseIntegrationContext
 
         $deletedUser = $userService->deleteUserAccount($this->userAccountId);
 
-        assertEquals($this->userAccountId, $deletedUser['Id']);
-        assertEquals($this->userAccountEmail, $deletedUser['Email']);
+        Assert::assertEquals($this->userAccountId, $deletedUser['Id']);
+        Assert::assertEquals($this->userAccountEmail, $deletedUser['Email']);
     }
 
     /**
@@ -1549,9 +1550,9 @@ class AccountContext extends BaseIntegrationContext
     {
         $command = $this->awsFixtures->getLastCommand();
 
-        assertEquals('actor-users', $command['TableName']);
-        assertEquals($this->userAccountId, $command['Key']['Id']['S']);
-        assertEquals('UpdateItem', $command->getName());
+        Assert::assertEquals('actor-users', $command['TableName']);
+        Assert::assertEquals($this->userAccountId, $command['Key']['Id']['S']);
+        Assert::assertEquals('UpdateItem', $command->getName());
     }
 
     protected function prepareContext(): void

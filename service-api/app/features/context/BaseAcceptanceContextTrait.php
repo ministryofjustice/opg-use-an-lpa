@@ -12,28 +12,14 @@ use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
 use JSHayes\FakeRequests\MockHandler;
 use JSHayes\FakeRequests\RequestHandler;
+use PHPUnit\Framework\Assert;
 
 trait BaseAcceptanceContextTrait
 {
-    /**
-     * @var BaseAcceptanceContext
-     */
-    protected $base;
-
-    /**
-     * @var MinkContext
-     */
-    protected $ui;
-
-    /**
-     * @var MockHandler
-     */
-    protected $apiFixtures;
-
-    /**
-     * @var AwsMockHandler
-     */
-    protected $awsFixtures;
+    protected BaseAcceptanceContext $base;
+    protected MinkContext $ui;
+    protected MockHandler $apiFixtures;
+    protected AwsMockHandler $awsFixtures;
 
     /**
      * @BeforeScenario
@@ -50,7 +36,7 @@ trait BaseAcceptanceContextTrait
 
     protected function getResponseAsJson(): array
     {
-        assertJson($this->ui->getSession()->getPage()->getContent());
+        Assert::assertJson($this->ui->getSession()->getPage()->getContent());
         return json_decode($this->ui->getSession()->getPage()->getContent(), true);
     }
 
