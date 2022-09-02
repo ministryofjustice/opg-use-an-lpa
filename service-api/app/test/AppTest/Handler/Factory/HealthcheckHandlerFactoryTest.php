@@ -11,10 +11,13 @@ use App\Handler\Factory\HealthcheckHandlerFactory;
 use App\Handler\HealthcheckHandler;
 use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class HealthcheckHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testItCreatesAHealthcheckHandler(): void
     {
         $factory = new HealthcheckHandlerFactory();

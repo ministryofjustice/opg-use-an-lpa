@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\Handler\LpaSearchHandler;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use App\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 class LpaSearchHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testHandle()
     {
         $this->markTestSkipped('must be revisited.');

@@ -4,14 +4,15 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetTrustCorporationStatus;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class GetTrustCorporationStatusTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {
@@ -19,7 +20,7 @@ class GetTrustCorporationStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_0_if_trustCorporation_is_active()
+    public function returns_0_if_trustCorporation_is_active(): void
     {
         $trustCorporation = ['uId' => 7, 'companyName' => 'ABC Ltd' , 'systemStatus' => true];
 
@@ -31,7 +32,7 @@ class GetTrustCorporationStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_1_if_trustCorporation_is_a_ghost()
+    public function returns_1_if_trustCorporation_is_a_ghost(): void
     {
         $trustCorporation = ['uId' => 8, 'companyName' => '', 'systemStatus' => false];
 
@@ -43,7 +44,7 @@ class GetTrustCorporationStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_2_if_trustCorporation_is_inactive()
+    public function returns_2_if_trustCorporation_is_inactive(): void
     {
         $trustCorporation = ['uId' => 7, 'companyName' => 'XYZ Ltd', 'systemStatus' => false];
 

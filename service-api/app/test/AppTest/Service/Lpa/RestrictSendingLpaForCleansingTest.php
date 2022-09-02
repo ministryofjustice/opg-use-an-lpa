@@ -5,6 +5,8 @@ namespace AppTest\Service\Lpa;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -15,10 +17,9 @@ use Psr\Log\LoggerInterface;
  */
 class RestrictSendingLpaForCleansingTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {

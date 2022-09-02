@@ -9,10 +9,13 @@ use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\RequestInterface;
 
 class RequestSignerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         // Keys from the documentation

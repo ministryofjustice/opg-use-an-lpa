@@ -12,22 +12,18 @@ use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class DynamoCodeValidationStrategyTest extends TestCase
 {
-    /** @var ObjectProphecy|ActorCodesInterface */
-    private ObjectProphecy $actorCodeRepositoryProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LoggerInterface */
-    private ObjectProphecy $loggerProphecy;
-
-    /** @var ObjectProphecy|LpaService */
-    private ObjectProphecy $lpaServiceProphecy;
-
-    /** @var ObjectProphecy|ResolveActor */
-    private ObjectProphecy $resolveActorProphecy;
+    private ActorCodesInterface|ObjectProphecy $actorCodeRepositoryProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function initDependencies(): void
     {

@@ -8,15 +8,16 @@ use App\Service\ApiClient\Client;
 use App\Service\ApiClient\ClientFactory;
 use App\Service\Log\RequestTracing;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 
 class ClientFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function can_create_an_instance_of_a_client()
+    use ProphecyTrait;
+
+    /** @test */
+    public function can_create_an_instance_of_a_client(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -47,10 +48,8 @@ class ClientFactoryTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    /**
-     * @test
-     */
-    public function throws_exception_when_missing_sirius_api_configuration()
+    /** @test */
+    public function throws_exception_when_missing_sirius_api_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')
@@ -69,10 +68,8 @@ class ClientFactoryTest extends TestCase
         $factory($containerProphecy->reveal());
     }
 
-    /**
-     * @test
-     */
-    public function throws_exception_when_missing_aws_configuration()
+    /** @test */
+    public function throws_exception_when_missing_aws_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')

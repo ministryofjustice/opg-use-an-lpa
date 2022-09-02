@@ -14,22 +14,18 @@ use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class CodesApiValidationStrategyTest extends TestCase
 {
-    /** @var ObjectProphecy|ActorCodes */
-    private ObjectProphecy $actorCodeApiProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LoggerInterface */
-    private ObjectProphecy $loggerProphecy;
-
-    /** @var ObjectProphecy|LpaService */
-    private ObjectProphecy $lpaServiceProphecy;
-
-    /** @var ObjectProphecy|ResolveActor */
-    private ObjectProphecy $resolveActorProphecy;
+    private ActorCodes|ObjectProphecy $actorCodeApiProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function initDependencies(): void
     {
