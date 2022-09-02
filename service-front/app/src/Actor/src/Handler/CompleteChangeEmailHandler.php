@@ -95,7 +95,7 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
             null,
             'flashMessage'
         );
-       $flash->flash(self::NEW_EMAIL_ACTIVATED_FLASH_MSG, $message);
+        $flash->flash(self::NEW_EMAIL_ACTIVATED_FLASH_MSG, $message);
 
         return $this->redirectToRoute('login');
     }

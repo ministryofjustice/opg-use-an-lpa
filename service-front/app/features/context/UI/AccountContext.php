@@ -1995,8 +1995,8 @@ class AccountContext implements Context
      */
     public function iRequestForMyPasswordToBeReset(
         $email = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
-        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk')
-    {
+        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk'
+    ) {
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
             ->respondWith(
