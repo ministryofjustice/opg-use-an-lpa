@@ -37,7 +37,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given I access the viewer service
      */
-    public function iAccessTheViewerService()
+    public function iAccessTheViewerService(): void
     {
         // Not used in this context
     }
@@ -45,7 +45,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then I can see the full details of the valid LPA
      */
-    public function iCanSeeTheFullDetailsOfTheValidLPA()
+    public function iCanSeeTheFullDetailsOfTheValidLPA(): void
     {
         // Not used in this context
     }
@@ -53,7 +53,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->organisation = 'TestOrg';
 
@@ -89,7 +89,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When I give a share code that's been cancelled
      */
-    public function iGiveAShareCodeThatHasBeenCancelled()
+    public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
         $this->lpa->status = 'Cancelled';
@@ -132,7 +132,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When I give a valid LPA share code
      */
-    public function iGiveAValidLPAShareCode()
+    public function iGiveAValidLPAShareCode(): void
     {
         $this->organisation = 'TestOrg';
 
@@ -173,7 +173,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given I have been given access to a cancelled LPA via share code
      */
-    public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode()
+    public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaShareCode();
         $this->lpa->status = 'Cancelled';
@@ -182,7 +182,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given I have been given access to an LPA via share code
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaShareCode()
+    public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
@@ -195,7 +195,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When /^I realise the LPA is incorrect$/
      */
-    public function iRealiseTheLPAIsCorrect()
+    public function iRealiseTheLPAIsCorrect(): void
     {
         // Not used in this context
     }
@@ -203,7 +203,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then /^I can see a message the LPA has been cancelled$/
      */
-    public function iSeeAMessageThatLPAHasBeenCancelled()
+    public function iSeeAMessageThatLPAHasBeenCancelled(): void
     {
         // Not used in this context
     }
@@ -211,7 +211,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then /^I want to see an option to check another LPA$/
      */
-    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
     }
@@ -219,7 +219,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then /^I want to see an option to re-enter code$/
      */
-    public function iWantToSeeAnOptionToReEnterCode()
+    public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // Not used in this context
     }
