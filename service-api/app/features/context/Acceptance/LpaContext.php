@@ -452,7 +452,9 @@ class LpaContext implements Context
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // codes api service call
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         // lpaService: getByUid
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
@@ -496,29 +498,6 @@ class LpaContext implements Context
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
-
-        $data = [
-            'queuedForCleansing' => true
-        ];
-
-        if ($cleanseStatus == 'not marked' && $regDate == 'before') {
-            // request a code to be generated and letter to be sent
-            $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($data)
-                )
-            );
-        } else {
-            // request a code to be generated and letter to be sent
-            $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
-        }
     }
 
     /**
@@ -527,7 +506,9 @@ class LpaContext implements Context
     public function theActivateByTTLIsRemovedFromTheRecordInTheDB(): void
     {
         // codes api service call
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         // lpaService: getByUid
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
@@ -664,12 +645,12 @@ class LpaContext implements Context
 
         // check if actor has a code
         $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['Created' => $createdDate->format('Y-m-d')])
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(['Created' => $createdDate->format('Y-m-d')])
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -725,7 +706,9 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -1270,7 +1253,10 @@ class LpaContext implements Context
         Assert::assertEquals($response[0]['Added'], '2019-01-05 12:34:56');
         Assert::assertNotEquals($response[0]['Expires'], (new DateTime('now'))->format('Y-m-d'));
         //check if the code expiry date is in the past
-        Assert::assertGreaterThan(strtotime($response[0]['Expires']), strtotime((new DateTime('now'))->format('Y-m-d')));
+        Assert::assertGreaterThan(
+            strtotime($response[0]['Expires']),
+            strtotime((new DateTime('now'))->format('Y-m-d'))
+        );
     }
 
     /**
@@ -1406,7 +1392,10 @@ class LpaContext implements Context
         Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
 
         //check if the code expiry date is in the past
-        Assert::assertGreaterThan(strtotime((new DateTime('now'))->format('Y-m-d')), strtotime($response[0]['Expires']));
+        Assert::assertGreaterThan(
+            strtotime((new DateTime('now'))->format('Y-m-d')),
+            strtotime($response[0]['Expires'])
+        );
     }
 
     /**
@@ -1623,7 +1612,9 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -1918,7 +1909,9 @@ class LpaContext implements Context
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         // codes api service call
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -2560,27 +2553,27 @@ class LpaContext implements Context
 
         // check if actor has a code
         $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'Created' => null
-                        ]
-                    )
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(
+                    [
+                        'Created' => null
+                    ]
                 )
-            );
+            )
+        );
 
         // lpaService: getByUid
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
@@ -2795,12 +2788,12 @@ class LpaContext implements Context
 
         // check if actor has a code
         $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['Created' => $createdDate->format('Y-m-d')])
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(['Created' => $createdDate->format('Y-m-d')])
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2826,7 +2819,6 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname
             ],
             'caseSubtype'           => $this->lpa->caseSubtype,
-            'activationKeyDueDate'  => $createdDate->format('c'),
             'activationKeyDueDate'  => $activationKeyDueDate
         ];
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -2937,7 +2929,7 @@ class LpaContext implements Context
      */
     public function iCheckMyAccessCodesOfTheStatusChangedLpa(): void
     {
-        $this->lpa->status = "Revoked";
+        $this->lpa->status = 'Revoked';
 
         // Get the LPA
 
@@ -3338,16 +3330,16 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
+        // LpaService: getByUid
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
