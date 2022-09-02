@@ -1723,10 +1723,12 @@ class AccountContext implements Context
 
     /**
      * @Given /^I should be able to login with my new email address$/
+     * @Then /^I am affirmed my email address has been changed$/
      */
     public function iShouldBeAbleToLoginWithMyNewEmailAddress()
     {
         $this->ui->assertPageAddress('/login');
+        $this->ui->assertPageContainsText('Email address changed successfully');
         // Login test is not needed since we already have one
     }
 
