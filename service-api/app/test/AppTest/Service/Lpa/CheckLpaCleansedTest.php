@@ -6,9 +6,9 @@ use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\LpaService;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use DateTime;
 
 /**
  * Class CheckLpaCleansedTest
@@ -28,7 +28,7 @@ class CheckLpaCleansedTest extends TestCase
      */
     private $lpaServiceProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
@@ -55,7 +55,10 @@ class CheckLpaCleansedTest extends TestCase
         );
 
         $actorDetailsMatch = [
-            'lpa-id'            => '700000000001'
+            'lpa-id' => '700000000001',
+            'actor' => [
+                'uId' => '700000000002'
+            ]
         ];
 
         $this->lpaServiceProphecy

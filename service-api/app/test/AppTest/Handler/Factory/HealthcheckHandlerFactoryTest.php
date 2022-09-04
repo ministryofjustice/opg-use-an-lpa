@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Test\Handler\Factory;
+namespace AppTest\Handler\Factory;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\ActorUsersInterface;
-use GuzzleHttp\Client as HttpClient;
-use PHPUnit\Framework\TestCase;
+use App\DataAccess\Repository\LpasInterface;
 use App\Handler\Factory\HealthcheckHandlerFactory;
 use App\Handler\HealthcheckHandler;
+use GuzzleHttp\Client as HttpClient;
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use App\DataAccess\Repository\LpasInterface;
 
 class HealthcheckHandlerFactoryTest extends TestCase
 {
-    public function testItCreatesAHealthcheckHandler()
+    public function testItCreatesAHealthcheckHandler(): void
     {
         $factory = new HealthcheckHandlerFactory();
 
@@ -28,9 +28,12 @@ class HealthcheckHandlerFactoryTest extends TestCase
         $container->get('config')->willReturn(
             [
                 'version' => 'dev',
+                'sirius_api' => [
+                    'endpoint' => 'localhost'
+                ],
                 'codes_api' => [
                     'endpoint' => 'localhost'
-                ]
+                ],
             ]
         );
         $container->get(ActorUsersInterface::class)->willReturn($actorUsers->reveal());

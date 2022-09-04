@@ -21,6 +21,7 @@ type AccountService interface {
 type LPAService interface {
 	GetLpasByUserID(context.Context, string) ([]*data.LPA, error)
 	GetLPAByActivationCode(context.Context, string) (*data.LPA, error)
+	GetLpaRecordBySiriusID(ctx context.Context, lpaID string) ([]*data.LPA, error)
 }
 
 type TemplateWriterService interface {
@@ -28,14 +29,24 @@ type TemplateWriterService interface {
 }
 
 type SearchServer struct {
-	accountService  AccountService
-	lpaService      LPAService
-	templateService TemplateWriterService
+	accountService       AccountService
+	lpaService           LPAService
+	templateService      TemplateWriterService
+	activationKeyService data.ActivationKeyService
+}
+
+type SearchResult struct {
+	Query         string
+	Used          string
+	Email         string
+	LPA           string
+	ActivationKey *data.ActivationKey
 }
 
 const (
 	EmailQuery QueryType = iota
 	ActivationCodeQuery
+	LPANumberQuery
 )
 
 var (
@@ -43,6 +54,7 @@ var (
 	ErrNotEmailOrCode error = errors.New("Enter an email address or activation code")
 
 	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
+	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)(\d[ -]*?){12}$`)
 )
 
 type QueryType int
@@ -54,8 +66,18 @@ type Search struct {
 	Errors validation.Errors
 }
 
-func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService) *SearchServer {
-	return &SearchServer{accountService: accountService, lpaService: lpaService, templateService: templateWriterService}
+type AddedBy struct {
+	DateAdded string
+	Email     string
+}
+
+func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
+	return &SearchServer{
+		accountService:       accountService,
+		lpaService:           lpaService,
+		templateService:      templateWriterService,
+		activationKeyService: activationKeyService,
+	}
 }
 
 func (s *Search) Validate() error {
@@ -85,6 +107,12 @@ func (s *Search) checkEmailOrCode(value interface{}) error {
 		return nil
 	}
 
+	isLpaNumber := validation.Match(lpaNumberRegex).Validate(value)
+	if isLpaNumber == nil {
+		s.Type = LPANumberQuery
+		return nil
+	}
+
 	return ErrNotEmailOrCode
 }
 
@@ -96,8 +124,8 @@ func stripUnnecessaryCharacters(code string) string {
 	return result
 }
 
-func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	s := &Search{}
+func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
+	search := &Search{}
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
@@ -105,57 +133,124 @@ func (searchServer *SearchServer) SearchHandler(w http.ResponseWriter, r *http.R
 			log.Error().Err(err).Msg("failed to parse form input")
 		}
 
-		s.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
+		search.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
 
-		err = s.Validate()
+		err = search.Validate()
 		if err != nil {
 			log.Debug().AnErr("form-error", err).Msg("")
 		} else {
-			s.Result = DoSearch(r.Context(), searchServer.accountService, searchServer.lpaService, s.Type, s.Query)
+			switch search.Type {
+			case LPANumberQuery:
+				search.Result = s.SearchByLPANumber(r.Context(), stripUnnecessaryCharacters(search.Query))
+			case EmailQuery:
+				search.Result = s.SearchByEmail(r.Context(), search.Query)
+			case ActivationCodeQuery:
+				search.Result = s.SearchByActivationCode(r.Context(), stripUnnecessaryCharacters(search.Query))
+			}
 		}
 	}
 
-	if err := searchServer.templateService.RenderTemplate(w, r.Context(), "search.page.gohtml", s); err != nil {
+	if err := s.templateService.RenderTemplate(w, r.Context(), "search.page.gohtml", search); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
 }
 
-func DoSearch(ctx context.Context, accountService AccountService, lpaService LPAService, t QueryType, q string) interface{} {
-	switch t {
-	case EmailQuery:
-		r, err := accountService.GetActorUserByEmail(ctx, q)
+func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interface{} {
+	r, err := s.lpaService.GetLpaRecordBySiriusID(ctx, q)
+	if err != nil {
+		return nil
+	}
+
+	emails := []AddedBy{}
+
+	for _, userID := range r {
+		email, err := s.accountService.GetEmailByUserID(ctx, userID.UserID)
+		if err == nil {
+			addedBy := AddedBy{Email: email, DateAdded: userID.Added}
+			emails = append(emails, addedBy)
+		}
+	}
+
+	return map[string]interface{}{
+		"LPANumber": q,
+		"AddedBy":   emails,
+	}
+}
+
+func (s *SearchServer) SearchByEmail(ctx context.Context, q string) interface{} {
+	r, err := s.accountService.GetActorUserByEmail(ctx, q)
+	if err != nil {
+		return nil
+	}
+
+	r.LPAs, err = s.lpaService.GetLpasByUserID(ctx, r.ID)
+	if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
+		return nil
+	}
+
+	return r
+}
+
+func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) interface{} {
+	r, err := s.lpaService.GetLPAByActivationCode(ctx, q)
+
+	if err == nil {
+		email, err := s.accountService.GetEmailByUserID(ctx, r.UserID)
 		if err != nil {
 			return nil
 		}
-
-		r.LPAs, err = lpaService.GetLpasByUserID(ctx, r.ID)
-		if err != nil && !errors.Is(err, data.ErrUserLpaActorMapNotFound) {
-			return nil
-		}
-
-		return r
-
-	case ActivationCodeQuery:
-		r, err := lpaService.GetLPAByActivationCode(ctx, stripUnnecessaryCharacters(q))
-		if err != nil {
-			return nil
-		}
-
-		email, err := accountService.GetEmailByUserID(ctx, r.UserID)
 
 		if email == "" {
 			email = "Not Found"
 		}
 
-		if err == nil {
-			return map[string]interface{}{
-				"Activation key": q,
-				"Used":           "Yes",
-				"Email":          email,
-				"LPA":            r.SiriusUID,
+		activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
+
+		if err != nil {
+			return &SearchResult{
+				Query:         q,
+				Used:          "Yes",
+				Email:         email,
+				LPA:           r.SiriusUID,
+				ActivationKey: nil,
+			}
+		} else {
+
+			for _, value := range *activationKey {
+				return &SearchResult{
+					Query:         q,
+					Used:          "Yes",
+					Email:         email,
+					LPA:           r.SiriusUID,
+					ActivationKey: &value,
+				}
 			}
 		}
+	} else {
+		activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
+		if err == nil {
+			for _, value := range *activationKey {
+
+				used := isUsed(value.Active, value.StatusDetails)
+
+				return &SearchResult{
+					Query:         q,
+					Used:          used,
+					ActivationKey: &value,
+					LPA:           value.Lpa,
+				}
+			}
+		}
+
 	}
 
 	return nil
+}
+
+func isUsed(active bool, status string) string {
+	if !active && status == "Revoked" {
+		return "Yes"
+	} else {
+		return "No"
+	}
 }

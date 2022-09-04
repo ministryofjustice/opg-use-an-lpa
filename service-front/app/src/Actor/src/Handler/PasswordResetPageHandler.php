@@ -8,7 +8,10 @@ use Acpr\I18n\TranslatorInterface;
 use Actor\Form\PasswordReset;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session;
+use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\User\UserService;
 use Mezzio\Flash\FlashMessageMiddleware;
 use ParagonIE\HiddenString\HiddenString;
@@ -25,9 +28,10 @@ use Mezzio\Template\TemplateRendererInterface;
  * @package Actor\Handler
  * @codeCoverageIgnore
  */
-class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
+class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware, SessionAware
 {
     use CsrfGuard;
+    use Session;
 
     private TranslatorInterface $translator;
 
@@ -87,6 +91,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
                     new HiddenString($data['password'])
                 );
 
+                $this->invalidateSession($request);
+
                 $message = $this->translator->translate(
                     'Password changed successfully',
                     [],
@@ -107,5 +113,20 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
         }
 
         return new HtmlResponse($this->renderer->render('actor::password-reset-not-found'));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return void
+     */
+    private function invalidateSession(ServerRequestInterface $request): void
+    {
+        $session = $this->getSession($request, 'session');
+
+        // Tell the SessionExpiredAttributeAllowlistMiddleware to clean out the session when it's done.
+        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
+
+        $session->regenerate();
     }
 }

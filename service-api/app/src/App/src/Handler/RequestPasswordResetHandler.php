@@ -6,10 +6,11 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\User\UserService;
+use Exception;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class RequestPasswordResetHandler
@@ -19,26 +20,21 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class RequestPasswordResetHandler implements RequestHandlerInterface
 {
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        private UserService $userService,
+    ) {
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws BadRequestException|Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['email'])) {
+        if (empty($requestData['email'])) {
             throw new BadRequestException('Email must be provided');
         }
 

@@ -18,7 +18,7 @@ class ViewerCodeActivityTest extends TestCase
 
     private $dynamoDbClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClient = $this->prophesize(DynamoDbClient::class);
     }

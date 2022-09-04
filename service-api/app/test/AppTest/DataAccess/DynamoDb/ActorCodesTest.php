@@ -6,9 +6,9 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ActorCodes;
 use Aws\DynamoDb\DynamoDbClient;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use DateTime;
 
 class ActorCodesTest extends TestCase
 {
@@ -18,7 +18,7 @@ class ActorCodesTest extends TestCase
 
     private $dynamoDbClientProphecy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }

@@ -44,9 +44,9 @@ class ActorCodeService
      *
      * @param string $userLpaActorMapId the database id to remove the TTL from
      *
-     * @return string|null returns the database ID of the LPA that has had it's TTL removed
+     * @return string returns the database ID of the LPA that has had it's TTL removed
      */
-    private function activateRecord(string $userLpaActorMapId, string $actorId, string $code): ?string
+    private function activateRecord(string $userLpaActorMapId, string $actorId, string $code): string
     {
         $this->userLpaActorMapRepository->activateRecord($userLpaActorMapId, $actorId, $code);
 

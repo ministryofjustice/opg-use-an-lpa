@@ -12,8 +12,6 @@ $cacheConfig = ['config_cache_path' => '/tmp/config-cache.php'];
 
 $aggregator = new ConfigAggregator(
     [
-        \WShafer\PSR11MonoLog\ConfigProvider::class,
-        \Laminas\HttpHandlerRunner\ConfigProvider::class,
         \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
 
         // Include cache configuration
@@ -26,10 +24,10 @@ $aggregator = new ConfigAggregator(
         // Swoole config to overwrite some services (if installed)
         class_exists(\Mezzio\Swoole\ConfigProvider::class)
             ? \Mezzio\Swoole\ConfigProvider::class
-            : function () {return []; },
+            : function () { return []; },
 
         // Default App module config
-        App\ConfigProvider::class,
+        \App\ConfigProvider::class,
 
         // Load application config in a pre-defined order in such a way that local settings
         // overwrite global settings. (Loaded as first to last):
@@ -42,6 +40,6 @@ $aggregator = new ConfigAggregator(
         // Load development config if it exists
         new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
     ],
-    $cacheConfig['config_cache_path'], [\Laminas\ZendFrameworkBridge\ConfigPostProcessor::class]);
+    $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();

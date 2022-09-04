@@ -13,7 +13,7 @@ class GetTrustCorporationStatusTest extends TestCase
      */
     private $loggerProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -21,7 +21,7 @@ class GetTrustCorporationStatusTest extends TestCase
     /** @test */
     public function returns_0_if_trustCorporation_is_active()
     {
-        $trustCorporation = ['id' => 7, 'companyName' => 'ABC Ltd' , 'systemStatus' => true];
+        $trustCorporation = ['uId' => 7, 'companyName' => 'ABC Ltd' , 'systemStatus' => true];
 
         $status = new GetTrustCorporationStatus(
             $this->loggerProphecy->reveal()
@@ -33,7 +33,7 @@ class GetTrustCorporationStatusTest extends TestCase
     /** @test */
     public function returns_1_if_trustCorporation_is_a_ghost()
     {
-        $trustCorporation = ['id' => 8, 'companyName' => '', 'systemStatus' => false];
+        $trustCorporation = ['uId' => 8, 'companyName' => '', 'systemStatus' => false];
 
         $status = new GetTrustCorporationStatus(
             $this->loggerProphecy->reveal()
@@ -45,7 +45,7 @@ class GetTrustCorporationStatusTest extends TestCase
     /** @test */
     public function returns_2_if_trustCorporation_is_inactive()
     {
-        $trustCorporation = ['id' => 7, 'companyName' => 'XYZ Ltd', 'systemStatus' => false];
+        $trustCorporation = ['uId' => 7, 'companyName' => 'XYZ Ltd', 'systemStatus' => false];
 
         $status = new GetTrustCorporationStatus(
             $this->loggerProphecy->reveal()

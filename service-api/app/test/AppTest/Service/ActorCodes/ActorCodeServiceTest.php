@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Lpa;
+namespace AppTest\Service\ActorCodes;
 
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\UserLpaActorMapInterface;

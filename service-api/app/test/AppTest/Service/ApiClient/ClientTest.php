@@ -23,7 +23,7 @@ class ClientTest extends TestCase
      */
     protected $apiClient;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Keys from the documentation
         // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
@@ -33,7 +33,7 @@ class ClientTest extends TestCase
         $this->apiClient = $this->prophesize(ClientInterface::class);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');

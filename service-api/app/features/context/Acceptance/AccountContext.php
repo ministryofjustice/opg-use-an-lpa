@@ -9,7 +9,6 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
-use ParagonIE\HiddenString\HiddenString;
 
 /**
  * Class AccountContext
@@ -1194,6 +1193,8 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
     {
+        $this->base->userAccountId = '123456789';
+
         $this->userAccountCreateData = [
             'Id'                  => 1,
             'ActivationToken'     => 'activate1234567890',
@@ -1283,6 +1284,6 @@ class AccountContext implements Context
      */
     public function iShouldBeToldThatABadRequestWasMade()
     {
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 }

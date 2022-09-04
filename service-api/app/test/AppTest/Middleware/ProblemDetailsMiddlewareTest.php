@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Handler;
+namespace AppTest\Middleware;
 
 use App\Exception\NotFoundException;
 use App\Middleware\ProblemDetailsMiddleware;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
 use Psr\Log\LoggerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 class ProblemDetailsMiddlewareTest extends TestCase
 {

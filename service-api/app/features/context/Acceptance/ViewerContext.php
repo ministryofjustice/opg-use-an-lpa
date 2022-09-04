@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
  * @property string viewerCode
  * @property string donorSurname
  * @property array lpa
+ * @property string viewerCodeOrganisation
  * @property string lpaViewedBy
  */
 class ViewerContext implements Context
@@ -33,6 +34,7 @@ class ViewerContext implements Context
     {
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
+        $this->viewerCodeOrganisation = 'santander';
         $this->lpaViewedBy = 'Santander';
 
         $this->lpa = json_decode(
@@ -118,10 +120,11 @@ class ViewerContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
-                            'Added'      => (new \DateTime('now'))->format('c'),
-                            'Expires'    => $lpaExpiry
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->viewerCodeOrganisation,
                         ]
                     )
                 ]
@@ -164,10 +167,11 @@ class ViewerContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
-                            'Added'      => (new \DateTime('now'))->format('c'),
-                            'Expires'    => $lpaExpiry
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->viewerCodeOrganisation,
                         ]
                     )
                 ]

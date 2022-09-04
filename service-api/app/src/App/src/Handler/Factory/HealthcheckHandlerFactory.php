@@ -6,12 +6,17 @@ namespace App\Handler\Factory;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\ActorUsersInterface;
-use GuzzleHttp\Client as HttpClient;
-use Psr\Container\ContainerInterface;
 use App\Handler\HealthcheckHandler;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class HealthcheckHandlerFactory
 {
+    /**
+     * @throws NotFoundExceptionInterface|ContainerExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): HealthcheckHandler
     {
         $config = $container->get('config');
@@ -21,7 +26,8 @@ class HealthcheckHandlerFactory
             $container->get(ActorUsersInterface::class),
             $container->get(HttpClient::class),
             $container->get(RequestSigner::class),
-            $config['codes_api']['endpoint']
+            $config['sirius_api']['endpoint'],
+            $config['codes_api']['endpoint'],
         );
     }
 }
