@@ -15,28 +15,20 @@ use DateInterval;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class OlderLpaServiceTest extends TestCase
 {
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LpasInterface */
-    private $lpasInterfaceProphecy;
-
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
-
-    /** @var ObjectProphecy|ActorCodes */
-    public $actorCodesProphecy;
-
-    /** @var ObjectProphecy|ResolveActor */
-    private $resolveActorProphecy;
-
-    /** @var UserLpaActorMapInterface|ObjectProphecy */
-    private $userLpaActorMapProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
+    private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    public ActorCodes|ObjectProphecy $actorCodesProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     public string $userId;
     public string $lpaUid;
@@ -47,7 +39,6 @@ class OlderLpaServiceTest extends TestCase
     private DateInterval $oneYearInterval;
     private DateInterval $sixWeekInterval;
     private DateInterval $twoWeekInterval;
-
 
     public function setUp(): void
     {
@@ -287,7 +278,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_code_created_date_if_code_exists_for_actor()
+    public function returns_code_created_date_if_code_exists_for_actor(): void
     {
         $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
 
@@ -309,7 +300,7 @@ class OlderLpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function returns_null_if_a_code_does_not_exist_for_an_actor()
+    public function returns_null_if_a_code_does_not_exist_for_an_actor(): void
     {
         $lpaCodesResponse = new ActorCode(
             [

@@ -4,14 +4,15 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class GetAttorneyStatusTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {
@@ -19,7 +20,7 @@ class GetAttorneyStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_0_if_attorney_is_active()
+    public function returns_0_if_attorney_is_active(): void
     {
         $attorney = ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true];
 
@@ -31,7 +32,7 @@ class GetAttorneyStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_1_if_attorney_is_a_ghost()
+    public function returns_1_if_attorney_is_a_ghost(): void
     {
         $attorney = ['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true];
 
@@ -43,7 +44,7 @@ class GetAttorneyStatusTest extends TestCase
     }
 
     /** @test */
-    public function returns_2_if_attorney_is_inactive()
+    public function returns_2_if_attorney_is_inactive(): void
     {
         $attorney = ['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false];
 

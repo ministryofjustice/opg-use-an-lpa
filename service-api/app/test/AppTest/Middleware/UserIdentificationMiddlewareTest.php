@@ -7,14 +7,17 @@ namespace AppTest\Middleware;
 use App\Exception\UnauthorizedException;
 use App\Middleware\UserIdentificationMiddleware;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class UserIdentificationMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
-    public function it_correctly_produces_a_successful_response()
+    public function it_correctly_produces_a_successful_response(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
@@ -36,7 +39,7 @@ class UserIdentificationMiddlewareTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_an_unauthorized_exception_when_no_user_token()
+    public function it_throws_an_unauthorized_exception_when_no_user_token(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);

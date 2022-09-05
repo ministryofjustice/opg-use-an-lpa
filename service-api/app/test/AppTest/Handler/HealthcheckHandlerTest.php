@@ -12,6 +12,7 @@ use GuzzleHttp\Client as HttpClient;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +20,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class HealthcheckHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ObjectProphecy $actorUsersProphecy;
     private ObjectProphecy $httpClientProphecy;
     private ObjectProphecy $requestSignerProphecy;

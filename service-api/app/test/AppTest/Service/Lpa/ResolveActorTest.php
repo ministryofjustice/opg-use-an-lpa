@@ -5,20 +5,16 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ResolveActorTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var ObjectProphecy
-     */
-    private $getAttorneyStatusProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
 
     public function setUp(): void
     {
@@ -35,7 +31,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor()
+    public function can_find_actor_who_is_a_donor(): void
     {
         $lpa = [
             'donor' => [
@@ -68,7 +64,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor_by_linked_id()
+    public function can_find_actor_who_is_a_donor_by_linked_id(): void
     {
         $lpa = [
             'donor' => [
@@ -92,7 +88,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor_by_linked_uid()
+    public function can_find_actor_who_is_a_donor_by_linked_uid(): void
     {
         $lpa = [
             'donor' => [
@@ -116,7 +112,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_not_a_donor_by_linked_id()
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_id(): void
     {
         $lpa = [
             'donor' => [
@@ -134,7 +130,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_not_a_donor_by_linked_uid()
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_uid(): void
     {
         $lpa = [
             'donor' => [
@@ -273,7 +269,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_an_inactive_attorney()
+    public function can_not_find_actor_who_is_an_inactive_attorney(): void
     {
         $lpa = [
             'donor' => [

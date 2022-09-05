@@ -6,14 +6,18 @@ namespace AppTest\Handler;
 
 use App\Handler\LpaHandler;
 use App\Service\Lpa\LpaService;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 class LpaHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testHandleForShareCode()
+:void
     {
         $this->markTestSkipped('must be revisited.');
         $shareCode = '123456789012';

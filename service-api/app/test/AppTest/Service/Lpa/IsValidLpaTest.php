@@ -4,14 +4,15 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\IsValidLpa;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpaTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {
@@ -27,7 +28,7 @@ class IsValidLpaTest extends TestCase
     }
 
     /** @test */
-    public function check_if_lpa_valid_when_status_registered()
+    public function check_if_lpa_valid_when_status_registered(): void
     {
         $lpa = [
             'uId'    => '700000000001',
@@ -43,7 +44,7 @@ class IsValidLpaTest extends TestCase
     }
 
     /** @test */
-    public function check_if_lpa_valid_when_status_cancelled()
+    public function check_if_lpa_valid_when_status_cancelled(): void
     {
         $lpa = [
             'uId'    => '700000000001',
@@ -59,7 +60,7 @@ class IsValidLpaTest extends TestCase
     }
 
     /** @test */
-    public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled()
+    public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled(): void
     {
         $lpa = [
             'uId'    => '700000000001',

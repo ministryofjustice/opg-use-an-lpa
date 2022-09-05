@@ -9,7 +9,8 @@ trait SetupEnv
     /**
      * @BeforeSuite
      */
-    public static function setupEnv() {
+    public static function setupEnv(): void
+    {
         putenv('AWS_ACCESS_KEY_ID=-');
         putenv('AWS_SECRET_ACCESS_KEY=-');
     }
@@ -17,7 +18,7 @@ trait SetupEnv
     /**
      * @AfterSuite
      */
-    public static function cleanupEnv()
+    public static function cleanupEnv(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');

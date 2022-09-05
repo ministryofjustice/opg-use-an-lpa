@@ -8,18 +8,22 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Handler\AuthHandler;
 use App\Service\User\UserService;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 class AuthHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
     // 'test':
     const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
     /** @test */
-    public function can_create_an_instance()
+    public function can_create_an_instance(): void
+
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 
@@ -29,7 +33,7 @@ class AuthHandlerTest extends TestCase
     }
 
     /** @test */
-    public function returns_an_error_when_bad_parameters_received()
+    public function returns_an_error_when_bad_parameters_received(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 
@@ -45,7 +49,7 @@ class AuthHandlerTest extends TestCase
     }
 
     /** @test */
-    public function returns_a_valid_user_when_correct_parameters_received()
+    public function returns_a_valid_user_when_correct_parameters_received(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
         $userServiceProphecy->authenticate('a@b.com', 'test')
@@ -71,7 +75,7 @@ class AuthHandlerTest extends TestCase
     }
 
     /** @test */
-    public function returns_a_not_found_when_credentials_incorrect()
+    public function returns_a_not_found_when_credentials_incorrect(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
         $userServiceProphecy->authenticate('b@c.com', 'test')

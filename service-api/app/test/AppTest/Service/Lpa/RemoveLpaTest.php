@@ -13,26 +13,26 @@ use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class RemoveLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+
     private string $actorLpaToken;
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
     private Lpa $lpa;
-    /** @var ObjectProphecy|LpaService */
-    private $lpaServiceProphecy;
     private string $lpaUid;
     private array $removedData;
     private array $userActorLpa;
     private string $userId;
-    /** @var ObjectProphecy|UserLpaActorMapInterface */
-    private $userLpaActorMapInterfaceProphecy;
     private array $viewerCodes;
-    /** @var ObjectProphecy|ViewerCodesInterface */
-    private $viewerCodesInterfaceProphecy;
 
     public function setUp(): void
     {
@@ -101,7 +101,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_can_remove_lpa_from_a_user_account_with_no_viewer_codes_to_update()
+    public function it_can_remove_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -127,7 +127,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_removes_an_lpa_from_a_user_account_and_cancels_their_active_codes_only()
+    public function it_removes_an_lpa_from_a_user_account_and_cancels_their_active_codes_only(): void
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -181,7 +181,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_exception_if_actor_lpa_token_not_found()
+    public function it_throws_exception_if_actor_lpa_token_not_found(): void
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -196,7 +196,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_exception_if_user_id_does_not_match_actor_lpa_data()
+    public function it_throws_exception_if_user_id_does_not_match_actor_lpa_data(): void
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
@@ -213,7 +213,7 @@ class RemoveLpaTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_an_error_if_deleted_data_does_not_match_row_data()
+    public function it_throws_an_error_if_deleted_data_does_not_match_row_data(): void
     {
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)

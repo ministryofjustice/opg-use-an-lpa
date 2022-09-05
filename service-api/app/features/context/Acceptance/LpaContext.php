@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Assert;
 
 /**
  * @property mixed lpa
@@ -38,7 +39,7 @@ class LpaContext implements Context
     /**
      * @Given I have previously requested the addition of a paper LPA to my account
      */
-    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount()
+    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
     {
         // Not necessary for this context
     }
@@ -46,36 +47,36 @@ class LpaContext implements Context
     /**
      * @Given /^A record of my activation key request is not saved$/
      */
-    public function aRecordOfMyActivationKeyRequestIsNotSaved()
+    public function aRecordOfMyActivationKeyRequestIsNotSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertNotEquals($lastCommand->getName(), 'PutItem');
+        Assert::assertNotEquals($lastCommand->getName(), 'PutItem');
     }
 
     /**
      * @Then /^A record of my activation key request is saved$/
      */
-    public function aRecordOfMyActivationKeyRequestIsSaved()
+    public function aRecordOfMyActivationKeyRequestIsSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertEquals($lastCommand->getName(), 'PutItem');
-        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
-        assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
-        assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
+        Assert::assertEquals($lastCommand->getName(), 'PutItem');
+        Assert::assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        Assert::assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
+        Assert::assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
     }
 
     /**
      * @Then /^a record of my activation key request is updated/
      */
-    public function aRecordOfMyActivationKeyRequestIsUpdated()
+    public function aRecordOfMyActivationKeyRequestIsUpdated(): void
     {
         $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
 
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertEquals($lastCommand->getName(), 'UpdateItem');
-        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
-        assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '111222333444']);
-        assertEquals(
+        Assert::assertEquals($lastCommand->getName(), 'UpdateItem');
+        Assert::assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        Assert::assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '111222333444']);
+        Assert::assertEquals(
             intval($lastCommand->toArray()['ExpressionAttributeValues'][':a']['N']),
             $dt->getTimestamp(),
             '',
@@ -86,7 +87,7 @@ class LpaContext implements Context
     /**
      * @Then /^A record of the LPA requested is saved to the database$/
      */
-    public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
+    public function aRecordOfTheLPARequestedIsSavedToTheDatabase(): void
     {
         //Not used in this context
     }
@@ -94,7 +95,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument(): void
     {
         // sets up the normal properties needed for an lpa
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
@@ -109,7 +110,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed confirm request is sent which is missing actor code$/
      */
-    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode()
+    public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode(): void
     {
         $this->userLpaActorToken = '13579';
 
@@ -129,7 +130,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed confirm request is sent which is missing date of birth$/
      */
-    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth()
+    public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth(): void
     {
         $this->userLpaActorToken = '13579';
 
@@ -149,7 +150,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed confirm request is sent which is missing user id$/
      */
-    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId()
+    public function aMalformedConfirmRequestIsSentWhichIsMissingUserId(): void
     {
         $this->userLpaActorToken = '13579';
 
@@ -169,7 +170,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am given a unique access code$/
      */
-    public function iAmGivenAUniqueAccessCode()
+    public function iAmGivenAUniqueAccessCode(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -181,16 +182,16 @@ class LpaContext implements Context
             new DateTimeZone('Europe/London')
         ))->format('Y-m-d');
 
-        assertArrayHasKey('code', $response);
-        assertNotNull($response['code']);
-        assertEquals($codeExpiry, $in30Days);
-        assertEquals($response['organisation'], $this->organisation);
+        Assert::assertArrayHasKey('code', $response);
+        Assert::assertNotNull($response['code']);
+        Assert::assertEquals($codeExpiry, $in30Days);
+        Assert::assertEquals($response['organisation'], $this->organisation);
     }
 
     /**
      * @Given /^I am on the add an LPA page$/
      */
-    public function iAmOnTheAddAnLPAPage()
+    public function iAmOnTheAddAnLPAPage(): void
     {
         // Not used in this context
     }
@@ -198,7 +199,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the create viewer code page$/
      */
-    public function iAmOnTheCreateViewerCodePage()
+    public function iAmOnTheCreateViewerCodePage(): void
     {
         // Not needed for this context
     }
@@ -209,7 +210,7 @@ class LpaContext implements Context
      * @Then /^I cannot see the added LPA$/
      * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
      */
-    public function iAmOnTheDashboardPage()
+    public function iAmOnTheDashboardPage(): void
     {
         // Not needed for this context
     }
@@ -218,7 +219,7 @@ class LpaContext implements Context
      * @Then /^I am taken back to the dashboard page$/
      * @Then /^I cannot see my access codes and their details$/
      */
-    public function iAmTakenBackToTheDashboardPage()
+    public function iAmTakenBackToTheDashboardPage(): void
     {
         // Not needed for this context
     }
@@ -226,7 +227,7 @@ class LpaContext implements Context
     /**
      * @When /^I attempt to add the same LPA again$/
      */
-    public function iAttemptToAddTheSameLPAAgain()
+    public function iAttemptToAddTheSameLPAAgain(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -248,14 +249,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -282,13 +282,13 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
      * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -340,25 +340,23 @@ class LpaContext implements Context
         }
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         if (!($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
             // LpaRepository::get
-            $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $differentLpa->uId)
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode($differentLpa)
-                    )
-                );
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($differentLpa)
+                )
+            );
         }
 
         // API call to request an activation key
@@ -404,13 +402,13 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
 
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
      * @When /^I request to add an LPA that I have requested an activation key for$/
      */
-    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor()
+    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor(): void
     {
         //UserLpaActorMap: getUsersLpas
         $this->awsFixtures->append(
@@ -451,20 +449,18 @@ class LpaContext implements Context
         );
 
         // lpaService: getByUserLpaActorToken
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -481,9 +477,9 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertArrayHasKey('actor', $response);
-        assertArrayHasKey('lpa', $response);
-        assertEquals($this->lpaUid, $response['lpa']['uId']);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertArrayHasKey('lpa', $response);
+        Assert::assertEquals($this->lpaUid, $response['lpa']['uId']);
     }
 
     /**
@@ -502,49 +498,23 @@ class LpaContext implements Context
         } else {
             $this->lpa->registrationDate = '2019-09-01';
         }
-
-        $data = [
-            'queuedForCleansing' => true
-        ];
-
-        if ($cleanseStatus == 'not marked' && $regDate == 'before') {
-            // request a code to be generated and letter to be sent
-            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode($data)
-                    )
-                );
-        } else {
-            // request a code to be generated and letter to be sent
-            $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_NO_CONTENT,
-                        []
-                    )
-                );
-        }
     }
 
     /**
      * @Given /^The activateBy TTL is removed from the record in the DB$/
      */
-    public function theActivateByTTLIsRemovedFromTheRecordInTheDB()
+    public function theActivateByTTLIsRemovedFromTheRecordInTheDB(): void
     {
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         //UserLpaActorMapRepository: getUsersLpas
         $this->awsFixtures->append(
@@ -585,8 +555,7 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/revoke')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(
             '/v1/add-lpa/confirm',
@@ -603,13 +572,13 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CREATED);
 
         $response = $this->getResponseAsJson();
-        assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+        Assert::assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
     }
 
     /**
      * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -657,34 +626,31 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get as part of LpaService::getByUserLpaActorToken
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['Created' => $createdDate->format('Y-m-d')])
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(['Created' => $createdDate->format('Y-m-d')])
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -715,14 +681,14 @@ class LpaContext implements Context
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('Activation key already requested for LPA');
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
      * @Then /^I am told an activation key is being sent$/
      */
-    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
         // Not needed for this context
     }
@@ -730,7 +696,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA which has a status other than registered$/
      */
-    public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered()
+    public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered(): void
     {
         $this->lpa->status = 'Cancelled';
 
@@ -740,14 +706,13 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -768,7 +733,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see all of my access codes and their details$/
      */
-    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
@@ -818,14 +783,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // LpaService::getLpas
         $this->apiGet(
@@ -839,10 +803,10 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey($this->userLpaActorToken, $response);
-        assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $response);
+        Assert::assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -928,27 +892,27 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertCount(2, $response);
+        Assert::assertCount(2, $response);
 
-        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($response[0]['Organisation'], $this->organisation);
-        assertEquals($response[0]['ViewerCode'], $this->accessCode);
-        assertEquals($response[0]['ActorId'], $this->actorId);
-        assertEquals($response[0]['Expires'], (new DateTime())->modify($code1Expiry)->format('Y-m-d'));
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        Assert::assertEquals($response[0]['ActorId'], $this->actorId);
+        Assert::assertEquals($response[0]['Expires'], (new DateTime())->modify($code1Expiry)->format('Y-m-d'));
 
-        assertEquals($response[1]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[1]['UserLpaActor'], '123456789');
-        assertEquals($response[1]['Organisation'], 'HSBC');
-        assertEquals($response[1]['ViewerCode'], 'XYZABC12345');
-        assertEquals($response[1]['ActorId'], 23);
-        assertEquals($response[1]['Expires'], (new DateTime())->modify($code2Expiry)->format('Y-m-d'));
+        Assert::assertEquals($response[1]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[1]['UserLpaActor'], '123456789');
+        Assert::assertEquals($response[1]['Organisation'], 'HSBC');
+        Assert::assertEquals($response[1]['ViewerCode'], 'XYZABC12345');
+        Assert::assertEquals($response[1]['ActorId'], 23);
+        Assert::assertEquals($response[1]['Expires'], (new DateTime())->modify($code2Expiry)->format('Y-m-d'));
     }
 
     /**
      * @Then /^I can see that no organisations have access to my LPA$/
      */
-    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
@@ -970,14 +934,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // LpaService::getLpas
         $this->apiGet(
@@ -991,10 +954,10 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey($this->userLpaActorToken, $response);
-        assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $response);
+        Assert::assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -1030,13 +993,13 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response);
+        Assert::assertEmpty($response);
     }
 
     /**
      * @When /^I cancel the organisation access code/
      */
-    public function iCancelTheOrganisationAccessCode()
+    public function iCancelTheOrganisationAccessCode(): void
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -1056,14 +1019,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to get lpa
         $this->apiGet(
@@ -1077,11 +1039,11 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $response);
-        assertArrayHasKey('actor', $response);
-        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['uId'], $this->actorId);
+        Assert::assertArrayHasKey('date', $response);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response['actor']['details']['uId'], $this->actorId);
 
         // Get the share codes
 
@@ -1154,18 +1116,18 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('ViewerCode', $response[0]);
-        assertArrayHasKey('Expires', $response[0]);
-        assertEquals($response[0]['Organisation'], $this->organisation);
-        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
+        Assert::assertArrayHasKey('ViewerCode', $response[0]);
+        Assert::assertArrayHasKey('Expires', $response[0]);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
     }
 
     /**
      * @When /^I click to check my access code now expired/
      */
-    public function iClickToCheckMyAccessCodeNowExpired()
+    public function iClickToCheckMyAccessCodeNowExpired(): void
     {
         // Get the LPA
 
@@ -1187,14 +1149,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to get lpa
         $this->apiGet(
@@ -1208,11 +1169,11 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $response);
-        assertArrayHasKey('actor', $response);
-        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['uId'], $this->actorId);
+        Assert::assertArrayHasKey('date', $response);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response['actor']['details']['uId'], $this->actorId);
 
         // Get the share codes
 
@@ -1284,21 +1245,24 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('ViewerCode', $response[0]);
-        assertArrayHasKey('Expires', $response[0]);
-        assertEquals($response[0]['Organisation'], $this->organisation);
-        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($response[0]['Added'], '2019-01-05 12:34:56');
-        assertNotEquals($response[0]['Expires'], (new DateTime('now'))->format('Y-m-d'));
+        Assert::assertArrayHasKey('ViewerCode', $response[0]);
+        Assert::assertArrayHasKey('Expires', $response[0]);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($response[0]['Added'], '2019-01-05 12:34:56');
+        Assert::assertNotEquals($response[0]['Expires'], (new DateTime('now'))->format('Y-m-d'));
         //check if the code expiry date is in the past
-        assertGreaterThan(strtotime($response[0]['Expires']), strtotime((new DateTime('now'))->format('Y-m-d')));
+        Assert::assertGreaterThan(
+            strtotime($response[0]['Expires']),
+            strtotime((new DateTime('now'))->format('Y-m-d'))
+        );
     }
 
     /**
      * @When /^I check my access codes$/
      */
-    public function iClickToCheckMyAccessCodes()
+    public function iClickToCheckMyAccessCodes(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode = 'XYZ321ABC987';
@@ -1323,14 +1287,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to get lpa
         $this->apiGet(
@@ -1344,11 +1307,11 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $response);
-        assertArrayHasKey('actor', $response);
-        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response['actor']['details']['uId'], $this->actorId);
+        Assert::assertArrayHasKey('date', $response);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response['actor']['details']['uId'], $this->actorId);
 
         // Get the share codes
 
@@ -1421,21 +1384,24 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('ViewerCode', $response[0]);
-        assertArrayHasKey('Expires', $response[0]);
-        assertEquals($response[0]['Organisation'], $this->organisation);
-        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
+        Assert::assertArrayHasKey('ViewerCode', $response[0]);
+        Assert::assertArrayHasKey('Expires', $response[0]);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
 
         //check if the code expiry date is in the past
-        assertGreaterThan(strtotime((new DateTime('now'))->format('Y-m-d')), strtotime($response[0]['Expires']));
+        Assert::assertGreaterThan(
+            strtotime((new DateTime('now'))->format('Y-m-d')),
+            strtotime($response[0]['Expires'])
+        );
     }
 
     /**
      * @When /^I confirm cancellation of the chosen viewer code/
      */
-    public function iConfirmCancellationOfTheChosenViewerCode()
+    public function iConfirmCancellationOfTheChosenViewerCode(): void
     {
         $shareCode = [
             'SiriusUid' => $this->lpaUid,
@@ -1486,20 +1452,19 @@ class LpaContext implements Context
     /**
      * @When /^I fill in the form and click the cancel button$/
      */
-    public function iFillInTheFormAndClickTheCancelButton()
+    public function iFillInTheFormAndClickTheCancelButton(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
 
         // API call for finding all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode([])
+            )
+        );
 
         $this->apiGet(
             '/v1/lpas',
@@ -1512,7 +1477,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have 2 codes for one of my LPAs$/
      */
-    public function iHave2CodesForOneOfMyLPAs()
+    public function iHave2CodesForOneOfMyLPAs(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iHaveCreatedAnAccessCode();
@@ -1522,7 +1487,7 @@ class LpaContext implements Context
      * @Given /^I have been given access to use an LPA via credentials$/
      * @Given /^I have added an LPA to my account$/
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'));
 
@@ -1538,7 +1503,7 @@ class LpaContext implements Context
      * @Given /^I have created an access code$/
      * @Given /^I have generated an access code for an organisation and can see the details$/
      */
-    public function iHaveCreatedAnAccessCode()
+    public function iHaveCreatedAnAccessCode(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
         $this->iAmGivenAUniqueAccessCode();
@@ -1547,7 +1512,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA that does not exist$/
      */
-    public function iRequestToAddAnLPAThatDoesNotExist()
+    public function iRequestToAddAnLPAThatDoesNotExist(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1555,15 +1520,13 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => ''])));
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NOT_FOUND
+            )
+        );
 
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1584,7 +1547,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with a missing actor code$/
      */
-    public function iRequestToAddAnLPAWithAMissingActorCode()
+    public function iRequestToAddAnLPAWithAMissingActorCode(): void
     {
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1602,7 +1565,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with a missing date of birth$/
      */
-    public function iRequestToAddAnLPAWithAMissingDateOfBirth()
+    public function iRequestToAddAnLPAWithAMissingDateOfBirth(): void
     {
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1622,7 +1585,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with a missing user id$/
      */
-    public function iRequestToAddAnLPAWithAMissingUserId()
+    public function iRequestToAddAnLPAWithAMissingUserId(): void
     {
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1641,7 +1604,7 @@ class LpaContext implements Context
      * @When /^I request to add an LPA with valid details$/
      * @When /^I confirmed to add an LPA to my account$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetails(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1649,14 +1612,13 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
             '/v1/add-lpa/validate',
@@ -1673,15 +1635,15 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertArrayHasKey('actor', $response);
-        assertArrayHasKey('lpa', $response);
-        assertEquals($this->lpaUid, $response['lpa']['uId']);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertArrayHasKey('lpa', $response);
+        Assert::assertEquals($this->lpaUid, $response['lpa']['uId']);
     }
 
     /**
      * @When /^I request to give an organisation access to one of my LPAs$/
      */
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs(): void
     {
         $this->organisation = "TestOrg";
         $this->accessCode = "XYZ321ABC987";
@@ -1719,7 +1681,7 @@ class LpaContext implements Context
     /**
      * @Given /^I request to go back and try again$/
      */
-    public function iRequestToGoBackAndTryAgain()
+    public function iRequestToGoBackAndTryAgain(): void
     {
         // Not needed for this context
     }
@@ -1750,8 +1712,7 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // LpaService::getLpaById
         $this->apiGet(
@@ -1766,18 +1727,18 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         if ($status == "Revoked") {
-            assertEmpty($response);
+            Assert::assertEmpty($response);
         } else {
-            assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
-            assertEquals($this->lpaUid, $response['lpa']['uId']);
-            assertEquals($status, $response['lpa']['status']);
+            Assert::assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
+            Assert::assertEquals($this->lpaUid, $response['lpa']['uId']);
+            Assert::assertEquals($status, $response['lpa']['status']);
         }
     }
 
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
-    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
     }
@@ -1785,18 +1746,18 @@ class LpaContext implements Context
     /**
      * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        assertArrayHasKey('Cancelled', $response);
+        Assert::assertArrayHasKey('Cancelled', $response);
     }
 
     /**
      * @Then /^I should be shown the details of the viewer code with status(.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus()
+    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus(): void
     {
         // Not needed for this context
     }
@@ -1804,7 +1765,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should be taken back to the access code summary page/
      */
-    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage(): void
     {
         // Not needed for this context
     }
@@ -1812,7 +1773,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should be told that I have not created any access codes yet$/
      */
-    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet(): void
     {
         // Not needed for this context
     }
@@ -1820,7 +1781,7 @@ class LpaContext implements Context
     /**
      * @When /^I view my dashboard$/
      */
-    public function iViewMyDashboard()
+    public function iViewMyDashboard(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
@@ -1842,8 +1803,7 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $request = $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // LpaService::getLpaById
         $this->apiGet(
@@ -1853,13 +1813,13 @@ class LpaContext implements Context
             ]
         );
 
-        $this->setLastRequest($request);
+        $this->setLastRequest($this->apiFixtures->getLastRequest());
     }
 
     /**
      * @Then /^I want to be asked for confirmation prior to cancellation/
      */
-    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    public function iWantToBeAskedForConfirmationPriorToCancellation(): void
     {
         // Not needed for this context
     }
@@ -1867,7 +1827,7 @@ class LpaContext implements Context
     /**
      * @When /^I want to cancel the access code for an organisation$/
      */
-    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    public function iWantToCancelTheAccessCodeForAnOrganisation(): void
     {
         // Not needed for this context
     }
@@ -1875,7 +1835,7 @@ class LpaContext implements Context
     /**
      * @Then /^I want to see the option to cancel the code$/
      */
-    public function iWantToSeeTheOptionToCancelTheCode()
+    public function iWantToSeeTheOptionToCancelTheCode(): void
     {
         // Not needed for this context
     }
@@ -1883,7 +1843,7 @@ class LpaContext implements Context
     /**
      * @When /^One of the generated access code has expired$/
      */
-    public function oneOfTheGeneratedAccessCodeHasExpired()
+    public function oneOfTheGeneratedAccessCodeHasExpired(): void
     {
         // Not needed for this context
     }
@@ -1891,7 +1851,7 @@ class LpaContext implements Context
     /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
-    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
     {
         // not needed for this context
     }
@@ -1907,57 +1867,56 @@ class LpaContext implements Context
     /**
      * @Given /^The LPA has not been added$/
      */
-    public function theLPAHasNotBeenAdded()
+    public function theLPAHasNotBeenAdded(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response);
+        Assert::assertEmpty($response);
     }
 
     /**
      * @Then /^The LPA is not found$/
      */
-    public function theLPAIsNotFound()
+    public function theLPAIsNotFound(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response['data']);
+        Assert::assertEmpty($response['data']);
     }
 
     /**
      * @Then /^The LPA is not found and I am told it was a bad request$/
      */
-    public function theLPAIsNotFoundAndIAmToldItWasABadRequest()
+    public function theLPAIsNotFoundAndIAmToldItWasABadRequest(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response['data']);
+        Assert::assertEmpty($response['data']);
     }
 
     /**
      * @Given /^The LPA is successfully added$/
      */
-    public function theLPAIsSuccessfullyAdded()
+    public function theLPAIsSuccessfullyAdded(): void
     {
         $this->userLpaActorToken = '13579';
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/validate')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId])));
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
+        );
 
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // called twice
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
@@ -1979,8 +1938,7 @@ class LpaContext implements Context
         );
 
         // codes api service call
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/revoke')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         $this->apiPost(
             '/v1/add-lpa/confirm',
@@ -1997,13 +1955,13 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CREATED);
 
         $response = $this->getResponseAsJson();
-        assertNotNull($response['user-lpa-actor-token']);
+        Assert::assertNotNull($response['user-lpa-actor-token']);
     }
 
     /**
      * @Then /^The LPA should not be found$/
      */
-    public function theLPAShouldNotBeFound()
+    public function theLPAShouldNotBeFound(): void
     {
         // Not needed for this context
     }
@@ -2011,7 +1969,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check the access codes$/
      */
-    public function iClickToCheckTheAccessCodes()
+    public function iClickToCheckTheAccessCodes(): void
     {
         $code1 = [
             'SiriusUid' => $this->lpaUid,
@@ -2055,14 +2013,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // LpaService::getLpas
         $this->apiGet(
@@ -2076,10 +2033,10 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey($this->userLpaActorToken, $response);
-        assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $response);
+        Assert::assertEquals($response[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -2164,25 +2121,25 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
         $response = $this->getResponseAsJson();
 
-        assertCount(2, $response);
+        Assert::assertCount(2, $response);
 
-        assertEquals($response[0]['Organisation'], $this->organisation);
-        assertEquals($response[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($response[0]['ViewerCode'], $this->accessCode);
-        assertEquals($response[0]['ActorId'], $this->actorId);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        Assert::assertEquals($response[0]['ActorId'], $this->actorId);
 
-        assertEquals($response[1]['Organisation'], 'SomeOrganisation');
-        assertEquals($response[1]['SiriusUid'], '700000000054');
-        assertEquals($response[1]['UserLpaActor'], '65d6833a-66d3-430f-8cf6-9e4fb1d851f1');
-        assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
-        assertEquals($response[1]['ActorId'], '4455');
+        Assert::assertEquals($response[1]['Organisation'], 'SomeOrganisation');
+        Assert::assertEquals($response[1]['SiriusUid'], '700000000054');
+        Assert::assertEquals($response[1]['UserLpaActor'], '65d6833a-66d3-430f-8cf6-9e4fb1d851f1');
+        Assert::assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
+        Assert::assertEquals($response[1]['ActorId'], '4455');
     }
 
     /**
      * @Given /^Co\-actors have also created access codes for the same LPA$/
      */
-    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA(): void
     {
         // Not needed for this context
     }
@@ -2190,7 +2147,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see all of the access codes and their details$/
      */
-    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
@@ -2198,7 +2155,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see the name of the organisation that viewed the LPA$/
      */
-    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         // Not needed for this context
     }
@@ -2206,7 +2163,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have shared the access code with organisations to view my LPA$/
      */
-    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
         // Not needed for this context
     }
@@ -2214,7 +2171,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check my access codes that is used to view LPA$/
      */
-    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA()
+    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
         // Get the LPA
 
@@ -2236,14 +2193,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to get lpa
         $this->apiGet(
@@ -2257,7 +2213,7 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
 
         // Get the share codes
 
@@ -2334,16 +2290,16 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('Viewed', $response[0]);
-        assertEquals($response[0]['ViewerCode'], $this->accessCode);
-        assertEquals($response[0]['ViewedBy'], 'organisation1');
-        assertEquals($response[1]['ViewedBy'], 'organisation2');
+        Assert::assertArrayHasKey('Viewed', $response[0]);
+        Assert::assertEquals($response[0]['ViewerCode'], $this->accessCode);
+        Assert::assertEquals($response[0]['ViewedBy'], 'organisation1');
+        Assert::assertEquals($response[1]['ViewedBy'], 'organisation2');
     }
 
     /**
      * @Then /^The LPA is removed and my active codes are cancelled$/
      */
-    public function theLPAIsRemovedAndMyActiveCodesAreCancelled()
+    public function theLPAIsRemovedAndMyActiveCodesAreCancelled(): void
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -2418,14 +2374,13 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result()); // 3rd code has already been cancelled
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // UserLpaActorMap::delete
         $this->awsFixtures->append(
@@ -2456,15 +2411,15 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertArrayHasKey('lpa', $response);
-        assertEquals($this->lpa->uId, $response['lpa']['uId']);
+        Assert::assertArrayHasKey('lpa', $response);
+        Assert::assertEquals($this->lpa->uId, $response['lpa']['uId']);
     }
 
     /**
      * @Given /^I am on the add an older LPA page$/
      * @Given /^I am on the Check we've found the right LPA page$/
      */
-    public function iAmOnTheAddAnOlderLPAPage()
+    public function iAmOnTheAddAnOlderLPAPage(): void
     {
         // Not needed for this context
     }
@@ -2472,7 +2427,7 @@ class LpaContext implements Context
     /**
      * @Then /^a repeat request for a letter containing a one time use code is made$/
      */
-    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade()
+    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade(): void
     {
         //UserLpaActorMap: getByUserId
         $this->awsFixtures->append(
@@ -2513,38 +2468,34 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // Done twice due to our codes interdependencies
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // CheckLpaCleansed: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
@@ -2584,49 +2535,53 @@ class LpaContext implements Context
     /**
      * @Then /^a letter is requested containing a one time use code$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
+        // In some way which I am not able to understand *at all* when this step is hit on Circle CI
+        // the apiFixtures contain a left-over item from a previous step. This does not happen when
+        // run locally. So the quick and dirty fix is to just ensure the queue is always cleared.
+        if ($this->apiFixtures->count() > 0) {
+            echo "WARNING apiFixtures should be empty and isn't";
+            $this->apiFixtures->reset();
+        }
+
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'Created' => null
-                        ]
-                    )
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(
+                    [
+                        'Created' => null
+                    ]
                 )
-            );
+            )
+        );
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
@@ -2667,7 +2622,7 @@ class LpaContext implements Context
      * @Given /^I confirm the details I provided are correct$/
      * @When /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmTheDetailsIProvidedAreCorrect()
+    public function iConfirmTheDetailsIProvidedAreCorrect(): void
     {
         // Not needed for this context
     }
@@ -2675,7 +2630,7 @@ class LpaContext implements Context
     /**
      * @When /^I provide the details from a valid paper LPA document$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPADocument()
+    public function iProvideTheDetailsFromAValidPaperLPADocument(): void
     {
         // Not needed for this context
     }
@@ -2683,7 +2638,7 @@ class LpaContext implements Context
     /**
      * @When /^I provide details of an LPA that does not exist$/
      */
-    public function iProvideDetailsOfAnLPAThatDoesNotExist()
+    public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -2691,14 +2646,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2730,14 +2684,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2762,7 +2715,7 @@ class LpaContext implements Context
      * @Then /^I am informed that an LPA could not be found with these details$/
      * @Then /^I am asked for my role on the LPA$/
      */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails(): void
     {
         // Not needed for this context
     }
@@ -2770,7 +2723,7 @@ class LpaContext implements Context
     /**
      * @When /^I provide details from an LPA registered before Sept 2019$/
      */
-    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
+    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019(): void
     {
         $this->lpa->registrationDate = '2019-08-31';
 
@@ -2780,14 +2733,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2811,7 +2763,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told that I cannot request an activation key$/
      */
-    public function iAmToldThatICannotRequestAnActivationKey()
+    public function iAmToldThatICannotRequestAnActivationKey(): void
     {
         // Not needed for this context
     }
@@ -2819,7 +2771,7 @@ class LpaContext implements Context
     /**
      * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -2834,24 +2786,22 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['Created' => $createdDate->format('Y-m-d')])
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(['Created' => $createdDate->format('Y-m-d')])
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -2877,19 +2827,18 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->donor->surname
             ],
             'caseSubtype'           => $this->lpa->caseSubtype,
-            'activationKeyDueDate'  => $createdDate->format('c'),
             'activationKeyDueDate'  => $activationKeyDueDate
         ];
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
 
-        assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
      */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt(): void
     {
         // Not needed for this context
     }
@@ -2897,7 +2846,7 @@ class LpaContext implements Context
     /**
      * @Given /^A malformed request is sent which is missing a data attribute$/
      */
-    public function aMalformedRequestIsSentWhichIsMissingADataAttribute()
+    public function aMalformedRequestIsSentWhichIsMissingADataAttribute(): void
     {
         $dataAttributes = [
             'reference_number'      => $this->lpaUid,
@@ -2927,7 +2876,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told that something went wrong$/
      */
-    public function iAmToldThatSomethingWentWrong()
+    public function iAmToldThatSomethingWentWrong(): void
     {
         // Not needed for this context
     }
@@ -2935,7 +2884,7 @@ class LpaContext implements Context
     /**
      * @Given /^The status of the LPA changed from Registered to Suspended$/
      */
-    public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
+    public function theStatusOfTheLPAChangedFromRegisteredToSuspended(): void
     {
         $this->lpa->status = 'Suspended';
 
@@ -2959,14 +2908,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // LpaService::getLpas
         $this->apiGet(
@@ -2980,16 +2928,16 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response);
+        Assert::assertEmpty($response);
     }
 
     /**
      * @When /^I check my access codes of the status changed LPA$/
      * @When /^I request to give an organisation access to the LPA whose status changed to Revoked$/
      */
-    public function iCheckMyAccessCodesOfTheStatusChangedLpa()
+    public function iCheckMyAccessCodesOfTheStatusChangedLpa(): void
     {
-        $this->lpa->status = "Revoked";
+        $this->lpa->status = 'Revoked';
 
         // Get the LPA
 
@@ -3011,14 +2959,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to get lpa
         $this->apiGet(
@@ -3032,13 +2979,13 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        assertEmpty($response);
+        Assert::assertEmpty($response);
     }
 
     /**
      * @When /^The status of the LPA got Revoked$/
      */
-    public function theStatusOfTheLpaGotRevoked()
+    public function theStatusOfTheLpaGotRevoked(): void
     {
         // Not needed for this context
     }
@@ -3048,7 +2995,7 @@ class LpaContext implements Context
      * @Given /^I provide the additional details asked$/
      * @Given /^I am asked to consent and confirm my details$/
      */
-    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    public function iAlreadyHaveAValidActivationKeyForMyLPA(): void
     {
         // Not needed for this context
     }
@@ -3056,7 +3003,7 @@ class LpaContext implements Context
     /**
      * @Given /^I lost the letter containing my activation key$/
      */
-    public function iLostTheLetterContainingMyActivationKey()
+    public function iLostTheLetterContainingMyActivationKey(): void
     {
         // Not needed for this context
     }
@@ -3065,7 +3012,7 @@ class LpaContext implements Context
      * @When /^I request for a new activation key again$/
      * @When /^I repeat my request for an activation key$/
      */
-    public function iRequestForANewActivationKeyAgain()
+    public function iRequestForANewActivationKeyAgain(): void
     {
         $this->lpa->lpaIsCleansed = true;
         //UserLpaActorMap: getAllForUser
@@ -3074,27 +3021,24 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
@@ -3136,7 +3080,7 @@ class LpaContext implements Context
      * @Then /^I am asked for my contact details$/
      * @Then /^I should expect it within 6 weeks time$/
      */
-    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode()
+    public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode(): void
     {
         // Not needed for this context
     }
@@ -3144,7 +3088,7 @@ class LpaContext implements Context
     /**
      * @When /^I provide the attorney details from a valid paper LPA document$/
      */
-    public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument()
+    public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -3152,18 +3096,16 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa->uId)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
         // API call to request an activation key
         $this->apiPost(
@@ -3199,14 +3141,14 @@ class LpaContext implements Context
                 'surname'       => $this->lpa->attorneys[0]->surname
             ]
         ];
-        assertEquals($expectedResponse, $this->getResponseAsJson());
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
     /**
      * @Then /^I am shown the details of an LPA$/
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      */
-    public function iAmShownDetailsOfAnLpa()
+    public function iAmShownDetailsOfAnLpa(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $this->lpa->lpaIsCleansed = true;
@@ -3222,18 +3164,16 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
         // API call to request an activation key
         $this->apiPost(
@@ -3264,14 +3204,14 @@ class LpaContext implements Context
             ],
         ];
 
-        assertArrayNotHasKey('attorney', $this->getResponseAsJson());
-        assertEquals($expectedResponse, $this->getResponseAsJson());
+        Assert::assertArrayNotHasKey('attorney', $this->getResponseAsJson());
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
     /**
      * @Then /^I being the attorney on the LPA I am shown the donor details$/
      */
-    public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails()
+    public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -3287,18 +3227,16 @@ class LpaContext implements Context
         $this->awsFixtures->append(new Result([]));
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // check if actor has a code
-        $this->apiFixtures->post('http://lpa-codes-pact-mock/v1/exists')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
         // API call to request an activation key
         $this->apiPost(
@@ -3335,13 +3273,13 @@ class LpaContext implements Context
             ],
         ];
 
-        assertEquals($expectedResponse, $this->getResponseAsJson());
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
     /**
      * @When I provide details of an LPA that is not registered
      */
-    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered(): void
     {
         $this->lpa->status = 'Pending';
 
@@ -3351,14 +3289,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(
@@ -3383,7 +3320,7 @@ class LpaContext implements Context
      * @When /^I confirm details of the found LPA are correct$/
      * @Then /^I am told my activation key is being sent$/
      */
-    public function iConfirmDetailsOfTheFoundLPAAreCorrect()
+    public function iConfirmDetailsOfTheFoundLPAAreCorrect(): void
     {
         $earliestRegDate = '2019-09-01';
 
@@ -3393,27 +3330,24 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
-        // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        // LpaService: getByUid
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
-        $this->apiFixtures->post('/v1/use-an-lpa/lpas/requestCode')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    []
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                []
+            )
+        );
 
         $this->awsFixtures->append(
             new Result(
@@ -3456,7 +3390,7 @@ class LpaContext implements Context
     /**
      * @When /^I confirm that the data is correct and click the confirm and submit button$/
      */
-    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -3464,18 +3398,16 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // lpaService: getByUid
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // AWS Request letter response in Given steps
 
@@ -3517,7 +3449,7 @@ class LpaContext implements Context
      * @Then /^I should expect it within 2 weeks time$/
      * @Then /^I will receive an email confirming this information$/
      */
-    public function iAmToldMyActivationKeyRequestHasBeenReceived()
+    public function iAmToldMyActivationKeyRequestHasBeenReceived(): void
     {
         //Not needed for this context
     }
@@ -3535,14 +3467,13 @@ class LpaContext implements Context
         );
 
         // LpaRepository::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpaUid)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpa)
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
 
         // API call to request an activation key
         $this->apiPost(

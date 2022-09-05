@@ -29,8 +29,9 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use JSHayes\FakeRequests\MockHandler;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
@@ -70,7 +71,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given I have previously requested the addition of a paper LPA to my account
      */
-    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount()
+    public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
     {
         // Not necessary for this context
     }
@@ -79,7 +80,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^a letter is requested containing a one time use code$/
      * @Then /^I am told my activation key is being sent$/
      */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
         // Lpas::requestLetter
         $this->pactPostInteraction(
@@ -109,7 +110,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^a repeat request for a letter containing a one time use code is made$/
      */
-    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade()
+    public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade(): void
     {
         // Lpas::requestLetter
         $this->pactPostInteraction(
@@ -139,27 +140,27 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^A record of my activation key request is saved$/
      */
-    public function aRecordOfMyActivationKeyRequestIsSaved()
+    public function aRecordOfMyActivationKeyRequestIsSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertEquals($lastCommand->getName(), 'PutItem');
-        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
-        assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
-        assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
+        Assert::assertEquals($lastCommand->getName(), 'PutItem');
+        Assert::assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        Assert::assertEquals($lastCommand->toArray()['Item']['SiriusUid'], ['S' => $this->lpaUid]);
+        Assert::assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
     }
 
     /**
      * @Then /^a record of my activation key request is updated/
      */
-    public function aRecordOfMyActivationKeyRequestIsUpdated()
+    public function aRecordOfMyActivationKeyRequestIsUpdated(): void
     {
         $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
 
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertEquals($lastCommand->getName(), 'UpdateItem');
-        assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
-        assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '00-0-0-0-00']);
-        assertEquals(
+        Assert::assertEquals($lastCommand->getName(), 'UpdateItem');
+        Assert::assertEquals($lastCommand->toArray()['TableName'], 'user-actor-lpa-map');
+        Assert::assertEquals($lastCommand->toArray()['Key']['Id'], ['S' => '00-0-0-0-00']);
+        Assert::assertEquals(
             intval($lastCommand->toArray()['ExpressionAttributeValues'][':a']['N']),
             $dt->getTimestamp(),
             '',
@@ -170,16 +171,16 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^A record of my activation key request is not saved$/
      */
-    public function aRecordOfMyActivationKeyRequestIsNotSaved()
+    public function aRecordOfMyActivationKeyRequestIsNotSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
-        assertNotEquals($lastCommand->getName(), 'PutItem');
+        Assert::assertNotEquals($lastCommand->getName(), 'PutItem');
     }
 
     /**
      * @Then /^A record of the LPA requested is saved to the database$/
      */
-    public function aRecordOfTheLPARequestedIsSavedToTheDatabase()
+    public function aRecordOfTheLPARequestedIsSavedToTheDatabase(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
@@ -202,16 +203,16 @@ class LpaContext extends BaseIntegrationContext
 
         $lpa = $this->lpaService->getAllForUser($this->userId);
 
-        assertArrayHasKey($this->userLpaActorToken, $lpa);
-        assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
     }
 
     /**
      * @Given /^Co\-actors have also created access codes for the same LPA$/
      */
-    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA()
+    public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA(): void
     {
         // Not needed for this context
     }
@@ -219,7 +220,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I am given a unique access code$/
      */
-    public function iAmGivenAUniqueAccessCode()
+    public function iAmGivenAUniqueAccessCode(): void
     {
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
@@ -227,16 +228,16 @@ class LpaContext extends BaseIntegrationContext
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
         $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
-        assertArrayHasKey('code', $codeData);
-        assertNotNull($codeData['code']);
-        assertEquals($codeExpiry, $in30Days);
-        assertEquals($codeData['organisation'], $this->organisation);
+        Assert::assertArrayHasKey('code', $codeData);
+        Assert::assertNotNull($codeData['code']);
+        Assert::assertEquals($codeExpiry, $in30Days);
+        Assert::assertEquals($codeData['organisation'], $this->organisation);
     }
 
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
      */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails(): void
     {
         // Not needed for this context
     }
@@ -244,7 +245,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I am on the add an LPA page$/
      */
-    public function iAmOnTheAddAnLPAPage()
+    public function iAmOnTheAddAnLPAPage(): void
     {
         // Not used in this context
     }
@@ -252,7 +253,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I am on the add an older LPA page$/
      */
-    public function iAmOnTheAddAnOlderLPAPage()
+    public function iAmOnTheAddAnOlderLPAPage(): void
     {
         // Not needed for this context
     }
@@ -266,7 +267,7 @@ class LpaContext extends BaseIntegrationContext
      * @Given /^I am asked to consent and confirm my details$/
      * @When /^I confirm that the data is correct and click the confirm and submit button$/
      */
-    public function iAmToldThatICannotRequestAnActivationKey()
+    public function iAmToldThatICannotRequestAnActivationKey(): void
     {
         // Not needed for this context
     }
@@ -274,7 +275,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I am told that I have an activation key for this LPA and where to find it$/
      */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt(): void
     {
         // Not needed for this context
     }
@@ -282,7 +283,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I attempt to add the same LPA again$/
      */
-    public function iAttemptToAddTheSameLPAAgain()
+    public function iAttemptToAddTheSameLPAAgain(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(
@@ -334,9 +335,9 @@ class LpaContext extends BaseIntegrationContext
                 $this->userId
             );
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA already added', $ex->getMessage());
-            assertEquals($expectedResponse, $ex->getAdditionalData());
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('LPA already added', $ex->getMessage());
+            Assert::assertEquals($expectedResponse, $ex->getAdditionalData());
             return;
         }
 
@@ -346,7 +347,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I provide the attorney details from a valid paper LPA document$/
      */
-    public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument()
+    public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -407,13 +408,13 @@ class LpaContext extends BaseIntegrationContext
             ],
         ];
 
-        assertEquals($expectedResponse, $lpaMatchResponse);
+        Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
 
     /**
      * @Then /^I being the attorney on the LPA I am shown the donor details$/
      */
-    public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails()
+    public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails(): void
     {
         // Not needed for this context
     }
@@ -421,7 +422,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA which has a status other than registered$/
      */
-    public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered()
+    public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered(): void
     {
         $this->lpa->status = 'Cancelled';
 
@@ -465,8 +466,8 @@ class LpaContext extends BaseIntegrationContext
                 $this->userId
             );
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA status is not registered', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('LPA status is not registered', $ex->getMessage());
             return;
         }
         throw new ExpectationFailedException('Exception should have been thrown due to invalid LPA status');
@@ -475,7 +476,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA that does not exist$/
      */
-    public function iRequestToAddAnLPAThatDoesNotExist()
+    public function iRequestToAddAnLPAThatDoesNotExist(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -516,8 +517,8 @@ class LpaContext extends BaseIntegrationContext
                 $this->userId
             );
         } catch (NotFoundException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals('Code validation failed', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            Assert::assertEquals('Code validation failed', $ex->getMessage());
             return;
         }
         throw new ExpectationFailedException('LPA should not have been found');
@@ -526,7 +527,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA that I have requested an activation key for$/
      */
-    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor()
+    public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor(): void
     {
         //UserLpaActorMap: getUsersLpas
         $this->awsFixtures->append(
@@ -600,15 +601,15 @@ class LpaContext extends BaseIntegrationContext
             $this->userId
         );
 
-        assertArrayHasKey('actor', $validatedLpa);
-        assertArrayHasKey('lpa', $validatedLpa);
-        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey('actor', $validatedLpa);
+        Assert::assertArrayHasKey('lpa', $validatedLpa);
+        Assert::assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
     }
 
     /**
      * @Given /^The activateBy TTL is removed from the record in the DB$/
      */
-    public function theActivateByTTLIsRemovedFromTheRecordInTheDB()
+    public function theActivateByTTLIsRemovedFromTheRecordInTheDB(): void
     {
         //UserLpaActorMapRepository: getUsersLpas
         $this->awsFixtures->append(
@@ -634,7 +635,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures->append(
             function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
                 $newID = $cmd->toArray()['ExpressionAttributeValues'][':a']['N'];
-                assertEquals($this->actorLpaId, $newID);
+                Assert::assertEquals($this->actorLpaId, $newID);
 
                 return new Result(
                     [
@@ -677,13 +678,13 @@ class LpaContext extends BaseIntegrationContext
         }
 
         //Check response is for correct Item ID
-        assertEquals($this->userLpaActorToken, $response);
+        Assert::assertEquals($this->userLpaActorToken, $response);
     }
 
     /**
      * @Then /^I should be told that I have already added this LPA$/
      */
-    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
         // Not needed for this context
     }
@@ -691,7 +692,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I can see all of my access codes and their details$/
      */
-    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
@@ -699,7 +700,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I can see all of the access codes and their details$/
      */
-    public function iCanSeeAllOfTheAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfTheAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
@@ -758,10 +759,10 @@ class LpaContext extends BaseIntegrationContext
 
         $lpa = $this->lpaService->getAllForUser($this->userId);
 
-        assertArrayHasKey($this->userLpaActorToken, $lpa);
-        assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -797,9 +798,9 @@ class LpaContext extends BaseIntegrationContext
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        assertCount(2, $codes);
-        assertEquals($codes[0], $code1);
-        assertEquals($codes[1], $code2);
+        Assert::assertCount(2, $codes);
+        Assert::assertEquals($codes[0], $code1);
+        Assert::assertEquals($codes[1], $code2);
 
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
@@ -811,22 +812,22 @@ class LpaContext extends BaseIntegrationContext
 
         $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
         $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($codes);
-        assertCount(2, $codesWithStatuses);
+        Assert::assertCount(2, $codesWithStatuses);
 
-        // Loop for asserting on both the 2 codes returned
+        // Loop for Assert::asserting on both the 2 codes returned
         for ($i = 0; $i < 2; $i++) {
-            assertEquals($codesWithStatuses[$i]['SiriusUid'], $this->lpaUid);
-            assertEquals($codesWithStatuses[$i]['UserLpaActor'], $this->userLpaActorToken);
-            assertEquals($codesWithStatuses[$i]['Organisation'], $this->organisation);
-            assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
+            Assert::assertEquals($codesWithStatuses[$i]['SiriusUid'], $this->lpaUid);
+            Assert::assertEquals($codesWithStatuses[$i]['UserLpaActor'], $this->userLpaActorToken);
+            Assert::assertEquals($codesWithStatuses[$i]['Organisation'], $this->organisation);
+            Assert::assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
 
             if ($i == 0) {
-                assertEquals(
+                Assert::assertEquals(
                     $codesWithStatuses[$i]['Expires'],
                     (new DateTime())->modify($code1Expiry)->format('Y-m-d')
                 );
             } else {
-                assertEquals(
+                Assert::assertEquals(
                     $codesWithStatuses[$i]['Expires'],
                     (new DateTime())->modify($code2Expiry)->format('Y-m-d')
                 );
@@ -853,16 +854,16 @@ class LpaContext extends BaseIntegrationContext
         $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
         $lpa = $userLpaActorMap->get($this->userLpaActorToken);
 
-        assertEquals($lpa['SiriusUid'], $this->lpaUid);
-        assertEquals($lpa['Id'], $this->userLpaActorToken);
-        assertEquals($lpa['ActorId'], $this->actorLpaId);
-        assertEquals($lpa['UserId'], $this->userId);
+        Assert::assertEquals($lpa['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($lpa['Id'], $this->userLpaActorToken);
+        Assert::assertEquals($lpa['ActorId'], $this->actorLpaId);
+        Assert::assertEquals($lpa['UserId'], $this->userId);
     }
 
     /**
      * @Then /^I can see that no organisations have access to my LPA$/
      */
-    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA(): void
     {
         // LpaService:getLpas
 
@@ -895,10 +896,10 @@ class LpaContext extends BaseIntegrationContext
 
         $lpa = $this->lpaService->getAllForUser($this->userId);
 
-        assertArrayHasKey($this->userLpaActorToken, $lpa);
-        assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
-        assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -925,13 +926,13 @@ class LpaContext extends BaseIntegrationContext
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        assertEmpty($codes);
+        Assert::assertEmpty($codes);
     }
 
     /**
      * @Then /^I can see the name of the organisation that viewed the LPA$/
      */
-    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         // Not needed for this context
     }
@@ -939,7 +940,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I cancel the organisation access code/
      */
-    public function iCancelTheOrganisationAccessCode()
+    public function iCancelTheOrganisationAccessCode(): void
     {
         // Not needed for this context
     }
@@ -947,7 +948,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I click to check my access code now expired/
      */
-    public function iClickToCheckMyAccessCodeNowExpired()
+    public function iClickToCheckMyAccessCodeNowExpired(): void
     {
         //Get the LPA
 
@@ -978,11 +979,11 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('actor', $lpaData);
+        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -1027,18 +1028,18 @@ class LpaContext extends BaseIntegrationContext
 
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        assertArrayHasKey('ViewerCode', $accessCodes[0]);
-        assertArrayHasKey('Expires', $accessCodes[0]);
-        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
-        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
+        Assert::assertArrayHasKey('ViewerCode', $accessCodes[0]);
+        Assert::assertArrayHasKey('Expires', $accessCodes[0]);
+        Assert::assertEquals($accessCodes[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
     }
 
     /**
      * @When /^I click to check my access codes that is used to view LPA/
      */
-    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
+    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA(): void
     {
         //Get the LPA
         // UserLpaActorMap::get
@@ -1068,11 +1069,11 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('actor', $lpaData);
+        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -1116,18 +1117,18 @@ class LpaContext extends BaseIntegrationContext
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        assertArrayHasKey('ViewerCode', $accessCodes[0]);
-        assertArrayHasKey('Expires', $accessCodes[0]);
-        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
-        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
+        Assert::assertArrayHasKey('ViewerCode', $accessCodes[0]);
+        Assert::assertArrayHasKey('Expires', $accessCodes[0]);
+        Assert::assertEquals($accessCodes[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
     }
 
     /**
      * @When /^I check my access codes$/
      */
-    public function iClickToCheckMyAccessCodes()
+    public function iClickToCheckMyAccessCodes(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode = 'XYZ321ABC987';
@@ -1161,11 +1162,11 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('actor', $lpaData);
+        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -1212,18 +1213,18 @@ class LpaContext extends BaseIntegrationContext
 
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        assertArrayHasKey('ViewerCode', $accessCodes[0]);
-        assertArrayHasKey('Expires', $accessCodes[0]);
-        assertEquals($accessCodes[0]['Organisation'], $this->organisation);
-        assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($accessCodes[0]['Added'], '2021-01-05 12:34:56');
+        Assert::assertArrayHasKey('ViewerCode', $accessCodes[0]);
+        Assert::assertArrayHasKey('Expires', $accessCodes[0]);
+        Assert::assertEquals($accessCodes[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($accessCodes[0]['Added'], '2021-01-05 12:34:56');
     }
 
     /**
      * @When /^I click to check the access codes$/
      */
-    public function iClickToCheckTheAccessCodes()
+    public function iClickToCheckTheAccessCodes(): void
     {
         //Get the LPA
 
@@ -1254,11 +1255,11 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('actor', $lpaData);
-        assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('actor', $lpaData);
+        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
 
         // Get the share codes
 
@@ -1345,17 +1346,17 @@ class LpaContext extends BaseIntegrationContext
             }
         }
 
-        assertEquals($codesWithStatuses[0]['Organisation'], $this->organisation);
-        assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
-        assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
-        assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
-        assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($codesWithStatuses[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
+        Assert::assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
+        Assert::assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
     }
 
     /**
      * @When /^I confirm cancellation of the chosen viewer code/
      */
-    public function iConfirmCancellationOfTheChosenViewerCode()
+    public function iConfirmCancellationOfTheChosenViewerCode(): void
     {
         // Expected fixture calls in this step
         $fixtureCount = 3;
@@ -1363,7 +1364,7 @@ class LpaContext extends BaseIntegrationContext
         // UserLpaActorMap::get
         $this->awsFixtures->append(
             function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
-                assertEquals('GetItem', $cmd->getName());
+                Assert::assertEquals('GetItem', $cmd->getName());
                 $fixtureCount--;
 
                 return new Result(
@@ -1385,7 +1386,7 @@ class LpaContext extends BaseIntegrationContext
         // ViewerCodes::get
         $this->awsFixtures->append(
             function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
-                assertEquals('GetItem', $cmd->getName());
+                Assert::assertEquals('GetItem', $cmd->getName());
                 $fixtureCount--;
 
                 return new Result(
@@ -1409,7 +1410,7 @@ class LpaContext extends BaseIntegrationContext
         // ViewerCodes::cancel
         $this->awsFixtures->append(
             function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
-                assertEquals('UpdateItem', $cmd->getName());
+                Assert::assertEquals('UpdateItem', $cmd->getName());
                 $fixtureCount--;
 
                 return new Result();
@@ -1419,7 +1420,7 @@ class LpaContext extends BaseIntegrationContext
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
         $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
-        assertEquals(
+        Assert::assertEquals(
             0,
             $fixtureCount,
             'Not all expected fixtures used, expected 3 got ' . 3 - $fixtureCount
@@ -1429,7 +1430,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I confirm details shown to me of the found LPA are correct$/
      */
-    public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
+    public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect(): void
     {
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -1449,8 +1450,7 @@ class LpaContext extends BaseIntegrationContext
 
         // pact interaction failed so had to use apiFixtures
         $this->apiFixtures
-            ->get('/v1/use-an-lpa/lpas/' . $this->lpa->uId)
-            ->respondWith(
+            ->append(
                 new Response(
                     StatusCodeInterface::STATUS_OK,
                     [],
@@ -1475,7 +1475,7 @@ class LpaContext extends BaseIntegrationContext
             ]
         ];
 
-        assertEquals($expectedResponse, $lpaMatchResponse);
+        Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
 
     /**
@@ -1486,7 +1486,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I being the donor on the LPA I am not shown the attorney details$/
      * @When /^I confirm details of the found LPA are correct$/
      */
-    public function iAmShownTheDetailsOfAnLPA()
+    public function iAmShownTheDetailsOfAnLPA(): void
     {
         // Not needed for this context
     }
@@ -1494,26 +1494,25 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I fill in the form and click the cancel button$/
      */
-    public function iFillInTheFormAndClickTheCancelButton()
+    public function iFillInTheFormAndClickTheCancelButton(): void
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
 
         // API call for finding all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode([])
+            )
+        );
     }
 
     /**
      * @Given /^I have 2 codes for one of my LPAs$/
      */
-    public function iHave2CodesForOneOfMyLPAs()
+    public function iHave2CodesForOneOfMyLPAs(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iHaveCreatedAnAccessCode();
@@ -1522,7 +1521,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument(): void
     {
         // sets up the normal properties needed for an lpa
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
@@ -1538,7 +1537,7 @@ class LpaContext extends BaseIntegrationContext
      * @Given /^I have been given access to use an LPA via credentials$/
      * @Given /^I have added an LPA to my account$/
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'));
 
@@ -1553,7 +1552,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I have created an access code$/
      */
-    public function iHaveCreatedAnAccessCode()
+    public function iHaveCreatedAnAccessCode(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
         $this->iAmGivenAUniqueAccessCode();
@@ -1562,7 +1561,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I have generated an access code for an organisation and can see the details$/
      */
-    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
+    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iClickToCheckMyAccessCodes();
@@ -1572,7 +1571,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I have shared the access code with organisations to view my LPA$/
      */
-    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
         // Not needed for this context
     }
@@ -1580,7 +1579,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I provide details from an LPA registered before Sept 2019$/
      */
-    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
+    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019(): void
     {
         $this->lpa->registrationDate = '2019-08-31';
 
@@ -1609,8 +1608,8 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA not eligible due to registration date', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('LPA not eligible due to registration date', $ex->getMessage());
             return;
         }
     }
@@ -1618,7 +1617,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I provide details of an LPA that does not exist$/
      */
-    public function iProvideDetailsOfAnLPAThatDoesNotExist()
+    public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
         $invalidLpaId = '700000004321';
 
@@ -1647,8 +1646,8 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals('LPA not found', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            Assert::assertEquals('LPA not found', $ex->getMessage());
             return;
         }
 
@@ -1687,8 +1686,8 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals('LPA not found', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            Assert::assertEquals('LPA not found', $ex->getMessage());
             return;
         }
 
@@ -1698,7 +1697,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I provide the details from a valid paper LPA document$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPADocument()
+    public function iProvideTheDetailsFromAValidPaperLPADocument(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -1754,13 +1753,13 @@ class LpaContext extends BaseIntegrationContext
             ]
         ];
 
-        assertEquals($expectedResponse, $lpaMatchResponse);
+        Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
 
     /**
      * @When /^I provide the details from a valid paper document that already has an activation key$/
      */
-    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey()
+    public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $data = [
             'reference_number'      => $this->lpaUid,
@@ -1809,9 +1808,9 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA has an activation key already', $ex->getMessage());
-            assertEquals(
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('LPA has an activation key already', $ex->getMessage());
+            Assert::assertEquals(
                 [
                     'donor'         => [
                         'uId'           => $this->lpa->donor->uId,
@@ -1833,7 +1832,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I request to add an LPA with valid details$/
      */
-    public function iRequestToAddAnLPAWithValidDetails()
+    public function iRequestToAddAnLPAWithValidDetails(): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1875,15 +1874,15 @@ class LpaContext extends BaseIntegrationContext
             $this->userId
         );
 
-        assertArrayHasKey('actor', $validatedLpa);
-        assertArrayHasKey('lpa', $validatedLpa);
-        assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+        Assert::assertArrayHasKey('actor', $validatedLpa);
+        Assert::assertArrayHasKey('lpa', $validatedLpa);
+        Assert::assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
     }
 
     /**
      * @When /^I request to give an organisation access to one of my LPAs$/
      */
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode = 'XYZ321ABC987';
@@ -1913,7 +1912,7 @@ class LpaContext extends BaseIntegrationContext
      * @Given /^I request to go back and try again$/
      * @Then /^I am asked for my role on the LPA$/
      */
-    public function iRequestToGoBackAndTryAgain()
+    public function iRequestToGoBackAndTryAgain(): void
     {
         // Not needed for this context
     }
@@ -1952,30 +1951,29 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaService::getLpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['lpa' => $this->lpa])
-                )
-            );
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(['lpa' => $this->lpa])
+            )
+        );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
 
         if ($status == "Revoked") {
-            assertEmpty($lpaData);
+            Assert::assertEmpty($lpaData);
         } else {
-            assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-            assertEquals($this->lpa->id, $lpaData['lpa']['id']);
-            assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+            Assert::assertEquals($this->lpa->id, $lpaData['lpa']['id']);
+            Assert::assertEquals($this->lpa->status, $lpaData['lpa']['status']);
         }
     }
 
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
-    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
     }
@@ -1983,7 +1981,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus(): void
     {
         // Not needed for this context
     }
@@ -1991,7 +1989,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I should be shown the details of the viewer code with status(.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus(): void
     {
         // Not needed for this context
     }
@@ -1999,7 +1997,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I should be taken back to the access code summary page/
      */
-    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage(): void
     {
         // Not needed for this context
     }
@@ -2007,7 +2005,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I should be told that I have not created any access codes yet$/
      */
-    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet(): void
     {
         // Not needed for this context
     }
@@ -2016,7 +2014,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I want to be asked for confirmation prior to cancellation/
      * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa/
      */
-    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    public function iWantToBeAskedForConfirmationPriorToCancellation(): void
     {
         // Not needed for this context
     }
@@ -2024,7 +2022,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I want to cancel the access code for an organisation$/
      */
-    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    public function iWantToCancelTheAccessCodeForAnOrganisation(): void
     {
         // Not needed for this context
     }
@@ -2032,7 +2030,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I want to see the option to cancel the code$/
      */
-    public function iWantToSeeTheOptionToCancelTheCode()
+    public function iWantToSeeTheOptionToCancelTheCode(): void
     {
         // Not needed for this context
     }
@@ -2040,7 +2038,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^One of the generated access code has expired$/
      */
-    public function oneOfTheGeneratedAccessCodeHasExpired()
+    public function oneOfTheGeneratedAccessCodeHasExpired(): void
     {
         // Not needed for this context
     }
@@ -2048,7 +2046,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
-    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
     {
         // not needed for this context
     }
@@ -2064,29 +2062,29 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^The LPA has not been added$/
      */
-    public function theLPAHasNotBeenAdded()
+    public function theLPAHasNotBeenAdded(): void
     {
         $lpas = $this->lpaService->getAllForUser($this->userId);
 
-        assertEmpty($lpas);
+        Assert::assertEmpty($lpas);
     }
 
     /**
      * @Then /^The LPA is not found$/
      */
-    public function theLPAIsNotFound()
+    public function theLPAIsNotFound(): void
     {
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
         $validatedLpa = $actorCodeService->validateDetails($this->oneTimeCode, $this->lpaUid, $this->userDob);
 
-        assertNull($validatedLpa);
+        Assert::assertNull($validatedLpa);
     }
 
     /**
      * @Then /^The LPA is removed and my active codes are cancelled$/
      */
-    public function theLPAIsRemovedAndMyActiveCodesAreCancelled()
+    public function theLPAIsRemovedAndMyActiveCodesAreCancelled(): void
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -2186,13 +2184,13 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaRemoved = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
 
-        assertEquals($this->lpa->uId, $lpaRemoved['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaRemoved['uId']);
     }
 
     /**
      * @Given /^The LPA is successfully added$/
      */
-    public function theLPAIsSuccessfullyAdded()
+    public function theLPAIsSuccessfullyAdded(): void
     {
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
         $this->userLpaActorToken = '13579';
@@ -2241,13 +2239,13 @@ class LpaContext extends BaseIntegrationContext
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
-        assertNotNull($response);
+        Assert::assertNotNull($response);
     }
 
     /**
      * @Then /^The LPA should not be found$/
      */
-    public function theLPAShouldNotBeFound()
+    public function theLPAShouldNotBeFound(): void
     {
         // Not needed for this context
     }
@@ -2271,7 +2269,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^The status of the LPA changed from Registered to Suspended$/
      */
-    public function theStatusOfTheLPAChangedFromRegisteredToSuspended()
+    public function theStatusOfTheLPAChangedFromRegisteredToSuspended(): void
     {
         $this->lpa->status = 'Suspended';
 
@@ -2311,13 +2309,13 @@ class LpaContext extends BaseIntegrationContext
 
         $lpa = $this->lpaService->getAllForUser($this->userId);
 
-        assertEmpty($lpa);
+        Assert::assertEmpty($lpa);
     }
 
     /**
      * @When /^The status of the LPA got Revoked$/
      */
-    public function theStatusOfTheLpaGotRevoked()
+    public function theStatusOfTheLpaGotRevoked(): void
     {
         // Not needed for this context
     }
@@ -2326,7 +2324,7 @@ class LpaContext extends BaseIntegrationContext
      * @When /^I check my access codes of the status changed LPA$/
      * @When /^I request to give an organisation access to the LPA whose status changed to Revoked$/
      */
-    public function iCheckMyAccessCodesOfTheStatusChangedLpa()
+    public function iCheckMyAccessCodesOfTheStatusChangedLpa(): void
     {
         $this->lpa->status = "Revoked";
 
@@ -2359,13 +2357,13 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        assertEmpty($lpaData);
+        Assert::assertEmpty($lpaData);
     }
 
     /**
      * @Given /^I lost the letter containing my activation key$/
      */
-    public function iLostTheLetterContainingMyActivationKey()
+    public function iLostTheLetterContainingMyActivationKey(): void
     {
         // Not needed for this context
     }
@@ -2373,7 +2371,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I should have an option to regenerate an activation key for the old LPA I want to add$/
      */
-    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd()
+    public function iShouldHaveAnOptionToRegenerateAnActivationKeyForTheOldLPAIWantToAdd(): void
     {
         // Not needed for this context
     }
@@ -2382,7 +2380,7 @@ class LpaContext extends BaseIntegrationContext
      * @When /^I request for a new activation key again$/
      * @When /^I repeat my request for an activation key$/
      */
-    public function iRequestForANewActivationKeyAgain()
+    public function iRequestForANewActivationKeyAgain(): void
     {
         $data = [
             'reference_number'      => $this->lpa->uId,
@@ -2421,13 +2419,13 @@ class LpaContext extends BaseIntegrationContext
             ]
         ];
 
-        assertEquals($expectedResponse, $response);
+        Assert::assertEquals($expectedResponse, $response);
     }
 
     /**
      * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -2535,9 +2533,9 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('LPA already added', $ex->getMessage());
-            assertEquals($expectedResponse, $ex->getAdditionalData());
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('LPA already added', $ex->getMessage());
+            Assert::assertEquals($expectedResponse, $ex->getAdditionalData());
             return;
         }
 
@@ -2547,7 +2545,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
      */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -2643,9 +2641,9 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            assertEquals('Activation key already requested for LPA', $ex->getMessage());
-            assertEquals($expectedResponse, $ex->getAdditionalData());
+            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+            Assert::assertEquals('Activation key already requested for LPA', $ex->getMessage());
+            Assert::assertEquals($expectedResponse, $ex->getAdditionalData());
             return;
         }
 
@@ -2657,7 +2655,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When I provide details of an LPA that is not registered
      */
-    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered(): void
     {
         $this->lpa->status = 'Pending';
 
@@ -2686,8 +2684,8 @@ class LpaContext extends BaseIntegrationContext
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (NotFoundException $ex) {
-            assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            assertEquals('LPA status invalid', $ex->getMessage());
+            Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+            Assert::assertEquals('LPA status invalid', $ex->getMessage());
             return;
         }
     }
@@ -2713,7 +2711,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @When  /^I am told my activation key request has been received$/
      */
-    public function iAmToldMyActivationKeyRequestHasBeenReceived()
+    public function iAmToldMyActivationKeyRequestHasBeenReceived(): void
     {
         $data = [
             'queuedForCleansing' => true
@@ -2779,16 +2777,16 @@ class LpaContext extends BaseIntegrationContext
             try {
                 $addOlderLpa->validateRequest($this->userId, $data);
             } catch (NotFoundException $ex) {
-                assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-                assertEquals('LPA not found', $ex->getMessage());
+                Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
+                Assert::assertEquals('LPA not found', $ex->getMessage());
                 return;
             }
         } else {
             try {
                 $addOlderLpa->validateRequest($this->userId, $data);
             } catch (BadRequestException $ex) {
-                assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-                assertEquals('LPA details do not match', $ex->getMessage());
+                Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
+                Assert::assertEquals('LPA details do not match', $ex->getMessage());
                 return;
             }
         }

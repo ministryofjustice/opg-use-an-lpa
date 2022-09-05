@@ -8,6 +8,8 @@ use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\LpaService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -18,15 +20,10 @@ use Psr\Log\LoggerInterface;
  */
 class CheckLpaCleansedTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaServiceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
 
     public function setUp(): void
     {
@@ -43,7 +40,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed_and_registered_before_sep2019()
+    public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed_and_registered_before_sep2019(): void
     {
         $userId = '1234';
         $lpa = new Lpa(
@@ -72,7 +69,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_add_confirmation_accepts_a_cleansed_lpa_and_registered_before_sep2019()
+    public function older_lpa_add_confirmation_accepts_a_cleansed_lpa_and_registered_before_sep2019(): void
     {
         $userId = '1234';
         $lpa = new Lpa(
@@ -96,7 +93,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_add_confirmation_accepts_a_lpa_not_cleansed_and_registered_after_sep2019()
+    public function older_lpa_add_confirmation_accepts_a_lpa_not_cleansed_and_registered_after_sep2019(): void
     {
         $userId = '1234';
         $lpa = new Lpa(
@@ -120,7 +117,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_add_confirmation_accepts_an_lpa_cleansed_and_registered_after_sep2019()
+    public function older_lpa_add_confirmation_accepts_an_lpa_cleansed_and_registered_after_sep2019(): void
     {
         $userId = '1234';
         $lpa = new Lpa(

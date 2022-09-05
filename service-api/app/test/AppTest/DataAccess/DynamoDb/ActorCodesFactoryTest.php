@@ -7,14 +7,17 @@ namespace AppTest\DataAccess\DynamoDb;
 use App\DataAccess\DynamoDb\ActorCodes;
 use App\DataAccess\DynamoDb\ActorCodesFactory;
 use Aws\DynamoDb\DynamoDbClient;
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Exception;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class ActorCodesFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
-    public function can_instantiate()
+    public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -36,7 +39,7 @@ class ActorCodesFactoryTest extends TestCase
     }
 
     /** @test */
-    public function cannot_instantiate()
+    public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

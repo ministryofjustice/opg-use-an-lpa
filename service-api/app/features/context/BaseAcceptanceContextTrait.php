@@ -10,35 +10,21 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
-use JSHayes\FakeRequests\MockHandler;
-use JSHayes\FakeRequests\RequestHandler;
+use GuzzleHttp\Handler\MockHandler;
+use PHPUnit\Framework\Assert;
+use Psr\Http\Message\RequestInterface;
 
 trait BaseAcceptanceContextTrait
 {
-    /**
-     * @var BaseAcceptanceContext
-     */
-    protected $base;
-
-    /**
-     * @var MinkContext
-     */
-    protected $ui;
-
-    /**
-     * @var MockHandler
-     */
-    protected $apiFixtures;
-
-    /**
-     * @var AwsMockHandler
-     */
-    protected $awsFixtures;
+    protected BaseAcceptanceContext $base;
+    protected MinkContext $ui;
+    protected MockHandler $apiFixtures;
+    protected AwsMockHandler $awsFixtures;
 
     /**
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
 
@@ -50,7 +36,7 @@ trait BaseAcceptanceContextTrait
 
     protected function getResponseAsJson(): array
     {
-        assertJson($this->ui->getSession()->getPage()->getContent());
+        Assert::assertJson($this->ui->getSession()->getPage()->getContent());
         return json_decode($this->ui->getSession()->getPage()->getContent(), true);
     }
 
@@ -148,12 +134,12 @@ trait BaseAcceptanceContextTrait
     }
 
     /**
-     * Allows context steps to optionally store an api request mock as returned from calls to
-     * `$this->apiFixtures->get|patch|post()`
+     * Allows context steps to optionally store an api request as made to guzzle and fetched
+     * with `getLastRequest()`
      *
-     * @param RequestHandler $request
+     * @param RequestInterface $request
      */
-    public function setLastRequest(RequestHandler $request): void
+    public function setLastRequest(RequestInterface $request): void
     {
         $this->base->lastApiRequest = $request;
     }
@@ -165,9 +151,9 @@ trait BaseAcceptanceContextTrait
      * This function may not return the request you're expecting so ensure your feature test steps
      * set the value you want before use.
      *
-     * @return RequestHandler
+     * @return RequestInterface
      */
-    public function getLastRequest(): RequestHandler
+    public function getLastRequest(): RequestInterface
     {
         return $this->base->lastApiRequest;
     }

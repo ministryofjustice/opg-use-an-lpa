@@ -20,34 +20,22 @@ use DateTime;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class AddOlderLpaTest extends TestCase
 {
-    /** @var ObjectProphecy|FindActorInLpa */
-    private $findActorInLpaProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LpaService */
-    private $lpaServiceProphecy;
-
-    /** @var ObjectProphecy|LpaAlreadyAdded */
-    private $lpaAlreadyAddedProphecy;
-
-    /** @var ObjectProphecy|OlderLpaService */
-    private $olderLpaServiceProphecy;
-
-    /** @var ObjectProphecy|ValidateOlderLpaRequirements */
-    private $validateOlderLpaRequirementsProphecy;
-
-    /** @var ObjectProphecy|RestrictSendingLpaForCleansing */
-    private $restrictSendingLpaForCleansingProphecy;
-
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
-
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
+    private FindActorInLpa|ObjectProphecy $findActorInLpaProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private LpaAlreadyAdded|ObjectProphecy $lpaAlreadyAddedProphecy;
+    private OlderLpaService|ObjectProphecy $olderLpaServiceProphecy;
+    private ValidateOlderLpaRequirements|ObjectProphecy $validateOlderLpaRequirementsProphecy;
+    private RestrictSendingLpaForCleansing|ObjectProphecy $restrictSendingLpaForCleansingProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     private string $userId;
     private string $lpaUid;
@@ -117,7 +105,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria()
+    public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
@@ -155,7 +143,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_already_added()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_already_added(): void
     {
         $alreadyAddedData = [
             'donor'         => [
@@ -179,7 +167,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -237,7 +225,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true()
+    public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
@@ -290,7 +278,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_not_found()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_not_found(): void
     {
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
@@ -309,7 +297,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid(): void
     {
         $invalidLpa = new Lpa(
             [
@@ -341,7 +329,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_lpa_status_not_registered()
+    public function older_lpa_lookup_throws_an_exception_if_lpa_status_not_registered(): void
     {
         $invalidLpa = new Lpa(
             [
@@ -373,7 +361,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa()
+    public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
@@ -407,7 +395,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key()
+    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -452,7 +440,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true()
+    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
@@ -550,7 +538,7 @@ class AddOlderLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_restrict_flag_true()
+    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_restrict_flag_true(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
