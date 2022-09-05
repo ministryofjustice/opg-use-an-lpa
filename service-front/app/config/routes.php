@@ -114,99 +114,99 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User deletion
     $app->get('/confirm-delete-account', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
     $app->get('/delete-account', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeleteAccountHandler::class], 'delete-account');
 
     // User details
     $app->get('/your-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
     ], 'your-details');
     $app->route('/change-password', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
     ], ['GET','POST'], 'change-password');
     $app->route('/change-email', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\RequestChangeEmailHandler::class
     ], ['GET','POST'], 'change-email');
     $app->get('/lpa/change-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
     ], 'lpa.change-details');
 
     // LPA management
     $app->get('/lpa/dashboard', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaDashboardHandler::class
     ], 'lpa.dashboard');
     $app->route('/lpa/check', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
     ], ['GET', 'POST'], 'lpa.check');
     $app->get('/lpa/view-lpa', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
     $app->route('/lpa/code-make', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
     ], ['GET', 'POST'], 'lpa.create-code');
     $app->route('/lpa/access-codes', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckAccessCodesHandler::class
     ], ['GET', 'POST'], 'lpa.access-codes');
     $app->post('/lpa/confirm-cancel-code', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmCancelCodeHandler::class
     ], 'lpa.confirm-cancel-code');
     $app->post('/lpa/cancel-code', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
     ], 'lpa.cancel-code');
     $app->get('/lpa/removed', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
     ], 'lpa.removed');
     $app->get('/lpa/instructions-preferences', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
     ], 'lpa.instructions-preferences');
     $app->get('/lpa/instructions-preferences-signed-before-2016', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Common\Handler\InstructionsPreferencesBefore2016Handler::class
     ], 'lpa.instructions-preferences-before-2016');
     $app->get('/lpa/death-notification', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
     ], 'lpa.death-notification');
     $app->get('/lpa/change-lpa-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeLpaDetailsHandler::class
     ], 'lpa.change-lpa-details');
 
     //Add by code routes
     $app->route('/lpa/add-by-key/activation-key', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\AddLpa\ActivationKeyHandler::class,
     ], ['GET', 'POST'], 'lpa.add-by-key');
 
     $app->route('/lpa/add-by-key/date-of-birth', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\DateOfBirthHandler::class,
     ], ['GET', 'POST'], 'lpa.add-by-key.date-of-birth');
 
     $app->route('/lpa/add-by-key/lpa-reference-number', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
     ], ['GET', 'POST'], 'lpa.add-by-key.lpa-reference-number');
 
     // Access for All Journey
     $app->route('/lpa/add/contact-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -216,7 +216,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.contact-details');
 
     $app->route('/lpa/add/actor-role', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -226,7 +226,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.actor-role');
 
     $app->route('/lpa/add/donor-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -236,7 +236,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.donor-details');
 
     $app->route('/lpa/add/actor-address', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -246,7 +246,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.actor-address');
 
     $app->route('/lpa/add/attorney-details', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -256,7 +256,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.attorney-details');
 
     $app->route('/lpa/add/check-details-and-consent', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -266,7 +266,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
 
     $app->route('/lpa/add/address-on-paper', [
-        Mezzio\Authentication\AuthenticationMiddleware::class,
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_OLDER_LPAS,
@@ -278,7 +278,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     // Older LPA journey
         // if flag true, send user to triage page as entry point
         $app->route('/lpa/add', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -288,7 +288,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.add');
 
         $app->route('/lpa/add-by-paper-information', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -298,7 +298,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.add-by-paper-information');
 
         $app->route('/lpa/request-code/lpa-reference-number', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -308,7 +308,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.add-by-paper');
 
         $app->route('/lpa/request-code/your-name', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -318,7 +318,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.your-name');
 
         $app->route('/lpa/request-code/date-of-birth', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -328,7 +328,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.date-of-birth');
 
         $app->route('/lpa/request-code/postcode', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -338,7 +338,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.postcode');
 
         $app->route('/lpa/request-code/check-answers', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -348,7 +348,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         ], ['GET', 'POST'], 'lpa.check-answers');
 
         $app->post('/lpa/confirm-activation-key-generation', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $USE_OLDER_LPA_JOURNEY,
@@ -360,7 +360,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
 
         $app->route('/lpa/remove-lpa', [
-            Mezzio\Authentication\AuthenticationMiddleware::class,
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
                 $container,
                 $DELETE_LPA_FEATURE,

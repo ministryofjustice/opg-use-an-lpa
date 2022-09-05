@@ -23,25 +23,21 @@ use RuntimeException;
  */
 class UserService implements UserRepositoryInterface
 {
-    /**
-     * @var ApiClient
-     */
-    private $apiClient;
+    private ApiClient $apiClient;
 
     /**
      * @var callable
      */
     private $userModelFactory;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * UserService constructor.
-     * @param ApiClient $apiClient
-     * @param callable $userModelFactory
+     *
+     * @param ApiClient       $apiClient
+     * @param callable        $userModelFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(ApiClient $apiClient, callable $userModelFactory, LoggerInterface $logger)
     {
@@ -77,7 +73,7 @@ class UserService implements UserRepositoryInterface
                 'event_code' => EventCodes::ACCOUNT_CREATED,
                 'id'         => $data['Id'],
                 'email'      => new Email($email)
-          ]
+            ]
         );
 
         return $data;
@@ -85,9 +81,10 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $email
-     * @return array
+     *
+     * @return array|null
      */
-    public function getByEmail(string $email): array
+    public function getByEmail(string $email): ?array
     {
         return $this->apiClient->httpGet('/v1/user', [
             'email' => $email,
@@ -97,46 +94,50 @@ class UserService implements UserRepositoryInterface
     /**
      * Attempts authentication of a user based on the passed in credentials.
      *
-     * @param string $email
-     * @param string $password
+     * @param string      $credential
+     * @param string|null $password
+     *
      * @return User|null
      */
-    public function authenticate(string $email, string $password = null): ?UserInterface
+    public function authenticate(string $credential, string $password = null): ?UserInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
-                'email' => strtolower(trim($email)),
+                'email' => strtolower(trim($credential)),
                 'password' => $password,
             ]);
 
-            if (!is_null($userData)) {
-                $this->logger->info(
-                    'Authentication successful for account with Id {id}',
-                    [
-                        'id'         => $userData['Id'],
-                        'last-login' => $userData['LastLogin'] ?? 'never'
-                    ]
-                );
+            $this->logger->info(
+                'Authentication successful for account with Id {id}',
+                [
+                    'id'         => $userData['Id'],
+                    'last-login' => $userData['LastLogin'] ?? 'never'
+                ]
+            );
 
-                $filteredDetails = [
-                    'Email'     => $userData['Email'],
-                ];
-                if (array_key_exists('LastLogin', $userData)) {
-                    $filteredDetails['LastLogin'] = $userData['LastLogin'];
-                }
+            $filteredDetails = [
+                'Email'     => $userData['Email'],
+            ];
 
-                return ($this->userModelFactory)(
-                    $userData['Id'],
-                    [],
-                    $filteredDetails
-                );
+            if (array_key_exists('LastLogin', $userData)) {
+                $filteredDetails['LastLogin'] = $userData['LastLogin'];
             }
+
+            if (!empty($userData['NeedsReset'])) {
+                $filteredDetails['NeedsReset'] = $userData['NeedsReset'];
+            }
+
+            return ($this->userModelFactory)(
+                $userData['Id'],
+                [],
+                $filteredDetails
+            );
         } catch (ApiException $e) {
             $this->logger->notice(
                 'Authentication failed for {email} with code {code}',
                 [
                     'code'  => $e->getCode(),
-                    'email' => $email
+                    'email' => $credential
                 ]
             );
             if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
@@ -155,14 +156,14 @@ class UserService implements UserRepositoryInterface
      * @param string $activationToken
      * @return bool|string
      */
-    public function activate(string $activationToken)
+    public function activate(string $activationToken): bool|string
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/user-activation', [
                 'activation_token' => $activationToken,
             ]);
 
-            if (is_array($userData) && !empty($userData)) {
+            if (!empty($userData)) {
                 $this->logger->notice(
                     'Account with Id {id} has been activated',
                     [
@@ -195,7 +196,7 @@ class UserService implements UserRepositoryInterface
             'email' => $email,
         ]);
 
-        if (!is_null($data) && isset($data['PasswordResetToken'])) {
+        if (isset($data['PasswordResetToken'])) {
             $this->logger->info(
                 'Account with Id {id} has requested a password reset',
                 [
@@ -266,7 +267,7 @@ class UserService implements UserRepositoryInterface
                 'password'      => $password->getString()
             ]);
 
-            if (!is_null($data) && isset($data['EmailResetToken'])) {
+            if (isset($data['EmailResetToken'])) {
                 $this->logger->info(
                     'Account with Id {id} has requested a email reset',
                     [
