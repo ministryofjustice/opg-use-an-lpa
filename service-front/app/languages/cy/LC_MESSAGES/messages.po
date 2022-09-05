@@ -7172,7 +7172,7 @@ msgstr ""
 #: src/Actor/src/Handler/PasswordResetPageHandler.php:96
 msgctxt "flashMessage"
 msgid "Password changed successfully"
-msgstr "Cyfrinair wedi'i newid yn llwyddiannus"
+msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
 
 #: src/Actor/templates/actor/home-page.html.twig:51
 msgid ""
