@@ -6,6 +6,8 @@ namespace Common\Middleware\Session;
 
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Service\Session\EncryptedCookiePersistence;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -31,6 +33,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
     public const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         EncryptedCookiePersistence::SESSION_EXPIRED_KEY,
+        FlashMessagesInterface::FLASH_NEXT
     ];
 
     private LoggerInterface $logger;

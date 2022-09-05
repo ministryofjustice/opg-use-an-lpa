@@ -7,6 +7,7 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
+use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -17,7 +18,7 @@ use Laminas\Filter\StringTrim;
 
 class PasswordResetRequest extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = "password-reset-request";
+    const FORM_NAME = 'password-reset-request';
 
     /**
      * PasswordReset constructor.
@@ -30,6 +31,8 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
         $this->add(new Email('email'));
 
         $this->add(new Email('email_confirm'));
+
+        $this->add(new Hidden('forced'));
     }
 
     /**
@@ -98,6 +101,9 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                     ],
                 ],
             ],
+            'forced'           => [
+                'required' => false,
+            ]
         ];
     }
 }

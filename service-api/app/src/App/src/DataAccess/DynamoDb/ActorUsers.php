@@ -15,32 +15,22 @@ class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $actorUsersTable;
-
-    /**
-     * ViewerCodeActivity constructor.
-     * @param DynamoDbClient $client
-     * @param string $actorUsersTable
-     */
-    public function __construct(DynamoDbClient $client, string $actorUsersTable)
-    {
-        $this->client = $client;
-        $this->actorUsersTable = $actorUsersTable;
+    public function __construct(
+        private DynamoDbClient $client,
+        private string $actorUsersTable,
+    ) {
     }
 
     /**
      * @inheritDoc
      */
-    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array
-    {
+    public function add(
+        string $id,
+        string $email,
+        HiddenString $password,
+        string $activationToken,
+        int $activationTtl
+    ): array {
         $this->client->putItem([
             'TableName' => $this->actorUsersTable,
             'Item' => [
@@ -245,7 +235,7 @@ class ActorUsers implements ActorUsersInterface
                     'S' => $id,
                 ],
             ],
-            'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry',
+            'UpdateExpression' => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry, NeedsReset',
             'ExpressionAttributeValues' => [
                 ':p' => [
                     'S' => password_hash($password->getString(), PASSWORD_DEFAULT)

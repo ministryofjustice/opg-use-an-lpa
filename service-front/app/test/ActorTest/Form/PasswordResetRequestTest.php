@@ -8,6 +8,7 @@ use Actor\Form\PasswordResetRequest;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Common\Form\Element\Email;
+use Laminas\Form\Element\Hidden;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +36,7 @@ class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
             '__csrf'           => Csrf::class,
             'email'            => Email::class,
             'email_confirm'    => Email::class,
+            'forced'           => Hidden::class,
         ];
     }
 
