@@ -6,6 +6,7 @@ namespace BehatTest\Context\Acceptance;
 
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class CommonContext
@@ -21,7 +22,7 @@ class CommonContext implements Context
     /**
      * @Given /^I attach a tracing header to my requests$/
      */
-    public function iAttachATracingHeaderToMyRequests()
+    public function iAttachATracingHeaderToMyRequests(): void
     {
         $this->traceId = 'Root=1-1-11';
 
@@ -34,10 +35,11 @@ class CommonContext implements Context
      * Relies on a previous context steps having set the last request value using
      * {@link BaseUiContextTrait::setLastRequest()}
      */
-    public function myOutboundRequestsHaveAttachedTracingHeaders()
+    public function myOutboundRequestsHaveAttachedTracingHeaders(): void
     {
         $request = $this->getLastRequest();
 
-        $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'), $this->traceId);
+        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')));
+        Assert::assertContains($this->traceId, $request->getHeader(strtolower('X-Amzn-Trace-Id')));
     }
 }

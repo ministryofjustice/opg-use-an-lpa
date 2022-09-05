@@ -9,6 +9,7 @@ use App\Service\ApiClient\Client;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -18,10 +19,9 @@ use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
 {
-    /**
-     * @var ObjectProphecy|ClientInterface
-     */
-    protected $apiClient;
+    use ProphecyTrait;
+
+    protected ClientInterface|ObjectProphecy $apiClient;
 
     public function setUp(): void
     {
@@ -59,7 +59,7 @@ class ClientTest extends TestCase
     // ============
 
     /** @test */
-    public function can_get_a_simple_endpoint_returning_valid_json()
+    public function can_get_a_simple_endpoint_returning_valid_json(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
@@ -72,7 +72,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function can_get_an_endpoint_with_parameters_returning_valid_json()
+    public function can_get_an_endpoint_with_parameters_returning_valid_json(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
@@ -85,7 +85,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processes_a_non_200_response_to_a_get_request()
+    public function correctly_processes_a_non_200_response_to_a_get_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -98,7 +98,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function client_throws_error_with_get_request()
+    public function client_throws_error_with_get_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
 
@@ -120,7 +120,7 @@ class ClientTest extends TestCase
      * @test
      * @dataProvider validStatusCodes
      */
-    public function can_post_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    public function can_post_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
@@ -133,7 +133,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processes_a_non_2xx_response_to_a_post_request()
+    public function correctly_processes_a_non_2xx_response_to_a_post_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -146,7 +146,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function client_throws_error_with_post_request()
+    public function client_throws_error_with_post_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
 
@@ -168,7 +168,7 @@ class ClientTest extends TestCase
      * @test
      * @dataProvider validStatusCodes
      */
-    public function can_put_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    public function can_put_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
@@ -181,7 +181,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processes_a_non_2xx_response_to_a_put_request()
+    public function correctly_processes_a_non_2xx_response_to_a_put_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -194,7 +194,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function client_throws_error_with_put_request()
+    public function client_throws_error_with_put_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
 
@@ -216,7 +216,7 @@ class ClientTest extends TestCase
      * @test
      * @dataProvider validStatusCodes
      */
-    public function can_patch_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    public function can_patch_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
@@ -229,7 +229,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processes_a_non_2xx_response_to_a_patch_request()
+    public function correctly_processes_a_non_2xx_response_to_a_patch_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -242,7 +242,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function client_throws_error_with_patch_request()
+    public function client_throws_error_with_patch_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
 
@@ -264,7 +264,7 @@ class ClientTest extends TestCase
      * @test
      * @dataProvider validStatusCodes
      */
-    public function can_delete_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode)
+    public function can_delete_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
@@ -277,7 +277,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function correctly_processes_a_non_2xx_response_to_a_delete_request()
+    public function correctly_processes_a_non_2xx_response_to_a_delete_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($this->setupResponse('', StatusCodeInterface::STATUS_NOT_FOUND)->reveal());
@@ -290,7 +290,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function client_throws_error_with_delete_request()
+    public function client_throws_error_with_delete_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
 
@@ -312,7 +312,7 @@ class ClientTest extends TestCase
     // expected functionality in each.
 
     /** @test */
-    public function sets_appropriate_request_headers_for_request()
+    public function sets_appropriate_request_headers_for_request(): void
     {
         $this->apiClient->sendRequest(Argument::that(function($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
@@ -347,7 +347,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function gracefully_handles_malformed_response_data()
+    public function gracefully_handles_malformed_response_data(): void
     {
         $exceptionProphecy = $this->prophesize(ApiException::class);
 
@@ -391,7 +391,8 @@ class ClientTest extends TestCase
      * Provides expected valid response codes that we know our methods should handle.
      * @return array
      */
-    public function validStatusCodes(): array {
+    public function validStatusCodes(): array
+    {
         return [
             [ StatusCodeInterface::STATUS_OK ],
             [ StatusCodeInterface::STATUS_CREATED],

@@ -6,6 +6,7 @@ namespace AppTest\Service\Features;
 
 use App\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
 /**
@@ -16,6 +17,8 @@ use RuntimeException;
  */
 class FeatureEnabledTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

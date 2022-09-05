@@ -7,16 +7,16 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class FindActorInLpaTest extends TestCase
 {
-    /** @var ObjectProphecy|GetAttorneyStatus  */
-    private $getAttorneyStatusProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {
@@ -27,10 +27,8 @@ class FindActorInLpaTest extends TestCase
     /**
      * @test
      * @dataProvider actorLookupDataProvider
-     * @param ?array $expectedResponse
-     * @param array  $userData
      */
-    public function returns_actor_and_lpa_details_if_match_found_in_lookup(?array $expectedResponse, array $userData)
+    public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
         $lpa = [
             'uId' => '700000012345',

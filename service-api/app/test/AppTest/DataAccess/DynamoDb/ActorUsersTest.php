@@ -13,9 +13,11 @@ use DateTimeInterface;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorUsersTest extends TestCase
 {
+    use ProphecyTrait;
     use GenerateAwsResultTrait;
 
     const TABLE_NAME = 'test-table-name';
@@ -28,7 +30,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_add_a_new_user()
+    public function will_add_a_new_user(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -104,7 +106,7 @@ class ActorUsersTest extends TestCase
 
 
     /** @test */
-    public function will_reset_activation_for_existing_user()
+    public function will_reset_activation_for_existing_user(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -162,7 +164,7 @@ class ActorUsersTest extends TestCase
 
 
     /** @test */
-    public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed()
+    public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -218,7 +220,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_get_a_user_record()
+    public function will_get_a_user_record(): void
     {
         $id = '12345-1234-1234-1234-12345';
 
@@ -250,7 +252,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_get_a_user_record_by_email()
+    public function will_get_a_user_record_by_email(): void
     {
         $email = 'a@b.com';
         $id = '12345-1234-1234-1234-12345';
@@ -287,7 +289,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_get_a_user_record_by_password_reset_token()
+    public function will_get_a_user_record_by_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_1234';
         $email = 'a@b.com';
@@ -325,7 +327,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_fail_to_get_a_user_record()
+    public function will_fail_to_get_a_user_record(): void
     {
         $id = '12345-1234-1234-1234-12345';
 
@@ -354,7 +356,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_fail_to_get_a_user_record_by_email()
+    public function will_fail_to_get_a_user_record_by_email(): void
     {
         $email = 'c@d.com';
 
@@ -390,7 +392,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_activate_a_user_account()
+    public function will_activate_a_user_account(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -497,7 +499,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_fail_to_activate_a_user_not_found()
+    public function will_fail_to_activate_a_user_not_found(): void
     {
         $activationToken = 'activateTok123';
 
@@ -525,7 +527,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_find_a_user_exists()
+    public function will_find_a_user_exists(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -557,7 +559,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_not_find_a_user()
+    public function will_not_find_a_user(): void
     {
         $email = 'c@d.com';
 
@@ -582,7 +584,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_record_a_successful_login()
+    public function will_record_a_successful_login(): void
     {
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
 
@@ -606,7 +608,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_record_a_password_reset_request()
+    public function will_record_a_password_reset_request(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -677,7 +679,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_fail_to_record_a_password_reset_request_if_user_does_not_exist()
+    public function will_fail_to_record_a_password_reset_request_if_user_does_not_exist(): void
     {
         $email = 'a@b.com';
 
@@ -706,7 +708,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_reset_a_password_when_given_a_correct_user_id()
+    public function will_reset_a_password_when_given_a_correct_user_id(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $password = 'password';
@@ -734,7 +736,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_not_reset_a_password_when_given_an_incorrect_user_id()
+    public function will_not_reset_a_password_when_given_an_incorrect_user_id(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $password = 'passwordToHash';
@@ -761,7 +763,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_delete_a_users_account()
+    public function will_delete_a_users_account(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -801,7 +803,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_throw_error_if_account_id_to_delete_doesnt_exist()
+    public function will_throw_error_if_account_id_to_delete_doesnt_exist(): void
     {
         $id = 'd0E2nT-ex12t';
 
@@ -822,7 +824,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_record_email_reset_request()
+    public function can_record_email_reset_request(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -877,7 +879,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_get_id_by_email_reset_token()
+    public function can_get_id_by_email_reset_token(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $resetToken = 'abcde12345';
@@ -910,7 +912,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_get_user_by_new_email()
+    public function can_get_user_by_new_email(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
@@ -944,7 +946,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function will_throw_not_found_exception_if_email_reset_token_not_found()
+    public function will_throw_not_found_exception_if_email_reset_token_not_found(): void
     {
         $resetToken = 'abcde12345';
 
@@ -966,7 +968,7 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
-    public function can_complete_change_email()
+    public function can_complete_change_email(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';

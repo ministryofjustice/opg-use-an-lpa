@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace BehatTest\GuzzleHttp;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
 
 class TestClientFactory

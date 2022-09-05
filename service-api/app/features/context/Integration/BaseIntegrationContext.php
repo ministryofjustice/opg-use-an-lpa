@@ -10,8 +10,6 @@ use Behat\Behat\Context\Context;
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
-
 abstract class BaseIntegrationContext implements Context, Psr11AwareContext
 {
     /**

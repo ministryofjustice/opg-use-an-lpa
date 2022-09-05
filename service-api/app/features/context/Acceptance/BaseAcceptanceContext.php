@@ -11,22 +11,20 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
 use DI\Container;
-use JSHayes\FakeRequests\MockHandler;
-use JSHayes\FakeRequests\RequestHandler;
+use GuzzleHttp\Handler\MockHandler;
 use Psr\Container\ContainerInterface;
-
-require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Class BaseAcceptanceContext
  *
- * @package BehatTest\Context\Acceptanc
- *
- * @property RequestHandler $lastApiRequest
+ * @package BehatTest\Context\Acceptance
  *
  * @property string userAccountId
  * @property string userAccountEmail
  * @property string userAccountPassword
+ *
+ * @property RequestInterface lastApiRequest
  */
 class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareContext
 {
@@ -48,7 +46,7 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     /**
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->ui = $environment->getContext(MinkContext::class);

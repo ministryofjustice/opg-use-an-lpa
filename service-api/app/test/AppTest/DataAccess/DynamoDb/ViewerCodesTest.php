@@ -11,9 +11,11 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ViewerCodesTest extends TestCase
 {
+    use ProphecyTrait;
     use GenerateAwsResultTrait;
 
     const TABLE_NAME = 'test-table-name';
@@ -26,7 +28,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_lookup_a_code()
+    public function can_lookup_a_code(): void
     {
         $testCode = 'test-code';
 
@@ -67,7 +69,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function cannot_lookup_a_missing_code()
+    public function cannot_lookup_a_missing_code(): void
     {
         $testCode = 'test-code';
 
@@ -166,7 +168,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function add_unique_code()
+    public function add_unique_code(): void
     {
         $testCode               = 'test-code';
         $testUserLpaActorToken  = 'test-token';
@@ -210,7 +212,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function add_conflicting_code()
+    public function add_conflicting_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
             ->willThrow(new DynamoDbException(
@@ -231,7 +233,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function test_unknown_exception_when_adding_code()
+    public function test_unknown_exception_when_adding_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
             ->willThrow(DynamoDbException::class)
@@ -248,7 +250,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_cancel_viewer_code()
+    public function can_cancel_viewer_code(): void
     {
         $testCode    = 'test-code';
         $currentDate = new DateTime('today');
@@ -279,7 +281,7 @@ class ViewerCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_remove_actor_and_code_association()
+    public function can_remove_actor_and_code_association(): void
     {
         $testCode    = 'test-code';
 
