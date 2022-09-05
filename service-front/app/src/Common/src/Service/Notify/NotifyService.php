@@ -34,6 +34,7 @@ class NotifyService
     public const ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE =
         'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
     public const NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE = 'NoAccountExistsEmail';
+    public const FORCE_PASSWORD_RESET_EMAIL_TEMPLATE = 'ForcePasswordResetEmail';
 
     /**
      * NotifyService constructor.

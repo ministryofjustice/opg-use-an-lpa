@@ -89,6 +89,11 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
 
                     if (!empty($data['forced'])) {
+                        $this->notifyService->sendEmailToUser(
+                                              NotifyService::FORCE_PASSWORD_RESET_EMAIL_TEMPLATE,
+                                              $data['email'],
+                            passwordResetUrl: $passwordResetUrl
+                        );
                         //$this->emailClient->sendForcePasswordResetEmail($data['email'], $passwordResetUrl);
                     } else {
                         $this->notifyService->sendEmailToUser(
