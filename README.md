@@ -169,11 +169,11 @@ run the following command:
 ```
 then try again
 
-### I cannot add  LPA's locally, which are in the seeded data set.
+### I cannot add LPA's locally, which are in the seeded data set.
 
 This could be because the LPA Gateway (Sirius Gateway) has not been properly initialised.
-make sure all docker compose services are running andhave settled first, then try again.
-If still not working,run the following command:
+make sure all docker compose services are running and have settled first, then try again.
+If still not working, run the following command:
 ```shell
 <DOCKER_COMPOSE> run lpa-gateway-setup
 ```
