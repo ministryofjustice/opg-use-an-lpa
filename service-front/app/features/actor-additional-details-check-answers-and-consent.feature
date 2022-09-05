@@ -57,3 +57,13 @@ Feature: Additional details check answers and consent
     Then I am asked to consent and confirm my details
     And I can see my address, attorney role, donor details and that I have not provided a telephone number
     And I can see the paper address I have input
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is shown the correct information on the check and consent page when they are not sure of the address on the paper lpa
+    Given I select I am not sure the address is same as on paper LPA
+    And I am asked for my role on the LPA
+    And I confirm that I am the Attorney
+    And I provide the donor's details
+    When I select that I cannot take calls
+    Then I am asked to consent and confirm my details
+    And I can see my address, attorney role, donor details and address on paper LPA marked unsure

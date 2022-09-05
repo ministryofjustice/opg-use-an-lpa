@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-08-04T12:06:57+00:00\n"
+"POT-Creation-Date: 2022-08-25T00:22:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -18,7 +18,6 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:86
 msgid "Back to your LPAs"
 msgstr ""
 
@@ -231,7 +230,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:76
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:155
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:270
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
@@ -1741,13 +1740,13 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:59
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:40
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:69
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:61
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:65
 msgid "Donor"
 msgstr ""
 
@@ -4078,7 +4077,7 @@ msgstr ""
 msgid "The donor's details"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:94
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:36
 msgid "Donor's date of birth"
 msgstr ""
@@ -4111,39 +4110,39 @@ msgstr ""
 msgid "Check your details"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:59
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:61
 msgid "Your role"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:74
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:79
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
 msgid "Donor's name"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:86
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:88
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:101
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:135
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:137
 msgid "Telephone number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:146
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:148
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:156
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:158
 msgid "I understand that the information I've given will be stored securely and used to process my activation key request."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:164
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:166
 msgid "Confirm and submit request"
 msgstr ""
 
@@ -4153,7 +4152,7 @@ msgctxt "error"
 msgid "Either enter your phone number or check the box to say you cannot take calls"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:141
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:143
 msgid "Not provided"
 msgstr ""
 
@@ -4882,12 +4881,12 @@ msgid "If you  only have one attorney, enter their details here. If you have mor
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:107
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:109
 msgid "Attorney's name"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:49
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:120
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:122
 msgid "Attorney's date of birth"
 msgstr ""
 
@@ -4983,7 +4982,7 @@ msgstr ""
 msgid "Current address"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:52
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
 msgstr ""
 
@@ -4991,19 +4990,19 @@ msgstr ""
 msgid "Address on paper LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:114
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:116
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:127
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:129
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:42
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:44
 msgid "Same as above"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
 msgid "Change<span class=\"govuk-visually-hidden\"> address on paper LPA</span>"
 msgstr ""
 
@@ -5130,4 +5129,8 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:77
 msgid "To do this you will need your own unique LPA activation key.  This is normally found on the letter that told you the LPA had been registered."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:40
+msgid "Not sure"
 msgstr ""
