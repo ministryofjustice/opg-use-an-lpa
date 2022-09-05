@@ -1,55 +1,56 @@
 locals {
   event_codes = [
-    "ACCOUNT_ACTIVATED",
-    "ACCOUNT_CREATED",
-    "ACCOUNT_DELETED",
-    "DOWNLOAD_SUMMARY",
-    "OLDER_LPA_DOES_NOT_MATCH",
-    "OLDER_LPA_HAS_ACTIVATION_KEY",
-    "OLDER_LPA_INVALID_STATUS",
-    "OLDER_LPA_NOT_ELIGIBLE",
-    "OLDER_LPA_NOT_FOUND",
-    "OLDER_LPA_SUCCESS",
-    "OLDER_LPA_CLEANSE_SUCCESS",
-    "OLDER_LPA_TOO_OLD",
-    "OLDER_LPA_ALREADY_ADDED",
-    "OLDER_LPA_FORCE_ACTIVATION_KEY",
-    "OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED",
-    "OLDER_LPA_PARTIAL_MATCH_TOO_RECENT",
-    "SHARE_CODE_NOT_FOUND",
-    "VIEW_LPA_SHARE_CODE_NOT_FOUND",
-    "VIEW_LPA_SHARE_CODE_SUCCESS",
-    "VIEW_LPA_SHARE_CODE_EXPIRED",
-    "VIEW_LPA_SHARE_CODE_CANCELLED",
-    "ADD_LPA_FOUND",
-    "ADD_LPA_NOT_FOUND",
-    "ADD_LPA_NOT_ELIGIBLE",
-    "ADD_LPA_ALREADY_ADDED",
-    "ADD_LPA_SUCCESS",
-    "ADD_LPA_FAILURE",
-    "LPA_REMOVED",
-    "OLDER_LPA_FOUND",
-    "OOLPA_KEY_REQUESTED_FOR_DONOR",
-    "OOLPA_KEY_REQUESTED_FOR_ATTORNEY",
-    "OOLPA_PHONE_NUMBER_PROVIDED",
-    "OOLPA_PHONE_NUMBER_NOT_PROVIDED",
-    "OLDER_LPA_KEY_ALREADY_REQUESTED",
-    "OLDER_LPA_NEEDS_CLEANSING",
-    "UNEXPECTED_DATA_LPA_API_RESPONSE",
-    "ACTIVATION_KEY_EXISTS",
-    "ACTIVATION_KEY_NOT_EXISTS",
-    "ACTIVATION_KEY_EXPIRED"
+    "event_code.ACCOUNT_ACTIVATED",
+    "event_code.ACCOUNT_CREATED",
+    "event_code.ACCOUNT_DELETED",
+    "event_code.DOWNLOAD_SUMMARY",
+    "event_code.OLDER_LPA_DOES_NOT_MATCH",
+    "event_code.OLDER_LPA_HAS_ACTIVATION_KEY",
+    "event_code.OLDER_LPA_INVALID_STATUS",
+    "event_code.OLDER_LPA_NOT_ELIGIBLE",
+    "event_code.OLDER_LPA_NOT_FOUND",
+    "event_code.OLDER_LPA_SUCCESS",
+    "event_code.OLDER_LPA_CLEANSE_SUCCESS",
+    "event_code.OLDER_LPA_TOO_OLD",
+    "event_code.OLDER_LPA_ALREADY_ADDED",
+    "event_code.OLDER_LPA_FORCE_ACTIVATION_KEY",
+    "event_code.OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED",
+    "event_code.OLDER_LPA_PARTIAL_MATCH_TOO_RECENT",
+    "event_code.SHARE_CODE_NOT_FOUND",
+    "event_code.VIEW_LPA_SHARE_CODE_NOT_FOUND",
+    "event_code.VIEW_LPA_SHARE_CODE_SUCCESS",
+    "event_code.VIEW_LPA_SHARE_CODE_EXPIRED",
+    "event_code.VIEW_LPA_SHARE_CODE_CANCELLED",
+    "event_code.ADD_LPA_FOUND",
+    "event_code.ADD_LPA_NOT_FOUND",
+    "event_code.ADD_LPA_NOT_ELIGIBLE",
+    "event_code.ADD_LPA_ALREADY_ADDED",
+    "event_code.ADD_LPA_SUCCESS",
+    "event_code.ADD_LPA_FAILURE",
+    "event_code.LPA_REMOVED",
+    "event_code.OLDER_LPA_FOUND",
+    "role.OOLPA_KEY_REQUESTED_FOR_DONOR",
+    "role.OOLPA_KEY_REQUESTED_FOR_ATTORNEY",
+    "phone.OOLPA_PHONE_NUMBER_PROVIDED",
+    "phone.OOLPA_PHONE_NUMBER_NOT_PROVIDED",
+    "event_code.OLDER_LPA_KEY_ALREADY_REQUESTED",
+    "event_code.OLDER_LPA_NEEDS_CLEANSING",
+    "event_code.UNEXPECTED_DATA_LPA_API_RESPONSE",
+    "key_status.ACTIVATION_KEY_EXISTS",
+    "key_status.ACTIVATION_KEY_NOT_EXISTS",
+    "key_status.ACTIVATION_KEY_EXPIRED",
+    "event_code.IDENTITY_HASH_CHANGE"
   ]
 }
 
 resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
   for_each       = toset(local.event_codes)
-  name           = "${local.environment_name}_${lower(each.value)}"
-  pattern        = "{ $.context.event_code = \"${each.value}\" }"
+  name           = "${local.environment_name}_${lower(split(".", each.value)[1])}"
+  pattern        = "{ $.context.${split(".", each.value)[0]} = \"${split(".", each.value)[1]}\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
-    name          = "${lower(each.value)}_event"
+    name          = "${lower(split(".", each.value)[1])}_event"
     namespace     = "${local.environment_name}_events"
     value         = "1"
     default_value = "0"
