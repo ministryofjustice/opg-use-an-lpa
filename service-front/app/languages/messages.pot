@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-09-05T13:33:24+00:00\n"
+"POT-Creation-Date: 2022-09-06T10:29:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -191,10 +191,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:17
 msgid "You’ve asked us to change your email address."
-msgstr ""
-
-#: src/Actor/templates/actor/request-email-change-success.html.twig:19
-msgid "We've emailed a link to %email% – please follow the link in the email to confirm the change."
 msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:21
@@ -5140,4 +5136,8 @@ msgstr ""
 #: src/Actor/src/Handler/CompleteChangeEmailHandler.php:92
 msgctxt "flashMessage"
 msgid "Email address changed successfully"
+msgstr ""
+
+#: src/Actor/templates/actor/request-email-change-success.html.twig:19
+msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> – please follow the link in the email to confirm the change."
 msgstr ""

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-09-05T13:33:24+00:00\n"
+"POT-Creation-Date: 2022-09-06T10:29:45+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -222,14 +222,6 @@ msgstr "Diweddaru eich cyfeiriad e-bost"
 #: src/Actor/templates/actor/request-email-change-success.html.twig:17
 msgid "You’ve asked us to change your email address."
 msgstr "Rydych wedi gofyn i ni newid eich cyfeiriad e-bost."
-
-#: src/Actor/templates/actor/request-email-change-success.html.twig:19
-msgid ""
-"We've emailed a link to %email% – please follow the link in the email to "
-"confirm the change."
-msgstr ""
-"Rydym wedi anfon dolen i %email% - cliciwch ar y ddolen yn y neges e-bost i "
-"gadarnhau’r newid."
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:21
 msgid ""
@@ -7385,3 +7377,11 @@ msgstr "Ddim yn siŵr"
 msgctxt "flashMessage"
 msgid "Email address changed successfully"
 msgstr "Cyfeiriad ebost newid yn llwyddiannus"
+
+#: src/Actor/templates/actor/request-email-change-success.html.twig:19
+msgid ""
+"We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</"
+"strong> – please follow the link in the email to confirm the change."
+msgstr ""
+"Rydym wedi anfon dolen i <strong class=\"govuk-!-font-weight-bold\">%email%</"
+"strong> - cliciwch ar y ddolen yn y neges e-bost i gadarnhau’r newid."
