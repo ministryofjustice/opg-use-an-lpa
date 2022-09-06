@@ -15,26 +15,20 @@ use App\Service\Lpa\ResolveActor;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ActorCodeServiceTest extends TestCase
 {
-    /** @var CodeValidationStrategyInterface|ObjectProphecy */
-    private $codeValidatorProphecy;
+    use ProphecyTrait;
 
-    /** @var LpaService|ObjectProphecy */
-    private $lpaServiceProphecy;
+    private CodeValidationStrategyInterface|ObjectProphecy $codeValidatorProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
     private string $testActorUid;
-
-    /** @var UserLpaActorMapInterface|ObjectProphecy */
-    private $userLpaActorMapInterfaceProphecy;
-
-    /** @var LoggerInterface|ObjectProphecy */
-    private $loggerProphecy;
-
-    /** @var ResolveActor|ObjectProphecy */
-    private $resolveActorProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function setUp(): void
     {

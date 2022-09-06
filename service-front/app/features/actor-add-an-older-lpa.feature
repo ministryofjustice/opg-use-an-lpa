@@ -200,6 +200,12 @@ Feature: Add an older LPA
     And I can see my role is now correctly set as the Donor
 
   @ui @ff:allow_older_lpas:true
+  Scenario: The user skips to final consent page when they go back and change address response
+    Given I have reached the check details and consent page and said I am unsure of my address on paper LPA
+    When I request to change the address response
+    Then I will be navigated back to more details page
+
+  @ui @ff:allow_older_lpas:true
   Scenario: The user skips to final consent page when they go back and change details
     Given I have reached the check details and consent page as the Donor
     And I request to change my role

@@ -13,12 +13,15 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 class ActorCodesTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_validates_a_correct_code(): void
     {

@@ -7,14 +7,17 @@ namespace CommonTest\Service\Log;
 use App\Service\Log\LogStderrListener;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class LogStderrListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
-    public function creates_and_pushes_test_message_without_trace()
+    public function creates_and_pushes_test_message_without_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
@@ -47,7 +50,7 @@ class LogStderrListenerTest extends TestCase
     }
 
     /** @test */
-    public function creates_and_pushes_test_message_with_trace()
+    public function creates_and_pushes_test_message_with_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(

@@ -14,6 +14,7 @@ use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -21,6 +22,8 @@ use stdClass;
 
 class LpaServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
     private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
@@ -79,7 +82,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_by_id()
+    public function can_get_by_id(): void
     {
         $testUid = '700012349874';
 
@@ -306,7 +309,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_by_user_token()
+    public function can_get_by_user_token(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -347,7 +350,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_inactive_actor()
+    public function cannot_get_by_user_token_with_inactive_actor(): void
     {
         $t = $this->init_valid_user_token_invalid_actor();
 
@@ -359,7 +362,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_invalid_userid()
+    public function cannot_get_by_user_token_with_invalid_userid(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -371,7 +374,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_invalid_sirius_uid()
+    public function cannot_get_by_user_token_with_invalid_sirius_uid(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -386,7 +389,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_when_not_valid_lpa()
+    public function cannot_get_by_user_token_when_not_valid_lpa(): void
     {
         $t = $this->init_valid_user_token_test(false);
 
@@ -470,7 +473,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user()
+    public function can_get_all_lpas_for_user(): void
     {
         $t = $this->init_valid_get_all_users(false);
 
@@ -502,7 +505,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user_including_not_activated()
+    public function can_get_all_lpas_for_user_including_not_activated(): void
     {
         $t = $this->init_valid_get_all_users(true);
 
@@ -533,7 +536,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_all_lpas_for_user_when_no_maps_found()
+    public function cannot_get_all_lpas_for_user_when_no_maps_found(): void
     {
         $t = $this->init_valid_get_all_users(false);
 
@@ -628,7 +631,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user_when_linked_donor()
+    public function can_get_all_lpas_for_user_when_linked_donor(): void
     {
         $t = $this->init_valid_get_all_users_with_linked();
 
@@ -698,7 +701,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_lpa_by_viewer_code_no_logging()
+    public function can_get_lpa_by_viewer_code_no_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -729,7 +732,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_lpa_by_viewer_code_with_logging()
+    public function can_get_lpa_by_viewer_code_with_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -761,7 +764,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_missing_viewer_code()
+    public function cannot_get_lpa_by_missing_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -776,7 +779,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_missing_lpa_by_viewer_code()
+    public function cannot_get_missing_lpa_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -791,7 +794,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_with_invalid_donor_by_viewer_code()
+    public function cannot_get_lpa_with_invalid_donor_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -803,7 +806,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_missing_expiry()
+    public function cannot_get_lpa_by_viewer_code_with_missing_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -827,7 +830,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_cancelled()
+    public function cannot_get_lpa_by_viewer_code_with_cancelled(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -852,7 +855,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_expired_expiry()
+    public function cannot_get_lpa_by_viewer_code_with_expired_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -876,7 +879,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_return_empty_lpa_array_when_status_invalid()
+    public function will_return_empty_lpa_array_when_status_invalid(): void
     {
         $t = $this->init_valid_user_token_test();
 

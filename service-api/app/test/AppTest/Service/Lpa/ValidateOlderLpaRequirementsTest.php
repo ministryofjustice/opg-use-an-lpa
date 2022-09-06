@@ -10,6 +10,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -21,11 +22,10 @@ use Psr\Log\LoggerInterface;
  */
 class ValidateOlderLpaRequirementsTest extends TestCase
 {
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     public function setUp(): void
     {

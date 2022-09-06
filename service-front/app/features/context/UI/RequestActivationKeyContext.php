@@ -371,6 +371,19 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I can see my address, attorney role, donor details and address on paper LPA marked unsure$/
+     */
+    public function iCanSeeMyAddressAttorneyRoleDonorDetailsAndAddressOnPaperLpaAsUnsure()
+    {
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->addressLine1);
+        $this->ui->assertPageContainsText(($this->lpa->donor->addresses[0])->town);
+        $this->ui->assertPageContainsText('Attorney');
+        $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
+        $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
+        $this->ui->assertPageContainsText('Not sure');
+    }
+
+    /**
      * @Then /^I can see the paper address I have input$/
      */
     public function iCanSeeThePaperAddressIHaveInput()
@@ -757,6 +770,20 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I have reached the check details and consent page and said I am unsure of my address on paper LPA$/
+     */
+    public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorneyAndSaidUnsureOfAddressOnPaperLpa()
+    {
+        $this->myLPAHasBeenFoundButMyDetailsDidNotMatch();
+        $this->iSelectIAmNotSureTheAddressIsSameAsOnPaperLPA('I am not sure');
+        $this->iConfirmThatIAmThe('Attorney');
+        $this->iProvideTheDonorsDetails();
+        $this->iSelectThatICannotTakeCalls();
+        $this->iAmAskedToConsentAndConfirmMyDetails();
+        $this->iCanSeeMyAddressAttorneyRoleDonorDetailsAndAddressOnPaperLpaAsUnsure();
+    }
+
+    /**
      * @Given I have requested an activation key with valid details
      * @Given I reach the Check answers part of the Add an Older LPA journey
      */
@@ -1073,6 +1100,14 @@ class RequestActivationKeyContext implements Context
     public function iRequestToChangeTheDonorsName()
     {
         $this->ui->clickLink('Change donor\'s name');
+    }
+
+    /**
+     * @Given /^I request to change the address response$/
+     */
+    public function iRequestToChangeTheAddressResponse()
+    {
+        $this->ui->clickLink('Change address on paper LPA');
     }
 
     /**

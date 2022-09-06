@@ -12,11 +12,14 @@ use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class CodeValidationStrategyFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_dynamo_strategy_when_configured(): void
     {

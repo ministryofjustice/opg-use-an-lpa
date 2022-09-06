@@ -108,6 +108,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
         if (!$state->needsCleansing && $state->actorUid === null) {
             $this->data['actor_role'] = $state->getActorRole();
+            $this->data['actor_address_response'] = $state->actorAddressResponse;
 
             if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
                 $this->data['donor_first_names'] = $state->donorFirstNames;
@@ -129,6 +130,10 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                     $state->actorAddressCounty
                 ]
             );
+
+            if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE) {
+                $this->data['address_on_paper'] = RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE;
+            }
 
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
                 $this->data['address_on_paper'] = $state->addressOnPaper;

@@ -13,11 +13,14 @@ use DateTime;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ViewerCodeServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
-    public function it_ca_be_instantiated()
+    public function it_ca_be_instantiated(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -33,7 +36,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_make_a_new_viewer_code_for_an_lpa()
+    public function it_will_make_a_new_viewer_code_for_an_lpa(): void
     {
         // code will expire 30 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
@@ -83,7 +86,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_wont_create_a_code_if_user_does_not_match()
+    public function it_wont_create_a_code_if_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
 
@@ -113,7 +116,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_generate_codes_until_a_new_one_is_found()
+    public function it_will_generate_codes_until_a_new_one_is_found(): void
     {
         $callCount = 0;
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
@@ -161,7 +164,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_retrieve_codes_of_a_user()
+    public function it_will_retrieve_codes_of_a_user(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
@@ -195,7 +198,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_wont_get_codes_if_user_does_not_match()
+    public function it_wont_get_codes_if_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
 
@@ -225,7 +228,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_can_cancel_a_code()
+    public function it_can_cancel_a_code(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
@@ -260,7 +263,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_wont_cancel_a_code_if_the_user_does_not_match()
+    public function it_wont_cancel_a_code_if_the_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
@@ -291,7 +294,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_wont_cancel_a_code_if_it_cant_find_it()
+    public function it_wont_cancel_a_code_if_it_cant_find_it(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy

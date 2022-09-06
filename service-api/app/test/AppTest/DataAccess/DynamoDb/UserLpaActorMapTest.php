@@ -13,21 +13,22 @@ use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class UserLpaActorMapTest extends TestCase
 {
+    use ProphecyTrait;
     use GenerateAwsResultTrait;
 
     public const TABLE_NAME = 'test-table-name';
 
-    /** @var ObjectProphecy|DynamoDbClient */
-    private $dynamoDbClientProphecy;
+    private DynamoDbClient|ObjectProphecy $dynamoDbClientProphecy;
 
     public function assertIsValidUuid($uuid, string $message = '')
     {
         $pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
-        self::assertRegExp($pattern, $uuid, $message);
+        self::assertMatchesRegularExpression($pattern, $uuid, $message);
     }
 
     protected function setUp(): void
@@ -39,7 +40,7 @@ class UserLpaActorMapTest extends TestCase
     // Get
 
     /** @test */
-    public function can_lookup_a_token()
+    public function can_lookup_a_token(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -93,7 +94,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function cannot_lookup_a_missing_code()
+    public function cannot_lookup_a_missing_code(): void
     {
         $testToken = 'test-token';
 
@@ -127,7 +128,7 @@ class UserLpaActorMapTest extends TestCase
     // Create
 
     /** @test */
-    public function add_unique_token()
+    public function add_unique_token(): void
     {
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
@@ -174,7 +175,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function add_unique_token_without_optional_values()
+    public function add_unique_token_without_optional_values(): void
     {
         $testSiriusUid = 'test-uid';
         $testUserId = 'test-user-id';
@@ -216,7 +217,7 @@ class UserLpaActorMapTest extends TestCase
 
 
     /** @test */
-    public function add_unique_token_with_TTL()
+    public function add_unique_token_with_TTL(): void
     {
         $yearInEpoch = 31536000;
         $testSiriusUid = 'test-uid';
@@ -268,7 +269,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function add_conflicting_code()
+    public function add_conflicting_code(): void
     {
         /** @var MockObject|DynamoDbClient $dDBMock */
         $dDBMock = $this->getMockBuilder(DynamoDbClient::class)
@@ -301,7 +302,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function test_unknown_exception_when_adding_code()
+    public function test_unknown_exception_when_adding_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
             ->willThrow(DynamoDbException::class)
@@ -321,7 +322,7 @@ class UserLpaActorMapTest extends TestCase
     // Delete
 
     /** @test */
-    public function can_delete_map()
+    public function can_delete_map(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -368,7 +369,7 @@ class UserLpaActorMapTest extends TestCase
     // Activate record
 
     /** @test */
-    public function can_activate_record()
+    public function can_activate_record(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -421,7 +422,7 @@ class UserLpaActorMapTest extends TestCase
     // Get All
 
     /** @test */
-    public function can_get_all_lpas_for_user()
+    public function can_get_all_lpas_for_user(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -490,7 +491,7 @@ class UserLpaActorMapTest extends TestCase
     // Renew Activation Period
 
     /** @test */
-    public function can_update_record()
+    public function can_update_record(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';
@@ -561,7 +562,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function can_update_record_without_actorId()
+    public function can_update_record_without_actorId(): void
     {
         $testToken = 'test-token';
         $testSiriusUid = 'test-uid';

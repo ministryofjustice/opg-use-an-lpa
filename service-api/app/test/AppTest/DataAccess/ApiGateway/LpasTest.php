@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
@@ -28,10 +29,12 @@ use Psr\Log\LoggerInterface;
  */
 class LpasTest extends TestCase
 {
+    use ProphecyTrait;
+
     private string $apiUrl;
-    private ObjectProphecy $dataSanitiserStrategy;
-    private ObjectProphecy $httpClientProphecy;
-    private ObjectProphecy $signatureV4Prophecy;
+    private DataSanitiserStrategy|ObjectProphecy $dataSanitiserStrategy;
+    private Client|ObjectProphecy $httpClientProphecy;
+    private SignatureV4|ObjectProphecy $signatureV4Prophecy;
     public string $traceId;
 
     public function setup(): void

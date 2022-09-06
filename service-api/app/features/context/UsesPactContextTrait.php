@@ -23,7 +23,7 @@ trait UsesPactContextTrait
      *
      * @BeforeSuite
      */
-    public static function waitForPactServices(BeforeSuiteScope $scope)
+    public static function waitForPactServices(BeforeSuiteScope $scope): void
     {
         sleep(3);
     }
@@ -31,7 +31,7 @@ trait UsesPactContextTrait
     /**
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
 
