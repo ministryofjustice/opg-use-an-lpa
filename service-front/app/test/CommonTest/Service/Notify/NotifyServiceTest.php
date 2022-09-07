@@ -48,7 +48,6 @@ class NotifyServiceTest extends TestCase
             activateAccountUrl: $activateAccountUrl
         );
 
-        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 }

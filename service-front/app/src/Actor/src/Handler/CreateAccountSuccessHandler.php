@@ -18,6 +18,7 @@ use Common\Service\Notify\NotifyService;
 /**
  * Class CreateAccountSuccessHandler
  * @package Actor\Handler
+ * @codeCoverageIgnore
  */
 class CreateAccountSuccessHandler extends AbstractHandler
 {

@@ -8,8 +8,6 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Log\LoggerInterface;
 use Locale;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
-
 /**
  * Class NotifyService
  *
@@ -55,7 +53,8 @@ class NotifyService
      * @param string $recipient
      * @param mixed  ...$emailData
      *
-     * sendEmailToUser('emailTemplate','recipient',activateAccountUrl: 'value1',signInLink: 'value2');
+     * Example usage:
+     * sendEmailToUser('emailTemplate', 'recipient', activateAccountUrl: 'value1', signInLink: 'value2');
      *
      * @return bool
      */

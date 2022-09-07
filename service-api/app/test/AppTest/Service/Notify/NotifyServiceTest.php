@@ -38,7 +38,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_account_activation_email()
+    public function can_send_account_activation_email(): void
     {
         $emailTemplate = 'AccountActivationEmail';
         $requestData = [
@@ -53,7 +53,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_account_activation_email_and_exception_thrown()
+    public function cannot_send_account_activation_email_and_exception_thrown(): void
     {
         $emailTemplate = 'AccountActivationEmail';
         $requestData = [
@@ -68,7 +68,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_account_activation_confirmation_email()
+    public function can_send_account_activation_confirmation_email(): void
     {
         $emailTemplate = 'AccountActivatedConfirmationEmail';
         $requestData = [
@@ -83,7 +83,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_account_activation_confirmation_email_throws_exception()
+    public function cannot_send_account_activation_confirmation_email_throws_exception(): void
     {
         $emailTemplate = 'AccountActivatedConfirmationEmail';
         $requestData = [
@@ -98,7 +98,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_already_registered_email()
+    public function can_send_already_registered_email(): void
     {
         $emailTemplate = 'AlreadyRegisteredEmail';
         $requestData = [
@@ -112,7 +112,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_already_registered_email_throws_exception()
+    public function cannot_send_already_registered_email_throws_exception(): void
     {
         $emailTemplate = 'AlreadyRegisteredEmail';
         $requestData = [];
@@ -126,7 +126,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_password_reset_email()
+    public function can_send_password_reset_email(): void
     {
         $emailTemplate = 'PasswordResetEmail';
         $requestData = [
@@ -141,7 +141,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_password_reset_email_throws_exception()
+    public function cannot_send_password_reset_email_throws_exception(): void
     {
         $emailTemplate = 'PasswordResetEmail';
         $requestData = [
@@ -156,7 +156,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_password_changed_email()
+    public function can_send_password_changed_email(): void
     {
         $emailTemplate = 'PasswordChangedEmail';
         $requestData = [
@@ -170,7 +170,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_password_changed_email_throws_exception()
+    public function cannot_send_password_changed_email_throws_exception(): void
     {
         $emailTemplate = 'PasswordChangedEmail';
         $requestData = [];
@@ -182,7 +182,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_request_change_email_to_current_email()
+    public function can_send_request_change_email_to_current_email(): void
     {
         $emailTemplate = 'RequestChangeEmailToCurrentEmail';
         $requestData = [
@@ -197,7 +197,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_request_change_email_to_current_email_throws_exception()
+    public function cannot_send_request_change_email_to_current_email_throws_exception(): void
     {
         $emailTemplate = 'RequestChangeEmailToCurrentEmail';
         $requestData = [
@@ -212,7 +212,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_request_change_email_to_new_email()
+    public function can_send_request_change_email_to_new_email(): void
     {
         $emailTemplate = 'RequestChangeEmailToNewEmail';
         $requestData = [
@@ -227,7 +227,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_request_change_email_to_new_email_throws_exception()
+    public function cannot_send_request_change_email_to_new_email_throws_exception(): void
     {
         $emailTemplate = 'RequestChangeEmailToNewEmail';
         $requestData = [
@@ -242,7 +242,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_someone_tried_to_use_your_email_in_email_reset_request()
+    public function can_send_someone_tried_to_use_your_email_in_email_reset_request(): void
     {
         $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
         $requestData = [
@@ -256,7 +256,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_someone_tried_to_use_your_email_in_email_reset_request_throws_exception()
+    public function cannot_send_someone_tried_to_use_your_email_in_email_reset_request_throws_exception(): void
     {
         $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
         $requestData = [
@@ -269,13 +269,13 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-//    /** @test */
-    public function can_send_activation_key_request_confirmation_mail()
+    /** @test */
+    public function can_send_activation_key_request_confirmation_mail(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en-GB',
+            'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
             'postcode' => 'HS8 2YB',
             'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
@@ -287,12 +287,12 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_activation_key_request_confirmation_mail_throws_exception()
+    public function cannot_send_activation_key_request_confirmation_mail_throws_exception(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en-GB',
+            'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
             'postcode' => 'HS8 2YB',
         ];
@@ -304,12 +304,12 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing()
+    public function can_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en-GB',
+            'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
             'letterExpectedDate' => (new DateTime())->modify('+6 weeks')->format('j F Y'),
         ];
@@ -320,12 +320,13 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing_throws_exception()
+    public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing_throws_exception(
+    ): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en-GB',
+            'locale' => 'en_GB',
             'letterExpectedDate' => (new DateTime())->modify('+6 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
@@ -336,12 +337,12 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing()
+    public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $requestData = [
             'recipient' => 'test@test.com',
-            'locale' => 'en-GB',
+            'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
         ];
         $notify = $this->getNotifyService();
@@ -352,7 +353,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_send_no_account_exists_email()
+    public function can_send_no_account_exists_email(): void
     {
         $emailTemplate = 'NoAccountExistsEmail';
         $requestData = [
@@ -366,7 +367,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_no_account_exists_email_throws_exception()
+    public function cannot_send_no_account_exists_email_throws_exception(): void
     {
         $emailTemplate = 'NoAccountExistsEmail';
         $requestData = [
