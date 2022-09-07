@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-08-04T12:06:57+00:00\n"
+"POT-Creation-Date: 2022-09-06T10:29:45+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -28,7 +28,6 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:12
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
-#: src/Viewer/templates/viewer/check-code-not-found.html.twig:86
 msgid "Back to your LPAs"
 msgstr "Yn ôl i’ch LPAs"
 
@@ -189,6 +188,7 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/create-account-success.html.twig:10
 #: src/Actor/templates/actor/create-account.html.twig:10
 #: src/Actor/templates/actor/death-notification.html.twig:17
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:12
 #: src/Actor/templates/actor/login.html.twig:10
 #: src/Actor/templates/actor/lpa-already-added.html.twig:11
 #: src/Actor/templates/actor/lpa-removed.html.twig:12
@@ -208,7 +208,6 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:12
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:11
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:12
-#: src/Actor/templates/actor/request-email-change-success.html.twig:11
 #: src/Common/templates/common/contact-us.html.twig:9
 #: src/Common/templates/common/cookies.html.twig:12
 #: src/Common/templates/common/instructions-preferences-signed-before-2016.html.twig:10
@@ -216,23 +215,15 @@ msgstr "Gadarnhau eich cyfeiriad e-bost newydd"
 msgid "Back"
 msgstr "Yn ôl"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:20
+#: src/Actor/templates/actor/request-email-change-success.html.twig:15
 msgid "Updating your email address"
 msgstr "Diweddaru eich cyfeiriad e-bost"
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:22
+#: src/Actor/templates/actor/request-email-change-success.html.twig:17
 msgid "You’ve asked us to change your email address."
 msgstr "Rydych wedi gofyn i ni newid eich cyfeiriad e-bost."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:24
-msgid ""
-"We've emailed a link to %email% – please follow the link in the email to "
-"confirm the change."
-msgstr ""
-"Rydym wedi anfon dolen i %email% - cliciwch ar y ddolen yn y neges e-bost i "
-"gadarnhau’r newid."
-
-#: src/Actor/templates/actor/request-email-change-success.html.twig:26
+#: src/Actor/templates/actor/request-email-change-success.html.twig:21
 msgid ""
 "The email should arrive in a few minutes, check your spam, bulk and junk "
 "folders."
@@ -240,11 +231,11 @@ msgstr ""
 "Dylai’r neges e-bost gyrraedd ymhen ychydig funudau, gwiriwch eich ffolderi "
 "spam, bulk a junk."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:28
+#: src/Actor/templates/actor/request-email-change-success.html.twig:23
 msgid "The link will work for 48 hours."
 msgstr "Mae gennych 48 awr i glicio ar y ddolen."
 
-#: src/Actor/templates/actor/request-email-change-success.html.twig:30
+#: src/Actor/templates/actor/request-email-change-success.html.twig:25
 msgid ""
 "If you’ve already confirmed the change, you can use your new email address to "
 "<a href=\"%link%\" class=\"govuk-link\">sign in</a> now."
@@ -274,7 +265,7 @@ msgstr "Cadarnhau eich cyfrinair"
 #: src/Actor/templates/actor/check-your-answers.html.twig:76
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:155
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:270
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
@@ -291,6 +282,7 @@ msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 msgid "Create account"
 msgstr "Creu cyfrif"
 
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:18
 #: src/Actor/templates/actor/password-change.html.twig:24
 #: src/Actor/templates/actor/password-reset.html.twig:28
 msgid "Change your password"
@@ -1707,6 +1699,7 @@ msgstr "Cyfeiriad e-bost"
 msgid "Confirm your email address"
 msgstr "Cadarnhewch eich cyfeiriad e-bost"
 
+#: src/Actor/templates/actor/force-password-reset-page.html.twig:35
 #: src/Actor/templates/actor/password-reset-request.html.twig:37
 msgid "Email me the link"
 msgstr "Anfon y ddolen ataf drwy e-bost"
@@ -2381,13 +2374,13 @@ msgstr "Eich swyddogaeth yn yr LPA hon"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:59
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:40
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:69
 msgid "Attorney"
 msgstr "Atwrnai"
 
 #: src/Actor/templates/actor/check-lpa.html.twig:61
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:65
 msgid "Donor"
 msgstr "Rhoddwr"
 
@@ -5791,7 +5784,7 @@ msgstr "Rhowch ddyddiad geni’r rhoddwr"
 msgid "The donor's details"
 msgstr "Manylion y rhoddwr"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:94
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:36
 msgid "Donor's date of birth"
 msgstr "Dyddiad geni’r rhoddwr"
@@ -5826,35 +5819,35 @@ msgstr "cofrestrwyd yr atwrneiaeth arhosol ar 1 Ionawr 2016 neu ar ôl hynny"
 msgid "Check your details"
 msgstr "Gwiriwch eich manylion"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:59
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:61
 msgid "Your role"
 msgstr "Eich rôl"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:74
 msgid "Change<span class=\"govuk-visually-hidden\"> role</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> rôl</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:79
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:81
 msgid "Donor's name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:86
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:88
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's name</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:101
 msgid "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:135
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:137
 msgid "Telephone number"
 msgstr "Rhif ffôn"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:146
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:148
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:156
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:158
 msgid ""
 "I understand that the information I've given will be stored securely and used "
 "to process my activation key request."
@@ -5862,7 +5855,7 @@ msgstr ""
 "Rwy’n deall y bydd y wybodaeth a roddais yn cael ei storio’n ddiogel a’i "
 "defnyddio i brosesu fy nghais am allwedd cadarnhau cyfrif."
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:164
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:166
 msgid "Confirm and submit request"
 msgstr "Cadarnhau a chyflwyno’r cais"
 
@@ -5874,7 +5867,7 @@ msgid ""
 msgstr ""
 "Rhowch eich rhif ffôn neu ticiwch y blwch i ddweud na allwch dderbyn galwadau"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:141
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:143
 msgid "Not provided"
 msgstr "Heb ei ddarparu"
 
@@ -7002,12 +6995,12 @@ msgstr ""
 "fwy nag un atwrnai, nodwch eu manylion."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:107
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:109
 msgid "Attorney's name"
 msgstr "Enw’r atwrnai"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:49
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:120
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:122
 msgid "Attorney's date of birth"
 msgstr "Dyddiad geni’r atwrnai"
 
@@ -7136,7 +7129,7 @@ msgstr "Dyddiad gweld y crynodeb"
 msgid "Current address"
 msgstr "Cyfeiriad presennol"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:52
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
 
@@ -7144,21 +7137,21 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
 msgid "Address on paper LPA"
 msgstr "Cyfeiriad ar yr LPA papur"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:114
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:116
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:127
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:129
 msgid ""
 "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
 msgstr ""
 "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni’r atwrnai</span>"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:42
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:44
 msgid "Same as above"
 msgstr "Yr un peth ag uchod"
 
-#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
 msgid "Change<span class=\"govuk-visually-hidden\"> address on paper LPA</span>"
 msgstr ""
 "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad ar yr LPA papur</span>"
@@ -7168,7 +7161,7 @@ msgid "Trust corporation"
 msgstr ""
 
 #: src/Actor/src/Handler/ChangePasswordHandler.php:118
-#: src/Actor/src/Handler/PasswordResetPageHandler.php:90
+#: src/Actor/src/Handler/PasswordResetPageHandler.php:96
 msgctxt "flashMessage"
 msgid "Password changed successfully"
 msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
@@ -7375,3 +7368,20 @@ msgstr ""
 "I wneud hyn, bydd angen eich allwedd cadarnhau cyfrif LPA unigryw eich hun "
 "arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA "
 "wedi’i chofrestru."
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:40
+msgid "Not sure"
+msgstr "Ddim yn siŵr"
+
+#: src/Actor/src/Handler/CompleteChangeEmailHandler.php:92
+msgctxt "flashMessage"
+msgid "Email address changed successfully"
+msgstr "Cyfeiriad ebost newid yn llwyddiannus"
+
+#: src/Actor/templates/actor/request-email-change-success.html.twig:19
+msgid ""
+"We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</"
+"strong> – please follow the link in the email to confirm the change."
+msgstr ""
+"Rydym wedi anfon dolen i <strong class=\"govuk-!-font-weight-bold\">%email%</"
+"strong> - cliciwch ar y ddolen yn y neges e-bost i gadarnhau’r newid."
