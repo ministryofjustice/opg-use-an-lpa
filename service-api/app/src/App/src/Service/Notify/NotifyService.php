@@ -18,10 +18,8 @@ use ReflectionClass;
  */
 class NotifyService
 {
-    public function __construct(LoggerInterface $logger, EmailClient $emailClient)
+    public function __construct(private LoggerInterface $logger, private EmailClient $emailClient)
     {
-        $this->logger = $logger;
-        $this->emailClient = $emailClient;
     }
 
     /**
