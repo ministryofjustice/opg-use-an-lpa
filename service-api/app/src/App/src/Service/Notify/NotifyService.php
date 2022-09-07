@@ -37,16 +37,17 @@ class NotifyService
         //Now go through the $properties array and populate each property
         foreach ($methods as $method) {
             if ($method->getName() === sprintf('send%s', $emailTemplate)) {
+
                 if ($method->getNumberOfParameters() !== count($requestData)) {
                     throw new BadRequestException('Parameters count do not match expected');
                 }
 
                 $parameters = $method->getParameters();
+
                 foreach ($parameters as $parameter) {
                     if (!array_key_exists($parameter->getName(), $requestData)) {
                         throw new BadRequestException(
-                            'Parameter %s not set to send an email',
-                            $parameter->getName()
+                            'Parameter not set to send an email'
                         );
                     }
                 }

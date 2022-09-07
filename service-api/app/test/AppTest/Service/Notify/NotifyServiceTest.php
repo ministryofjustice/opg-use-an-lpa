@@ -304,6 +304,24 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
+    public function cannot_send_activation_key_request_confirmation_mail_throws_exception_again(): void
+    {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
+        $requestData = [
+            'to' => 'test@test.com',
+            'locale' => 'en_GB',
+            'referenceNumber' => '700000000138',
+            'postCode' => 'HS8 2YB',
+            'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
+        ];
+        $notify = $this->getNotifyService();
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Parameter not set to send an email');
+        $result = $notify($emailTemplate, $requestData);
+    }
+
+    /** @test */
     public function can_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
