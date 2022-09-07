@@ -2036,19 +2036,22 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            )
             ->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email_address', $params);
-                    assertArrayHasKey('personalisation', $params);
-                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                    assertArrayHasKey('passwordResetUrl', $params);
+                    assertArrayHasKey('recipient', $params);
                 }
             );
+
         $this->ui->pressButton('Email me the link');
         $this->ui->assertPageContainsText('We\'ve emailed a link to');
     }

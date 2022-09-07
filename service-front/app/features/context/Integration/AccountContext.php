@@ -629,6 +629,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
+        $this->userEmail = 'test@test.com';
         $expectedUrl = 'http://localhost/activate-account/' . $this->activationToken;
         $expectedTemplateId = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
 
@@ -654,11 +655,12 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-                                $this->userEmail,
                                 $emailTemplate,
+                                $this->userEmail,
             activateAccountUrl: $expectedUrl
 
         );
+
         assertTrue($result);
     }
 
@@ -690,8 +692,8 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-                              $this->userEmail,
                               $emailTemplate,
+                              $this->userEmail,
             passwordResetUrl: $expectedUrl
         );
 
@@ -724,8 +726,8 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-            $this->userEmail,
-            $emailTemplate
+            $emailTemplate,
+            $this->userEmail
         );
 
         assertTrue($result);
@@ -907,8 +909,8 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-                             $this->userEmail,
                              $emailTemplate1,
+                             $this->userEmail,
             newEmailAddress: $this->newUserEmail
         );
 
@@ -925,8 +927,8 @@ class AccountContext extends BaseIntegrationContext
             );
 
         $result = $this->notifyService->sendEmailToUser(
-                                    $this->newUserEmail,
                                     $emailTemplate2,
+                                    $this->newUserEmail,
             completeEmailChangeUrl: $expectedUrl
         );
 
