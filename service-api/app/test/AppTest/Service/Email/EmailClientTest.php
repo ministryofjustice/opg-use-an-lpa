@@ -499,5 +499,4 @@ class EmailClientTest extends TestCase
             'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE'
         );
     }
-
 }
