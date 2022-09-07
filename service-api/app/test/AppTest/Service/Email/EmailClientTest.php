@@ -380,7 +380,7 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
         $postCode = 'HS8 2YB';
-        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');;
+        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
