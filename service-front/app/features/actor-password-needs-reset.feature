@@ -18,4 +18,5 @@ Feature: A user of the system is able to login
   Scenario: A user is able to reset password if password security compromised
     Given My password security is compromised and requested to reset my password on login
     When I request for my password to be reset
-#    Then I receive an email and shown unique instructions on how to reset my password
+    Then I receive an email and shown unique instructions on how to reset my password
+    

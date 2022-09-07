@@ -2053,7 +2053,6 @@ class AccountContext implements Context
             );
 
         $this->ui->pressButton('Email me the link');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to');
     }
 
     /**
