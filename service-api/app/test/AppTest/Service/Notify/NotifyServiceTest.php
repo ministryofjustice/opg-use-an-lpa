@@ -277,7 +277,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
-            'postcode' => 'HS8 2YB',
+            'postCode' => 'HS8 2YB',
             'letterExpectedDate' => (new DateTime())->modify('+2 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
@@ -294,7 +294,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
-            'postcode' => 'HS8 2YB',
+            'postCode' => 'HS8 2YB',
         ];
         $notify = $this->getNotifyService();
 
