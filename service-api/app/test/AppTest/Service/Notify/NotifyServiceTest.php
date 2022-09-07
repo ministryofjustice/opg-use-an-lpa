@@ -320,8 +320,7 @@ class NotifyServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing_throws_exception(
-    ): void
+    public function cannot_send_activation_key_request_confirmation_email_lpa_needs_cleansing_throws_exception(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $requestData = [
