@@ -26,7 +26,7 @@ class NotifyService
      * @param array $requestData email parameters
      * @param EmailClient $emailClient
      * @param string $emailTemplate
-     * @throws Exception Thrown when parameters do not match
+     * @throws BadRequestException Thrown when parameters do not match
      */
     public function __invoke(string $emailTemplate, array $requestData): bool
     {
