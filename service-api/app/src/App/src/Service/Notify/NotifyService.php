@@ -55,7 +55,7 @@ class NotifyService
 
                 $method->invokeArgs($this->emailClient, $requestData);
 
-                $this->logger->notice('Email sent to user');
+                $this->logger->info('Email sent to user');
             }
         }
         return true;
