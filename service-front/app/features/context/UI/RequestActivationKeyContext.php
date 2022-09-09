@@ -35,6 +35,10 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
+    private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
+    private const ADD_OLDER_LPA_CONFIRM = 'AddOlderLpa::confirm';
+    private const CLEANSE_LPA_CLEANSE = 'CleanseLpa::cleanse';
+
     /**
      * @var RequestInterface Used to store external requests made to a mocked handler for
      *                       subsequent "Then" step verification.
@@ -166,6 +170,7 @@ class RequestActivationKeyContext implements Context
             $this->ui->pressButton('Continue');
         }
     }
+
     /**
      * @Then /^I am informed that an LPA could not be found with these details$/
      */
@@ -498,30 +503,26 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
-        $this->apiFixtures->patch('/v1/older-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                json_encode([]),
+                self::ADD_OLDER_LPA_CONFIRM
+            )
+        );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
-            );
+        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        assertIsArray($params);
+        assertArrayHasKey('template_id', $params);
+        assertArrayHasKey('personalisation', $params);
     }
 
     /**
@@ -647,7 +648,7 @@ class RequestActivationKeyContext implements Context
                 ($this->lpa->donor->addresses[0])->town,
                 strtoupper(($this->lpa->donor->addresses[0])->postcode)
             ),
-            $this->requestBody->getBody()->getContents()
+            $this->base->historyContainer[3]['request']->getBody()->getContents()
         );
     }
 
@@ -670,7 +671,7 @@ class RequestActivationKeyContext implements Context
      */
     public function theActivationKeyHasBeenReceivedOrWasLost()
     {
-       //Not needed for this context
+        //Not needed for this context
     }
 
     /**
@@ -811,20 +812,19 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'LPA not eligible due to registration date',
-                            'details' => 'LPA not eligible due to registration date',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'LPA not eligible due to registration date',
+                        'details' => 'LPA not eligible due to registration date',
+                        'data' => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
     }
 
     /**
@@ -835,20 +835,19 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'LPA details do not match',
-                            'details' => 'LPA details do not match',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'LPA details do not match',
+                        'details' => 'LPA details do not match',
+                        'data' => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
     }
 
     /**
@@ -859,20 +858,19 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         // Setup fixture for success response
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'LPA not found',
-                            'details' => 'LPA not found',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode(
+                    [
+                        'title' => 'LPA not found',
+                        'details' => 'LPA not found',
+                        'data' => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
     }
 
     /**
@@ -921,52 +919,50 @@ class RequestActivationKeyContext implements Context
          */
         if ($this->activationCode === null) {
             // Setup fixture for success response
-            $this->apiFixtures->post('/v1/older-lpa/validate')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'donor' => [
+                                'uId' => $this->lpa->donor->uId,
+                                'firstname' => $this->lpa->donor->firstname,
+                                'middlenames' => $this->lpa->donor->middlenames,
+                                'surname' => $this->lpa->donor->surname,
+                            ],
+                            'lpa-id' => $this->lpa->uId,
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'role' => 'donor',
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_VALIDATE
+                )
+            );
+        } else {
+            // Setup fixture for activation key already existing
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA has an activation key already',
+                            'data' => [
                                 'donor' => [
                                     'uId' => $this->lpa->donor->uId,
                                     'firstname' => $this->lpa->donor->firstname,
                                     'middlenames' => $this->lpa->donor->middlenames,
                                     'surname' => $this->lpa->donor->surname,
                                 ],
-                                'lpa-id' => $this->lpa->uId,
                                 'caseSubtype' => $this->lpa->caseSubtype,
-                                'role' => 'donor',
-                            ]
-                        )
-                    )
-                );
-        } else {
-            // Setup fixture for activation key already existing
-            $this->apiFixtures->post('/v1/older-lpa/validate')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_BAD_REQUEST,
-                        [],
-                        json_encode(
-                            [
-                                'title' => 'Bad request',
-                                'details' => 'LPA has an activation key already',
-                                'data' => [
-                                    'donor'         => [
-                                        'uId'           => $this->lpa->donor->uId,
-                                        'firstname'     => $this->lpa->donor->firstname,
-                                        'middlenames'   => $this->lpa->donor->middlenames,
-                                        'surname'       => $this->lpa->donor->surname,
-                                    ],
-                                    'caseSubtype' => $this->lpa->caseSubtype,
-                                    'lpaActorToken' => $this->userLpaActorToken,
-                                    'activationKeyDueDate' => $createdDate->format('c')
-                                ],
-                            ]
-                        )
-                    )
-                );
+                                'lpaActorToken' => $this->userLpaActorToken,
+                                'activationKeyDueDate' => $createdDate->format('c'),
+                            ],
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_VALIDATE
+                )
+            );
         }
     }
 
@@ -977,29 +973,28 @@ class RequestActivationKeyContext implements Context
     {
         $this->fillAndSubmitOlderLpaForm();
 
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'LPA already added',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'Bad request',
+                        'details' => 'LPA already added',
+                        'data' => [
+                            'donor' => [
+                                'uId' => $this->lpa->donor->uId,
+                                'firstname' => $this->lpa->donor->firstname,
+                                'middlenames' => $this->lpa->donor->middlenames,
+                                'surname' => $this->lpa->donor->surname,
                             ],
-                        ]
-                    )
-                )
-            );
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'lpaActorToken' => $this->userLpaActorToken,
+                        ],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
     }
 
     /**
@@ -1061,29 +1056,25 @@ class RequestActivationKeyContext implements Context
      */
     public function iRequestForANewActivationKeyAgain()
     {
-        $this->apiFixtures->patch('/v1/older-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NO_CONTENT,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                json_encode([]),
+                self::ADD_OLDER_LPA_CONFIRM
+            )
+        );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
-            );
+        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->pressButton('Continue and ask for a new key');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        assertIsArray($params);
+        assertArrayHasKey('template_id', $params);
+        assertArrayHasKey('personalisation', $params);
     }
 
     /**
@@ -1196,7 +1187,7 @@ class RequestActivationKeyContext implements Context
     {
         assertStringContainsString(
             'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
-            $this->requestBody->getBody()->getContents()
+            $this->base->historyContainer[3]['request']->getBody()->getContents()
         );
     }
 
@@ -1351,29 +1342,28 @@ class RequestActivationKeyContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad request',
-                            'details' => 'Activation key already requested for LPA',
-                            'data' => [
-                                'donor' => [
-                                    'uId' => $this->lpa->donor->uId,
-                                    'firstname' => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname' => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                                'activationKeyDueDate'  =>  '2022-01-30'
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'Bad request',
+                        'details' => 'Activation key already requested for LPA',
+                        'data' => [
+                            'donor' => [
+                                'uId' => $this->lpa->donor->uId,
+                                'firstname' => $this->lpa->donor->firstname,
+                                'middlenames' => $this->lpa->donor->middlenames,
+                                'surname' => $this->lpa->donor->surname,
                             ],
-                        ]
-                    )
-                )
-            );
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'activationKeyDueDate' => '2022-01-30',
+                        ],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
 
         $this->fillAndSubmitOlderLpaForm();
     }
@@ -1388,14 +1378,13 @@ class RequestActivationKeyContext implements Context
         $this->lpa->status = 'Pending';
 
         // Setup fixture for success response
-        $this->apiFixtures->post('/v1/older-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode([]),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
     }
 
     /**
@@ -1445,48 +1434,46 @@ class RequestActivationKeyContext implements Context
         $earliestRegDate = '2019-09-01';
 
         if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
-            $this->apiFixtures->patch('/v1/older-lpa/confirm')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_BAD_REQUEST,
-                        [],
-                        json_encode(
-                            [
-                                'title' => 'Bad request',
-                                'details' => 'LPA needs cleansing',
-                                'data' => [
-                                    'actor_id' => $this->actorUId
-                                ],
-                            ]
-                        )
-                    )
-                );
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    json_encode(
+                        [
+                            'title' => 'Bad request',
+                            'details' => 'LPA needs cleansing',
+                            'data' => [
+                                'actor_id' => $this->actorUId,
+                            ],
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_CONFIRM
+                )
+            );
 
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->pressButton('Continue');
         } else {
-            $this->apiFixtures->patch('/v1/older-lpa/confirm')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'data' => [
-                                    'donor'         => [
-                                        'uId'           => $this->lpa->donor->uId,
-                                        'firstname'     => $this->lpa->donor->firstname,
-                                        'middlenames'   => $this->lpa->donor->middlenames,
-                                        'surname'       => $this->lpa->donor->surname,
-                                    ],
-                                    'caseSubtype'   => $this->lpa->caseSubtype,
-                                    'lpa-id'        => $this->lpa->uId,
-                                    'role'          => 'donor'
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'data' => [
+                                'donor' => [
+                                    'uId' => $this->lpa->donor->uId,
+                                    'firstname' => $this->lpa->donor->firstname,
+                                    'middlenames' => $this->lpa->donor->middlenames,
+                                    'surname' => $this->lpa->donor->surname,
                                 ],
-                            ]
-                        )
-                    )
-                );
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpa-id' => $this->lpa->uId,
+                                'role' => 'donor',
+                            ],
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_CONFIRM
+                )
+            );
 
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->pressButton('Continue');
@@ -1509,39 +1496,31 @@ class RequestActivationKeyContext implements Context
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
         $data = [
-            'queuedForCleansing' => true
+            'queuedForCleansing' => true,
         ];
 
         $this->ui->assertPageContainsText('Check your details');
         $this->ui->assertPageContainsText('Confirm and submit request');
 
-        $this->apiFixtures->post('/v1/older-lpa/cleanse')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($data)
-                )
-            )->inspectRequest(
-                function (RequestInterface $request) {
-                    $this->requestBody = $request;
-                }
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($data),
+                self::CLEANSE_LPA_CLEANSE
+            )
+        );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
-            );
+        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
         $this->ui->pressButton('Confirm and submit request');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        assertIsArray($params);
+        assertArrayHasKey('template_id', $params);
+        assertArrayHasKey('personalisation', $params);
     }
 
     /**

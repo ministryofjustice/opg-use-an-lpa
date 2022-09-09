@@ -133,7 +133,7 @@ class Client
             // which is relied on for a couple of edge cases for getting the message.
             //TODO: revisit this and see if we can get the mock fixtures to behave - ticket to follow.
             $responseMessage = $this->getResponseMessage($response, 'Error whilst making http POST request');
-            throw ApiException::create( $responseMessage, $response, $ex);
+            throw ApiException::create($responseMessage, $response, $ex);
         }
     }
 
@@ -292,6 +292,6 @@ class Client
     public function getResponseMessage(ResponseInterface $response, $defaultMessage): string
     {
         $body = json_decode($response->getBody()->getContents(), true);
-        return $body['details'] ?? $defaultMessage;
+        return $defaultMessage;
     }
 }

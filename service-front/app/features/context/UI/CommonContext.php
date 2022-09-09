@@ -33,6 +33,8 @@ class CommonContext implements Context
 {
     use BaseUiContextTrait;
 
+    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
+
     /**
      * @Given I access the service home page
      */
@@ -157,28 +159,33 @@ class CommonContext implements Context
 
         if ($userActive) {
             // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(
-                    new Response(
+            $this->apiFixtures->append(
+                    BaseUiContext::newResponse(
                         StatusCodeInterface::STATUS_OK,
-                        [],
                         json_encode(
                             [
                                 'Id' => $userId,
                                 'Email' => $userEmail,
                                 'LastLogin' => '2020-01-01',
                             ]
-                        )
+                        ),
+                        self::USER_SERVICE_AUTHENTICATE
                     )
                 );
 
             // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->get('/v1/lpas')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+            $this->apiFixtures->append(BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                'LpaService::getLpas'
+            ));
         } else {
             // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+            $this->apiFixtures->append(BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_UNAUTHORIZED, 
+                json_encode([]), 
+                self::USER_SERVICE_AUTHENTICATE
+            ));
         }
 
         $this->ui->pressButton('Sign in');
@@ -417,8 +424,8 @@ class CommonContext implements Context
      */
     public function myOutboundRequestsHaveAttachedTracingHeaders()
     {
-        $request = $this->getLastRequest();
-        $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'));
+        $request = $this->apiFixtures->getLastRequest();
+        assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')),'No X-Amzn-Trace-Id header');
     }
 
     /**

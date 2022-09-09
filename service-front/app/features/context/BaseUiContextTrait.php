@@ -9,8 +9,8 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\UI\SharedState;
-use JSHayes\FakeRequests\MockHandler;
-use JSHayes\FakeRequests\RequestHandler;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 
 /**
  * Trait BaseUiContextTrait
@@ -49,31 +49,6 @@ trait BaseUiContextTrait
     public function assertResponseHeader($name, $value): void
     {
         $this->ui->assertSession()->responseHeaderEquals($name, $value);
-    }
-
-    /**
-     * Allows context steps to optionally store an api request mock as returned from calls to
-     * `$this->apiFixtures->get|patch|post()`
-     *
-     * @param RequestHandler $request
-     */
-    public function setLastRequest(RequestHandler $request): void
-    {
-        $this->base->lastApiRequest = $request;
-    }
-
-    /**
-     * Allow context steps to optionally fetch the last api request that was stored via a previous
-     * call to {@link setLastRequest()}
-     *
-     * This function may not return the request you're expecting so ensure your feature test steps
-     * set the value you want before use.
-     *
-     * @return RequestHandler
-     */
-    public function getLastRequest(): RequestHandler
-    {
-        return $this->base->lastApiRequest;
     }
 
     /**

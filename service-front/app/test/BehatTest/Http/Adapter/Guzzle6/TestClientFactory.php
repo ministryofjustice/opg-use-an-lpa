@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace BehatTest\Http\Adapter\Guzzle6;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use Http\Adapter\Guzzle6\Client as ClientAdapter;
-use JSHayes\FakeRequests\MockHandler;
 use Psr\Container\ContainerInterface;
 
 class TestClientFactory
 {
+
     public function __invoke(ContainerInterface $container)
     {
-        $handlerStack = HandlerStack::create($container->get(MockHandler::class));
+        $handlerStack = $container->get(HandlerStack::class);
+
         $guzzleClient = new Client(
             [
                 'handler' => $handlerStack,

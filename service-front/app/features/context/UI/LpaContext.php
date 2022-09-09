@@ -7,10 +7,12 @@ namespace BehatTest\Context\UI;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\View;
 use JSHayes\FakeRequests\RequestHandler;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\RequestInterface;
@@ -33,6 +35,16 @@ class LpaContext implements Context
 {
     use ActorContext;
     use BaseUiContextTrait;
+
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES = 'ViewerCodeService::getShareCodes';
+    private const ADD_LPA_VALIDATE = 'AddLpa::validate';
+    private const ADD_LPA_CONFIRM = 'AddLpa::confirm';
+    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
+    private const LPA_SERVICE_GET_LPA_BY_ID = 'LpaService::getLpaById';
+    private const VIEWER_CODE_SERVICE_CREATE_SHARE_CODE = 'ViewerCodeService::createShareCode';
+    private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
+    private const REMOVE_LPA_INVOKE = 'RemoveLpa::__invoke';
+    private $dashboardLPAs;
 
     /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
     private RequestHandler $requestDashboardLPAs;
@@ -137,24 +149,22 @@ class LpaContext implements Context
     public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
     {
         // API call for removing an LPA from a users account
-        $this->apiFixtures->delete('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(['lpa' => $this->lpa])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(['lpa' => $this->lpa]),
+                self::REMOVE_LPA_INVOKE
+            )
+        );
 
         //API call for getting all the users added LPAs on the dashboard
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         $this->ui->pressButton('Yes, remove LPA');
     }
@@ -264,6 +274,28 @@ class LpaContext implements Context
      */
     public function iAmOnTheDashboardPage()
     {
+        if ($this->dashboardLPAs) {
+            //API call for getting all the users added LPAs
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($this->dashboardLPAs),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
+
+
+            foreach ($this->dashboardLPAs as $lpa) {
+                $this->apiFixtures->append(
+                    BaseUiContext::newResponse(
+                        StatusCodeInterface::STATUS_OK,
+                        json_encode([]),
+                        self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+                    )
+                );
+            }
+        }
+
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -355,33 +387,12 @@ class LpaContext implements Context
      */
     public function iHaveAdded2LPAsToMyAccount()
     {
-        $lpas = [];
-
         for ($x = 0; $x < 2; $x++) {
-            //API call for getting each LPAs share codes
-            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode([])
-                    )
-                );
-
             // change the token within the LPA data to match as it changes
             $this->lpaData['user-lpa-actor-token'] = $this->userLpaActorToken;
-            $lpas[$this->userLpaActorToken] = $this->lpaData;
+            $this->dashboardLPAs[$this->userLpaActorToken] = $this->lpaData;
             $this->userLpaActorToken = (string)(intval($this->userLpaActorToken) + 1);
         }
-
-        //API call for getting all the users added LPAs
-        $this->requestDashboardLPAs->respondWith(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($lpas)
-            )
-        );
     }
 
     /**
@@ -400,29 +411,28 @@ class LpaContext implements Context
         $this->iAmOnTheAddAnLPAPage();
 
         // API call for checking add LPA data
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA already added',
-                            'data' => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa->donor->uId,
-                                    'firstname'     => $this->lpa->donor->firstname,
-                                    'middlenames'   => $this->lpa->donor->middlenames,
-                                    'surname'       => $this->lpa->donor->surname,
-                                ],
-                                'caseSubtype' => $this->lpa->caseSubtype,
-                                'lpaActorToken' => $this->userLpaActorToken
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'Bad Request',
+                        'details' => 'LPA already added',
+                        'data' => [
+                            'donor'         => [
+                                'uId'           => $this->lpa->donor->uId,
+                                'firstname'     => $this->lpa->donor->firstname,
+                                'middlenames'   => $this->lpa->donor->middlenames,
+                                'surname'       => $this->lpa->donor->surname,
                             ],
-                        ]
-                    )
-                )
-            );
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'lpaActorToken' => $this->userLpaActorToken
+                        ],
+                    ]
+                ),
+                self::ADD_LPA_VALIDATE
+            )
+        );
 
         $this->fillAddLpaPages('XYUPHWQRECHV', '05', '10', '1975', '700000000054');
     }
@@ -509,20 +519,22 @@ class LpaContext implements Context
         ];
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([0 => $code]))
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([0 => $code]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -602,29 +614,27 @@ class LpaContext implements Context
         ];
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
                             0 => $code1,
                             1 => $code2,
                         ]
-                    )
-                )
-            );
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -640,24 +650,22 @@ class LpaContext implements Context
     public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
     {
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -683,24 +691,22 @@ class LpaContext implements Context
     public function iCanSeeTheMessage($message)
     {
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -738,45 +744,43 @@ class LpaContext implements Context
     public function iCancelTheViewerCode()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
                             'user-lpa-actor-token' => $this->userLpaActorToken,
                             'date' => 'date',
                             'lpa' => $this->lpa,
                             'actor' => $this->lpaData['actor'],
                         ]
-                    )
-                )
-            );
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-09-16T22:57:12.398570Z',
-                                'Organisation' => $this->organisation,
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'ViewerCode' => $this->accessCode,
-                                'Cancelled' => '2020-09-16T22:58:43+00:00',
-                                'Expires' => '2020-09-16T23:59:59+01:00',
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-09-16T22:57:12.398570Z',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode' => $this->accessCode,
+                            'Cancelled' => '2020-09-16T22:58:43+00:00',
+                            'Expires' => '2020-09-16T23:59:59+01:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
     }
 
     /**
@@ -784,19 +788,21 @@ class LpaContext implements Context
      */
     public function iCannotCheckExistingOrInactiveAccessCodesForTheLpa()
     {
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -814,19 +820,21 @@ class LpaContext implements Context
      */
     public function iCannotMakeAccessCodesForTheLpa()
     {
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -844,19 +852,21 @@ class LpaContext implements Context
      */
     public function iCannotViewTheLpaSummary()
     {
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(StatusCodeInterface::STATUS_OK, [], json_encode([]))
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -875,31 +885,29 @@ class LpaContext implements Context
     public function iCheckMyAccessCodes()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -936,44 +944,42 @@ class LpaContext implements Context
     public function iClickToCheckMyAccessCodeNowExpired()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2020-02-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2020-02-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -984,44 +990,42 @@ class LpaContext implements Context
     public function iClickToCheckMyAccessCodes()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => $this->lpa,
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
+                ),
+                'LpaService::getLPAById'
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => (new DateTime('yesterday'))->format('c'),
-                                'Expires' => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    0 => [
+                                    'SiriusUid' => $this->lpa->uId,
+                                    'Added' => (new DateTime('yesterday'))->format('c'),
+                                    'Expires' => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
+                                    'UserLpaActor' => $this->userLpaActorToken,
+                                    'Organisation' => $this->organisation,
+                                    'ViewerCode' => $this->accessCode,
+                                    'Viewed' => false,
+                                    'ActorId' => $this->actorId,
+                                    ],
+                                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1034,55 +1038,53 @@ class LpaContext implements Context
         $organisation = 'Natwest';
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2021-01-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => [
-                                    0 => [
-                                        'Viewed' => '2020-10-01T15:27:23.263483Z',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => $organisation,
-                                    ],
-                                    1 => [
-                                        'Viewed' => '2020-10-01T15:27:23.263483Z',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => 'Another Organisation',
-                                    ],
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => [
+                                0 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => $organisation,
                                 ],
-                                'ActorId' => $this->actorId,
+                                1 => [
+                                    'Viewed' => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy' => 'Another Organisation',
+                                ],
                             ],
-                        ]
-                    )
-                )
-            );
+                            'ActorId' => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1093,54 +1095,52 @@ class LpaContext implements Context
     public function iClickToCheckMyActiveAndInactiveCodes()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => $this->lpa,
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2021-02-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                            1 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Expires' => '2020-02-01T23:59:59+00:00',
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => "ABC321ABCXYZ",
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-02-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
+                        ],
+                        1 => [
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2020-02-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => "ABC321ABCXYZ",
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->clickLink('Check access codes');
     }
@@ -1163,55 +1163,53 @@ class LpaContext implements Context
         $this->accessCode = "XYZ321ABC987";
 
         // API call to cancel code
-        $this->apiFixtures->put('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE
+            )
+        );
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call for getShareCodes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                [
+                    0 =>
                         [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Organisation' => $this->organisation,
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'ViewerCode' => $this->accessCode,
-                                'Cancelled' => '2021-01-02T23:59:59+00:00',
-                                'Expires' => '2021-01-02T23:59:59+00:00',
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+                            'SiriusUid' => $this->lpa->uId,
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode' => $this->accessCode,
+                            'Cancelled' => '2021-01-02T23:59:59+00:00',
+                            'Expires' => '2021-01-02T23:59:59+00:00',
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
+                        ],
+                ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->pressButton("Yes, cancel code");
     }
@@ -1224,44 +1222,42 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => $this->lpa,
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         // API call for getShareCodes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => '2020-01-01T23:59:59+00:00',
-                                'Organisation' => $this->organisation,
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'ViewerCode' => $this->accessCode,
-                                'Expires' => '2021-01-05T23:59:59+00:00',
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    0 => [
+                                    'SiriusUid' => $this->lpa->uId,
+                                    'Added' => '2020-01-01T23:59:59+00:00',
+                                    'Organisation' => $this->organisation,
+                                    'UserLpaActor' => $this->userLpaActorToken,
+                                    'ViewerCode' => $this->accessCode,
+                                    'Expires' => '2021-01-05T23:59:59+00:00',
+                                    'Viewed' => false,
+                                    'ActorId' => $this->actorId,
+                                    ],
+                                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->pressButton("No, return to access codes");
     }
@@ -1288,14 +1284,13 @@ class LpaContext implements Context
     public function iFillInTheFormAndClickTheCancelButton()
     {
         // API call for finding all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
@@ -1327,24 +1322,20 @@ class LpaContext implements Context
         // Dashboard page
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData])
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([])
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
 
@@ -1359,25 +1350,7 @@ class LpaContext implements Context
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
-        //API call for getting all the users added LPAs
-        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
-
-        //API call for getting each LPAs share codes
-        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->dashboardLPAs = [$this->userLpaActorToken => $this->lpaData];
     }
 
     /**
@@ -1388,14 +1361,13 @@ class LpaContext implements Context
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
     }
 
     /**
@@ -1497,24 +1469,20 @@ class LpaContext implements Context
         ];
 
         //API call for getting all the users added LPAs
-        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData])
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->requestDashboardLPACodes = $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([])
+            )
+        );
     }
 
     /**
@@ -1525,24 +1493,20 @@ class LpaContext implements Context
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016();
 
         //API call for getting all the users added LPAs
-        $this->requestDashboardLPAs = $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData])
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->requestDashboardLPACodes = $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([])
+            )
+        );
     }
 
     /**
@@ -1576,44 +1540,40 @@ class LpaContext implements Context
         $this->accessCode = "XYZ321ABC987";
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => $this->lpa,
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
                 )
-            );
+            )
+        );
 
         // API call to get access codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            0 => [
-                                'SiriusUid' => $this->lpa->uId,
-                                'Added' => (new DateTime('yesterday'))->format('c'),
-                                'Expires' => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => false,
-                                'ActorId' => $this->actorId,
-                            ],
-                        ]
-                    )
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    0 => [
+                                    'SiriusUid' => $this->lpa->uId,
+                                    'Added' => (new DateTime('yesterday'))->format('c'),
+                                    'Expires' => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
+                                    'UserLpaActor' => $this->userLpaActorToken,
+                                    'Organisation' => $this->organisation,
+                                    'ViewerCode' => $this->accessCode,
+                                    'Viewed' => false,
+                                    'ActorId' => $this->actorId,
+                                    ],
+                                    ]
                 )
-            );
+            )
+        );
     }
 
     /**
@@ -1623,32 +1583,29 @@ class LpaContext implements Context
     {
         $this->ui->assertPageContainsText("Which organisation do you want to give access to?");
 
-        // API call to make code
-        $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
-        // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        // API call to make code
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+            )
+        );
 
         $this->ui->fillField('org_name', $organisationname);
         $this->ui->pressButton('Continue');
@@ -1667,14 +1624,13 @@ class LpaContext implements Context
      */
     public function iNavigateToCheckAnAccessCode()
     {
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->visit('lpa/access-codes?lpa=' . $this->userLpaActorToken);
     }
@@ -1684,14 +1640,13 @@ class LpaContext implements Context
      */
     public function iNavigateToGiveAnOrganisationAccess()
     {
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->visit('lpa/code-make?lpa=' . $this->userLpaActorToken);
     }
@@ -1701,14 +1656,13 @@ class LpaContext implements Context
      */
     public function iNavigateToViewTheLpaSummary()
     {
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->visit('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
     }
@@ -1729,20 +1683,19 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Not found',
-                            'details' => 'Code validation failed',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                json_encode(
+                    [
+                        'title' => 'Not found',
+                        'details' => 'Code validation failed',
+                        'data' => [],
+                    ]
+                ),
+                self::ADD_LPA_VALIDATE
+            )
+        );
 
         $this->fillAddLpaPages('ABC321GHI567', '05', '10', '1975', '700000000278');
     }
@@ -1757,28 +1710,24 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_BAD_REQUEST,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Bad Request',
-                            'details' => 'LPA status is not registered',
-                            'data' => [],
-                        ]
-                    )
-                )
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                                    'title' => 'Bad Request',
+                                    'details' => 'LPA status is not registered',
+                                    'data' => [],                        ]
+                ),
+                self::ADD_LPA_VALIDATE
             )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-                    assertEquals('XYUPHWQRECHV', $params['actor-code']);
-                }
-            );
+        );
 
         $this->fillAddLpaPages($code, '05', '10', '1975', '700000000054');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+        assertEquals('XYUPHWQRECHV', $params['actor-code']);
     }
 
     /**
@@ -1868,14 +1817,13 @@ class LpaContext implements Context
         ];
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpaData)
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
 
         $this->fillAddLpaPages($activation_key, '05', '10', '1975', '700000000054');
     }
@@ -1931,14 +1879,13 @@ class LpaContext implements Context
         ];
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpaData)
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
 
         $this->fillAddLpaPages($activation_key, '05', '10', '1975', '700000151998');
     }
@@ -1951,23 +1898,21 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         // API call for checking LPA
-        $this->apiFixtures->post('/v1/add-lpa/validate')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($this->lpaData)
-                )
-            )
-            ->inspectRequest(
-                function (RequestInterface $request) use ($storedCode) {
-                    $params = json_decode($request->getBody()->getContents(), true);
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            ),
+        );
 
-                    assertEquals($storedCode, $params['actor-code']);
-                }
-            );
 
         $this->fillAddLpaPages($code, '05', '10', '1975', '700000000054');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        assertEquals($storedCode, $params['actor-code']);
     }
 
     /**
@@ -1976,21 +1921,20 @@ class LpaContext implements Context
     public function iRequestToGiveAnOrganisationAccess()
     {
         // API call for get LpaById (when give organisation access is clicked)
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('/lpa/code-make?lpa=' . $this->userLpaActorToken);
@@ -2004,21 +1948,20 @@ class LpaContext implements Context
         $this->lpa->caseSubtype = $lpaType;
 
         // API call for get LpaById (when give organisation access is clicked)
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->clickLink('Give an organisation access');
     }
@@ -2035,37 +1978,35 @@ class LpaContext implements Context
         $this->iRequestToGiveAnOrganisationAccess();
 
         // API call to make code
-        $this->apiFixtures->post('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'code' => $this->accessCode,
-                            'expires' => '2021-03-07T23:59:59+00:00',
-                            'organisation' => $this->organisation,
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'code' => $this->accessCode,
+                        'expires' => '2021-03-07T23:59:59+00:00',
+                        'organisation' => $this->organisation,
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_CREATE_SHARE_CODE
+            )
+        );
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->fillField('org_name', $this->organisation);
         $this->ui->pressButton('Continue');
@@ -2088,21 +2029,20 @@ class LpaContext implements Context
         $this->lpa->status = $status;
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
         $this->ui->clickLink('Remove LPA');
         $this->ui->assertPageAddress('/lpa/remove-lpa');
     }
@@ -2114,21 +2054,20 @@ class LpaContext implements Context
     public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016()
     {
         $this->ui->assertPageContainsText('View LPA summary');
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
         $this->ui->clickLink('View LPA summary');
     }
 
@@ -2142,38 +2081,35 @@ class LpaContext implements Context
 
         if ($status === 'Revoked') {
             // API call for get LpaById
-            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'user-lpa-actor-token' => $this->userLpaActorToken,
-                                'date' => 'date',
-                                'lpa' => [],
-                                'actor' => $this->lpaData['actor'],
-                            ]
-                        )
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                                            'date' => 'date',
+                                            'lpa' => [],
+                                            'actor' => $this->lpaData['actor'],
+                                            ]
                     )
-                );
+                )
+            );
         } else {
             // API call for get LpaById
-            $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'user-lpa-actor-token' => $this->userLpaActorToken,
-                                'date' => 'date',
-                                'lpa' => $this->lpa,
-                                'actor' => $this->lpaData['actor'],
-                            ]
-                        )
-                    )
-                );
+            $this->apiFixtures->append(
+                BaseUiContext::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => $this->lpaData['actor'],
+                        ]
+                    ),
+                    self::LPA_SERVICE_GET_LPA_BY_ID
+                )
+            );
             $this->ui->clickLink('View LPA summary');
         }
     }
@@ -2184,21 +2120,20 @@ class LpaContext implements Context
     public function iRequestToViewTheLPAThatHasAlreadyBeenAdded()
     {
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->clickLink('see this LPA');
     }
@@ -2263,21 +2198,20 @@ class LpaContext implements Context
     public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
     {
         // API call for get LpaById (when give organisation access is clicked)
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => $this->lpa,
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
 
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
@@ -2447,34 +2381,31 @@ class LpaContext implements Context
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
     {
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/add-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_CREATED,
-                    [],
-                    json_encode(['user-lpa-actor-token' => $this->userLpaActorToken])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_CREATED,
+                json_encode(['user-lpa-actor-token' => $this->userLpaActorToken]),
+                self::ADD_LPA_CONFIRM
+            ),
+        );
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->assertPageAddress('/lpa/check');
 
@@ -2490,34 +2421,31 @@ class LpaContext implements Context
     public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role)
     {
         // API call for adding an LPA
-        $this->apiFixtures->post('/v1/add-lpa/confirm')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_CREATED,
-                    [],
-                    json_encode(['user-lpa-actor-token' => $this->userLpaActorToken])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_CREATED,
+                json_encode(['user-lpa-actor-token' => $this->userLpaActorToken]),
+                self::ADD_LPA_CONFIRM,
+            )
+        );
 
         //API call for getting all the users added LPAs
-        $this->apiFixtures->get('/v1/lpas')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([$this->userLpaActorToken => $this->lpaData])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         //API call for getting each LPAs share codes
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken . '/codes')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode([])
-                )
-            );
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
 
         $this->ui->assertPageAddress('/lpa/check');
 
@@ -2599,21 +2527,19 @@ class LpaContext implements Context
         $this->lpa->status = "Revoked";
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => [],
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => [],
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
                 )
-            );
+            )
+        );
     }
 
     /**
@@ -2638,21 +2564,19 @@ class LpaContext implements Context
 
 
         // API call for get LpaById
-        $this->apiFixtures->get('/v1/lpas/' . $this->userLpaActorToken)
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date' => 'date',
-                            'lpa' => [],
-                            'actor' => $this->lpaData['actor'],
-                        ]
-                    )
+        $this->apiFixtures->append(
+            BaseUiContext::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                                    'date' => 'date',
+                                    'lpa' => [],
+                                    'actor' => $this->lpaData['actor'],
+                                    ]
                 )
-            );
+            )
+        );
     }
 
     /**

@@ -6,15 +6,27 @@ namespace BehatTest\Context\UI;
 
 use Acpr\Behat\Psr\Context\Psr11MinkAwareContext;
 use Acpr\Behat\Psr\Context\RuntimeMinkContext;
+use Amp\Process\Internal\Posix\Handle;
+use App\Service\ApiClient\Client;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
-use JSHayes\FakeRequests\MockHandler;
-use JSHayes\FakeRequests\RequestHandler;
+use Common\Service\Pdf\StylesService;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
+use function DI\get;
 use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -24,7 +36,6 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  *
  * @package BehatTest\Context\UI
  *
- * @property RequestHandler $lastApiRequest
  */
 class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 {
@@ -33,14 +44,28 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     public ContainerInterface $container;
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
+    private ErrorHandler $errorHandler;
+    public array $historyContainer = [];
     public MinkContext $ui;
 
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
 
-        $this->apiFixtures = $container->get(MockHandler::class);
+        //Create handler stack and push to container
+        $mockHandler = $container->get(MockHandler::class);
+        $handlerStack = HandlerStack::create($mockHandler);
+        $history = Middleware::history($this->historyContainer);
+        $handlerStack->push($history);
+        $handlerStack->remove('http_errors');
+        $handlerStack->remove('cookies');
+        $handlerStack->remove('allow_redirects');
+        $container->set(HandlerStack::class, $handlerStack);
+
+        $this->apiFixtures = $mockHandler;
         $this->awsFixtures = $container->get(AwsMockHandler::class);
+
+        $container->set(StylesService::class, new StylesService('./test/CommonTest/assets/stylesheets/pdf.css'));
     }
 
     /**
@@ -74,5 +99,20 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     public function resetSharedState(): void
     {
         SharedState::getInstance()->reset();
+    }
+
+    public static function newResponse(int $status, string $body = '', string $reason = ''): ResponseInterface
+    {
+        $bt = debug_backtrace();
+        $caller = array_shift($bt);
+        $file = $caller['file'];
+        $line = $caller['line'];
+
+        return new Response(
+            status: $status,
+            headers: [],
+            body: $body,
+            reason: $reason . ' file: ' . $file . ' lineNumber: ' . $line,
+        );
     }
 }
