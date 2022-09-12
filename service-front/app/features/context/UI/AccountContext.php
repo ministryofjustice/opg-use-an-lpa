@@ -9,6 +9,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use Common\Service\Email\EmailClient;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -55,20 +56,20 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                            'Id' => '123',
-                            'Email' => $email,
-                            'ActivationToken' => $this->activationToken,
-                        ]
+                        'Id' => '123',
+                        'Email' => $email,
+                        'ActivationToken' => $this->activationToken,
+                    ]
                 )
             )
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('password', $password);
@@ -498,7 +499,7 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 '',
                 self::USER_SERVICE_REQUEST_PASSWORD_RESET
@@ -506,7 +507,7 @@ class AccountContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('email_confirm', $email_confirmation);
@@ -531,7 +532,7 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -544,7 +545,7 @@ class AccountContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('email_confirm', $email_confirmation);
@@ -572,7 +573,7 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_FORBIDDEN,
                 json_encode([])
             )
@@ -614,11 +615,13 @@ class AccountContext implements Context
     public function iAttemptToSignInAgain()
     {
         // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode([]),
-            self::LPA_SERVICE_GET_LPAS
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         $this->ui->visit('/login');
     }
@@ -706,11 +709,13 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/reset-password/123456');
 
         // API fixture for reset token check
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode(['Id' => '123456']),
-            self::USER_SERVICE_CAN_PASSWORD_RESET
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(['Id' => '123456']),
+                self::USER_SERVICE_CAN_PASSWORD_RESET
+            )
+        );
 
         $this->ui->fillField('password', $password);
         $this->ui->pressButton('Change password');
@@ -724,18 +729,22 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/reset-password/123456');
 
         // API fixture for reset token check
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode(['Id' => '123456']),
-            self::USER_SERVICE_CAN_PASSWORD_RESET
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(['Id' => '123456']),
+                self::USER_SERVICE_CAN_PASSWORD_RESET
+            )
+        );
 
         // API fixture for password reset
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode(['Id' => '123456']),
-            self::USER_SERVICE_COMPLETE_PASSWORD_RESET
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(['Id' => '123456']),
+                self::USER_SERVICE_COMPLETE_PASSWORD_RESET
+            )
+        );
 
         $this->ui->fillField('password', 'n3wPassWord');
         $this->ui->pressButton('Change password');
@@ -755,7 +764,7 @@ class AccountContext implements Context
     {
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_FORBIDDEN,
                 json_encode([])
             )
@@ -791,7 +800,7 @@ class AccountContext implements Context
     {
         // API fixture for email reset token check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -803,11 +812,13 @@ class AccountContext implements Context
         );
 
         // API fixture to complete email change
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode([]),
-            self::USER_SERVICE_COMPLETE_CHANGE_EMAIL
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::USER_SERVICE_COMPLETE_CHANGE_EMAIL
+            )
+        );
 
         $this->ui->visit('/verify-new-email/' . $this->userEmailResetToken);
     }
@@ -821,7 +832,7 @@ class AccountContext implements Context
         $this->userEmailResetToken = 'exp1r3dT0k3n';
         // API fixture for email reset token check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_GONE,
                 json_encode([]),
                 self::USER_SERVICE_CAN_RESET_EMAIL
@@ -839,7 +850,7 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/confirm-delete-account');
 
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -869,14 +880,14 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                            'Id' => '123',
-                            'Email' => $this->userEmail,
-                            'ActivationToken' => $this->activationToken,
-                        ]
+                        'Id' => '123',
+                        'Email' => $this->userEmail,
+                        'ActivationToken' => $this->activationToken,
+                    ]
                 ),
                 self::USER_SERVICE_CREATE
             )
@@ -884,11 +895,12 @@ class AccountContext implements Context
 
         // API call for Notify
         $request = $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::USER_SERVICE_CREATE
-        ));
+            )
+        );
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
@@ -915,20 +927,20 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_CONFLICT,
                 json_encode(
                     [
-                            'Email' => $this->userEmail,
-                            'ActivationToken' => $this->activationToken,
-                        ]
+                        'Email' => $this->userEmail,
+                        'ActivationToken' => $this->activationToken,
+                    ]
                 ),
                 self::USER_SERVICE_CREATE
             )
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
@@ -948,12 +960,12 @@ class AccountContext implements Context
 
         // API call for creating an account
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_CONFLICT,
                 json_encode(
                     [
-                            'message' => 'Another user has requested to change their email to ' . $this->userEmail,
-                        ]
+                        'message' => 'Another user has requested to change their email to ' . $this->userEmail,
+                    ]
                 ),
                 self::USER_SERVICE_CREATE
             )
@@ -961,7 +973,7 @@ class AccountContext implements Context
 
         // API call for Notify to warn user their email an attempt to use their email has been made
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([]))
+            ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([]))
         );
 
         $this->ui->fillField('email', $this->userEmail);
@@ -984,10 +996,10 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/create-account');
 
         // API call for password reset request
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', 'a@b.com');
         $this->ui->fillField('show_hide_password', $password);
@@ -1015,32 +1027,36 @@ class AccountContext implements Context
         if ($this->userActive) {
             // API call for authentication
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                                'Id' => $this->userId,
-                                'Email' => $this->userEmail,
-                                'LastLogin' => '2020-01-01',
-                            ]
+                            'Id' => $this->userId,
+                            'Email' => $this->userEmail,
+                            'LastLogin' => '2020-01-01',
+                        ]
                     ),
                     'UserService::Authenticate'
                 )
             );
 
             // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                self::LPA_SERVICE_GET_LPAS
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([]),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
         } else {
             // API call for authentication
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_UNAUTHORIZED,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_UNAUTHORIZED,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
         }
 
         $this->ui->pressButton('Sign in');
@@ -1057,7 +1073,7 @@ class AccountContext implements Context
         if ($this->userActive) {
             // API call for authentication
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
 
                     json_encode(
@@ -1072,18 +1088,22 @@ class AccountContext implements Context
             );
 
             // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                self::LPA_SERVICE_GET_LPAS
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([]),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
         } else {
             // API call for authentication
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_UNAUTHORIZED,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_UNAUTHORIZED,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
         }
 
         $this->ui->assertPageContainsText('Sign in');
@@ -1110,7 +1130,9 @@ class AccountContext implements Context
         $this->ui->fillField('password', $password);
 
         // API call for authentication
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_FORBIDDEN, json_encode([])));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(StatusCodeInterface::STATUS_FORBIDDEN, json_encode([]))
+        );
 
         $this->ui->pressButton('Sign in');
     }
@@ -1124,7 +1146,9 @@ class AccountContext implements Context
         $this->ui->fillField('password', 'inoc0rrectPassword');
 
         // API call for authentication
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_NOT_FOUND, json_encode([])));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(StatusCodeInterface::STATUS_NOT_FOUND, json_encode([]))
+        );
 
         $this->ui->pressButton('Sign in');
     }
@@ -1138,11 +1162,13 @@ class AccountContext implements Context
         $this->ui->fillField('password', 'inoc0rrectPassword');
 
         // API call for authentication
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_FORBIDDEN,
-            json_encode([]),
-            self::USER_SERVICE_AUTHENTICATE
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_FORBIDDEN,
+                json_encode([]),
+                self::USER_SERVICE_AUTHENTICATE
+            )
+        );
 
         $this->ui->pressButton('Sign in');
     }
@@ -1153,7 +1179,9 @@ class AccountContext implements Context
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword()
     {
         // remove successful reset token and add failure state
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_GONE, '', self::USER_SERVICE_CAN_PASSWORD_RESET));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(StatusCodeInterface::STATUS_GONE, '', self::USER_SERVICE_CAN_PASSWORD_RESET)
+        );
 
         $this->ui->visit('/reset-password/123456');
     }
@@ -1164,9 +1192,13 @@ class AccountContext implements Context
     public function iFollowMyUniqueInstructionsAfter24Hours()
     {
         // remove successful reset token and add failure state
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_NOT_FOUND, '',
-                                                              self::USER_SERVICE_ACTIVATE
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                '',
+                self::USER_SERVICE_ACTIVATE
+            )
+        );
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
     }
@@ -1178,7 +1210,7 @@ class AccountContext implements Context
     {
         // API fixture for reset token check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -1203,7 +1235,7 @@ class AccountContext implements Context
         $this->userEmail = 'a@b.com';
         // API fixture for reset token check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -1217,7 +1249,7 @@ class AccountContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append( BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
 
@@ -1317,7 +1349,7 @@ class AccountContext implements Context
         if ($this->userActive) {
             // API call for authentication
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
@@ -1331,11 +1363,13 @@ class AccountContext implements Context
             );
         } else {
             // API call for authentication
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_UNAUTHORIZED,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_UNAUTHORIZED,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
         }
 
         $this->ui->pressButton('Sign in');
@@ -1360,10 +1394,12 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/create-account');
 
         // API call for password reset request
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([]), self::USER_SERVICE_CREATE));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([]), self::USER_SERVICE_CREATE)
+        );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('show_hide_password', $password);
@@ -1416,7 +1452,7 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::USER_SERVICE_AUTHENTICATE
@@ -1425,7 +1461,7 @@ class AccountContext implements Context
 
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $newPassword);
@@ -1442,7 +1478,7 @@ class AccountContext implements Context
 
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_FORBIDDEN,
                 json_encode([]),
                 self::USER_SERVICE_CHANGE_PASSWORD
@@ -1512,11 +1548,13 @@ class AccountContext implements Context
         $this->ui->fillField('password', $this->userPassword);
 
         // API call for authentication
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_FORBIDDEN,
-            json_encode([]),
-            self::USER_SERVICE_AUTHENTICATE
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_FORBIDDEN,
+                json_encode([]),
+                self::USER_SERVICE_AUTHENTICATE
+            )
+        );
 
         $this->ui->pressButton('Sign in');
     }
@@ -1528,7 +1566,7 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailToAUniqueEmailAddress()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
 
                 json_encode(
@@ -1547,10 +1585,10 @@ class AccountContext implements Context
         );
 
         // API call for Notify to current email
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         // API call for Notify to new email
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('new_email_address', $this->newUserEmail);
         $this->ui->fillField('current_password', $this->userPassword);
@@ -1591,7 +1629,7 @@ class AccountContext implements Context
     {
         //request change email call
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_CONFLICT,
                 json_encode([]),
                 self::USER_SERVICE_REQUEST_CHANGE_EMAIL
@@ -1599,7 +1637,7 @@ class AccountContext implements Context
         );
 
         // API call for Notify to new email requested
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->fillField('new_email_address', $this->newUserEmail);
         $this->ui->fillField('current_password', $this->userPassword);
@@ -1648,7 +1686,7 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailWithAnIncorrectPassword()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_FORBIDDEN,
                 json_encode([]),
                 self::USER_SERVICE_REQUEST_CHANGE_EMAIL
@@ -1863,11 +1901,13 @@ class AccountContext implements Context
     public function iViewMyDashboard()
     {
         // Dashboard page checks for all LPA's for a user
-        $request = $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode([]),
-            self::LPA_SERVICE_GET_LPAS
-        ));
+        $request = $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
 
         $this->ui->visit('/lpa/dashboard');
     }
@@ -1966,7 +2006,7 @@ class AccountContext implements Context
 
         // API call for authentication
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -2019,12 +2059,12 @@ class AccountContext implements Context
     ) {
         // API call for password reset request
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                            'Id' => $this->userId,
-                            'PasswordResetToken' => '123456',
+                        'Id' => $this->userId,
+                        'PasswordResetToken' => '123456',
                     ]
                 ),
                 self::USER_SERVICE_REQUEST_PASSWORD_RESET
@@ -2032,7 +2072,7 @@ class AccountContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $this->ui->pressButton('Email me the link');
         $this->ui->assertPageContainsText('We\'ve emailed a link to');
 

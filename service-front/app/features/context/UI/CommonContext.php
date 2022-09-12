@@ -7,6 +7,7 @@ namespace BehatTest\Context\UI;
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Lpa\LpaService;
@@ -160,32 +161,36 @@ class CommonContext implements Context
         if ($userActive) {
             // API call for authentication
             $this->apiFixtures->append(
-                    BaseUiContext::newResponse(
-                        StatusCodeInterface::STATUS_OK,
-                        json_encode(
-                            [
-                                'Id' => $userId,
-                                'Email' => $userEmail,
-                                'LastLogin' => '2020-01-01',
-                            ]
-                        ),
-                        self::USER_SERVICE_AUTHENTICATE
-                    )
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'Id' => $userId,
+                            'Email' => $userEmail,
+                            'LastLogin' => '2020-01-01',
+                        ]
+                    ),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
                 );
 
             // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                'LpaService::getLpas'
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([]),
+                    'LpaService::getLpas'
+                )
+            );
         } else {
             // API call for authentication
-            $this->apiFixtures->append(BaseUiContext::newResponse(
-                StatusCodeInterface::STATUS_UNAUTHORIZED, 
-                json_encode([]), 
-                self::USER_SERVICE_AUTHENTICATE
-            ));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_UNAUTHORIZED,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
         }
 
         $this->ui->pressButton('Sign in');

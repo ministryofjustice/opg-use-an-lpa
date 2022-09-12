@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Service\Log\RequestTracing;
@@ -163,13 +164,15 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iAmViewingAValidLPA()
     {
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode([
-                'lpa' => $this->lpaData
-            ]),
-            self::LPA_SERVICE_GET_LPA_BY_CODE
-        ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                                'lpa' => $this->lpaData
+                            ]),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $lpaService = $this->container->get(LpaService::class);
 
@@ -189,13 +192,15 @@ class ViewerContext extends BaseIntegrationContext
     public function iAmViewingACancelledLPA()
     {
         $this->lpaData['status'] = 'Cancelled';
-        $this->apiFixtures->append(BaseUiContext::newResponse(
-            StatusCodeInterface::STATUS_OK,
-            json_encode([
-                'lpa' => $this->lpaData
-            ]),
-            self::LPA_SERVICE_GET_LPA_BY_CODE
-    ));
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                                'lpa' => $this->lpaData
+                            ]),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $lpaService = $this->container->get(LpaService::class);
 
@@ -213,7 +218,7 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iChooseToDownloadADocumentVersionOfTheLPA()
     {
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, ''));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
 
         $pdfService = $this->container->get(PdfService::class);
 

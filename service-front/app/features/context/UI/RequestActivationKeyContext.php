@@ -8,6 +8,7 @@ use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -504,7 +505,7 @@ class RequestActivationKeyContext implements Context
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
                 self::ADD_OLDER_LPA_CONFIRM
@@ -512,7 +513,7 @@ class RequestActivationKeyContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
@@ -813,7 +814,7 @@ class RequestActivationKeyContext implements Context
 
         // Setup fixture for success response
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
@@ -836,7 +837,7 @@ class RequestActivationKeyContext implements Context
 
         // Setup fixture for success response
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
@@ -859,7 +860,7 @@ class RequestActivationKeyContext implements Context
 
         // Setup fixture for success response
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 json_encode(
                     [
@@ -920,7 +921,7 @@ class RequestActivationKeyContext implements Context
         if ($this->activationCode === null) {
             // Setup fixture for success response
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
@@ -941,7 +942,7 @@ class RequestActivationKeyContext implements Context
         } else {
             // Setup fixture for activation key already existing
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     json_encode(
                         [
@@ -974,7 +975,7 @@ class RequestActivationKeyContext implements Context
         $this->fillAndSubmitOlderLpaForm();
 
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
@@ -1057,7 +1058,7 @@ class RequestActivationKeyContext implements Context
     public function iRequestForANewActivationKeyAgain()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
                 self::ADD_OLDER_LPA_CONFIRM
@@ -1065,7 +1066,7 @@ class RequestActivationKeyContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->pressButton('Continue and ask for a new key');
 
@@ -1343,7 +1344,7 @@ class RequestActivationKeyContext implements Context
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
@@ -1379,7 +1380,7 @@ class RequestActivationKeyContext implements Context
 
         // Setup fixture for success response
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 json_encode([]),
                 self::ADD_OLDER_LPA_VALIDATE
@@ -1435,7 +1436,7 @@ class RequestActivationKeyContext implements Context
 
         if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     json_encode(
                         [
@@ -1454,7 +1455,7 @@ class RequestActivationKeyContext implements Context
             $this->ui->pressButton('Continue');
         } else {
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
@@ -1503,7 +1504,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageContainsText('Confirm and submit request');
 
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode($data),
                 self::CLEANSE_LPA_CLEANSE
@@ -1511,7 +1512,7 @@ class RequestActivationKeyContext implements Context
         );
 
         // API call for Notify
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
         $this->ui->pressButton('Confirm and submit request');
 

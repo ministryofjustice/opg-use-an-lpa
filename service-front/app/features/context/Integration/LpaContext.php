@@ -6,6 +6,7 @@ namespace BehatTest\Context\Integration;
 
 use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
+use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\UI\BaseUiContext;
 use Common\Entity\CaseActor;
 use Common\Service\Log\RequestTracing;
@@ -66,6 +67,7 @@ class LpaContext extends BaseIntegrationContext
     private const CLEANSE_LPA_CLEANSE = 'CleanseLpa::cleanse';
     private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
     private const REMOVE_LPA_INVOKE = 'RemoveLpa::__invoke';
+
     private LpaFactory $lpaFactory;
     private LpaService $lpaService;
     private ViewerCodeService $viewerCodeService;
@@ -77,22 +79,22 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for requesting activation code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                            'title'     => 'Bad Request',
-                            'details'   => 'Activation key already requested for LPA',
-                            'data'      => [
-                                'donor'         => [
-                                    'uId'           => $this->lpa['donor']['uId'],
-                                    'firstname'     => $this->lpa['donor']['firstname'],
-                                    'middlenames'   => $this->lpa['donor']['middlenames'],
-                                    'surname'       => $this->lpa['donor']['surname'],
-                                ],
-                                'caseSubtype'   => $this->lpa['caseSubtype']
-                            ]
+                        'title' => 'Bad Request',
+                        'details' => 'Activation key already requested for LPA',
+                        'data' => [
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
+                            ],
+                            'caseSubtype' => $this->lpa['caseSubtype']
                         ]
+                    ]
                 )
             )
         );
@@ -149,7 +151,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->apiFixtures->reset();
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(['lpa' => $this->lpa]),
                 self::REMOVE_LPA_INVOKE
@@ -192,30 +194,30 @@ class LpaContext extends BaseIntegrationContext
 
             // API call for get LpaById (when give organisation access is clicked)
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                                'user-lpa-actor-token' => $this->actorLpaToken,
-                                'date' => 'date',
-                                'lpa' => [],
-                                'actor' => $this->lpaData['actor'],
-                            ]
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => $this->lpaData['actor'],
+                        ]
                     )
                 )
             );
         } else {
             // API call for get LpaById (when give organisation access is clicked)
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                                'user-lpa-actor-token' => $this->actorLpaToken,
-                                'date' => 'date',
-                                'lpa' => [],
-                                'actor' => null,
-                            ]
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => null,
+                        ]
                     )
                 )
             );
@@ -230,7 +232,7 @@ class LpaContext extends BaseIntegrationContext
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
                 self::ADD_OLDER_LPA_CONFIRM
@@ -331,13 +333,13 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title'     => 'Bad Request',
-                        'details'   => 'LPA not eligible due to registration date',
-                        'data'      => [],
+                        'title' => 'Bad Request',
+                        'details' => 'LPA not eligible due to registration date',
+                        'data' => [],
                     ]
                 ),
                 self::ADD_OLDER_LPA_VALIDATE
@@ -416,7 +418,7 @@ class LpaContext extends BaseIntegrationContext
 
         //API call for getting all the users added LPAs
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([$this->actorLpaToken => $this->lpaData]),
                 self::LPA_SERVICE_GET_LPAS
@@ -425,7 +427,7 @@ class LpaContext extends BaseIntegrationContext
 
         //API call for getting each LPAs share codes
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -456,7 +458,7 @@ class LpaContext extends BaseIntegrationContext
     {
         //API call for getting all the users added LPAs
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([$this->actorLpaToken => $this->lpaData]),
                 self::LPA_SERVICE_GET_LPAS
@@ -465,7 +467,7 @@ class LpaContext extends BaseIntegrationContext
 
         //API call for getting each LPAs share codes
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
@@ -515,7 +517,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
@@ -524,13 +526,13 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'  => 'date',
-                        'lpa'   => $this->lpa,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
@@ -550,13 +552,13 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'  => 'date',
-                        'lpa'   => $this->lpa,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
@@ -566,7 +568,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -609,13 +611,13 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'  => 'date',
-                        'lpa'   => $this->lpa,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
@@ -625,7 +627,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -680,13 +682,13 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'  => 'date',
-                        'lpa'   => $this->lpa,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
@@ -696,7 +698,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -736,13 +738,13 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'user-lpa-actor-token' => $this->actorLpaToken,
-                        'date'  => 'date',
-                        'lpa'   => $this->lpa,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
@@ -752,29 +754,29 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         0 => [
-                            'SiriusUid'     => $this->lpa['uId'],
-                            'Added'         => '2020-01-01T23:59:59+00:00',
-                            'Expires'       => '2021-01-01T23:59:59+00:00',
-                            'UserLpaActor'  => $this->actorLpaToken,
-                            'Organisation'  => $this->organisation,
-                            'ViewerCode'    => $this->accessCode,
-                            'Viewed'        => false,
-                            'ActorId'       => $this->actorId,
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => $this->accessCode,
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
                         ],
                         1 => [
-                            'SiriusUid'     => $this->lpa['uId'],
-                            'Added'         => '2020-01-01T23:59:59+00:00',
-                            'Expires'       => '2020-02-01T23:59:59+00:00',
-                            'UserLpaActor'  => $this->actorLpaToken,
-                            'Organisation'  => $this->organisation,
-                            'ViewerCode'    => "ABC321ABCXYZ",
-                            'Viewed'        => false,
-                            'ActorId'       => $this->actorId,
+                            'SiriusUid' => $this->lpa['uId'],
+                            'Added' => '2020-01-01T23:59:59+00:00',
+                            'Expires' => '2020-02-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->actorLpaToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode' => "ABC321ABCXYZ",
+                            'Viewed' => false,
+                            'ActorId' => $this->actorId,
                         ],
                     ]
                 ),
@@ -803,7 +805,7 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for cancelShareCode in CancelCodeHandler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE
@@ -818,7 +820,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -836,7 +838,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for getShareCodes in CheckAccessCodesHandler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -1012,7 +1014,7 @@ class LpaContext extends BaseIntegrationContext
     {
         // Setup fixture for success response
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
@@ -1041,7 +1043,7 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 '',
                 self::ADD_OLDER_LPA_VALIDATE
@@ -1092,7 +1094,7 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for checking LPA
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode($this->lpaData),
                 self::ADD_LPA_VALIDATE
@@ -1122,14 +1124,14 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'user-lpa-actor-token'  => $this->actorLpaToken,
-                        'date'                  => 'date',
-                        'lpa'                   => $this->lpa,
-                        'actor'                 => $this->lpaData['actor'],
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_ID
@@ -1138,7 +1140,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call to make code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -1162,29 +1164,29 @@ class LpaContext extends BaseIntegrationContext
         if ($status === "Revoked") {
             // API call for getting the LPA by id
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                                'user-lpa-actor-token'  => $this->actorLpaToken,
-                                'date'                  => 'date',
-                                'lpa'                   => [],
-                                'actor'                 => $this->lpaData['actor'],
-                            ]
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => [],
+                            'actor' => $this->lpaData['actor'],
+                        ]
                     )
                 )
             );
         } else {
             // API call for getting the LPA by id
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'user-lpa-actor-token'  => $this->actorLpaToken,
-                            'date'                  => 'date',
-                            'lpa'                   => $this->lpa,
-                            'actor'                 => $this->lpaData['actor'],
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date' => 'date',
+                            'lpa' => $this->lpa,
+                            'actor' => $this->lpaData['actor'],
                         ]
                     ),
                     self::LPA_SERVICE_GET_LPA_BY_ID
@@ -1224,14 +1226,14 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for get LpaById
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'user-lpa-actor-token'  => $this->actorLpaToken,
-                        'date'                  => 'date',
-                        'lpa'                   => $this->lpa,
-                        'actor'                 => $this->lpaData['actor'],
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => $this->lpa,
+                        'actor' => $this->lpaData['actor'],
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_ID
@@ -1244,7 +1246,7 @@ class LpaContext extends BaseIntegrationContext
 
         //API call for getShareCodes
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -1355,13 +1357,13 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for checking LPA
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 json_encode(
                     [
-                        'title'     => 'Not found',
-                        'details'   => 'Code validation failed',
-                        'data'      => [],
+                        'title' => 'Not found',
+                        'details' => 'Code validation failed',
+                        'data' => [],
                     ]
                 ),
                 self::ADD_LPA_VALIDATE
@@ -1390,7 +1392,7 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for adding an LPA
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_CREATED,
                 json_encode(['user-lpa-actor-token' => $this->userIdentity]),
                 self::ADD_LPA_CONFIRM
@@ -1443,20 +1445,20 @@ class LpaContext extends BaseIntegrationContext
 
         // API call for requesting activation code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title'     => 'Bad Request',
-                        'details'   => 'LPA has an activation key already',
-                        'data'      => [
-                            'donor'         => [
-                                'uId'           => $this->lpa['donor']['uId'],
-                                'firstname'     => $this->lpa['donor']['firstname'],
-                                'middlenames'   => $this->lpa['donor']['middlenames'],
-                                'surname'       => $this->lpa['donor']['surname'],
+                        'title' => 'Bad Request',
+                        'details' => 'LPA has an activation key already',
+                        'data' => [
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
                             ],
-                            'caseSubtype'   => $this->lpa['caseSubtype'],
+                            'caseSubtype' => $this->lpa['caseSubtype'],
                             'activationKeyDueDate' => $createdDate->format('c')
                         ]
                     ]
@@ -1501,20 +1503,20 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for requesting activation code
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title'     => 'Bad Request',
-                        'details'   => 'LPA already added',
-                        'data'      => [
-                            'donor'         => [
-                                'uId'           => $this->lpa['donor']['uId'],
-                                'firstname'     => $this->lpa['donor']['firstname'],
-                                'middlenames'   => $this->lpa['donor']['middlenames'],
-                                'surname'       => $this->lpa['donor']['surname'],
+                        'title' => 'Bad Request',
+                        'details' => 'LPA already added',
+                        'data' => [
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
                             ],
-                            'caseSubtype'   => $this->lpa['caseSubtype'],
+                            'caseSubtype' => $this->lpa['caseSubtype'],
                             'lpaActorToken' => $this->actorLpaToken
                         ]
                     ]
@@ -1569,20 +1571,20 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for checking add LPA data
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
                         'title' => 'Bad Request',
                         'details' => 'LPA already added',
                         'data' => [
-                            'donor'         => [
-                                'uId'           => $this->lpa['donor']['uId'],
-                                'firstname'     => $this->lpa['donor']['firstname'],
-                                'middlenames'   => $this->lpa['donor']['middlenames'],
-                                'surname'       => $this->lpa['donor']['surname'],
+                            'donor' => [
+                                'uId' => $this->lpa['donor']['uId'],
+                                'firstname' => $this->lpa['donor']['firstname'],
+                                'middlenames' => $this->lpa['donor']['middlenames'],
+                                'surname' => $this->lpa['donor']['surname'],
                             ],
-                            'caseSubtype'   => $this->lpa['caseSubtype'],
+                            'caseSubtype' => $this->lpa['caseSubtype'],
                             'lpaActorToken' => $this->actorLpaToken
                         ],
                     ]
@@ -1621,18 +1623,18 @@ class LpaContext extends BaseIntegrationContext
     public function iAmShownTheDetailsOfAnLPA()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
                         'donor' => [
-                            'uId'           => $this->lpa['donor']['uId'],
-                            'firstname'     => $this->lpa['donor']['firstname'],
-                            'middlenames'   => $this->lpa['donor']['middlenames'],
-                            'surname'       => $this->lpa['donor']['surname'],
+                            'uId' => $this->lpa['donor']['uId'],
+                            'firstname' => $this->lpa['donor']['firstname'],
+                            'middlenames' => $this->lpa['donor']['middlenames'],
+                            'surname' => $this->lpa['donor']['surname'],
                         ],
-                        'caseSubtype'   => $this->lpa['caseSubtype'],
-                        'role'          => 'donor'
+                        'caseSubtype' => $this->lpa['caseSubtype'],
+                        'role' => 'donor'
                     ]
                 ),
                 self::ADD_OLDER_LPA_VALIDATE
@@ -1683,7 +1685,7 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 '',
                 self::ADD_OLDER_LPA_VALIDATE
@@ -1743,7 +1745,7 @@ class LpaContext extends BaseIntegrationContext
 
         if (!$this->lpa['lpaIsCleansed'] && $this->lpa['registrationDate'] < $earliestRegDate) {
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_BAD_REQUEST,
                     json_encode(
                         [
@@ -1773,14 +1775,14 @@ class LpaContext extends BaseIntegrationContext
             assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
         } else {
             $this->apiFixtures->append(
-                BaseUiContext::newResponse(
+                ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_NO_CONTENT,
                     json_encode([])
                 )
             );
 
             // API call for Notify
-            $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
+            $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
             $addOlderLpa = $this->container->get(AddOlderLpa::class);
 
@@ -1813,7 +1815,7 @@ class LpaContext extends BaseIntegrationContext
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
                 self::CLEANSE_LPA_CLEANSE
@@ -1858,15 +1860,15 @@ class LpaContext extends BaseIntegrationContext
     {
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                            'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date' => 'date',
-                            'lpa' => [],
-                            'actor' => $this->lpaData['actor'],
-                        ]
+                        'user-lpa-actor-token' => $this->actorLpaToken,
+                        'date' => 'date',
+                        'lpa' => [],
+                        'actor' => $this->lpaData['actor'],
+                    ]
                 )
             )
         );

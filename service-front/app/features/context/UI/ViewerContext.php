@@ -6,6 +6,7 @@ namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
@@ -280,7 +281,7 @@ class ViewerContext implements Context
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -293,7 +294,7 @@ class ViewerContext implements Context
         );
 
         // API to pdf service for pdf rendering
-        $this->apiFixtures->append(BaseUiContext::newResponse(StatusCodeInterface::STATUS_OK, ''));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
 
         $this->ui->pressButton('Download this LPA summary');
 
@@ -334,7 +335,7 @@ class ViewerContext implements Context
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -373,14 +374,14 @@ class ViewerContext implements Context
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                            'cancelled' => (new DateTime('-1 day'))->format('c'),
-                        ]
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'cancelled' => (new DateTime('-1 day'))->format('c'),
+                    ]
                 )
             )
         )
@@ -414,7 +415,7 @@ class ViewerContext implements Context
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -444,7 +445,7 @@ class ViewerContext implements Context
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -477,14 +478,14 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/home');
 
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_GONE,
                 json_encode(
                     [
-                            'title' => 'Gone',
-                            'details' => 'Share code expired',
-                            'data' => [],
-                        ]
+                        'title' => 'Gone',
+                        'details' => 'Share code expired',
+                        'data' => [],
+                    ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
@@ -504,14 +505,14 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/home');
 
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_GONE,
                 json_encode(
                     [
-                            'title' => 'Gone',
-                            'details' => 'Share code cancelled',
-                            'data' => [],
-                        ]
+                        'title' => 'Gone',
+                        'details' => 'Share code cancelled',
+                        'data' => [],
+                    ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
@@ -656,7 +657,7 @@ class ViewerContext implements Context
 
         // API call for lpa summary check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 '',
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -756,7 +757,7 @@ class ViewerContext implements Context
 
         // API call for lpa summary check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
@@ -969,7 +970,7 @@ class ViewerContext implements Context
 
         // API call for lpa summary check
         $this->apiFixtures->append(
-            BaseUiContext::newResponse(
+            ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [

@@ -101,18 +101,4 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         SharedState::getInstance()->reset();
     }
 
-    public static function newResponse(int $status, string $body = '', string $reason = ''): ResponseInterface
-    {
-        $bt = debug_backtrace();
-        $caller = array_shift($bt);
-        $file = $caller['file'];
-        $line = $caller['line'];
-
-        return new Response(
-            status: $status,
-            headers: [],
-            body: $body,
-            reason: $reason . ' file: ' . $file . ' lineNumber: ' . $line,
-        );
-    }
 }
