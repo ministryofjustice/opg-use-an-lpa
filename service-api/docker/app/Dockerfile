@@ -44,6 +44,8 @@ FROM app as development
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
 
+COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/app-php.ini
+
 RUN set -xe \
   && install-php-extensions xdebug-stable \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
