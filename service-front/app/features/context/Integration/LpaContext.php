@@ -204,7 +204,7 @@ class LpaContext extends BaseIntegrationContext
                             'lpa' => [],
                             'actor' => $this->lpaData['actor'],
                         ]
-                    )
+                    ),
                 )
             );
         } else {
@@ -219,7 +219,7 @@ class LpaContext extends BaseIntegrationContext
                             'lpa' => [],
                             'actor' => null,
                         ]
-                    )
+                    ),
                 )
             );
         }

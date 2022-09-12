@@ -299,7 +299,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('Download this LPA summary');
 
         //Full lpa fetch assertions
-        $request = $this->base->historyContainer[2]['request'];
+        $request = $this->base->mockClientHistoryContainer[2]['request'];
         $params = json_decode($request->getBody()->getContents(), true);
 
         assertIsArray($params);

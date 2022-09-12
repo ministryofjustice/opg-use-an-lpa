@@ -128,10 +128,6 @@ class Client
             }
         } catch (ClientExceptionInterface $ex) {
             $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
-            // some issues with test fixtures, these throw a HTTPException, prematurely.
-            // this code is here to extract the details field
-            // which is relied on for a couple of edge cases for getting the message.
-            //TODO: revisit this and see if we can get the mock fixtures to behave - ticket to follow.
             $responseMessage = $this->getResponseMessage($response, 'Error whilst making http POST request');
             throw ApiException::create($responseMessage, $response, $ex);
         }
@@ -292,6 +288,6 @@ class Client
     public function getResponseMessage(ResponseInterface $response, $defaultMessage): string
     {
         $body = json_decode($response->getBody()->getContents(), true);
-        return $defaultMessage;
+        return $body['details'] ?? $defaultMessage;
     }
 }

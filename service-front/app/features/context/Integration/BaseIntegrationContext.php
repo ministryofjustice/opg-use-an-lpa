@@ -22,7 +22,7 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
      */
     protected $container;
     public MockHandler $apiFixtures;
-    public array $historyContainer = [];
+    public array $mockClientHistoryContainer = [];
 
     /**
      * @inheritDoc
@@ -34,7 +34,7 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
         //Create handler stack and push to container
         $mockHandler = $container->get(MockHandler::class);
         $handlerStack = HandlerStack::create($mockHandler);
-        $history = Middleware::history($this->historyContainer);
+        $history = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
         $handlerStack->remove('http_errors');
         $handlerStack->remove('cookies');

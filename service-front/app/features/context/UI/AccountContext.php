@@ -1236,7 +1236,7 @@ class AccountContext implements Context
         $this->ui->visit('/activate-account/' . $this->activationToken);
 
         //Test reset token check
-        $request = $this->base->historyContainer[0]['request'];
+        $request = $this->base->mockClientHistoryContainer[0]['request'];
         $params = json_decode($request->getBody()->getContents(), true);
         assertEquals('abcd2345', $params['activation_token']);
     }
@@ -1593,7 +1593,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Save new email address');
 
         //Test for request change email
-        $request = $this->base->historyContainer[2]['request'];
+        $request = $this->base->mockClientHistoryContainer[2]['request'];
         $params = json_decode($request->getBody()->getContents(), true);
 
         assertIsArray($params);
@@ -1961,13 +1961,6 @@ class AccountContext implements Context
                 self::USER_SERVICE_AUTHENTICATE
             )
         );
-
-//        // API call for authentication
-//        $this->apiFixtures->append(BaseUiContext::newResponse(
-//            StatusCodeInterface::STATUS_UNAUTHORIZED,
-//            json_encode([]),
-//            self::USER_SERVICE_REQUEST_PASSWORD_RESET
-//        ));
     }
 
     /**

@@ -641,7 +641,7 @@ class RequestActivationKeyContext implements Context
                 ($this->lpa->donor->addresses[0])->town,
                 strtoupper(($this->lpa->donor->addresses[0])->postcode)
             ),
-            $this->base->historyContainer[3]['request']->getBody()->getContents()
+            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
         );
     }
 
@@ -1173,7 +1173,7 @@ class RequestActivationKeyContext implements Context
     {
         assertStringContainsString(
             'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
-            $this->base->historyContainer[3]['request']->getBody()->getContents()
+            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
         );
     }
 

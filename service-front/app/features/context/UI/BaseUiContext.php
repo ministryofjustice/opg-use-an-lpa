@@ -45,7 +45,7 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
     private ErrorHandler $errorHandler;
-    public array $historyContainer = [];
+    public array $mockClientHistoryContainer = [];
     public MinkContext $ui;
 
     public function setContainer(ContainerInterface $container): void
@@ -55,7 +55,7 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         //Create handler stack and push to container
         $mockHandler = $container->get(MockHandler::class);
         $handlerStack = HandlerStack::create($mockHandler);
-        $history = Middleware::history($this->historyContainer);
+        $history = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
         $handlerStack->remove('http_errors');
         $handlerStack->remove('cookies');
