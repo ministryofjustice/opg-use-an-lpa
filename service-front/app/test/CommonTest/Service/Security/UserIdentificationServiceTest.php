@@ -7,11 +7,14 @@ namespace CommonTest\Service\Security;
 use Common\Service\Security\UserIdentificationService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class UserIdentificationServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Because this request has no headers we're not actually testing that a unique ID is generated per request,
      * this test is therefore just a validation of the code not throwing errors.

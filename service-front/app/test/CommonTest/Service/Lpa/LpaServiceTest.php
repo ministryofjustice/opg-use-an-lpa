@@ -15,10 +15,13 @@ use Common\Service\Lpa\PopulateLpaMetadata;
 use Common\Service\Lpa\SortLpas;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class LpaServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var Client */
     private $apiClientProphecy;
     /** @var LoggerInterface */

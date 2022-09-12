@@ -10,12 +10,15 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContainerInterface
      */

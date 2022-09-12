@@ -11,10 +11,12 @@ use CommonTest\Form\LaminasFormTests;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AttorneyDetailsTest extends TestCase
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected AttorneyDetails $form;
 

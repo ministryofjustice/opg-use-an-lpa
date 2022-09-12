@@ -10,14 +10,14 @@ use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\ShareCode;
 
 class ShareCodeTest extends TestCase
 {
-    /**
-     * @var ShareCode
-     */
-    private $form;
+    use ProphecyTrait;
+    
+    private ShareCode $form;
 
     /**
      * @var array

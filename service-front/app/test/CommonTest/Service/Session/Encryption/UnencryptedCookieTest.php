@@ -7,10 +7,13 @@ namespace CommonTest\Service\Session\Encryption;
 use Common\Service\Session\Encryption\UnencryptedCookie;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class UnencryptedCookieTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function usage_logs_critical_error(): void
     {

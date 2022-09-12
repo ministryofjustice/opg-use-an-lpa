@@ -8,14 +8,15 @@ use Common\Service\Security\RateLimiterInterface;
 use Common\Service\Security\RateLimitServiceFactory;
 use Laminas\Cache\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-use const Laminas\Cache\Exception\InvalidArgumentException;
-
 class RateLimitServiceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_requires_a_ratelimits_configuration()
     {

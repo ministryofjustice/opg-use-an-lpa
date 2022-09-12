@@ -10,12 +10,15 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionMiddleware;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class SessionExpiredRedirectMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_correctly_handles_request_with_no_session(): void
     {

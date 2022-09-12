@@ -4,9 +4,12 @@ namespace CommonTest\Filter;
 
 use Common\Filter\ConvertQuotesToApostrophe;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ConvertQuotesToApostropheTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ConvertQuotesToApostrophe $filter;
 
     public function setUp(): void

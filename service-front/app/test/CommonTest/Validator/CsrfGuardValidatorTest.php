@@ -8,10 +8,13 @@ use Common\Validator\CsrfGuardValidator;
 use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use Mezzio\Csrf\CsrfGuardInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 class CsrfGuardValidatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testThrowsExceptionWhenNoGuardOption()
     {
         $this->expectException(InvalidArgumentException::class);

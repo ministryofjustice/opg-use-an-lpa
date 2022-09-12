@@ -12,10 +12,13 @@ use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class CatalogueExtractorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_will_extract_a_single_twig_file(): void
     {

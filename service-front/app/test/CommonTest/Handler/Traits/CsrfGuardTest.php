@@ -6,12 +6,15 @@ namespace CommonTest\Handler\Traits;
 
 use Common\Handler\Traits\CsrfGuard;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Mezzio\Csrf\CsrfMiddleware;
 
 class CsrfGuardTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function can_get_guard_from_request_pipeline()
     {

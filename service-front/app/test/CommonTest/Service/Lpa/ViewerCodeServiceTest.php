@@ -9,9 +9,13 @@ use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodeServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
     const SORT_ADDED = 'Added';
     const LPA_ID = '98765432-12345-54321-12345-9876543210';
@@ -20,10 +24,7 @@ class ViewerCodeServiceTest extends TestCase
     const SUR_NAME = "Will";
     const CSRF_CODE = '1234';
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy|Client
-     */
-    private $apiClientProphecy;
+    private ObjectProphecy|Client $apiClientProphecy;
 
     public function setUp(): void
     {

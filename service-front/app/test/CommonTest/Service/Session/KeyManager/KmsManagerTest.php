@@ -14,9 +14,11 @@ use Common\Service\Session\KeyManager\KmsManager;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class KmsManagerTest extends TestCase
 {
+    use ProphecyTrait;
     const TEST_KMS_CMK_ALIAS = 'test-alias-name';
 
     private $cacheProphecy;

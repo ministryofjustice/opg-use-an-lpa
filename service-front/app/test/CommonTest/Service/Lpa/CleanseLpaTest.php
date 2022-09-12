@@ -9,10 +9,13 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class CleanseLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
     private int $actorId;
     private string $additionalInfo;
     private $apiClientProphecy;

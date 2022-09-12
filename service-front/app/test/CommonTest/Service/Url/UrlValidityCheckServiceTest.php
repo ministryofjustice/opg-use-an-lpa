@@ -11,30 +11,22 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouteResult;
 use Mezzio\Router\RouterInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class UrlValidityCheckServiceTest extends TestCase
 {
-    /**
-     * @var ServerRequestInterface
-     */
-    private $serverRequestFactoryProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var RouterInterface
-     */
-    protected $routerProphecy;
+    private ServerRequestInterface|ObjectProphecy $serverRequestFactoryProphecy;
 
-    /**
-     * @var ServerRequestFactoryInterface
-     */
-    protected $serverRequestInterfaceProphecy;
+    protected RouterInterface|ObjectProphecy $routerProphecy;
 
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelperProphecy;
+    protected ServerRequestFactoryInterface|ObjectProphecy $serverRequestInterfaceProphecy;
+
+    private UrlHelper|ObjectProphecy $urlHelperProphecy;
 
     private $locale;
 

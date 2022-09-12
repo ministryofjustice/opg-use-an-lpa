@@ -9,6 +9,7 @@ use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Laminas\Stratigility\MiddlewarePipeInterface;
 use Mezzio\Authentication\AuthenticationMiddleware as MezzioAuthenticationMiddleware;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

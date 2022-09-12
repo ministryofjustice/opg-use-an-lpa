@@ -21,11 +21,14 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     const CSRF_CODE = '1234';
 
     /**

@@ -7,12 +7,15 @@ namespace CommonTest\Handler\Traits;
 use Common\Handler\Traits\User;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 
 class UserTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function can_get_user_from_request_pipeline()
     {

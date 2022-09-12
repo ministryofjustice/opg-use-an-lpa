@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DobValidatorTest extends TestCase
 {
-    /**
-     * @var DobValidator
-     */
-    private $validator;
+    private DobValidator $validator;
 
     public function setUp(): void
     {

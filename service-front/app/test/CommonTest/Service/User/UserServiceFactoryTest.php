@@ -8,12 +8,15 @@ use Common\Service\ApiClient\Client;
 use Common\Service\User\UserService;
 use Common\Service\User\UserServiceFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Mezzio\Authentication\UserInterface;
 
 class UserServiceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_valid_UserServiceFactory_instance()
     {

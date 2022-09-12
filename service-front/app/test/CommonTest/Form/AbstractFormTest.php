@@ -8,9 +8,12 @@ use Common\Form\AbstractForm;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AbstractFormTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AbstractForm
      */

@@ -6,12 +6,15 @@ namespace CommonTest\Entity;
 
 use Common\Entity\UserFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use ReflectionFunction;
 use Mezzio\Authentication\UserInterface;
 
 class UserFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_a_valid_callable()
     {

@@ -8,9 +8,12 @@ use Common\Entity\User;
 use DateTime;
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class UserTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_can_be_constructed()
     {

@@ -12,11 +12,14 @@ use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class UserServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function can_create_a_new_user_account()
     {

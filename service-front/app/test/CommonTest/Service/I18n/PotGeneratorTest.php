@@ -10,9 +10,12 @@ use Gettext\Headers;
 use Gettext\Translations;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PotGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_will_write_out_a_catalogue(): void
     {

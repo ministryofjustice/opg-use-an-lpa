@@ -10,12 +10,15 @@ use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Viewer\Handler\CheckCodeHandler;
 use Viewer\Handler\Factory\CheckCodeHandlerFactory;
 
 class CheckCodeHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_correctly_configured_instance()
     {

@@ -8,10 +8,13 @@ use Common\Service\Lpa\Response\OlderLpaMatchResponse;
 use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ParseOlderLpaMatchResponseTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $donor;
     private CaseActor $attorney;
     /** @var ObjectProphecy|LpaFactory */

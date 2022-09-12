@@ -8,10 +8,13 @@ use Acpr\I18n\TranslatorInterface;
 use Common\I18n\TranslatorFactory;
 use Gettext\GettextTranslator;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class TranslatorFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test
      */
     public function it_returns_a_welsh_translator_instance(): void

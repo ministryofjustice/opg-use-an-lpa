@@ -8,14 +8,14 @@ use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\Organisation;
 
 class OrganisationTest extends TestCase
 {
-    /**
-     * @var Organisation
-     */
-    private $form;
+    use ProphecyTrait;
+
+    private Organisation $form;
 
     /**
      * @var array

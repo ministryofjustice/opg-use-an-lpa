@@ -9,10 +9,12 @@ use CommonTest\Form\LaminasFormTests;
 use CommonTest\Form\TestsLaminasForm;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CheckDetailsAndConsentTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected CheckDetailsAndConsent $form;
 

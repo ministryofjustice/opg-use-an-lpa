@@ -10,6 +10,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Http\Client\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -18,6 +19,8 @@ use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|ClientInterface
      */

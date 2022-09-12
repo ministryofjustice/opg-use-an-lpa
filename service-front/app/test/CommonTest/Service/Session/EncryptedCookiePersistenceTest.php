@@ -29,6 +29,7 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,6 +37,8 @@ use Psr\Http\Message\UriInterface;
 
 class EncryptedCookiePersistenceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /*
      * Name given to the cookie
      */
@@ -56,10 +59,7 @@ class EncryptedCookiePersistenceTest extends TestCase
      */
     private const COOKIE_EXPIRES = 600;
 
-    /**
-     * @var ObjectProphecy|EncryptInterface
-     */
-    private $encrypterProphecy;
+    private ObjectProphecy|EncryptInterface $encrypterProphecy;
 
     /**
      * @var Key
@@ -194,7 +194,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $patternSameSite = "SameSite=Lax$";
 
                     // Validate the full pattern
-                    $this->assertRegExp(
+                    $this->assertMatchesRegularExpression(
                         "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly} {$patternSameSite}|",
                         $input
                     );
@@ -315,7 +315,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $patternSameSite = "SameSite=Strict$";
 
                     // Validate the full pattern
-                    $this->assertRegExp(
+                    $this->assertMatchesRegularExpression(
                         "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly} {$patternSameSite}|",
                         $input
                     );

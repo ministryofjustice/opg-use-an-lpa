@@ -7,11 +7,14 @@ namespace CommonTest\View\Twig;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use Common\View\Twig\GenericGlobalVariableExtensionFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 
 class GenericGlobalVariableExtensionFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+    
     /**
      * @test
      */

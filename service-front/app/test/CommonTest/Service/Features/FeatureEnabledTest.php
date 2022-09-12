@@ -6,6 +6,7 @@ namespace CommonTest\Service\Features;
 
 use Common\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
 /**

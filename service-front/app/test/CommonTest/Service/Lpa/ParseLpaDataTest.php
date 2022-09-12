@@ -10,6 +10,7 @@ use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\ParseLpaData;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
@@ -24,6 +25,8 @@ use Prophecy\Prophecy\ObjectProphecy;
  */
 class ParseLpaDataTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var ObjectProphecy|LpaFactory */
     private $lpaFactory;
 
