@@ -507,7 +507,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAskForMyPasswordToBeResetOnAnAccountThatDoesntExist()
     {
-        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_NOT_FOUND));
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_NOT_FOUND, ''));
     }
 
     /**
