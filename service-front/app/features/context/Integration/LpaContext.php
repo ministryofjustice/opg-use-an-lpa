@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
 use Common\Entity\CaseActor;
 use Common\Service\Log\RequestTracing;
@@ -25,6 +24,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use JSHayes\FakeRequests\MockHandler;
 use Psr\Http\Message\RequestInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * A behat context that encapsulates user account steps
@@ -58,6 +58,7 @@ class LpaContext extends BaseIntegrationContext
     private LpaFactory $lpaFactory;
     private LpaService $lpaService;
     private ViewerCodeService $viewerCodeService;
+    private NotifyService $notifyService;
 
     /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
@@ -224,6 +225,8 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
+
         $this->apiFixtures->patch('/v1/older-lpa/confirm')
             ->respondWith(
                 new Response(
@@ -234,8 +237,14 @@ class LpaContext extends BaseIntegrationContext
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            )
             ->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
@@ -1868,6 +1877,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $this->apiFixtures->post('/v1/older-lpa/cleanse')
             ->respondWith(
                 new Response(
@@ -1878,16 +1888,13 @@ class LpaContext extends BaseIntegrationContext
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $cleanseLpa = $this->container->get(CleanseLpa::class);

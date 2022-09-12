@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\Email;
+namespace App\Service\Email;
 
-use Alphagov\Notifications\Client as NotifyClient;
+use Alphagov\Notifications\Client;
 
 /**
  * Class EmailClient
- * @package Common\Service\Email
+ *
+ * @package App\Service\Email
  */
 class EmailClient
 {
@@ -70,26 +71,25 @@ class EmailClient
         self::CY_LOCALE => 'c1e2994e-2346-48b4-ac18-ef9eb26b114d',
     ];
 
-    private NotifyClient $notifyClient;
-    private string $locale;
+    private Client $notifyClient;
 
-    public function __construct(NotifyClient $notifyClient, string $locale)
+    public function __construct(Client $notifyClient)
     {
         $this->notifyClient = $notifyClient;
-        $this->locale = $locale;
     }
 
     /**
      * Email an account activation email to a user
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $activateAccountUrl
      */
-    public function sendAccountActivationEmail(string $recipient, string $activateAccountUrl): void
+    public function sendAccountActivationEmail(string $recipient, string $locale, string $activateAccountUrl): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_ACCOUNT_ACTIVATION[$this->locale],
+            self::TEMPLATE_ID_ACCOUNT_ACTIVATION[$locale],
             [
                 'activate-account-url' => $activateAccountUrl,
             ]
@@ -100,13 +100,14 @@ class EmailClient
      * Email an account activation confirmation email to a user
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $signInLink
      */
-    public function sendAccountActivatedConfirmationEmail(string $recipient, string $signInLink): void
+    public function sendAccountActivatedConfirmationEmail(string $recipient, string $locale, string $signInLink): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION[$this->locale],
+            self::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION[$locale],
             [
                 'sign-in-url' => $signInLink,
             ]
@@ -117,23 +118,28 @@ class EmailClient
      * Email a user to tell them that the email address is already registered
      *
      * @param string $recipient
+     * @param string $locale
      */
-    public function sendAlreadyRegisteredEmail(string $recipient): void
+    public function sendAlreadyRegisteredEmail(string $recipient, string $locale): void
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED[$this->locale]);
+        $this->notifyClient->sendEmail(
+            $recipient,
+            self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED[$locale]
+        );
     }
 
     /**
      * Email a password reset request email to a user
      *
      * @param string $recipient A valid email address
+     * @param string $locale
      * @param string $passwordResetUrl
      */
-    public function sendPasswordResetEmail(string $recipient, string $passwordResetUrl): void
+    public function sendPasswordResetEmail(string $recipient, string $locale, string $passwordResetUrl): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_PASSWORD_RESET[$this->locale],
+            self::TEMPLATE_ID_PASSWORD_RESET[$locale],
             [
                 'password-reset-url' => $passwordResetUrl,
             ]
@@ -144,23 +150,31 @@ class EmailClient
      * Email a user to inform them that their password has changed
      *
      * @param string $recipient
+     * @param string $locale
      */
-    public function sendPasswordChangedEmail(string $recipient): void
+    public function sendPasswordChangedEmail(string $recipient, string $locale): void
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_PASSWORD_CHANGE[$this->locale]);
+        $this->notifyClient->sendEmail(
+            $recipient,
+            self::TEMPLATE_ID_PASSWORD_CHANGE[$locale]
+        );
     }
 
     /**
      * Email a user's current email informing them on how to complete their email reset
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $newEmailAddress
      */
-    public function sendRequestChangeEmailToCurrentEmail(string $recipient, string $newEmailAddress): void
-    {
+    public function sendRequestChangeEmailToCurrentEmail(
+        string $recipient,
+        string $locale,
+        string $newEmailAddress
+    ): void {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[$this->locale],
+            self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[$locale],
             [
                 'new-email-address' => $newEmailAddress,
             ]
@@ -171,13 +185,17 @@ class EmailClient
      * Email the new email address the user selected to reset their email to
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $completeEmailChangeUrl
      */
-    public function sendRequestChangeEmailToNewEmail(string $recipient, string $completeEmailChangeUrl): void
-    {
+    public function sendRequestChangeEmailToNewEmail(
+        string $recipient,
+        string $locale,
+        string $completeEmailChangeUrl
+    ): void {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[$this->locale],
+            self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[$locale],
             [
                 'verify-new-email-url' => $completeEmailChangeUrl,
             ]
@@ -188,12 +206,13 @@ class EmailClient
      * Email the new email address telling the user that someone has tried to use their email on the service
      *
      * @param string $recipient
+     * @param string $locale
      */
-    public function sendSomeoneTriedToUseYourEmailInEmailResetRequest(string $recipient): void
+    public function sendSomeoneTriedToUseYourEmailInEmailResetRequest(string $recipient, string $locale): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[$this->locale]
+            self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[$locale]
         );
     }
 
@@ -201,23 +220,25 @@ class EmailClient
      * Email an activation key request confirmation email to a user
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $referenceNumber
      * @param string $postCode
      * @param string $letterExpectedDate
      */
     public function sendActivationKeyRequestConfirmationEmail(
         string $recipient,
+        string $locale,
         string $referenceNumber,
         string $postCode,
         string $letterExpectedDate
     ): void {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[$this->locale],
+            self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[$locale],
             [
                 'reference_number' => $referenceNumber,
-                'postcode'         => $postCode,
-                'date'             => $letterExpectedDate
+                'postcode' => $postCode,
+                'date' => $letterExpectedDate,
             ]
         );
     }
@@ -226,20 +247,22 @@ class EmailClient
      * Email an activation key request confirmation email to a user when LPA is identified not cleansed
      *
      * @param string $recipient
+     * @param string $locale
      * @param string $referenceNumber
      * @param string $letterExpectedDate
      */
     public function sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
         string $recipient,
+        string $locale,
         string $referenceNumber,
         string $letterExpectedDate
     ): void {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[$this->locale],
+            self::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[$locale],
             [
-                'reference_number'  => $referenceNumber,
-                'date'              => $letterExpectedDate,
+                'reference_number' => $referenceNumber,
+                'date' => $letterExpectedDate,
             ]
         );
     }
@@ -247,11 +270,15 @@ class EmailClient
     /**
      * Email a user to inform them that no account exists under the email provided
      *
+     * @param string $locale
      * @param string $recipient
      */
-    public function sendNoAccountExistsEmail(string $recipient): void
+    public function sendNoAccountExistsEmail(string $recipient, string $locale): void
     {
-        $this->notifyClient->sendEmail($recipient, self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$this->locale]);
+        $this->notifyClient->sendEmail(
+            $recipient,
+            self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$locale]
+        );
     }
 
     /**
@@ -261,11 +288,11 @@ class EmailClient
      * @param string $resetUrl
      *
      */
-    public function sendForcePasswordResetEmail(string $recipient, string $resetUrl): void
+    public function sendForcePasswordResetEmail(string $recipient, string $locale, string $resetUrl): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_FORCE_PASSWORD_RESET[$this->locale],
+            self::TEMPLATE_ID_FORCE_PASSWORD_RESET[$locale],
             [
                 'password-reset-url' => $resetUrl,
             ]

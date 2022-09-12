@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Handler\ChangePasswordHandler;
-use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
-use Common\Service\Email\EmailClient;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -37,6 +34,7 @@ class AccountContext implements Context
     public function anAccountIsCreatedUsingEmailPasswordTerms($email, $password, $terms)
     {
         $this->activationToken = 'activate1234567890';
+        $emailTemplate = 'AccountActivationEmail';
 
         $this->ui->assertPageAddress('/create-account');
 
@@ -55,10 +53,15 @@ class AccountContext implements Context
                     )
                 )
             );
-
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('password', $password);
@@ -484,6 +487,7 @@ class AccountContext implements Context
         $email = 'test@example.com',
         $email_confirmation = 'test@example.com'
     ) {
+        $emailTemplate = 'NoAccountExistsEmail';
         $this->ui->assertPageAddress('/reset-password');
 
         // API call for password reset request
@@ -495,15 +499,13 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertArrayHasKey('template_id', $params);
-                    assertEquals('36a86dbf-27a3-448c-a743-5f915e1733c3', $params['template_id']);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->fillField('email', $email);
@@ -519,6 +521,7 @@ class AccountContext implements Context
         $email = 'test@example.com',
         $email_confirmation = 'test@example.com'
     ) {
+        $emailTemplate = 'PasswordResetEmail';
         $this->ui->assertPageAddress('/reset-password');
 
         // API call for password reset request
@@ -537,20 +540,13 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email_address', $params);
-                    assertArrayHasKey('personalisation', $params);
-
-                    assertInternalType('array', $params['personalisation']);
-                    assertArrayHasKey('password-reset-url', $params['personalisation']);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->fillField('email', $email);
@@ -854,6 +850,7 @@ class AccountContext implements Context
         $this->userEmail = 'test@example.com';
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
+        $emailTemplate = 'AccountActivationEmail';
 
         $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
 
@@ -874,8 +871,15 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $request = $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $request = $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
+        //
 
         $this->setLastRequest($request);
 
@@ -899,6 +903,7 @@ class AccountContext implements Context
         $this->userEmail = 'test@example.com';
         $this->password = 'n3wPassWord';
         $this->activationToken = 'activate1234567890';
+        $emailTemplate = 'AlreadyRegisteredEmail';
 
         $this->ui->assertPageAddress('/create-account');
 
@@ -918,8 +923,14 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('email', $this->userEmail);
         $this->ui->fillField('show_hide_password', $this->password);
@@ -934,6 +945,7 @@ class AccountContext implements Context
     {
         $this->userEmail = 'test@test.com';
         $this->userPassword = 'pa33W0rd!123';
+        $emailTemplate = 'AlreadyRegisteredEmail';
 
         $this->ui->assertPageAddress('/create-account');
 
@@ -951,16 +963,14 @@ class AccountContext implements Context
                 )
             );
 
-        // API call for Notify to warn user their email an attempt to use their email has been made
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                }
+        // API call for Notify
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->fillField('email', $this->userEmail);
@@ -974,6 +984,7 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountWithAPasswordOf($password)
     {
+        $emailTemplate = 'AccountActivationEmail';
         $this->ui->assertPageAddress('/create-account');
 
         // API call for password reset request
@@ -981,8 +992,14 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('email', 'a@b.com');
         $this->ui->fillField('show_hide_password', $password);
@@ -1172,6 +1189,8 @@ class AccountContext implements Context
     {
         $this->activationToken = 'abcd2345';
         $this->userEmail = 'a@b.com';
+        $emailTemplate = 'AccountActivatedConfirmationEmail';
+
         // API fixture for reset token check
         $this->apiFixtures->patch('/v1/user-activation')
             ->respondWith(
@@ -1195,18 +1214,13 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('personalisation', $params);
-                    assertArrayHasKey('sign-in-url', $params['personalisation']);
-                    assertContains('/login', $params['personalisation']['sign-in-url']);
-                }
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->visit('/activate-account/' . $this->activationToken);
@@ -1341,6 +1355,8 @@ class AccountContext implements Context
      */
     public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email, $password, $terms)
     {
+        $emailTemplate = 'AccountActivationEmail';
+
         $this->ui->assertPageAddress('/create-account');
 
         // API call for password reset request
@@ -1348,8 +1364,14 @@ class AccountContext implements Context
             ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('email', $email);
         $this->ui->fillField('show_hide_password', $password);
@@ -1399,6 +1421,7 @@ class AccountContext implements Context
     public function iProvideMyNewPassword()
     {
         $newPassword = 'Password123';
+        $emailTemplate = 'PasswordChangedEmail';
 
         // API call for password reset request
         $this->apiFixtures->patch('/v1/change-password')
@@ -1412,8 +1435,14 @@ class AccountContext implements Context
 
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            );
 
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->fillField('new_password', $newPassword);
@@ -1465,7 +1494,12 @@ class AccountContext implements Context
         $request = $this->getLastRequest();
 
         $requestBody = $request->getRequest()->getRequest()->getBody()->getContents();
-        assertStringContainsString(EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION[EmailClient::CY_LOCALE], $requestBody);
+
+        assertStringContainsString('"locale":"cy_GB"', $requestBody);
+
+        $this->ui->assertPageAddress('/cy/create-account-success');
+
+        $this->ui->assertPageContainsText('Rydym wedi e-bostio dolen i ' . $this->userEmail);
     }
 
     /**
@@ -1513,6 +1547,9 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailToAUniqueEmailAddress()
     {
+        $emailTemplate1 = 'RequestChangeEmailToCurrentEmail';
+        $emailTemplate2 = 'RequestChangeEmailToNewEmail';
+
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
                 new Response(
@@ -1532,38 +1569,24 @@ class AccountContext implements Context
                 )
             );
 
-        // API call for Notify to current email
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email_address', $params);
-                    assertArrayHasKey('personalisation', $params);
-
-                    assertInternalType('array', $params['personalisation']);
-                    assertArrayHasKey('new-email-address', $params['personalisation']);
-                }
+        // API call for Notify
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate1)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
-        // API call for Notify to new email
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email_address', $params);
-                    assertArrayHasKey('personalisation', $params);
-
-                    assertInternalType('array', $params['personalisation']);
-                    assertArrayHasKey('verify-new-email-url', $params['personalisation']);
-                }
+        // API call for Notify
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate2)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->fillField('new_email_address', $this->newUserEmail);
@@ -1577,6 +1600,8 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService()
     {
+        $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
+
         $this->apiFixtures->patch('/v1/request-change-email')
             ->respondWith(
                 new Response(StatusCodeInterface::STATUS_CONFLICT, [], json_encode([]))
@@ -1590,16 +1615,14 @@ class AccountContext implements Context
                 }
             );
 
-        // API call for Notify to new email requested
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                }
+        // API call for Notify
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
             );
 
         $this->ui->fillField('new_email_address', $this->newUserEmail);
@@ -1997,6 +2020,8 @@ class AccountContext implements Context
         $email = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
         $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk'
     ) {
+        $emailTemplate = 'ForcePasswordResetEmail';
+
         // API call for password reset request
         $this->apiFixtures->patch('/v1/request-password-reset')
             ->respondWith(
@@ -2013,21 +2038,23 @@ class AccountContext implements Context
             );
 
         // API call for Notify
-        $this->apiFixtures->post(Client::PATH_NOTIFICATION_SEND_EMAIL)
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])))
+        $this->apiFixtures->post('/v1/email-user/' . $emailTemplate)
+            ->respondWith(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode([])
+                )
+            )
             ->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertArrayHasKey('template_id', $params);
-                    assertArrayHasKey('email_address', $params);
-                    assertArrayHasKey('personalisation', $params);
-                    assertArrayHasKey('password-reset-url', $params['personalisation']);
+                    assertArrayHasKey('passwordResetUrl', $params);
+                    assertArrayHasKey('recipient', $params);
                 }
             );
+
         $this->ui->pressButton('Email me the link');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to');
     }
 
     /**

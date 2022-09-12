@@ -9,7 +9,6 @@ use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
-use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use ParagonIE\HiddenString\HiddenString;
@@ -19,6 +18,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class CreateAccountHandler
@@ -32,32 +32,32 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
     /** @var UserService */
     private $userService;
 
-    /** @var EmailClient */
-    private $emailClient;
-
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
+
+    /** @var NotifyService */
+    private $notifyService;
 
     /**
      * CreateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
-     * @param EmailClient $emailClient
      * @param ServerUrlHelper $serverUrlHelper
+     * @param NotifyService $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper
+        ServerUrlHelper $serverUrlHelper,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
-        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
+        $this->notifyService = $notifyService;
     }
 
     /**
@@ -93,10 +93,17 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
-                    $this->emailClient->sendAccountActivationEmail($emailAddress, $activateAccountUrl);
+                    $this->notifyService->sendEmailToUser(
+                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                        $emailAddress,
+                        activateAccountUrl: $activateAccountUrl
+                    );
                 } catch (ApiException $ex) {
                     if ($ex->getCode() == StatusCodeInterface::STATUS_CONFLICT) {
-                        $this->emailClient->sendAlreadyRegisteredEmail($emailAddress);
+                        $this->notifyService->sendEmailToUser(
+                            NotifyService::ALREADY_REGISTERED_EMAIL_TEMPLATE,
+                            $emailAddress
+                        );
                     } else {
                         throw $ex;
                     }

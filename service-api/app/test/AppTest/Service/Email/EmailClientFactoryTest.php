@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\Email;
+namespace AppTest\Service\Email;
 
-use Common\Service\Email\EmailClient;
-use Common\Service\Email\EmailClientFactory;
+use App\Service\Email\EmailClient;
+use App\Service\Email\EmailClientFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -18,13 +18,14 @@ class EmailClientFactoryTest extends TestCase
     public function can_create_an_instance_of_the_email_client()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $key = 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012';
 
         $containerProphecy->get('config')
             ->willReturn(
                 [
                     'notify' => [
                         'api' => [
-                            'key' => 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012',
+                            'key' => $key,
                         ],
                     ],
                 ]

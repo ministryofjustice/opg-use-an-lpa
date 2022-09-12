@@ -16,7 +16,6 @@ use Common\Handler\{AbstractHandler,
     Traits\Session as SessionTrait,
     Traits\User,
     UserAware};
-use Common\Service\Email\EmailClient;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddOlderLpa;
 use Common\Service\Lpa\LocalisedDate;
@@ -53,7 +52,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     private ?UserInterface $user;
 
     private AddOlderLpa $addOlderLpa;
-    private EmailClient $emailClient;
     private LocalisedDate $localisedDate;
     private FeatureEnabled $featureEnabled;
     private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
@@ -64,7 +62,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         UrlHelper $urlHelper,
         AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
-        EmailClient $emailClient,
         LocalisedDate $localisedDate,
         FeatureEnabled $featureEnabled,
         RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
@@ -73,7 +70,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
-        $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
         $this->featureEnabled = $featureEnabled;
         $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;

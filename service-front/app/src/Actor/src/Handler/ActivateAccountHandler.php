@@ -6,7 +6,6 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Common\Handler\AbstractHandler;
-use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Flash\FlashMessageMiddleware;
@@ -17,6 +16,7 @@ use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class ActivateAccountHandler
@@ -28,38 +28,38 @@ class ActivateAccountHandler extends AbstractHandler
     /** @var UserService */
     private $userService;
 
-    /** @var EmailClient */
-    private $emailClient;
-
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
 
     private TranslatorInterface $translator;
     public const ACCOUNT_ACTIVATED_FLASH_MSG = 'account_activated_flash_msg';
 
+    /** @var NotifyService */
+    private $notifyService;
+
     /**
      * ActivateAccountHandler constructor.
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
-     * @param EmailClient $emailClient
      * @param ServerUrlHelper $serverUrlHelper
      * @param TranslatorInterface $translator
+     * @param NotifyService $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        EmailClient $emailClient,
         ServerUrlHelper $serverUrlHelper,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
-        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
         $this->translator = $translator;
+        $this->notifyService = $notifyService;
     }
 
     /**
@@ -89,7 +89,11 @@ class ActivateAccountHandler extends AbstractHandler
                 $loginUrl = $this->urlHelper->generate('login');
                 $signInLink = $this->serverUrlHelper->generate($loginUrl);
 
-                $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
+                $this->notifyService->sendEmailToUser(
+                    NotifyService::ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE,
+                    $activated,
+                    signInLink: $signInLink
+                );
 
                 $message = $this->translator->translate(
                     'Account activated successfully',

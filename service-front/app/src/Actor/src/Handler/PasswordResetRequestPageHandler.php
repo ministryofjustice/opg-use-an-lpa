@@ -9,7 +9,6 @@ use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
-use Common\Service\Email\EmailClient;
 use Common\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,6 +17,7 @@ use Mezzio\Csrf\CsrfMiddleware;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class PasswordResetRequestPageHandler
@@ -32,11 +32,11 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
     /** @var UserService */
     private $userService;
 
-    /** @var EmailClient */
-    private $emailClient;
-
     /** @var ServerUrlHelper */
     private $serverUrlHelper;
+
+    /** @var NotifyService */
+    private $notifyService;
 
     /**
      * PasswordResetRequestPageHandler constructor.
@@ -46,21 +46,21 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
-     * @param EmailClient $emailClient
      * @param ServerUrlHelper $serverUrlHelper
+     * @param NotifyService $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         UserService $userService,
-        EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper
+        ServerUrlHelper $serverUrlHelper,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->userService = $userService;
-        $this->emailClient = $emailClient;
         $this->serverUrlHelper = $serverUrlHelper;
+        $this->notifyService = $notifyService;
     }
 
     /**
@@ -89,13 +89,25 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
 
                     if (!empty($data['forced'])) {
-                        $this->emailClient->sendForcePasswordResetEmail($data['email'], $passwordResetUrl);
+                        $this->notifyService->sendEmailToUser(
+                                              NotifyService::FORCE_PASSWORD_RESET_EMAIL_TEMPLATE,
+                                              $data['email'],
+                            passwordResetUrl: $passwordResetUrl
+                        );
+                        //$this->emailClient->sendForcePasswordResetEmail($data['email'], $passwordResetUrl);
                     } else {
-                        $this->emailClient->sendPasswordResetEmail($data['email'], $passwordResetUrl);
+                        $this->notifyService->sendEmailToUser(
+                                              NotifyService::PASSWORD_RESET_EMAIL_TEMPLATE,
+                                              $data['email'],
+                            passwordResetUrl: $passwordResetUrl
+                        );
                     }
                 } catch (ApiException $ae) {
                     // the password reset request returned a 404 indicating the user did not exist
-                    $this->emailClient->sendNoAccountExistsEmail($data['email']);
+                    $this->notifyService->sendEmailToUser(
+                        NotifyService::NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE,
+                        $data['email']
+                    );
                 }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
