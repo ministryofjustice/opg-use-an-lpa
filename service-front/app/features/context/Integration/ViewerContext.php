@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use BehatTest\Context\ContextUtilities;
+use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use JSHayes\FakeRequests\MockHandler;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -26,8 +29,8 @@ class ViewerContext extends BaseIntegrationContext
 {
     use ViewerContextTrait;
 
-    /** @var MockHandler */
-    private $apiFixtures;
+
+    private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
 
     protected function prepareContext(): void
     {
@@ -161,21 +164,26 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iAmViewingAValidLPA()
     {
-        $this->apiFixtures->post('/v1/viewer-codes/full')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa' => $this->lpaData
-            ])))
-            ->inspectRequest(function (RequestInterface $request, array $options) {
-                $body = json_decode($request->getBody()->getContents());
-
-                assertEquals('111111111111', $body->code); // code gets hyphens removed
-                assertEquals($this->lpaSurname, $body->name);
-                assertEquals( $this->lpaViewedBy, $body->organisation);
-            });
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                                'lpa' => $this->lpaData
+                            ]),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $lpaService = $this->container->get(LpaService::class);
 
         $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+
+        $request = $this->apiFixtures->getLastRequest();
+        $body = json_decode($request->getBody()->getContents());
+
+        assertEquals('111111111111', $body->code); // code gets hyphens removed
+        assertEquals($this->lpaSurname, $body->name);
+        assertEquals( $this->lpaViewedBy, $body->organisation);
     }
 
     /**
@@ -184,36 +192,40 @@ class ViewerContext extends BaseIntegrationContext
     public function iAmViewingACancelledLPA()
     {
         $this->lpaData['status'] = 'Cancelled';
-        $this->apiFixtures->post('/v1/viewer-codes/full')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([
-                'lpa' => $this->lpaData
-            ])))
-            ->inspectRequest(function (RequestInterface $request, array $options) {
-                $body = json_decode($request->getBody()->getContents());
-
-                assertEquals('111111111111', $body->code); // code gets hyphens removed
-                assertEquals($this->lpaSurname, $body->name);
-                assertEquals( $this->lpaViewedBy, $body->organisation);
-            });
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                                'lpa' => $this->lpaData
+                            ]),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $lpaService = $this->container->get(LpaService::class);
 
         $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+
+        $request = $this->apiFixtures->getLastRequest();
+        $body = json_decode($request->getBody()->getContents());
+
+        assertEquals('111111111111', $body->code); // code gets hyphens removed
+        assertEquals($this->lpaSurname, $body->name);
+        assertEquals( $this->lpaViewedBy, $body->organisation);
     }
     /**
      * @When /^I choose to download a document version of the LPA$/
      */
     public function iChooseToDownloadADocumentVersionOfTheLPA()
     {
-        $this->apiFixtures->post('/generate-pdf')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], ''))
-            ->inspectRequest(function (RequestInterface $request, array $options) {
-                assertContains('Mr Test Testable Testerson', $request->getBody()->getContents());
-            });
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
 
         $pdfService = $this->container->get(PdfService::class);
 
         $pdfStream = $pdfService->getLpaAsPdf($this->viewedLpa);
+
+        $request = $this->apiFixtures->getLastRequest();
+        assertContains('Mr Test Testable Testerson', $request->getBody()->getContents());
     }
 
     /**

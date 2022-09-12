@@ -141,5 +141,5 @@ Feature: View an LPA via sharecode
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I waited too long to enter the share code
-    And I give a valid LPA share code
+    And I give a valid LPA share code when my session is timed out
     Then I have an error message informing me to try again.
