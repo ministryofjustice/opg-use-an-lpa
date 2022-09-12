@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Alphagov\Notifications\Client;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
@@ -517,13 +516,6 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->pressButton('Continue');
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
-
-        assertIsArray($params);
-        assertArrayHasKey('template_id', $params);
-        assertArrayHasKey('personalisation', $params);
     }
 
     /**
@@ -1069,13 +1061,6 @@ class RequestActivationKeyContext implements Context
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->pressButton('Continue and ask for a new key');
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
-
-        assertIsArray($params);
-        assertArrayHasKey('template_id', $params);
-        assertArrayHasKey('personalisation', $params);
     }
 
     /**
@@ -1496,6 +1481,7 @@ class RequestActivationKeyContext implements Context
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
+        $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
         $data = [
             'queuedForCleansing' => true,
         ];
@@ -1515,13 +1501,6 @@ class RequestActivationKeyContext implements Context
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
         $this->ui->pressButton('Confirm and submit request');
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
-
-        assertIsArray($params);
-        assertArrayHasKey('template_id', $params);
-        assertArrayHasKey('personalisation', $params);
     }
 
     /**

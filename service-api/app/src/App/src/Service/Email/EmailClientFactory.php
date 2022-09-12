@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\Email;
+namespace App\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Locale;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
  * Class EmailClientFactory
- * @package Common\Service\Email
+ * @package App\Service\Email
  */
 class EmailClientFactory
 {
@@ -28,13 +27,13 @@ class EmailClientFactory
             throw new RuntimeException('Missing notify API key');
         }
 
-        $notifyClient = new NotifyClient([
-            'apiKey'     => $config['notify']['api']['key'],
-            'httpClient' => $container->get(ClientInterface::class),
-        ]);
+        $notifyClient = new NotifyClient(
+            [
+                'apiKey' => $config['notify']['api']['key'],
+                'httpClient' => $container->get(ClientInterface::class),
+            ]
+        );
 
-        $locale = Locale::getDefault();
-
-        return new EmailClient($notifyClient, $locale);
+        return new EmailClient($notifyClient);
     }
 }

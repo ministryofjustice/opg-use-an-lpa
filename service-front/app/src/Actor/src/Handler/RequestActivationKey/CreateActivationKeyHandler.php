@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\AddOlderLpa};
-use Common\Service\Email\EmailClient;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Workflow\State;
@@ -22,6 +21,7 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Service\Notify\NotifyService;
 
 /**
  * Class CreateActivationKeyHandler
@@ -36,24 +36,24 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
     use CsrfGuard;
     use State;
 
-    private EmailClient $emailClient;
     private AddOlderLpa $addOlderLpa;
     private LocalisedDate $localisedDate;
+    private NotifyService $notifyService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         AddOlderLpa $addOlderLpa,
         UrlHelper $urlHelper,
-        EmailClient $emailClient,
-        LocalisedDate $localisedDate
+        LocalisedDate $localisedDate,
+        NotifyService $notifyService
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
         $this->addOlderLpa = $addOlderLpa;
-        $this->emailClient = $emailClient;
         $this->localisedDate = $localisedDate;
+        $this->notifyService = $notifyService;
     }
 
     /**
@@ -92,11 +92,12 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                 case OlderLpaApiResponse::SUCCESS:
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
-                    $this->emailClient->sendActivationKeyRequestConfirmationEmail(
+                    $this->notifyService->sendEmailToUser(
+                        NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE,
                         $user->getDetails()['Email'],
-                        (string) $state->referenceNumber,
-                        strtoupper($state->postcode),
-                        ($this->localisedDate)($letterExpectedDate)
+                        referenceNumber:(string) $state->referenceNumber,
+                        postCode:strtoupper($state->postcode),
+                        letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                     );
 
                     return new HtmlResponse(

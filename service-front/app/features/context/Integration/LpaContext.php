@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\UI\BaseUiContext;
@@ -27,6 +26,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Common\Service\Notify\NotifyService;
 
 /**
  * A behat context that encapsulates user account steps
@@ -71,6 +71,7 @@ class LpaContext extends BaseIntegrationContext
     private LpaFactory $lpaFactory;
     private LpaService $lpaService;
     private ViewerCodeService $viewerCodeService;
+    private NotifyService $notifyService;
 
     /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
@@ -1798,14 +1799,6 @@ class LpaContext extends BaseIntegrationContext
 
             $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
             assertEquals($response, $result);
-
-            $request = $this->apiFixtures->getLastRequest();
-            $params = json_decode($request->getBody()->getContents(), true);
-
-            assertIsArray($params);
-            assertArrayHasKey('template_id', $params);
-            assertArrayHasKey('personalisation', $params);
-
         }
     }
 

@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace CommonTest\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use Carbon\Carbon;
-use Common\Service\Email\EmailClient;
+use App\Service\Email\EmailClient;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class EmailClientTest extends TestCase
 {
-    private ObjectProphecy|NotifyClient $notifyClientProphecy;
+    /** @var NotifyClient|ObjectProphecy */
+    private $notifyClientProphecy;
 
     private string $defaultLocale;
 
@@ -34,14 +35,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION[EmailClient::EN_LOCALE],
             [
-                'activate-account-url' => 'http://localhost:9002/activate-account/activateAccountAABBCCDDEE'
+                'activate-account-url' => 'http://localhost:9002/activate-account/activateAccountAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAccountActivationEmail($recipient, 'http://localhost:9002/activate-account/activateAccountAABBCCDDEE');
+        $emailClient->sendAccountActivationEmail(
+            $recipient,
+            $this->defaultLocale,
+            'http://localhost:9002/activate-account/activateAccountAABBCCDDEE'
+        );
     }
 
     /** @test */
@@ -53,14 +58,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION[EmailClient::EN_LOCALE],
             [
-                'sign-in-url' => 'http://localhost:9002/login'
+                'sign-in-url' => 'http://localhost:9002/login',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAccountActivatedConfirmationEmail($recipient, 'http://localhost:9002/login');
+        $emailClient->sendAccountActivatedConfirmationEmail(
+            $recipient,
+            $this->defaultLocale,
+            'http://localhost:9002/login'
+        );
     }
 
     /** @test */
@@ -74,9 +83,9 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAlreadyRegisteredEmail($recipient);
+        $emailClient->sendAlreadyRegisteredEmail($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -88,14 +97,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_PASSWORD_RESET[EmailClient::EN_LOCALE],
             [
-                'password-reset-url' => 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE'
+                'password-reset-url' => 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordResetEmail($recipient, 'http://localhost:9002/password-reset/passwordResetAABBCCDDEE');
+        $emailClient->sendPasswordResetEmail(
+            $recipient,
+            $this->defaultLocale,
+            'http://localhost:9002/password-reset/passwordResetAABBCCDDEE'
+        );
     }
 
     /** @test */
@@ -109,9 +122,9 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordChangedEmail($recipient);
+        $emailClient->sendPasswordChangedEmail($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -124,14 +137,14 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[EmailClient::EN_LOCALE],
             [
-                'new-email-address' => $newEmail
+                'new-email-address' => $newEmail,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, $newEmail);
+        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, $this->defaultLocale, $newEmail);
     }
 
     /** @test */
@@ -143,15 +156,16 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[EmailClient::EN_LOCALE],
             [
-                'verify-new-email-url' => 'http://localhost:9002/verify-new-email/verifyNewEmailAABBCCDDEE'
+                'verify-new-email-url' => 'http://localhost:9002/verify-new-email/verifyNewEmailAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
         $emailClient->sendRequestChangeEmailToNewEmail(
             $recipient,
+            $this->defaultLocale,
             'http://localhost:9002/verify-new-email/verifyNewEmailAABBCCDDEE'
         );
     }
@@ -166,9 +180,9 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[EmailClient::EN_LOCALE]
         )->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
+        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient, $this->defaultLocale);
     }
 
     /** @test */
@@ -180,14 +194,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATION[EmailClient::CY_LOCALE],
             [
-                'activate-account-url' => 'http://localhost:9002/cy/activate-account/activateAccountAABBCCDDEE'
+                'activate-account-url' => 'http://localhost:9002/cy/activate-account/activateAccountAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAccountActivationEmail($recipient, 'http://localhost:9002/cy/activate-account/activateAccountAABBCCDDEE');
+        $emailClient->sendAccountActivationEmail(
+            $recipient,
+            self::CY_LOCALE,
+            'http://localhost:9002/cy/activate-account/activateAccountAABBCCDDEE'
+        );
     }
 
     /** @test */
@@ -199,14 +217,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION[EmailClient::CY_LOCALE],
             [
-                'sign-in-url' => 'http://localhost:9002/cy/login'
+                'sign-in-url' => 'http://localhost:9002/cy/login',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAccountActivatedConfirmationEmail($recipient, 'http://localhost:9002/cy/login');
+        $emailClient->sendAccountActivatedConfirmationEmail(
+            $recipient,
+            self::CY_LOCALE,
+            'http://localhost:9002/cy/login'
+        );
     }
 
     /** @test */
@@ -220,9 +242,9 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendAlreadyRegisteredEmail($recipient);
+        $emailClient->sendAlreadyRegisteredEmail($recipient, self::CY_LOCALE);
     }
 
     /** @test */
@@ -234,14 +256,18 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_PASSWORD_RESET[EmailClient::CY_LOCALE],
             [
-                'password-reset-url' => 'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE'
+                'password-reset-url' => 'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordResetEmail($recipient, 'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE');
+        $emailClient->sendPasswordResetEmail(
+            $recipient,
+            self::CY_LOCALE,
+            'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE'
+        );
     }
 
     /** @test */
@@ -255,9 +281,9 @@ class EmailClientTest extends TestCase
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendPasswordChangedEmail($recipient);
+        $emailClient->sendPasswordChangedEmail($recipient, self::CY_LOCALE);
     }
 
     /** @test */
@@ -270,14 +296,14 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[EmailClient::CY_LOCALE],
             [
-                'new-email-address' => $newEmail
+                'new-email-address' => $newEmail,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, $newEmail);
+        $emailClient->sendRequestChangeEmailToCurrentEmail($recipient, self::CY_LOCALE, $newEmail);
     }
 
     /** @test */
@@ -289,15 +315,16 @@ class EmailClientTest extends TestCase
             $recipient,
             EmailClient::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[EmailClient::CY_LOCALE],
             [
-                'verify-new-email-url' => 'http://localhost:9002/cy/verify-new-email/verifyNewEmailAABBCCDDEE'
+                'verify-new-email-url' => 'http://localhost:9002/cy/verify-new-email/verifyNewEmailAABBCCDDEE',
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
         $emailClient->sendRequestChangeEmailToNewEmail(
             $recipient,
+            self::CY_LOCALE,
             'http://localhost:9002/cy/verify-new-email/verifyNewEmailAABBCCDDEE'
         );
     }
@@ -312,9 +339,9 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[EmailClient::CY_LOCALE]
         )->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient);
+        $emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($recipient, self::CY_LOCALE);
     }
 
     /** @test */
@@ -323,22 +350,28 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
         $postCode = 'HS8 2YB';
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[EmailClient::CY_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'postcode'         => $postCode,
-                'date'             => $letterExpectedDate
+                'postcode' => $postCode,
+                'date' => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendActivationKeyRequestConfirmationEmail($recipient, $referenceNumber, $postCode, $letterExpectedDate);
+        $emailClient->sendActivationKeyRequestConfirmationEmail(
+            $recipient,
+            self::CY_LOCALE,
+            $referenceNumber,
+            $postCode,
+            $letterExpectedDate
+        );
     }
 
     /** @test */
@@ -347,22 +380,28 @@ class EmailClientTest extends TestCase
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
         $postCode = 'HS8 2YB';
-        $letterExpectedDate = (new Carbon())->addWeeks(2)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[EmailClient::EN_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'postcode'         => $postCode,
-                'date'             => $letterExpectedDate
+                'postcode' => $postCode,
+                'date' => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
-        $emailClient->sendActivationKeyRequestConfirmationEmail($recipient, $referenceNumber, $postCode, $letterExpectedDate);
+        $emailClient->sendActivationKeyRequestConfirmationEmail(
+            $recipient,
+            $this->defaultLocale,
+            $referenceNumber,
+            $postCode,
+            $letterExpectedDate
+        );
     }
 
     /** @test */
@@ -370,22 +409,23 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[EmailClient::EN_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'date'             => $letterExpectedDate
+                'date' => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), $this->defaultLocale);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
         $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
             $recipient,
+            $this->defaultLocale,
             $referenceNumber,
             $letterExpectedDate
         );
@@ -396,24 +436,67 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new Carbon())->addWeeks(6)->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[EmailClient::CY_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'date'             => $letterExpectedDate
+                'date' => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
 
-        $emailClient = new EmailClient($this->notifyClientProphecy->reveal(), self::CY_LOCALE);
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
 
         $emailClient->sendActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing(
             $recipient,
+            self::CY_LOCALE,
             $referenceNumber,
             $letterExpectedDate
+        );
+    }
+
+    /** @test */
+    public function cannot_send_account_activation_key_as_account_does_not_exist()
+    {
+        $recipient = 'a@b.com';
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_NO_EXISTING_ACCOUNT[EmailClient::EN_LOCALE]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
+
+        $emailClient->sendNoAccountExistsEmail(
+            $recipient,
+            $this->defaultLocale
+        );
+    }
+
+    /** @test */
+    public function send_force_password_reset_email()
+    {
+        $recipient = 'a@b.com';
+
+        $this->notifyClientProphecy->sendEmail(
+            $recipient,
+            EmailClient::TEMPLATE_ID_FORCE_PASSWORD_RESET[EmailClient::EN_LOCALE],
+            [
+                'password-reset-url' => 'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE',
+            ]
+        )
+            ->shouldBeCalledOnce();
+
+        $emailClient = new EmailClient($this->notifyClientProphecy->reveal());
+
+        $emailClient->sendForcePasswordResetEmail(
+            $recipient,
+            $this->defaultLocale,
+            'http://localhost:9002/cy/password-reset/passwordResetAABBCCDDEE'
         );
     }
 }

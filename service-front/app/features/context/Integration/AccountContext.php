@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use Alphagov\Notifications\Client;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\UI\BaseUiContext;
 use Common\Exception\ApiException;
-use Common\Service\Email\EmailClient;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
+use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
@@ -61,11 +60,12 @@ class AccountContext extends BaseIntegrationContext
     private const USER_SERVICE_REQUEST_PASSWORD_RESET = 'UserService::requestPasswordReset';
     private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
-    private EmailClient $emailClient;
+
     private LpaFactory $lpaFactory;
     private LpaService $lpaService;
     private UserService $userService;
     private ViewerCodeService $viewerCodeService;
+    private NotifyService $notifyService;
 
     /**
      * @Given /^I access the account creation page$/
@@ -652,20 +652,29 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
+        $this->userEmail = 'test@test.com';
         $expectedUrl = 'http://localhost/activate-account/' . $this->activationToken;
         $expectedTemplateId = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
+
+        $emailTemplate = 'AccountActivationEmail';
 
         // API call for Notify
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-        $this->emailClient->sendAccountActivationEmail($this->userEmail, $expectedUrl);
+        $result = $this->notifyService->sendEmailToUser(
+                                $emailTemplate,
+                                $this->userEmail,
+            activateAccountUrl: $expectedUrl
 
-        $request = $this->apiFixtures->getLastRequest();
-        $requestBody = $request->getBody()->getContents();
+        );
 
-        assertContains($this->activationToken, $requestBody);
-        assertContains(json_encode($expectedUrl), $requestBody);
-        assertContains($expectedTemplateId, $requestBody);
+        $query = $this->apiFixtures->getLastRequest()->getBody()->getContents();
+
+        assertContains('recipient', $query);
+        assertContains('locale', $query);
+        assertContains('http:\/\/localhost\/activate-account\/activate1234567890', $query);
+
+        assertTrue($result);
     }
 
     /**
@@ -675,17 +684,23 @@ class AccountContext extends BaseIntegrationContext
     {
         $expectedUrl = 'http://localhost/reset-password/' . $this->userPasswordResetToken;
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
+        $emailTemplate = 'PasswordResetEmail';
 
         // API call for Notify
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-        $this->emailClient->sendPasswordResetEmail($this->userEmail, $expectedUrl);
-
+        $result = $this->notifyService->sendEmailToUser(
+                              $emailTemplate,
+                              $this->userEmail,
+            passwordResetUrl: $expectedUrl
+        );
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
-        assertContains($this->userPasswordResetToken, $requestBody);
-        assertContains(json_encode($expectedUrl), $requestBody);
-        assertContains($expectedTemplateId, $requestBody);
+
+        assertContains($this->userEmail, $requestBody);
+        assertContains('en_GB', $requestBody);
+
+        assertTrue($result);
     }
 
     /**
@@ -693,16 +708,23 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveAnEmailTellingMeIDoNotHaveAnAccount()
     {
-        $expectedTemplateId = '36a86dbf-27a3-448c-a743-5f915e1733c3';
+        $emailTemplate = 'NoAccountExistsEmail';
 
         $this->apiFixtures->reset();
         // API call for Notify
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-        $this->emailClient->sendNoAccountExistsEmail($this->userEmail);
+
+        $result = $this->notifyService->sendEmailToUser(
+            $emailTemplate,
+            $this->userEmail
+        );
 
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
-        assertContains($expectedTemplateId, $requestBody);
+        assertContains($this->userEmail, $requestBody);
+        assertContains('en_GB', $requestBody);
+
+        assertTrue($result);
     }
 
     /**
@@ -867,29 +889,28 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail()
     {
-        $currentEmailTemplateId = '19051f55-d60d-4bbc-ab49-cf85580d3102';
+        $emailTemplate1 = 'RequestChangeEmailToCurrentEmail';
+        $emailTemplate2 = 'RequestChangeEmailToNewEmail';
         $expectedUrl = 'http://localhost/verify-new-email/' . $this->userEmailResetToken;
-        $newEmailTemplateId = 'bcf7e3f7-7f76-4e0a-87ee-b6722bdc223a';
 
         // API call for Notify sent to current email
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-        $this->emailClient->sendRequestChangeEmailToCurrentEmail($this->userEmail, $this->newUserEmail);
+        $result = $this->notifyService->sendEmailToUser(
+                             $emailTemplate1,
+                             $this->userEmail,
+            newEmailAddress: $this->newUserEmail
+        );
+
+        assertTrue($result);
 
         // API call for Notify sent to new email
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-
-        $this->emailClient->sendRequestChangeEmailToNewEmail($this->newUserEmail, $expectedUrl);
-
-        $request = $this->apiFixtures->getLastRequest();
-        $requestBody = $request->getBody()->getContents();
-
-        assertContains($this->userEmailResetToken, $requestBody);
-        assertContains(json_encode($expectedUrl), $requestBody);
-        assertContains($newEmailTemplateId, $requestBody);
-
-        $request = $this->historyContainer[2]['request'];
-        $requestBody = $request->getBody()->getContents();
-        assertContains($currentEmailTemplateId, $requestBody);
+        $result = $this->notifyService->sendEmailToUser(
+                                    $emailTemplate2,
+                                    $this->newUserEmail,
+            completeEmailChangeUrl: $expectedUrl
+        );
+        assertTrue($result);
     }
 
     /**
@@ -1061,9 +1082,9 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->userService = $this->container->get(UserService::class);
-        $this->emailClient = $this->container->get(EmailClient::class);
         $this->lpaService = $this->container->get(LpaService::class);
         $this->lpaFactory = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
+        $this->notifyService = $this->container->get(NotifyService::class);
     }
 }
