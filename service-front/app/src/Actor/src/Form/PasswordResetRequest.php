@@ -7,18 +7,17 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
-use Laminas\Form\Element\Hidden;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
+use Laminas\Filter\StringTrim;
+use Laminas\Form\Element\Hidden;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
-use Laminas\Filter\StringTrim;
-
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class PasswordResetRequest extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'password-reset-request';
+    public const FORM_NAME = 'password-reset-request';
 
     /**
      * PasswordReset constructor.
@@ -53,7 +52,6 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                     ],
                     [
                         'name' => StringTrim::class,
-
                     ],
                 ],
                 'validators' => [
@@ -62,14 +60,15 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages'           => [
-                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
+                                NotEmpty::IS_EMPTY =>
+                                    'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
                     ],
                     [
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
-                    ]
+                    ],
                 ],
             ],
             'email_confirm'    => [
@@ -103,7 +102,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
             ],
             'forced'           => [
                 'required' => false,
-            ]
+            ],
         ];
     }
 }

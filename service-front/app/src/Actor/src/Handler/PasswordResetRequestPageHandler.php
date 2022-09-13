@@ -9,15 +9,14 @@ use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Csrf\CsrfMiddleware;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Common\Service\Notify\NotifyService;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class PasswordResetRequestPageHandler
@@ -28,15 +27,6 @@ use Common\Service\Notify\NotifyService;
 class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
-
-    /** @var UserService */
-    private $userService;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
-    /** @var NotifyService */
-    private $notifyService;
 
     /**
      * PasswordResetRequestPageHandler constructor.
@@ -52,15 +42,11 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        ServerUrlHelper $serverUrlHelper,
-        NotifyService $notifyService
+        private UserService $userService,
+        private ServerUrlHelper $serverUrlHelper,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->notifyService = $notifyService;
     }
 
     /**
@@ -90,15 +76,14 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
 
                     if (!empty($data['forced'])) {
                         $this->notifyService->sendEmailToUser(
-                                              NotifyService::FORCE_PASSWORD_RESET_EMAIL_TEMPLATE,
-                                              $data['email'],
+                            NotifyService::FORCE_PASSWORD_RESET_EMAIL_TEMPLATE,
+                            $data['email'],
                             passwordResetUrl: $passwordResetUrl
                         );
-                        //$this->emailClient->sendForcePasswordResetEmail($data['email'], $passwordResetUrl);
                     } else {
                         $this->notifyService->sendEmailToUser(
-                                              NotifyService::PASSWORD_RESET_EMAIL_TEMPLATE,
-                                              $data['email'],
+                            NotifyService::PASSWORD_RESET_EMAIL_TEMPLATE,
+                            $data['email'],
                             passwordResetUrl: $passwordResetUrl
                         );
                     }
