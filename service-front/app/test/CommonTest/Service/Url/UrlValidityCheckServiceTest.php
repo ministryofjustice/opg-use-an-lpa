@@ -21,13 +21,9 @@ class UrlValidityCheckServiceTest extends TestCase
     use ProphecyTrait;
 
     private ServerRequestInterface|ObjectProphecy $serverRequestFactoryProphecy;
-
     protected RouterInterface|ObjectProphecy $routerProphecy;
-
     protected ServerRequestFactoryInterface|ObjectProphecy $serverRequestInterfaceProphecy;
-
     private UrlHelper|ObjectProphecy $urlHelperProphecy;
-
     private $locale;
 
     public function setUp(): void
