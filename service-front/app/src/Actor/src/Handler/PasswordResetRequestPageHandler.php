@@ -11,6 +11,7 @@ use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
@@ -28,17 +29,6 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
 {
     use CsrfGuard;
 
-    /**
-     * PasswordResetRequestPageHandler constructor.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param ServerUrlHelper $serverUrlHelper
-     * @param NotifyService $notifyService
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -88,11 +78,14 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                         );
                     }
                 } catch (ApiException $ae) {
-                    // the password reset request returned a 404 indicating the user did not exist
-                    $this->notifyService->sendEmailToUser(
-                        NotifyService::NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE,
-                        $data['email']
-                    );
+                    if ($ae->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
+                        $this->notifyService->sendEmailToUser(
+                            NotifyService::NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE,
+                            $data['email']
+                        );
+                    } else {
+                        throw $ae;
+                    }
                 }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
