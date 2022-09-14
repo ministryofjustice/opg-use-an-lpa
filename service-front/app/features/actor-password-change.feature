@@ -7,6 +7,7 @@ Feature: Authenticated Account Password Change
 
   Background:
     Given I am a user of the lpa application
+    
     And I am currently signed in
     And I view my user details
 

@@ -18,6 +18,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 
@@ -80,7 +81,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmAUserOfTheLpaApplication()
     {
-        $this->userEmail = "test@example.com";
+        $this->userEmail = 'test@example.com';
     }
 
     /**
@@ -108,7 +109,7 @@ class AccountContext extends BaseIntegrationContext
 
         $user = $this->userService->authenticate($this->userEmail, $this->userPassword);
 
-        assertEquals($user->getIdentity(), $this->userIdentity);
+        Assert::assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     /**
@@ -132,7 +133,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmNotAUserOfTheLpaApplication()
     {
-        $this->userEmail = " ";
+        $this->userEmail = ' ';
     }
 
     /**
@@ -184,7 +185,7 @@ class AccountContext extends BaseIntegrationContext
 
         $lpas = $this->lpaService->getLpas($this->userIdentity);
 
-        assertEmpty($lpas);
+        Assert::assertEmpty($lpas);
     }
 
     /**
@@ -258,8 +259,8 @@ class AccountContext extends BaseIntegrationContext
 
         $token = $this->userService->requestPasswordReset($this->userEmail);
 
-        assertInternalType('string', $token);
-        assertEquals($this->userPasswordResetToken, $token);
+        Assert::assertIsString($token);
+        Assert::assertEquals($this->userPasswordResetToken, $token);
     }
 
     /**
@@ -299,9 +300,9 @@ class AccountContext extends BaseIntegrationContext
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertInternalType('array', $params);
-        assertEquals($this->userPasswordResetToken, $params['token']);
-        assertEquals($expectedPassword, $params['password']);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($this->userPasswordResetToken, $params['token']);
+        Assert::assertEquals($expectedPassword, $params['password']);
     }
 
     /**
@@ -323,7 +324,7 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $canReset = $this->userService->canResetEmail($this->userEmailResetToken);
-        assertTrue($canReset);
+        Assert::assertTrue($canReset);
     }
 
     /**
@@ -343,7 +344,7 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $tokenValid = $this->userService->canResetEmail($this->userEmailResetToken);
-        assertFalse($tokenValid);
+        Assert::assertFalse($tokenValid);
     }
 
     /**
@@ -378,8 +379,8 @@ class AccountContext extends BaseIntegrationContext
 
         $userData = $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
 
-        assertInternalType('string', $userData['activationToken']);
-        assertEquals($this->activationToken, $userData['activationToken']);
+        Assert::assertIsString($userData['activationToken']);
+        Assert::assertEquals($this->activationToken, $userData['activationToken']);
     }
 
     /**
@@ -410,7 +411,7 @@ class AccountContext extends BaseIntegrationContext
         try {
             $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
         } catch (ApiException $ex) {
-            assertEquals(409, $ex->getCode());
+            Assert::assertEquals(409, $ex->getCode());
             return;
         }
 
@@ -441,7 +442,7 @@ class AccountContext extends BaseIntegrationContext
 
         $lpas = $this->lpaService->getLpas($this->userIdentity);
 
-        assertEmpty($lpas);
+        Assert::assertEmpty($lpas);
     }
 
     /**
@@ -458,11 +459,11 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $canReset = $this->userService->canPasswordReset($this->userPasswordResetToken);
-        assertFalse($canReset);
+        Assert::assertFalse($canReset);
 
         $request = $this->apiFixtures->getLastRequest();
         $query = $request->getUri()->getQuery();
-        assertContains($this->userPasswordResetToken, $query);
+        Assert::assertStringContainsString($this->userPasswordResetToken, $query);
     }
 
     /**
@@ -473,12 +474,12 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_GONE));
 
         $canActivate = $this->userService->activate($this->activationToken);
-        assertFalse($canActivate);
+        Assert::assertFalse($canActivate);
 
         $request = $this->apiFixtures->getLastRequest();
 
         $query = $request->getUri()->getQuery();
-        assertContains($this->activationToken, $query);
+        Assert::assertStringContainsString($this->activationToken, $query);
     }
 
     /**
@@ -495,11 +496,11 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $canReset = $this->userService->canPasswordReset($this->userPasswordResetToken);
-        assertTrue($canReset);
+        Assert::assertTrue($canReset);
 
         $request = $this->apiFixtures->getLastRequest();
         $query = $request->getUri()->getQuery();
-        assertContains($this->userPasswordResetToken, $query);
+        Assert::assertStringContainsString($this->userPasswordResetToken, $query);
     }
 
     /**
@@ -527,12 +528,12 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $canActivate = $this->userService->activate($this->activationToken);
-        assertTrue($canActivate);
+        Assert::assertTrue($canActivate);
 
         $request = $this->apiFixtures->getLastRequest();
 
         $query = $request->getUri()->getQuery();
-        assertContains($this->activationToken, $query);
+        Assert::assertStringContainsString($this->activationToken, $query);
     }
 
     /**
@@ -610,10 +611,10 @@ class AccountContext extends BaseIntegrationContext
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertInternalType('array', $params);
-        assertEquals($this->userIdentity, $params['user-id']);
-        assertEquals($this->userPassword, $params['password']);
-        assertEquals($expectedPassword, $params['new-password']);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($this->userIdentity, $params['user-id']);
+        Assert::assertEquals($this->userPassword, $params['password']);
+        Assert::assertEquals($expectedPassword, $params['new-password']);
     }
 
     /**
@@ -635,15 +636,15 @@ class AccountContext extends BaseIntegrationContext
         try {
             $this->userService->changePassword('123', new HiddenString('SomeWrongValue'), new HiddenString($expectedPassword));
         } catch (ApiException $exception) {
-            assertEquals($exception->getCode(), StatusCodeInterface::STATUS_FORBIDDEN);
+            Assert::assertEquals($exception->getCode(), StatusCodeInterface::STATUS_FORBIDDEN);
 
             $request = $this->apiFixtures->getLastRequest();
             $params = json_decode($request->getBody()->getContents(), true);
 
-            assertIsArray($params);
-            assertEquals($this->userIdentity, $params['user-id']);
-            assertNotEquals($this->userPassword, $params['password']);
-            assertEquals($expectedPassword, $params['new-password']);
+            Assert::assertIsArray($params);
+            Assert::assertEquals($this->userIdentity, $params['user-id']);
+            Assert::assertNotEquals($this->userPassword, $params['password']);
+            Assert::assertEquals($expectedPassword, $params['new-password']);
         }
     }
 
@@ -662,19 +663,18 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $result = $this->notifyService->sendEmailToUser(
-                                $emailTemplate,
-                                $this->userEmail,
+            $emailTemplate,
+            $this->userEmail,
             activateAccountUrl: $expectedUrl
-
         );
 
         $query = $this->apiFixtures->getLastRequest()->getBody()->getContents();
 
-        assertContains('recipient', $query);
-        assertContains('locale', $query);
-        assertContains('http:\/\/localhost\/activate-account\/activate1234567890', $query);
+        Assert::assertStringContainsString('recipient', $query);
+        Assert::assertStringContainsString('locale', $query);
+        Assert::assertStringContainsString('http:\/\/localhost\/activate-account\/activate1234567890', $query);
 
-        assertTrue($result);
+        Assert::assertTrue($result);
     }
 
     /**
@@ -690,17 +690,17 @@ class AccountContext extends BaseIntegrationContext
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $result = $this->notifyService->sendEmailToUser(
-                              $emailTemplate,
-                              $this->userEmail,
+            $emailTemplate,
+            $this->userEmail,
             passwordResetUrl: $expectedUrl
         );
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
 
-        assertContains($this->userEmail, $requestBody);
-        assertContains('en_GB', $requestBody);
+        Assert::assertStringContainsString($this->userEmail, $requestBody);
+        Assert::assertStringContainsString('en_GB', $requestBody);
 
-        assertTrue($result);
+        Assert::assertTrue($result);
     }
 
     /**
@@ -721,10 +721,10 @@ class AccountContext extends BaseIntegrationContext
 
         $request = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
-        assertContains($this->userEmail, $requestBody);
-        assertContains('en_GB', $requestBody);
+        Assert::assertStringContainsString($this->userEmail, $requestBody);
+        Assert::assertStringContainsString('en_GB', $requestBody);
 
-        assertTrue($result);
+        Assert::assertTrue($result);
     }
 
     /**
@@ -738,13 +738,13 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        "EmailResetExpiry" => 1589983070,
-                        "Email" => $this->userEmail,
-                        "LastLogin" => null,
-                        "Id" => $this->userIdentity,
-                        "NewEmail" => $this->newUserEmail,
-                        "EmailResetToken" => "re3eTt0k3N",
-                        "Password" => $this->userPassword,
+                        'EmailResetExpiry' => 1589983070,
+                        'Email' => $this->userEmail,
+                        'LastLogin' => null,
+                        'Id' => $this->userIdentity,
+                        'NewEmail' => $this->newUserEmail,
+                        'EmailResetToken' => 're3eTt0k3N',
+                        'Password' => $this->userPassword,
                     ]
                 ),
                 self::USER_SERVICE_REQUEST_CHANGE_EMAIL
@@ -757,20 +757,20 @@ class AccountContext extends BaseIntegrationContext
             new HiddenString($this->userPassword)
         );
 
-        assertNotEmpty($data);
-        assertEquals($this->userEmail, $data['Email']);
-        assertEquals($this->newUserEmail, $data['NewEmail']);
-        assertEquals($this->userIdentity, $data['Id']);
-        assertEquals($this->userPassword, $data['Password']);
-        assertArrayHasKey('EmailResetToken', $data);
-        assertArrayHasKey('EmailResetExpiry', $data);
+        Assert::assertNotEmpty($data);
+        Assert::assertEquals($this->userEmail, $data['Email']);
+        Assert::assertEquals($this->newUserEmail, $data['NewEmail']);
+        Assert::assertEquals($this->userIdentity, $data['Id']);
+        Assert::assertEquals($this->userPassword, $data['Password']);
+        Assert::assertArrayHasKey('EmailResetToken', $data);
+        Assert::assertArrayHasKey('EmailResetExpiry', $data);
 
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
-        assertIsArray($params);
-        assertArrayHasKey('user-id', $params);
-        assertArrayHasKey('new-email', $params);
-        assertArrayHasKey('password', $params);
+        Assert::assertIsArray($params);
+        Assert::assertArrayHasKey('user-id', $params);
+        Assert::assertArrayHasKey('new-email', $params);
+        Assert::assertArrayHasKey('password', $params);
     }
 
     /**
@@ -794,14 +794,14 @@ class AccountContext extends BaseIntegrationContext
                 new HiddenString($this->userPassword)
             );
         } catch (ApiException $aex) {
-            assertEquals(409, $aex->getCode());
+            Assert::assertEquals(409, $aex->getCode());
 
             $request = $this->apiFixtures->getLastRequest();
             $params = json_decode($request->getBody()->getContents(), true);
-            assertIsArray($params);
-            assertArrayHasKey('user-id', $params);
-            assertArrayHasKey('new-email', $params);
-            assertArrayHasKey('password', $params);
+            Assert::assertIsArray($params);
+            Assert::assertArrayHasKey('user-id', $params);
+            Assert::assertArrayHasKey('new-email', $params);
+            Assert::assertArrayHasKey('password', $params);
             return;
         }
 
@@ -828,14 +828,14 @@ class AccountContext extends BaseIntegrationContext
                 new HiddenString($this->userPassword)
             );
         } catch (ApiException $aex) {
-            assertEquals(403, $aex->getCode());
+            Assert::assertEquals(403, $aex->getCode());
 
             $request = $this->apiFixtures->getLastRequest();
             $params = json_decode($request->getBody()->getContents(), true);
-            assertIsArray($params);
-            assertArrayHasKey('user-id', $params);
-            assertArrayHasKey('new-email', $params);
-            assertArrayHasKey('password', $params);
+            Assert::assertIsArray($params);
+            Assert::assertArrayHasKey('user-id', $params);
+            Assert::assertArrayHasKey('new-email', $params);
+            Assert::assertArrayHasKey('password', $params);
 
             return;
         }
@@ -881,7 +881,7 @@ class AccountContext extends BaseIntegrationContext
 
         $user = $this->userService->authenticate($this->newUserEmail, $this->userPassword);
 
-        assertEquals($user->getIdentity(), $this->userIdentity);
+        Assert::assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     /**
@@ -896,21 +896,21 @@ class AccountContext extends BaseIntegrationContext
         // API call for Notify sent to current email
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $result = $this->notifyService->sendEmailToUser(
-                             $emailTemplate1,
-                             $this->userEmail,
+            $emailTemplate1,
+            $this->userEmail,
             newEmailAddress: $this->newUserEmail
         );
 
-        assertTrue($result);
+        Assert::assertTrue($result);
 
         // API call for Notify sent to new email
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
         $result = $this->notifyService->sendEmailToUser(
-                                    $emailTemplate2,
-                                    $this->newUserEmail,
+            $emailTemplate2,
+            $this->newUserEmail,
             completeEmailChangeUrl: $expectedUrl
         );
-        assertTrue($result);
+        Assert::assertTrue($result);
     }
 
     /**
@@ -974,7 +974,7 @@ class AccountContext extends BaseIntegrationContext
 
         $user = $this->userService->authenticate($this->userEmail, $this->userPassword);
 
-        assertEquals($user->getIdentity(), $this->userIdentity);
+        Assert::assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     /**
@@ -1042,12 +1042,12 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $delete = $this->userService->deleteAccount($this->userIdentity);
-        assertNull($delete);
+        Assert::assertNull($delete);
 
         $request = $this->apiFixtures->getLastRequest();
         $uri = $request->getUri()->getPath();
 
-        assertEquals($uri, '/v1/delete-account/123');
+        Assert::assertEquals($uri, '/v1/delete-account/123');
     }
 
     /**
