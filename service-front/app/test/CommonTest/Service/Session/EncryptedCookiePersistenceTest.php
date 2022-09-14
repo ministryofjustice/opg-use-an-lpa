@@ -192,7 +192,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
                     // Validate the full pattern
                     $this->assertMatchesRegularExpression(
-                        "|{$regexCookie} {$regexPath} {$regexExpires} {Secure;} {HttpOnly;} {SameSite=Lax$}|",
+                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=Lax$|",
                         $input
                     );
 
@@ -310,7 +310,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
                     // Validate the full pattern
                     $this->assertMatchesRegularExpression(
-                        "|{$regexCookie} {$regexPath} {$regexExpires} {Secure;} {HttpOnly;} {SameSite=Strict$}|",
+                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=Strict$|",
                         $input
                     );
 
