@@ -121,7 +121,7 @@ class CatalogueExtractorTest extends TestCase
         /** @var Translations|ObjectProphecy $originalTranslationsProphecy */
         $originalTranslationsProphecy = $this->prophesize(Translations::class);
         $originalTranslationsProphecy
-            ->mergeWith(Argument::type(Translations::class), Argument::that(function($arg) {
+            ->mergeWith(Argument::type(Translations::class), Argument::that(function ($arg) {
                 $this->assertEquals(8704, $arg, 'The merge strategy is incorrect');
                 return true;
             }))

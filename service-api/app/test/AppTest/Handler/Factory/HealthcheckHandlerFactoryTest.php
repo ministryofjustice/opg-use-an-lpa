@@ -49,3 +49,4 @@ class HealthcheckHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(HealthcheckHandler::class, $handler);
     }
 }
+

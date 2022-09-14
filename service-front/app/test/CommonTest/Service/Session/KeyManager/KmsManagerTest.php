@@ -19,7 +19,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 class KmsManagerTest extends TestCase
 {
     use ProphecyTrait;
-    const TEST_KMS_CMK_ALIAS = 'test-alias-name';
+
+    private const TEST_KMS_CMK_ALIAS = 'test-alias-name';
 
     private $cacheProphecy;
     private $kmsClientProphecy;

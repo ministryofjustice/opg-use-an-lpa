@@ -1049,7 +1049,6 @@ class AccountContext implements Context
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
-
                     json_encode(
                         [
                             'Id' => $this->userId,
@@ -1532,7 +1531,6 @@ class AccountContext implements Context
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-
                 json_encode(
                     [
                         'EmailResetExpiry' => time() + (60 * 60 * 48),
@@ -1557,7 +1555,6 @@ class AccountContext implements Context
         $this->ui->fillField('new_email_address', $this->newUserEmail);
         $this->ui->fillField('current_password', $this->userPassword);
         $this->ui->pressButton('Save new email address');
-
     }
 
     /**

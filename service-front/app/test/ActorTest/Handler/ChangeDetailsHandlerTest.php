@@ -17,7 +17,7 @@ class ChangeDetailsHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    const LPA_ID = '98765432-12345-54321-12345-9876543210';
+    private const LPA_ID = '98765432-12345-54321-12345-9876543210';
 
     /**
      * @var ObjectProphecy|TemplateRendererInterface

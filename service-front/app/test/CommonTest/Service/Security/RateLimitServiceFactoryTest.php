@@ -202,5 +202,4 @@ class RateLimitServiceFactoryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $rateLimiter = $factory->all();
     }
-
 }

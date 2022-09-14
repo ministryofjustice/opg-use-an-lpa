@@ -173,7 +173,7 @@ class CommonContext implements Context
                     ),
                     self::USER_SERVICE_AUTHENTICATE
                 )
-                );
+            );
 
             // Dashboard page checks for all LPA's for a user
             $this->apiFixtures->append(
@@ -431,7 +431,7 @@ class CommonContext implements Context
     public function myOutboundRequestsHaveAttachedTracingHeaders()
     {
         $request = $this->apiFixtures->getLastRequest();
-        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')),'No X-Amzn-Trace-Id header');
+        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')), 'No X-Amzn-Trace-Id header');
     }
 
     /**

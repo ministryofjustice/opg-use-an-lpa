@@ -72,7 +72,8 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
         $request = new SessionExpiredRedirectMiddleware(
-            $this->prophesize(UrlHelper::class)->reveal());
+            $this->prophesize(UrlHelper::class)->reveal()
+        );
 
         $result = $request->process($requestProphecy->reveal(), $delegateProphecy->reveal());
         $this->assertInstanceOf(ResponseInterface::class, $result);

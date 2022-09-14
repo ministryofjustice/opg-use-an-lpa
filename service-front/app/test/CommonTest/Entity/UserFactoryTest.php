@@ -64,6 +64,5 @@ class UserFactoryTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $callable('test', [], []);
-
     }
 }

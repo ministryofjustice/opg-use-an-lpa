@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
@@ -14,7 +14,7 @@ use Psr\Http\Client\ClientInterface;
 class GenericGlobalVariableExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
-    
+
     /**
      * @test
      */
@@ -53,3 +53,4 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
         $genericConfig = $factory($containerProphecy->reveal());
     }
 }
+

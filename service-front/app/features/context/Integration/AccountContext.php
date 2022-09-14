@@ -606,7 +606,11 @@ class AccountContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-        $this->userService->changePassword($this->userIdentity, new HiddenString($this->userPassword), new HiddenString($expectedPassword));
+        $this->userService->changePassword(
+            $this->userIdentity,
+            new HiddenString($this->userPassword),
+            new HiddenString($expectedPassword)
+        );
 
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
@@ -634,7 +638,11 @@ class AccountContext extends BaseIntegrationContext
         );
 
         try {
-            $this->userService->changePassword('123', new HiddenString('SomeWrongValue'), new HiddenString($expectedPassword));
+            $this->userService->changePassword(
+                '123',
+                new HiddenString('SomeWrongValue'),
+                new HiddenString($expectedPassword)
+            );
         } catch (ApiException $exception) {
             Assert::assertEquals($exception->getCode(), StatusCodeInterface::STATUS_FORBIDDEN);
 

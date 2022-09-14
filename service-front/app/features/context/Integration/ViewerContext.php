@@ -183,7 +183,11 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode(
+            $this->lpaShareCode,
+            $this->lpaSurname,
+            $this->lpaViewedBy
+        ))['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
         $body = json_decode($request->getBody()->getContents());
@@ -211,7 +215,11 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode(
+            $this->lpaShareCode,
+            $this->lpaSurname,
+            $this->lpaViewedBy
+        ))['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
         $body = json_decode($request->getBody()->getContents());

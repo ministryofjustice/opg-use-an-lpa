@@ -22,8 +22,14 @@ class SiriusLpaFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'), true);
-        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'), true);
+        $this->fullExampleFixtureData = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'),
+            true
+        );
+        $this->simpleExampleFixtureData = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'),
+            true
+        );
     }
 
     public function testBadDataThrowsExceptionInCreateLpa()

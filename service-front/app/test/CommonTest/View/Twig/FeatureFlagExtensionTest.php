@@ -93,3 +93,4 @@ class FeatureFlagExtensionTest extends TestCase
     }
 
 }
+

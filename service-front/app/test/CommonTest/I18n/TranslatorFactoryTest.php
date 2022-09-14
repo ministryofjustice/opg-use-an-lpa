@@ -25,7 +25,7 @@ class TranslatorFactoryTest extends TestCase
 
         $gettextTranslator->gettext('LPA access code')->willReturn('LPA access code');
 
-        $gettextTranslator->setLanguage('cy')->will(function($language) {
+        $gettextTranslator->setLanguage('cy')->will(function ($language) {
             $this->gettext('LPA access code')->willReturn('Rhowch god mynediad yr ACLL');
             return $this->reveal();
         });

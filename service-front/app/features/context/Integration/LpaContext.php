@@ -255,7 +255,6 @@ class LpaContext extends BaseIntegrationContext
 
         $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
         Assert::assertEquals($response, $result);
-
     }
     /**
      * @Given /^I already have a valid activation key for my LPA$/
@@ -602,7 +601,10 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($this->actorLpaToken, $shareCodes[0]['UserLpaActor']);
         Assert::assertEquals(false, $shareCodes[0]['Viewed']);
         //check if the code expiry date is in the past
-        Assert::assertGreaterThan(strtotime($shareCodes[0]['Expires']), strtotime((new DateTime('now'))->format('Y-m-d')));
+        Assert::assertGreaterThan(
+            strtotime($shareCodes[0]['Expires']),
+            strtotime((new DateTime('now'))->format('Y-m-d'))
+        );
         Assert::assertGreaterThan(strtotime($shareCodes[0]['Added']), strtotime($shareCodes[0]['Expires']));
     }
 

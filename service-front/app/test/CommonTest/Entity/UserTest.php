@@ -87,7 +87,8 @@ class UserTest extends TestCase
 
         $user = new User(
             '
-            test', [],
+            test',
+            [],
             [
                 'LastLogin' => [
                     'date' => $date->format('Y-m-d H:i:s.u'),

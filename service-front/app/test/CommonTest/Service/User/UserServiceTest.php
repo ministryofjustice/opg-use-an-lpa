@@ -504,7 +504,10 @@ class UserServiceTest extends TestCase
 
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
-            ->willThrow(new ApiException('HTTP: 500 - Unexpected API response', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+            ->willThrow(new ApiException(
+                'HTTP: 500 - Unexpected API response',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
+            );
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);
@@ -712,7 +715,10 @@ class UserServiceTest extends TestCase
             [
                 'token' => $resetToken,
             ]
-        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+        )->willThrow(new ApiException(
+            'Email reset token has expired',
+            StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
+        );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.

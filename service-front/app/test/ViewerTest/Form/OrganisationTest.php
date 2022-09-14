@@ -53,7 +53,14 @@ class OrganisationTest extends TestCase
             $elementClass = get_class($formElement);
 
             if ($expectedElementClass != $elementClass) {
-                $this->fail(sprintf('Class type expectation failure for "%s": Expecting %s but found %s', $formElementName, $expectedElementClass, $elementClass));
+                $this->fail(
+                    sprintf(
+                        'Class type expectation failure for "%s": Expecting %s but found %s',
+                        $formElementName,
+                        $expectedElementClass,
+                        $elementClass
+                    )
+                );
             }
 
             //  Put an assertion in here so that the test isn't flagged as risky

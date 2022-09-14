@@ -27,7 +27,8 @@ class UserServiceFactoryTest extends TestCase
         $containerProphecy->get(Client::class)
             ->willReturn($clientProphecy->reveal());
         $containerProphecy->get(UserInterface::class)
-            ->willReturn(function(){});
+            ->willReturn(function () {
+            });
         $containerProphecy->get(LoggerInterface::class)
             ->willReturn($loggerProphecy->reveal());
 
