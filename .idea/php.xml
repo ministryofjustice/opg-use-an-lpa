@@ -8,6 +8,7 @@
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-validator" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/jshayes/fake-requests" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-hydrator" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-httphandlerrunner" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-stratigility" />
@@ -34,6 +35,7 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/openlss/lib-array2xml" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpspec/prophecy" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-token-stream" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-timer" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/phpunit" />
@@ -76,6 +78,7 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/cooperaj/better-twig-i18n" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/cooperaj/behat-psr-extension" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/inflector" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/mikey179/vfsstream" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/php-http/guzzle6-adapter" />
@@ -106,6 +109,8 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/glob" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/support" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/contracts" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/netresearch/jsonmapper" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/webimpress/safe-writer" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/felixfbecker/advanced-json-rpc" />
@@ -171,12 +176,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laravel/serializable-closure" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-invoker" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/phpspec/prophecy-phpunit" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/code-unit" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/cli-parser" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/lines-of-code" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/complexity" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

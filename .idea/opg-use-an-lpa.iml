@@ -12,12 +12,6 @@
       <sourceFolder url="file://$MODULE_DIR$/service-api/app/src/App/src" isTestSource="false" packagePrefix="App" />
       <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/AppTest" isTestSource="true" packagePrefix="AppTest" />
       <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/BehatTest" isTestSource="true" packagePrefix="BehatTest" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/phpunit/php-invoker" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/phpspec/prophecy-phpunit" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/sebastian/code-unit" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/sebastian/cli-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/sebastian/lines-of-code" />
-      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/sebastian/complexity" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
