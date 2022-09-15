@@ -71,11 +71,8 @@ class EmailClient
         self::CY_LOCALE => 'c1e2994e-2346-48b4-ac18-ef9eb26b114d',
     ];
 
-    private Client $notifyClient;
-
-    public function __construct(Client $notifyClient)
+    public function __construct(private Client $notifyClient)
     {
-        $this->notifyClient = $notifyClient;
     }
 
     /**
@@ -92,7 +89,7 @@ class EmailClient
             self::TEMPLATE_ID_ACCOUNT_ACTIVATION[$locale],
             [
                 'activate-account-url' => $activateAccountUrl,
-            ]
+            ],
         );
     }
 
@@ -110,7 +107,7 @@ class EmailClient
             self::TEMPLATE_ID_ACCOUNT_ACTIVATED_CONFIRMATION[$locale],
             [
                 'sign-in-url' => $signInLink,
-            ]
+            ],
         );
     }
 
@@ -124,7 +121,7 @@ class EmailClient
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED[$locale]
+            self::TEMPLATE_ID_EMAIL_ADDRESS_ALREADY_REGISTERED[$locale],
         );
     }
 
@@ -142,7 +139,7 @@ class EmailClient
             self::TEMPLATE_ID_PASSWORD_RESET[$locale],
             [
                 'password-reset-url' => $passwordResetUrl,
-            ]
+            ],
         );
     }
 
@@ -156,7 +153,7 @@ class EmailClient
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_PASSWORD_CHANGE[$locale]
+            self::TEMPLATE_ID_PASSWORD_CHANGE[$locale],
         );
     }
 
@@ -177,7 +174,7 @@ class EmailClient
             self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_CURRENT_EMAIL[$locale],
             [
                 'new-email-address' => $newEmailAddress,
-            ]
+            ],
         );
     }
 
@@ -198,7 +195,7 @@ class EmailClient
             self::TEMPLATE_ID_EMAIL_CHANGE_SENT_TO_NEW_EMAIL[$locale],
             [
                 'verify-new-email-url' => $completeEmailChangeUrl,
-            ]
+            ],
         );
     }
 
@@ -212,7 +209,7 @@ class EmailClient
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[$locale]
+            self::TEMPLATE_ID_RESET_CONFLICT_EMAIL_CHANGE_INCOMPLETE[$locale],
         );
     }
 
@@ -239,7 +236,7 @@ class EmailClient
                 'reference_number' => $referenceNumber,
                 'postcode' => $postCode,
                 'date' => $letterExpectedDate,
-            ]
+            ],
         );
     }
 
@@ -263,7 +260,7 @@ class EmailClient
             [
                 'reference_number' => $referenceNumber,
                 'date' => $letterExpectedDate,
-            ]
+            ],
         );
     }
 
@@ -277,7 +274,7 @@ class EmailClient
     {
         $this->notifyClient->sendEmail(
             $recipient,
-            self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$locale]
+            self::TEMPLATE_ID_NO_EXISTING_ACCOUNT[$locale],
         );
     }
 
@@ -285,17 +282,17 @@ class EmailClient
      * Email a user to ask them to reset their password for security reasons
      *
      * @param string $recipient
-     * @param string $resetUrl
+     * @param string $passwordResetUrl
      *
      */
-    public function sendForcePasswordResetEmail(string $recipient, string $locale, string $resetUrl): void
+    public function sendForcePasswordResetEmail(string $recipient, string $locale, string $passwordResetUrl): void
     {
         $this->notifyClient->sendEmail(
             $recipient,
             self::TEMPLATE_ID_FORCE_PASSWORD_RESET[$locale],
             [
-                'password-reset-url' => $resetUrl,
-            ]
+                'password-reset-url' => $passwordResetUrl,
+            ],
         );
     }
 }
