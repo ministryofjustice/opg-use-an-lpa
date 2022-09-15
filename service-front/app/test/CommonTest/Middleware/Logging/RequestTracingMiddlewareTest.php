@@ -6,6 +6,7 @@ namespace CommonTest\Middleware\Logging;
 
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Service\Container\ModifiableContainerInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RequestTracingMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_sets_a_trace_attribute_if_set_as_a_header(): void
     {

@@ -13,10 +13,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Password;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class EmailChangeTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     /** @var ChangeEmail */
     protected $form;

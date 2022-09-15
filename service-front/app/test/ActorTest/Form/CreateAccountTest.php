@@ -12,10 +12,12 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\{Checkbox, Password};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CreateAccountTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     /** @var CreateAccount */
     protected $form;

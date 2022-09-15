@@ -30,8 +30,8 @@ class UserServiceTest extends TestCase
     use ProphecyTrait;
 
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    const PASS = 'test';
-    const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
+    private const PASS = 'test';
+    private const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
     /** @test */
     public function can_create_a_valid_instance(): void
@@ -107,7 +107,7 @@ class UserServiceTest extends TestCase
                 'ExpiresTTL' => $ttl,
                 'ActivationToken' => $activationToken
             ]);
-        $repoProphecy->resetActivationDetails($id,$password, Argument::type('integer'))
+        $repoProphecy->resetActivationDetails($id, $password, Argument::type('integer'))
             ->willReturn([
                 'Id' => $id,
                 'Email' => $email
@@ -185,7 +185,14 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
+            ->willReturn(
+                [
+                    'Id' => '1234-1234-1234',
+                    'Email' => 'a@b.com',
+                    'Password' => self::PASS_HASH,
+                    'LastLogin' => '2020-01-01'
+                ]
+            );
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function ($dateTime) {
             $this->assertIsString($dateTime);
 
@@ -199,7 +206,15 @@ class UserServiceTest extends TestCase
 
         $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
-        $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01'], $return);
+        $this->assertEquals(
+            [
+                'Id' => '1234-1234-1234',
+                'Email' => 'a@b.com',
+                'Password' => self::PASS_HASH,
+                'LastLogin' => '2020-01-01'
+            ],
+            $return
+        );
     }
 
     /** @test */
@@ -239,7 +254,14 @@ class UserServiceTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
+            ->willReturn(
+                [
+                    'Email' => 'a@b.com',
+                    'Password' => self::PASS_HASH,
+                    'ActivationToken' => 'aToken',
+                    'Id' => '1234-1234-1234'
+                ]
+            );
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -663,7 +685,6 @@ class UserServiceTest extends TestCase
 
         $response = $us->completeChangeEmail($token);
         $this->assertNull($response);
-
     }
-
 }
+

@@ -13,7 +13,7 @@ class EmailTest extends TestCase
     public function it_hides_a_string()
     {
         $email = new Email('test@test.com');
-        $this->assertRegExp('/.*/', (string)$email);
-        $this->assertNotContains('test@test.com', (string)$email);
+        $this->assertMatchesRegularExpression('/.*/', (string)$email);
+        $this->assertStringNotContainsString('test@test.com', (string)$email);
     }
 }

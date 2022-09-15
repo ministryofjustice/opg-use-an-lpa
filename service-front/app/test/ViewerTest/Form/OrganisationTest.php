@@ -8,14 +8,14 @@ use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\Organisation;
 
 class OrganisationTest extends TestCase
 {
-    /**
-     * @var Organisation
-     */
-    private $form;
+    use ProphecyTrait;
+
+    private Organisation $form;
 
     /**
      * @var array
@@ -53,7 +53,14 @@ class OrganisationTest extends TestCase
             $elementClass = get_class($formElement);
 
             if ($expectedElementClass != $elementClass) {
-                $this->fail(sprintf('Class type expectation failure for "%s": Expecting %s but found %s', $formElementName, $expectedElementClass, $elementClass));
+                $this->fail(
+                    sprintf(
+                        'Class type expectation failure for "%s": Expecting %s but found %s',
+                        $formElementName,
+                        $expectedElementClass,
+                        $elementClass
+                    )
+                );
             }
 
             //  Put an assertion in here so that the test isn't flagged as risky

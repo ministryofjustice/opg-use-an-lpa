@@ -8,10 +8,13 @@ use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ParseLpaAlreadyAddedResponseTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $donor;
     /** @var ObjectProphecy|LpaFactory */
     private $lpaFactory;

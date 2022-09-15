@@ -11,9 +11,12 @@ use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Laminas\Crypt\BlockCipher;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class KmsEncryptedCookieTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_can_be_instantiated(): void
     {

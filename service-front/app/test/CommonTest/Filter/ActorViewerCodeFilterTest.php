@@ -6,9 +6,12 @@ namespace CommonTest\Filter;
 
 use Common\Filter\ActorViewerCodeFilter;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorViewerCodeFilterTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ActorViewerCodeFilter $filter;
 
     public function setUp(): void

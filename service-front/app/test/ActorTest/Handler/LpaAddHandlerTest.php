@@ -21,57 +21,24 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\CallbackToken;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class LpaAddHandlerTest extends TestCase
 {
-    const CSRF_CODE = '1234';
+    use ProphecyTrait;
 
-    /**
-     * @var TemplateRendererInterface
-     */
-    private $rendererProphecy;
+    private const CSRF_CODE = '1234';
 
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelperProphecy;
-
-    /**
-     * @var LpaService
-     */
-    private $lpaServiceProphecy;
-
-    /**
-     * @var AuthenticationInterface
-     */
-    private $authenticatorProphecy;
-
-    /**
-     * @var ServerRequestInterface
-     */
-    private $requestProphecy;
-
-    /**
-     * @var SessionInterface
-     */
-    private $sessionProphecy;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
-
-    /**
-     * @var StatesCollection
-     */
-    private $statesProphecy;
-
-    /**
-     * @var WorkflowState
-     */
-    private $stateProphecy;
+    private ObjectProphecy|TemplateRendererInterface $rendererProphecy;
+    private ObjectProphecy|UrlHelper $urlHelperProphecy;
+    private ObjectProphecy|LpaService $lpaServiceProphecy;
+    private ObjectProphecy|AuthenticationInterface $authenticatorProphecy;
+    private ObjectProphecy|ServerRequestInterface $requestProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private ObjectProphecy|WorkflowState $stateProphecy;
 
     public function setUp(): void
     {
@@ -85,13 +52,13 @@ class LpaAddHandlerTest extends TestCase
 
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $this->sessionProphecy = $this->prophesize(SessionInterface::class);
+        $sessionProphecy = $this->prophesize(SessionInterface::class);
 
-        $this->statesProphecy = $this->prophesize(StatesCollection::class);
+        $statesProphecy = $this->prophesize(StatesCollection::class);
 
 
-        $this->statesProphecy->has(AddLpa::class)->willReturn(true);
-        $this->statesProphecy->get(AddLpa::class)->willReturn(new AddLpa());
+        $statesProphecy->has(AddLpa::class)->willReturn(true);
+        $statesProphecy->get(AddLpa::class)->willReturn(new AddLpa());
 
         $csrfProphecy = $this->prophesize(CsrfGuardInterface::class);
         $csrfProphecy->generateToken()
@@ -102,10 +69,10 @@ class LpaAddHandlerTest extends TestCase
             ->willReturn($csrfProphecy->reveal());
 
         $this->requestProphecy->getAttribute('session', null)
-            ->willReturn($this->sessionProphecy->reveal());
+            ->willReturn($sessionProphecy->reveal());
 
         $this->requestProphecy->getAttribute(StatePersistenceMiddleware::WORKFLOW_STATE_ATTRIBUTE)
-            ->willReturn($this->statesProphecy->reveal());
+            ->willReturn($statesProphecy->reveal());
 
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }

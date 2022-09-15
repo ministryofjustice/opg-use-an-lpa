@@ -10,10 +10,12 @@ use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorAddressTest extends TestCase
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected ActorAddress $form;
 

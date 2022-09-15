@@ -50,3 +50,4 @@ class AuthHandler implements RequestHandlerInterface
         return new JsonResponse($user);
     }
 }
+

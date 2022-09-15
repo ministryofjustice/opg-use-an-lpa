@@ -11,10 +11,13 @@ use Common\Service\I18n\Extractors\PhpFactory;
 use Common\Service\I18n\Extractors\TwigFactory;
 use Common\Service\I18n\PotGenerator;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class TranslationUpdateCommandFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_translation_update_command(): void
     {

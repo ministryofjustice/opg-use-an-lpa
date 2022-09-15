@@ -6,11 +6,14 @@ namespace AppTest\Service\Log;
 
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Common\Service\Log\RequestTracingLogProcessor;
 
 class RequestTracingLogProcessorFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_constructs_a_request_tracing_log_processor()
     {
