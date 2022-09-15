@@ -106,7 +106,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             $this->logger->debug(
                 'Resolved actor id to {type}:{actor_id}',
                 [
-                    'actor_id' => $code['ActorId'],
+                    'actor_id' => $code['ActorId'] ?? 'ActorId not present',
                     'type' => gettype($code['ActorId']),
                 ]
             );
