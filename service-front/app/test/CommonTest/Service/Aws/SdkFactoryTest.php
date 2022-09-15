@@ -7,10 +7,13 @@ namespace CommonTest\Service\Aws;
 use Common\Service\Aws\SdkFactory;
 use Aws\Sdk;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class SdkFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testMissingConfig()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ContextUtilities;
-use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class ViewerContext
@@ -44,7 +41,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I have been given access to an LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToAnLPAViaShareCode()
+    public function iHaveBeenGivenAccessToAnLPAViaShareCode(): void
     {
         $this->lpaShareCode = '1111-1111-1111';
         $this->lpaSurname = 'Testerson';
@@ -60,7 +57,7 @@ class ViewerContext extends BaseIntegrationContext
                 'dob' => '1948-11-01',
                 'salutation' => 'Mr',
                 'firstname' => 'Test',
-                'middlenames' =>'Testable',
+                'middlenames' => 'Testable',
                 'surname' => 'Testerson',
                 'addresses' => [
                     0 => [
@@ -82,7 +79,8 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I have been given access to a cancelled LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode(): void
+    {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Cancelled';
@@ -92,7 +90,8 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I have been given access to a revoked LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToARevokedLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToARevokedLPAViaShareCode(): void
+    {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Revoked';
@@ -101,7 +100,8 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I have been given access to an expired LPA via share code$/
      */
-    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode() {
+    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode(): void
+    {
         $this->iHaveBeenGivenAccessToAnExpiredLPAViaShareCode();
 
         $this->lpaData['status'] = 'Expired';
@@ -110,35 +110,40 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Given /^I access the viewer service$/
      */
-    public function iAccessTheViewerService() {
+    public function iAccessTheViewerService(): void
+    {
         // not used in this context
     }
 
     /**
      * @When /^I give a valid LPA share code$/
      */
-    public function iGiveAValidLPAShareCode() {
+    public function iGiveAValidLPAShareCode(): void
+    {
         // not used in this context
     }
 
     /**
     * @When /^I give a valid LPA share code on a cancelled LPA$/
     */
-    public function iGiveAValidLPAShareCodeOnACancelledLPA() {
+    public function iGiveAValidLPAShareCodeOnACancelledLPA(): void
+    {
         // not used in this context
     }
 
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect() {
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
+    {
         // not used in this context
     }
 
     /**
      * @When /^I confirm the cancelled LPA is correct$/
      */
-    public function iConfirmTheCancelledLPAIsCorrect() {
+    public function iConfirmTheCancelledLPAIsCorrect(): void
+    {
         // not used in this context
     }
 
@@ -146,14 +151,16 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When /^I give a share code that's been cancelled$/
      */
-    public function iGiveAShareCodeThatsBeenCancelled() {
+    public function iGiveAShareCodeThatsBeenCancelled(): void
+    {
         // not used in this context
     }
 
     /**
     * @When /^I give a share code that's been revoked$/
     */
-    public function iGiveAShareCodeThatsBeenRevoked() {
+    public function iGiveAShareCodeThatsBeenRevoked(): void
+    {
         // not used in this context
     }
 
@@ -162,7 +169,7 @@ class ViewerContext extends BaseIntegrationContext
      * @Then /^I can see the full details of the valid LPA$/
      * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iAmViewingAValidLPA()
+    public function iAmViewingAValidLPA(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -176,20 +183,24 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode(
+            $this->lpaShareCode,
+            $this->lpaSurname,
+            $this->lpaViewedBy
+        ))['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
         $body = json_decode($request->getBody()->getContents());
 
-        assertEquals('111111111111', $body->code); // code gets hyphens removed
-        assertEquals($this->lpaSurname, $body->name);
-        assertEquals( $this->lpaViewedBy, $body->organisation);
+        Assert::assertEquals('111111111111', $body->code); // code gets hyphens removed
+        Assert::assertEquals($this->lpaSurname, $body->name);
+        Assert::assertEquals($this->lpaViewedBy, $body->organisation);
     }
 
     /**
      * @Then /^I can see the full details of the cancelled LPA$/
      */
-    public function iAmViewingACancelledLPA()
+    public function iAmViewingACancelledLPA(): void
     {
         $this->lpaData['status'] = 'Cancelled';
         $this->apiFixtures->append(
@@ -204,19 +215,23 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode($this->lpaShareCode, $this->lpaSurname, $this->lpaViewedBy))['lpa'];
+        $this->viewedLpa = ($lpaService->getLpaByCode(
+            $this->lpaShareCode,
+            $this->lpaSurname,
+            $this->lpaViewedBy
+        ))['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
         $body = json_decode($request->getBody()->getContents());
 
-        assertEquals('111111111111', $body->code); // code gets hyphens removed
-        assertEquals($this->lpaSurname, $body->name);
-        assertEquals( $this->lpaViewedBy, $body->organisation);
+        Assert::assertEquals('111111111111', $body->code); // code gets hyphens removed
+        Assert::assertEquals($this->lpaSurname, $body->name);
+        Assert::assertEquals($this->lpaViewedBy, $body->organisation);
     }
     /**
      * @When /^I choose to download a document version of the LPA$/
      */
-    public function iChooseToDownloadADocumentVersionOfTheLPA()
+    public function iChooseToDownloadADocumentVersionOfTheLPA(): void
     {
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
 
@@ -225,13 +240,13 @@ class ViewerContext extends BaseIntegrationContext
         $pdfStream = $pdfService->getLpaAsPdf($this->viewedLpa);
 
         $request = $this->apiFixtures->getLastRequest();
-        assertContains('Mr Test Testable Testerson', $request->getBody()->getContents());
+        Assert::assertStringContainsString('Mr Test Testable Testerson', $request->getBody()->getContents());
     }
 
     /**
      * @Then /^a PDF is downloaded$/
      */
-    public function aPDFIsDownloaded()
+    public function aPDFIsDownloaded(): void
     {
         // not used in this context
     }
@@ -239,7 +254,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @When /^I realise the LPA is incorrect$/
      */
-    public function iRealiseTheLPAIsCorrect()
+    public function iRealiseTheLPAIsCorrect(): void
     {
         // not used in this context
     }
@@ -247,7 +262,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then /^I want to see an option to re-enter code$/
      */
-    public function iWantToSeeAnOptionToReEnterCode()
+    public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // not used in this context
     }
@@ -255,7 +270,7 @@ class ViewerContext extends BaseIntegrationContext
     /**
      * @Then /^I want to see an option to check another LPA$/
      */
-    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // not used in this context
     }

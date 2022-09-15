@@ -12,6 +12,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Actor\Handler\CheckLpaHandler;
 use Actor\Handler\Factory\CheckLpaHandlerFactory;
@@ -20,6 +21,8 @@ use Acpr\I18n\TranslatorInterface;
 
 class CheckLpaHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_correctly_configured_instance()
     {

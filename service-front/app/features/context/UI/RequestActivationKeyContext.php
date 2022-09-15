@@ -11,6 +11,7 @@ use BehatTest\Context\ContextUtilities;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -634,7 +635,7 @@ class RequestActivationKeyContext implements Context
      */
     public function myCurrentAddressIsRecordedInTheSiriusTask()
     {
-        assertStringContainsString(
+        Assert::assertStringContainsString(
             sprintf(
                 'Current postal address: %s, %s, %s\n',
                 ($this->lpa->donor->addresses[0])->addressLine1,
@@ -1171,7 +1172,7 @@ class RequestActivationKeyContext implements Context
      */
     public function theAddressGivenOnThePaperLPAIsRecordedInTheSiriusTask()
     {
-        assertStringContainsString(
+        Assert::assertStringContainsString(
             'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
             $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
         );

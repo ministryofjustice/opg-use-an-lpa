@@ -10,10 +10,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class RemoveLpaTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected RemoveLpa $form;
 

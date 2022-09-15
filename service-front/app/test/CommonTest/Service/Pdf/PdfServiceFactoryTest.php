@@ -10,6 +10,7 @@ use Common\Service\Pdf\PdfServiceFactory;
 use Common\Service\Pdf\StylesService;
 use DI\Factory\RequestedEntry;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -18,6 +19,8 @@ use Mezzio\Template\TemplateRendererInterface;
 
 class PdfServiceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_a_configured_pdf_service()
     {

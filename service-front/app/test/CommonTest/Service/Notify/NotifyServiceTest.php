@@ -6,6 +6,7 @@ namespace CommonTest\Service\Notify;
 
 use Common\Service\Notify\NotifyService;
 use Laminas\Diactoros\Response\JsonResponse;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Common\Service\ApiClient\Client;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,8 @@ use Locale;
 
 class NotifyServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     private string $defaultLocale;
 
     private const EN_LOCALE = 'en_GB';

@@ -11,6 +11,7 @@ use BehatTest\Context\ViewerContextTrait;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -302,13 +303,13 @@ class ViewerContext implements Context
         $request = $this->base->mockClientHistoryContainer[2]['request'];
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertIsArray($params);
-        assertEquals($params['name'], $this->lpaSurname);
-        assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
 
         //PDF service assertions
         $request = $this->apiFixtures->getLastRequest();
-        assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
+        Assert::assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
     }
 
     /**
@@ -354,10 +355,10 @@ class ViewerContext implements Context
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertInternalType('array', $params);
-        assertEquals($params['name'], $this->lpaSurname);
-        assertEquals($params['code'], $this->lpaStoredCode);
-        assertEquals($params['organisation'], $this->lpaViewedBy);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
     /**
@@ -389,10 +390,10 @@ class ViewerContext implements Context
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
 
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                    assertEquals($params['organisation'], $this->lpaViewedBy);
+                    Assert::assertIsArray($params);
+                    Assert::assertEquals($params['name'], $this->lpaSurname);
+                    Assert::assertEquals($params['code'], $this->lpaStoredCode);
+                    Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
                 }
             );
 
@@ -463,10 +464,10 @@ class ViewerContext implements Context
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertIsArray($params);
-        assertEquals($params['name'], $this->lpaSurname);
-        assertEquals($params['code'], $this->lpaStoredCode);
-        assertEquals($params['organisation'], $this->lpaViewedBy);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
     /**
@@ -774,9 +775,9 @@ class ViewerContext implements Context
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertIsArray($params);
-        assertEquals($params['name'], $this->lpaSurname);
-        assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
     }
 
     /**
@@ -990,8 +991,8 @@ class ViewerContext implements Context
 
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertIsArray($params);
-        assertEquals($params['name'], $this->lpaSurname);
-        assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
     }
 }

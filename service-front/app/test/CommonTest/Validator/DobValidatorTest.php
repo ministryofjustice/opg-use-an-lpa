@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DobValidatorTest extends TestCase
 {
-    /**
-     * @var DobValidator
-     */
-    private $validator;
+    private DobValidator $validator;
 
     public function setUp(): void
     {
@@ -77,7 +74,8 @@ class DobValidatorTest extends TestCase
         ]);
 
         $this->assertEquals([
-            DobValidator::AGE_TOO_YOUNG => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
+            DobValidator::AGE_TOO_YOUNG =>
+                'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
         ], $this->validator->getMessages());
 
         $this->assertFalse($isValid);

@@ -9,10 +9,13 @@ use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\I18n\SetLocaleMiddlewareFactory;
 use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class SetLocaleMiddlewareFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_can_be_configured_with_a_default_locale(): void
     {

@@ -9,6 +9,7 @@ use Common\Service\Log\LogStderrListenerDelegatorFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -17,6 +18,8 @@ use Psr\Log\LoggerInterface;
  */
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

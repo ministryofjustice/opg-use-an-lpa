@@ -12,10 +12,13 @@ use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class CatalogueExtractorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_will_extract_a_single_twig_file(): void
     {
@@ -118,7 +121,7 @@ class CatalogueExtractorTest extends TestCase
         /** @var Translations|ObjectProphecy $originalTranslationsProphecy */
         $originalTranslationsProphecy = $this->prophesize(Translations::class);
         $originalTranslationsProphecy
-            ->mergeWith(Argument::type(Translations::class), Argument::that(function($arg) {
+            ->mergeWith(Argument::type(Translations::class), Argument::that(function ($arg) {
                 $this->assertEquals(8704, $arg, 'The merge strategy is incorrect');
                 return true;
             }))

@@ -10,12 +10,15 @@ use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Service\Security\RateLimit\KeyedRateLimitService;
 use Common\Service\Security\RateLimitServiceFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class RateLimitMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_functions_without_an_identity(): void
     {

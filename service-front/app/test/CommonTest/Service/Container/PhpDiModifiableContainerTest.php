@@ -7,10 +7,13 @@ namespace CommonTest\Service\Container;
 use Common\Service\Container\PhpDiModifiableContainer;
 use DI\Container;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class PhpDiModifiableContainerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_only_acts_on_a_phpdi_container()
     {

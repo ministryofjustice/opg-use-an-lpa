@@ -29,6 +29,7 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,6 +37,8 @@ use Psr\Http\Message\UriInterface;
 
 class EncryptedCookiePersistenceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /*
      * Name given to the cookie
      */
@@ -56,10 +59,7 @@ class EncryptedCookiePersistenceTest extends TestCase
      */
     private const COOKIE_EXPIRES = 600;
 
-    /**
-     * @var ObjectProphecy|EncryptInterface
-     */
-    private $encrypterProphecy;
+    private ObjectProphecy|EncryptInterface $encrypterProphecy;
 
     /**
      * @var Key
@@ -186,23 +186,20 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $cookieName = self::COOKIE_NAME;
                     $cookiePath = self::COOKIE_PATH;
 
-                    $patternCookie = "^{$cookieName}=(.+?);";
-                    $patternPath = "Path={$cookiePath};";
-                    $patternExpires = "Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);";
-                    $patternSecure = "Secure;";
-                    $patternHttpOnly = "HttpOnly;";
-                    $patternSameSite = "SameSite=Lax$";
+                    $regexCookie = "^{$cookieName}=(.+?);";
+                    $regexPath = "Path={$cookiePath};";
+                    $regexExpires = 'Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);';
 
                     // Validate the full pattern
-                    $this->assertRegExp(
-                        "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly} {$patternSameSite}|",
+                    $this->assertMatchesRegularExpression(
+                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=Lax$|",
                         $input
                     );
 
                     //--------
                     // Extract the cookie data
 
-                    preg_match("|{$patternCookie}|", $input, $matches);
+                    preg_match("|{$regexCookie}|", $input, $matches);
 
                     // Decompose the value into the key id, and the data
                     [$keyId, $payload] = explode('.', $matches[1], 2);
@@ -213,7 +210,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     //--------
                     // Extract the Expires time
 
-                    preg_match("|{$patternExpires}|", $input, $matches);
+                    preg_match("|{$regexExpires}|", $input, $matches);
 
                     $time = strtotime($matches[1]);
 
@@ -307,23 +304,20 @@ class EncryptedCookiePersistenceTest extends TestCase
                     $cookieName = self::COOKIE_NAME;
                     $cookiePath = self::COOKIE_PATH;
 
-                    $patternCookie = "^{$cookieName}=(.+?);";
-                    $patternPath = "Path={$cookiePath};";
-                    $patternExpires = "Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);";
-                    $patternSecure = "Secure;";
-                    $patternHttpOnly = "HttpOnly;";
-                    $patternSameSite = "SameSite=Strict$";
+                    $regexCookie = "^{$cookieName}=(.+?);";
+                    $regexPath = "Path={$cookiePath};";
+                    $regexExpires = 'Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);';
 
                     // Validate the full pattern
-                    $this->assertRegExp(
-                        "|{$patternCookie} {$patternPath} {$patternExpires} {$patternSecure} {$patternHttpOnly} {$patternSameSite}|",
+                    $this->assertMatchesRegularExpression(
+                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=Strict$|",
                         $input
                     );
 
                     //--------
                     // Extract the cookie data
 
-                    preg_match("|{$patternCookie}|", $input, $matches);
+                    preg_match("|{$regexCookie}|", $input, $matches);
 
                     // Decompose the value into the key id, and the data
                     [$keyId, $payload] = explode('.', $matches[1], 2);
@@ -334,7 +328,7 @@ class EncryptedCookiePersistenceTest extends TestCase
                     //--------
                     // Extract the Expires time
 
-                    preg_match("|{$patternExpires}|", $input, $matches);
+                    preg_match("|{$regexExpires}|", $input, $matches);
 
                     $time = strtotime($matches[1]);
 

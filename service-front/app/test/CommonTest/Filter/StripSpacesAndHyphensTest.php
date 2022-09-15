@@ -4,9 +4,12 @@ namespace CommonTest\Filter;
 
 use Common\Filter\StripSpacesAndHyphens;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class StripSpacesAndHyphensTest extends TestCase
 {
+    use ProphecyTrait;
+
     private StripSpacesAndHyphens $filter;
 
     public function setUp(): void

@@ -15,11 +15,14 @@ use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TemplateRendererInterface
      */

@@ -7,11 +7,14 @@ namespace CommonTest\View\Twig;
 use Common\View\Twig\JavascriptVariablesExtension;
 use Common\View\Twig\JavascriptVariablesExtensionFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 
 class JavascriptVariablesExtensionFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

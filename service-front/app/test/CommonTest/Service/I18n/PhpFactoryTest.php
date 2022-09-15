@@ -8,9 +8,12 @@ use Acpr\I18n\PhpExtractor;
 use Common\Service\I18n\CatalogueExtractor;
 use Common\Service\I18n\Extractors\PhpFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PhpFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_an_extractor(): void
     {
