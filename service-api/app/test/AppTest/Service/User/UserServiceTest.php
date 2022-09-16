@@ -204,7 +204,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
         $this->assertEquals(
             [
@@ -229,7 +229,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
-        $return = $us->authenticate('a@b.com', 'badpassword');
+        $return = $us->authenticate('a@b.com', new HiddenString('badpassword'));
     }
 
     /** @test */
@@ -244,7 +244,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
-        $return = $us->authenticate('baduser@b.com', self::PASS);
+        $return = $us->authenticate('baduser@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -266,7 +266,7 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(UnauthorizedException::class);
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
@@ -687,4 +687,3 @@ class UserServiceTest extends TestCase
         $this->assertNull($response);
     }
 }
-
