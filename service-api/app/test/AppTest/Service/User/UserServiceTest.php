@@ -687,4 +687,3 @@ class UserServiceTest extends TestCase
         $this->assertNull($response);
     }
 }
-
