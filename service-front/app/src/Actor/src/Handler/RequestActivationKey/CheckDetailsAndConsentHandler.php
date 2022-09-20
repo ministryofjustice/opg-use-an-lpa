@@ -102,13 +102,13 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->data['actor_role']             = $state->getActorRole();
             $this->data['actor_address_response'] = $state->actorAddressResponse;
 
-            if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+            if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
                 $this->data['donor_first_names'] = $state->donorFirstNames;
                 $this->data['donor_last_name']   = $state->donorLastName;
                 $this->data['donor_dob']         = $state->donorDob;
             }
 
-            if ($state->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+            if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
                 $this->data['attorney_first_names'] = $state->attorneyFirstNames;
                 $this->data['attorney_last_name']   = $state->attorneyLastName;
                 $this->data['attorney_dob']         = $state->attorneyDob;
@@ -182,7 +182,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 'and provided the following contact information: {role}, {phone}',
                 [
                     'id'    => $this->user->getIdentity(),
-                    'role'  => $state->getActorRole() === RequestActivationKey::ACTOR_DONOR ?
+                    'role'  => $state->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR ?
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_DONOR :
                         EventCodes::OOLPA_KEY_REQUESTED_FOR_ATTORNEY,
                     'phone' => $state->telephone !== null ?
@@ -257,7 +257,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             || $this->state($request)->actorAddress1 === null
             || $this->state($request)->actorAddressTown === null;
 
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             return $alwaysRequired
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null

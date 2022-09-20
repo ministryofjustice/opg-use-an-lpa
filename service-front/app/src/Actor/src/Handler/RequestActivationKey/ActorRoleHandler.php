@@ -26,9 +26,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
             $this->form->setData(['actor_role_radio' => 'Donor']);
-        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             $this->form->setData(['actor_role_radio' => 'Attorney']);
         }
 
@@ -50,9 +50,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_DONOR);
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_DONOR);
             } elseif ($selected === 'Attorney') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_ATTORNEY);
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_ATTORNEY);
             }
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
@@ -78,7 +78,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             return 'lpa.add.check-details-and-consent';
         }
 
-        return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
+        return $state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY
             ? 'lpa.add.donor-details'
             : 'lpa.add.attorney-details';
     }
