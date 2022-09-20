@@ -1,0 +1,98 @@
+name: "[Workflow] Dependabot Composer and Npm Changes"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+#      - 'dependabot/npm_and_yarn/**'
+#      - 'dependabot/composer/**'
+      - 'UML-2558**'
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+#  workspace_name:
+#    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
+  branch_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
+
+  create_tags:
+    name: Create Tags
+    needs: [ 'branch_name' ]
+    uses: ./.github/workflows/_create-tags.yml
+    with:
+      branch_name: ${{ needs.branch_name.outputs.parsed }}
+    secrets:
+      source_github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  node_test:
+#    if: github.actor != 'dependabot[bot]'
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+
+  node_build:
+#    if: github.actor != 'dependabot[bot]'
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - branch_name
+      - create_tags
+      - node_test
+      - node_build
+    with:
+      tag: ${{ needs.create_tags.outputs.version_tag }}
+      branch_name: ${{ needs.branch_name.outputs.parsed }}
+      push_to_ecr: false
+    secrets: inherit
+
+  code_coverage:
+    name: upload to code coverage
+    needs: ['docker_build_scan_push']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: Restore the tests
+        run: echo "Restoring the tests"
+      - name: Get and Validate Codecov App
+        run: bash ./scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
+      - name: download artifact for front tests
+        uses: actions/download-artifact@v3
+        with:
+          name: service-front
+      - name: download artifact for api tests
+        uses: actions/download-artifact@v3
+        with:
+          name: service-api
+      - name: Upload to Codecov
+        run: |
+          echo "would run below"
+          # bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+
+  # Required end of workflow job
+#  workflow_end:
+#    name: End of workflow
+#    runs-on: ubuntu-latest
+#    needs: ['code_coverage']
+#    steps:
+#      - name: ending workflow
+#        run: echo "Ending Workflow"
