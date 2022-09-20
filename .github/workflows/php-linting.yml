@@ -46,7 +46,7 @@ jobs:
         mkdir standards
         tar -xzf 1.2.4.tar.gz -C standards
         tar -xzf 8.4.0.tar.gz -C standards
-        php phpcs.phar --config-set installed_paths $PWD/standards/coding-standard-1.2.4/src/WebImpressCodingStandard/,$PWD/standards/coding-standard-8.4.0/SlevomatCodingStandard/
+        php phpcs.phar --config-set installed_paths $PWD/standards/coding-standard-1.2.4/src/WebimpressCodingStandard/,$PWD/standards/coding-standard-8.4.0/SlevomatCodingStandard/
         php phpcs.phar --config-show
         php phpcs.phar -i
 
