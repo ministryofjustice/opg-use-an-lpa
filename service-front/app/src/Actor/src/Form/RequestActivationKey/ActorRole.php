@@ -13,24 +13,20 @@ class ActorRole extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'actor_role';
 
-    /**
-     * AddLpaTriage constructor.
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add(
             [
-                'name'       => 'actor_role_radio',
-                'type'       => 'Radio',
-                'options'    => [
+                'name'    => 'actor_role_radio',
+                'type'    => 'Radio',
+                'options' => [
                     'value_options' => [
-                        'Donor'     => 'Donor',
-                        'Attorney'  => 'Attorney'
-                    ]
-                ]
+                        'Donor'    => 'Donor',
+                        'Attorney' => 'Attorney',
+                    ],
+                ],
             ]
         );
     }
@@ -46,9 +42,9 @@ class ActorRole extends AbstractForm implements InputFilterProviderInterface
                 'required'   => true,
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'messages'           => [
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Select whether you are the donor or an attorney on the LPA',
                             ],
                         ],

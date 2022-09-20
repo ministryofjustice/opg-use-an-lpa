@@ -18,8 +18,7 @@ class CookieConsentTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var CookieConsent */
-    protected $form;
+    protected CookieConsent $form;
 
     public function getForm(): AbstractForm
     {
@@ -34,15 +33,15 @@ class CookieConsentTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'usageCookies'     => Radio::class,
-            'referer'         => Hidden::class,
+            '__csrf'       => Csrf::class,
+            'usageCookies' => Radio::class,
+            'referer'      => Hidden::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CookieConsent($guardProphecy->reveal());
+        $this->form    = new CookieConsent($guardProphecy->reveal());
     }
 }

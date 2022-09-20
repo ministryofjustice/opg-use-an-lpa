@@ -3,35 +3,27 @@
 declare(strict_types=1);
 
 return [
-
-    'application' => getenv('CONTEXT') ?: null,
-
-    'version' => getenv('CONTAINER_VERSION') ?: 'dev',
-
-    'api' => [
+    'application'    => getenv('CONTEXT') ?: null,
+    'version'        => getenv('CONTAINER_VERSION') ?: 'dev',
+    'api'            => [
         'uri' => getenv('API_SERVICE_URL') ?: null,
     ],
-
-    'pdf' => [
+    'pdf'            => [
         'uri' => getenv('PDF_SERVICE_URL') ?: null,
     ],
-
-    'aws' => [
-        'region'    => 'eu-west-1',
-        'version'   => 'latest',
-
-        'Kms' => [
+    'aws'            => [
+        'region'  => 'eu-west-1',
+        'version' => 'latest',
+        'Kms'     => [
             'endpoint' => getenv('AWS_ENDPOINT_KMS') ?: null,
         ],
     ],
-
-    'notify' => [
+    'notify'         => [
         'api' => [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
         ],
     ],
-
-    'session' => [
+    'session'        => [
 
         // Time in seconds after which a session will expire.
         'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
@@ -39,10 +31,8 @@ return [
         // Time in seconds before a users session will expire
         // whereby a popup window will appear to warn them
         'expiry_warning' => 60 * getenv('SESSION_EXPIRY_WARNING') ?: 300,  // default to 5 minutes
-
-        'cookie_ttl' => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
-
-        'key' => [
+        'cookie_ttl'     => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
+        'key'            => [
             // KMS alias to use for data key generation.
             'alias' => getenv('KMS_SESSION_CMK_ALIAS') ?: null,
         ],
@@ -100,95 +90,90 @@ return [
         // the below flag is toggled off.
         'persistent' => false,
     ],
-
-    'analytics' => [
-        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: "",
+    'analytics'      => [
+        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: '',
     ],
-
     'authentication' => [
         'username' => 'email',
         'redirect' => '/login',
     ],
-
-    'i18n' => [
+    'i18n'           => [
         'default_locale' => 'en_GB',
         'default_domain' => 'messages',
-        'locale_path' => '/app/languages/'
+        'locale_path'    => '/app/languages/',
     ],
-
-    'ratelimits' => [
+    'ratelimits'     => [
         'viewer_code_failure' => [
-            'type' => 'keyed',
+            'type'    => 'keyed',
             'storage' => [
                 'adapter' => [
                     'name'    => 'redis',
                     'options' => [
-                        'ttl' => 60,
-                        'server' => [
+                        'ttl'         => 60,
+                        'server'      => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
+                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
                         ],
                         'lib_options' => [
-                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
-                        ]
+                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+                        ],
                     ],
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
         ],
-        'actor_code_failure' => [
-            'type' => 'keyed',
+        'actor_code_failure'  => [
+            'type'    => 'keyed',
             'storage' => [
                 'adapter' => [
                     'name'    => 'redis',
                     'options' => [
-                        'ttl' => 60,
-                        'server' => [
+                        'ttl'         => 60,
+                        'server'      => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
+                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
                         ],
                         'lib_options' => [
-                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
-                        ]
+                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+                        ],
                     ],
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
         ],
         'actor_login_failure' => [
-            'type' => 'keyed',
+            'type'    => 'keyed',
             'storage' => [
                 'adapter' => [
                     'name'    => 'redis',
                     'options' => [
-                        'ttl' => 60,
-                        'server' => [
+                        'ttl'         => 60,
+                        'server'      => [
                             'persistent_id' => 'brute-force-cache-replication-group',
-                            'host' => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port' => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60
+                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
                         ],
                         'lib_options' => [
-                            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP
-                        ]
+                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+                        ],
                     ],
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
-        ]
-    ]
-
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
+        ],
+    ],
 ];

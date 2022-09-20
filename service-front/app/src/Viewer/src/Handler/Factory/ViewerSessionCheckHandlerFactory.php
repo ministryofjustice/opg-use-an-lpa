@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\Factory;
 
-use Viewer\Handler\ViewerSessionCheckHandler;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Exception\RuntimeException;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Viewer\Handler\ViewerSessionCheckHandler;
 
 /**
- * Class ViewerSessionCheckHandlerFactory
- * @package Viewer\Handler\Factory
  * @codeCoverageIgnore
  * Tests are covered by ActorSessionCheckHandlerFactory
  */

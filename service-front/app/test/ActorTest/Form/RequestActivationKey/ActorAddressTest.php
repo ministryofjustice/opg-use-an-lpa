@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorAddress;
@@ -32,18 +34,18 @@ class ActorAddressTest extends TestCase
     public function getFormElements(): array
     {
         return [
-            '__csrf'               => Csrf::class,
-            'actor_address_1'      => Text::class,
-            'actor_address_2'      => Text::class,
-            'actor_address_town'   => Text::class,
-            'actor_address_county' => Text::class,
-            'actor_address_check_radio' => Radio::class
+            '__csrf'                    => Csrf::class,
+            'actor_address_1'           => Text::class,
+            'actor_address_2'           => Text::class,
+            'actor_address_town'        => Text::class,
+            'actor_address_county'      => Text::class,
+            'actor_address_check_radio' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActorAddress($guardProphecy->reveal());
+        $this->form    = new ActorAddress($guardProphecy->reveal());
     }
 }

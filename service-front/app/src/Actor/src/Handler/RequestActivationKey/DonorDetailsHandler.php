@@ -12,18 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class DonorDetailsHandler
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 {
     private DonorDetails $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new DonorDetails($this->getCsrfGuard($request));
@@ -34,14 +28,14 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
     {
         $data = [
             'donor_first_names' => $this->state($request)->donorFirstNames,
-            'donor_last_name' => $this->state($request)->donorLastName
+            'donor_last_name'   => $this->state($request)->donorLastName,
         ];
 
         if (($dob = $this->state($request)->donorDob) !== null) {
             $data['donor_dob'] = [
-                'day' => $dob->format('d'),
+                'day'   => $dob->format('d'),
                 'month' => $dob->format('m'),
-                'year' => $dob->format('Y'),
+                'year'  => $dob->format('Y'),
             ];
         }
 
@@ -52,7 +46,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -64,8 +58,8 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
             $postData = $this->form->getData();
 
             $this->state($request)->donorFirstNames = $postData['donor_first_names'];
-            $this->state($request)->donorLastName = $postData['donor_last_name'];
-            $this->state($request)->donorDob = (new DateTimeImmutable())->setDate(
+            $this->state($request)->donorLastName   = $postData['donor_last_name'];
+            $this->state($request)->donorDob        = (new DateTimeImmutable())->setDate(
                 (int) $postData['donor_dob']['year'],
                 (int) $postData['donor_dob']['month'],
                 (int) $postData['donor_dob']['day']
@@ -81,7 +75,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -95,11 +89,15 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.contact-details';
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.contact-details';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.actor-role';
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.actor-role';
     }
 }

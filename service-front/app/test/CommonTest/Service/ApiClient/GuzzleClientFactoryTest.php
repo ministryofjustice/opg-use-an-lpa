@@ -11,11 +11,7 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * Class GuzzleClientFactoryTest
- *
  * @coversDefaultClass \Common\Service\ApiClient\GuzzleClientFactory
- *
- * @package CommonTest\Service\ApiClient
  */
 class GuzzleClientFactoryTest extends TestCase
 {
@@ -68,11 +64,11 @@ class GuzzleClientFactoryTest extends TestCase
     {
         return [
             [
-                []
+                [],
             ],
             [
                 ['api' => []],
-            ]
+            ],
         ];
     }
 }

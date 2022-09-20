@@ -30,8 +30,8 @@ class KeyedRateLimitService extends RateLimitService
         }
 
         // walk the time window and drop expired records
-        $expiredTime = time() - $this->interval;
-        $accessRecords = array_filter($accessRecords, function($item) use($expiredTime) {
+        $expiredTime   = time() - $this->interval;
+        $accessRecords = array_filter($accessRecords, function ($item) use ($expiredTime) {
             return $item >= $expiredTime;
         });
 

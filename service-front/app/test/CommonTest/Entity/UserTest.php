@@ -29,7 +29,7 @@ class UserTest extends TestCase
         $user = new User('test', [], [
             'Email'      => 'a@b.com',
             'LastLogin'  => $date->format(DateTimeInterface::ATOM),
-            'NeedsReset' => strtotime('now')
+            'NeedsReset' => strtotime('now'),
         ]);
 
         $this->assertIsArray($user->getDetails());
@@ -43,8 +43,8 @@ class UserTest extends TestCase
     {
         $date = new DateTime();
         $user = new User('test', [], [
-            'Email'      => 'a@b.com',
-            'LastLogin'  => $date->format(DateTimeInterface::ATOM),
+            'Email'     => 'a@b.com',
+            'LastLogin' => $date->format(DateTimeInterface::ATOM),
         ]);
 
         $this->assertIsArray($user->getDetails());
@@ -73,8 +73,8 @@ class UserTest extends TestCase
         $date = new DateTime($date);
 
         $user = new User('test', [], [
-            'Email'      => 'a@b.com',
-            'LastLogin'  => $date->format(DateTimeInterface::ATOM),
+            'Email'     => 'a@b.com',
+            'LastLogin' => $date->format(DateTimeInterface::ATOM),
         ]);
 
         $this->assertEquals($date, $user->getDetail('LastLogin'));
@@ -91,11 +91,11 @@ class UserTest extends TestCase
             [],
             [
                 'LastLogin' => [
-                    'date' => $date->format('Y-m-d H:i:s.u'),
+                    'date'          => $date->format('Y-m-d H:i:s.u'),
                     'timezone_type' => 3,
-                    'timezone' => $date->getTimezone()->getName(),
+                    'timezone'      => $date->getTimezone()->getName(),
                 ],
-                'Email' => 'a@b.com',
+                'Email'     => 'a@b.com',
             ],
         );
 

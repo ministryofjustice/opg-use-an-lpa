@@ -14,10 +14,11 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'organisation_name';
 
+    /** @var array<array-key, mixed> */
     protected array $messageTemplates = [
-        self::NOT_SAME => "Do you want to continue?" .
-            " You have not used this service for 30 minutes." .
-            " Click continue to use any details you entered"
+        self::NOT_SAME => 'Do you want to continue?' .
+            ' You have not used this service for 30 minutes.' .
+            ' Click continue to use any details you entered',
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
@@ -31,15 +32,14 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
     }
 
     /**
-     * @return array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array
     {
         return [
             'organisation' => [
-                'required' => true,
-                'filters'  => [
+                'required'   => true,
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
@@ -47,10 +47,10 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message'  => 'Enter your organisation name',
+                            'message' => 'Enter your organisation name',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ],
         ];
     }

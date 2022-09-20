@@ -12,18 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActorRoleHandler
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class ActorRoleHandler extends AbstractCleansingDetailsHandler
 {
     private ActorRole $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new ActorRole($this->getCsrfGuard($request));
@@ -41,17 +35,13 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-role',
             [
-                'user'  => $this->user,
-                'form'  => $this->form,
-                'back' => $this->lastPage($this->state($request))
+                'user' => $this->user,
+                'form' => $this->form,
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
@@ -71,7 +61,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
             'user' => $this->user,
             'form' => $this->form,
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

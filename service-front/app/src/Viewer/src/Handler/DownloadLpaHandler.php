@@ -15,9 +15,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class DownloadLpaHandler
- *
- * @package Viewer\Handler
  * @codeCoverageIgnore
  */
 class DownloadLpaHandler implements RequestHandlerInterface
@@ -27,32 +24,13 @@ class DownloadLpaHandler implements RequestHandlerInterface
     /**
      * @var LoggerInterface;
      */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
-
-    /**
-     * @var PdfService
-     */
-    private $pdfService;
-
-    /**
-     * ViewLpaHandler constructor.
-     *
-     * @param LpaService        $lpaService
-     * @param PdfService        $pdfService
-     * @param LoggerInterface   $logger
-     */
     public function __construct(
-        LpaService $lpaService,
-        PdfService $pdfService,
-        LoggerInterface $logger
+        private LpaService $lpaService,
+        private PdfService $pdfService,
+        LoggerInterface $logger,
     ) {
-        $this->lpaService = $lpaService;
-        $this->pdfService = $pdfService;
         $this->logger = $logger;
     }
 
@@ -63,16 +41,16 @@ class DownloadLpaHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->getSession($request, 'session')->get('code');
+        $code    = $this->getSession($request, 'session')->get('code');
         $surname = $this->getSession($request, 'session')->get('surname');
 
         if (!isset($code)) {
-            $this->logger->error("Session timed out unable to generated PDF");
+            $this->logger->error('Session timed out unable to generated PDF');
 
             throw new SessionTimeoutException();
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, null);
+        $lpa       = $this->lpaService->getLpaByCode($code, $surname, null);
         $pdfStream = $this->pdfService->getLpaAsPdf($lpa->lpa);
 
         return new PdfResponse($pdfStream, 'lpa-' . $lpa->lpa->getUId());

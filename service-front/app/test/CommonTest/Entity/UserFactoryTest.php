@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace CommonTest\Entity;
 
 use Common\Entity\UserFactory;
+use Mezzio\Authentication\UserInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use ReflectionFunction;
-use Mezzio\Authentication\UserInterface;
+use RuntimeException;
 
 class UserFactoryTest extends TestCase
 {
@@ -26,13 +27,13 @@ class UserFactoryTest extends TestCase
 
         $this->assertIsCallable($callable);
 
-        $r = new ReflectionFunction($callable);
+        $r          = new ReflectionFunction($callable);
         $parameters = $r->getParameters();
 
         $this->assertCount(3, $parameters);
-        $this->assertEquals('string', ($parameters[0])->getType());
-        $this->assertEquals('array', ($parameters[1])->getType());
-        $this->assertEquals('array', ($parameters[2])->getType());
+        $this->assertEquals('string', $parameters[0]->getType());
+        $this->assertEquals('array', $parameters[1]->getType());
+        $this->assertEquals('array', $parameters[2]->getType());
 
         $this->assertEquals(UserInterface::class, $r->getReturnType());
     }
@@ -61,7 +62,7 @@ class UserFactoryTest extends TestCase
 
         $callable = $factory($containerProphecy->reveal());
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $callable('test', [], []);
     }

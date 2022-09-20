@@ -8,32 +8,11 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
 
 /**
  * Represents a single encryption key, and it ID.
- *
- * Class Key
- * @package Common\Service\Session\KeyManager
  */
 class Key
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var EncryptionKey
-     */
-    private $material;
-
-    /**
-     * Key constructor.
-     *
-     * @param string $id
-     * @param EncryptionKey $material
-     */
-    public function __construct(string $id, EncryptionKey $material)
+    public function __construct(private string $id, private EncryptionKey $material)
     {
-        $this->id = $id;
-        $this->material = $material;
     }
 
     /**

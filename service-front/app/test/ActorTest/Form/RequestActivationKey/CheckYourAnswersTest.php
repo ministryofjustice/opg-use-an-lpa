@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\CheckYourAnswers;
@@ -31,13 +33,13 @@ class CheckYourAnswersTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf' => Csrf::class
+            '__csrf' => Csrf::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CheckYourAnswers($guardProphecy->reveal());
+        $this->form    = new CheckYourAnswers($guardProphecy->reveal());
     }
 }

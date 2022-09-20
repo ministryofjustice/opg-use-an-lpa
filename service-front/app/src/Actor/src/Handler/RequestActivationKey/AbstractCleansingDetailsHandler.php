@@ -26,8 +26,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractCleansingDetailsHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements
@@ -36,11 +34,11 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     LoggerAware,
     WorkflowStep
 {
-    use User;
     use CsrfGuard;
-    use SessionTrait;
     use Logger;
+    use SessionTrait;
     use State;
+    use User;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
@@ -49,21 +47,16 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
@@ -91,7 +84,6 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return RequestActivationKey
      * @throws StateNotInitialisedException
      */
@@ -100,11 +92,6 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         return $this->loadState($request, RequestActivationKey::class);
     }
 
-    /**
-     * @param RequestActivationKey $state
-     *
-     * @return bool
-     */
     protected function hasFutureAnswersInState(RequestActivationKey $state): bool
     {
         // address 1 is a required field on it's page so only need to check that.

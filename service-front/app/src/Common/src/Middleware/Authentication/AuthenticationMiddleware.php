@@ -18,7 +18,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
     public function __construct(
         MiddlewarePipeInterface $middlewarePipe,
         MezzioAuthenticationMiddleware $authenticationMiddleware,
-        ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware
+        ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware,
     ) {
         $this->pipe = $middlewarePipe;
         $this->pipe->pipe($authenticationMiddleware);

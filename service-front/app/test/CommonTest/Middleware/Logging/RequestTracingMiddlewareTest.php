@@ -6,11 +6,11 @@ namespace CommonTest\Middleware\Logging;
 
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Service\Container\ModifiableContainerInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class RequestTracingMiddlewareTest extends TestCase
 {
@@ -31,7 +31,7 @@ class RequestTracingMiddlewareTest extends TestCase
             ->handle($requestProphecy->reveal())
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $rtm = new RequestTracingMiddleware($containerProphecy->reveal());
+        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
         $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
@@ -50,7 +50,7 @@ class RequestTracingMiddlewareTest extends TestCase
             ->handle($requestProphecy->reveal())
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $rtm = new RequestTracingMiddleware($containerProphecy->reveal());
+        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
         $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 }

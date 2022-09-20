@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DateTest extends TestCase
 {
-    /**
-     * @var Date
-     */
-    private $fieldset;
+    private Date $fieldset;
 
     public function setUp(): void
     {
@@ -43,9 +40,9 @@ class DateTest extends TestCase
             }
 
             $expectedElementClass = $elements[$fieldsetElementName];
-            $elementClass = get_class($fieldsetElement);
+            $elementClass         = $fieldsetElement::class;
 
-            if ($expectedElementClass != $elementClass) {
+            if ($expectedElementClass !== $elementClass) {
                 $this->fail(sprintf('Class type expectation failure for "%s": Expecting %s but found %s', $fieldsetElementName, $expectedElementClass, $elementClass));
             }
 

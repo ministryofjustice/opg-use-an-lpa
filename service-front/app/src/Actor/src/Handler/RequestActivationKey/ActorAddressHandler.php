@@ -12,17 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class ActorAddressHandler extends AbstractCleansingDetailsHandler
 {
     private ActorAddress $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new ActorAddress($this->getCsrfGuard($request));
@@ -33,9 +28,9 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
     {
         $this->form->setData(
             [
-                'actor_address_1' => $this->state($request)->actorAddress1,
-                'actor_address_2' => $this->state($request)->actorAddress2,
-                'actor_address_town' => $this->state($request)->actorAddressTown,
+                'actor_address_1'      => $this->state($request)->actorAddress1,
+                'actor_address_2'      => $this->state($request)->actorAddress2,
+                'actor_address_town'   => $this->state($request)->actorAddressTown,
                 'actor_address_county' => $this->state($request)->actorAddressCounty,
             ]
         );
@@ -43,7 +38,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         if ($this->state($request)->getActorAddressCheckResponse() !== null) {
             $this->form->setData(
                 [
-                    'actor_address_check_radio' => $this->state($request)->getActorAddressCheckResponse()
+                    'actor_address_check_radio' => $this->state($request)->getActorAddressCheckResponse(),
                 ]
             );
         }
@@ -51,9 +46,9 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-address',
             [
-                'user'     => $this->user,
-                'form'     => $this->form->prepare(),
-                'back'     => $this->lastPage($this->state($request))
+                'user' => $this->user,
+                'form' => $this->form->prepare(),
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -64,10 +59,10 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            $this->state($request)->actorAddress1 = $postData['actor_address_1'];
-            $this->state($request)->actorAddress2 = $postData['actor_address_2'];
-            $this->state($request)->actorAddressTown = $postData['actor_address_town'];
-            $this->state($request)->actorAddressCounty = $postData['actor_address_county'];
+            $this->state($request)->actorAddress1        = $postData['actor_address_1'];
+            $this->state($request)->actorAddress2        = $postData['actor_address_2'];
+            $this->state($request)->actorAddressTown     = $postData['actor_address_town'];
+            $this->state($request)->actorAddressCounty   = $postData['actor_address_county'];
             $this->state($request)->actorAddressResponse = $postData['actor_address_check_radio'];
 
             $nextPageName = $this->nextPage($this->state($request));
@@ -77,10 +72,10 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-address',
             [
-                'user' => $this->user,
-                'form' => $this->form->prepare(),
+                'user'     => $this->user,
+                'form'     => $this->form->prepare(),
                 'postcode' => $this->state($request)->postcode,
-                'back' => $this->lastPage($this->state($request))
+                'back'     => $this->lastPage($this->state($request)),
             ]
         ));
     }

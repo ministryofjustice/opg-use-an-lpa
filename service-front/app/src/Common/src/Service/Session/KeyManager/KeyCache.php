@@ -6,9 +6,6 @@ namespace Common\Service\Session\KeyManager;
 
 /**
  * Abstracted APCu functions out to aid with testing.
- *
- * Class KeyCache
- * @package Common\Service\Session\KeyManager
  */
 class KeyCache
 {

@@ -15,19 +15,12 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class SessionExpiredRedirectMiddleware
- *
  * Responsible for redirecting to an appropriate page when the session is loaded as expired. Determination
  * of the expiry of a session is made in the EncryptedCookiePersistence class and attached as data into the session.
- *
- * @package Common\Middleware\Session
  */
 class SessionExpiredRedirectMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var UrlHelper
-     */
-    private $helper;
+    private UrlHelper $helper;
 
     public function __construct(UrlHelper $urlHelper)
     {

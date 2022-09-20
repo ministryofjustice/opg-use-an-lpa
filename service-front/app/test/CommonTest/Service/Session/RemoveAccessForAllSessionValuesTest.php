@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Session;
 
 use Common\Service\Session\RemoveAccessForAllSessionValues;
@@ -25,7 +27,7 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
             'donor_last_name',
             'donor_dob',
             'telephone_option',
-            'lpa_full_match_but_not_cleansed'
+            'lpa_full_match_but_not_cleansed',
         ];
 
         foreach ($postMatchSessionValues as $sessionValue) {
@@ -50,7 +52,7 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
             'donor_last_name',
             'donor_dob',
             'telephone_option',
-            'lpa_full_match_but_not_cleansed'
+            'lpa_full_match_but_not_cleansed',
         ];
 
         foreach ($toRemoveSessionValues as $sessionValue) {

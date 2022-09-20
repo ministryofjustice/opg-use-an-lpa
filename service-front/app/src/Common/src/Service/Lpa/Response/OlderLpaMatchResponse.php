@@ -9,8 +9,8 @@ use Common\Entity\CaseActor;
 class OlderLpaMatchResponse
 {
     protected CaseActor $donor;
-    /** @var CaseActor|null */
-    protected $attorney = null;
+
+    protected ?CaseActor $attorney = null;
     protected string $caseSubtype;
     protected string $activationKeyDueDate;
 

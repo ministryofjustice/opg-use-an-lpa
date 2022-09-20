@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
@@ -33,13 +35,13 @@ class ActorRoleTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'actor_role_radio' => Radio::class
+            'actor_role_radio' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActorRole($guardProphecy->reveal());
+        $this->form    = new ActorRole($guardProphecy->reveal());
     }
 }

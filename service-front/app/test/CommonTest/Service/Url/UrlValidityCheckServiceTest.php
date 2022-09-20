@@ -20,19 +20,19 @@ class UrlValidityCheckServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ServerRequestInterface|ObjectProphecy $serverRequestFactoryProphecy;
-    protected RouterInterface|ObjectProphecy $routerProphecy;
-    protected ServerRequestFactoryInterface|ObjectProphecy $serverRequestInterfaceProphecy;
-    private UrlHelper|ObjectProphecy $urlHelperProphecy;
-    private $locale;
+    private ObjectProphecy|ServerRequestInterface $serverRequestFactoryProphecy;
+    private ObjectProphecy|RouterInterface $routerProphecy;
+    private ObjectProphecy|ServerRequestFactoryInterface $serverRequestInterfaceProphecy;
+    private ObjectProphecy|UrlHelper $urlHelperProphecy;
+    private string $locale;
 
     public function setUp(): void
     {
-        $this->serverRequestFactoryProphecy = $this->prophesize(ServerRequestFactory::class);
-        $this->routerProphecy = $this->prophesize(RouterInterface::class);
+        $this->serverRequestFactoryProphecy   = $this->prophesize(ServerRequestFactory::class);
+        $this->routerProphecy                 = $this->prophesize(RouterInterface::class);
         $this->serverRequestInterfaceProphecy = $this->prophesize(ServerRequestInterface::class);
-        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
-        $this->locale = "en_GB";
+        $this->urlHelperProphecy              = $this->prophesize(UrlHelper::class);
+        $this->locale                         = 'en_GB';
     }
 
     /** @test */
@@ -74,12 +74,12 @@ class UrlValidityCheckServiceTest extends TestCase
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
 
-        $routeResult = $this->prophesize(RouteResult::class);
+        $routeResult   = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(
             [],
             [],
             $refererUrl,
-            "method",
+            'method',
             'php://temp'
         );
 
@@ -110,12 +110,12 @@ class UrlValidityCheckServiceTest extends TestCase
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/dashboard';
 
-        $routeResult = $this->prophesize(RouteResult::class);
+        $routeResult   = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(
             [],
             [],
             $refererUrl,
-            "method",
+            'method',
             'php://temp'
         );
 
@@ -138,15 +138,15 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_url_for_home_if_referer_is_invalid()
     {
-        $homeUrl = 'https://localhost:9002/';
+        $homeUrl    = 'https://localhost:9002/';
         $refererUrl = 'https://www.invalid/url';
 
-        $routeResult = $this->prophesize(RouteResult::class);
+        $routeResult   = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(
             [],
             [],
             $refererUrl,
-            "method",
+            'method',
             'php://temp'
         );
 
@@ -190,17 +190,17 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
     {
-        $this->locale = 'cy_GB';
+        $this->locale      = 'cy_GB';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
-        $homeUrl = 'https://localhost:9002/home';
-        $welshHomeUrl = 'https://localhost:9002/cy/home';
+        $homeUrl           = 'https://localhost:9002/home';
+        $welshHomeUrl      = 'https://localhost:9002/cy/home';
 
-        $routeResult = $this->prophesize(RouteResult::class);
+        $routeResult   = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(
             [],
             [],
             $englishRefererUrl,
-            "method",
+            'method',
             'php://temp'
         );
 
@@ -226,16 +226,16 @@ class UrlValidityCheckServiceTest extends TestCase
     /** @test */
     public function it_returns_a_valid_welsh_referer_if_locale_is_cy()
     {
-        $this->locale = 'cy_GB';
-        $refererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/cy/login';
+        $this->locale      = 'cy_GB';
+        $refererUrl        = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/cy/login';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
 
-        $routeResult = $this->prophesize(RouteResult::class);
+        $routeResult   = $this->prophesize(RouteResult::class);
         $requestReturn =  new ServerRequest(
             [],
             [],
             $englishRefererUrl,
-            "method",
+            'method',
             'php://temp'
         );
 

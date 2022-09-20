@@ -7,10 +7,6 @@ namespace Common\Form\Element;
 use Common\Validator\CsrfGuardValidator as CsrfValidator;
 use Laminas\Form\Element\Csrf as LaminasCsrf;
 
-/**
- * Class Csrf
- * @package Common\Form\Element
- */
 class Csrf extends LaminasCsrf
 {
     /**

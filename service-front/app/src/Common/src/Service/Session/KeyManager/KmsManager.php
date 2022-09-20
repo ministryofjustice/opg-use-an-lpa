@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Common\Service\Session\KeyManager;
 
-use Aws\Kms\KmsClient;
 use Aws\Kms\Exception\KmsException;
+use Aws\Kms\KmsClient;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\Halite\Alerts\InvalidKey;
+use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 
 class KmsManager implements KeyManagerInterface
 {
-
     /**
      * Time to cache encryption data key.
      */
@@ -30,33 +29,8 @@ class KmsManager implements KeyManagerInterface
      */
     const CURRENT_ENCRYPTION_KEY = 'current_session_encryption_key';
 
-    /**
-     * @var string
-     */
-    private $kmsAlias;
-
-    /**
-     * @var KmsClient
-     */
-    private $kmsClient;
-
-    /**
-     * @var KeyCache
-     */
-    private $cache;
-
-    /**
-     * KmsManager constructor.
-     *
-     * @param KmsClient $kmsClient
-     * @param KeyCache $cache
-     * @param string $kmsAlias
-     */
-    public function __construct(KmsClient $kmsClient, KeyCache $cache, string $kmsAlias)
+    public function __construct(private KmsClient $kmsClient, private KeyCache $cache, private string $kmsAlias)
     {
-        $this->kmsAlias = $kmsAlias;
-        $this->kmsClient = $kmsClient;
-        $this->cache = $cache;
     }
 
     /**
@@ -72,13 +46,13 @@ class KmsManager implements KeyManagerInterface
         if ($currentKey !== false) {
             // If we found a current key
 
-            $id = $currentKey['id'];
+            $id       = $currentKey['id'];
             $material = $currentKey['key_material'];
         } else {
             // Else we get a new key
 
             $newKey = $this->kmsClient->generateDataKey([
-                'KeyId' => $this->kmsAlias,
+                'KeyId'   => $this->kmsAlias,
                 'KeySpec' => 'AES_256',
             ]);
 
@@ -92,7 +66,7 @@ class KmsManager implements KeyManagerInterface
 
             // Make this key the current key for encrypting
             $this->cache->store(static::CURRENT_ENCRYPTION_KEY, [
-                'id' => $id,
+                'id'           => $id,
                 'key_material' => $material,
             ], self::ENCRYPTION_KEY_TTL);
 
@@ -122,7 +96,7 @@ class KmsManager implements KeyManagerInterface
                     'CiphertextBlob' => Base64UrlSafe::decode($id),
                 ]);
             } catch (KmsException $e) {
-                if ($e->getAwsErrorCode() == 'InvalidCiphertextException') {
+                if ($e->getAwsErrorCode() === 'InvalidCiphertextException') {
                     throw new KeyNotFoundException();
                 }
                 throw $e;

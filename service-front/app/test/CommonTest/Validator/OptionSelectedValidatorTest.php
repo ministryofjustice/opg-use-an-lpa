@@ -21,7 +21,7 @@ class OptionSelectedValidatorTest extends TestCase
     {
         $isValid = $this->validator->isValid(
             [
-                'telephone' => '0123456789'
+                'telephone' => '0123456789',
             ]
         );
 
@@ -34,7 +34,7 @@ class OptionSelectedValidatorTest extends TestCase
         $isValid = $this->validator->isValid(
             [
                 'telephone' => '',
-                'no_phone'  => 'yes'
+                'no_phone'  => 'yes',
             ]
         );
 
@@ -48,8 +48,8 @@ class OptionSelectedValidatorTest extends TestCase
 
         $this->assertEquals(
             [
-                OptionSelectedValidator::OPTION_MUST_BE_SELECTED =>
-                    'Either enter your phone number or check the box to say you cannot take calls'
+                OptionSelectedValidator::OPTION_MUST_BE_SELECTED
+                    => 'Either enter your phone number or check the box to say you cannot take calls',
             ],
             $this->validator->getMessages()
         );
@@ -63,14 +63,14 @@ class OptionSelectedValidatorTest extends TestCase
         $isValid = $this->validator->isValid(
             [
                 'telephone' => '0123456789',
-                'no_phone' => 'yes'
+                'no_phone'  => 'yes',
             ]
         );
 
         $this->assertEquals(
             [
-                OptionSelectedValidator::OPTION_MUST_BE_SELECTED =>
-                    'Either enter your phone number or check the box to say you cannot take calls'
+                OptionSelectedValidator::OPTION_MUST_BE_SELECTED
+                    => 'Either enter your phone number or check the box to say you cannot take calls',
             ],
             $this->validator->getMessages()
         );

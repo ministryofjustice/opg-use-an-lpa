@@ -7,33 +7,25 @@ namespace Common\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-/**
- * Class ApiException
- * @package App\Service\ApiClient
- */
 class ApiException extends AbstractApiException
 {
     // A safe bet for an exception is a 500 error response
-    const DEFAULT_ERROR = 500;
+    public const DEFAULT_ERROR = 500;
 
     // The title is suitably generic, further details (from previous Throwables) will be
     // encapsulated in the stacktrace.
-    const DEFAULT_TITLE = 'An API exception has occurred';
+    public const DEFAULT_TITLE = 'An API exception has occurred';
 
     /**
      * @var int|null
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $code;
 
     /**
-     * @var ResponseInterface
-     */
-    protected $response;
-
-    /**
      * @var array|null
      */
-    protected $additionalData;
+    protected ?array $additionalData = null;
 
     /**
      * ApiException constructor
@@ -47,11 +39,10 @@ class ApiException extends AbstractApiException
     public function __construct(
         string $message,
         int $code = self::DEFAULT_ERROR,
-        ?ResponseInterface $response = null,
+        protected ?ResponseInterface $response = null,
         ?array $additionalData = null,
-        Throwable $previous = null
+        ?Throwable $previous = null,
     ) {
-        $this->response = $response;
         $this->code = $code;
 
         parent::__construct(self::DEFAULT_TITLE, $message, $additionalData, $previous);
@@ -62,9 +53,12 @@ class ApiException extends AbstractApiException
         return $this->response;
     }
 
-    public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
-    {
-        $code = self::DEFAULT_ERROR;
+    public static function create(
+        ?string $message = null,
+        ?ResponseInterface $response = null,
+        ?Throwable $previous = null,
+    ): ApiException {
+        $code           = self::DEFAULT_ERROR;
         $additionalData = null;
 
         if (! is_null($response)) {

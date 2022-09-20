@@ -23,9 +23,9 @@ class DobValidatorTest extends TestCase
     public function testIsValidFormat($day, $month, $year)
     {
         $value = [
-            'day' => $day,
+            'day'   => $day,
             'month' => $month,
-            'year' => $year,
+            'year'  => $year,
         ];
 
         $isValid = $this->validator->isValid($value);
@@ -74,8 +74,8 @@ class DobValidatorTest extends TestCase
         ]);
 
         $this->assertEquals([
-            DobValidator::AGE_TOO_YOUNG =>
-                'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
+            DobValidator::AGE_TOO_YOUNG
+                => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
         ], $this->validator->getMessages());
 
         $this->assertFalse($isValid);

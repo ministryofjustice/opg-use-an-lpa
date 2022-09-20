@@ -13,9 +13,6 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * Class OlderLpaApiResponseTest
- *
- * @package CommonTest\Service\Lpa
  * @coversDefaultClass \Common\Service\Lpa\OlderLpaApiResponse
  */
 class OlderLpaApiResponseTest extends TestCase
@@ -113,7 +110,7 @@ class OlderLpaApiResponseTest extends TestCase
             ['i am a string'],
             [false],
             [null],
-            [new ArrayObject()]
+            [new ArrayObject()],
         ];
     }
 
@@ -138,7 +135,7 @@ class OlderLpaApiResponseTest extends TestCase
     public function it_makes_available_the_type_and_passed_in_additional_data(): void
     {
         $data = [
-            'test' => 'data'
+            'test' => 'data',
         ];
 
         $sut = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, $data);

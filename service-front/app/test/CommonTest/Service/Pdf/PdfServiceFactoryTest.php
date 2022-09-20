@@ -9,13 +9,13 @@ use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\PdfServiceFactory;
 use Common\Service\Pdf\StylesService;
 use DI\Factory\RequestedEntry;
+use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Mezzio\Template\TemplateRendererInterface;
 
 class PdfServiceFactoryTest extends TestCase
 {
@@ -48,7 +48,7 @@ class PdfServiceFactoryTest extends TestCase
         $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('Root=1-1-11');
 
 
-        $factory = new PdfServiceFactory();
+        $factory    = new PdfServiceFactory();
         $pdfService = $factory(
             $containerProphecy->reveal(),
             $this->prophesize(RequestedEntry::class)->reveal()
@@ -60,8 +60,7 @@ class PdfServiceFactoryTest extends TestCase
     /** @test */
     public function it_needs_a_configuration_array_and_fails_if_not_there()
     {
-        $config = [
-        ];
+        $config = [];
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')->willReturn($config);

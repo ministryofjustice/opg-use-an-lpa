@@ -29,7 +29,7 @@ class TranslationUpdateCommandTest extends TestCase
             null,
             [
                 'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
-                'home.php' => '<?php $translator->translate("Some translated PHP content", []);'
+                'home.php'       => '<?php $translator->translate("Some translated PHP content", []);',
             ]
         );
 

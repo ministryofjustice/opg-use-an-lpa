@@ -20,6 +20,7 @@ use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Notify\NotifyService;
 use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
@@ -36,11 +37,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Twig\Environment;
-use Common\Service\Notify\NotifyService;
 
 /**
- * Class CheckDetailsAndConsentHandler
- * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
 class CheckDetailsAndConsentHandler extends AbstractHandler implements
@@ -49,23 +47,20 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     LoggerAware,
     WorkflowStep
 {
-    use User;
     use CsrfGuard;
-    use SessionTrait;
     use Logger;
+    use SessionTrait;
     use State;
+    use User;
 
     private CheckDetailsAndConsent $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
-    private NotifyService $notifyService;
 
     /** @var array<string, int|string|bool|DateTimeInterface|array|null>  */
     private array $data;
 
     private CleanseLpa $cleanseLPA;
-    private LocalisedDate $localisedDate;
-    private Environment $environment;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -73,24 +68,21 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
-        LocalisedDate $localisedDate,
-        Environment $environment,
-        NotifyService $notifyService
+        private LocalisedDate $localisedDate,
+        private Environment $environment,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
-        $this->localisedDate = $localisedDate;
-        $this->environment = $environment;
-        $this->notifyService = $notifyService;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckDetailsAndConsent($this->getCsrfGuard($request));
 
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
@@ -101,13 +93,13 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             'email' => $this->user->getDetail('email'),
         ];
 
-        $state = $this->state($request);
+        $state                         = $this->state($request);
         $state->noTelephone
             ? $this->data['no_phone']  = $state->noTelephone
             : $this->data['telephone'] = $state->telephone;
 
         if (!$state->needsCleansing && $state->actorUid === null) {
-            $this->data['actor_role'] = $state->getActorRole();
+            $this->data['actor_role']             = $state->getActorRole();
             $this->data['actor_address_response'] = $state->actorAddressResponse;
 
             if ($state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
@@ -127,7 +119,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                     $state->actorAddress1,
                     $state->actorAddress2,
                     $state->actorAddressTown,
-                    $state->actorAddressCounty
+                    $state->actorAddressCounty,
                 ]
             );
 
@@ -153,7 +145,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             [
                 'user' => $this->user,
                 'form' => $this->form,
-                'data' => $this->data
+                'data' => $this->data,
             ]
         ));
     }
@@ -175,14 +167,14 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                     $state->actorAddress2,
                     $state->actorAddressTown,
                     $state->actorAddressCounty,
-                    $state->postcode
+                    $state->postcode,
                 ]
             );
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
                 $this->data['address_on_paper'] = $state->addressOnPaper;
             }
 
-            $txtRenderer = new TwigRenderer($this->environment, 'txt.twig');
+            $txtRenderer    = new TwigRenderer($this->environment, 'txt.twig');
             $additionalInfo = $txtRenderer->render('actor::request-cleanse-note', ['data' => $this->data]);
 
             $this->getLogger()->notice(
@@ -196,7 +188,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                     'phone' => $state->telephone !== null ?
                         EventCodes::OOLPA_PHONE_NUMBER_PROVIDED :
                         EventCodes::OOLPA_PHONE_NUMBER_NOT_PROVIDED,
-                    'match' => $this->data['actor_id'] === null ? 'part match' : 'full match'
+                    'match' => $this->data['actor_id'] === null ? 'part match' : 'full match',
                 ]
             );
 
@@ -223,7 +215,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                         'actor::activation-key-request-received',
                         [
                             'user' => $this->user,
-                            'date' => $letterExpectedDate
+                            'date' => $letterExpectedDate,
                         ]
                     )
                 );

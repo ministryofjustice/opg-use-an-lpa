@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use ArrayObject;
 use Common\Service\Lpa\LocalisedDate;
 use DateTime;
+use Locale;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class LocalisedDateTest
- *
  * @coversDefaultClass \Common\Service\Lpa\LocalisedDate
- * @package CommonTest\Service\Lpa
  */
 class LocalisedDateTest extends TestCase
 {
@@ -30,13 +27,13 @@ class LocalisedDateTest extends TestCase
         $dateFormatter = new LocalisedDate();
 
         // retain the current locale
-        $originalLocale = \Locale::getDefault();
-        \Locale::setDefault($locale);
+        $originalLocale = Locale::getDefault();
+        Locale::setDefault($locale);
 
         $dateString = $dateFormatter($date);
 
         // restore the locale setting
-        \Locale::setDefault($originalLocale);
+        Locale::setDefault($originalLocale);
 
         $this->assertEquals($expected, $dateString);
     }
@@ -52,7 +49,7 @@ class LocalisedDateTest extends TestCase
             [
                 new DateTime('today'),
                 'en_GB',
-                (new DateTime('now'))->format('j F Y')
+                (new DateTime('now'))->format('j F Y'),
             ],
         ];
     }
