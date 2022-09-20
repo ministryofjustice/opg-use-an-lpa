@@ -5,21 +5,13 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class CancelCode
- * @package Actor\Form
- */
 class CancelCode extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'cancel_code';
 
-    /**
-     * CancelCode constructor.
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
@@ -42,17 +34,17 @@ class CancelCode extends AbstractForm implements InputFilterProviderInterface
      * @return array
      * @codeCoverageIgnore
      */
-    public function getInputFilterSpecification() : array
+    public function getInputFilterSpecification(): array
     {
         return [
-            'viewer_code' => [
-                'required'   => true,
+            'viewer_code'  => [
+                'required' => true,
             ],
             'organisation' => [
-                'required'   => true,
+                'required' => true,
             ],
-            'lpa_token' => [
-                'required'   => true,
+            'lpa_token'    => [
+                'required' => true,
             ],
         ];
     }

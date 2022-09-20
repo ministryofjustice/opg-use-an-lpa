@@ -7,6 +7,7 @@ namespace CommonTest\Service\Lpa;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 abstract class LpaFixtureTestCase extends TestCase
@@ -24,14 +25,14 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa1->setCaseSubtype('hw');
         $donor1 = new CaseActor();
         $donor1->setUId('700000000001');
-        $donor1->setDob(new \DateTime('1980-01-01'));
+        $donor1->setDob(new DateTime('1980-01-01'));
         $donor1->setFirstname('Daniel');
         $donor1->setSurname('Williams');
         $lpa1->setDonor($donor1);
         $lpa1 = new ArrayObject(
             [
-                'lpa' => $lpa1,
-                'added' => date('Y-m-d H:i:s', strtotime('-1 hour'))
+                'lpa'   => $lpa1,
+                'added' => date('Y-m-d H:i:s', strtotime('-1 hour')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added an hour ago
@@ -42,8 +43,8 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa5->setDonor($donor1);
         $lpa5 = new ArrayObject(
             [
-                'lpa' => $lpa5,
-                'added' => date('Y-m-d H:i:s', strtotime('-10 minutes'))
+                'lpa'   => $lpa5,
+                'added' => date('Y-m-d H:i:s', strtotime('-10 minutes')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added 10 minutes ago
@@ -54,8 +55,8 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa6->setDonor($donor1);
         $lpa6 = new ArrayObject(
             [
-                'lpa' => $lpa6,
-                'added' => date('Y-m-d H:i:s', strtotime('-5 minutes'))
+                'lpa'   => $lpa6,
+                'added' => date('Y-m-d H:i:s', strtotime('-5 minutes')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added five minutes ago
@@ -66,14 +67,14 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa2->setCaseSubtype('pfa');
         $donor2 = new CaseActor();
         $donor2->setUId('700000000002');
-        $donor2->setDob(new \DateTime('1980-01-01'));
+        $donor2->setDob(new DateTime('1980-01-01'));
         $donor2->setFirstname('Amy');
         $donor2->setSurname('Johnson');
         $lpa2->setDonor($donor2);
         $lpa2 = new ArrayObject(
             [
-                'lpa' => $lpa2,
-                'added' => date('Y-m-d H:i:s', strtotime('-5 minutes'))
+                'lpa'   => $lpa2,
+                'added' => date('Y-m-d H:i:s', strtotime('-5 minutes')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added five minutes ago
@@ -84,8 +85,8 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa7->setDonor($donor2);
         $lpa7 = new ArrayObject(
             [
-                'lpa' => $lpa7,
-                'added' => date('Y-m-d H:i:s', strtotime('-2 minutes'))
+                'lpa'   => $lpa7,
+                'added' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added two minutes ago
@@ -96,14 +97,14 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa3->setCaseSubtype('hw');
         $donor3 = new CaseActor();
         $donor3->setUId('700000000003');
-        $donor3->setDob(new \DateTime('1980-01-01'));
+        $donor3->setDob(new DateTime('1980-01-01'));
         $donor3->setFirstname('Sam');
         $donor3->setSurname('Taylor');
         $lpa3->setDonor($donor3);
         $lpa3 = new ArrayObject(
             [
-                'lpa' => $lpa3,
-                'added' => date('Y-m-d H:i:s', strtotime('-3 hours'))
+                'lpa'   => $lpa3,
+                'added' => date('Y-m-d H:i:s', strtotime('-3 hours')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added an three hours ago
@@ -114,8 +115,8 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa4->setDonor($donor3);
         $lpa4 = new ArrayObject(
             [
-                'lpa' => $lpa4,
-                'added' => date('Y-m-d H:i:s', strtotime('-2 hours'))
+                'lpa'   => $lpa4,
+                'added' => date('Y-m-d H:i:s', strtotime('-2 hours')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added two hours ago
@@ -126,14 +127,14 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa8->setCaseSubtype('hw');
         $donor8 = new CaseActor();
         $donor8->setUId('700000000008');
-        $donor8->setDob(new \DateTime('1980-01-01'));
+        $donor8->setDob(new DateTime('1980-01-01'));
         $donor8->setFirstname('Gemma');
         $donor8->setSurname('Taylor');
         $lpa8->setDonor($donor8);
         $lpa8 = new ArrayObject(
             [
-                'lpa' => $lpa8,
-                'added' => date('Y-m-d H:i:s', strtotime('-5 hours'))
+                'lpa'   => $lpa8,
+                'added' => date('Y-m-d H:i:s', strtotime('-5 hours')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added five hours ago
@@ -145,14 +146,14 @@ abstract class LpaFixtureTestCase extends TestCase
         $lpa9->setCaseSubtype('hw');
         $donor9 = new CaseActor();
         $donor9->setUId('700000000009');
-        $donor9->setDob(new \DateTime('1998-02-09'));
+        $donor9->setDob(new DateTime('1998-02-09'));
         $donor9->setFirstname('Gemma');
         $donor9->setSurname('Taylor');
         $lpa9->setDonor($donor9);
         $lpa9 = new ArrayObject(
             [
-                'lpa' => $lpa9,
-                'added' => date('Y-m-d H:i:s', strtotime('-9 hours'))
+                'lpa'   => $lpa9,
+                'added' => date('Y-m-d H:i:s', strtotime('-9 hours')),
             ],
             ArrayObject::ARRAY_AS_PROPS
         ); // added nine hours ago
@@ -167,7 +168,7 @@ abstract class LpaFixtureTestCase extends TestCase
                 '0006-01-01-01-666666' => $lpa6,
                 '0007-01-01-01-777777' => $lpa7,
                 '0008-01-01-01-888888' => $lpa8,
-                '0009-01-01-01-999999' => $lpa9
+                '0009-01-01-01-999999' => $lpa9,
             ],
             ArrayObject::ARRAY_AS_PROPS
         );

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
-use Common\Validator\OptionSelectedValidator;
 use Common\Form\AbstractForm;
+use Common\Validator\OptionSelectedValidator;
 use Laminas\Filter\Digits;
 use Laminas\Filter\StringTrim;
 use Laminas\Form\Fieldset;
@@ -30,11 +30,11 @@ class RequestContactDetails extends AbstractForm implements InputFilterProviderI
 
         $fieldset->add(
             [
-                'name' => 'no_phone',
-                'type' => 'Checkbox',
-                'options' => [
-                    'label' => 'A checkbox',
-                    'checked_value' => 'yes',
+                'name'       => 'no_phone',
+                'type'       => 'Checkbox',
+                'options'    => [
+                    'label'           => 'A checkbox',
+                    'checked_value'   => 'yes',
                     'unchecked_value' => 'no',
                 ],
                 'attributes' => [
@@ -55,20 +55,20 @@ class RequestContactDetails extends AbstractForm implements InputFilterProviderI
             'telephone_option' => [
                 'validators' => [
                     [
-                        'name' => OptionSelectedValidator::class
-                    ]
-                ]
+                        'name' => OptionSelectedValidator::class,
+                    ],
+                ],
             ],
-            'telephone' => [
+            'telephone'        => [
                 'required' => false,
                 'filters'  => [
                     ['name' => StringTrim::class],
                     ['name' => Digits::class],
                 ],
             ],
-            'no_phone' => [
-                'required' => false
-            ]
+            'no_phone'         => [
+                'required' => false,
+            ],
         ];
     }
 }

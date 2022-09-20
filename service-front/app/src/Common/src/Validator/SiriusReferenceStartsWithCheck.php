@@ -13,13 +13,12 @@ class SiriusReferenceStartsWithCheck extends AbstractValidator
     /**
      * @var string[]
      */
-    protected $messageTemplates = [
-        self::LPA_MUST_START_WITH  => 'LPA reference numbers that are 12 numbers long must begin with a 7'
+    protected array $messageTemplates = [
+        self::LPA_MUST_START_WITH => 'LPA reference numbers that are 12 numbers long must begin with a 7',
     ];
 
     /**
      * @param string $reference_number
-     *
      * @return bool
      */
     public function isValid($reference_number): bool

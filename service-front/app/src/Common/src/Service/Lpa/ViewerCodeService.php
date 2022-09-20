@@ -9,22 +9,12 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use DateTime;
 
-/**
- * Class ViewerCodeService
- * @package Common\Service\Lpa
- */
 class ViewerCodeService
 {
-    const SORT_ADDED = 'Added';
+    public const SORT_ADDED = 'Added';
 
-    /**
-     * @var ApiClient
-     */
-    private $apiClient;
-
-    public function __construct(ApiClient $apiClient)
+    public function __construct(private ApiClient $apiClient)
     {
-        $this->apiClient = $apiClient;
     }
 
     /**
@@ -40,7 +30,7 @@ class ViewerCodeService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpPost('/v1/lpas/' . $lpaId . '/codes', [
-            'organisation' => $organisation
+            'organisation' => $organisation,
         ]);
 
         if (is_array($lpaData)) {
@@ -64,7 +54,7 @@ class ViewerCodeService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
-             'code' => $shareCode
+             'code' => $shareCode,
         ]);
     }
 
@@ -83,7 +73,7 @@ class ViewerCodeService
         $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
 
         //sort the result array to appear in order of most recent added
-        usort($shareCodes, function ($a, $b) use (&$sort_by_field_name) {
+        usort($shareCodes, function ($a, $b) {
             return strtotime($b[self::SORT_ADDED]) - strtotime($a[self::SORT_ADDED]);
         });
 

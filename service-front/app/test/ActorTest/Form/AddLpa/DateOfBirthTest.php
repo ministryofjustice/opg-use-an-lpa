@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\AddLpa;
 
-use Actor\Form\AddLpa\ActivationKey;
 use Actor\Form\AddLpa\DateOfBirth;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Laminas\Form\Element\Date;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Date;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -19,9 +18,7 @@ class DateOfBirthTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-
-    /** @var DateOfBirth */
-    protected $form;
+    protected DateOfBirth $form;
 
     public function getForm(): AbstractForm
     {
@@ -44,6 +41,6 @@ class DateOfBirthTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new DateOfBirth($guardProphecy->reveal());
+        $this->form    = new DateOfBirth($guardProphecy->reveal());
     }
 }

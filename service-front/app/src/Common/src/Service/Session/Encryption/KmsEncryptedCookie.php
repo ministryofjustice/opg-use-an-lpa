@@ -11,13 +11,8 @@ use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class KmsEncryptedCookie implements EncryptInterface
 {
-    private KeyManagerInterface $keyManager;
-    private BlockCipher $blockCipher;
-
-    public function __construct(KeyManagerInterface $keyManager, BlockCipher $blockCipher)
+    public function __construct(private KeyManagerInterface $keyManager, private BlockCipher $blockCipher)
     {
-        $this->keyManager = $keyManager;
-        $this->blockCipher = $blockCipher;
     }
 
     /**
@@ -65,7 +60,7 @@ class KmsEncryptedCookie implements EncryptInterface
                 ->decrypt($ciphertext);
 
             return json_decode($plaintext, true);
-        } catch (KeyNotFoundException $e) {
+        } catch (KeyNotFoundException) {
             # TODO: add logging
         }
 

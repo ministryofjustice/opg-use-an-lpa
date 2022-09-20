@@ -4,61 +4,41 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Acpr\I18n\TranslatorInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class CancelCodeHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use Session;
     use CsrfGuard;
+    use Session;
+    use User;
 
     public const CANCEL_CODE_FLASH_MSG = 'cancel_code_flash_msg';
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ViewerCodeService
-     */
-    private $viewerCodeService;
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService,
-        ViewerCodeService $viewerCodeService,
+        private LpaService $lpaService,
+        private ViewerCodeService $viewerCodeService,
         UrlHelper $urlHelper,
-        TranslatorInterface $translator
+        private TranslatorInterface $translator,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
-        $this->viewerCodeService = $viewerCodeService;
-        $this->translator = $translator;
     }
 
     /**
@@ -72,8 +52,8 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
     {
         $form = new CancelCode($this->getCsrfGuard($request));
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $user     = $this->getUser($request);
+        $identity = !is_null($user) ? $user->getIdentity() : null;
 
         $form->setData($request->getParsedBody());
 
@@ -91,13 +71,13 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
 
             $formattedCode = str_split($validated['viewer_code'], 4);
             array_unshift($formattedCode, 'V');
-            $formattedCode = implode("-", $formattedCode);
+            $formattedCode = implode('-', $formattedCode);
 
             $message = $this->translator->translate(
-                "You cancelled the access code for %organisation%: %code%",
+                'You cancelled the access code for %organisation%: %code%',
                 [
-                    '%code%' => $formattedCode,
-                    '%organisation%' => $validated['organisation']
+                    '%code%'         => $formattedCode,
+                    '%organisation%' => $validated['organisation'],
                 ],
                 null,
                 'flashMessage'

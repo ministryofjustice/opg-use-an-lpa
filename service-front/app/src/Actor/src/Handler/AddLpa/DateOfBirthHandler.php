@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler\AddLpa;
 
 use Actor\Form\AddLpa\DateOfBirth;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\User;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
@@ -15,9 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class LpaAddHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class DateOfBirthHandler extends AbstractAddLpaHandler
@@ -26,7 +21,6 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -42,9 +36,9 @@ class DateOfBirthHandler extends AbstractAddLpaHandler
         $data = [];
         if (($dob = $this->state($request)->dateOfBirth) !== null) {
             $data['dob'] = [
-                'day' => $dob->format('d'),
+                'day'   => $dob->format('d'),
                 'month' => $dob->format('m'),
-                'year' => $dob->format('Y'),
+                'year'  => $dob->format('Y'),
             ];
         }
 

@@ -20,8 +20,7 @@ class EmailChangeTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var ChangeEmail */
-    protected $form;
+    protected ChangeEmail $form;
 
     public function getForm(): AbstractForm
     {
@@ -36,15 +35,15 @@ class EmailChangeTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf' => Csrf::class,
+            '__csrf'            => Csrf::class,
             'new_email_address' => Email::class,
-            'current_password' => Password::class,
+            'current_password'  => Password::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ChangeEmail($guardProphecy->reveal());
+        $this->form    = new ChangeEmail($guardProphecy->reveal());
     }
 }

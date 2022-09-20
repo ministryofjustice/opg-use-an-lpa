@@ -75,11 +75,11 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
     public function it_strips_session_values_that_have_not_been_allowed(): void
     {
         $sessionData = [
-            'string' => 'one',
-            'bool' => true,
-            'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
+            'string'                                        => 'one',
+            'bool'                                          => true,
+            'DateTime'                                      => new DateTime(),
+            EncryptedCookiePersistence::SESSION_TIME_KEY    => time() - 300, // session expired 5 minutes ago
+            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true,
         ];
 
         $sessionProphecy = $this->prophesize(Session::class);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
+use InvalidArgumentException;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
@@ -14,10 +15,7 @@ class AbstractFormTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var AbstractForm
-     */
-    private $form;
+    private AbstractForm $form;
 
     protected function setUp(): void
     {
@@ -33,7 +31,7 @@ class AbstractFormTest extends TestCase
                 $this->add(
                     [
                         'name' => 'testElement',
-                        'type' => 'Text'
+                        'type' => 'Text',
                     ]
                 );
             }
@@ -61,14 +59,14 @@ class AbstractFormTest extends TestCase
     /** @test */
     public function adding_an_undefined_error_fails()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('doesNotExist');
     }
 
     /** @test */
     public function adding_an_error_to_a_nonexistent_form_element_fails()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('testKey', 'doesNotExist');
     }
 

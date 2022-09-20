@@ -30,7 +30,7 @@ class SetLocaleMiddlewareFactoryTest extends TestCase
         $containerProphecy->get(Translator::class)
             ->willReturn($this->prophesize(Translator::class)->reveal());
 
-        $factory = new SetLocaleMiddlewareFactory();
+        $factory  = new SetLocaleMiddlewareFactory();
         $instance = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(SetLocaleMiddleware::class, $instance);

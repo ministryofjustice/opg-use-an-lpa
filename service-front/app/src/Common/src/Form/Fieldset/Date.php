@@ -7,12 +7,8 @@ namespace Common\Form\Fieldset;
 use Laminas\Form\Fieldset;
 
 /**
- * Class Date
- *
  * This fieldset is only suitable for catching AD dates
  * To validate this fieldset use the Common\Validator\DateValidator or any of it's descendant validators
- *
- * @package Common\Form\Fieldset
  */
 class Date extends Fieldset
 {

@@ -12,7 +12,6 @@ trait State
     /**
      * @param ServerRequestInterface      $request
      * @param class-string<WorkflowState> $workflowStateClass
-     *
      * @return WorkflowState
      * @throws StateNotInitialisedException
      */

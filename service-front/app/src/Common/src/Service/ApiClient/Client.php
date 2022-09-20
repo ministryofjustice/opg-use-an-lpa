@@ -14,31 +14,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Client
- * @package Common\Service\ApiClient
- */
 class Client
 {
-    /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var string
-     */
-    private $apiBaseUri;
-
-    /**
-     * @var string
-     */
-    private $token;
-
-    /**
-     * @var string
-     */
-    private $traceId;
+    private string $token;
 
     /**
      * Client constructor
@@ -47,11 +25,8 @@ class Client
      * @param string $apiBaseUri
      * @param string|null $token
      */
-    public function __construct(ClientInterface $httpClient, string $apiBaseUri, string $traceId)
+    public function __construct(private ClientInterface $httpClient, private string $apiBaseUri, private string $traceId)
     {
-        $this->httpClient = $httpClient;
-        $this->apiBaseUri = $apiBaseUri;
-        $this->traceId = $traceId;
     }
 
     /**
@@ -94,7 +69,7 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http GET request', $response, $ex);
         }
@@ -127,7 +102,7 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response        = $ex instanceof HttpException ? $ex->getResponse() : null;
             $responseMessage = $this->getResponseMessage($response, 'Error whilst making http POST request');
             throw ApiException::create($responseMessage, $response, $ex);
         }
@@ -160,7 +135,7 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http PUT request', $response, $ex);
         }
@@ -193,7 +168,7 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http PATCH request', $response, $ex);
         }
@@ -225,7 +200,7 @@ class Client
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http DELETE request', $response, $ex);
         }
@@ -239,8 +214,8 @@ class Client
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
+            'Accept'       => 'application/json',
+            'Content-Type' => 'application/json',
         ];
 
         // the trace Id is used for logging of the path of requests through infrastructure

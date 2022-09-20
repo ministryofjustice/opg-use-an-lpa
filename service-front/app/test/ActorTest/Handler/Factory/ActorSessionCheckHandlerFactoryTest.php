@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Handler\Factory;
+namespace ActorTest\Handler\Factory;
 
 use Actor\Handler\ActorSessionCheckHandler;
 use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
@@ -11,18 +11,17 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class ActorSessionCheckHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $containerProphecy;
+    private ObjectProphecy|ContainerInterface $containerProphecy;
 
     public function setUp(): void
     {
@@ -46,30 +45,26 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
             ->willReturn($httpClientProphecy->reveal());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function testItCreatesASessionCheckHandler()
     {
         $this->containerProphecy->get('config')
             ->willReturn(
                 [
                     'session' => [
-                        'expires' => 1200,
-                        'expiry_warning' => 300
+                        'expires'        => 1200,
+                        'expiry_warning' => 300,
                     ],
                 ]
             );
 
-        $factory = new ActorSessionCheckHandlerFactory();
+        $factory             = new ActorSessionCheckHandlerFactory();
         $sessionCheckHandler = $factory($this->containerProphecy->reveal());
 
         $this->assertInstanceOf(ActorSessionCheckHandler::class, $sessionCheckHandler);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function testThrowsExceptionMissingConfigValue()
     {
         $this->containerProphecy->get('config')
@@ -77,7 +72,7 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
 
         $factory = new ActorSessionCheckHandlerFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $sessionCheckHandler = $factory($this->containerProphecy->reveal());
     }

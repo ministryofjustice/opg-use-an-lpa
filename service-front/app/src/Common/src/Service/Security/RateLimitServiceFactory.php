@@ -12,14 +12,8 @@ use RuntimeException;
 
 class RateLimitServiceFactory
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**
@@ -56,8 +50,6 @@ class RateLimitServiceFactory
                     $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?? 60,
                     $this->container->get(LoggerInterface::class)
                 );
-
-                break;
             default:
                 throw new RuntimeException('No class available for rate limit type ' . $type);
         }

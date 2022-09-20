@@ -4,37 +4,30 @@ declare(strict_types=1);
 
 namespace Common\Service\Security;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 use function hash;
 
 class UserIdentificationService
 {
-    private LoggerInterface $logger;
-
-    /**
-     * UserIdentificationService constructor.
-     *
-     * @param LoggerInterface $logger
-     */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
      * Builds a unique userId that can be used to identify users for security tracking.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function id(\Psr\Http\Message\ServerRequestInterface $request): string
+    public function id(ServerRequestInterface $request): string
     {
         $headersToHash = [
             'accept-encoding' => '',
             'accept-language' => '',
-            'user-agent' => '',
-            'x-forwarded-for' => ''
+            'user-agent'      => '',
+            'x-forwarded-for' => '',
         ];
 
         // pull each header value out (if it exists)

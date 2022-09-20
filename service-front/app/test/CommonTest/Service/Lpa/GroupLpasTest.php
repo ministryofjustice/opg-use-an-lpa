@@ -7,10 +7,7 @@ namespace CommonTest\Service\Lpa;
 use Common\Service\Lpa\GroupLpas;
 
 /**
- * Class GroupLpasTest
- *
  * @coversDefaultClass \Common\Service\Lpa\GroupLpas
- * @package CommonTest\Service\Lpa
  */
 class GroupLpasTest extends LpaFixtureTestCase
 {
@@ -22,7 +19,7 @@ class GroupLpasTest extends LpaFixtureTestCase
     {
         $lpas = $this->lpaFixtureData();
 
-        $grouper = new GroupLpas();
+        $grouper     = new GroupLpas();
         $groupedLpas = $grouper($lpas)->getArrayCopy();
 
         $this->assertEquals(5, count($groupedLpas));

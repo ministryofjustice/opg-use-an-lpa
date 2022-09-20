@@ -6,11 +6,6 @@ namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
 
-/**
- * Class LuhnCheck
- *
- * @package Common\Validator
- */
 class LuhnCheck extends AbstractValidator
 {
     public const INVALID_REFERENCE = 'invalidReference';
@@ -18,9 +13,9 @@ class LuhnCheck extends AbstractValidator
     /**
      * @var string[]
      */
-    protected $messageTemplates = [
+    protected array $messageTemplates = [
         //  From parent
-        self::INVALID_REFERENCE => 'The LPA reference number provided is not correct'
+        self::INVALID_REFERENCE => 'The LPA reference number provided is not correct',
     ];
 
     /**
@@ -42,9 +37,9 @@ class LuhnCheck extends AbstractValidator
             $value = (string)$reference_number;
 
             // Set some initial values up.
-            $length = strlen($value);
-            $checkDigit  = $length % 2;
-            $sum = 0;
+            $length     = strlen($value);
+            $checkDigit = $length % 2;
+            $sum        = 0;
 
             for ($i = $length - 1; $i >= 0; --$i) {
                 // Extract a character from the value.
@@ -64,7 +59,7 @@ class LuhnCheck extends AbstractValidator
             }
 
             // Check if sum mod 10 equals zero
-            if (($sum) % 10 !== 0) {
+            if ($sum % 10 !== 0) {
                 $this->error(self::INVALID_REFERENCE);
                 $isValid = false;
             }

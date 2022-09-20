@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Middleware\Session;
 
 use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
@@ -45,16 +47,16 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
     public function it_correctly_handles_an_non_expired_session(): void
     {
         $sessionData = [
-            'string' => 'one',
-            'bool' => true,
-            'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => false
+            'string'                                        => 'one',
+            'bool'                                          => true,
+            'DateTime'                                      => new DateTime(),
+            EncryptedCookiePersistence::SESSION_TIME_KEY    => time() - 300, // session expired 5 minutes ago
+            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => false,
         ];
 
-        $sessionProphecy = $this->prophesize(Session::class);
+        $sessionProphecy  = $this->prophesize(Session::class);
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
 
         $requestProphecy
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
@@ -83,19 +85,19 @@ class SessionExpiredRedirectMiddlewareTest extends TestCase
     public function it_correctly_redirects_to_session_expired_page_when_session_expires(): void
     {
         $sessionData = [
-            'string' => 'one',
-            'bool' => true,
-            'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
+            'string'                                        => 'one',
+            'bool'                                          => true,
+            'DateTime'                                      => new DateTime(),
+            EncryptedCookiePersistence::SESSION_TIME_KEY    => time() - 300, // session expired 5 minutes ago
+            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true,
         ];
 
         $uri = 'https://localhost:9002/session-expired';
 
-        $sessionProphecy = $this->prophesize(Session::class);
-        $helperProphecy = $this->prophesize(UrlHelper::class);
+        $sessionProphecy  = $this->prophesize(Session::class);
+        $helperProphecy   = $this->prophesize(UrlHelper::class);
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
 
         $requestProphecy
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)

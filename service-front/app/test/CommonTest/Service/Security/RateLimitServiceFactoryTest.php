@@ -55,8 +55,8 @@ class RateLimitServiceFactoryTest extends TestCase
             ->willReturn(
                 [
                     'ratelimits' => [
-                        'a-rate-limiter' => []
-                    ]
+                        'a-rate-limiter' => [],
+                    ],
                 ]
             );
 
@@ -77,9 +77,9 @@ class RateLimitServiceFactoryTest extends TestCase
                 [
                     'ratelimits' => [
                         'a-rate-limiter' => [
-                            'type' => 'keyed'
-                        ]
-                    ]
+                            'type' => 'keyed',
+                        ],
+                    ],
                 ]
             );
 
@@ -100,12 +100,12 @@ class RateLimitServiceFactoryTest extends TestCase
                 [
                     'ratelimits' => [
                         'a-rate-limiter' => [
-                            'type' => 'does-not-exist',
+                            'type'    => 'does-not-exist',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
 
@@ -127,12 +127,12 @@ class RateLimitServiceFactoryTest extends TestCase
                 [
                     'ratelimits' => [
                         'a-rate-limiter' => [
-                            'type' => 'keyed',
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
         $containerProphecy
@@ -156,25 +156,25 @@ class RateLimitServiceFactoryTest extends TestCase
             ->willReturn(
                 [
                     'ratelimits' => [
-                        'a-rate-limiter' => [
-                            'type' => 'keyed',
+                        'a-rate-limiter'   => [
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
+                                'adapter' => 'memory',
+                            ],
                         ],
                         'a-second-limiter' => [
-                            'type' => 'keyed',
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
+                                'adapter' => 'memory',
+                            ],
                         ],
-                        'a-third-limiter' => [
-                            'type' => 'keyed',
+                        'a-third-limiter'  => [
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
         $containerProphecy

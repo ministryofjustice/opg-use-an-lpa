@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\View\Twig;
 
 use Psr\Container\ContainerInterface;
-use RuntimeException;
+use UnexpectedValueException;
 
 class JavascriptVariablesExtensionFactory
 {
@@ -14,7 +14,7 @@ class JavascriptVariablesExtensionFactory
         $config = $container->get('config');
 
         if (!isset($config['analytics']['uaid'])) {
-            throw new \UnexpectedValueException('Missing google analytics ua id');
+            throw new UnexpectedValueException('Missing google analytics ua id');
         }
 
         return new JavascriptVariablesExtension(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
@@ -16,21 +18,21 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     use ProphecyTrait;
 
     private CaseActor $donor;
-    /** @var ObjectProphecy|LpaFactory */
-    private $lpaFactory;
+
+    private ObjectProphecy|LpaFactory $lpaFactory;
     private array $response;
 
     public function setUp(): void
     {
         $this->response = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+            'donor'                => [
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'activationKeyDueDate' => '2021-12-06'
+            'caseSubtype'          => 'hw',
+            'activationKeyDueDate' => '2021-12-06',
         ];
 
         $this->donor = new CaseActor();
@@ -49,7 +51,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($this->donor);
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut    = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
@@ -61,9 +63,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     /** @test */
     public function it_creates_a_dto_from_array_data_if_name_fields_are_null()
     {
-        $this->response['donor']['firstname'] = null;
+        $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
-        $this->response['donor']['surname'] = null;
+        $this->response['donor']['surname']     = null;
 
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -72,7 +74,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($donor);
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut    = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
@@ -92,12 +94,12 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => null
+            'caseSubtype' => null,
         ];
 
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
@@ -114,12 +116,12 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'       => '12345',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
             ],
-            'caseSubtype' => null
+            'caseSubtype' => null,
         ];
 
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
@@ -136,12 +138,12 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'middlenames'   => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'firstname'   => 'Donor',
+                'middlenames' => 'Person',
             ],
-            'caseSubtype' => null
+            'caseSubtype' => null,
         ];
 
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
@@ -158,13 +160,13 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => null
+            'caseSubtype' => null,
         ];
 
         $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());

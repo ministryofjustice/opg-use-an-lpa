@@ -9,10 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class SiriusReferenceStartsWithTest extends TestCase
 {
-    /**
-     * @var SiriusReferenceStartsWithCheck
-     */
-    private $validator;
+    private SiriusReferenceStartsWithCheck $validator;
 
     public function setUp(): void
     {
@@ -35,7 +32,7 @@ class SiriusReferenceStartsWithTest extends TestCase
             ['700000000252'],
             ['700000000047'],
             ['700000000138'],
-            ['712121234926']
+            ['712121234926'],
         ];
     }
 
@@ -48,8 +45,8 @@ class SiriusReferenceStartsWithTest extends TestCase
 
         $this->assertEquals(
             [
-                SiriusReferenceStartsWithCheck::LPA_MUST_START_WITH =>
-                    'LPA reference numbers that are 12 numbers long must begin with a 7',
+                SiriusReferenceStartsWithCheck::LPA_MUST_START_WITH
+                    => 'LPA reference numbers that are 12 numbers long must begin with a 7',
             ],
             $this->validator->getMessages()
         );

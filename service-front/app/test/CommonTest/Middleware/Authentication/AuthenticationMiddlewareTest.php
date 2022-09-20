@@ -18,9 +18,9 @@ class AuthenticationMiddlewareTest extends TestCase
     /** @test */
     public function it_pipes_a_request_through_all_authentication_middlewares(): void
     {
-        $pipe = $this->createMock(MiddlewarePipeInterface::class);
+        $pipe                           = $this->createMock(MiddlewarePipeInterface::class);
         $mezzioAuthenticationMiddleware = $this->createMock(MezzioAuthenticationMiddleware::class);
-        $forcedPasswordResetMiddleware = $this->createMock(ForcedPasswordResetMiddleware::class);
+        $forcedPasswordResetMiddleware  = $this->createMock(ForcedPasswordResetMiddleware::class);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $handler = $this->createMock(RequestHandlerInterface::class);

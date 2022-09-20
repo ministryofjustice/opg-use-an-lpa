@@ -7,11 +7,11 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
+use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
-use Laminas\Filter\StringTrim;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class Login extends AbstractForm implements InputFilterProviderInterface
 {
@@ -20,12 +20,13 @@ class Login extends AbstractForm implements InputFilterProviderInterface
 
     /**
      * Error messages
+     *
      * @var array
      */
     protected array $messageTemplates = [
-        self::NOT_SAME => 'Security validation failed. Please try again.',
+        self::NOT_SAME  => 'Security validation failed. Please try again.',
         self::NOT_FOUND => 'We could not find a Use a lasting power of attorney account ' .
-            'with that email address and password. Check your details and try again.'
+            'with that email address and password. Check your details and try again.',
     ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
@@ -47,7 +48,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'email' => [
+            'email'    => [
                 'required'   => true,
                 'filters'    => [
                     [
@@ -55,7 +56,6 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                     ],
                     [
                         'name' => StringTrim::class,
-
                     ],
                 ],
                 'validators' => [
@@ -63,7 +63,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'messages'           => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Enter an email address in the correct format,
                                  like name@example.com',
                             ],
@@ -72,7 +72,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
-                    ]
+                    ],
                 ],
             ],
             'password' => [

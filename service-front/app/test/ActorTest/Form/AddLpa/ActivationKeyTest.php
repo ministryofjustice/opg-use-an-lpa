@@ -18,8 +18,7 @@ class ActivationKeyTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var ActivationKey */
-    protected $form;
+    protected ActivationKey $form;
 
     public function getForm(): AbstractForm
     {
@@ -34,14 +33,14 @@ class ActivationKeyTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'activation_key'   => Text::class,
+            '__csrf'         => Csrf::class,
+            'activation_key' => Text::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActivationKey($guardProphecy->reveal());
+        $this->form    = new ActivationKey($guardProphecy->reveal());
     }
 }

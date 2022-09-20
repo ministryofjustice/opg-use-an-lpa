@@ -7,7 +7,6 @@ namespace CommonTest\Service\I18n;
 use Acpr\I18n\ExtractorInterface;
 use Acpr\I18n\TwigExtractor;
 use Common\Service\I18n\CatalogueExtractor;
-use Common\Service\I18n\TwigCatalogueExtractor;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +25,7 @@ class CatalogueExtractorTest extends TestCase
             'rootDir',
             null,
             [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
+                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
             ]
         );
 
@@ -38,7 +37,7 @@ class CatalogueExtractorTest extends TestCase
             ->extract($vfs->getChild('home.html.twig')->url())
             ->shouldBeCalled()
             ->willReturn(
-                [ 'messages' => $translationsProphecy->reveal() ]
+                ['messages' => $translationsProphecy->reveal()]
             );
 
         $extractor = new CatalogueExtractor($extractorProphecy->reveal());
@@ -55,7 +54,7 @@ class CatalogueExtractorTest extends TestCase
             'rootDir',
             null,
             [
-                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
+                'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
             ]
         );
 
@@ -67,7 +66,7 @@ class CatalogueExtractorTest extends TestCase
             ->extract($vfs->url())
             ->shouldBeCalled()
             ->willReturn(
-                [ 'messages' => $translationsProphecy->reveal() ]
+                ['messages' => $translationsProphecy->reveal()]
             );
 
         $extractor = new CatalogueExtractor($extractorProphecy->reveal());
@@ -85,9 +84,9 @@ class CatalogueExtractorTest extends TestCase
             null,
             [
                 'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
-                'partials' => [
-                    'page.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>'
-                ]
+                'partials'       => [
+                    'page.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
+                ],
             ]
         );
 
@@ -106,7 +105,7 @@ class CatalogueExtractorTest extends TestCase
             ->extract(Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn(
-                [ 'messages' => $translationsProphecy->reveal() ]
+                ['messages' => $translationsProphecy->reveal()]
             );
 
         $extractor = new CatalogueExtractor($extractorProphecy->reveal());
@@ -131,14 +130,14 @@ class CatalogueExtractorTest extends TestCase
             );
         $originalTranslations = [
             'default' => $originalTranslationsProphecy->reveal(),
-            'errors' => $originalTranslationsProphecy->reveal()
+            'errors'  => $originalTranslationsProphecy->reveal(),
         ];
 
         /** @var Translations|ObjectProphecy $newTranslationsProphecy */
         $newTranslationsProphecy = $this->prophesize(Translations::class);
-        $newTranslations = [
+        $newTranslations         = [
             'default' => $newTranslationsProphecy->reveal(),
-            'new' => $newTranslationsProphecy->reveal()
+            'new'     => $newTranslationsProphecy->reveal(),
         ];
 
         /** @var TwigExtractor|ObjectProphecy $extractorProphecy */

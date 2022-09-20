@@ -14,50 +14,33 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Flash\FlashMessageMiddleware;
-use ParagonIE\HiddenString\HiddenString;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Common\Service\Notify\NotifyService;
+use ParagonIE\HiddenString\HiddenString;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ChangePasswordHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
 {
     use CsrfGuard;
-    use User;
     use Session;
+    use User;
 
     public const PASSWORD_CHANGED_FLASH_MSG = 'password_changed_flash_msg';
 
-    private TranslatorInterface $translator;
-
-    /** @var UserService */
-    private $userService;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
-    /** @var NotifyService */
-    private $notifyService;
-
     /**
-     * PasswordResetPageHandler constructor.
-     *
      * @codeCoverageIgnore
-     *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
@@ -69,22 +52,16 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
+        private UserService $userService,
         AuthenticationInterface $authenticator,
-        ServerUrlHelper $serverUrlHelper,
-        TranslatorInterface $translator,
-        NotifyService $notifyService
+        private ServerUrlHelper $serverUrlHelper,
+        private TranslatorInterface $translator,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
-        $this->userService = $userService;
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->translator = $translator;
-        $this->notifyService = $notifyService;
-
         $this->setAuthenticator($authenticator);
     }
-
 
     /**
      * @inheritDoc
@@ -138,7 +115,7 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
 
         return new HtmlResponse($this->renderer->render('actor::password-change', [
             'user' => $user,
-            'form' => $form->prepare()
+            'form' => $form->prepare(),
         ]));
     }
 }

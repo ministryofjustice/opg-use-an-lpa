@@ -17,42 +17,24 @@ use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-/**
- * Class UserService
- * @package Common\Service\ApiClient
- */
 class UserService implements UserRepositoryInterface
 {
-    private ApiClient $apiClient;
-
     /**
      * @var callable
      */
     private $userModelFactory;
 
-    private LoggerInterface $logger;
-
-    /**
-     * UserService constructor.
-     *
-     * @param ApiClient       $apiClient
-     * @param callable        $userModelFactory
-     * @param LoggerInterface $logger
-     */
-    public function __construct(ApiClient $apiClient, callable $userModelFactory, LoggerInterface $logger)
+    public function __construct(private ApiClient $apiClient, callable $userModelFactory, private LoggerInterface $logger)
     {
-        $this->apiClient = $apiClient;
 
         // Provide type safety for the composed user factory.
         $this->userModelFactory = function (
             string $identity,
             array $roles = [],
-            array $details = []
+            array $details = [],
         ) use ($userModelFactory): UserInterface {
             return $userModelFactory($identity, $roles, $details);
         };
-
-        $this->logger = $logger;
     }
 
     /**
@@ -64,7 +46,7 @@ class UserService implements UserRepositoryInterface
     {
         $data = $this->apiClient->httpPost('/v1/user', [
             'email'    => $email,
-            'password' => $password->getString()
+            'password' => $password->getString(),
         ]);
 
         $this->logger->notice(
@@ -72,7 +54,7 @@ class UserService implements UserRepositoryInterface
             [
                 'event_code' => EventCodes::ACCOUNT_CREATED,
                 'id'         => $data['Id'],
-                'email'      => new Email($email)
+                'email'      => new Email($email),
             ]
         );
 
@@ -81,7 +63,6 @@ class UserService implements UserRepositoryInterface
 
     /**
      * @param string $email
-     *
      * @return array|null
      */
     public function getByEmail(string $email): ?array
@@ -96,14 +77,13 @@ class UserService implements UserRepositoryInterface
      *
      * @param string      $credential
      * @param string|null $password
-     *
      * @return User|null
      */
-    public function authenticate(string $credential, string $password = null): ?UserInterface
+    public function authenticate(string $credential, ?string $password = null): ?UserInterface
     {
         try {
             $userData = $this->apiClient->httpPatch('/v1/auth', [
-                'email' => strtolower(trim($credential)),
+                'email'    => strtolower(trim($credential)),
                 'password' => $password,
             ]);
 
@@ -111,12 +91,12 @@ class UserService implements UserRepositoryInterface
                 'Authentication successful for account with Id {id}',
                 [
                     'id'         => $userData['Id'],
-                    'last-login' => $userData['LastLogin'] ?? 'never'
+                    'last-login' => $userData['LastLogin'] ?? 'never',
                 ]
             );
 
             $filteredDetails = [
-                'Email'     => $userData['Email'],
+                'Email' => $userData['Email'],
             ];
 
             if (array_key_exists('LastLogin', $userData)) {
@@ -137,7 +117,7 @@ class UserService implements UserRepositoryInterface
                 'Authentication failed for {email} with code {code}',
                 [
                     'code'  => $e->getCode(),
-                    'email' => $credential
+                    'email' => $credential,
                 ]
             );
             if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
@@ -152,10 +132,6 @@ class UserService implements UserRepositoryInterface
         return null;
     }
 
-    /**
-     * @param string $activationToken
-     * @return bool|string
-     */
     public function activate(string $activationToken): bool|string
     {
         try {
@@ -168,7 +144,7 @@ class UserService implements UserRepositoryInterface
                     'Account with Id {id} has been activated',
                     [
                         'event_code' => EventCodes::ACCOUNT_ACTIVATED,
-                        'id'         => $userData['Id']
+                        'id'         => $userData['Id'],
                     ]
                 );
 
@@ -183,7 +159,7 @@ class UserService implements UserRepositoryInterface
         $this->logger->notice(
             'Account activation token {token} is invalid',
             [
-                'token' => $activationToken
+                'token' => $activationToken,
             ]
         );
 
@@ -200,7 +176,7 @@ class UserService implements UserRepositoryInterface
             $this->logger->info(
                 'Account with Id {id} has requested a password reset',
                 [
-                    'id' => $data['Id']
+                    'id' => $data['Id'],
                 ]
             );
 
@@ -221,7 +197,7 @@ class UserService implements UserRepositoryInterface
                 $this->logger->info(
                     'Password reset token for account with Id {id} was used successfully',
                     [
-                        'id' => $data['Id']
+                        'id' => $data['Id'],
                     ]
                 );
 
@@ -236,7 +212,7 @@ class UserService implements UserRepositoryInterface
         $this->logger->notice(
             'Password reset token {token} is invalid',
             [
-                'token' => $token
+                'token' => $token,
             ]
         );
 
@@ -246,14 +222,14 @@ class UserService implements UserRepositoryInterface
     public function completePasswordReset(string $token, HiddenString $password): void
     {
         $this->apiClient->httpPatch('/v1/complete-password-reset', [
-            'token' => $token,
+            'token'    => $token,
             'password' => $password->getString(),
         ]);
 
         $this->logger->info(
             'Password reset using token {token} has been successful',
             [
-                'token' => $token
+                'token' => $token,
             ]
         );
     }
@@ -262,16 +238,16 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $data = $this->apiClient->httpPatch('/v1/request-change-email', [
-                'user-id'       => $userId,
-                'new-email'     => $newEmail,
-                'password'      => $password->getString()
+                'user-id'   => $userId,
+                'new-email' => $newEmail,
+                'password'  => $password->getString(),
             ]);
 
             if (isset($data['EmailResetToken'])) {
                 $this->logger->info(
                     'Account with Id {id} has requested a email reset',
                     [
-                        'id' => $data['Id']
+                        'id' => $data['Id'],
                     ]
                 );
 
@@ -281,8 +257,8 @@ class UserService implements UserRepositoryInterface
             $this->logger->notice(
                 'Failed to request email change for account with Id {id} with code {code}',
                 [
-                    'id'    => $userId,
-                    'code'  => $ex->getCode()
+                    'id'   => $userId,
+                    'code' => $ex->getCode(),
                 ]
             );
 
@@ -303,7 +279,7 @@ class UserService implements UserRepositoryInterface
                 $this->logger->info(
                     'Email reset token for account with Id {id} was used successfully',
                     [
-                        'id' => $data['Id']
+                        'id' => $data['Id'],
                     ]
                 );
 
@@ -318,7 +294,7 @@ class UserService implements UserRepositoryInterface
         $this->logger->notice(
             'Email reset token {token} is invalid',
             [
-                'token' => $token
+                'token' => $token,
             ]
         );
 
@@ -334,7 +310,7 @@ class UserService implements UserRepositoryInterface
         $this->logger->info(
             'Email reset using token {token} has been successful',
             [
-                'token' => $resetToken
+                'token' => $resetToken,
             ]
         );
     }
@@ -343,9 +319,9 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $this->apiClient->httpPatch('/v1/change-password', [
-                'user-id'       => $id,
-                'password'      => $password->getString(),
-                'new-password'  => $newPassword->getString()
+                'user-id'      => $id,
+                'password'     => $password->getString(),
+                'new-password' => $newPassword->getString(),
             ]);
 
             $this->logger->info(
@@ -356,8 +332,8 @@ class UserService implements UserRepositoryInterface
             $this->logger->notice(
                 'Failed to change password for user ID {userId} with code {code}',
                 [
-                    'userId'    => $id,
-                    'code'      => $ex->getCode()
+                    'userId' => $id,
+                    'code'   => $ex->getCode(),
                 ]
             );
 
@@ -383,7 +359,7 @@ class UserService implements UserRepositoryInterface
                 'Failed to delete account for userId {userId} - status code {code}',
                 [
                     'userId' => $accountId,
-                    'code'   => $ex->getCode()
+                    'code'   => $ex->getCode(),
                 ]
             );
 

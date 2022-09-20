@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Filter;
 
 use Common\Filter\ConvertQuotesToApostrophe;
@@ -33,7 +35,7 @@ class ConvertQuotesToApostropheTest extends TestCase
             ['Jones’s', 'Jones\'s'],
             ['Swyddfa’r', 'Swyddfa\'r'],
             ['D’Andre', 'D\'Andre'],
-            ['d’Antoine', 'd\'Antoine']
+            ['d’Antoine', 'd\'Antoine'],
         ];
     }
 }

@@ -7,17 +7,15 @@ namespace Actor\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Exception;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Exception;
 
 /**
- * Class ConfirmDeleteAccountHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
@@ -27,9 +25,10 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authentication
+        AuthenticationInterface $authentication,
     ) {
         parent::__construct($renderer, $urlHelper);
+
         $this->setAuthenticator($authentication);
     }
 
@@ -43,8 +42,7 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-delete-account', [
-            'user' => $user
+            'user' => $user,
         ]));
     }
-
 }

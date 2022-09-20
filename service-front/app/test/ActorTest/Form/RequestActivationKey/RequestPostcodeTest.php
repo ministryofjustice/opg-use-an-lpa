@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestPostcode;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Laminas\Form\Element\Text;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -31,14 +33,14 @@ class RequestPostcodeTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'    => Csrf::class,
-            'postcode'  => Text::class
+            '__csrf'   => Csrf::class,
+            'postcode' => Text::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestPostcode($guardProphecy->reveal());
+        $this->form    = new RequestPostcode($guardProphecy->reveal());
     }
 }

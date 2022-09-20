@@ -17,12 +17,12 @@ class ViewerCodeServiceTest extends TestCase
     use ProphecyTrait;
 
     private const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
-    private const SORT_ADDED = 'Added';
-    private const LPA_ID = '98765432-12345-54321-12345-9876543210';
-    private const ACTOR_ID = 10;
-    private const FIRST_NAME = "John";
-    private const SUR_NAME = "Will";
-    private const CSRF_CODE = '1234';
+    private const SORT_ADDED     = 'Added';
+    private const LPA_ID         = '98765432-12345-54321-12345-9876543210';
+    private const ACTOR_ID       = 10;
+    private const FIRST_NAME     = 'John';
+    private const SUR_NAME       = 'Will';
+    private const CSRF_CODE      = '1234';
 
     private ObjectProphecy|Client $apiClientProphecy;
 
@@ -41,13 +41,13 @@ class ViewerCodeServiceTest extends TestCase
     {
         $lpaId      = '700000000047';
         $viewerCode = '123456789012';
-        $expiry     = (new \DateTime('now +30 days'))->format('c');
+        $expiry     = (new DateTime('now +30 days'))->format('c');
         $orgName    = 'Test Org';
 
         $return = [
             'code'         => $viewerCode,
             'expiry'       => $expiry,
-            'organisation' => $orgName
+            'organisation' => $orgName,
         ];
 
         $this->apiClientProphecy
@@ -60,7 +60,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertInstanceOf(ArrayObject::class, $codeData);
         $this->assertEquals($viewerCode, $codeData->code);
-        $this->assertInstanceOf(\DateTime::class, new \DateTime($codeData->expiry));
+        $this->assertInstanceOf(DateTime::class, new DateTime($codeData->expiry));
         $this->assertEquals($orgName, $codeData->organisation);
     }
 
@@ -71,8 +71,8 @@ class ViewerCodeServiceTest extends TestCase
 
         $return = [
             [
-                'UserLpaActor' => $lpaId
-            ]
+                'UserLpaActor' => $lpaId,
+            ],
         ];
 
         $this->apiClientProphecy
@@ -109,26 +109,26 @@ class ViewerCodeServiceTest extends TestCase
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
-        $endOfToday =  (new DateTime('now'))->setTime(23, 59, 59)->format('c');
+        $endOfToday      =  (new DateTime('now'))->setTime(23, 59, 59)->format('c');
         $currentDateTime =  (new DateTime('now'))->setTime(16, 59, 59)->format('c');
-        $futureWeek = (new DateTime('+1 week'))->format('c');
-        $pastWeek = (new DateTime('-1 week'))->format('c');
+        $futureWeek      = (new DateTime('+1 week'))->format('c');
+        $pastWeek        = (new DateTime('-1 week'))->format('c');
 
         $return = [
             [
-                'Added' => '2020-09-16 22:00:00',
+                'Added'        => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
-                'Expires' => $pastWeek,
+                'Expires'      => $pastWeek,
             ],
             [
-                'Added' => '2020-09-16 22:00:00',
+                'Added'        => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
-                'Expires' => $futureWeek,
+                'Expires'      => $futureWeek,
             ],
             [
-                'Added' => '2020-09-16 22:00:00',
+                'Added'        => '2020-09-16 22:00:00',
                 'UserLpaActor' => $lpaId,
-                'Expires' => $endOfToday,
+                'Expires'      => $endOfToday,
             ],
         ];
 
@@ -170,31 +170,31 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_orders_viewercode_by_order_of_added_date()
     {
-        $lpaId = '98765432-01234-01234-01234-012345678901';
-        $expiry     = (new \DateTime('now +30 days'))->format('c');
+        $lpaId  = '98765432-01234-01234-01234-012345678901';
+        $expiry = (new DateTime('now +30 days'))->format('c');
 
         $shareCodes = [
             0 => [
-                'ActorId' => 123,
-                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
-                'Added' => '2020-09-16 22:00:00',
-                'ViewerCode' => 'ABCD',
-                'Organisation' => 'TestOrg1'
+                'ActorId'      => 123,
+                'CreatedBy'    => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added'        => '2020-09-16 22:00:00',
+                'ViewerCode'   => 'ABCD',
+                'Organisation' => 'TestOrg1',
             ],
             1 => [
-                'ActorId' => self::ACTOR_ID,
-                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
-                'Added' => '2020-09-16 22:10:00',
-                'ViewerCode' => 'WXYZ',
-                'Organisation' => 'TestOrg2'
+                'ActorId'      => self::ACTOR_ID,
+                'CreatedBy'    => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added'        => '2020-09-16 22:10:00',
+                'ViewerCode'   => 'WXYZ',
+                'Organisation' => 'TestOrg2',
             ],
             2 => [
-                'ActorId' => self::ACTOR_ID,
-                'CreatedBy' => self::FIRST_NAME . ' ' . self::SUR_NAME,
-                'Added' => '2020-09-16 22:20:00',
-                'ViewerCode' => 'LMNO',
-                'Organisation' => 'TestOrg3'
-            ]
+                'ActorId'      => self::ACTOR_ID,
+                'CreatedBy'    => self::FIRST_NAME . ' ' . self::SUR_NAME,
+                'Added'        => '2020-09-16 22:20:00',
+                'ViewerCode'   => 'LMNO',
+                'Organisation' => 'TestOrg3',
+            ],
         ];
 
         $this->apiClientProphecy
