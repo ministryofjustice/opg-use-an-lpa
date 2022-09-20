@@ -46,6 +46,7 @@ jobs:
         mkdir webimpress && tar -xzvf 1.2.4.tar.gz -C webimpress
         mkdir slevomat && tar -xzvf 8.4.0.tar.gz -C slevomat
         php phpcs.phar --config-set installed_paths ./webimpress/coding-standard-1.2.4,./slevomat/coding-standard-8.4.0
+        php phpcs.phar --config-show
 
     - uses: thenabeel/action-phpcs@v8
       with:
