@@ -45,7 +45,7 @@ jobs:
         curl -OL https://github.com/slevomat/coding-standard/archive/refs/tags/8.4.0.tar.gz
         mkdir webimpress && tar -xzf 1.2.4.tar.gz -C webimpress
         mkdir slevomat && tar -xzf 8.4.0.tar.gz -C slevomat
-        php phpcs --config-set installed_paths ./webimpress,./slevomat
+        php phpcs.phar --config-set installed_paths ./webimpress,./slevomat
 
     - uses: thenabeel/action-phpcs@v8
       with:
