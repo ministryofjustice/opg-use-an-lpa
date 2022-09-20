@@ -140,6 +140,8 @@
                 <element value="@version"/>
             </property>
         </properties>
+        <!-- This file contains license information for the files original source -->
+        <exclude-pattern>src/Common/src/Service/Session/EncryptedCookiePersistence.php</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
         <properties>
@@ -180,6 +182,8 @@
                 "/>
             </property>
         </properties>
+        <!-- This file contains license information for the files original source -->
+        <exclude-pattern>src/Common/src/Service/Session/EncryptedCookiePersistence.php</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Commenting.EmptyComment" />
     <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment" />
