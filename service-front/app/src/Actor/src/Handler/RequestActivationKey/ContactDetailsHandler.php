@@ -79,7 +79,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             || $this->state($request)->actorAddress1 === null
             || $this->state($request)->getActorRole() === null;
 
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             return $required
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null

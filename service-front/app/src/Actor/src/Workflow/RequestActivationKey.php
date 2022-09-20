@@ -14,8 +14,8 @@ class RequestActivationKey implements WorkflowState
     use JsonSerializable;
 
     // TODO replace with enums at PHP 8.1
-    public const ACTOR_DONOR    = 'donor';
-    public const ACTOR_ATTORNEY = 'attorney';
+    public const ACTOR_TYPE_DONOR    = 'donor';
+    public const ACTOR_TYPE_ATTORNEY = 'attorney';
 
     public const ACTOR_ADDRESS_SELECTION_YES      = 'Yes';
     public const ACTOR_ADDRESS_SELECTION_NO       = 'No';
@@ -113,12 +113,12 @@ class RequestActivationKey implements WorkflowState
      * TODO replace with enums at PHP 8.1
      *
      * @param string $role
-     * @psalm-param self::ACTOR_* $role
+     * @psalm-param self::ACTOR_TYPE_* $role
      * @throws RuntimeException
      */
     public function setActorRole(string $role): void
     {
-        if (!in_array($role, [self::ACTOR_ATTORNEY, self::ACTOR_DONOR])) {
+        if (!in_array($role, [self::ACTOR_TYPE_ATTORNEY, self::ACTOR_TYPE_DONOR])) {
             throw new RuntimeException(sprintf("Actor type '%s' not recognised", $role));
         }
 
