@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@v3
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -35,7 +35,7 @@ jobs:
           npm run build
           npm run build:pdf_production
       - name: archive dist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
         with:
           name: dist-web
           path: |

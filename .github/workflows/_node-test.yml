@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@v3
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -35,7 +35,7 @@ jobs:
           mkdir -p ./test-results/junit
           ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
       - name: test summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@77bb5a9f9c572416423f9a157cbf1159c1e75a4c # pin@v1.0
         with:
           paths: |
             **/service-front/web/test-results/junit/results.xml

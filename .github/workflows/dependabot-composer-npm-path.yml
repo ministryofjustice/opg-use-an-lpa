@@ -27,19 +27,8 @@ permissions:
   statuses: none
 
 jobs:
-#  workspace_name:
-#    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
   branch_name:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
-
-  create_tags:
-    name: Create Tags
-    needs: [ 'branch_name' ]
-    uses: ./.github/workflows/_create-tags.yml
-    with:
-      branch_name: ${{ needs.branch_name.outputs.parsed }}
-    secrets:
-      source_github_token: ${{ secrets.GITHUB_TOKEN }}
 
   node_test:
 #    if: github.actor != 'dependabot[bot]'
@@ -56,11 +45,10 @@ jobs:
     uses: ./.github/workflows/_build-and-push.yml
     needs:
       - branch_name
-      - create_tags
       - node_test
       - node_build
     with:
-      tag: ${{ needs.create_tags.outputs.version_tag }}
+      tag: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
       branch_name: ${{ needs.branch_name.outputs.parsed }}
       push_to_ecr: false
     secrets: inherit
@@ -76,17 +64,22 @@ jobs:
       - name: Get and Validate Codecov App
         run: bash ./scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
       - name: download artifact for front tests
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: service-front
       - name: download artifact for api tests
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: service-api
+      - name: check paths
+        run: |
+          ls -alt
+          ls -alt service-api
+          ls -alt service-front
       - name: Upload to Codecov
         run: |
-          echo "would run below"
-          # bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+          echo "would run normally"
+          # bash ~/project/codecov -t ${{ secrets.CODECOV_TOKEN }} || echo 'Codecov upload failed'
 
   # Required end of workflow job
 #  workflow_end:
