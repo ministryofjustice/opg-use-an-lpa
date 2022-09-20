@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb6bd88b69e41da781f0f87372193d6d",
+    "content-hash": "4bffaaa666b937d283d88d5f463fe2ce",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -7390,62 +7390,6 @@
             "time": "2020-11-30T20:16:31+00:00"
         },
         {
-            "name": "laminas/laminas-coding-standard",
-            "version": "2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-coding-standard.git",
-                "reference": "eb076dd86aa93dd424856b150c9b6f76c1fdfabc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-coding-standard/zipball/eb076dd86aa93dd424856b150c9b6f76c1fdfabc",
-                "reference": "eb076dd86aa93dd424856b150c9b6f76c1fdfabc",
-                "shasum": ""
-            },
-            "require": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-                "php": "^7.4 || ^8.0",
-                "slevomat/coding-standard": "^7.0",
-                "squizlabs/php_codesniffer": "^3.6",
-                "webimpress/coding-standard": "^1.2"
-            },
-            "conflict": {
-                "phpstan/phpdoc-parser": ">=1.6.0"
-            },
-            "type": "phpcodesniffer-standard",
-            "autoload": {
-                "psr-4": {
-                    "LaminasCodingStandard\\": "src/LaminasCodingStandard/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Laminas Coding Standard",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "Coding Standard",
-                "laminas"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-coding-standard/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-coding-standard/issues",
-                "rss": "https://github.com/laminas/laminas-coding-standard/releases.atom",
-                "source": "https://github.com/laminas/laminas-coding-standard"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2022-08-24T17:45:47+00:00"
-        },
-        {
             "name": "laminas/laminas-composer-autoloading",
             "version": "2.2.0",
             "source": {
@@ -8260,16 +8204,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.5.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "981cc368a216c988e862a75e526b6076987d1b50"
+                "reference": "367a8d9d5f7da2a0136422d27ce8840583926955"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/981cc368a216c988e862a75e526b6076987d1b50",
-                "reference": "981cc368a216c988e862a75e526b6076987d1b50",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/367a8d9d5f7da2a0136422d27ce8840583926955",
+                "reference": "367a8d9d5f7da2a0136422d27ce8840583926955",
                 "shasum": ""
             },
             "require": {
@@ -8279,6 +8223,7 @@
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan-phpunit": "^1.1",
                 "phpstan/phpstan-strict-rules": "^1.0",
                 "phpunit/phpunit": "^9.5",
                 "symfony/process": "^5.2"
@@ -8298,9 +8243,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.5.1"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.7.0"
             },
-            "time": "2022-05-05T11:32:40+00:00"
+            "time": "2022-08-09T12:23:23+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -10253,37 +10198,37 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "7.2.1",
+            "version": "8.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "aff06ae7a84e4534bf6f821dc982a93a5d477c90"
+                "reference": "02f27326be19633a1b6ba76745390bbf9a4be0b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/aff06ae7a84e4534bf6f821dc982a93a5d477c90",
-                "reference": "aff06ae7a84e4534bf6f821dc982a93a5d477c90",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/02f27326be19633a1b6ba76745390bbf9a4be0b6",
+                "reference": "02f27326be19633a1b6ba76745390bbf9a4be0b6",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpdoc-parser": "^1.5.1",
-                "squizlabs/php_codesniffer": "^3.6.2"
+                "phpstan/phpdoc-parser": ">=1.7.0 <1.8.0",
+                "squizlabs/php_codesniffer": "^3.7.1"
             },
             "require-dev": {
-                "phing/phing": "2.17.3",
+                "phing/phing": "2.17.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.2",
-                "phpstan/phpstan": "1.4.10|1.7.1",
+                "phpstan/phpstan": "1.4.10|1.8.2",
                 "phpstan/phpstan-deprecation-rules": "1.0.0",
                 "phpstan/phpstan-phpunit": "1.0.0|1.1.1",
-                "phpstan/phpstan-strict-rules": "1.2.3",
-                "phpunit/phpunit": "7.5.20|8.5.21|9.5.20"
+                "phpstan/phpstan-strict-rules": "1.3.0",
+                "phpunit/phpunit": "7.5.20|8.5.21|9.5.21"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.x-dev"
+                    "dev-master": "8.x-dev"
                 }
             },
             "autoload": {
@@ -10298,7 +10243,7 @@
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/7.2.1"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.4.0"
             },
             "funding": [
                 {
@@ -10310,7 +10255,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-25T10:58:12+00:00"
+            "time": "2022-08-09T19:03:45+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
