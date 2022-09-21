@@ -89,4 +89,44 @@ class RequestActivationKeyTest extends TestCase
             }
         }
     }
+
+    /**
+     * @test
+     * @covers ::__construct
+     * @covers ::reset
+     * @dataProvider fullActivationKeyWorkflow
+     */
+    public function it_can_be_reset(array $data): void
+    {
+        $sut = new RequestActivationKey(...$data);
+
+        Assert::assertInstanceOf(RequestActivationKey::class, $sut);
+
+        $sut->reset();
+
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'firstNames':
+                case 'lastName':
+                case 'postcode':
+                    Assert::assertEquals($value, $sut->$key);
+                    break;
+                case 'dob':
+                    Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
+                    Assert::assertEquals($value, $sut->$key->format('c'));
+                    break;
+                case 'actorType':
+                    Assert::assertNull($sut->getActorRole());
+                    break;
+                case 'actorAddressResponse':
+                    Assert::assertNull($sut->getActorAddressCheckResponse());
+                    break;
+                case 'needsCleansing':
+                    Assert::assertFalse($sut->$key);
+                    break;
+                default:
+                    Assert::assertNull($sut->$key);
+            }
+        }
+    }
 }
