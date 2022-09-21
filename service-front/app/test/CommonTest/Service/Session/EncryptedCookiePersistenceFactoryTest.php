@@ -9,6 +9,7 @@ use Common\Service\Session\EncryptedCookiePersistenceFactory;
 use Common\Service\Session\Encryption\EncryptInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
@@ -20,6 +21,8 @@ use RuntimeException;
  */
 class EncryptedCookiePersistenceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

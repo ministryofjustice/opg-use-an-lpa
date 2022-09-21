@@ -6,10 +6,13 @@ use Common\View\Twig\TranslationSwitchExtension;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Twig\TwigFunction;
 
 class TranslationSwitchExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_an_array_of_exported_twig_functions()
     {

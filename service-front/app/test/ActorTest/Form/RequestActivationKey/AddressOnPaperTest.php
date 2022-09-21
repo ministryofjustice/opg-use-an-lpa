@@ -12,10 +12,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Textarea;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AddressOnPaperTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected AddressOnPaper $form;
 

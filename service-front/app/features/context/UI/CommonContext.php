@@ -17,11 +17,12 @@ use DI\Container;
 use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\Definition\Reference;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class CommonContext
@@ -172,7 +173,7 @@ class CommonContext implements Context
                     ),
                     self::USER_SERVICE_AUTHENTICATE
                 )
-                );
+            );
 
             // Dashboard page checks for all LPA's for a user
             $this->apiFixtures->append(
@@ -236,7 +237,7 @@ class CommonContext implements Context
         $seen = $session->getCookie('cookie_policy');
 
         if ($seen === null) {
-            throw new \Exception('Cookies not set');
+            throw new Exception('Cookies not set');
         }
     }
 
@@ -247,7 +248,7 @@ class CommonContext implements Context
     {
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText(
-            "You’ve set your cookie preferences. Go back to the page you were looking at."
+            'You’ve set your cookie preferences. Go back to the page you were looking at.'
         );
         $this->ui->assertElementContains('h2[id=govuk-notification-banner-title]', '');
     }
@@ -344,7 +345,7 @@ class CommonContext implements Context
      */
     public function iSeeOptionsToAcceptAnalyticsCookies($option1, $option2)
     {
-        $this->ui->assertPageContainsText("Do you want to accept analytics cookies");
+        $this->ui->assertPageContainsText('Do you want to accept analytics cookies');
         $this->ui->assertPageContainsText($option1);
         $this->ui->assertPageContainsText($option2);
         $this->ui->assertElementContains('input[id=usageCookies-1]', '');
@@ -430,7 +431,7 @@ class CommonContext implements Context
     public function myOutboundRequestsHaveAttachedTracingHeaders()
     {
         $request = $this->apiFixtures->getLastRequest();
-        assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')),'No X-Amzn-Trace-Id header');
+        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')), 'No X-Amzn-Trace-Id header');
     }
 
     /**

@@ -10,12 +10,15 @@ use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Acpr\I18n\TranslatorInterface;
 
 class CookiesPageHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_a_CookiesPageHandler(): void
     {

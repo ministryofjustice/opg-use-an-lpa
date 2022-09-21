@@ -9,21 +9,22 @@ use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodeServiceTest extends TestCase
 {
-    const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
-    const SORT_ADDED = 'Added';
-    const LPA_ID = '98765432-12345-54321-12345-9876543210';
-    const ACTOR_ID = 10;
-    const FIRST_NAME = "John";
-    const SUR_NAME = "Will";
-    const CSRF_CODE = '1234';
+    use ProphecyTrait;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy|Client
-     */
-    private $apiClientProphecy;
+    private const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
+    private const SORT_ADDED = 'Added';
+    private const LPA_ID = '98765432-12345-54321-12345-9876543210';
+    private const ACTOR_ID = 10;
+    private const FIRST_NAME = "John";
+    private const SUR_NAME = "Will";
+    private const CSRF_CODE = '1234';
+
+    private ObjectProphecy|Client $apiClientProphecy;
 
     public function setUp(): void
     {
@@ -108,8 +109,8 @@ class ViewerCodeServiceTest extends TestCase
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
-        $endOfToday =  (new DateTime('now'))->setTime(23,59,59)->format('c');
-        $currentDateTime =  (new DateTime('now'))->setTime(16,59,59)->format('c');
+        $endOfToday =  (new DateTime('now'))->setTime(23, 59, 59)->format('c');
+        $currentDateTime =  (new DateTime('now'))->setTime(16, 59, 59)->format('c');
         $futureWeek = (new DateTime('+1 week'))->format('c');
         $pastWeek = (new DateTime('-1 week'))->format('c');
 
@@ -163,7 +164,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $codeData = $viewerCodeService->cancelShareCode(self::IDENTITY_TOKEN, $lpaId, $viewerCode);
 
-        $this->assertEquals(null,$codeData);
+        $this->assertEquals(null, $codeData);
     }
 
     /** @test */
@@ -208,7 +209,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertIsArray($codeData);
         $this->assertNotEquals($shareCodes, $codeData);
         $this->assertEquals($codeData[0]['Added'], $shareCodes[2]['Added']);
-        $this->assertEquals( $codeData[1]['Added'], $shareCodes[1]['Added']);
+        $this->assertEquals($codeData[1]['Added'], $shareCodes[1]['Added']);
         $this->assertEquals($codeData[2]['Added'], $shareCodes[0]['Added']);
     }
 }

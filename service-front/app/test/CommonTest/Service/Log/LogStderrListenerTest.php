@@ -7,6 +7,7 @@ namespace CommonTest\Service\Log;
 use Common\Service\Log\LogStderrListener;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -16,6 +17,8 @@ use Psr\Log\LoggerInterface;
  */
 class LogStderrListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__construct

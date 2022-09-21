@@ -9,10 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DateValidatorTest extends TestCase
 {
-    /**
-     * @var DateValidator
-     */
-    private $validator;
+    private DateValidator $validator;
 
     public function setUp(): void
     {
@@ -192,3 +189,4 @@ class DateValidatorTest extends TestCase
 
 
 }
+

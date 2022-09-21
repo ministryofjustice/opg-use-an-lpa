@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Handler\HomePageHandler;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,6 +14,8 @@ use Mezzio\Template\TemplateRendererInterface;
 
 class HomePageHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testReturnsHtmlResponseWhenTemplateRendererProvided()
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);

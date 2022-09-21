@@ -8,6 +8,7 @@ use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Log\RequestTracing;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -21,6 +22,8 @@ use RuntimeException;
  */
 class ClientFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

@@ -8,11 +8,14 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Interop\Container\ContainerInterface;
 use Monolog\Test\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class ConditionalRoutingMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $containerProphecy;
     private $requestInterfaceProphecy;
     private $requestHandlerInterfaceProphecy;

@@ -8,15 +8,11 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
-use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\View;
-use JSHayes\FakeRequests\RequestHandler;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * @property mixed  $lpa
@@ -54,7 +50,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
      */
-    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
+    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable(): void
     {
         $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
     }
@@ -62,7 +58,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to the change LPA details page$/
      */
-    public function iAmTakenToTheChangeLPADetailsPage()
+    public function iAmTakenToTheChangeLPADetailsPage(): void
     {
         $this->ui->assertPageAddress('/lpa/change-lpa-details');
         $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
@@ -71,7 +67,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
      */
-    public function iAmTakenToTheRemoveAnLPAConfirmationPage($status)
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage($status): void
     {
         $this->ui->assertPageAddress('/lpa/remove-lpa');
         $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
@@ -89,7 +85,7 @@ class LpaContext implements Context
     /**
      * @Given /^I cannot see my LPA on the dashboard$/
      */
-    public function iCannotSeeMyLPAOnTheDashboard()
+    public function iCannotSeeMyLPAOnTheDashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageNotContainsText('Ian Deputy Deputy');
@@ -98,7 +94,7 @@ class LpaContext implements Context
     /**
      * @Given /^I can see a flash message confirming that my LPA has been removed$/
      */
-    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
+    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved(): void
     {
         $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
     }
@@ -106,7 +102,7 @@ class LpaContext implements Context
     /**
      * @When /^I click on the Read more link$/
      */
-    public function iClickOnTheReadMoreLink()
+    public function iClickOnTheReadMoreLink(): void
     {
         $this->ui->clickLink('Read more');
     }
@@ -114,7 +110,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to remove an LPA from my account without the lpa actor token$/
      */
-    public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken()
+    public function iRequestToRemoveAnLPAFromMyAccountWithoutTheLpaActorToken(): void
     {
         $this->ui->visit('/lpa/remove-lpa');
     }
@@ -122,7 +118,7 @@ class LpaContext implements Context
     /**
      * @When /^I select that I have seen something incorrect in the LPA details$/
      */
-    public function iSelectThatIHaveSeenSomethingIncorrectInTheLPADetails()
+    public function iSelectThatIHaveSeenSomethingIncorrectInTheLPADetails(): void
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->clickLink('Seen something incorrect in the LPA details');
@@ -131,7 +127,7 @@ class LpaContext implements Context
     /**
      * @Given /^My active codes are cancelled$/
      */
-    public function myActiveCodesAreCancelled()
+    public function myActiveCodesAreCancelled(): void
     {
         // Not needed for this context
     }
@@ -139,7 +135,7 @@ class LpaContext implements Context
     /**
      * @Then /^The LPA is removed/
      */
-    public function theLPAIsRemoved()
+    public function theLPAIsRemoved(): void
     {
         // Not needed for this context
     }
@@ -147,7 +143,7 @@ class LpaContext implements Context
     /**
      * @Given /^I confirm that I want to remove the LPA from my account$/
      */
-    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
+    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount(): void
     {
         // API call for removing an LPA from a users account
         $this->apiFixtures->append(
@@ -173,7 +169,7 @@ class LpaContext implements Context
     /**
      * @Then /^I receive an email confirming activation key request$/
      */
-    public function iReceiveAnEmailConfirmingActivationKeyRequest()
+    public function iReceiveAnEmailConfirmingActivationKeyRequest(): void
     {
         //Not needed for this context
     }
@@ -181,7 +177,7 @@ class LpaContext implements Context
     /**
      * @Given /^an attorney can be removed from acting on a particular LPA$/
      */
-    public function anAttorneyCanBeRemovedFromActingOnAParticularLpa()
+    public function anAttorneyCanBeRemovedFromActingOnAParticularLpa(): void
     {
         // Not needed for this context
     }
@@ -189,7 +185,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am given a unique access code$/
      */
-    public function iAmGivenAUniqueAccessCode()
+    public function iAmGivenAUniqueAccessCode(): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
         $this->ui->assertPageContainsText('XYZ3 - 21AB - C987');
@@ -199,7 +195,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am inactive against the LPA on my account$/
      */
-    public function iAmInactiveAgainstTheLpaOnMyAccount()
+    public function iAmInactiveAgainstTheLpaOnMyAccount(): void
     {
         $this->lpaData['actor']['details']['systemStatus'] = false;
     }
@@ -207,7 +203,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am navigated to the instructions and preferences page$/
      */
-    public function iAmNavigatedToTheInstructionsAndPreferencesPage()
+    public function iAmNavigatedToTheInstructionsAndPreferencesPage(): void
     {
         $this->ui->assertPageAddress('/lpa/instructions-preferences');
         $this->ui->assertPageContainsText('Instructions and preferences');
@@ -216,7 +212,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the activation key information page$/
      */
-    public function iAmOnTheActivationKeyInformationPage()
+    public function iAmOnTheActivationKeyInformationPage(): void
     {
         $this->ui->visit('/lpa/add-by-paper-information');
         if (($this->base->container->get('Common\Service\Features\FeatureEnabled'))('allow_older_lpas')) {
@@ -229,7 +225,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the add an LPA page$/
      */
-    public function iAmOnTheAddAnLPAPage()
+    public function iAmOnTheAddAnLPAPage(): void
     {
         $this->ui->visit('/lpa/add-by-key/activation-key');
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
@@ -238,7 +234,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the add an LPA triage page$/
      */
-    public function iAmOnTheAddAnLPATriagePage()
+    public function iAmOnTheAddAnLPATriagePage(): void
     {
         $this->ui->visit('/lpa/add');
         $this->iAmTakenToTheAddAnLPATriagePage();
@@ -247,7 +243,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to the add an LPA triage page$/
      */
-    public function iAmTakenToTheAddAnLPATriagePage()
+    public function iAmTakenToTheAddAnLPATriagePage(): void
     {
         $this->ui->assertPageAddress('/lpa/add');
         $this->ui->assertPageContainsText('Do you have an activation key to add an LPA?');
@@ -256,7 +252,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the change details page$/
      */
-    public function iAmOnTheChangeDetailsPage()
+    public function iAmOnTheChangeDetailsPage(): void
     {
         $this->ui->visit('/lpa/change-details');
         $this->ui->assertPageAddress('/lpa/change-details');
@@ -265,7 +261,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the check LPA page$/
      */
-    public function iAmOnTheCheckLPAPage()
+    public function iAmOnTheCheckLPAPage(): void
     {
         $this->ui->assertPageAddress('/lpa/check');
     }
@@ -273,7 +269,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the dashboard page$/
      */
-    public function iAmOnTheDashboardPage()
+    public function iAmOnTheDashboardPage(): void
     {
         if ($this->dashboardLPAs) {
             //API call for getting all the users added LPAs
@@ -306,7 +302,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the death notification page$/
      */
-    public function iAmOnTheDeathNotificationPage()
+    public function iAmOnTheDeathNotificationPage(): void
     {
         $this->ui->visit('/lpa/death-notification');
     }
@@ -314,7 +310,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the full lpa page$/
      */
-    public function iAmOnTheFullLpaPage()
+    public function iAmOnTheFullLpaPage(): void
     {
         $this->iAmOnTheDashboardPage();
         $this->iRequestToViewAnLPAWhichStatusIs('Registered');
@@ -324,7 +320,7 @@ class LpaContext implements Context
     /**
      * @When /^I am on the instructions and preferences page$/
      */
-    public function iAmOnTheInstructionsAndPreferencesPage()
+    public function iAmOnTheInstructionsAndPreferencesPage(): void
     {
         $this->iAmOnTheDashboardPage();
         $this->iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage('Read more');
@@ -334,7 +330,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am shown a not found error$/
      */
-    public function iAmShownANotFoundError()
+    public function iAmShownANotFoundError(): void
     {
         $this->ui->assertResponseStatus(404);
     }
@@ -342,7 +338,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to page giving me information about asking for an activation key$/
      */
-    public function iAmTakenToPageToAskForAnActivationKey()
+    public function iAmTakenToPageToAskForAnActivationKey(): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-paper-information');
     }
@@ -350,7 +346,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to request an activation key form$/
      */
-    public function iAmTakenToRequestAnActivationKeyForm()
+    public function iAmTakenToRequestAnActivationKeyForm(): void
     {
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
@@ -360,7 +356,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am taken to the change details page$/
      */
-    public function iAmTakenToTheChangeDetailsPage()
+    public function iAmTakenToTheChangeDetailsPage(): void
     {
         $this->ui->assertPageAddress('lpa/change-details?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
@@ -369,7 +365,7 @@ class LpaContext implements Context
     /**
      * @Given /^I am the donor$/
      */
-    public function iAmTheDonor()
+    public function iAmTheDonor(): void
     {
         $this->lpaData['actor']['type'] = 'donor';
         unset($this->lpaData['actor']['details']['systemStatus']);
@@ -378,7 +374,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told that I have 2 LPAs in my account$/
      */
-    public function iAmToldThatIHave2LPAsInMyAccount()
+    public function iAmToldThatIHave2LPAsInMyAccount(): void
     {
         $this->ui->assertPageContainsText('You have 2 LPAs in your account');
     }
@@ -386,7 +382,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have added an additional LPA to my account$/
      */
-    public function iHaveAdded2LPAsToMyAccount()
+    public function iHaveAdded2LPAsToMyAccount(): void
     {
         for ($x = 0; $x < 2; $x++) {
             // change the token within the LPA data to match as it changes
@@ -399,7 +395,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told that my input is invalid because (.*)$/
      */
-    public function iAmToldThatMyInputIsInvalidBecause($reason)
+    public function iAmToldThatMyInputIsInvalidBecause($reason): void
     {
         $this->ui->assertPageContainsText($reason);
     }
@@ -407,7 +403,7 @@ class LpaContext implements Context
     /**
      * @When /^I attempt to add the same LPA again$/
      */
-    public function iAttemptToAddTheSameLPAAgain()
+    public function iAttemptToAddTheSameLPAAgain(): void
     {
         $this->iAmOnTheAddAnLPAPage();
 
@@ -441,7 +437,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can find out why this LPA has been removed from the account$/
      */
-    public function iCanFindOutWhyThisLPAHasBeenRemovedFromTheAccount()
+    public function iCanFindOutWhyThisLPAHasBeenRemovedFromTheAccount(): void
     {
         $this->ui->clickLink('Why is this?');
         $this->ui->assertPageAddress('/lpa/removed');
@@ -451,7 +447,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can go back to the dashboard page$/
      */
-    public function iCanGoBackToTheDashboardPage()
+    public function iCanGoBackToTheDashboardPage(): void
     {
         $this->ui->assertPageAddress('/lpa/removed');
         $this->ui->clickLink('Back');
@@ -461,7 +457,7 @@ class LpaContext implements Context
     /**
      * @Given /^I can see a flash message for the added LPA$/
      */
-    public function iCanSeeAFlashMessageForTheAddedLPA()
+    public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
         $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
     }
@@ -469,7 +465,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see all of my access codes and their details$/
      */
-    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails(): void
     {
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertElementContainsText(
@@ -485,7 +481,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
      */
-    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
+    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle): void
     {
         $this->ui->assertPageContainsText($activeTitle);
         $this->ui->assertElementContainsText(
@@ -503,10 +499,10 @@ class LpaContext implements Context
     /**
      * @Then /^I can see authority to use the LPA is revoked$/
      */
-    public function iCanSeeAuthorityToUseTheLpaIsRevoked()
+    public function iCanSeeAuthorityToUseTheLpaIsRevoked(): void
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         $code = [
             'SiriusUid' => $this->lpa->uId,
@@ -549,7 +545,7 @@ class LpaContext implements Context
      * @Then /^I can see banner about existing LPAs before 2019$/
      */
 
-    public function iCanSeeBannerAboutExistingLPAsBefore2019()
+    public function iCanSeeBannerAboutExistingLPAsBefore2019(): void
     {
         $this->ui->assertElementOnPage('.govuk-notification-banner');
         $this->ui->assertElementContainsText('.govuk-notification-banner', '1 September 2019');
@@ -559,7 +555,7 @@ class LpaContext implements Context
      * @Then /^I can see banner about existing LPAs after 2016$/
      */
 
-    public function iCanSeeBannerAboutExistingLPAsAfter2016()
+    public function iCanSeeBannerAboutExistingLPAsAfter2016(): void
     {
         $this->ui->assertElementOnPage('.govuk-notification-banner');
         $this->ui->assertElementContainsText('.govuk-notification-banner', '1 January 2016');
@@ -569,7 +565,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see (.*) link along with the instructions or preference message$/
      */
-    public function iCanSeeReadMoreLink($readMoreLink)
+    public function iCanSeeReadMoreLink($readMoreLink): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
 
@@ -587,10 +583,10 @@ class LpaContext implements Context
     /**
      * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
      */
-    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry): void
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         $code1 = [
             'SiriusUid' => $this->lpa->uId,
@@ -648,7 +644,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see that no organisations have access to my LPA$/
      */
-    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA(): void
     {
         //API call for getting all the users added LPAs
         $this->apiFixtures->append(
@@ -677,7 +673,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see the code has not been used to view the LPA$/
      */
-    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
+    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA(): void
     {
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
@@ -689,7 +685,7 @@ class LpaContext implements Context
      * @Then /^I can see the message (.*)$/
      * <Important: This LPA has instructions or preferences>
      */
-    public function iCanSeeTheMessage($message)
+    public function iCanSeeTheMessage($message): void
     {
         //API call for getting all the users added LPAs
         $this->apiFixtures->append(
@@ -718,7 +714,7 @@ class LpaContext implements Context
     /**
      * @Then /^I can see the name of the organisation that viewed the LPA$/
      */
-    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
@@ -730,7 +726,7 @@ class LpaContext implements Context
     /**
      * @When /^I cancel the organisation access code/
      */
-    public function iCancelTheOrganisationAccessCode()
+    public function iCancelTheOrganisationAccessCode(): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
@@ -742,7 +738,7 @@ class LpaContext implements Context
     /**
      * @When /^I cancel the viewer code/
      */
-    public function iCancelTheViewerCode()
+    public function iCancelTheViewerCode(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -787,7 +783,7 @@ class LpaContext implements Context
     /**
      * @Then /^I cannot check existing or inactive access codes for the LPA$/
      */
-    public function iCannotCheckExistingOrInactiveAccessCodesForTheLpa()
+    public function iCannotCheckExistingOrInactiveAccessCodesForTheLpa(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -819,7 +815,7 @@ class LpaContext implements Context
     /**
      * @Then /^I cannot make access codes for the LPA$/
      */
-    public function iCannotMakeAccessCodesForTheLpa()
+    public function iCannotMakeAccessCodesForTheLpa(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -851,7 +847,7 @@ class LpaContext implements Context
     /**
      * @Then /^I cannot view the LPA summary$/
      */
-    public function iCannotViewTheLpaSummary()
+    public function iCannotViewTheLpaSummary(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -883,7 +879,7 @@ class LpaContext implements Context
     /**
      * @When /^I check my access codes/
      */
-    public function iCheckMyAccessCodes()
+    public function iCheckMyAccessCodes(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -916,7 +912,7 @@ class LpaContext implements Context
     /**
      * @When /^I click the Continue link$/
      */
-    public function iClickTheContinueLink()
+    public function iClickTheContinueLink(): void
     {
         $this->ui->clickLink('Continue');
     }
@@ -924,7 +920,7 @@ class LpaContext implements Context
     /**
      * @When /^I click the (.*) link in the instructions or preference message$/
      */
-    public function iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage($readMoreLink)
+    public function iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage($readMoreLink): void
     {
         $this->iCanSeeReadMoreLink($readMoreLink);
         $this->ui->clickLink($readMoreLink);
@@ -933,7 +929,7 @@ class LpaContext implements Context
     /**
      * @When /^I click the (.*) to change a donor or attorneys details$/
      */
-    public function iClickTheToChangeADonorOrAttorneysDetails($link)
+    public function iClickTheToChangeADonorOrAttorneysDetails($link): void
     {
         $this->ui->assertPageAddress('lpa/view-lpa?lpa=' . $this->userLpaActorToken);
         $this->ui->clickLink($link);
@@ -942,7 +938,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check my access code now expired/
      */
-    public function iClickToCheckMyAccessCodeNowExpired()
+    public function iClickToCheckMyAccessCodeNowExpired(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -988,7 +984,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check my access codes$/
      */
-    public function iClickToCheckMyAccessCodes()
+    public function iClickToCheckMyAccessCodes(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -1034,7 +1030,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check my access codes that is used to view LPA$/
      */
-    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA()
+    public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
         $organisation = 'Natwest';
 
@@ -1093,7 +1089,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check my active and inactive codes$/
      */
-    public function iClickToCheckMyActiveAndInactiveCodes()
+    public function iClickToCheckMyActiveAndInactiveCodes(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -1133,7 +1129,7 @@ class LpaContext implements Context
                             'Expires' => '2020-02-01T23:59:59+00:00',
                             'UserLpaActor' => $this->userLpaActorToken,
                             'Organisation' => $this->organisation,
-                            'ViewerCode' => "ABC321ABCXYZ",
+                            'ViewerCode' => 'ABC321ABCXYZ',
                             'Viewed' => false,
                             'ActorId' => $this->actorId,
                         ],
@@ -1149,7 +1145,7 @@ class LpaContext implements Context
     /**
      * @When /^I click to check the viewer code has been cancelled which is now expired/
      */
-    public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired()
+    public function iClickToCheckTheViewerCodeHasBeenCancelledWhichIsNowExpired(): void
     {
         $this->ui->clickLink('Check access codes');
     }
@@ -1157,11 +1153,11 @@ class LpaContext implements Context
     /**
      * @When /^I confirm cancellation of the chosen viewer code/
      */
-    public function iConfirmCancellationOfTheChosenViewerCode()
+    public function iConfirmCancellationOfTheChosenViewerCode(): void
     {
         $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         // API call to cancel code
         $this->apiFixtures->append(
@@ -1212,13 +1208,13 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->pressButton("Yes, cancel code");
+        $this->ui->pressButton('Yes, cancel code');
     }
 
     /**
      * @When /^I do not confirm cancellation of the chosen viewer code$/
      */
-    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode(): void
     {
         $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
 
@@ -1260,13 +1256,13 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->pressButton("No, return to access codes");
+        $this->ui->pressButton('No, return to access codes');
     }
 
     /**
      * @When /^I do not select an option for whether I have an activation key$/
      */
-    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey()
+    public function iDoNotSelectAnOptionForWhetherIHaveAnActivationKey(): void
     {
         $this->ui->pressButton('Continue');
     }
@@ -1274,7 +1270,7 @@ class LpaContext implements Context
     /**
      * @Then /^I expect to be on the death notification page$/
      */
-    public function iExpectToBeOnTheDeathNotificationPage()
+    public function iExpectToBeOnTheDeathNotificationPage(): void
     {
         $this->ui->assertPageAddress('/lpa/death-notification');
     }
@@ -1282,7 +1278,7 @@ class LpaContext implements Context
     /**
      * @When /^I fill in the form and click the cancel button$/
      */
-    public function iFillInTheFormAndClickTheCancelButton()
+    public function iFillInTheFormAndClickTheCancelButton(): void
     {
         // API call for finding all the users added LPAs
         $this->apiFixtures->append(
@@ -1310,7 +1306,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have 2 codes for one of my LPAs$/
      */
-    public function iHave2CodesForOneOfMyLPAs()
+    public function iHave2CodesForOneOfMyLPAs(): void
     {
         // Not needed for one this context
     }
@@ -1318,7 +1314,7 @@ class LpaContext implements Context
     /**
      * @Given /^I have added a (.*) LPA$/
      */
-    public function iHaveAddedALPA($lpaType)
+    public function iHaveAddedALPA($lpaType): void
     {
         // Dashboard page
 
@@ -1347,7 +1343,7 @@ class LpaContext implements Context
     /**
      * @Given I have added an LPA to my account
      */
-    public function iHaveAddedAnLpaToMyAccount()
+    public function iHaveAddedAnLpaToMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
@@ -1357,7 +1353,7 @@ class LpaContext implements Context
     /**
      * @Given I have no LPAs in my account
      */
-    public function iHaveNoLpasInMyAccount()
+    public function iHaveNoLpasInMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
@@ -1375,7 +1371,7 @@ class LpaContext implements Context
      * @Given I have been given access to use an LPA via credentials
      *
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
 
@@ -1423,7 +1419,7 @@ class LpaContext implements Context
     /**
      * @Given I have been given access to use an LPA via credentials which has a donor signature before 2016
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016()
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016(): void
     {
         $this->lpa = json_decode(file_get_contents(
             __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
@@ -1489,7 +1485,7 @@ class LpaContext implements Context
     /**
      * @Given I have added an LPA to my account which has a donor signature before 2016
      */
-    public function iHaveAddedAnLPAToMyAccountSignedBefore2016()
+    public function iHaveAddedAnLPAToMyAccountSignedBefore2016(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016();
 
@@ -1513,16 +1509,16 @@ class LpaContext implements Context
     /**
      * @Given /^I have created an access code$/
      */
-    public function iHaveCreatedAnAccessCode()
+    public function iHaveCreatedAnAccessCode(): void
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
     }
 
     /**
      * @Given /^I have generated an access code for an organisation and can see the details$/
      */
-    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
+    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iAmOnTheDashboardPage();
@@ -1533,12 +1529,12 @@ class LpaContext implements Context
     /**
      * @Given I have generated an access code for an LPA on my account
      */
-    public function iHaveGeneratedAnAccessCodeForAnLPAOnMyAccount()
+    public function iHaveGeneratedAnAccessCodeForAnLPAOnMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
 
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -1580,9 +1576,9 @@ class LpaContext implements Context
     /**
      * @When /^I have not provided required information for creating access code such as (.*)$/
      */
-    public function iHaveNotProvidedRequiredInformationForCreatingAccessCodeSuchAs($organisationname)
+    public function iHaveNotProvidedRequiredInformationForCreatingAccessCodeSuchAs($organisationname): void
     {
-        $this->ui->assertPageContainsText("Which organisation do you want to give access to?");
+        $this->ui->assertPageContainsText('Which organisation do you want to give access to?');
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
@@ -1615,7 +1611,7 @@ class LpaContext implements Context
     /**
      * @When /^I have shared the access code with organisations to view my LPA$/
      */
-    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
         // Not needed for this context
     }
@@ -1623,7 +1619,7 @@ class LpaContext implements Context
     /**
      * @When /^I navigate to check an access code$/
      */
-    public function iNavigateToCheckAnAccessCode()
+    public function iNavigateToCheckAnAccessCode(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1639,7 +1635,7 @@ class LpaContext implements Context
     /**
      * @When /^I navigate to give an organisation access$/
      */
-    public function iNavigateToGiveAnOrganisationAccess()
+    public function iNavigateToGiveAnOrganisationAccess(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1655,7 +1651,7 @@ class LpaContext implements Context
     /**
      * @When /^I navigate to view the LPA summary$/
      */
-    public function iNavigateToViewTheLpaSummary()
+    public function iNavigateToViewTheLpaSummary(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1671,7 +1667,7 @@ class LpaContext implements Context
     /**
      * @When /^I request an activation key without entering my (.*)$/
      */
-    public function iRequestAnActivationKeyWithoutEnteringMy($data)
+    public function iRequestAnActivationKeyWithoutEnteringMy($data): void
     {
         $this->ui->pressButton('Continue');
     }
@@ -1679,7 +1675,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA that does not exist$/
      */
-    public function iRequestToAddAnLPAThatDoesNotExist()
+    public function iRequestToAddAnLPAThatDoesNotExist(): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
@@ -1704,7 +1700,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA whose status is (.*) using (.*)$/
      */
-    public function iRequestToAddAnLPAWhoseStatusIs(string $status, string $code)
+    public function iRequestToAddAnLPAWhoseStatusIs(string $status, string $code): void
     {
         $this->lpa->status = $status;
 
@@ -1729,13 +1725,13 @@ class LpaContext implements Context
 
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
-        assertEquals('XYUPHWQRECHV', $params['actor-code']);
+        Assert::assertEquals('XYUPHWQRECHV', $params['actor-code']);
     }
 
     /**
      * @When /^I request to add an LPA with an invalid DOB format of "([^"]*)" "([^"]*)" "([^"]*)"$/
      */
-    public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year)
+    public function iRequestToAddAnLPAWithAnInvalidDOBFormatOf1($day, $month, $year): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->ui->fillField('activation_key', 'T3STPA22C0D3');
@@ -1750,7 +1746,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with an invalid passcode format of "([^"]*)"$/
      */
-    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($activation_key)
+    public function iRequestToAddAnLPAWithAnInvalidPasscodeFormatOf1($activation_key): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->ui->fillField('activation_key', $activation_key);
@@ -1760,7 +1756,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with an invalid reference number format of "([^"]*)"$/
      */
-    public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo)
+    public function iRequestToAddAnLPAWithAnInvalidReferenceNumberFormatOf($referenceNo): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->fillAddLpaPages('T3STPA22C0D3', '05', '10', '1975', $referenceNo);
@@ -1895,7 +1891,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
      */
-    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode): void
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
@@ -1914,13 +1910,13 @@ class LpaContext implements Context
         $request = $this->apiFixtures->getLastRequest();
         $params = json_decode($request->getBody()->getContents(), true);
 
-        assertEquals($storedCode, $params['actor-code']);
+        Assert::assertEquals($storedCode, $params['actor-code']);
     }
 
     /**
      * @When /^I request to give an organisation access$/
      */
-    public function iRequestToGiveAnOrganisationAccess()
+    public function iRequestToGiveAnOrganisationAccess(): void
     {
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
@@ -1945,7 +1941,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to give an organisation access for my (.*) LPA$/
      */
-    public function iRequestToGiveAnOrganisationAccessForMyLPA($lpaType)
+    public function iRequestToGiveAnOrganisationAccessForMyLPA($lpaType): void
     {
         $this->lpa->caseSubtype = $lpaType;
 
@@ -1971,10 +1967,10 @@ class LpaContext implements Context
     /**
      * @When /^I request to give an organisation access to one of my LPAs$/
      */
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs(): void
     {
-        $this->organisation = "TestOrg";
-        $this->accessCode = "XYZ321ABC987";
+        $this->organisation = 'TestOrg';
+        $this->accessCode = 'XYZ321ABC987';
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->iRequestToGiveAnOrganisationAccess();
@@ -2017,7 +2013,7 @@ class LpaContext implements Context
     /**
      * @Given /^I request to go back and try again$/
      */
-    public function iRequestToGoBackAndTryAgain()
+    public function iRequestToGoBackAndTryAgain(): void
     {
         $this->ui->pressButton('Try again');
         $this->ui->assertPageAddress('/lpa/add');
@@ -2026,7 +2022,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to remove an LPA from my account that is (.*)$/
      */
-    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status)
+    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status): void
     {
         $this->lpa->status = $status;
 
@@ -2053,7 +2049,7 @@ class LpaContext implements Context
      * @When /^I request to view an LPA which has a donor signature before 2016$/
      * @When /^I request to view an LPA which has a trust corporation added$/
      */
-    public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016()
+    public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016(): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
         $this->apiFixtures->append(
@@ -2076,7 +2072,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
-    public function iRequestToViewAnLPAWhichStatusIs($status)
+    public function iRequestToViewAnLPAWhichStatusIs($status): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
@@ -2119,7 +2115,7 @@ class LpaContext implements Context
     /**
      * @When /^I request to view the LPA that has already been added$/
      */
-    public function iRequestToViewTheLPAThatHasAlreadyBeenAdded()
+    public function iRequestToViewTheLPAThatHasAlreadyBeenAdded(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -2143,7 +2139,7 @@ class LpaContext implements Context
     /**
      * @When /^I say I do not have an activation key$/
      */
-    public function iSayIDoNotHaveAnActivationKey()
+    public function iSayIDoNotHaveAnActivationKey(): void
     {
         $this->ui->fillField('activation_key_triage', 'No');
         $this->ui->pressButton('Continue');
@@ -2152,7 +2148,7 @@ class LpaContext implements Context
     /**
      * @Then /^I see a page showing me the answers I have entered and content that helps me get it right$/
      */
-    public function iSeeAPageShowingMeTheAnswersIHaveEnteredAndContentThatHelpsMeGetItRight()
+    public function iSeeAPageShowingMeTheAnswersIHaveEnteredAndContentThatHelpsMeGetItRight(): void
     {
         $this->ui->assertPageAddress('/lpa/check');
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
@@ -2164,7 +2160,7 @@ class LpaContext implements Context
     /**
      * @When /^I select to add an LPA$/
      */
-    public function iSelectToAddAnLPA()
+    public function iSelectToAddAnLPA(): void
     {
         $this->ui->clickLink('Add another LPA');
     }
@@ -2172,7 +2168,7 @@ class LpaContext implements Context
     /**
      * @When /^I choose to add my first LPA$/
      */
-    public function iChooseToAddMyFirstLPA()
+    public function iChooseToAddMyFirstLPA(): void
     {
         $this->ui->clickLink('Add your first LPA');
     }
@@ -2180,7 +2176,7 @@ class LpaContext implements Context
     /**
      * @When /^I select to find out more if the donor or an attorney dies$/
      */
-    public function iSelectToFindOutMoreIfTheDonorOrAnAttorneyDies()
+    public function iSelectToFindOutMoreIfTheDonorOrAnAttorneyDies(): void
     {
         $this->ui->clickLink('the donor or an attorney dies');
     }
@@ -2188,7 +2184,7 @@ class LpaContext implements Context
     /**
      * @When /^I select (.*) whether I have an activation key$/
      */
-    public function iSelectWhetherIHaveAnActivationKey($option)
+    public function iSelectWhetherIHaveAnActivationKey($option): void
     {
         $this->ui->fillField('activation_key_triage', $option);
         $this->ui->pressButton('Continue');
@@ -2197,7 +2193,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should be able to click a link to go and create the access codes$/
      */
-    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
@@ -2223,21 +2219,21 @@ class LpaContext implements Context
     /**
      * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
      */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus()
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus(): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
         $this->ui->assertPageContainsText('Check Access Codes');
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('Inactive codes');
-        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('Cancelled');
     }
 
     /**
      * @Then /^I should be shown the details of the viewer code with status (.*)/
      */
-    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status)
+    public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
 
@@ -2251,10 +2247,10 @@ class LpaContext implements Context
             $codeDetails[] = ($codeItem->find('css', 'dd'))->getText();
         }
 
-        assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
-        assertEquals($codeDetails[1], 'Ian Deputy');
-        assertEquals($codeDetails[2], 'Not viewed');
-        assertEquals($codeDetails[4], $status);
+        Assert::assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
+        Assert::assertEquals($codeDetails[1], 'Ian Deputy');
+        Assert::assertEquals($codeDetails[2], 'Not viewed');
+        Assert::assertEquals($codeDetails[4], $status);
 
         if ($codeDetails === null) {
             throw new Exception('Code details not found');
@@ -2264,18 +2260,18 @@ class LpaContext implements Context
     /**
      * @Then /^I should be taken back to the access code summary page/
      */
-    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage(): void
     {
         $this->ui->assertPageContainsText('Check Access Codes');
         $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText("V - XYZ3 - 21AB - C987");
+        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageNotContainsText('Cancelled');
     }
 
     /**
      * @Then /^I should be told access code could not be created due to (.*)$/
      */
-    public function iShouldBeToldAccessCodeCouldNotBeCreatedDueTo($reasons)
+    public function iShouldBeToldAccessCodeCouldNotBeCreatedDueTo($reasons): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
 
@@ -2285,7 +2281,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should be told that I have already added this LPA$/
      */
-    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
         $this->ui->assertPageContainsText("You've already added this LPA to your account");
     }
@@ -2293,7 +2289,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should be told that I have not created any access codes yet$/
      */
-    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet(): void
     {
         $this->ui->assertPageContainsText('Check access codes');
         $this->ui->assertPageContainsText('There are no access codes for this LPA');
@@ -2303,7 +2299,7 @@ class LpaContext implements Context
     /**
      * @Given /^I should not see a flash message to confirm the code that I have cancelled$/
      */
-    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled(): void
     {
         $this->ui->assertPageNotContainsText(
             sprintf(
@@ -2316,7 +2312,7 @@ class LpaContext implements Context
     /**
      * @Given /^I should see a flash message to confirm the code that I have cancelled$/
      */
-    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled(): void
     {
         $this->ui->assertPageContainsText(
             sprintf(
@@ -2329,7 +2325,7 @@ class LpaContext implements Context
     /**
      * @Then /^I should see relevant (.*) of organisations$/
      */
-    public function iShouldSeeRelevantOfOrganisations($orgDescription)
+    public function iShouldSeeRelevantOfOrganisations($orgDescription): void
     {
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText($orgDescription);
@@ -2338,16 +2334,16 @@ class LpaContext implements Context
     /**
      * @Then /^I want to be asked for confirmation prior to cancellation/
      */
-    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    public function iWantToBeAskedForConfirmationPriorToCancellation(): void
     {
         $this->ui->assertPageAddress('/lpa/confirm-cancel-code');
-        $this->ui->assertPageContainsText("Are you sure you want to cancel this code?");
+        $this->ui->assertPageContainsText('Are you sure you want to cancel this code?');
     }
 
     /**
      * @When /^I want to cancel the access code for an organisation$/
      */
-    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    public function iWantToCancelTheAccessCodeForAnOrganisation(): void
     {
         // Not needed for this context
     }
@@ -2355,7 +2351,7 @@ class LpaContext implements Context
     /**
      * @Then /^I want to see the option to cancel the code$/
      */
-    public function iWantToSeeTheOptionToCancelTheCode()
+    public function iWantToSeeTheOptionToCancelTheCode(): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText("Cancel organisation's access");
@@ -2364,7 +2360,7 @@ class LpaContext implements Context
     /**
      * @Then /^I will be taken to the appropriate (.*) to add an lpa$/
      */
-    public function iWillBeTakenToTheAppropriateToAddAnLpa($page)
+    public function iWillBeTakenToTheAppropriateToAddAnLpa($page): void
     {
         $this->ui->assertPageContainsText($page);
     }
@@ -2372,7 +2368,7 @@ class LpaContext implements Context
     /**
      * @Then /^I will be told that I must select whether I have an activation key$/
      */
-    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey()
+    public function iWillBeToldThatIMustSelectWhetherIHaveAnActivationKey(): void
     {
         $this->ui->assertPageContainsText('Select if you have an activation key to add an LPA');
     }
@@ -2380,7 +2376,7 @@ class LpaContext implements Context
     /**
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
-    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
     {
         // API call for adding an LPA
         $this->apiFixtures->append(
@@ -2420,7 +2416,7 @@ class LpaContext implements Context
     /**
      * @Then /^The correct LPA is found and I can see the correct name which will have a role of "([^"]*)"$/
      */
-    public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role)
+    public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role): void
     {
         // API call for adding an LPA
         $this->apiFixtures->append(
@@ -2465,7 +2461,7 @@ class LpaContext implements Context
     /**
      * @Then /^The full LPA is displayed$/
      */
-    public function theFullLPAIsDisplayed()
+    public function theFullLPAIsDisplayed(): void
     {
         $this->ui->assertPageAddress('/lpa/view-lpa?=' . $this->userLpaActorToken);
         $this->ui->assertPageContainsText('This LPA is registered');
@@ -2474,7 +2470,7 @@ class LpaContext implements Context
     /**
      * @Then /^The full LPA is displayed with the correct (.*)$/
      */
-    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    public function theFullLPAIsDisplayedWithTheCorrect($message): void
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($message);
@@ -2483,7 +2479,7 @@ class LpaContext implements Context
     /**
      * @Then /^The Revoked LPA details are not displayed$/
      */
-    public function theRevokedLPADetailsAreNotDisplayed()
+    public function theRevokedLPADetailsAreNotDisplayed(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageNotContainsText(
@@ -2496,7 +2492,7 @@ class LpaContext implements Context
     /**
      * @Given /^The LPA has not been added$/
      */
-    public function theLPAHasNotBeenAdded()
+    public function theLPAHasNotBeenAdded(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText('Add your first LPA');
@@ -2505,7 +2501,7 @@ class LpaContext implements Context
     /**
      * @Then /^The LPA is not found$/
      */
-    public function theLPAIsNotFound()
+    public function theLPAIsNotFound(): void
     {
         $this->ui->assertPageAddress('/lpa/check');
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
@@ -2514,7 +2510,7 @@ class LpaContext implements Context
     /**
      * @Given /^The LPA is successfully added$/
      */
-    public function theLPAIsSuccessfullyAdded()
+    public function theLPAIsSuccessfullyAdded(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText('Ian Deputy Deputy');
@@ -2524,9 +2520,9 @@ class LpaContext implements Context
     /**
      * @When /^I check access codes of the status changed LPA$/
      */
-    public function iCheckAccessCodesOfTheStatusChangedLpa()
+    public function iCheckAccessCodesOfTheStatusChangedLpa(): void
     {
-        $this->lpa->status = "Revoked";
+        $this->lpa->status = 'Revoked';
 
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -2548,7 +2544,7 @@ class LpaContext implements Context
      * @When /^The LPA has been revoked$/
      * @Then /^I cannot see my access codes and their details$/
      */
-    public function theStatusOfTheLpaGotRevoked()
+    public function theStatusOfTheLpaGotRevoked(): void
     {
         // Not needed for this context
     }
@@ -2557,12 +2553,12 @@ class LpaContext implements Context
      * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
      * @When /^I request to view an LPA whose status changed to Revoked$/
      */
-    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
+    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked(): void
     {
-        $this->lpa->status = "Revoked";
-        $this->lpa->donor->firstname = "abc";
-        $this->lpa->donor->middlenames = "efg";
-        $this->lpa->donor->surname = "xyz";
+        $this->lpa->status = 'Revoked';
+        $this->lpa->donor->firstname = 'abc';
+        $this->lpa->donor->middlenames = 'efg';
+        $this->lpa->donor->surname = 'xyz';
 
 
         // API call for get LpaById
@@ -2584,7 +2580,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      */
-    public function iAmToldANewActivationIsPostedToTheProvidedPostcode()
+    public function iAmToldANewActivationIsPostedToTheProvidedPostcode(): void
     {
         $this->ui->assertPageAddress('/lpa/confirm-activation-key-generation');
     }
@@ -2592,15 +2588,20 @@ class LpaContext implements Context
     /**
      * @Then /^I can see the trust corporation (.*) in the list of attorneys$/
      */
-    public function ICanSeeTheTrustCorporationInTheListOfAttorneys($companyName)
+    public function ICanSeeTheTrustCorporationInTheListOfAttorneys($companyName): void
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
-        $this->ui->assertPageContainsText("The attorneys");
+        $this->ui->assertPageContainsText('The attorneys');
         $this->ui->assertPageContainsText($companyName);
     }
 
     /**
      * @param string $code
+     * @param string $day
+     * @param string $month
+     * @param string $year
+     * @param string $reference_number
+     *
      * @return void
      */
     private function fillAddLpaPages(
@@ -2625,7 +2626,7 @@ class LpaContext implements Context
     /**
      * @When /^I say I have an activation key but it has expired$/
      */
-    public function iSayIHaveAnActivationKeyButItHasExpired()
+    public function iSayIHaveAnActivationKeyButItHasExpired(): void
     {
         $this->ui->fillField('activation_key_triage', 'Expired');
         $this->ui->pressButton('Continue');

@@ -7,10 +7,13 @@ namespace CommonTest\Handler;
 use Common\Handler\SessionRefreshHandler;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SessionRefreshHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */

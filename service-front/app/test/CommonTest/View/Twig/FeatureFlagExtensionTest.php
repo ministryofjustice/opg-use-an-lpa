@@ -7,6 +7,7 @@ namespace CommonTest\View\Twig;
 use Common\Service\Features\FeatureEnabled;
 use Common\View\Twig\FeatureFlagExtension;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Twig\TwigFunction;
 
 /**
@@ -18,6 +19,8 @@ use Twig\TwigFunction;
  */
 class FeatureFlagExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::getFunctions
@@ -90,3 +93,4 @@ class FeatureFlagExtensionTest extends TestCase
     }
 
 }
+

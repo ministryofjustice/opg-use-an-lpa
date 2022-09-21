@@ -18,6 +18,7 @@ use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -32,6 +33,8 @@ use RuntimeException;
  */
 class AddOlderLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var \Prophecy\Prophecy\ObjectProphecy|ApiClient */
     private $apiClientProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */

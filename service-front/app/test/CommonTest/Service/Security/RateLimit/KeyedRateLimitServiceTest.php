@@ -9,10 +9,13 @@ use Common\Service\Security\RateLimit\KeyedRateLimitService;
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class KeyedRateLimitServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_will_limit_an_identity_when_required()
     {

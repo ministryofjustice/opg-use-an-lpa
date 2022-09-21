@@ -9,6 +9,7 @@ use Common\Entity\CaseActor;
 use Common\Service\Lpa\PopulateLpaMetadata;
 use Common\Service\Lpa\ViewerCodeService;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Class PopulateLpaMetadataTest
@@ -24,6 +25,8 @@ use PHPUnit\Framework\TestCase;
  */
 class PopulateLpaMetadataTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         $this->userToken = '12-1-1-1-1234';

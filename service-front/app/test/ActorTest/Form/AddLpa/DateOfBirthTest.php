@@ -12,10 +12,13 @@ use Laminas\Form\Element\Date;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class DateOfBirthTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
+
 
     /** @var DateOfBirth */
     protected $form;

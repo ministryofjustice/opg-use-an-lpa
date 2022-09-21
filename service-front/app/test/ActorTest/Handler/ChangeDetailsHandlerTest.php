@@ -10,12 +10,14 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ChangeDetailsHandlerTest extends TestCase
 {
+    use ProphecyTrait;
 
-    const LPA_ID = '98765432-12345-54321-12345-9876543210';
+    private const LPA_ID = '98765432-12345-54321-12345-9876543210';
 
     /**
      * @var ObjectProphecy|TemplateRendererInterface
