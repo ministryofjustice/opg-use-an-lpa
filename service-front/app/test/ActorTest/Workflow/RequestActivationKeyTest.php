@@ -60,6 +60,10 @@ class RequestActivationKeyTest extends TestCase
     /**
      * @test
      * @covers ::__construct
+     * @covers ::getActorRole
+     * @covers ::setActorRole
+     * @covers ::setActorAddressResponse
+     * @covers ::getActorAddressCheckResponse
      * @dataProvider fullActivationKeyWorkflow
      */
     public function it_can_be_created_with_data(array $data): void
@@ -93,6 +97,10 @@ class RequestActivationKeyTest extends TestCase
     /**
      * @test
      * @covers ::__construct
+     * @covers ::getActorRole
+     * @covers ::setActorRole
+     * @covers ::setActorAddressResponse
+     * @covers ::getActorAddressCheckResponse
      * @covers ::reset
      * @dataProvider fullActivationKeyWorkflow
      */
