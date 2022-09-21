@@ -97,6 +97,11 @@ class RequestActivationKey implements WorkflowState
         $this->actorUid             = null;
         $this->needsCleansing       = false;
         $this->actorAddressResponse = null;
+
+        $this->firstNames = null;
+        $this->lastName = null;
+        $this->dob = null;
+        $this->postcode = null;
     }
 
     /**
