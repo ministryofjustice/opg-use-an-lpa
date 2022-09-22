@@ -209,9 +209,6 @@ jobs:
           IMAGE_NAME: ${{ matrix.image_name }}
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
-          if [ ${{ matrix.override_tag }} ]; then
-            IMAGE_TAG=${{ matrix.override_tag }}
-          fi
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
           if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG

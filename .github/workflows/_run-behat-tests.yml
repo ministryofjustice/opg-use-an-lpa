@@ -57,7 +57,7 @@ jobs:
           fi
 
       - name: run behat test suite
-        command: |
+        run: |
           viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
           actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
           public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)

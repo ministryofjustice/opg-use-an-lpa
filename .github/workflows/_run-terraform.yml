@@ -28,6 +28,9 @@ on:
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
         with:
@@ -50,10 +53,14 @@ jobs:
           role-session-name: OPGUseAnLPAECRGithubAction
 
       - name: output terraform variables
+        env:
+          TF_PATH: ${{ inputs.terraform_path }}
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TAG: ${{ inputs.container_version }}
         run: |
-          echo "Path: ${{ inputs.terraform_path }}"
-          echo "Workspace: ${{ inputs.workspace }}"
-          echo "Image_tag: ${{ inputs.container_version }}"
+          echo "Path: ${TF_PATH}"
+          echo "Workspace: ${TF_WORKSPACE}"
+          echo "Image_tag: ${TAG}"
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 

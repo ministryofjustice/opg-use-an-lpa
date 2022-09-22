@@ -32,7 +32,7 @@ jobs:
         run: pip install -r service-api/seeding/requirements.txt
 
       - name: seed dynamodb
-        command: |
+        run: |
           echo "would seed db here"
 #          export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
 #          export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)

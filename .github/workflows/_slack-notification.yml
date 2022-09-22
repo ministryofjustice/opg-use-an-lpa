@@ -8,7 +8,7 @@ on:
   workflow_call:
     inputs:
       template:
-        decsription: 'Template to use'
+        description: 'Template to use'
         required: true
         type: string
       webhook:
@@ -32,8 +32,11 @@ jobs:
         run: pip install -r scripts/pipeline/requirements.txt
 
       - name: Notify Slack
-        command: |
+        env:
+          SLACK_WEB_HOOK: ${{ inputs.webhook }}
+          TEMPLATE: ${{ inputs.template }}
+        run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-          --slack_webhook ${{ inputs.webhook }} \
-          --template_path scripts/pipeline/post_release_slack_notification/${{ inputs.template }} \
+          --slack_webhook ${SLACK_WEB_HOOK} \
+          --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
           --commit_message "$(git log -1 --pretty=%B)"
