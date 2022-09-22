@@ -25,7 +25,7 @@ jobs:
           cache: 'pip'
 
       - name: install chrome
-        uses: browser-actions/setup-chrome@7ed8b4156d9a872bbc7957909a36339330613dc7 # pin@NoVersions
+        uses: browser-actions/setup-chrome@latest # pin@NoVersions
 
       - name: Setup PHP
         uses: shivammathur/setup-php@e04e1d97f0c0481c6e1ba40f8a538454fe5d7709 # pin@v2.21.2
@@ -44,24 +44,37 @@ jobs:
         run: composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
         working-directory: tests/smoke
 
-      - name: download config
-        run: echo "would download config here.."
+      - name: download cluster_config
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: environment_config_file
+          path: terraform/environment
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPABehatGithubAction
 
       - name: allow gh actions ingress to environment
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
+          pip install boto3
           echo ${TF_WORKSPACE}
           if [[ "${TF_WORKSPACE}" != "production" ]]; then
-            python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
+            python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json --add
           fi
 
       - name: run behat test suite
-        command: |
-          viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
-          actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
-          public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
-          public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+        run: |
+          viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
+          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .actor_fqdn | xargs)
+          public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+          public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
 
           ln -sf ../features tests/smoke/features
 
@@ -83,5 +96,5 @@ jobs:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}
-          python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
+          python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json
         if: always()

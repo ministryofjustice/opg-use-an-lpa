@@ -8,16 +8,15 @@ on:
   workflow_call:
     inputs:
       template:
-        decsription: 'Template to use'
+        description: 'Template to use'
         required: true
         type: string
+    secrets:
       webhook:
-        description: 'Slack webhook'
         required: true
-        type: string
 
 jobs:
-  build-web:
+  send-slack-notification:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
@@ -31,9 +30,18 @@ jobs:
       - name: install requirements
         run: pip install -r scripts/pipeline/requirements.txt
 
+      - name: download cluster_config
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: environment_config_file
+          path: /tmp
+
       - name: Notify Slack
-        command: |
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+          TEMPLATE: ${{ inputs.template }}
+        run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-          --slack_webhook ${{ inputs.webhook }} \
-          --template_path scripts/pipeline/post_release_slack_notification/${{ inputs.template }} \
+          --slack_webhook ${SLACK_WEB_HOOK} \
+          --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
           --commit_message "$(git log -1 --pretty=%B)"

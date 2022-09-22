@@ -19,11 +19,6 @@ on:
         required: false
         type: string
         default: 'false'
-    secrets:
-      aws_access_key_id_actions:
-        required: true
-      aws_secret_access_key_actions:
-        required: true
 
 jobs:
   terraform_workflow:
@@ -39,21 +34,45 @@ jobs:
         with:
           terraform_version: 1.2.4
 
+      - name: configure AWS credentials for getting pagerduty token
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::367815980639:role/opg-use-an-lpa-ci
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPADevAssumeGithubAction
+
+      - name: set pagerduty token
+        run: |
+          export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
+            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+          echo "::add-mask::$TF_VAR_pagerduty_token"
+          echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
+
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
           role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPAECRGithubAction
+          role-session-name: OPGUseAnLPATerraformGithubAction
+
+      - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: output terraform variables
+        env:
+          TF_PATH: ${{ inputs.terraform_path }}
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TAG: ${{ inputs.container_version }}
         run: |
-          echo "Path: ${{ inputs.terraform_path }}"
-          echo "Workspace: ${{ inputs.workspace }}"
-          echo "Image_tag: ${{ inputs.container_version }}"
+          echo "Path: ${TF_PATH}"
+          echo "Workspace: ${TF_WORKSPACE}"
+          echo "Image_tag: ${TAG}"
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 
@@ -85,8 +104,11 @@ jobs:
           CI: true
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
-          mv cluster_config.json /tmp/
         working-directory: terraform/${{ inputs.terraform_path }}
 
-      - name: upload configuration
-        run: echo "would upload config here.. deciding if that is good idea"
+      - name: upload environment cluster config file
+        if: inputs.terraform_path == 'environment'
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
+        with:
+          name: environment_config_file
+          path: terraform/environment/cluster_config.json

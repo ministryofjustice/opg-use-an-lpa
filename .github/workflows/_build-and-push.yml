@@ -165,8 +165,7 @@ jobs:
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
         with:
           name: service-${{ matrix.svc_prefix }}
-          path: |
-            build/service-${{ matrix.svc_prefix }}
+          path: build/service-${{ matrix.svc_prefix }}
 
       - name: build image for production
         env:
@@ -180,18 +179,34 @@ jobs:
             fi
 
             if [[ "${SVC_PREFIX}" = "admin" ]]; then
-              docker build --target production --file service-${SVC_PREFIX}/Dockerfile --tag ${SVC_PREFIX}-app:latest service-${SVC_PREFIX}/
+              docker build --target production --file service-${SVC_PREFIX}/Dockerfile --tag ${SVC_PREFIX}_app:latest service-${SVC_PREFIX}/
             else
-              docker build --target production --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
+              docker build --target production --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}_app:latest .
             fi
 
-          elif [[ "${SVC_TYPE}" = "web" ]]; then
+          elif [[ "${SVC_SUFFIX}" = "web" ]]; then
             if [[ "${SVC_PREFIX}" = "front" ]]; then
               cp -R ./service-front/web/dist/* service-front/docker/web/web/
             fi
 
-            docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}-web:latest .
+            docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
           fi
+
+      - name: Trivy Image Vulnerability Scanner
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@d63413b0a4a4482237085319f7f4a1ce99a8f2ac # pin@v0.7.1
+        with:
+          image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+#      - name: Upload Trivy scan results to GitHub Security tab
+#        id: trivy_upload_sarif
+#        uses: github/codeql-action/upload-sarif@v2
+#        if: always()
+#        with:
+#          sarif_file: 'trivy-results.sarif'
 
       - name: ecr login
         id: login_ecr
@@ -206,15 +221,12 @@ jobs:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: use_an_lpa
           IMAGE_TAG: ${{ inputs.tag }}
-          IMAGE_NAME: ${{ matrix.image_name }}
+          IMAGE_NAME: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
-          if [ ${{ matrix.override_tag }} ]; then
-            IMAGE_TAG=${{ matrix.override_tag }}
-          fi
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
           if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
           fi
-            docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME
+          docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
