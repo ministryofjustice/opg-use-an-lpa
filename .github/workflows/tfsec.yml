@@ -1,10 +1,13 @@
 name: TFSec Static analysis
 
+#on:
+#  pull_request:
+#    branches: [ main ]
+#    paths:
+#      - "**.tf"
+
 on:
-  pull_request:
-    branches: [ main ]
-    paths:
-      - "**.tf"
+  workflow_call:
 
 permissions:
   actions: read

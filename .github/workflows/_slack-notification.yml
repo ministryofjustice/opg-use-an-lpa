@@ -1,0 +1,39 @@
+name: "[Slack] Send slack notification"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      template:
+        decsription: 'Template to use'
+        required: true
+        type: string
+      webhook:
+        description: 'Slack webhook'
+        required: true
+        type: string
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - name: install python
+        uses: actions/setup-python@b55428b1882923874294fa556849718a1d7f2ca5 # pin@v4.2.0
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: install requirements
+        run: pip install -r scripts/pipeline/requirements.txt
+
+      - name: Notify Slack
+        command: |
+          python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+          --slack_webhook ${{ inputs.webhook }} \
+          --template_path scripts/pipeline/post_release_slack_notification/${{ inputs.template }} \
+          --commit_message "$(git log -1 --pretty=%B)"

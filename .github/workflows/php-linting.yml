@@ -1,10 +1,14 @@
 name: "PHP Linting with Code Sniffer"
+
 on:
-  pull_request:
-    paths:
-      - "**.php"
-      - "**/app/phpcs.xml.dist"
-      - ".github/workflows/php-linting.yml"
+  workflow_call:
+
+#on:
+#  pull_request:
+#    paths:
+#      - "**.php"
+#      - "**/app/phpcs.xml.dist"
+#      - ".github/workflows/php-linting.yml"
 
 permissions:
   actions: read

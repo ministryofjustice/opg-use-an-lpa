@@ -1,0 +1,38 @@
+name: "[Terraform] Validate terraform"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: 'Terraform workspace'
+        required: true
+        type: string
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - folder: 'environment'
+          - folder: 'account'
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - name: terraform fmt {{ matrix.folder }} check
+        run: terraform fmt -check -recursive
+        working-directory: ./terraform/${{ matrix.folder }}
+
+      - name: terraform validate {{ inputs.workspace }}
+        env:
+          TF_WORKSPACE: ${{ matrix.folder }}
+        run: |
+          terraform --version
+          terraform init
+          echo $TF_WORKSPACE
+          terraform validate
+        working-directory: ./terraform/${{ matrix.folder }}

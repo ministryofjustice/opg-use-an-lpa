@@ -1,0 +1,92 @@
+on:
+  workflow_call:
+    inputs:
+      terraform_path:
+        description: 'The name of the terraform paths'
+        required: true
+        type: string
+      workspace:
+        description: 'Terraform workspace'
+        required: true
+        type: string
+      container_version:
+        description: 'Image tag to use'
+        required: false
+        type: string
+        default: ''
+      apply:
+        description: 'Whether to apply terraform'
+        required: false
+        type: string
+        default: 'false'
+    secrets:
+      aws_access_key_id_actions:
+        required: true
+      aws_secret_access_key_actions:
+        required: true
+
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        with:
+          fetch-depth: '0'
+
+      - uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c # pin@v1.0.3
+
+      - uses: hashicorp/setup-terraform@17d4c9b8043b238f6f35641cdd8433da1e6f3867 # pin@v2.0.0
+        with:
+          terraform_version: 1.2.4
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPAECRGithubAction
+
+      - name: output terraform variables
+        run: |
+          echo "Path: ${{ inputs.terraform_path }}"
+          echo "Workspace: ${{ inputs.workspace }}"
+          echo "Image_tag: ${{ inputs.container_version }}"
+        working-directory: terraform/${{ inputs.terraform_path }}
+        continue-on-error: true
+
+      - name: terraform init
+        run: terraform init -input=false
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform plan ${{ inputs.terraform_path }}
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_tag: ${{ inputs.container_version }}
+        run: |
+          terraform workspace show
+          terraform plan -input=false -parallelism=30
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: add TTL to dynamodb for environment
+        if: inputs.apply == 'true'
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=${TF_WORKSPACE}
+
+      - name: terraform apply ${{ inputs.terraform_path }}
+        if: inputs.apply == 'true'
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_container_version: ${{ inputs.container_version }}
+          TF_VAR_admin_container_version: ${{ inputs.container_version }}
+          CI: true
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+          mv cluster_config.json /tmp/
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: upload configuration
+        run: echo "would upload config here.. deciding if that is good idea"

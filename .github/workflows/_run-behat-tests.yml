@@ -1,0 +1,87 @@
+name: "[Behat] Run behat tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      workspace:
+        description: 'Terraform workspace'
+        required: true
+        type: string
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - name: install python
+        uses: actions/setup-python@b55428b1882923874294fa556849718a1d7f2ca5 # pin@v4.2.0
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: install chrome
+        uses: browser-actions/setup-chrome@7ed8b4156d9a872bbc7957909a36339330613dc7 # pin@NoVersions
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@e04e1d97f0c0481c6e1ba40f8a538454fe5d7709 # pin@v2.21.2
+        with:
+          php-version: 8.1
+
+      - name: show versions
+        run: |
+          chrome --version
+          python --version
+          pip --version
+          php --version
+          composer --version
+
+      - name: install and configure dependencies
+        run: composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+        working-directory: tests/smoke
+
+      - name: download config
+        run: echo "would download config here.."
+
+      - name: allow gh actions ingress to environment
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          echo ${TF_WORKSPACE}
+          if [[ "${TF_WORKSPACE}" != "production" ]]; then
+            python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
+          fi
+
+      - name: run behat test suite
+        command: |
+          viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+          actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+          public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+          public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+
+          ln -sf ../features tests/smoke/features
+
+          cd tests/smoke
+          BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
+            BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
+            BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
+            BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+            vendor/bin/behat
+
+      - name: archive failed test screenshots
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
+        with:
+          name: behat-screenshots
+          path: tests/smoke/failed_step_screenshots
+
+      - name: remove gh actions ingress to environment
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          echo ${TF_WORKSPACE}
+          python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
+        if: always()

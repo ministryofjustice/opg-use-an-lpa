@@ -1,0 +1,156 @@
+name: "[Workflow] Standard branch based pull requests"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - '*'              # matches every branch that doesn't contain a '/'
+      - '*/*'            # matches every branch containing a single '/'
+      - '**'             # matches every branch
+      - '!main'          # reverse match main
+      - '!dependabot/**' # reverse match dependabot PRs
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  branch_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - branch_name
+    with:
+      tag: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
+      branch_name: ${{ needs.branch_name.outputs.parsed }}
+      push_to_ecr: false
+
+  node_test:
+    if: github.actor != 'dependabot[bot]'
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+
+  node_build:
+    if: github.actor != 'dependabot[bot]'
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - branch_name
+      - node_test
+      - node_build
+    with:
+      tag: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
+      branch_name: ${{ needs.branch_name.outputs.parsed }}
+      push_to_ecr: false
+    secrets: inherit
+
+  terraform_plan_shared_development:
+    name: terraform plan shared development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_lint
+    with:
+      workspace: development
+      terraform_path: account
+    secrets: inherit
+
+  terraform_apply_environment:
+    name: terraform apply environment
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+      - branch_name
+    with:
+      workspace: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
+      terraform_path: environment
+      container_version: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
+      apply: true
+    secrets: inherit
+
+  seed_dynamodb:
+    name: terraform apply environment
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_environment
+    secrets: inherit
+
+  run_behat_suite:
+    name: run behat tests against environment
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb
+      - branch_name
+    with:
+      workspace: ${{ needs.branch_name.outputs.parsed }}-${{ github.sha }}
+    secrets: inherit
+
+  python_templated_slack_notify:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - run_behat_suite
+    with:
+      template: successful_dev_build.txt
+      webhook: DUMMY_VALUE
+    secrets: inherit
+
+  code_coverage:
+    name: upload to code coverage
+    needs: ['docker_build_scan_push']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: Restore the tests
+        run: echo "Restoring the tests"
+      - name: get and validate codecov app
+        run: bash ./scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
+      - name: download artifact for front tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-front
+          path: service-front
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-api
+          path: service-api
+      - name: check paths
+        run: |
+          ls -alt
+          ls -alt service-api
+          ls -alt service-front
+      - name: upload to codecov
+        run: |
+          echo "would run normally"
+          # bash ~/project/codecov -t ${{ secrets.CODECOV_TOKEN }} || echo 'Codecov upload failed'
+
+  # Required end of workflow job
+#  workflow_end:
+#    name: End of workflow
+#    runs-on: ubuntu-latest
+#    needs: ['code_coverage']
+#    steps:
+#      - name: ending workflow
+#        run: echo "Ending Workflow"

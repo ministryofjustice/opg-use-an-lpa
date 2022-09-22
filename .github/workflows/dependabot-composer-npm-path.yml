@@ -31,12 +31,12 @@ jobs:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
 
   node_test:
-#    if: github.actor != 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]'
     name: test node dependencies
     uses: ./.github/workflows/_node-test.yml
 
   node_build:
-#    if: github.actor != 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]'
     name: build node dependencies
     uses: ./.github/workflows/_node-build.yml
 

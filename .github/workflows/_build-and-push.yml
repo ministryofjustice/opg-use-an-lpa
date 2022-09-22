@@ -127,7 +127,7 @@ jobs:
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
-          if [ ${SVC_PREFIX} == "api" ]; then
+          if [[ "${SVC_PREFIX}" = "api" ]]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
             --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
@@ -143,7 +143,7 @@ jobs:
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
-          elif [ ${SVC_PREFIX} == "front" ]; then
+          elif [[ "${SVC_PREFIX}" = "front" ]]; then
             docker run -d --name inttests front-app:latest
             docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
@@ -169,22 +169,28 @@ jobs:
             build/service-${{ matrix.svc_prefix }}
 
       - name: build image for production
+        env:
+          SVC_PREFIX: ${{ matrix.svc_prefix }}
+          SVC_SUFFIX: ${{ matrix.svc_suffix }}
         run: |
-          if [ ${SVC_TYPE} == "app" ]; then
-            if [ ${SVC_PREFIX} == "front" ]; then
+          if [[ "${SVC_SUFFIX}" = "app" ]]; then
+            if [[ "${SVC_PREFIX}" = "front" ]]; then
               mkdir -p service-front/app/assets/stylesheets
               cp -R ./service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
             fi
 
-            docker build --target production --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
+            if [[ "${SVC_PREFIX}" = "admin" ]]; then
+              docker build --target production --file service-${SVC_PREFIX}/Dockerfile --tag ${SVC_PREFIX}-app:latest service-${SVC_PREFIX}/
+            else
+              docker build --target production --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
+            fi
 
-          elif [ ${SVC_TYPE} == "web" ]; then
-            if [ ${SVC_PREFIX} == "front" ]; then
+          elif [[ "${SVC_TYPE}" = "web" ]]; then
+            if [[ "${SVC_PREFIX}" = "front" ]]; then
               cp -R ./service-front/web/dist/* service-front/docker/web/web/
             fi
 
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}-web:latest .
-
           fi
 
       - name: ecr login
@@ -207,7 +213,7 @@ jobs:
             IMAGE_TAG=${{ matrix.override_tag }}
           fi
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
-          if [ $BRANCH_NAME == "main" ]; then
+          if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
           fi
