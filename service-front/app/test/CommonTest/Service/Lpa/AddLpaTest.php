@@ -13,6 +13,7 @@ use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use ArrayObject;
 use RuntimeException;
@@ -30,6 +31,8 @@ use RuntimeException;
  */
 class AddLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var \Prophecy\Prophecy\ObjectProphecy|ApiClient */
     private $apiClientProphecy;
     /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaData */

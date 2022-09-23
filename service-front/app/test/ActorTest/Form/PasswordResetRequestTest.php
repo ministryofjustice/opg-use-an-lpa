@@ -12,10 +12,12 @@ use Laminas\Form\Element\Hidden;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     /** @var PasswordResetRequest */
     protected $form;

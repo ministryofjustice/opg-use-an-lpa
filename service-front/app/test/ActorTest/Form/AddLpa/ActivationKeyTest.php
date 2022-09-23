@@ -11,10 +11,12 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActivationKeyTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     /** @var ActivationKey */
     protected $form;

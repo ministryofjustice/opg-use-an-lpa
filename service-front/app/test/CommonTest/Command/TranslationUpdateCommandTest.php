@@ -13,11 +13,14 @@ use Common\Service\I18n\PotGenerator;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class TranslationUpdateCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_can_be_executed(): void
     {

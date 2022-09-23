@@ -104,7 +104,7 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $user = $us->authenticate($this->userAccountEmail, $this->password);
+        $user = $us->authenticate($this->userAccountEmail, new HiddenString($this->password));
 
         Assert::assertEquals($this->userAccountId, $user['Id']);
         Assert::assertEquals($this->userAccountEmail, $user['Email']);
@@ -206,7 +206,7 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
 
         try {
-            $us->authenticate($this->userAccountEmail, $this->userAccountPassword);
+            $us->authenticate($this->userAccountEmail, new HiddenString($this->userAccountPassword));
         } catch (UnauthorizedException $ex) {
             Assert::assertEquals(
                 'Authentication attempted against inactive account with Id ' . $this->userAccountId,
@@ -245,7 +245,7 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
 
         try {
-            $us->authenticate($this->userAccountEmail, '1nc0rr3ctPa33w0rd');
+            $us->authenticate($this->userAccountEmail, new HiddenString('1nc0rr3ctPa33w0rd'));
         } catch (ForbiddenException $fe) {
             Assert::assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
             Assert::assertEquals(403, $fe->getCode());
@@ -1465,7 +1465,7 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
 
         try {
-            $us->authenticate('incorrect@email.com', $this->userAccountPassword);
+            $us->authenticate('incorrect@email.com', new HiddenString($this->userAccountPassword));
         } catch (NotFoundException $ex) {
             Assert::assertEquals('User not found for email', $ex->getMessage());
             Assert::assertEquals(404, $ex->getCode());

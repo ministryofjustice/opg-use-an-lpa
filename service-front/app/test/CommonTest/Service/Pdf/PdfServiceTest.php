@@ -10,6 +10,7 @@ use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\StylesService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -21,6 +22,8 @@ use Psr\Log\LoggerInterface;
 
 class PdfServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Create a {@link ResponseInterface} prophecy that returns a defined response body and code.
      *

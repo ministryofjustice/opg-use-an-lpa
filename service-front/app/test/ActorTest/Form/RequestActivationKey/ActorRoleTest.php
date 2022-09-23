@@ -10,10 +10,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorRoleTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected ActorRole $form;
 

@@ -8,10 +8,13 @@ use Common\Service\Aws\SecretsManagerFactory;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class SecretsManagerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testValidConfig()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -8,10 +8,13 @@ use DI\NotFoundException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Log\RequestTracingLogProcessor;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class RequestTracingLogProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_adds_the_tracing_parameter()
     {

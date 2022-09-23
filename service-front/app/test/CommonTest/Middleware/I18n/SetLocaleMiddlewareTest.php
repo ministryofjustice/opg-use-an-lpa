@@ -8,6 +8,7 @@ use Acpr\I18n\Translator;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Mezzio\Helper\UrlHelper;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -15,6 +16,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class SetLocaleMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_sets_a_default_locale_of_en_GB_if_none_provided(): void
     {

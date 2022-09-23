@@ -6,11 +6,14 @@ namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testReturnsExpectedJsonResponse()
     {
         $healthyResponse = [

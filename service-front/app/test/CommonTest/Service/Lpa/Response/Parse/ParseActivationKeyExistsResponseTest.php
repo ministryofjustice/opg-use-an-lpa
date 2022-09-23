@@ -8,10 +8,13 @@ use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ParseActivationKeyExistsResponseTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $donor;
     /** @var ObjectProphecy|LpaFactory */
     private $lpaFactory;

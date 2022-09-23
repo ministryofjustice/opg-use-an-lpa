@@ -12,11 +12,14 @@ use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class UserServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function can_create_a_new_user_account()
     {
@@ -501,7 +504,10 @@ class UserServiceTest extends TestCase
 
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
-            ->willThrow(new ApiException('HTTP: 500 - Unexpected API response', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+            ->willThrow(new ApiException(
+                'HTTP: 500 - Unexpected API response',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
+            );
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);
@@ -709,7 +715,10 @@ class UserServiceTest extends TestCase
             [
                 'token' => $resetToken,
             ]
-        )->willThrow(new ApiException('Email reset token has expired', StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR));
+        )->willThrow(new ApiException(
+            'Email reset token has expired',
+            StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
+        );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.

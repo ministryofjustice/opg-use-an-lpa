@@ -11,6 +11,7 @@ use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,6 +19,8 @@ use Psr\Log\LoggerInterface;
 
 class UserIdentificationMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_uniquely_identifies_a_user_without_a_session()
     {

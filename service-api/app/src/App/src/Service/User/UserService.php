@@ -151,16 +151,16 @@ class UserService
      * Attempts authentication of a user
      *
      * @param string $email
-     * @param string $password
+     * @param HiddenString $password
      *
      * @return array
      * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
-    public function authenticate(string $email, string $password): array
+    public function authenticate(string $email, HiddenString $password): array
     {
         $user = $this->usersRepository->getByEmail($email);
 
-        if (!password_verify($password, $user['Password'])) {
+        if (!password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email]);
         }
 

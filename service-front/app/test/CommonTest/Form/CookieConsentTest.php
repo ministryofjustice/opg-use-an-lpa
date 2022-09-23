@@ -11,10 +11,12 @@ use Common\Form\Element\Csrf;
 use Laminas\Form\Element\{Hidden, Radio};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CookieConsentTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     /** @var CookieConsent */
     protected $form;

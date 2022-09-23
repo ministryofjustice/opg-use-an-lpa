@@ -6,6 +6,7 @@ namespace CommonTest\Service\ApiClient;
 
 use Common\Service\ApiClient\GuzzleClientFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
@@ -18,6 +19,8 @@ use RuntimeException;
  */
 class GuzzleClientFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

@@ -10,19 +10,26 @@ use Common\Entity\Lpa;
 use Common\Service\Lpa\Factory\Sirius;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class SiriusLpaFactoryTest extends TestCase
 {
-    /** @var array */
-    protected $fullExampleFixtureData;
+    use ProphecyTrait;
 
-    /** @var array */
-    protected $simpleExampleFixtureData;
+    protected array $fullExampleFixtureData;
+
+    protected array $simpleExampleFixtureData;
 
     public function setUp(): void
     {
-        $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'), true);
-        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'), true);
+        $this->fullExampleFixtureData = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'),
+            true
+        );
+        $this->simpleExampleFixtureData = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'),
+            true
+        );
     }
 
     public function testBadDataThrowsExceptionInCreateLpa()

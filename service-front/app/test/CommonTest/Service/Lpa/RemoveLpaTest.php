@@ -11,6 +11,7 @@ use Common\Service\Lpa\ParseLpaData;
 use Common\Service\Lpa\RemoveLpa;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -22,17 +23,16 @@ use Psr\Log\LoggerInterface;
  */
 class RemoveLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $actor;
     private string $actorLpaToken;
-    /** @var ObjectProphecy|ApiClient */
-    private $apiClientProphecy;
+    private ObjectProphecy|ApiClient $apiClientProphecy;
     private Lpa $lpa;
     private array $lpaArrayData;
     private ArrayObject $lpaParsedData;
-    /** @var ObjectProphecy|ParseLpaData */
-    private $parseLpaDataProphecy;
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    private ObjectProphecy|ParseLpaData $parseLpaDataProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
     private RemoveLpa $removeLpa;
     private string $userToken;
 
@@ -91,7 +91,7 @@ class RemoveLpaTest extends TestCase
 
         $result = ($this->removeLpa)($this->userToken, $this->actorLpaToken);
 
-        $this->assertContains($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
+        $this->assertStringContainsString($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
     }
 
     /**

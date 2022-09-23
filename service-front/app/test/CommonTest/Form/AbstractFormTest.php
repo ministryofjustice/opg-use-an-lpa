@@ -8,9 +8,12 @@ use Common\Form\AbstractForm;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AbstractFormTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AbstractForm
      */
@@ -20,7 +23,7 @@ class AbstractFormTest extends TestCase
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new class('testConcreteForm', $guardProphecy->reveal()) extends AbstractForm {
+        $this->form = new class ('testConcreteForm', $guardProphecy->reveal()) extends AbstractForm {
             protected array $messageTemplates = ['testKey' => 'testErrorMessage'];
 
             public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
