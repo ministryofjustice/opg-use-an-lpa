@@ -569,7 +569,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
 
-        $this->ui->assertPageContainsText('Important: This LPA has instructions or preferences');
+        $this->ui->assertPageContainsText('Important: This LPA has instructions and preferences. You might need to show organisations the paper LPA.');
 
         $session = $this->ui->getSession();
         $page = $session->getPage();
