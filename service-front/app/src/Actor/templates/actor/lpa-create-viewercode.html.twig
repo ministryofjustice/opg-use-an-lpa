@@ -67,6 +67,7 @@
                     </div>
                     {% endif %}
 
+                    {% if not lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
@@ -76,6 +77,7 @@
                             {% endtrans %}
                         </strong>
                     </div>
+                    {% endif %}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">
                         {% trans %}Continue{% endtrans %}
