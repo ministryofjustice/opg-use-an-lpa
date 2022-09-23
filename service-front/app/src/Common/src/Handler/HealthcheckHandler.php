@@ -6,6 +6,7 @@ namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,11 +14,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    protected ApiClient $apiClient;
-
-    public function __construct(protected string $version, ApiClient $api)
+    public function __construct(protected string $version, protected ApiClient $apiClient)
     {
-        $this->apiClient = $api;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -26,7 +24,7 @@ class HealthcheckHandler implements RequestHandlerInterface
             'overall_healthy' => $this->isHealthy(),
             'version'         => $this->version,
             'dependencies'    => $this->checkDependencyEndpoints(),
-        ], 200, [], JSON_PRETTY_PRINT);
+        ], StatusCodeInterface::STATUS_OK, [], JSON_PRETTY_PRINT);
     }
 
     protected function isHealthy(): bool
