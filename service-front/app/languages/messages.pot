@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-09-23T00:24:24+00:00\n"
+"POT-Creation-Date: 2022-09-23T15:57:33+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -226,7 +226,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:72
 #: src/Actor/templates/actor/check-your-answers.html.twig:76
 #: src/Actor/templates/actor/create-account.html.twig:55
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:73
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:74
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:90
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:273
@@ -1776,7 +1776,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:75
 #: src/Actor/templates/actor/contact-details.html.twig:43
 #: src/Actor/templates/actor/home-page.html.twig:57
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:81
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:83
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:83
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:52
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:34
@@ -1901,7 +1901,7 @@ msgstr ""
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:42
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:54
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:23
 msgid "Read more"
 msgstr ""
@@ -5145,26 +5145,6 @@ msgstr ""
 msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> – please follow the link in the email to confirm the change."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:74
-msgid "Check that the organisation will accept an online summary of the<abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:2
-msgid "<strong>Important: </strong>This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:13
-msgid "<strong>Important: </strong>This LPA has preferences. You might need to show organisations the paper LPA."
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:24
-msgid "<strong>Important: </strong>This LPA has instructions and preferences. You might need to show organisations the paper LPA."
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:35
-msgid "<strong>Important: </strong>This LPA has instructions or preferences. You might need to show organisations the paper LPA."
-msgstr ""
-
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has instructions or preferences. You might need to show organisations the paper LPA."
 msgstr ""
@@ -5179,4 +5159,32 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:14
 msgid "This LPA has instructions and preferences. You might need to show organisations the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:75
+msgid "Check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
+msgid ""
+"<strong>Important: </strong>This LPA has instructions.<br>\n"
+"            You might need to show organisations the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:17
+msgid ""
+"<strong>Important: </strong>This LPA has preferences.<br>\n"
+"            You might need to show organisations the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:31
+msgid ""
+"<strong>Important: </strong>This LPA has instructions and preferences.<br>\n"
+"            You might need to show organisations the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:45
+msgid ""
+"<strong>Important: </strong>This LPA has instructions or preferences.<br>\n"
+"            You might need to show organisations the paper LPA."
 msgstr ""
