@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Actor\Form\RequestActivationKey\ActorAddress;
 use Actor\Form\RequestActivationKey\CheckYourAnswers;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Actor\Workflow\RequestActivationKey;
@@ -218,7 +219,17 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
                 case OlderLpaApiResponse::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {
-                        return $this->redirectToRoute('lpa.add.actor-address');
+                        $form = new ActorAddress($this->getCsrfGuard($request));
+                        return new HtmlResponse(
+                            $this->renderer->render(
+                                'actor::request-activation-key/actor-address',
+                                [
+                                    'user'     => $this->user,
+                                    'form'      => $form,
+                                    'postCode' => $state->postcode
+                                ]
+                            )
+                        );
                     } else {
                         return new HtmlResponse($this->renderer->render(
                             'actor::cannot-find-lpa',

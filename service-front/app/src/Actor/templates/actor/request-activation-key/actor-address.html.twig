@@ -8,7 +8,7 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link"
+            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link"
                id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
@@ -22,6 +22,7 @@
                     <h1 class="govuk-heading-xl">{% trans %}We need some more details{% endtrans %}</h1>
                     <p class="govuk-body">{% trans %}We need a few extra details to make sure we have the right LPA for your activation key request.{% endtrans %}</p>
                     <h2 class="govuk-heading-l">{% trans %}What is your current address?{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}You've already given your post code as:{% endtrans %} {{ postCode }}</p>
                     <p class="govuk-body">{% trans %}Your activation key will be posted to this address.{% endtrans %}</p>
 
                     {{ govuk_form_element(form.get('__csrf')) }}
