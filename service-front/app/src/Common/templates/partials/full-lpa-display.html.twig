@@ -80,33 +80,30 @@
 
 
 
-            <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds">
 
-                {% if lpa.caseSubtype|lower == "pfa" %}
-                    {% set type = "Property and finance" %}
-                {% else %}
-                    {% set type = "Health and welfare" %}
-                {% endif %}
-
-
-                <h2 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}, {{ type|trans }}</h2>
-
-                {% if not forDownload %}
-
-                    <div class="govuk-inset-text">
-                        {% trans %}You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it.{% endtrans %}
-                    </div>
-
-                    <form action={{ path('download-lpa') }}>
-                        <button class="govuk-button" type="submit">{% trans %}Download this LPA summary{% endtrans %}</button>
-                    </form>
-                {% else %}
-                    {{ include('@partials/section-break.html.twig') }}
-                {% endif %}
-
-            </div>
+            {% if lpa.caseSubtype|lower == "pfa" %}
+                {% set type = "Property and finance" %}
+            {% else %}
+                {% set type = "Health and welfare" %}
+            {% endif %}
 
 
+            <h2 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}, {{ type|trans }}</h2>
+
+            {% if not forDownload %}
+
+                <div class="govuk-inset-text">
+                    {% trans %}You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it.{% endtrans %}
+                </div>
+
+                <form action={{ path('download-lpa') }}>
+                    <button class="govuk-button" type="submit">{% trans %}Download this LPA summary{% endtrans %}</button>
+                </form>
+            {% endif %}
+        </div>
+
+        {{ include('@partials/section-break.html.twig') }}
 
         <div class="govuk-grid-row">
 
