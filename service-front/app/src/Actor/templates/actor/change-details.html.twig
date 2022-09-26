@@ -23,7 +23,7 @@
                 <div class="govuk-grid-column-two-thirds">
 
                     <h1 class="govuk-heading-xl">{% trans %}Let us know if a donor or attorney's details change{% endtrans %}</h1>
-
+xgB
                     <p class="govuk-body">{% trans %}It's important that we hold up-to-date information about donors and attorneys. This is because the first
                         time you show an <abbr title="lasting power of attorney">LPA</abbr> to an organisation, they might ask you to confirm that your name and
                         address match what’s on the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
@@ -52,8 +52,16 @@
                     <p class="govuk-body">{% trans %}If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details.{% endtrans %}</p>
 
                     <h2 class="govuk-heading-m">{% trans %}How to let us know{% endtrans %}</h2>
-
-                    <p class="govuk-body">{% trans %}When you get in touch, quote the LPA reference number.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}Contact us through any of the ways below.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}When you get in touch, you’ll need to tell us:{% endtrans %}</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}the LPA reference number{% endtrans %}</li>
+                        <li>{% trans %}your name{% endtrans %}</li>
+                        <li>{% trans %}your role (ie, whether you are the donor or an attorney){% endtrans %}</li>
+                        <li>{% trans %}the donor’s name (if you are not the donor){% endtrans %}</li>
+                        <li>{% trans %}the donor’s date of birth{% endtrans %}</li>
+                        <li>{% trans %}the donor’s address and postcode{% endtrans %}</li>
+                    </ul>
 
                     {{ include('@partials/contact-details/contact-details.html.twig') }}
 
