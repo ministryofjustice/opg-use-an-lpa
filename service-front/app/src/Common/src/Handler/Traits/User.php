@@ -9,6 +9,9 @@ use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
+/**
+ * @psalm-require-implements Common\Handler\UserAware
+ */
 trait User
 {
     private ?AuthenticationInterface $authenticator = null;
