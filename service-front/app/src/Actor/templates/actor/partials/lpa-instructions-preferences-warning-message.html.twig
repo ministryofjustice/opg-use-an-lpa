@@ -1,0 +1,23 @@
+{% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
+    {% trans %}
+        This LPA has instructions or preferences. You might need to show organisations the paper LPA.
+    {% endtrans %}
+{% elseif not is_donor_signature_date_too_old(lpa) and lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
+    {% trans %}
+        This LPA has instructions. You might need to show organisations the paper LPA.
+    {% endtrans %}
+{% elseif not is_donor_signature_date_too_old(lpa) and lpa.applicationHasGuidance and not lpa.applicationHasRestrictions %}
+    {% trans %}
+        This LPA has preferences. You might need to show organisations the paper LPA.
+    {% endtrans %}
+{% elseif not is_donor_signature_date_too_old(lpa) and lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+    {% trans %}
+        This LPA has instructions and preferences. You might need to show organisations the paper LPA.
+    {% endtrans %}
+{% endif %}
+<a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+   data-gaEventType="onClick"
+   data-gaAction="Clicked Link"
+   data-gaCategory="Read More"
+   data-gaLabel="Read More - instructions and preferences"
+> {% trans %}Read more{% endtrans %}</a>

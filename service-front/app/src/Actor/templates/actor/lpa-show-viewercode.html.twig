@@ -84,23 +84,29 @@
                             </p>
                         {% endif %}
                     {% endif %}
-                    {% if is_donor_signature_date_too_old(lpa) %}
-                        <p class="govuk-body">
-                            {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                        </p>
-                    {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-                        <p class="govuk-body">
-                            {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                        </p>
-                    {% elseif lpa.applicationHasRestrictions%}
-                        <p class="govuk-body">
-                            {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                        </p>
-                    {% elseif lpa.applicationHasGuidance%}
-                        <p class="govuk-body">
-                            {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                        </p>
-                    {% endif %}
+
+                    <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                        {% if is_donor_signature_date_too_old(lpa) %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasRestrictions %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasGuidance %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% endif %}
+                    </strong>
+                    </div>
 
                     <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
                             {% trans %}Give another organisation access{% endtrans %}
