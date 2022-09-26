@@ -73,8 +73,8 @@ class RequestActivationKey implements WorkflowState
     /**
      * Reset the workflow to the start.
      *
-     * This does not clear the name, date of birth or postcode as it is likely a repeat journey would use
      * identical information.
+     * @codeCoverageIgnore
      */
     public function reset(): void
     {
