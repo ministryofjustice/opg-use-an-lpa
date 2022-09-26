@@ -3124,16 +3124,16 @@
         },
         {
             "name": "mezzio/mezzio-helpers",
-            "version": "5.8.0",
+            "version": "5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-helpers.git",
-                "reference": "6e231cd6ad09eae7c2d9bac71441b496159dba28"
+                "reference": "b460d1d9ded9af5b9e257005afe2da1c4323ea13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/6e231cd6ad09eae7c2d9bac71441b496159dba28",
-                "reference": "6e231cd6ad09eae7c2d9bac71441b496159dba28",
+                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/b460d1d9ded9af5b9e257005afe2da1c4323ea13",
+                "reference": "b460d1d9ded9af5b9e257005afe2da1c4323ea13",
                 "shasum": ""
             },
             "require": {
@@ -3148,8 +3148,8 @@
             },
             "require-dev": {
                 "ext-json": "*",
-                "laminas/laminas-coding-standard": "~2.3.0",
-                "laminas/laminas-diactoros": "^2.5.0",
+                "laminas/laminas-coding-standard": "~2.4.0",
+                "laminas/laminas-diactoros": "^2.11.1",
                 "mockery/mockery": "^1.4.2",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.5.11",
@@ -3198,7 +3198,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-01-06T16:10:11+00:00"
+            "time": "2022-09-14T07:33:03+00:00"
         },
         {
             "name": "mezzio/mezzio-router",
@@ -9276,16 +9276,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "4.0.6",
+            "version": "4.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "55f4261989e546dc112258c7a75935a81a7ce382"
+                "reference": "fa0f136dd2334583309d32b62544682ee972b51a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/55f4261989e546dc112258c7a75935a81a7ce382",
-                "reference": "55f4261989e546dc112258c7a75935a81a7ce382",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/fa0f136dd2334583309d32b62544682ee972b51a",
+                "reference": "fa0f136dd2334583309d32b62544682ee972b51a",
                 "shasum": ""
             },
             "require": {
@@ -9338,7 +9338,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/comparator/issues",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/4.0.6"
+                "source": "https://github.com/sebastianbergmann/comparator/tree/4.0.8"
             },
             "funding": [
                 {
@@ -9346,7 +9346,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:49:45+00:00"
+            "time": "2022-09-14T12:41:17+00:00"
         },
         {
             "name": "sebastian/complexity",
@@ -9536,16 +9536,16 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "4.0.4",
+            "version": "4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9"
+                "reference": "ac230ed27f0f98f597c8a2b6eb7ac563af5e5b9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/65e8b7db476c5dd267e65eea9cab77584d3cfff9",
-                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/ac230ed27f0f98f597c8a2b6eb7ac563af5e5b9d",
+                "reference": "ac230ed27f0f98f597c8a2b6eb7ac563af5e5b9d",
                 "shasum": ""
             },
             "require": {
@@ -9601,7 +9601,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/exporter/issues",
-                "source": "https://github.com/sebastianbergmann/exporter/tree/4.0.4"
+                "source": "https://github.com/sebastianbergmann/exporter/tree/4.0.5"
             },
             "funding": [
                 {
@@ -9609,7 +9609,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-11-11T14:18:36+00:00"
+            "time": "2022-09-14T06:03:37+00:00"
         },
         {
             "name": "sebastian/global-state",
