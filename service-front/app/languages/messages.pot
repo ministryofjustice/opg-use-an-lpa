@@ -1229,7 +1229,7 @@ msgstr ""
 msgid "Death Notification"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:62
+#: src/Actor/templates/actor/change-details.html.twig:70
 #: src/Actor/templates/actor/death-notification.html.twig:25
 msgid "Let us know if a donor or attorney dies"
 msgstr ""
@@ -2021,13 +2021,13 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:64
+#: src/Actor/templates/actor/change-details.html.twig:72
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys.\n"
 "                        This is because an LPA will end when the donor dies, and can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:71
+#: src/Actor/templates/actor/change-details.html.twig:79
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
 msgstr ""
 
@@ -5143,6 +5143,46 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-email-change-success.html.twig:19
 msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> – please follow the link in the email to confirm the change."
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:55
+#: src/Actor/templates/actor/change-lpa-details.html.twig:44
+msgid "Contact us through any of the ways below."
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:56
+#: src/Actor/templates/actor/change-lpa-details.html.twig:45
+msgid "When you get in touch, you’ll need to tell us:"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:58
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
+msgid "the LPA reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-lpa-details.html.twig:48
+msgid "your name"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-lpa-details.html.twig:49
+msgid "your role (ie, whether you are the donor or an attorney)"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:61
+#: src/Actor/templates/actor/change-lpa-details.html.twig:50
+msgid "the donor’s name (if you are not the donor)"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:62
+#: src/Actor/templates/actor/change-lpa-details.html.twig:51
+msgid "the donor’s date of birth"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:63
+#: src/Actor/templates/actor/change-lpa-details.html.twig:52
+msgid "the donor’s address and postcode"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
