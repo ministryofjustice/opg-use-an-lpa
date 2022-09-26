@@ -103,6 +103,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $shareCodes[$key]['form'] = $form;
             }
 
+            if (!isset($code['ActorId'])) {
+                continue;
+            }
+
             $this->logger->debug(
                 'Resolved actor id to {type}:{actor_id}',
                 [
