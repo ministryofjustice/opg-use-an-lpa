@@ -43,8 +43,8 @@ jobs:
     - name: Check PHPCS installation
       run: |
         export install_dir=$HOME/.composer/vendor
-        php phpcs.phar --config-set installed_paths $install_dir/webimpress/coding-standard/src/WebimpressCodingStandard/,$install_dir/slevomat/coding-standard-8.4.0/SlevomatCodingStandard/
         phpcs --version
+        phpcs --config-set installed_paths $install_dir/webimpress/coding-standard/src/WebimpressCodingStandard/,$install_dir/slevomat/coding-standard-8.4.0/SlevomatCodingStandard/
         phpcs -i
 
     - uses: thenabeel/action-phpcs@v8
