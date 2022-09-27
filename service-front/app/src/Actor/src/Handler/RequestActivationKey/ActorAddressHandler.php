@@ -53,7 +53,8 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             [
                 'user'     => $this->user,
                 'form'     => $this->form->prepare(),
-                'back'     => $this->lastPage($this->state($request))
+                'back'     => $this->lastPage($this->state($request)),
+                'postCode' => $this->state($request)->postcode
             ]
         ));
     }
