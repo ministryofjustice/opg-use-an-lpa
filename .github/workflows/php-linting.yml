@@ -45,7 +45,6 @@ jobs:
         composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
         composer global require --no-interaction squizlabs/php_codesniffer:3.7.1 webimpress/coding-standard:1.2.4 slevomat/coding-standard:8.4.0
         phpcs --version
-#        phpcs --config-set installed_paths $install_dir/webimpress/coding-standard/src/WebimpressCodingStandard/,$install_dir/slevomat/coding-standard/SlevomatCodingStandard/
         phpcs -i
 
     - uses: thenabeel/action-phpcs@v8
