@@ -8,18 +8,17 @@ use Actor\Form\Triage;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
-use Prophecy\PhpUnit\ProphecyTrait;
 use Laminas\Form\Element\{Radio};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class TriageTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var Triage */
-    protected $form;
+    protected Triage $form;
 
     public function getForm(): AbstractForm
     {
@@ -34,14 +33,14 @@ class TriageTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'triageEntry'     => Radio::class,
+            '__csrf'      => Csrf::class,
+            'triageEntry' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new Triage($guardProphecy->reveal());
+        $this->form    = new Triage($guardProphecy->reveal());
     }
 }

@@ -18,24 +18,20 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ReferenceNumberHandler
- * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
 class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestReferenceNumber $form;
-    private FeatureEnabled $featureEnabled;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        FeatureEnabled $featureEnabled
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $authenticator, $urlHelper, $logger);
-        $this->featureEnabled = $featureEnabled;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -56,7 +52,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
         $this->form->setData(
             [
-                'opg_reference_number' => $this->state($request)->referenceNumber
+                'opg_reference_number' => $this->state($request)->referenceNumber,
             ]
         );
 
@@ -66,7 +62,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->lastPage($this->state($request))
+                    'back' => $this->lastPage($this->state($request)),
                 ]
             )
         );
@@ -90,7 +86,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->lastPage($this->state($request))
+                    'back' => $this->lastPage($this->state($request)),
                 ]
             )
         );

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use UnexpectedValueException;
 
 class JavascriptVariablesExtensionFactoryTest extends TestCase
 {
@@ -53,7 +54,7 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
 
         $factory = new JavascriptVariablesExtensionFactory();
 
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Missing google analytics ua id');
         $analyticsConfig = $factory($containerProphecy->reveal());
     }

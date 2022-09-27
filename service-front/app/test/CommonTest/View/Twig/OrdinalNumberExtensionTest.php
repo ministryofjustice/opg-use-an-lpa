@@ -6,7 +6,9 @@ namespace CommonTest\View\Twig;
 
 use Common\View\Twig\OrdinalNumberExtension;
 use InvalidArgumentException;
+use Locale;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Twig\TwigFilter;
 
 class OrdinalNumberExtensionTest extends TestCase
@@ -57,8 +59,8 @@ class OrdinalNumberExtensionTest extends TestCase
                 null,
                 true,
                 false,
-                new \stdClass(),
-                1.2345
+                new stdClass(),
+                1.2345,
             ],
         ];
     }
@@ -71,13 +73,13 @@ class OrdinalNumberExtensionTest extends TestCase
         $extension = new OrdinalNumberExtension();
 
         // retain the current locale
-        $originalLocale = \Locale::getDefault();
-        \Locale::setDefault($locale);
+        $originalLocale = Locale::getDefault();
+        Locale::setDefault($locale);
 
         $ordinal = $extension->makeOrdinal($value);
 
         // restore the locale setting
-        \Locale::setDefault($originalLocale);
+        Locale::setDefault($originalLocale);
 
         $this->assertEquals($expected, $ordinal);
     }
@@ -162,7 +164,7 @@ class OrdinalNumberExtensionTest extends TestCase
             ['cy', 36, '36ain'],
             ['cy', 37, '37ain'],
             ['cy', 38, '38ain'],
-            ['cy', 39, '39ain']
+            ['cy', 39, '39ain'],
         ];
     }
 }

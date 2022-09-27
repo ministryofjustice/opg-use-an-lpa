@@ -12,18 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActorRoleHandler
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class ActorRoleHandler extends AbstractCleansingDetailsHandler
 {
     private ActorRole $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new ActorRole($this->getCsrfGuard($request));
@@ -32,26 +26,22 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_DONOR) {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
             $this->form->setData(['actor_role_radio' => 'Donor']);
-        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             $this->form->setData(['actor_role_radio' => 'Attorney']);
         }
 
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-role',
             [
-                'user'  => $this->user,
-                'form'  => $this->form,
-                'back' => $this->lastPage($this->state($request))
+                'user' => $this->user,
+                'form' => $this->form,
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
@@ -60,9 +50,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             $selected = $this->form->getData()['actor_role_radio'];
 
             if ($selected === 'Donor') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_DONOR);
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_DONOR);
             } elseif ($selected === 'Attorney') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_ATTORNEY);
+                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_ATTORNEY);
             }
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
@@ -71,7 +61,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
             'user' => $this->user,
             'form' => $this->form,
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -88,7 +78,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             return 'lpa.add.check-details-and-consent';
         }
 
-        return $state->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY
+        return $state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY
             ? 'lpa.add.donor-details'
             : 'lpa.add.attorney-details';
     }

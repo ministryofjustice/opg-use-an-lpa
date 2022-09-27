@@ -9,26 +9,16 @@ use Locale;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouterInterface;
 
-/**
- * Class UrlValidityCheckService
- * @package Common\Service\Url
- */
 class UrlValidityCheckService
 {
-    private ServerRequestFactory $serverRequestFactory;
-    private RouterInterface $router;
-    private UrlHelper $urlHelper;
     private string $locale;
 
     public function __construct(
-        ServerRequestFactory $serverRequestFactory,
-        RouterInterface $router,
-        UrlHelper $urlHelper
+        private ServerRequestFactory $serverRequestFactory,
+        private RouterInterface $router,
+        private UrlHelper $urlHelper,
     ) {
-        $this->serverRequestFactory = $serverRequestFactory;
-        $this->router               = $router;
-        $this->urlHelper            = $urlHelper;
-        $this->locale               = Locale::getDefault();
+        $this->locale = Locale::getDefault();
     }
 
     public function isValid(string $referrerUrl): bool
@@ -47,7 +37,7 @@ class UrlValidityCheckService
         }
 
         $request = $this->serverRequestFactory->createServerRequest('GET', $referrerUrl);
-        $result = $this->router->match($request);
+        $result  = $this->router->match($request);
 
         return $result->isSuccess();
     }
@@ -59,7 +49,9 @@ class UrlValidityCheckService
 
             $isValidRefererRoute = $this->checkReferrerRouteValid($referrer);
 
-            return ($validUrl && $isValidRefererRoute ? $referrer : $this->generateHomeUrlForCurrentLocale());
+            return $validUrl && $isValidRefererRoute
+                ? $referrer
+                : $this->generateHomeUrlForCurrentLocale();
         }
 
         return $this->generateHomeUrlForCurrentLocale();

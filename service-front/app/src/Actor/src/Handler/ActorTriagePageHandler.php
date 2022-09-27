@@ -6,44 +6,34 @@ namespace Actor\Handler;
 
 use Actor\Form\Triage;
 use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Helper\ServerUrlHelper;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class ActorTriagePageHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, UserAware
 {
-    use User;
     use CsrfGuard;
+    use User;
 
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
+    private ServerUrlHelper $serverUrlHelper;
 
-    /**
-     * CreateAccountHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param AuthenticationInterface $authenticator
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator
+        AuthenticationInterface $authenticator,
     ) {
         parent::__construct($renderer, $urlHelper);
+
         $this->setAuthenticator($authenticator);
     }
 
@@ -51,7 +41,7 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
     {
         $form = new Triage($this->getCsrfGuard($request));
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() === 'POST') {
             return $this->handlePost($request);
         }
 
@@ -60,13 +50,13 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
         }
 
         return new HtmlResponse($this->renderer->render('actor::home-page', [
-            'form' => $form->prepare()
+            'form' => $form->prepare(),
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new Triage($this->getCsrfGuard($request));
+        $form        = new Triage($this->getCsrfGuard($request));
         $requestData = $request->getParsedBody();
 
         $form->setData($requestData);
@@ -81,7 +71,7 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
         }
 
         return new HtmlResponse($this->renderer->render('actor::home-page', [
-            'form' => $form->prepare()
+            'form' => $form->prepare(),
         ]));
     }
 }

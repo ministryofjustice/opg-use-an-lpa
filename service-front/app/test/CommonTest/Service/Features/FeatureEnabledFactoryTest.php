@@ -12,10 +12,6 @@ use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
 /**
- * Class FeatureEnabledFactoryTest
- *
- * @package CommonTest\Service\Features
- *
  * @coversDefaultClass \Common\Service\Features\FeatureEnabledFactory
  */
 class FeatureEnabledFactoryTest extends TestCase

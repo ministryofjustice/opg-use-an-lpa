@@ -9,37 +9,29 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ViewLpaSummaryHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 {
     use User;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService
+        private LpaService $lpaService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
     }
 
     /**
@@ -55,8 +47,8 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $user     = $this->getUser($request);
+        $identity = !is_null($user) ? $user->getIdentity() : null;
 
         //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
@@ -70,9 +62,9 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
                 'actor::view-lpa-summary',
                 [
                     'actorToken' => $actorLpaToken,
-                    'user' => $user,
-                    'lpa' => $lpaData->lpa,
-                    'actor' => $lpaData->actor
+                    'user'       => $user,
+                    'lpa'        => $lpaData->lpa,
+                    'actor'      => $lpaData->actor,
                 ]
             )
         );

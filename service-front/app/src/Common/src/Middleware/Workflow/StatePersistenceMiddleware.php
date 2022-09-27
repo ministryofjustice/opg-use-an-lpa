@@ -6,6 +6,7 @@ namespace Common\Middleware\Workflow;
 
 use Common\Workflow\StatesCollection;
 use Common\Workflow\WorkflowState;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -56,9 +57,7 @@ class StatePersistenceMiddleware implements MiddlewareInterface
 
     /**
      * @param class-string<WorkflowState> $class
-     *
      * @return void
-     *
      * @throws RuntimeException Requested workflow state class is not a valid class or does not implement WorkflowState
      */
     private function classIsWorkflow(string $class): void
@@ -74,7 +73,7 @@ class StatePersistenceMiddleware implements MiddlewareInterface
         } catch (ReflectionException $rex) {
             throw new RuntimeException(
                 'Requested WorkflowState class is not a valid class name',
-                500,
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
                 $rex
             );
         }

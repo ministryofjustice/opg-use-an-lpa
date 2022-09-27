@@ -9,10 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class MerisReferenceCheckValidatorTest extends TestCase
 {
-    /**
-     * @var MerisReferenceCheckValidator
-     */
-    private $validator;
+    private MerisReferenceCheckValidator $validator;
 
     public function setUp(): void
     {
@@ -39,7 +36,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
             ['2121267'],
             ['2089183'],
             ['3089166'],
-            ['3004918']
+            ['3004918'],
         ];
     }
 
@@ -52,8 +49,8 @@ class MerisReferenceCheckValidatorTest extends TestCase
 
         $this->assertEquals(
             [
-                MerisReferenceCheckValidator::MERIS_NO_MUST_START_WITH =>
-                    'LPA reference numbers that are 7 numbers long must begin with a 2 or 3',
+                MerisReferenceCheckValidator::MERIS_NO_MUST_START_WITH
+                    => 'LPA reference numbers that are 7 numbers long must begin with a 2 or 3',
             ],
             $this->validator->getMessages()
         );
@@ -83,8 +80,8 @@ class MerisReferenceCheckValidatorTest extends TestCase
 
         $this->assertEquals(
             [
-                MerisReferenceCheckValidator::MUST_BE_LENGTH =>
-                    'Enter an LPA reference number that is either 7 or 12 numbers long',
+                MerisReferenceCheckValidator::MUST_BE_LENGTH
+                    => 'Enter an LPA reference number that is either 7 or 12 numbers long',
             ],
             $this->validator->getMessages()
         );

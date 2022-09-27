@@ -34,14 +34,14 @@ class AddressOnPaperTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'address_on_paper_area' => Textarea::class
+            '__csrf'                => Csrf::class,
+            'address_on_paper_area' => Textarea::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new AddressOnPaper($guardProphecy->reveal());
+        $this->form    = new AddressOnPaper($guardProphecy->reveal());
     }
 }

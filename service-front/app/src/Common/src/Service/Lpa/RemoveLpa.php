@@ -11,28 +11,17 @@ use Psr\Log\LoggerInterface;
 
 class RemoveLpa
 {
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var LoggerInterface */
-    private $logger;
-    /** @var ParseLpaData */
-    private $parseLpaData;
-
     /**
      * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
      * @param ParseLpaData    $parseLpaData
-     *
      * @codeCoverageIgnore
      */
     public function __construct(
-        ApiClient $apiClient,
-        LoggerInterface $logger,
-        ParseLpaData $parseLpaData
+        private ApiClient $apiClient,
+        private LoggerInterface $logger,
+        private ParseLpaData $parseLpaData,
     ) {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
-        $this->parseLpaData = $parseLpaData;
     }
 
     public function __invoke(string $userToken, string $actorLpaToken)
@@ -45,7 +34,7 @@ class RemoveLpa
                 'Successfully removed LPA for user lpa actor {token}',
                 [
                     'event_code' => EventCodes::LPA_REMOVED,
-                    'token' => $actorLpaToken,
+                    'token'      => $actorLpaToken,
                 ]
             );
         } catch (ApiException $ex) {

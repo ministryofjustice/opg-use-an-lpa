@@ -10,6 +10,7 @@ use Gettext\GettextTranslator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class TranslatorFactoryTest extends TestCase
 {
@@ -38,7 +39,7 @@ class TranslatorFactoryTest extends TestCase
                     'i18n' => [
                         'default_locale' => 'en_GB',
                         'default_domain' => 'messages',
-                        'locale_path' => '/app/languages/'
+                        'locale_path'    => '/app/languages/',
                     ],
                 ]
             );
@@ -71,7 +72,7 @@ class TranslatorFactoryTest extends TestCase
 
         $factory = new TranslatorFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $instance = $factory($containerProphecy->reveal());
     }
 }

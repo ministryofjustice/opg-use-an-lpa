@@ -8,6 +8,7 @@ use Acpr\I18n\TranslatorInterface;
 use Common\Form\CookieConsent;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Service\Url\UrlValidityCheckService;
+use DateTime;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -19,44 +20,24 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class CookiesPageHandler
- * @package Viewer\Handler
  * @codeCoverageIgnore
  */
 class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
 
-    private string $application;
-
-    private UrlValidityCheckService $urlValidityCheckService;
-
-    private TranslatorInterface $translator;
-
-    private const COOKIE_POLICY_NAME = 'cookie_policy';
-    private const SEEN_COOKIE_NAME   = 'seen_cookie_message';
+    private const COOKIE_POLICY_NAME   = 'cookie_policy';
+    private const SEEN_COOKIE_NAME     = 'seen_cookie_message';
     public const COOKIES_SET_FLASH_MSG = 'cookies_set_flash_msg';
 
-    /**
-     * CreateAccountHandler constructor.
-     *
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UrlValidityCheckService $urlValidityCheckService
-     * @param TranslatorInterface $translator
-     * @param string $application
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService,
-        TranslatorInterface $translator,
-        string $application = 'actor'
+        private UrlValidityCheckService $urlValidityCheckService,
+        private TranslatorInterface $translator,
+        private string $application = 'actor',
     ) {
         parent::__construct($renderer, $urlHelper);
-        $this->urlValidityCheckService = $urlValidityCheckService;
-        $this->translator = $translator;
-        $this->application = $application;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -66,7 +47,7 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         $form = new CookieConsent($this->getCsrfGuard($request));
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() === 'POST') {
             return $this->handlePost($request);
         }
 
@@ -91,7 +72,7 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         return new HtmlResponse($this->renderer->render('common::cookies', [
             'form'        => $form,
             'application' => $this->application,
-            'flash'       => $flash
+            'flash'       => $flash,
         ]));
     }
 
@@ -106,15 +87,15 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
         $flash->flash(self::COOKIES_SET_FLASH_MSG, $form->get('referer')->getValue());
 
-        $cookiePolicy = [];
+        $cookiePolicy              = [];
         $cookiePolicy['essential'] = true;
-        $cookiePolicy['usage'] = $form->get('usageCookies')->getValue() === 'yes';
+        $cookiePolicy['usage']     = $form->get('usageCookies')->getValue() === 'yes';
 
         return FigResponseCookies::set(
             $response,
             SetCookie::create(self::COOKIE_POLICY_NAME, json_encode($cookiePolicy))
                 ->withHttpOnly(false)
-                ->withExpires(new \DateTime('+365 days'))
+                ->withExpires(new DateTime('+365 days'))
                 ->withPath('/')
         );
     }

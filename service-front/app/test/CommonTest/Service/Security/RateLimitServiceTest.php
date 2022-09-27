@@ -34,7 +34,7 @@ class RateLimitServiceTest extends TestCase
                 $storageProphecy->reveal(),
                 60,
                 4,
-                $loggerProphecy->reveal()
+                $loggerProphecy->reveal(),
             ]
         );
 

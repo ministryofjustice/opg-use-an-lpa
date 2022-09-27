@@ -13,8 +13,6 @@ namespace Common\Service\Container;
  * The interface is limited in scope to *only* allow the setting of configuration values within the container,
  * probably pulled from runtime calculations. Creation/alteration of more complicated items should be done as
  * a part of standard DI container instantiation.
- *
- * @package Common\Service\Container
  */
 interface ModifiableContainerInterface
 {

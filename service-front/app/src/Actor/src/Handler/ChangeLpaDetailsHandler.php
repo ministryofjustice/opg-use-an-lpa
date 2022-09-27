@@ -15,9 +15,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ChangeLpaDetailsHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
@@ -27,7 +24,7 @@ class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -42,13 +39,15 @@ class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actorLpaToken = !empty($request->getQueryParams()) ? $request->getQueryParams()['lpa'] : 'null';
+        $actorLpaToken = !empty($request->getQueryParams())
+            ? $request->getQueryParams()['lpa']
+            : 'null';
 
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::change-lpa-details', [
             'actorToken' => $actorLpaToken,
-            'user' => $user
+            'user'       => $user,
         ]));
     }
 }

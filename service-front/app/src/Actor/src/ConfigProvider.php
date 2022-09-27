@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Actor;
 
+use Actor\Handler\ActorSessionCheckHandler;
+use Actor\Handler\CheckLpaHandler;
+use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
+use Actor\Handler\Factory\CheckLpaHandlerFactory;
+use Actor\Handler\Factory\LoginPageHandlerFactory;
+use Actor\Handler\LoginPageHandler;
+
 /**
  * The configuration provider for the Actor module
  *
  * @see https://docs.zendframework.com/zend-component-installer/
+ *
  * @codeCoverageIgnore
  */
 class ConfigProvider
@@ -32,10 +40,10 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'factories'  => [
-                \Actor\Handler\CheckLpaHandler::class => \Actor\Handler\Factory\CheckLpaHandlerFactory::class,
-                \Actor\Handler\LoginPageHandler::class => \Actor\Handler\Factory\LoginPageHandlerFactory::class,
-                \Actor\Handler\ActorSessionCheckHandler::class => \Actor\Handler\Factory\ActorSessionCheckHandlerFactory::class
+            'factories' => [
+                CheckLpaHandler::class          => CheckLpaHandlerFactory::class,
+                LoginPageHandler::class         => LoginPageHandlerFactory::class,
+                ActorSessionCheckHandler::class => ActorSessionCheckHandlerFactory::class,
             ],
         ];
     }

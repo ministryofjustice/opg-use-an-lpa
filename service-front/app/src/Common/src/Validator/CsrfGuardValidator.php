@@ -11,22 +11,22 @@ use Mezzio\Csrf\CsrfGuardInterface;
 /**
  * Simplified CSRF validator that relies on a passed secret
  * Where the secret comes from is beyond the scope of this class
- *
- * @package Common\Validator
  */
 class CsrfGuardValidator extends LaminasCsrf
 {
     /**
      * @var string[]
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $messageTemplates = [
         parent::NOT_SAME => 'As you have not used this service for over 20 minutes, the page has ' .
-            'timed out. We\'ve now refreshed the page - please try to sign in again'
+            'timed out. We\'ve now refreshed the page - please try to sign in again',
     ];
 
     /**
      * Set to null in order to force the user to manually set it
      * @var ?string
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $name = null;
 

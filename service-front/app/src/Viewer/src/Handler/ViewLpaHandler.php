@@ -8,38 +8,22 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Lpa\LpaService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\StreamFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ViewLpaHandler
- * @package Viewer\Handler
  * @codeCoverageIgnore
  */
 class ViewLpaHandler extends AbstractHandler
 {
     use SessionTrait;
 
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
-
-    /**
-     * ViewLpaHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param LpaService $lpaService
-     */
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, LpaService $lpaService)
+    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, private LpaService $lpaService)
     {
         parent::__construct($renderer, $urlHelper);
-
-        $this->lpaService = $lpaService;
     }
 
     /**
@@ -49,8 +33,8 @@ class ViewLpaHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->getSession($request, 'session')->get('code');
-        $surname = $this->getSession($request, 'session')->get('surname');
+        $code         = $this->getSession($request, 'session')->get('code');
+        $surname      = $this->getSession($request, 'session')->get('surname');
         $organisation = $this->getSession($request, 'session')->get('organisation');
 
         if (!isset($code)) {

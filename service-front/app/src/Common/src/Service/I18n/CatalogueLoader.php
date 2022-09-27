@@ -10,13 +10,8 @@ use Symfony\Component\Finder\Finder;
 
 class CatalogueLoader
 {
-    private Finder $fileFinder;
-    private LoaderInterface $loader;
-
-    public function __construct(LoaderInterface $loader, Finder $fileFinder)
+    public function __construct(private LoaderInterface $loader, private Finder $fileFinder)
     {
-        $this->loader = $loader;
-        $this->fileFinder = $fileFinder;
     }
 
     /**
@@ -33,7 +28,7 @@ class CatalogueLoader
         $files = $this->findPotFiles($directory);
 
         foreach ($files as $file) {
-            $translations = $this->loader->loadFile($file->getRealPath());
+            $translations                           = $this->loader->loadFile($file->getRealPath());
             $catalogues[$translations->getDomain()] = $translations;
         }
 

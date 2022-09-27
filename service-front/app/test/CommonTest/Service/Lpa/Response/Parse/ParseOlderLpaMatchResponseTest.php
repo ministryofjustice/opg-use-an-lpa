@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
@@ -17,24 +19,24 @@ class ParseOlderLpaMatchResponseTest extends TestCase
 
     private CaseActor $donor;
     private CaseActor $attorney;
-    /** @var ObjectProphecy|LpaFactory */
-    private $lpaFactory;
+
+    private ObjectProphecy|LpaFactory $lpaFactory;
     private array $response;
 
     public function setUp(): void
     {
         $this->response = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'attorney'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Attorney',
-                'surname'       => 'Person',
+            'attorney'    => [
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Attorney',
+                'surname'     => 'Person',
             ],
             'caseSubtype' => 'hw',
         ];
@@ -65,7 +67,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ->createCaseActorFromData($this->response['attorney'])
             ->willReturn($this->attorney);
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut    = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(OlderLpaMatchResponse::class, $result);
@@ -77,9 +79,9 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     /** @test */
     public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields()
     {
-        $this->response['donor']['firstname'] = null;
+        $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
-        $this->response['donor']['surname'] = null;
+        $this->response['donor']['surname']     = null;
 
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -92,7 +94,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ->createCaseActorFromData($this->response['attorney'])
             ->willReturn($this->attorney);
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut    = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(OlderLpaMatchResponse::class, $result);
@@ -113,10 +115,10 @@ class ParseOlderLpaMatchResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
             'caseSubtype' => 'hw',
         ];
@@ -135,12 +137,12 @@ class ParseOlderLpaMatchResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'surname'       => 'Person',
+            'donor'       => [
+                'uId'       => '12345',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
             ],
-            'caseSubtype' => 'hw'
+            'caseSubtype' => 'hw',
         ];
 
         $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
@@ -157,10 +159,10 @@ class ParseOlderLpaMatchResponseTest extends TestCase
         );
 
         $data = [
-            'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'middlenames'   => 'Person',
+            'donor'       => [
+                'uId'         => '12345',
+                'firstname'   => 'Donor',
+                'middlenames' => 'Person',
             ],
             'caseSubtype' => 'hw',
         ];
@@ -190,61 +192,61 @@ class ParseOlderLpaMatchResponseTest extends TestCase
         return [
             [
                 [
-                    'donor'         => null,
-                    'caseSubtype' => 'hw'
-                ]
+                    'donor'       => null,
+                    'caseSubtype' => 'hw',
+                ],
             ],
             [
                 [
-                    'attorney'          => [
-                        'uId'           => null,
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Attorney',
-                        'surname'       => 'Person',
+                    'attorney'    => [
+                        'uId'         => null,
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Attorney',
+                        'surname'     => 'Person',
                     ],
-                    'donor'             => [
-                        'uId'           => null,
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                    'donor'       => [
+                        'uId'         => null,
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => 'hw'
-                ]
+                    'caseSubtype' => 'hw',
+                ],
             ],
             [
                 [
-                    'attorney'          => [
-                        'uId'           => '12378',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Attorney',
-                        'surname'       => 'Person',
+                    'attorney'    => [
+                        'uId'         => '12378',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Attorney',
+                        'surname'     => 'Person',
                     ],
-                    'donor'             => [
-                        'uId'           => '12345',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                    'donor'       => [
+                        'uId'         => '12345',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => null
-                ]
+                    'caseSubtype' => null,
+                ],
             ],
             [
                 [
-                    'attorney'          => [
-                        'uId'           => '12378',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Attorney',
-                        'surname'       => 'Person',
+                    'attorney'    => [
+                        'uId'         => '12378',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Attorney',
+                        'surname'     => 'Person',
                     ],
-                    'donor'             => [
-                        'uId'           => '12345',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                    'donor'       => [
+                        'uId'         => '12345',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => null
-                ]
-            ]
+                    'caseSubtype' => null,
+                ],
+            ],
         ];
     }
 }

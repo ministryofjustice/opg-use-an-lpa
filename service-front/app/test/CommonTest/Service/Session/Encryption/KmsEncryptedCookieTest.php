@@ -20,7 +20,7 @@ class KmsEncryptedCookieTest extends TestCase
     /** @test */
     public function it_can_be_instantiated(): void
     {
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
+        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
         $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
@@ -32,7 +32,7 @@ class KmsEncryptedCookieTest extends TestCase
     public function it_encodes_a_session_array(): void
     {
         $data = [
-            'session' => 'data'
+            'session' => 'data',
         ];
 
         $keyProphecy = $this->prophesize(Key::class);
@@ -58,7 +58,7 @@ class KmsEncryptedCookieTest extends TestCase
     {
         $data = [];
 
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
+        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
         $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
@@ -72,7 +72,7 @@ class KmsEncryptedCookieTest extends TestCase
     public function it_decodes_a_string_into_session_data(): void
     {
         $data = [
-            'session' => 'data'
+            'session' => 'data',
         ];
 
         $keyProphecy = $this->prophesize(Key::class);
@@ -95,8 +95,6 @@ class KmsEncryptedCookieTest extends TestCase
     /** @test */
     public function it_throws_an_exception_when_key_id_not_matched_and_returns_new_session(): void
     {
-        $keyProphecy = $this->prophesize(Key::class);
-
         $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
         $keyManagerProphecy->getDecryptionKey('1')->willThrow(new KeyNotFoundException());
 
@@ -114,7 +112,7 @@ class KmsEncryptedCookieTest extends TestCase
     {
         $data = [];
 
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
+        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
         $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());

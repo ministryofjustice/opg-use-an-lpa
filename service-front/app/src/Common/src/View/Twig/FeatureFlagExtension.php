@@ -10,18 +10,12 @@ use Twig\TwigFunction;
 
 class FeatureFlagExtension extends AbstractExtension
 {
-    private FeatureEnabled $featureEnabled;
-
     /**
-     * FeatureFlagExtension constructor.
-     *
      * @param FeatureEnabled $featureEnabled
-     *
      * @codeCoverageIgnore
      */
-    public function __construct(FeatureEnabled $featureEnabled)
+    public function __construct(private FeatureEnabled $featureEnabled)
     {
-        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -30,7 +24,7 @@ class FeatureFlagExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('feature_enabled', [$this, 'featureEnabled'])
+            new TwigFunction('feature_enabled', [$this, 'featureEnabled']),
         ];
     }
 
@@ -38,7 +32,6 @@ class FeatureFlagExtension extends AbstractExtension
      * Returns the enabled state of a feature
      *
      * @param string $featureName The name of a feature configured in features.php
-     *
      * @return bool
      */
     public function featureEnabled(string $featureName): bool

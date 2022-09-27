@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class CreateShareCode extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'lpa_sharecode_create';
 
-    /**
-     * LpaAdd constructor.
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
@@ -39,9 +35,9 @@ class CreateShareCode extends AbstractForm implements InputFilterProviderInterfa
     public function getInputFilterSpecification(): array
     {
         return [
-            'org_name' => [
+            'org_name'  => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
@@ -49,7 +45,7 @@ class CreateShareCode extends AbstractForm implements InputFilterProviderInterfa
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'messages'           => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Enter an organisation name',
                             ],
                         ],
@@ -57,7 +53,7 @@ class CreateShareCode extends AbstractForm implements InputFilterProviderInterfa
                 ],
             ],
             'lpa_token' => [
-                'required'   => true,
+                'required' => true,
             ],
         ];
     }

@@ -11,30 +11,24 @@ use Mezzio\Authentication\UserInterface;
 use RuntimeException;
 
 /**
- * Class User
- *
  * Implements the UserInterface interface from the Zend Expressive authentication library
- *
- * @package Common\Entity
  */
 class User implements UserInterface
 {
-    protected string $identity;
     protected string $email;
-    
+
     protected bool $needsReset;
     protected ?DateTime $lastLogin;
 
-    public function __construct(string $identity, array $roles, array $details)
+    public function __construct(protected string $identity, array $roles, array $details)
     {
-        $this->identity = $identity;
         $this->lastLogin = null;
 
         if (empty($details['Email'])) {
             throw new RuntimeException('Expected database value "Email" not returned');
         }
-        
-        $this->email = $details['Email'];
+
+        $this->email      = $details['Email'];
         $this->needsReset = !empty($details['NeedsReset']);
 
         if (!empty($details['LastLogin'])) {
