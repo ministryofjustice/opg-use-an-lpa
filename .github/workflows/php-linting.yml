@@ -35,7 +35,7 @@ jobs:
         fetch-depth: 2
 
     - name: Setup PHP with tools
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@verbose
       with:
         php-version: '8.1'
         tools: squizlabs/php_codesniffer:3.7.1, webimpress/coding-standard:1.2.4, slevomat/coding-standard:8.4.0
