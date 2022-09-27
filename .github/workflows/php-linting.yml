@@ -46,6 +46,7 @@ jobs:
         phpcs --version
         phpcs --config-set installed_paths $install_dir/webimpress/coding-standard/src/WebimpressCodingStandard/,$install_dir/slevomat/coding-standard/SlevomatCodingStandard/
         phpcs -i
+        ls -lha $install_dir
 
     - uses: thenabeel/action-phpcs@v8
       with:
