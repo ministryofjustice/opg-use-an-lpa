@@ -57,6 +57,15 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
     {
         $this->form->setData($request->getParsedBody());
         if ($this->form->isValid()) {
+            /**
+             * @psalm-var array{
+             *     actor_address_1: string,
+             *     actor_address_2: string,
+             *     actor_address_town: string,
+             *     actor_address_county: string,
+             *     actor_address_check_radio: string
+             * }
+             */
             $postData = $this->form->getData();
 
             $this->state($request)->actorAddress1        = $postData['actor_address_1'];
