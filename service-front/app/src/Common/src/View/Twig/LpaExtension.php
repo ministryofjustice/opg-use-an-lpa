@@ -11,13 +11,10 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use IntlDateFormatter;
+use Locale;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-/**
- * Class LpaExtension
- * @package Common\View\Twig
- */
 class LpaExtension extends AbstractExtension
 {
     /**
@@ -49,10 +46,7 @@ class LpaExtension extends AbstractExtension
             return 'Property and finance';
         }
     }
-    /**
-     * @param CaseActor $actor
-     * @return string
-     */
+    
     public function actorAddress(CaseActor $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
@@ -67,7 +61,7 @@ class LpaExtension extends AbstractExtension
                 $address->getAddressLine3(),
                 $address->getTown(),
                 $address->getCounty(),
-                $address->getPostcode()
+                $address->getPostcode(),
             ]));
         }
 
@@ -137,7 +131,7 @@ class LpaExtension extends AbstractExtension
             }
 
             if ($date instanceof DateTimeInterface) {
-                $formatter = $this->getDateFormatter(\Locale::getDefault(), null);
+                $formatter = $this->getDateFormatter(Locale::getDefault(), null);
                 $formatter->setTimeZone($date->getTimezone());
                 return $formatter->format($date);
             }
@@ -158,8 +152,8 @@ class LpaExtension extends AbstractExtension
         $difference = '';
 
         if (!empty($expiryDate)) {
-            $expires = new DateTime($expiryDate);
-            $now = new DateTime("now");
+            $expires    = new DateTime($expiryDate);
+            $now        = new DateTime('now');
             $difference = $expires->diff($now)->format('%a');
         }
 
@@ -175,7 +169,7 @@ class LpaExtension extends AbstractExtension
      */
     public function isCodeCancelled(?array $code): ?bool
     {
-        if (array_key_exists("Cancelled", $code)) {
+        if (array_key_exists('Cancelled', $code)) {
             return $cancelledStatus = true;
         }
 
@@ -222,11 +216,6 @@ class LpaExtension extends AbstractExtension
         return ($status === 'Cancelled') || ($status === 'Revoked');
     }
 
-    /**
-     * @param Lpa $lpa
-     *
-     * @return bool
-     */
     public function isDonorSignatureDateOld(Lpa $lpa): bool
     {
         return $lpa->getLpaDonorSignatureDate() < new DateTime('2016-01-01');

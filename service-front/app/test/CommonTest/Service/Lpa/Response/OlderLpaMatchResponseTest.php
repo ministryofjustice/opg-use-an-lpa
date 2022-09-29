@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;

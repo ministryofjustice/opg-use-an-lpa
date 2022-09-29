@@ -6,6 +6,7 @@ namespace CommonTest\Validator;
 
 use Common\Validator\DateValidator;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class DateValidatorTest extends TestCase
 {
@@ -22,9 +23,9 @@ class DateValidatorTest extends TestCase
     public function testIsValidFormat($day, $month, $year)
     {
         $value = [
-            'day' => $day,
+            'day'   => $day,
             'month' => $month,
-            'year' => $year,
+            'year'  => $year,
         ];
 
         $isValid = $this->validator->isValid($value);
@@ -87,9 +88,9 @@ class DateValidatorTest extends TestCase
     public function testIsValidEmptyFormat()
     {
         $isValid = $this->validator->isValid([
-            'day' => '',
+            'day'   => '',
             'month' => '',
-            'year' => '',
+            'year'  => '',
         ]);
 
         $this->assertEquals([
@@ -102,9 +103,9 @@ class DateValidatorTest extends TestCase
     public function testIsValidIncompleteDayFormat()
     {
         $isValid = $this->validator->isValid([
-            'day' => '',
+            'day'   => '',
             'month' => 2,
-            'year' => 1999,
+            'year'  => 1999,
         ]);
 
         $this->assertEquals([
@@ -117,9 +118,9 @@ class DateValidatorTest extends TestCase
     public function testIsValidIncompleteMonthFormat()
     {
         $isValid = $this->validator->isValid([
-            'day' => 2,
+            'day'   => 2,
             'month' => '',
-            'year' => 1999,
+            'year'  => 1999,
         ]);
 
         $this->assertEquals([
@@ -132,9 +133,9 @@ class DateValidatorTest extends TestCase
     public function testIsValidIncompleteYearFormat()
     {
         $isValid = $this->validator->isValid([
-            'day' => 5,
+            'day'   => 5,
             'month' => 2,
-            'year' => '',
+            'year'  => '',
         ]);
 
         $this->assertEquals([
@@ -177,16 +178,11 @@ class DateValidatorTest extends TestCase
         return [
             [-1, -2, -1999],
             ['honk', 'beep', 'peanuts'],
-            [true, true, new \stdClass()],
+            [true, true, new stdClass()],
             [32, 2, 1999],
             [1, 13, 1999],
             [1, 2, 999],
             [29, 2, 1999],
         ];
     }
-
-
-
-
 }
-

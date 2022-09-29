@@ -15,8 +15,6 @@ use Common\Handler\{AbstractHandler,
     UserAware};
 use Common\Handler\Traits\User;
 use Common\Workflow\State;
-use Common\Workflow\StateAware;
-use Common\Workflow\StateBuilderFactory;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -28,8 +26,6 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractRequestKeyHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 abstract class AbstractRequestKeyHandler extends AbstractHandler implements
@@ -39,11 +35,11 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     LoggerAware,
     WorkflowStep
 {
-    use User;
     use CsrfGuard;
-    use SessionTrait;
     use Logger;
+    use SessionTrait;
     use State;
+    use User;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
@@ -52,20 +48,16 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
@@ -84,7 +76,6 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return RequestActivationKey
      * @throws StateNotInitialisedException
      */

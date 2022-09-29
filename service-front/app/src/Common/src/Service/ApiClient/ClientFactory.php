@@ -9,10 +9,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
-/**
- * Class ClientFactory
- * @package Common\Service\ApiClient
- */
 class ClientFactory
 {
     public function __invoke(ContainerInterface $container): Client

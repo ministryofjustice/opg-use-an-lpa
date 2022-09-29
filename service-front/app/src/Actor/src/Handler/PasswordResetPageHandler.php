@@ -13,19 +13,16 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\User\UserService;
-use Mezzio\Flash\FlashMessageMiddleware;
-use ParagonIE\HiddenString\HiddenString;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use ParagonIE\HiddenString\HiddenString;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class PasswordResetPageHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware, SessionAware
@@ -33,19 +30,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
     use CsrfGuard;
     use Session;
 
-    private TranslatorInterface $translator;
-
-    /** @var UserService */
-    private $userService;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
     /**
-     * PasswordResetPageHandler constructor.
-     *
      * @codeCoverageIgnore
-     *
      * @param TemplateRendererInterface $renderer
      * @param UrlHelper $urlHelper
      * @param UserService $userService
@@ -55,15 +41,11 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        ServerUrlHelper $serverUrlHelper,
-        TranslatorInterface $translator
+        private UserService $userService,
+        private ServerUrlHelper $serverUrlHelper,
+        private TranslatorInterface $translator,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->translator = $translator;
     }
 
     /**
@@ -108,18 +90,13 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
 
         if ($tokenValid) {
             return new HtmlResponse($this->renderer->render('actor::password-reset', [
-                'form' => $form->prepare()
+                'form' => $form->prepare(),
             ]));
         }
 
         return new HtmlResponse($this->renderer->render('actor::password-reset-not-found'));
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return void
-     */
     private function invalidateSession(ServerRequestInterface $request): void
     {
         $session = $this->getSession($request, 'session');

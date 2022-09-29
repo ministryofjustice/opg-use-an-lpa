@@ -16,35 +16,29 @@ use Common\Service\Lpa\SortLpas;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class LpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var Client */
-    private $apiClientProphecy;
-    /** @var LoggerInterface */
-    private $loggerProphecy;
-    /** @var ParseLpaData */
-    private $parseLpaData;
-    /** @var PopulateLpaMetadata */
-    private $populateLpaMetadata;
-    /** @var SortLpas */
-    private $sortLpas;
-    /** @var GroupLpas */
-    private $groupLpas;
-    /** @var LpaService */
-    private $lpaService;
+    private ObjectProphecy|Client $apiClientProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private ObjectProphecy|ParseLpaData $parseLpaData;
+    private ObjectProphecy|PopulateLpaMetadata $populateLpaMetadata;
+    private ObjectProphecy|SortLpas $sortLpas;
+    private ObjectProphecy|roupLpas $groupLpas;
+    private ObjectProphecy|LpaService $lpaService;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy = $this->prophesize(Client::class);
-        $this->parseLpaData = $this->prophesize(ParseLpaData::class);
+        $this->apiClientProphecy   = $this->prophesize(Client::class);
+        $this->parseLpaData        = $this->prophesize(ParseLpaData::class);
         $this->populateLpaMetadata = $this->prophesize(PopulateLpaMetadata::class);
-        $this->sortLpas = $this->prophesize(SortLpas::class);
-        $this->groupLpas = $this->prophesize(GroupLpas::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->sortLpas            = $this->prophesize(SortLpas::class);
+        $this->groupLpas           = $this->prophesize(GroupLpas::class);
+        $this->loggerProphecy      = $this->prophesize(LoggerInterface::class);
 
         $this->lpaService = new LpaService(
             $this->apiClientProphecy->reveal(),
@@ -64,13 +58,13 @@ class LpaServiceTest extends TestCase
         $lpaData = [
             '0123-01-01-01-012345' => [
                 'lpa' => [
-                    'uId' => '123456789012',
+                    'uId'   => '123456789012',
                     'donor' => [
                         'uId' => '123456789012',
-                        'dob' => '1980-01-01'
-                    ]
-                ]
-            ]
+                        'dob' => '1980-01-01',
+                    ],
+                ],
+            ],
         ];
 
         $parsedLpaData = new ArrayObject(
@@ -99,13 +93,13 @@ class LpaServiceTest extends TestCase
         $lpaData = [
             '0123-01-01-01-012345' => [
                 'lpa' => [
-                    'uId' => '123456789012',
+                    'uId'   => '123456789012',
                     'donor' => [
                         'uId' => '123456789012',
-                        'dob' => '1980-01-01'
-                    ]
-                ]
-            ]
+                        'dob' => '1980-01-01',
+                    ],
+                ],
+            ],
         ];
 
         $parsedLpaData = new ArrayObject(
@@ -166,9 +160,9 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost(
             '/v1/viewer-codes/full',
             [
-                'code' => 'P9H8A6MLD3AM',
-                'name' => 'Sanderson',
-                'organisation' => 'Santander'
+                'code'         => 'P9H8A6MLD3AM',
+                'name'         => 'Sanderson',
+                'organisation' => 'Santander',
             ]
         )->willReturn($lpaData);
 
@@ -179,7 +173,6 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
-
 
     /** @test */
     public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
@@ -233,13 +226,12 @@ class LpaServiceTest extends TestCase
         $token = '01234567-01234-01234-01234-012345678901';
 
         $lpaData = [
-            'lpa' => [
-                'id' => '70000000047',
-                'status' => 'Registered'
+            'lpa'   => [
+                'id'     => '70000000047',
+                'status' => 'Registered',
             ],
             'actor' => [
-                'details' => [
-                ]
+                'details' => [],
             ],
         ];
 

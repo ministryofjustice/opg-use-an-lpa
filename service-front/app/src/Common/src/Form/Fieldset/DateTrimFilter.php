@@ -8,7 +8,6 @@ use Laminas\Filter\AbstractFilter;
 
 class DateTrimFilter extends AbstractFilter
 {
-
     /**
      * Defined by Laminas\Filter\FilterInterface
      *
@@ -19,9 +18,9 @@ class DateTrimFilter extends AbstractFilter
      */
     public function filter($value): array
     {
-        $value['day'] = trim($value['day']);
+        $value['day']   = trim($value['day']);
         $value['month'] = trim($value['month']);
-        $value['year'] = trim($value['year']);
+        $value['year']  = trim($value['year']);
         return $value;
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\AddLpa;
 
-use Actor\Form\AddLpa\ActivationKey;
 use Actor\Form\AddLpa\LpaReferenceNumber;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
@@ -19,9 +18,7 @@ class LpaReferenceNumberTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-
-    /** @var LpaReferenceNumber */
-    protected $form;
+    protected LpaReferenceNumber $form;
 
     public function getForm(): AbstractForm
     {
@@ -44,6 +41,6 @@ class LpaReferenceNumberTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new LpaReferenceNumber($guardProphecy->reveal());
+        $this->form    = new LpaReferenceNumber($guardProphecy->reveal());
     }
 }

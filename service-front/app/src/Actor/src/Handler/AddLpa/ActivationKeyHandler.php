@@ -12,9 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class LpaAddHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ActivationKeyHandler extends AbstractAddLpaHandler
@@ -23,9 +20,7 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
-     *
      * @throws StateNotInitialisedException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -57,7 +52,7 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
 
         if ($this->form->isValid()) {
             //  Attempt to retrieve an LPA using the form data
-            $postData = $this->form->getData();
+            $postData                             = $this->form->getData();
             $this->state($request)->activationKey = $postData['activation_key'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));

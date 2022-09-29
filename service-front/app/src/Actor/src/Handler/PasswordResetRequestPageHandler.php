@@ -20,9 +20,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class PasswordResetRequestPageHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGuardAware
@@ -78,7 +75,7 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                         );
                     }
                 } catch (ApiException $ae) {
-                    if ($ae->getCode() == StatusCodeInterface::STATUS_NOT_FOUND) {
+                    if ($ae->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {
                         $this->notifyService->sendEmailToUser(
                             NotifyService::NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE,
                             $data['email']
@@ -89,13 +86,13 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                 }
 
                 return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
-                    'email' => strtolower($data['email'])
+                    'email' => strtolower($data['email']),
                 ]));
             }
         }
 
         return new HtmlResponse($this->renderer->render('actor::password-reset-request', [
-            'form' => $form
+            'form' => $form,
         ]));
     }
 }

@@ -4,45 +4,21 @@ declare(strict_types=1);
 
 namespace Common\Handler;
 
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 
-/**
- * Class AbstractHandler
- *
- * @package Common\Handler
- */
 abstract class AbstractHandler implements RequestHandlerInterface
 {
-    /** @var LoggerInterface|null */
-    protected $logger;
-
-    /** @var TemplateRendererInterface */
-    protected $renderer;
-
-    /** @var UrlHelper */
-    protected $urlHelper;
-
-    /**
-     * AbstractHandler constructor.
-     *
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param LoggerInterface|null $logger
-     */
     public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        ?LoggerInterface $logger = null
+        protected TemplateRendererInterface $renderer,
+        protected UrlHelper $urlHelper,
+        protected ?LoggerInterface $logger = null,
     ) {
-        $this->renderer = $renderer;
-        $this->urlHelper = $urlHelper;
-        $this->logger = $logger;
     }
 
     /**

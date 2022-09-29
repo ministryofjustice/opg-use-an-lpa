@@ -24,7 +24,7 @@ class KeyedRateLimitServiceTest extends TestCase
             time() - 20,
             time() - 30,
             time() - 40,
-            time() - 50
+            time() - 50,
         ];
 
         $storageProphecy = $this->prophesize(StorageInterface::class);
@@ -79,7 +79,7 @@ class KeyedRateLimitServiceTest extends TestCase
         $beforeWindow = [
             time() - 20,
             time() - 30,
-            time() - 65 // outside 60 second window
+            time() - 65, // outside 60 second window
         ];
 
         $storageProphecy = $this->prophesize(StorageInterface::class);
@@ -92,7 +92,7 @@ class KeyedRateLimitServiceTest extends TestCase
                 'test-identity:',
                 [
                     $beforeWindow[0],
-                    $beforeWindow[1]
+                    $beforeWindow[1],
                 ]
             )
             ->shouldBeCalled();

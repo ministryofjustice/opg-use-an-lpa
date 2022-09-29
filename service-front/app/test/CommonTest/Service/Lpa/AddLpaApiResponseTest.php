@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa;
 
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AddLpaApiResponse;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use ArrayObject;
 
 /**
- * Class AddLpaApiResponseTest
- *
- * @package CommonTest\Service\Lpa
  * @coversDefaultClass \Common\Service\Lpa\AddLpaApiResponse
  */
 class AddLpaApiResponseTest extends TestCase
@@ -89,7 +87,7 @@ class AddLpaApiResponseTest extends TestCase
             [3.1],
             ['i am a string'],
             [false],
-            [null]
+            [null],
         ];
     }
 

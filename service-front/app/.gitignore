@@ -5,3 +5,6 @@ coveralls-upload.json
 phpunit.xml
 vendor/
 build/
+
+.phpcs-cache
+.phpunit.result.cache

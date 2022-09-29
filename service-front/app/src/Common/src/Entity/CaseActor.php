@@ -8,41 +8,23 @@ use DateTime;
 
 class CaseActor
 {
-    /** @var int */
-    protected $id;
-
-    /** @var string|null */
-    protected $uId = null;
+    protected int $id;
+    protected ?string $uId = null;
 
     /** @var array<array<mixed>>|null */
-    protected $linked = null;
+    protected ?array $linked = null;
 
-    /** @var string|null */
-    protected $email = null;
-
-    /** @var DateTime|null */
-    protected $dob = null;
-
-    /** @var string|null */
-    protected $salutation = null;
-
-    /** @var string|null */
-    protected $firstname = null;
-
-    /** @var string|null */
-    protected $middlenames = null;
-
-    /** @var string|null */
-    protected $surname = null;
-
-    /** @var string|null */
-    protected $companyName = null;
-
-    /** @var bool */
-    protected $systemStatus = null;
+    protected ?string $email       = null;
+    protected ?DateTime $dob       = null;
+    protected ?string $salutation  = null;
+    protected ?string $firstname   = null;
+    protected ?string $middlenames = null;
+    protected ?string $surname     = null;
+    protected ?string $companyName = null;
+    protected ?bool $systemStatus  = null;
 
     /** @var Address[] */
-    protected $addresses = [];
+    protected array $addresses = [];
 
     public function getId(): int
     {
@@ -73,7 +55,7 @@ class CaseActor
             return [$this->getId()];
         }
 
-        return array_map(function($x) {
+        return array_map(function ($x) {
             return $x['id'];
         }, $this->linked);
     }
@@ -83,7 +65,7 @@ class CaseActor
      */
     public function setLinked(array $linked): void
     {
-        $this->linked = $linked;;
+        $this->linked = $linked;
     }
 
     public function getEmail(): ?string

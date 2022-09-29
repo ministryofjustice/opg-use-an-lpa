@@ -14,8 +14,6 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class RequestActivationKeyHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
@@ -34,12 +32,11 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
         if (($dob = $this->state($request)->dob) !== null) {
             $this->form->setData(
                 [
-                    'dob' =>
-                        [
-                            'day' => $dob->format('d'),
-                            'month' => $dob->format('m'),
-                            'year' => $dob->format('Y'),
-                        ]
+                    'dob' => [
+                        'day'   => $dob->format('d'),
+                        'month' => $dob->format('m'),
+                        'year'  => $dob->format('Y'),
+                    ],
                 ]
             );
         }
@@ -47,7 +44,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -71,7 +68,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/date-of-birth', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

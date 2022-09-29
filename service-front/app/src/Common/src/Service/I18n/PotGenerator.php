@@ -10,18 +10,11 @@ use Gettext\Translations;
 
 class PotGenerator
 {
-    private string $defaultLocale;
-    private string $localePath;
-    private GeneratorInterface $writer;
-
     public function __construct(
-        GeneratorInterface $writer,
-        string $localePath = 'languages/',
-        string $defaultLocale = 'en_GB'
+        private GeneratorInterface $writer,
+        private string $localePath = 'languages/',
+        private string $defaultLocale = 'en_GB',
     ) {
-        $this->writer = $writer;
-        $this->localePath = $localePath;
-        $this->defaultLocale = $defaultLocale;
 
         $this->catalogues = [];
     }

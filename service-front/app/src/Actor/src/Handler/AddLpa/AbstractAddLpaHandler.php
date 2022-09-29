@@ -25,8 +25,6 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractRequestKeyHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 abstract class AbstractAddLpaHandler extends AbstractHandler implements
@@ -36,11 +34,11 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     LoggerAware,
     WorkflowStep
 {
-    use User;
     use CsrfGuard;
-    use SessionTrait;
     use Logger;
+    use SessionTrait;
     use State;
+    use User;
 
     protected ?UserInterface $user;
 
@@ -48,7 +46,7 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -57,7 +55,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -77,7 +74,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -85,7 +81,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -93,7 +88,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return AddLpa
      * @throws StateNotInitialisedException
      */

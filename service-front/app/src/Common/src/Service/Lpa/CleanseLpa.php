@@ -8,44 +8,29 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AddOlderLpa
- *
  * Single action invokeable class that is responsible for calling the APIs necessary to add older
  * LPAs to a users account.
- *
- * @package Common\Service\Lpa
  */
 class CleanseLpa
 {
-
-    /** @var ApiClient */
-    private ApiClient $apiClient;
-    /** @var LoggerInterface */
-    private LoggerInterface $logger;
-
     /**
-     * AddOlderLpa constructor.
-     *
      * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
-     *
      * @codeCoverageIgnore
      */
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
+    public function __construct(private ApiClient $apiClient, private LoggerInterface $logger)
     {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
     }
 
     public function cleanse(
         string $userToken,
         int $lpaUid,
         string $additionalInformation,
-        ?int $actorId
+        ?int $actorId,
     ): OlderLpaApiResponse {
         $data = [
             'reference_number' => $lpaUid,
-            'notes' => $additionalInformation
+            'notes'            => $additionalInformation,
         ];
 
         if ($actorId !== null) {

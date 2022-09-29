@@ -47,7 +47,7 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
 
         $errorHandler = $factory(
             $containerProphecy->reveal(),
-            'Laminas\Stratigility\Middleware\ErrorHandler',
+            ErrorHandler::class,
             $callable
         );
 
@@ -81,7 +81,7 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
 
         $errorHandler = $factory(
             $containerProphecy->reveal(),
-            'Laminas\Stratigility\Middleware\ErrorHandler',
+            ErrorHandler::class,
             $callable
         );
 

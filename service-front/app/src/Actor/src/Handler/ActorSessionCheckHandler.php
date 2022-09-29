@@ -22,36 +22,30 @@ use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandler extends AbstractHandler implements UserAware, SessionAware, LoggerAware
 {
-    use User;
-    use Session;
     use Logger;
-
-    private int $sessionTime;
-
-    private int $sessionWarningTime;
+    use Session;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         LoggerInterface $logger,
         UrlHelper $urlHelper,
-        int $sessionTime,
-        int $sessionWarningTime
+        private int $sessionTime,
+        private int $sessionWarningTime,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->sessionTime = $sessionTime;
-        $this->sessionWarningTime = $sessionWarningTime;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->getUser($request);
+        $user    = $this->getUser($request);
         $session = $this->getSession($request, 'session');
 
-        $expiresAt = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
-        $timeRemaining = $expiresAt - time();
+        $expiresAt          = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
+        $timeRemaining      = $expiresAt - time();
         $showSessionWarning = false;
 
         if ($user !== null && $timeRemaining <= $this->sessionWarningTime) {
@@ -61,7 +55,7 @@ class ActorSessionCheckHandler extends AbstractHandler implements UserAware, Ses
         return new JsonResponse(
             [
                 'session_warning' => $showSessionWarning,
-                'time_remaining'  => $timeRemaining
+                'time_remaining'  => $timeRemaining,
             ]
         );
     }

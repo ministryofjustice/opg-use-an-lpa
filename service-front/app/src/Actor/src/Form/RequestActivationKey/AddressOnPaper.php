@@ -13,19 +13,15 @@ class AddressOnPaper extends AbstractForm implements InputFilterProviderInterfac
 {
     public const FORM_NAME = 'address_on_paper';
 
-    /**
-     * AddLpaTriage constructor.
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add(
             [
-                'name'       => 'address_on_paper_area',
-                'label'      => 'What is your address',
-                'type'       => 'Textarea',
+                'name'  => 'address_on_paper_area',
+                'label' => 'What is your address',
+                'type'  => 'Textarea',
             ]
         );
     }
@@ -41,9 +37,9 @@ class AddressOnPaper extends AbstractForm implements InputFilterProviderInterfac
                 'required'   => true,
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'messages'           => [
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Enter your address on the paper LPA',
                             ],
                         ],

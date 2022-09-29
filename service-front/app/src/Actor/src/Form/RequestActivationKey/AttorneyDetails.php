@@ -14,17 +14,13 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class DonorDetails
- *
- * @package Actor\RequestActivationKey\Form
- */
 class AttorneyDetails extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'attorney_details';
 
     /**
      * DonorDetails constructor
+     *
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)
@@ -53,49 +49,49 @@ class AttorneyDetails extends AbstractForm implements InputFilterProviderInterfa
         return [
             'attorney_first_names' => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'message'  => 'Enter the attorney\'s first names',
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => 'Enter the attorney\'s first names',
                         ],
                     ],
-                ]
+                ],
             ],
-            'attorney_last_name' => [
+            'attorney_last_name'   => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'message'  => 'Enter the attorney\'s last name',
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => 'Enter the attorney\'s last name',
                         ],
                     ],
-                ]
+                ],
             ],
-            'attorney_dob' => [
+            'attorney_dob'         => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => DateTrimFilter::class],
                     ['name' => DatePrefixFilter::class],
                 ],
                 'validators' => [
                     [
-                        'name' => DobValidator::class,
-                        'options'                => [
+                        'name'    => DobValidator::class,
+                        'options' => [
                             'messages' => [
                                 DobValidator::DATE_EMPTY => 'Enter the attorney\'s date of birth',
-                            ]
+                            ],
                         ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

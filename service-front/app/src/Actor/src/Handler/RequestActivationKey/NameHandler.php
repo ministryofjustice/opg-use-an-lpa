@@ -13,8 +13,6 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class RequestActivationKeyHandler
- * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
 class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
@@ -32,14 +30,14 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         $this->form->setData(
             [
                 'first_names' => $this->state($request)->firstNames,
-                'last_name' => $this->state($request)->lastName
+                'last_name'   => $this->state($request)->lastName,
             ]
         );
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -52,7 +50,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
             //  Set the data in the state and pass to the check your answers handler
             $this->state($request)->firstNames = $postData['first_names'];
-            $this->state($request)->lastName = $postData['last_name'];
+            $this->state($request)->lastName   = $postData['last_name'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -60,7 +58,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
             'user' => $this->user,
             'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

@@ -13,9 +13,6 @@ use RuntimeException;
  * Builds a configured instance of the AWS Sdk for testing
  *
  * Utilises an Aws MockHandler to allow us to stub requests to the Aws platform.
- *
- * Class SdkFactory
- * @package BehatTest\Common\Service\Aws
  */
 class SdkFactory
 {

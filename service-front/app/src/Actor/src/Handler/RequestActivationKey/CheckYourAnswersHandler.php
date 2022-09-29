@@ -35,49 +35,37 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * Class CheckYourAnswersHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CheckYourAnswersHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware, WorkflowStep
 {
-    use User;
     use CsrfGuard;
-    use SessionTrait;
     use Logger;
+    use SessionTrait;
     use State;
+    use User;
 
     private CheckYourAnswers $form;
     private ?SessionInterface $session;
     private ?UserInterface $user;
 
-    private AddOlderLpa $addOlderLpa;
-    private LocalisedDate $localisedDate;
-    private FeatureEnabled $featureEnabled;
-    private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        AddOlderLpa $addOlderLpa,
+        private AddOlderLpa $addOlderLpa,
         LoggerInterface $logger,
-        LocalisedDate $localisedDate,
-        FeatureEnabled $featureEnabled,
-        RemoveAccessForAllSessionValues $removeAccessForAllSessionValues
+        private LocalisedDate $localisedDate,
+        private FeatureEnabled $featureEnabled,
+        private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->addOlderLpa = $addOlderLpa;
-        $this->localisedDate = $localisedDate;
-        $this->featureEnabled = $featureEnabled;
-        $this->removeAccessForAllSessionValues = $removeAccessForAllSessionValues;
     }
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -85,7 +73,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
     {
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
 
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
         if ($this->isMissingPrerequisite($request)) {
@@ -100,19 +88,18 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $state = $this->state($request);
-        $data = [
+        $data  = [
             'reference_number' => $state->referenceNumber,
             'first_names'      => $state->firstNames,
             'last_name'        => $state->lastName,
             'dob'              => $state->dob,
-            'postcode'         => $state->postcode
+            'postcode'         => $state->postcode,
         ];
 
         return new HtmlResponse($this->renderer->render(
@@ -120,14 +107,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             [
                 'user' => $this->user,
                 'form' => $this->form,
-                'data' => $data
+                'data' => $data,
             ]
         ));
     }
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -159,7 +145,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                 'user'       => $this->user,
                                 'donor'      => $lpaAddedData->getDonor(),
                                 'lpaType'    => $lpaAddedData->getCaseSubtype(),
-                                'actorToken' => $lpaAddedData->getLpaActorToken()
+                                'actorToken' => $lpaAddedData->getLpaActorToken(),
                             ]
                         )
                     );
@@ -167,7 +153,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case OlderLpaApiResponse::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
-                        [ 'user' => $this->user ]
+                        ['user' => $this->user]
                     ));
 
                 case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
@@ -188,7 +174,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             [
                                 'user'    => $this->user,
                                 'dueDate' => $activationKeyDueDate,
-                                'form'    => $form
+                                'form'    => $form,
                             ]
                         )
                     );
@@ -211,7 +197,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             [
                                 'user'    => $this->user,
                                 'dueDate' => $activationKeyDueDate,
-                                'form'    => $form
+                                'form'    => $form,
                             ]
                         )
                     );
@@ -228,7 +214,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                 'first_name'           => $state->firstNames,
                                 'last_name'            => $state->lastName,
                                 'dob'                  => $state->dob,
-                                'postcode'             => $state->postcode
+                                'postcode'             => $state->postcode,
                             ],
                         ));
                     }
@@ -242,7 +228,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'first_name'           => $state->firstNames,
                             'last_name'            => $state->lastName,
                             'dob'                  => $state->dob,
-                            'postcode'             => $state->postcode
+                            'postcode'             => $state->postcode,
                         ],
                     ));
 
@@ -254,7 +240,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                     $lpaData = $result->getData();
-                    $actor = $lpaData->getAttorney() === null ? $lpaData->getDonor() : $lpaData->getAttorney();
+                    $actor   = $lpaData->getAttorney() ?? $lpaData->getDonor();
 
                     return new HtmlResponse(
                         $this->renderer->render(
@@ -265,7 +251,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                                 'actor'     => $actor,
                                 'actorRole' => $lpaData->getAttorney() === null ? 'Donor' : 'Attorney',
                                 'donor'     => $lpaData->getDonor(),
-                                'lpaType'   => $lpaData->getCaseSubtype()
+                                'lpaType'   => $lpaData->getCaseSubtype(),
                             ]
                         )
                     );
