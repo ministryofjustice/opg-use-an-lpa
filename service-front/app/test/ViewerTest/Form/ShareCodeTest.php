@@ -22,7 +22,7 @@ class ShareCodeTest extends TestCase
     /**
      * @var array
      */
-    private $elements = [
+    private array $elements = [
         '__csrf'        => Csrf::class,
         'lpa_code'      => Text::class,
         'donor_surname' => Text::class,
@@ -53,9 +53,9 @@ class ShareCodeTest extends TestCase
             }
 
             $expectedElementClass = $this->elements[$formElementName];
-            $elementClass = get_class($formElement);
+            $elementClass         = $formElement::class;
 
-            if ($expectedElementClass != $elementClass) {
+            if ($expectedElementClass !== $elementClass) {
                 $this->fail(
                     sprintf(
                         'Class type expectation failure for "%s": Expecting %s but found %s',

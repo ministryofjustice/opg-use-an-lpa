@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\DonorDetails;
@@ -32,16 +34,16 @@ class DonorDetailsTest extends TestCase
     public function getFormElements(): array
     {
         return [
-            '__csrf'        => Csrf::class,
-            'donor_first_names'   => Text::class,
-            'donor_last_name'     => Text::class,
-            'donor_dob'           => Date::class
+            '__csrf'            => Csrf::class,
+            'donor_first_names' => Text::class,
+            'donor_last_name'   => Text::class,
+            'donor_dob'         => Date::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new DonorDetails($guardProphecy->reveal());
+        $this->form    = new DonorDetails($guardProphecy->reveal());
     }
 }

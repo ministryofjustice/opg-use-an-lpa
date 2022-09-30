@@ -8,18 +8,14 @@ use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
 use Common\Validator\PasswordValidator;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\StringToLower;
+use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
-use Laminas\Filter\StringTrim;
+use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class CreateAccount
- * @package Actor\Form
- */
 class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
     const FORM_NAME = 'create_account';
@@ -28,16 +24,13 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 
     /**
      * Error messages
+     *
      * @var array
      */
     protected array $messageTemplates = [
-        self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that email address. Please try a different one'
+        self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that email address. Please try a different one',
     ];
 
-    /**
-     * CreateAccount constructor.
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
@@ -63,15 +56,14 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'email'            => [
-                'required' => true,
-                'filters'  => [
+            'email'              => [
+                'required'   => true,
+                'filters'    => [
                     [
                         'name' => StringToLower::class,
                     ],
                     [
                         'name' => StringTrim::class,
-
                     ],
                 ],
                 'validators' => [
@@ -79,7 +71,7 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'messages'           => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
@@ -87,10 +79,10 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'                   => EmailAddressValidator::class,
                         'break_chain_on_failure' => true,
-                    ]
+                    ],
                 ],
             ],
-            'show_hide_password'    => [
+            'show_hide_password' => [
                 'required'   => true,
                 'validators' => [
                     [
@@ -117,16 +109,16 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                     ],
                 ],
             ],
-            'terms'            => [
+            'terms'              => [
                 'required'      => true,
                 'error_message' => 'You must accept the terms of use to create an account',
                 'validators'    => [
                     [
-                        'name'    => Identical::class,
+                        'name'                   => Identical::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
-                            'token' => '1',
-                            'literal' => true,
+                        'options'                => [
+                            'token'    => '1',
+                            'literal'  => true,
                             'messages' => [
                                 Identical::NOT_SAME => 'You must accept the terms of use to create an account',
                             ],

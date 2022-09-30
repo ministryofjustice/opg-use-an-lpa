@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Service\Session;
 
 use Mezzio\Session\SessionInterface;
@@ -8,6 +10,7 @@ class RemoveAccessForAllSessionValues
 {
     /**
      * Cleans the session values removing any post check answers session values, also removes LPA reference number
+     *
      * @param SessionInterface $session the users session
      */
     public function cleanAccessForAllSessionValues(SessionInterface $session): void

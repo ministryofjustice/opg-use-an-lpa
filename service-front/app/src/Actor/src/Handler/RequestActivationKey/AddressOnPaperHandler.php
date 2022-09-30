@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Actor\Form\RequestActivationKey\ActorRole;
 use Actor\Form\RequestActivationKey\AddressOnPaper;
 use Actor\Workflow\RequestActivationKey;
 use Common\Workflow\StateNotInitialisedException;
@@ -14,18 +13,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActorRoleHandler
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
 {
     private AddressOnPaper $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new AddressOnPaper($this->getCsrfGuard($request));
@@ -40,16 +33,15 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/address-on-paper',
             [
-                'user'  => $this->user,
-                'form'  => $this->form,
-                'back' => $this->lastPage($this->state($request))
+                'user' => $this->user,
+                'form' => $this->form,
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -68,7 +60,7 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/address-on-paper', [
             'user' => $this->user,
             'form' => $this->form,
-            'back' => $this->lastPage($this->state($request))
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

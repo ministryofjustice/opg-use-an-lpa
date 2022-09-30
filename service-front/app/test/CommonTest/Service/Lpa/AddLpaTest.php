@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa;
 
+use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
@@ -14,45 +17,37 @@ use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use ArrayObject;
 use RuntimeException;
 
 /**
- * Class AddLpaTest
- *
  * @property array $data
  * @property AddLpa $addLpa
  * @property array $lpaArrayData
  * @property ArrayObject $lpaParsedData
- *
- * @package CommonTest\Service\Lpa
  * @coversDefaultClass \Common\Service\Lpa\AddLpa
  */
 class AddLpaTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var \Prophecy\Prophecy\ObjectProphecy|ApiClient */
-    private $apiClientProphecy;
-    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaData */
-    private $parseLpaDataProphecy;
-    /** @var \Prophecy\Prophecy\ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
-    /** @var \Prophecy\Prophecy\ObjectProphecy|ParseLpaAlreadyAddedResponse */
-    private $parseAlreadyAddedProphecy;
+    private ObjectProphecy|ApiClient $apiClientProphecy;
+    private ObjectProphecy|ParseLpaData $parseLpaDataProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private ObjectProphecy|ParseLpaAlreadyAddedResponse $parseAlreadyAddedProphecy;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy = $this->prophesize(ApiClient::class);
-        $this->parseLpaDataProphecy = $this->prophesize(ParseLpaData::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->apiClientProphecy         = $this->prophesize(ApiClient::class);
+        $this->parseLpaDataProphecy      = $this->prophesize(ParseLpaData::class);
+        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
         $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
 
         $this->data = [
-            'uid' => '700000000321',
+            'uid'        => '700000000321',
             'actor-code' => '4UAL33PEQNAY',
-            'dob' => '1980-11-07'
+            'dob'        => '1980-11-07',
         ];
 
         $this->apiClientProphecy->setUserTokenHeader('12-1-1-1-1234')->shouldBeCalled();
@@ -78,23 +73,23 @@ class AddLpaTest extends TestCase
 
         $this->lpaParsedData = new ArrayObject(
             [
-                'lpa' => $lpa,
-                'actor' => $actor
+                'lpa'   => $lpa,
+                'actor' => $actor,
             ]
         );
 
         $this->lpaArrayData = [
-            'lpa' => [
-                'id' => 1111,
-                'uId' => $this->data['uid']
+            'lpa'   => [
+                'id'  => 1111,
+                'uId' => $this->data['uid'],
             ],
             'actor' => [
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => 25,
+                    'id'  => 25,
                     'uId' => '700000000997',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -106,8 +101,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willReturn($this->lpaArrayData);
 
@@ -131,13 +126,13 @@ class AddLpaTest extends TestCase
     {
         $response = [
             'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'lpaActorToken' => 'wxyz-4321'
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => 'wxyz-4321',
         ];
 
         $this->apiClientProphecy
@@ -145,8 +140,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willThrow(
                 new ApiException(
@@ -191,8 +186,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willThrow(
                 new ApiException(
@@ -226,8 +221,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willThrow(
                 new ApiException(
@@ -261,8 +256,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willThrow(
                 new ApiException(
@@ -290,8 +285,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willThrow(
                 new ApiException(
@@ -324,8 +319,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/confirm',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willReturn($this->lpaArrayData);
 
@@ -347,8 +342,8 @@ class AddLpaTest extends TestCase
                 '/v1/add-lpa/confirm',
                 [
                     'actor-code' => $this->data['actor-code'],
-                    'uid' => $this->data['uid'],
-                    'dob' => $this->data['dob']
+                    'uid'        => $this->data['uid'],
+                    'dob'        => $this->data['dob'],
                 ]
             )->willReturn($this->lpaArrayData);
 

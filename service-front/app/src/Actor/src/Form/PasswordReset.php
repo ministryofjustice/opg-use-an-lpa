@@ -5,23 +5,16 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Common\Validator\EmailAddressValidator;
 use Common\Validator\PasswordValidator;
-use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Filter\StringToLower;
 use Laminas\InputFilter\InputFilterProviderInterface;
-use Laminas\Validator\Identical;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class PasswordReset extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = "password-reset";
+    const FORM_NAME = 'password-reset';
 
-    /**
-     * PasswordReset constructor.
-     * @param CsrfGuardInterface $guard
-     */
     public function __construct(CsrfGuardInterface $guard)
     {
         parent::__construct(self::FORM_NAME, $guard);
@@ -34,7 +27,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
 
     /**
      * Should return an array specification compatible with
-     * {@link Laminas\InputFilter\Factory::createInputFilter()}.
+     * {@link \Laminas\InputFilter\Factory::createInputFilter()}.
      *
      * @return array
      * @codeCoverageIgnore
@@ -42,7 +35,7 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'password'         => [
+            'password' => [
                 'required'   => true,
                 'validators' => [
                     [

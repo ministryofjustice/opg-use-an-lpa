@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestContactDetails;
@@ -41,6 +43,6 @@ class RequestContactDetailsTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestContactDetails($guardProphecy->reveal());
+        $this->form    = new RequestContactDetails($guardProphecy->reveal());
     }
 }

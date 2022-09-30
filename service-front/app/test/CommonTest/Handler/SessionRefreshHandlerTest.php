@@ -24,7 +24,7 @@ class SessionRefreshHandlerTest extends TestCase
         $handler = new SessionRefreshHandler();
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode($response->getBody()->getContents(), true);
+        $json     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 

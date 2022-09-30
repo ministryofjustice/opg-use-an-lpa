@@ -12,34 +12,25 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ContactUsPageHandler
- * @package Common\Handler
  * @codeCoverageIgnore
  */
 class ContactUsPageHandler extends AbstractHandler
 {
-    private UrlValidityCheckService $urlValidityCheckService;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService
+        private UrlValidityCheckService $urlValidityCheckService,
     ) {
         parent::__construct($renderer, $urlHelper);
-        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $refererHeader = $request->getHeaders()['referer'][0] ?? null;
 
         $referer = $this->urlValidityCheckService->setValidReferrer($refererHeader);
         return new HtmlResponse($this->renderer->render('common::contact-us', [
-            'referer' => $referer
+            'referer' => $referer,
         ]));
     }
 }

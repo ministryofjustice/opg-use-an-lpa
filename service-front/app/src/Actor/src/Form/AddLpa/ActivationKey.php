@@ -13,20 +13,10 @@ use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class LpaAdd
- *
- * @package Actor\Form
- */
 class ActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'lpa_add_activation_key';
 
-    /**
-     * LpaAdd constructor.
-     *
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
@@ -47,45 +37,45 @@ class ActivationKey extends AbstractForm implements InputFilterProviderInterface
     {
         return [
             'activation_key' => [
-                'filters' => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => ActorViewerCodeFilter::class],
                 ],
                 'validators' => [
                     [
-                        'name' => NotEmpty::class,
+                        'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
+                        'options'                => [
                             'message' => 'Enter your activation key',
                         ],
                     ],
                     [
-                        'name' => Regex::class,
+                        'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
-                            'pattern' => "/^(?![Cc][[:alnum:]]{12,}).*$/",
+                        'options'                => [
+                            'pattern' => '/^(?![Cc][[:alnum:]]{12,}).*$/',
                             'message' => 'The activation key you entered is too long. '
                                 . 'Check that you only entered the 12 letters and numbers that follow the C-',
                         ],
                     ],
                     [
-                        'name' => StringLength::class,
+                        'name'                   => StringLength::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
+                        'options'                => [
                             'encoding' => 'UTF-8',
-                            'min' => 12,
-                            'max' => 12,
+                            'min'      => 12,
+                            'max'      => 12,
                             'messages' => [
-                                StringLength::TOO_LONG => 'The activation key you entered is too long',
+                                StringLength::TOO_LONG  => 'The activation key you entered is too long',
                                 StringLength::TOO_SHORT => 'The activation key you entered is too short',
                             ],
                         ],
                     ],
                     [
-                        'name' => Regex::class,
+                        'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
-                        'options' => [
-                            'pattern' => "/^[[:alnum:]]{12}$/",
+                        'options'                => [
+                            'pattern' => '/^[[:alnum:]]{12}$/',
                             'message' => 'Enter an activation key in the correct format',
                         ],
                     ],

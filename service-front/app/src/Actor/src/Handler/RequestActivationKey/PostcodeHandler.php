@@ -13,9 +13,6 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class RequestActivationKeyHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
@@ -33,7 +30,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
         if (($postcode = $this->state($request)->postcode) !== null) {
             $this->form->setData(
                 [
-                    'postcode' => $postcode
+                    'postcode' => $postcode,
                 ]
             );
         }
@@ -44,7 +41,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->lastPage($this->state($request))
+                    'back' => $this->lastPage($this->state($request)),
                 ]
             )
         );
@@ -69,7 +66,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
                 [
                     'user' => $this->user,
                     'form' => $this->form->prepare(),
-                    'back' => $this->lastPage($this->state($request))
+                    'back' => $this->lastPage($this->state($request)),
                 ]
             )
         );

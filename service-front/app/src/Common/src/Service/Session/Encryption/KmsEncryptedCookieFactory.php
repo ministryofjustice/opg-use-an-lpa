@@ -18,7 +18,7 @@ class KmsEncryptedCookieFactory
                 'openssl',
                 [
                     'algo' => 'aes',
-                    'mode' => 'gcm'
+                    'mode' => 'gcm',
                 ]
             )->setBinaryOutput(true)
         );

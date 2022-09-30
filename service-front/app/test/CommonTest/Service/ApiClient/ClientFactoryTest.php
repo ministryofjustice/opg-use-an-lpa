@@ -14,11 +14,7 @@ use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
- * Class ClientFactoryTest
- *
  * @coversDefaultClass \Common\Service\ApiClient\ClientFactory
- *
- * @package CommonTest\Service\ApiClient
  */
 class ClientFactoryTest extends TestCase
 {
@@ -79,11 +75,11 @@ class ClientFactoryTest extends TestCase
     {
         return [
             [
-                []
+                [],
             ],
             [
                 ['api' => []],
-            ]
+            ],
         ];
     }
 }

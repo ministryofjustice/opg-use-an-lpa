@@ -15,20 +15,10 @@ use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class LpaAdd
- *
- * @package Actor\Form
- */
 class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'lpa_add_reference_number';
 
-    /**
-     * LpaAdd constructor.
-     *
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);

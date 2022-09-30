@@ -10,11 +10,7 @@ use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 /**
- * Class ClientFactory
- *
  * Builds a Guzzle Client instance configured with appropriate settings
- *
- * @package Common\Service\ApiClient\Guzzle
  */
 class GuzzleClientFactory
 {
@@ -32,8 +28,8 @@ class GuzzleClientFactory
 
         return GuzzleClient::createWithConfig(
             [
-                'base_url' => $config['api']['uri'],
-                'http_errors' => false
+                'base_url'    => $config['api']['uri'],
+                'http_errors' => false,
             ]
         );
     }

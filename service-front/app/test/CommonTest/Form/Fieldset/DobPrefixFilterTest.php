@@ -9,9 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class DobPrefixFilterTest extends TestCase
 {
-    /**
-     * @var DatePrefixFilter
-     */
     private DatePrefixFilter $filter;
 
     public function setUp(): void
@@ -28,56 +25,56 @@ class DobPrefixFilterTest extends TestCase
         $this->assertEquals($formattedDate, $dob);
     }
 
-    public function validFormatProvider() : array
+    public function validFormatProvider(): array
     {
         return [
             [
                 [
-                    'day' => '1',
+                    'day'   => '1',
                     'month' => '10',
-                    'year' => '1980',
+                    'year'  => '1980',
                 ],
                 [
-                    'day' => '01',
+                    'day'   => '01',
                     'month' => '10',
-                    'year' => '1980',
-                ]
+                    'year'  => '1980',
+                ],
             ],
             [
                 [
-                    'day' => '11',
+                    'day'   => '11',
                     'month' => '8',
-                    'year' => '1980',
+                    'year'  => '1980',
                 ],
                 [
-                    'day' => '11',
+                    'day'   => '11',
                     'month' => '08',
-                    'year' => '1980',
-                ]
+                    'year'  => '1980',
+                ],
             ],
             [
                 [
-                    'day' => '1',
+                    'day'   => '1',
                     'month' => '1',
-                    'year' => '1980',
+                    'year'  => '1980',
                 ],
                 [
-                    'day' => '01',
+                    'day'   => '01',
                     'month' => '01',
-                    'year' => '1980',
-                ]
+                    'year'  => '1980',
+                ],
             ],
             [
                 [
-                    'day' => '11',
+                    'day'   => '11',
                     'month' => '10',
-                    'year' => '1980',
+                    'year'  => '1980',
                 ],
                 [
-                    'day' => '11',
+                    'day'   => '11',
                     'month' => '10',
-                    'year' => '1980',
-                ]
+                    'year'  => '1980',
+                ],
             ],
         ];
     }

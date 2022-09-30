@@ -13,33 +13,24 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class RequestActivationKeyInfoHandler
- * @package Actor\Handler\RequestActivationKey
  * @codeCoverageIgnore
  */
 class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAware
 {
-    use User;
     use SessionTrait;
-
-    private FeatureEnabled $featureEnabled;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        FeatureEnabled $featureEnabled
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->featureEnabled = $featureEnabled;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);

@@ -10,16 +10,12 @@ use InvalidArgumentException;
 
 class ParseOlderLpaMatchResponse
 {
-    /** @var LpaFactory */
-    private LpaFactory $lpaFactory;
-
     /**
      * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
      */
-    public function __construct(LpaFactory $lpaFactory)
+    public function __construct(private LpaFactory $lpaFactory)
     {
-        $this->lpaFactory = $lpaFactory;
     }
 
     public function __invoke(array $data): OlderLpaMatchResponse

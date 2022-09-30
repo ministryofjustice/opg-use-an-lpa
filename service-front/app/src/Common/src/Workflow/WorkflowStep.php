@@ -10,7 +10,6 @@ interface WorkflowStep
 {
     /**
      * @param ServerRequestInterface $request
-     *
      * @return WorkflowState The workflow state object associated with this step
      * @throws StateNotInitialisedException
      */
@@ -18,7 +17,6 @@ interface WorkflowStep
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return bool True if the user has the prerequisite workflow state items for this part of the workflow
      * @throws StateNotInitialisedException
      */
@@ -26,14 +24,12 @@ interface WorkflowStep
 
     /**
      * @param WorkflowState $state
-     *
      * @return string The route name of the next page in the workflow
      */
     public function nextPage(WorkflowState $state): string;
 
     /**
      * @param WorkflowState $state
-     *
      * @return string The route name of the previous page in the workflow
      */
     public function lastPage(WorkflowState $state): string;

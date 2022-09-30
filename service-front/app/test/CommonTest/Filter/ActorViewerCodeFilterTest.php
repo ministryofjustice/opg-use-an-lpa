@@ -42,7 +42,7 @@ class ActorViewerCodeFilterTest extends TestCase
             ['C abcd 1234 efgh', 'ABCD1234EFGH'],
             ['C   abcd   1234   efgh', 'ABCD1234EFGH'],
             ['C - ABCD - 1234 - EFGH', 'ABCD1234EFGH'],
-            ['c--ABCD--1234--EFGH', 'ABCD1234EFGH']
+            ['c--ABCD--1234--EFGH', 'ABCD1234EFGH'],
         ];
     }
 }

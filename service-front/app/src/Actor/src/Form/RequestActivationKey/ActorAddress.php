@@ -16,6 +16,7 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
 
     /**
      * DonorDetails constructor
+     *
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)
@@ -52,15 +53,15 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
 
         $this->add(
             [
-                'name'       => 'actor_address_check_radio',
-                'type'       => 'Radio',
-                'options'    => [
+                'name'    => 'actor_address_check_radio',
+                'type'    => 'Radio',
+                'options' => [
                     'value_options' => [
-                        'Yes' => 'Yes',
-                        'No'  => 'No',
-                        'Not sure'  => 'Not sure'
-                    ]
-                ]
+                        'Yes'      => 'Yes',
+                        'No'       => 'No',
+                        'Not sure' => 'Not sure',
+                    ],
+                ],
             ]
         );
     }
@@ -68,7 +69,7 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'actor_address_1'    => [
+            'actor_address_1'           => [
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
@@ -77,18 +78,18 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => NotEmpty::class,
                         'options' => [
-                            'message'  => 'Enter your address',
+                            'message' => 'Enter your address',
                         ],
                     ],
-                ]
+                ],
             ],
-            'actor_address_2'    => [
-                'required'   => false,
-                'filters'    => [
+            'actor_address_2'           => [
+                'required' => false,
+                'filters'  => [
                     ['name' => StringTrim::class],
                 ],
             ],
-            'actor_address_town' => [
+            'actor_address_town'        => [
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
@@ -97,26 +98,26 @@ class ActorAddress extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => NotEmpty::class,
                         'options' => [
-                            'message'  => 'Enter your town or city',
+                            'message' => 'Enter your town or city',
                         ],
                     ],
-                ]
+                ],
             ],
-            'actor_address_county' => [
-                'required'   => false,
-                'filters'    => [
+            'actor_address_county'      => [
+                'required' => false,
+                'filters'  => [
                     ['name' => StringTrim::class],
                 ],
             ],
             'actor_address_check_radio' => [
-                'required' => true,
+                'required'   => true,
                 'validators' => [
                     [
-                        'name' => NotEmpty::class,
+                        'name'    => NotEmpty::class,
                         'options' => [
                             'messages' => [
-                                NotEmpty::IS_EMPTY =>
-                                    'Select whether this is the same address as your address on the paper LPA',
+                                NotEmpty::IS_EMPTY
+                                    => 'Select whether this is the same address as your address on the paper LPA',
                             ],
                         ],
                     ],

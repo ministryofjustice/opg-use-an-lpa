@@ -9,19 +9,18 @@ use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\View\Twig\LpaExtension;
 use DateTime;
+use Locale;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
 
 class LpaExtensionTest extends TestCase
 {
     /** @test */
-    public function it_returns_an_array_of_exported_twig_functions()
+    public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $extension = new LpaExtension();
 
         $functions = $extension->getFunctions();
-
-        $this->assertTrue(is_array($functions));
 
         $expectedFunctions = [
             'actor_address'                   => 'actorAddress',
@@ -54,7 +53,7 @@ class LpaExtensionTest extends TestCase
      * @test
      * @dataProvider addressDataProvider
      */
-    public function it_concatenates_an_address_array_into_a_comma_separated_string($addressLines, $expected)
+    public function it_concatenates_an_address_array_into_a_comma_separated_string($addressLines, $expected): void
     {
         $extension = new LpaExtension();
 
@@ -98,7 +97,7 @@ class LpaExtensionTest extends TestCase
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
                 ],
-                'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD'
+                'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD',
             ],
             [
                 [
@@ -109,7 +108,7 @@ class LpaExtensionTest extends TestCase
                     'county'       => 'Some County5',
                     'postcode'     => 'AB1 2CQ',
                 ],
-                'Some House1, Some Place2, Somewhere3, Some Town4, Some County5, AB1 2CQ'
+                'Some House1, Some Place2, Somewhere3, Some Town4, Some County5, AB1 2CQ',
             ],
             [
                 [
@@ -119,7 +118,7 @@ class LpaExtensionTest extends TestCase
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
                 ],
-                'Some House, Somewhere, Some Town, Some County, AB1 2CD'
+                'Some House, Somewhere, Some Town, Some County, AB1 2CD',
             ],
             [
                 [
@@ -130,15 +129,15 @@ class LpaExtensionTest extends TestCase
                     'postcode'     => 'AB1 2CD',
                     'ignoreField'  => 'This value won\'t show',
                 ],
-                'Some House, Somewhere, Some Town, Some County, AB1 2CD'
+                'Some House, Somewhere, Some Town, Some County, AB1 2CD',
             ],
             [
                 null,
-                ''
+                '',
             ],
             [
                 [],
-                ''
+                '',
             ],
         ];
     }
@@ -179,16 +178,16 @@ class LpaExtensionTest extends TestCase
                     'firstname'  => 'Jack',
                     'surname'    => 'Allen',
                 ],
-                'Mr Jack Allen'
+                'Mr Jack Allen',
             ],
             [
                 [
-                    'salutation' => 'Mr',
-                    'firstname'  => 'Jack',
+                    'salutation'  => 'Mr',
+                    'firstname'   => 'Jack',
                     'middlenames' => 'Oliver',
-                    'surname'    => 'Allen',
+                    'surname'     => 'Allen',
                 ],
-                'Mr Jack Oliver Allen'
+                'Mr Jack Oliver Allen',
             ],
             [
                 [
@@ -196,11 +195,11 @@ class LpaExtensionTest extends TestCase
                     'firstname'  => 'Someone',
                     'surname'    => 'Taylor',
                 ],
-                'Mrs Someone Taylor'
+                'Mrs Someone Taylor',
             ],
             [
                 [],
-                ''
+                '',
             ],
         ];
     }
@@ -214,13 +213,13 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         // retain the current locale
-        $originalLocale = \Locale::getDefault();
-        \Locale::setDefault($locale);
+        $originalLocale = Locale::getDefault();
+        Locale::setDefault($locale);
 
         $dateString = $extension->lpaDate($date);
 
         // restore the locale setting
-        \Locale::setDefault($originalLocale);
+        Locale::setDefault($originalLocale);
 
         $this->assertEquals($expected, $dateString);
     }
@@ -241,7 +240,7 @@ class LpaExtensionTest extends TestCase
             [
                 'today',
                 'en_GB',
-                (new DateTime('now'))->format('j F Y')
+                (new DateTime('now'))->format('j F Y'),
             ],
             [
                 'not-a-date',
@@ -252,7 +251,7 @@ class LpaExtensionTest extends TestCase
                 null,
                 'en_GB',
                 '',
-            ]
+            ],
         ];
     }
 
@@ -265,13 +264,13 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         // retain the current locale
-        $originalLocale = \Locale::getDefault();
-        \Locale::setDefault($locale);
+        $originalLocale = Locale::getDefault();
+        Locale::setDefault($locale);
 
         $dateString = $extension->formatDate($date);
 
         // restore the locale setting
-        \Locale::setDefault($originalLocale);
+        Locale::setDefault($originalLocale);
 
         $this->assertEquals($expected, $dateString);
     }
@@ -298,7 +297,7 @@ class LpaExtensionTest extends TestCase
                 null,
                 'en_GB',
                 '',
-            ]
+            ],
         ];
     }
 
@@ -318,22 +317,22 @@ class LpaExtensionTest extends TestCase
 
     public function cancelledDateProvider()
     {
-        $shareCodeWithCancelledStatus = [
-            'SiriusUid'        => '1234',
-            'Added'            => '2021-01-05 12:34:56',
-            'Expires'          => '2022-01-05 12:34:56',
-            'Cancelled'        => '2022-01-06 12:34:56',
-            'UserLpaActor'     => '111',
-            'Organisation'     => 'TestOrg',
-            'ViewerCode'       => 'XYZ321ABC987'
+        $shareCodeWithCancelledStatus    = [
+            'SiriusUid'    => '1234',
+            'Added'        => '2021-01-05 12:34:56',
+            'Expires'      => '2022-01-05 12:34:56',
+            'Cancelled'    => '2022-01-06 12:34:56',
+            'UserLpaActor' => '111',
+            'Organisation' => 'TestOrg',
+            'ViewerCode'   => 'XYZ321ABC987',
         ];
         $shareCodeWithoutCancelledStatus = [
-            'SiriusUid'        => '1234',
-            'Added'            => '2021-01-05 12:34:56',
-            'Expires'          => '2022-01-07 12:34:56',
-            'UserLpaActor'     => '111',
-            'Organisation'     => 'TestOrg',
-            'ViewerCode'       => 'XYZ321ABC987'
+            'SiriusUid'    => '1234',
+            'Added'        => '2021-01-05 12:34:56',
+            'Expires'      => '2022-01-07 12:34:56',
+            'UserLpaActor' => '111',
+            'Organisation' => 'TestOrg',
+            'ViewerCode'   => 'XYZ321ABC987',
         ];
         return [
             [
@@ -363,8 +362,8 @@ class LpaExtensionTest extends TestCase
 
     public function expiryDateProvider()
     {
-        $future = (new DateTime('+1 week'))->format('Y-m-d');
-        $past = (new DateTime('-1 week'))->format('Y-m-d');
+        $future     = (new DateTime('+1 week'))->format('Y-m-d');
+        $past       = (new DateTime('-1 week'))->format('Y-m-d');
         $endOfToday = (new DateTime('now'))->setTime(23, 59, 59)->format('Y-m-d');
 
         return [
@@ -383,7 +382,7 @@ class LpaExtensionTest extends TestCase
             [
                 '',
                 null,
-            ]
+            ],
         ];
     }
 
@@ -423,7 +422,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_an_LPA_is_cancelled()
     {
         $extension = new LpaExtension();
-        $lpa = new Lpa();
+        $lpa       = new Lpa();
 
         $lpa->setCancellationDate(new DateTime('-1 days'));
         $lpa->setStatus('Cancelled');
@@ -436,7 +435,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_an_LPA_is_not_cancelled()
     {
         $extension = new LpaExtension();
-        $lpa = new Lpa();
+        $lpa       = new Lpa();
 
         $lpa->setStatus('Registered');
         $status = $extension->isLPACancelled($lpa);
@@ -448,7 +447,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_an_LPA_is_revoked()
     {
         $extension = new LpaExtension();
-        $lpa = new Lpa();
+        $lpa       = new Lpa();
 
         $lpa->setStatus('Revoked');
         $status = $extension->isLPACancelled($lpa);
@@ -461,8 +460,8 @@ class LpaExtensionTest extends TestCase
     {
         $extension = new LpaExtension();
 
-        $donorNameWithDob = "Harry Potter 1980-07-31";
-        $donorName = $extension->donorNameWithDobRemoved($donorNameWithDob);
+        $donorNameWithDob = 'Harry Potter 1980-07-31';
+        $donorName        = $extension->donorNameWithDobRemoved($donorNameWithDob);
 
         $this->assertEquals('Harry Potter', $donorName);
     }
@@ -471,7 +470,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
     {
         $extension = new LpaExtension();
-        $lpa = new Lpa();
+        $lpa       = new Lpa();
 
         $lpa->setLpaDonorSignatureDate(new DateTime('2015-01-01'));
         $status = $extension->isDonorSignatureDateOld($lpa);

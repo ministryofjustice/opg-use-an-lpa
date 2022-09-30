@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Actor\Handler\AddLpa;
 
 use Actor\Form\AddLpa\LpaReferenceNumber;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\User;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -14,9 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class LpaAddHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class LpaReferenceNumberHandler extends AbstractAddLpaHandler
@@ -25,7 +20,6 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -39,7 +33,7 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
     {
         $this->form->setData(
             [
-                'reference_number' => $this->state($request)->lpaReferenceNumber
+                'reference_number' => $this->state($request)->lpaReferenceNumber,
             ]
         );
 

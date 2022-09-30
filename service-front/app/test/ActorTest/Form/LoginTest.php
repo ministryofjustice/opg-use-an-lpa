@@ -19,8 +19,7 @@ class LoginTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var Login */
-    protected $form;
+    protected Login $form;
 
     public function getForm(): AbstractForm
     {
@@ -35,15 +34,15 @@ class LoginTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'email'            => Email::class,
-            'password'         => Password::class,
+            '__csrf'   => Csrf::class,
+            'email'    => Email::class,
+            'password' => Password::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new Login($guardProphecy->reveal());
+        $this->form    = new Login($guardProphecy->reveal());
     }
 }

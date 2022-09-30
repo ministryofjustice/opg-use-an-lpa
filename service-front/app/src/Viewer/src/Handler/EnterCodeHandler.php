@@ -8,24 +8,16 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\ShareCode;
-use Laminas\Diactoros\Response\HtmlResponse;
 
-/**
- * Class EnterCodeHandler
- * @package Viewer\Handler
- */
 class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use SessionTrait;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $session = $this->getSession($request, 'session');
@@ -46,7 +38,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
         }
 
         return new HtmlResponse($this->renderer->render('viewer::enter-code', [
-            'form' => $form
+            'form' => $form,
         ]));
     }
 }

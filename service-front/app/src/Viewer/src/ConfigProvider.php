@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Viewer;
 
+use Common\Handler\Factory\HealthcheckHandlerFactory;
+use Common\Handler\HealthcheckHandler;
+use Viewer\Handler\CheckCodeHandler;
+use Viewer\Handler\Factory\CheckCodeHandlerFactory;
+use Viewer\Handler\Factory\ViewerSessionCheckHandlerFactory;
+use Viewer\Handler\ViewerSessionCheckHandler;
+
 /**
  * The configuration provider for the App module
  *
  * @see https://docs.zendframework.com/zend-component-installer/
+ *
  * @codeCoverageIgnore
  */
 class ConfigProvider
@@ -17,7 +25,6 @@ class ConfigProvider
      *
      * To add a bit of a structure, each section is defined in a separate
      * method which returns an array with its configuration.
-     *
      */
     public function __invoke(): array
     {
@@ -33,11 +40,11 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'factories'  => [
+            'factories' => [
                 // Handlers
-                \Common\Handler\HealthcheckHandler::class => \Common\Handler\Factory\HealthcheckHandlerFactory::class,
-                \Viewer\Handler\CheckCodeHandler::class => \Viewer\Handler\Factory\CheckCodeHandlerFactory::class,
-                \Viewer\Handler\ViewerSessionCheckHandler::class => \Viewer\Handler\Factory\ViewerSessionCheckHandlerFactory::class
+                HealthcheckHandler::class        => HealthcheckHandlerFactory::class,
+                CheckCodeHandler::class          => CheckCodeHandlerFactory::class,
+                ViewerSessionCheckHandler::class => ViewerSessionCheckHandlerFactory::class,
             ],
         ];
     }

@@ -12,23 +12,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ViewerAccessibilityStatementHandler
- * @package Viewer\Handler
  * @codeCoverageIgnore
  */
 class ViewerAccessibilityStatementHandler extends AbstractHandler
 {
     public function __construct(
         TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         parent::__construct($renderer, $urlHelper);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse($this->renderer->render('viewer::viewer-accessibility-statement'));

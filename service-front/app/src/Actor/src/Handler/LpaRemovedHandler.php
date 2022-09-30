@@ -7,17 +7,14 @@ namespace Actor\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class LpaRemovedHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class LpaRemovedHandler extends AbstractHandler implements UserAware
@@ -27,7 +24,7 @@ class LpaRemovedHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -44,7 +41,7 @@ class LpaRemovedHandler extends AbstractHandler implements UserAware
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::lpa-removed',[
+        return new HtmlResponse($this->renderer->render('actor::lpa-removed', [
             'user' => $user,
             ]));
     }

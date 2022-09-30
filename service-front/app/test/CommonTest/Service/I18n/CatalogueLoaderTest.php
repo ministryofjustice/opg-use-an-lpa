@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
+use ArrayObject;
 use Common\Service\I18n\CatalogueLoader;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Translations;
@@ -25,7 +26,7 @@ class CatalogueLoaderTest extends TestCase
         $finderProphecy->in('/')->willReturn($finderProphecy->reveal());
         $finderProphecy
             ->getIterator()
-            ->willReturn(new \ArrayObject($files));
+            ->willReturn(new ArrayObject($files));
 
         return $finderProphecy;
     }

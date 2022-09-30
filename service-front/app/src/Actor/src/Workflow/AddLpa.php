@@ -33,8 +33,8 @@ class AddLpa implements WorkflowState
      */
     public function reset(): void
     {
-        $this->activationKey = null;
-        $this->dateOfBirth = null;
+        $this->activationKey      = null;
+        $this->dateOfBirth        = null;
         $this->lpaReferenceNumber = null;
     }
 }
