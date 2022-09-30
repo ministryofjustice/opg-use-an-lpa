@@ -60,6 +60,10 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Discern the intended locale
     $app->pipe(SetLocaleMiddleware::class);
 
+    // Register the routing middleware in the middleware pipeline.
+    // This middleware registers the Mezzio\Router\RouteResult request attribute.
+    $app->pipe(RouteMiddleware::class);
+
     // Load session from request and save it on the return
     $app->pipe(SessionMiddleware::class);
 
@@ -75,10 +79,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(StatePersistenceMiddleware::class);
 
     $app->pipe(FlashMessageMiddleware::class);
-
-    // Register the routing middleware in the middleware pipeline.
-    // This middleware registers the Mezzio\Router\RouteResult request attribute.
-    $app->pipe(RouteMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method
