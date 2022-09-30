@@ -74,7 +74,7 @@ class RequestActivationKey implements WorkflowState
      * Reset the workflow to the start.
      *
      * identical information.
-     * @codeCoverageIgnore
+     *
      */
     public function reset(): void
     {
