@@ -7510,12 +7510,3 @@ msgstr "A ydych yn siŵr eich bod am ddileu’r LPA hon?"
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:22
 msgid "LPA type:"
 msgstr "LPA math:"
-
-#~ msgid ""
-#~ "Check that the organisation will accept an online summary of the<abbr title="
-#~ "\"lasting power of attorney\">LPA</abbr> and how they want to receive the "
-#~ "access code you make for them."
-#~ msgstr ""
-#~ "Gwiriwch a fydd y sefydliad yn derbyn crynodeb ar-lein o’r <abbr title="
-#~ "\"atwrneiaethau arhosol\">LPA</abbr> a sut maen nhw eisiau cael y cod "
-#~ "mynediad y byddwch yn ei greu iddynt."
