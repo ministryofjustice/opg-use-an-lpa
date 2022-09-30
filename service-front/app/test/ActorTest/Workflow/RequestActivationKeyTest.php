@@ -117,11 +117,8 @@ class RequestActivationKeyTest extends TestCase
                 case 'firstNames':
                 case 'lastName':
                 case 'postcode':
-                    Assert::assertEquals($value, $sut->$key);
-                    break;
                 case 'dob':
-                    Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
-                    Assert::assertEquals($value, $sut->$key->format('c'));
+                    Assert::assertNull($sut->$key);
                     break;
                 case 'actorType':
                     Assert::assertNull($sut->getActorRole());

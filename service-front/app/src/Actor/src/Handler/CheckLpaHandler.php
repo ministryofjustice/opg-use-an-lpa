@@ -130,6 +130,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         switch ($result->getResponse()) {
             case AddLpaApiResponse::ADD_LPA_ALREADY_ADDED:
                 $lpaAddedData = $result->getData();
+
+                $this->state($request)->reset();
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::lpa-already-added',
@@ -145,6 +147,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             case AddLpaApiResponse::ADD_LPA_NOT_FOUND:
                 $this->rateLimitService->
                 limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+
+                $this->state($request)->reset();
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::lpa-not-found',
@@ -235,6 +239,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     );
                     $flash->flash(self::ADD_LPA_FLASH_MSG, $message);
 
+                    $this->state($request)->reset();
                     return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
                 case AddLpaApiResponse::ADD_LPA_FAILURE:
                     break;
