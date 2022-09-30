@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
-use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use DateTime;
@@ -18,7 +17,7 @@ use Twig\TwigFunction;
 class LpaExtension extends AbstractExtension
 {
     /**
-     * @return array
+     * @return array<TwigFunction>
      */
     public function getFunctions(): array
     {
@@ -45,14 +44,15 @@ class LpaExtension extends AbstractExtension
         } elseif ($typeShorthand === 'pf') {
             return 'Property and finance';
         }
+
+        return '';
     }
     
     public function actorAddress(CaseActor $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
-        if (is_array($actor->getAddresses()) && count($actor->getAddresses()) > 0) {
+        if (count($actor->getAddresses()) > 0) {
 
-            /** @var Address $address */
             $address = $actor->getAddresses()[0];
 
             return implode(', ', array_filter([
@@ -77,8 +77,7 @@ class LpaExtension extends AbstractExtension
     public function donorNameWithDobRemoved(string $donorNameAndDob): string
     {
         preg_match('/((\D*)(\d+[-]\d+[-]\d+))/', $donorNameAndDob, $matches);
-        $donorName = trim($matches[2]);
-        return $donorName;
+        return trim($matches[2]);
     }
 
     /**
@@ -106,9 +105,10 @@ class LpaExtension extends AbstractExtension
      * or as a Datetime and converts it for displaying on pages
      *
      * @param DateTimeInterface|string|null $date
+     *
      * @return string
      */
-    public function lpaDate($date): string
+    public function lpaDate(DateTimeInterface|string|null $date): string
     {
         return $this->formatDate($date, 'Y-m-d');
     }
@@ -118,10 +118,11 @@ class LpaExtension extends AbstractExtension
      * and converts it for displaying on pages
      *
      * @param DateTimeInterface|string|null $date
-     * @param string $parseFormat A PHP Datetime format string that should be used to parse $date
+     * @param string                        $parseFormat A PHP Datetime format string that should be used to parse $date
+     *
      * @return string
      */
-    public function formatDate($date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
+    public function formatDate(DateTimeInterface|string|null $date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
     {
         if (!is_null($date)) {
             if ($date === 'today') {
@@ -131,7 +132,7 @@ class LpaExtension extends AbstractExtension
             }
 
             if ($date instanceof DateTimeInterface) {
-                $formatter = $this->getDateFormatter(Locale::getDefault(), null);
+                $formatter = $this->getDateFormatter(Locale::getDefault());
                 $formatter->setTimeZone($date->getTimezone());
                 return $formatter->format($date);
             }
@@ -143,7 +144,8 @@ class LpaExtension extends AbstractExtension
     /**
      * Calculates the days remaining until the viewer code expires
      *
-     * @param string $expiryDate
+     * @param string|null $expiryDate
+     *
      * @return string
      * @throws Exception
      */
@@ -163,14 +165,14 @@ class LpaExtension extends AbstractExtension
     /**
      * Checks whether the code has been cancelled
      *
-     * @param string|null $expiryDate
+     * @param array $code
+     *
      * @return bool|null
-     * @throws Exception
      */
-    public function isCodeCancelled(?array $code): ?bool
+    public function isCodeCancelled(array $code): ?bool
     {
         if (array_key_exists('Cancelled', $code)) {
-            return $cancelledStatus = true;
+            return true;
         }
 
         return null;
@@ -185,7 +187,8 @@ class LpaExtension extends AbstractExtension
      */
     public function hasCodeExpired(?string $expiryDate): ?bool
     {
-        if (!empty($expiryDate && $date = new DateTime($expiryDate))) {
+        if ($expiryDate) {
+            $date = new DateTime($expiryDate);
             return $date <= (new DateTime('now'))->setTime(23, 59, 59);
         }
 
@@ -195,10 +198,10 @@ class LpaExtension extends AbstractExtension
     /**
      * Create a hyphenated viewer code
      *
-     * @param string|null $viewerCode
+     * @param string $viewerCode
      * @return string
      */
-    public function formatViewerCode(?string $viewerCode): string
+    public function formatViewerCode(string $viewerCode): string
     {
         $viewerCodeParts = str_split($viewerCode, 4);
         array_unshift($viewerCodeParts, 'V');
@@ -207,7 +210,8 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param array $lpa
+     * @param Lpa $lpa
+     *
      * @return bool
      */
     public function isLPACancelled(Lpa $lpa): bool
@@ -225,23 +229,16 @@ class LpaExtension extends AbstractExtension
      * Creates an international date formatter that is capable of doing locale based dates.
      *
      * @param string $locale
-     * @param string|null $pattern Optional pattern to format the date as
      * @return IntlDateFormatter
      */
-    private function getDateFormatter(string $locale, ?string $pattern): IntlDateFormatter
+    private function getDateFormatter(string $locale): IntlDateFormatter
     {
-        $formatter = IntlDateFormatter::create(
+        return IntlDateFormatter::create(
             $locale,
             IntlDateFormatter::LONG,
             IntlDateFormatter::NONE,
             'Europe/London',
             IntlDateFormatter::GREGORIAN
         );
-
-        if ($pattern !== null) {
-            $formatter->setPattern($pattern);
-        }
-
-        return $formatter;
     }
 }
