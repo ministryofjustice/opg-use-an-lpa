@@ -23,22 +23,17 @@ class ForcedPasswordResetMiddleware implements MiddlewareInterface, CsrfGuardAwa
     use CsrfGuard;
     use User;
 
-    private TemplateRendererInterface $renderer;
-    private UrlHelper $urlHelper;
-
     public function __construct(
-        TemplateRendererInterface $renderer,
+        private TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper,
+        private UrlHelper $urlHelper,
     ) {
-        $this->renderer = $renderer;
         $this->setAuthenticator($authenticator);
-        $this->urlHelper = $urlHelper;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $user = $this->getUser($request);
+        $user  = $this->getUser($request);
         $email = $user->getDetail('Email');
 
         if (!$user->getDetail('NeedsReset')) {

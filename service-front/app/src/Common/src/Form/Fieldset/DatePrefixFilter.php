@@ -8,7 +8,6 @@ use Laminas\Filter\AbstractFilter;
 
 class DatePrefixFilter extends AbstractFilter
 {
-
     /**
      * Defined by Laminas\Filter\FilterInterface
      *
@@ -20,7 +19,7 @@ class DatePrefixFilter extends AbstractFilter
     public function filter($value): array
     {
         if (
-            $value != null && !empty($value['day']) && !empty($value['month'])
+            $value !== null && !empty($value['day']) && !empty($value['month'])
             && ($value['day'] <= 9 || $value['month'] <= 9)
         ) {
             return $this->formatWithLeadingZero($value);
@@ -29,14 +28,13 @@ class DatePrefixFilter extends AbstractFilter
     }
 
     /**
-     *
      * @param array $value
      * @param array $formattedDate
      * @return array
      */
     protected function formatWithLeadingZero($value): array
     {
-        $value['day'] = str_pad($value['day'], 2, '0', STR_PAD_LEFT);
+        $value['day']   = str_pad($value['day'], 2, '0', STR_PAD_LEFT);
         $value['month'] = str_pad($value['month'], 2, '0', STR_PAD_LEFT);
 
         return $value;

@@ -8,10 +8,6 @@ use Common\Service\Session\Encryption\EncryptInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
-/**
- * Class EncryptedCookiePersistenceFactory
- * @package Common\Service\Session
- */
 class EncryptedCookiePersistenceFactory
 {
     public function __invoke(ContainerInterface $container): EncryptedCookiePersistence

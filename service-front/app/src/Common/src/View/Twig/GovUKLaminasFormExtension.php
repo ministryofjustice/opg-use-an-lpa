@@ -7,18 +7,18 @@ namespace Common\View\Twig;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email as CustomEmail;
 use Common\Form\Fieldset\Date;
-use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Exception;
 use Laminas\Form\Element;
 use Laminas\Form\ElementInterface;
 use Laminas\Form\FieldsetInterface;
-use Exception;
+use Throwable;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-/**
- * Class GovUKLaminasFormExtension
- * @package Common\View\Twig
- */
 class GovUKLaminasFormExtension extends AbstractExtension
 {
     /**
@@ -26,7 +26,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
      *
      * @var array
      */
-    private $blockMappings = [
+    private array $blockMappings = [
         Element\Checkbox::class => 'form_input_checkbox',
         Element\Csrf::class     => 'form_input_hidden',
         Element\Hidden::class   => 'form_input_hidden',
@@ -36,7 +36,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Radio::class    => 'form_input_radio',
         Element\Textarea::class => 'form_input_area',
         //  Fieldsets
-        Date::class             => 'form_fieldset_date',
+        Date::class => 'form_fieldset_date',
     ];
 
     /**
@@ -56,10 +56,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
      * @param Environment $twigEnv
      * @param AbstractForm $form
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
     public function formOpen(Environment $twigEnv, AbstractForm $form)
     {
@@ -73,10 +70,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
     /**
      * @param Environment $twigEnv
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
     public function formClose(Environment $twigEnv)
     {
@@ -91,12 +85,9 @@ class GovUKLaminasFormExtension extends AbstractExtension
      * @param array $options
      * @param FieldsetInterface|null $fieldset
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
-    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = [], FieldsetInterface $fieldset = null): string
+    public function formElement(Environment $twigEnv, ElementInterface $element, array $options = [], ?FieldsetInterface $fieldset = null): string
     {
         $elementBlock = $this->getBlockForElement($element);
 
@@ -110,7 +101,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
             $elementBlock,
             array_merge(
                 [
-                    'element' => $element,
+                    'element'  => $element,
                     'fieldset' => $fieldset,
                 ],
                 $options
@@ -123,10 +114,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
      * @param FieldsetInterface $fieldset
      * @param array $options
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
     public function formFieldset(Environment $twigEnv, FieldsetInterface $fieldset, array $options = []): string
     {
@@ -156,7 +144,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
      */
     private function getBlockForElement(ElementInterface $element): string
     {
-        $eleClass = get_class($element);
+        $eleClass = $element::class;
 
         //  Check for a direct mapping
         if (isset($this->blockMappings[$eleClass])) {

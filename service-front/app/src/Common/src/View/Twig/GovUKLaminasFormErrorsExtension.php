@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
-use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use Laminas\Form\ElementInterface;
 use Laminas\Form\FormInterface;
+use Throwable;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 class GovUKLaminasFormErrorsExtension extends AbstractExtension
 {
@@ -29,7 +33,7 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
                 'govuk_error_summary',
                 [$this, 'errorSummary'],
                 ['needs_environment' => true, 'is_safe' => ['html']]
-            )
+            ),
         ];
     }
 
@@ -37,18 +41,15 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
      * @param Environment $twigEnv
      * @param ElementInterface $element
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
     public function errorMessage(Environment $twigEnv, ElementInterface $element): string
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
         return $template->renderBlock('error_message', [
-            'element'     => $element,
-            'errors' => $this->flattenMessages($element->getMessages()),
+            'element' => $element,
+            'errors'  => $this->flattenMessages($element->getMessages()),
         ]);
     }
 
@@ -56,17 +57,14 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
      * @param Environment $twigEnv
      * @param FormInterface $form
      * @return string
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
     public function errorSummary(Environment $twigEnv, FormInterface $form): string
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
         // if the form has no overall errors it'll be an empty array
-        $errors = $form->getMessages();
+        $errors       = $form->getMessages();
         $invalidInput = $form->getInputFilter()->getInvalidInput();
 
         //  Flatten each set of messages for each input

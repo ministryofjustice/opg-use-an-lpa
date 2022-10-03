@@ -15,24 +15,21 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = "change-email";
+    public const FORM_NAME = 'change-email';
 
     public const NEW_EMAIL_NOT_DIFFERENT = 'NewEmailNotDifferent';
-    public const INVALID_PASSWORD = 'invalidPassword';
+    public const INVALID_PASSWORD        = 'invalidPassword';
 
     /**
      * Error messages
+     *
      * @var array
      */
     protected array $messageTemplates = [
-        self::INVALID_PASSWORD => 'The password you entered is incorrect',
+        self::INVALID_PASSWORD        => 'The password you entered is incorrect',
         self::NEW_EMAIL_NOT_DIFFERENT => 'The new email address you entered is the same as your current email address. They must be different.',
     ];
 
-    /**
-     * ChangeEmail constructor.
-     * @param CsrfGuardInterface $guard
-     */
     public function __construct(CsrfGuardInterface $guard)
     {
         parent::__construct(self::FORM_NAME, $guard);
@@ -54,7 +51,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
         return [
             'new_email_address' => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     [
                         'name' => StringToLower::class,
                     ],
@@ -80,7 +77,7 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
                                 EmailAddressValidator::INVALID => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
-                    ]
+                    ],
                 ],
             ],
             'current_password'  => [

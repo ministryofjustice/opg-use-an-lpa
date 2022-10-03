@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Common\Service\Log;
 
 /**
- * Class Event
- *
  * Contains definitions for event codes to be attached to logged messages where needed.
  * Generally only needed when doing work on the logs that require filtering of specific logging entries.
- *
- * @package Common\Service\Log
  */
 class EventCodes
 {

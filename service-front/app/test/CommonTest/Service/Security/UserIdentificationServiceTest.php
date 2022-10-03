@@ -62,34 +62,34 @@ class UserIdentificationServiceTest extends TestCase
         return [
             'the realistic bare minimum unique thing to track' => [
                 ['x-forwarded-for'],
-                '597967406e7009e87bfa34db426f795fc9248dd12af70290385fded6e46443a9'
+                '597967406e7009e87bfa34db426f795fc9248dd12af70290385fded6e46443a9',
             ],
-            'the complete set' => [
+            'the complete set'                                 => [
                 [
                     'accept',
                     'accept-encoding',
                     'accept-language',
                     'user-agent',
-                    'x-forwarded-for'
+                    'x-forwarded-for',
                 ],
-                '92e7dd7306dbdd412c8d6b626b7c808f0c3fc692c9297aedf047ae918b11be58'
+                '92e7dd7306dbdd412c8d6b626b7c808f0c3fc692c9297aedf047ae918b11be58',
             ],
-            'not a complete set' => [
+            'not a complete set'                               => [
                 [
                     'accept',
                     'user-agent',
-                    'x-forwarded-for'
+                    'x-forwarded-for',
                 ],
-                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61'
+                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61',
             ],
-            'only use specified headers' => [
+            'only use specified headers'                       => [
                 [
                     'accept',
                     'user-agent',
                     'not-a-real-header',
-                    'x-forwarded-for'
+                    'x-forwarded-for',
                 ],
-                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61'
+                '833dccbeb6f8d0fea36924bafa0e3eaa8c4d565a36ed8742321e39bc5981ab61',
             ],
         ];
     }

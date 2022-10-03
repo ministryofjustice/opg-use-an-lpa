@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
+use Actor\Form\RemoveLpa as RemoveLpaForm;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -21,47 +23,35 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Actor\Form\RemoveLpa as RemoveLpaForm;
-use Common\Service\Lpa\LpaService;
 
 /**
- * Class RemoveLpaHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
-    use User;
     use CsrfGuard;
+    use User;
 
     public const REMOVE_LPA_FLASH_MSG = 'remove_lpa_flash_msg';
 
-    private RemoveLpa $removeLpa;
-    private TranslatorInterface $translator;
     private RemoveLpaForm $form;
     private ?UserInterface $user;
-    private LpaService $lpaService;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        RemoveLpa $removeLpa,
-        TranslatorInterface $translator,
-        LpaService $lpaService
+        private RemoveLpa $removeLpa,
+        private TranslatorInterface $translator,
+        private LpaService $lpaService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->removeLpa = $removeLpa;
-        $this->translator = $translator;
-        $this->lpaService = $lpaService;
     }
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws InvalidRequestException
      */
@@ -80,7 +70,6 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws InvalidRequestException
      */
@@ -92,32 +81,27 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $user     = $this->getUser($request);
+        $identity = !is_null($user) ? $user->getIdentity() : null;
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
-            'user' => $this->user,
+            'user'       => $this->user,
             'actorToken' => $actorLpaToken,
-            'form' => $this->form,
-            'lpa' => $lpaData->lpa
+            'form'       => $this->form,
+            'lpa'        => $lpaData->lpa,
         ]));
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $formData = $this->form->getData();
+            $formData      = $this->form->getData();
             $actorLpaToken = $formData['actor_lpa_token'];
 
             $removedLpaData = ($this->removeLpa)($this->user->getIdentity(), $actorLpaToken);
@@ -125,19 +109,19 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             /** @var FlashMessagesInterface $flash */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
-            $hw = $this->translator->translate('health and welfare', [], null, 'flashMessage');
+            $hw  = $this->translator->translate('health and welfare', [], null, 'flashMessage');
             $pfa = $this->translator->translate('property and finance', [], null, 'flashMessage');
 
             //data to be used in flash message
-            $donor = $removedLpaData['lpa']->getDonor()->getFirstname()
+            $donor   = $removedLpaData['lpa']->getDonor()->getFirstname()
                 . ' ' . $removedLpaData['lpa']->getDonor()->getSurname();
             $lpaType = $removedLpaData['lpa']->getCaseSubtype() === 'hw' ? $hw : $pfa;
 
             $message = $this->translator->translate(
                 "You've removed %donor%'s %lpaType% LPA",
                 [
-                    '%donor%' => $donor,
-                    '%lpaType%' => $lpaType
+                    '%donor%'   => $donor,
+                    '%lpaType%' => $lpaType,
                 ],
                 null,
                 'flashMessage'

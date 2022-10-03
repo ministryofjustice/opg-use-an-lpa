@@ -9,9 +9,6 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * Class FeatureEnabledTest
- *
- * @package CommonTest\Service\Features
  * @coversDefaultClass \Common\Service\Features\FeatureEnabled
  */
 class FeatureEnabledTest extends TestCase
@@ -23,7 +20,7 @@ class FeatureEnabledTest extends TestCase
     public function it_correctly_returns_feature_value_from_configuration(): void
     {
         $flags = [
-            'feature_name' => true
+            'feature_name' => true,
         ];
 
         $sut = new FeatureEnabled($flags);
@@ -40,7 +37,7 @@ class FeatureEnabledTest extends TestCase
     public function it_throws_an_exception_when_not_finding_a_feature_value(): void
     {
         $flags = [
-            'feature_name' => true
+            'feature_name' => true,
         ];
 
         $sut = new FeatureEnabled($flags);
@@ -56,7 +53,7 @@ class FeatureEnabledTest extends TestCase
     public function it_throws_an_exception_when_not_finding_badly_configured_feature_value(): void
     {
         $flags = [
-            'feature_name' => 'Yes'
+            'feature_name' => 'Yes',
         ];
 
         $sut = new FeatureEnabled($flags);

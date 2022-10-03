@@ -2,8 +2,18 @@
 
 declare(strict_types=1);
 
+use Common\Middleware\I18n\SetLocaleMiddleware;
+use Common\Middleware\Logging\RequestTracingMiddleware;
+use Common\Middleware\Security\RateLimitMiddleware;
+use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
+use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
+use Common\Middleware\Session\SessionTimeoutMiddleware;
+use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
+use Mezzio\Csrf\CsrfMiddleware;
+use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
@@ -13,16 +23,18 @@ use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
+use Mezzio\Session\SessionMiddleware;
 use Psr\Container\ContainerInterface;
 
 /**
  * Setup middleware pipeline:
  */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+
+return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandler::class);
-    $app->pipe(\Common\Middleware\Session\SessionTimeoutMiddleware::class);
+    $app->pipe(SessionTimeoutMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request:
@@ -43,26 +55,26 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
-    $app->pipe(\Common\Middleware\Logging\RequestTracingMiddleware::class);
+    $app->pipe(RequestTracingMiddleware::class);
 
     // Discern the intended locale
-    $app->pipe(\Common\Middleware\I18n\SetLocaleMiddleware::class);
+    $app->pipe(SetLocaleMiddleware::class);
 
     // Load session from request and save it on the return
-    $app->pipe(\Mezzio\Session\SessionMiddleware::class);
+    $app->pipe(SessionMiddleware::class);
 
-    $app->pipe(\Common\Middleware\Security\UserIdentificationMiddleware::class);
-    $app->pipe(\Common\Middleware\Security\RateLimitMiddleware::class);
+    $app->pipe(UserIdentificationMiddleware::class);
+    $app->pipe(RateLimitMiddleware::class);
 
     // Clean out the session if expired
-    $app->pipe(\Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware::class);
-    $app->pipe(\Common\Middleware\Session\SessionExpiredRedirectMiddleware::class);
+    $app->pipe(SessionExpiredAttributeAllowlistMiddleware::class);
+    $app->pipe(SessionExpiredRedirectMiddleware::class);
 
-    $app->pipe(\Mezzio\Csrf\CsrfMiddleware::class);
+    $app->pipe(CsrfMiddleware::class);
 
-    $app->pipe(\Common\Middleware\Workflow\StatePersistenceMiddleware::class);
+    $app->pipe(StatePersistenceMiddleware::class);
 
-    $app->pipe(\Mezzio\Flash\FlashMessageMiddleware::class);
+    $app->pipe(FlashMessageMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.

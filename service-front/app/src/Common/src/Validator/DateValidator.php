@@ -8,10 +8,6 @@ use DateTime;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Regex;
 
-/**
- * Class DateValidator
- * @package Common\Validator
- */
 class DateValidator extends AbstractValidator
 {
     public const DATE_INVALID_FORMAT = 'dateInvalidFormat';
@@ -24,13 +20,13 @@ class DateValidator extends AbstractValidator
     /**
      * @var string[]
      */
-    protected $messageTemplates = [
+    protected array $messageTemplates = [
         self::DATE_INVALID_FORMAT => 'Date value must be provided in an array',
         self::DATE_EMPTY          => 'Enter a date',
         self::DATE_INVALID        => 'Enter a real date',
-        self::DAY_INCOMPLETE         => 'Date must include a day',
-        self::MONTH_INCOMPLETE       => 'Date must include a month',
-        self::YEAR_INCOMPLETE        => 'Date must include a year',
+        self::DAY_INCOMPLETE      => 'Date must include a day',
+        self::MONTH_INCOMPLETE    => 'Date must include a month',
+        self::YEAR_INCOMPLETE     => 'Date must include a year',
     ];
 
     /**
@@ -96,19 +92,19 @@ class DateValidator extends AbstractValidator
             && is_numeric($year) && $year > 0
         ) {
             //  Validate the individual values in isolation
-            $dayValidator = new Regex('/\b(0?[1-9]|[12][0-9]|3[01])\b/');
+            $dayValidator   = new Regex('/\b(0?[1-9]|[12][0-9]|3[01])\b/');
             $monthValidator = new Regex('/\b(0?[1-9]|1[0-2])\b/');
-            $yearValidator = new Regex('/\b([0-9]?[0-9]?[0-9]?[0-9])\b/');
+            $yearValidator  = new Regex('/\b([0-9]?[0-9]?[0-9]?[0-9])\b/');
 
             if ($dayValidator->isValid($day) && $monthValidator->isValid($month) && $yearValidator->isValid($year)) {
                 //  Check that the values combined are a possible date
-                $format = 'Y-n-j';
+                $format        = 'Y-n-j';
                 $formattedDate = sprintf('%s-%s-%s', (int) $year, (int) $month, (int) $day);
 
-                $date = DateTime::createFromFormat($format, $formattedDate);
+                $date        = DateTime::createFromFormat($format, $formattedDate);
                 $derivedDate = $date->format($format);
 
-                if ($formattedDate == $derivedDate) {
+                if ($formattedDate === $derivedDate) {
                     return $date;
                 }
             }

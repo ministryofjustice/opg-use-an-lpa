@@ -14,17 +14,13 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class DonorDetails
- *
- * @package Actor\RequestActivationKey\Form
- */
 class DonorDetails extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'donor_details';
 
     /**
      * DonorDetails constructor
+     *
      * @param CsrfGuardInterface $csrfGuard
      */
     public function __construct(CsrfGuardInterface $csrfGuard)
@@ -53,49 +49,49 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
         return [
             'donor_first_names' => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'message'  => 'Enter the donor\'s first names',
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => 'Enter the donor\'s first names',
                         ],
                     ],
-                ]
+                ],
             ],
-            'donor_last_name' => [
+            'donor_last_name'   => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
-                        'options'                => [
-                            'message'  => 'Enter the donor\'s last name',
+                        'name'    => NotEmpty::class,
+                        'options' => [
+                            'message' => 'Enter the donor\'s last name',
                         ],
                     ],
-                ]
+                ],
             ],
-            'donor_dob' => [
+            'donor_dob'         => [
                 'required'   => true,
-                'filters'  => [
+                'filters'    => [
                     ['name' => DateTrimFilter::class],
                     ['name' => DatePrefixFilter::class],
                 ],
                 'validators' => [
                     [
-                        'name' => DobValidator::class,
-                        'options'                => [
+                        'name'    => DobValidator::class,
+                        'options' => [
                             'messages' => [
                                 DobValidator::DATE_EMPTY => 'Enter the donor\'s date of birth',
-                            ]
+                            ],
                         ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

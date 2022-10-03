@@ -19,24 +19,18 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
 {
     public const FORM_NAME = 'password-reset-request';
 
-    /**
-     * PasswordReset constructor.
-     * @param CsrfGuardInterface $guard
-     */
     public function __construct(CsrfGuardInterface $guard)
     {
         parent::__construct(self::FORM_NAME, $guard);
 
         $this->add(new Email('email'));
-
         $this->add(new Email('email_confirm'));
-
         $this->add(new Hidden('forced'));
     }
 
     /**
      * Should return an array specification compatible with
-     * {@link Laminas\InputFilter\Factory::createInputFilter()}.
+     * {@link \Laminas\InputFilter\Factory::createInputFilter()}.
      *
      * @return array
      * @codeCoverageIgnore
@@ -44,9 +38,9 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
     public function getInputFilterSpecification(): array
     {
         return [
-            'email'            => [
-                'required' => true,
-                'filters'  => [
+            'email'         => [
+                'required'   => true,
+                'filters'    => [
                     [
                         'name' => StringToLower::class,
                     ],
@@ -59,9 +53,9 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'messages'           => [
-                                NotEmpty::IS_EMPTY =>
-                                    'Enter an email address in the correct format, like name@example.com',
+                            'messages' => [
+                                NotEmpty::IS_EMPTY
+                                    => 'Enter an email address in the correct format, like name@example.com',
                             ],
                         ],
                     ],
@@ -71,9 +65,9 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                     ],
                 ],
             ],
-            'email_confirm'    => [
-                'required' => true,
-                'filters'  => [
+            'email_confirm' => [
+                'required'   => true,
+                'filters'    => [
                     [
                         'name' => StringTrim::class,
                     ],
@@ -83,7 +77,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'messages'           => [
+                            'messages' => [
                                 NotEmpty::IS_EMPTY => 'Confirm your email address',
                             ],
                         ],
@@ -100,7 +94,7 @@ class PasswordResetRequest extends AbstractForm implements InputFilterProviderIn
                     ],
                 ],
             ],
-            'forced'           => [
+            'forced'        => [
                 'required' => false,
             ],
         ];

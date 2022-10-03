@@ -6,6 +6,7 @@ namespace CommonTest\Service\Container;
 
 use Common\Service\Container\PhpDiModifiableContainer;
 use DI\Container;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -19,7 +20,7 @@ class PhpDiModifiableContainerTest extends TestCase
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $di = new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 

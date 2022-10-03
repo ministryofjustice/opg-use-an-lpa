@@ -8,6 +8,7 @@ use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\StylesService;
+use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -17,7 +18,6 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
 
 class PdfServiceTest extends TestCase
@@ -55,7 +55,7 @@ class PdfServiceTest extends TestCase
         $rendererProphecy->render(
             'viewer::download-lpa',
             [
-                'lpa' => $lpa,
+                'lpa'       => $lpa,
                 'pdfStyles' => '',
             ]
         )->willReturn('<html></html>');
@@ -106,7 +106,7 @@ class PdfServiceTest extends TestCase
         $rendererProphecy->render(
             'viewer::download-lpa',
             [
-                'lpa' => $lpa,
+                'lpa'       => $lpa,
                 'pdfStyles' => '',
             ]
         )->willReturn('<html></html>');
@@ -143,7 +143,7 @@ class PdfServiceTest extends TestCase
         $rendererProphecy->render(
             'viewer::download-lpa',
             [
-                'lpa' => $lpa,
+                'lpa'       => $lpa,
                 'pdfStyles' => '',
             ]
         )->willReturn('<html></html>');
@@ -180,7 +180,7 @@ class PdfServiceTest extends TestCase
         $rendererProphecy->render(
             'viewer::download-lpa',
             [
-                'lpa' => $lpa,
+                'lpa'       => $lpa,
                 'pdfStyles' => '',
             ]
         )->willReturn('<html></html>');

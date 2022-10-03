@@ -16,23 +16,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class AttorneyDetailsHandler
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
 {
-    use User;
     use CsrfGuard;
     use SessionTrait;
     use State;
+    use User;
 
     private AttorneyDetails $form;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new AttorneyDetails($this->getCsrfGuard($request));
@@ -43,14 +37,14 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
     {
         $data = [
             'attorney_first_names' => $this->state($request)->attorneyFirstNames,
-            'attorney_last_name' => $this->state($request)->attorneyLastName
+            'attorney_last_name'   => $this->state($request)->attorneyLastName,
         ];
 
         if (($dob = $this->state($request)->attorneyDob) !== null) {
             $data['attorney_dob'] = [
-                'day' => $dob->format('d'),
+                'day'   => $dob->format('d'),
                 'month' => $dob->format('m'),
-                'year' => $dob->format('Y'),
+                'year'  => $dob->format('Y'),
             ];
         }
 
@@ -61,7 +55,7 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -73,8 +67,8 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
             $postData = $this->form->getData();
 
             $this->state($request)->attorneyFirstNames = $postData['attorney_first_names'];
-            $this->state($request)->attorneyLastName = $postData['attorney_last_name'];
-            $this->state($request)->attorneyDob = (new DateTimeImmutable())->setDate(
+            $this->state($request)->attorneyLastName   = $postData['attorney_last_name'];
+            $this->state($request)->attorneyDob        = (new DateTimeImmutable())->setDate(
                 (int) $postData['attorney_dob']['year'],
                 (int) $postData['attorney_dob']['month'],
                 (int) $postData['attorney_dob']['day']
@@ -90,7 +84,7 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -99,16 +93,20 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
     {
         return parent::isMissingPrerequisite($request)
             || $this->state($request)->getActorRole() === null
-            || $this->state($request)->getActorRole() != 'donor';
+            || $this->state($request)->getActorRole() !== 'donor';
     }
 
     public function nextPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.contact-details';
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.contact-details';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state) ? 'lpa.add.check-details-and-consent' : 'lpa.add.actor-role';
+        return $this->hasFutureAnswersInState($state)
+            ? 'lpa.add.check-details-and-consent'
+            : 'lpa.add.actor-role';
     }
 }

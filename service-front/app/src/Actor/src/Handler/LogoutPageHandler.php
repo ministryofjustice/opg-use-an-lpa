@@ -21,32 +21,25 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class CreateAccountHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
 {
+    use Logger;
     use Session;
     use User;
-    use Logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authentication,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authentication);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
@@ -61,7 +54,7 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
         $this->getLogger()->info(
             'Account with Id {id} has logged out of the service',
             [
-                'id' => $user->getIdentity()
+                'id' => $user->getIdentity(),
             ]
         );
 

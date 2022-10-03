@@ -10,10 +10,6 @@ use NumberFormatter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-/**
- * Class OrdinalNumberExtension
- * @package Common\View\Twig
- */
 class OrdinalNumberExtension extends AbstractExtension
 {
     /**
@@ -49,7 +45,7 @@ class OrdinalNumberExtension extends AbstractExtension
     protected function getFormatter(string $locale): NumberFormatter
     {
         if ($locale === 'cy') {
-            $pattern = <<<EOT
+            $pattern   = <<<EOT
 %digits-ordinal:
 1: =#,##0=af;
 2: =#,##0=il;

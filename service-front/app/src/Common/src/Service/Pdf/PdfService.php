@@ -12,64 +12,24 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Http\Client\Exception\HttpException;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamInterface;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Log\LoggerInterface;
 
 class PdfService
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $apiBaseUri;
-
-    /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var TemplateRendererInterface
-     */
-    private $renderer;
-
-    /**
-     * @var StylesService
-     */
-    private $styles;
-
-    /**
-     * @var string
-     */
-    private $traceId;
-
     public function __construct(
-        TemplateRendererInterface $renderer,
-        ClientInterface $httpClient,
-        StylesService $styles,
-        LoggerInterface $logger,
-        string $apiBaseUri,
-        string $traceId
+        private TemplateRendererInterface $renderer,
+        private ClientInterface $httpClient,
+        private StylesService $styles,
+        private LoggerInterface $logger,
+        private string $apiBaseUri,
+        private string $traceId,
     ) {
-        $this->renderer = $renderer;
-        $this->httpClient = $httpClient;
-        $this->styles = $styles;
-        $this->logger = $logger;
-        $this->apiBaseUri = $apiBaseUri;
-        $this->traceId = $traceId;
     }
 
-    /**
-     * @param Lpa $lpa
-     * @return StreamInterface
-     */
     public function getLpaAsPdf(Lpa $lpa): StreamInterface
     {
         $renderedLpa = $this->renderLpaAsHtml($lpa);
@@ -77,16 +37,12 @@ class PdfService
         return $this->requestPdfFromService($renderedLpa);
     }
 
-    /**
-     * @param Lpa $lpa
-     * @return string
-     */
     private function renderLpaAsHtml(Lpa $lpa): string
     {
         return $this->renderer->render(
             'viewer::download-lpa',
             [
-                'lpa' => $lpa,
+                'lpa'       => $lpa,
                 'pdfStyles' => ($this->styles)(),
             ]
         );
@@ -117,7 +73,7 @@ class PdfService
                         'Successfully generated PDF and presented for download {code}',
                         [
                             'event_code' => EventCodes::DOWNLOAD_SUMMARY,
-                            'code' => $response->getStatusCode()
+                            'code'       => $response->getStatusCode(),
                         ]
                     );
 
@@ -126,13 +82,13 @@ class PdfService
                     throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
-            $response = ($ex instanceof HttpException) ? $ex->getResponse() : null;
+            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
 
             $this->logger->error(
                 'Failed to generate PDF from service {code} {response}',
                 [
-                    'code'      => $ex->getCode(),
-                    'response'  => $response
+                    'code'     => $ex->getCode(),
+                    'response' => $response,
                 ]
             );
 

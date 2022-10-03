@@ -27,45 +27,26 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class CreateAccountHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
 {
-    use User;
     use CsrfGuard;
     use Logger;
+    use User;
 
-    private RateLimitService $rateLimitService;
-
-    /**
-     * CreateAccountHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param AuthenticationInterface $authenticator
-     * @param LoggerInterface $logger
-     * @param RateLimitService $rateLimitService
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
         LoggerInterface $logger,
-        RateLimitService $rateLimitService
+        private RateLimitService $rateLimitService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->rateLimitService = $rateLimitService;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     * @throws \Http\Client\Exception|\Exception
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $form = new Login($this->getCsrfGuard($request));
@@ -82,8 +63,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 $this->getLogger()->notice('Login form validation failed.', $errors);
 
                 return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form' => $form,
-                    'flash' => $flash
+                    'form'  => $form,
+                    'flash' => $flash,
                 ]));
             }
 
@@ -101,18 +82,18 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                 $form->addErrorMessage(Login::NOT_FOUND);
 
                 return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form' => $form,
-                    'flash' => $flash
+                    'form'  => $form,
+                    'flash' => $flash,
                 ]));
             } catch (ApiException $e) {
                //401 denotes in this case that we hve not activated,
                // redirect to correct success page with correct data
                 if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
-                    $formValues = $form->getData();
+                    $formValues   = $form->getData();
                     $emailAddress = $formValues['email'];
 
                     return $this->redirectToRoute('create-account-success', [], [
-                       'email' => $emailAddress
+                       'email' => $emailAddress,
                     ]);
                 }
             }
@@ -128,7 +109,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         return new HtmlResponse($this->renderer->render('actor::login', [
             'form'  => $form,
-            'flash' => $flash
+            'flash' => $flash,
         ]));
     }
 }

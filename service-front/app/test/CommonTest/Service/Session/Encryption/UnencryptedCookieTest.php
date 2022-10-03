@@ -29,7 +29,7 @@ class UnencryptedCookieTest extends TestCase
     public function it_base64_encodes_an_array_of_data(): void
     {
         $data = [
-            'session' => 'data'
+            'session' => 'data',
         ];
 
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -59,7 +59,7 @@ class UnencryptedCookieTest extends TestCase
     public function it_decodes_base64_data_into_an_array(): void
     {
         $data = [
-            'session' => 'data'
+            'session' => 'data',
         ];
 
         $loggerProphecy = $this->prophesize(LoggerInterface::class);

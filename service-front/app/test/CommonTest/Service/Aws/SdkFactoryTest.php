@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Aws;
 
-use Common\Service\Aws\SdkFactory;
 use Aws\Sdk;
+use Common\Service\Aws\SdkFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class SdkFactoryTest extends TestCase
 {
@@ -18,7 +19,7 @@ class SdkFactoryTest extends TestCase
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing aws configuration');
 
         $containerProphecy

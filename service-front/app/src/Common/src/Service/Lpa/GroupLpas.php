@@ -7,12 +7,8 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 
 /**
- * Class GroupLpas
- *
  * Single action invokeable that groups incoming LPA array objects according to our criteria.
  * Groups LPAs by donor, separating incorrect matches by DoB
- *
- * @package Common\Service\Lpa
  */
 class GroupLpas
 {
@@ -20,7 +16,6 @@ class GroupLpas
      * Groups LPAs based on name and DoB
      *
      * @param ArrayObject $lpas
-     *
      * @return ArrayObject
      */
     public function __invoke(ArrayObject $lpas): ArrayObject
@@ -37,7 +32,7 @@ class GroupLpas
                         $lpa->lpa->getDonor()->getMiddlenames(),
                         $lpa->lpa->getDonor()->getSurname(),
                         // prevents different donors with same name from being grouped together
-                        $lpa->lpa->getDonor()->getDob() ? $lpa->lpa->getDonor()->getDob()->format('Y-m-d') : '0-0-0'
+                        $lpa->lpa->getDonor()->getDob() ? $lpa->lpa->getDonor()->getDob()->format('Y-m-d') : '0-0-0',
                     ]
                 )
             );

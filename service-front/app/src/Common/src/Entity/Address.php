@@ -6,32 +6,15 @@ namespace Common\Entity;
 
 class Address
 {
-    /** @var int */
-    protected $id;
-
-    /** @var string|null */
-    protected $town = null;
-
-    /** @var string|null */
-    protected $county = null;
-
-    /** @var string|null */
-    protected $postcode = null;
-
-    /** @var string|null */
-    protected $country = null;
-
-    /** @var string|null */
-    protected $type = null;
-
-    /** @var string|null */
-    protected $addressLine1 = null;
-
-    /** @var string|null */
-    protected $addressLine2 = null;
-
-    /** @var string|null */
-    protected $addressLine3 = null;
+    protected int $id;
+    protected ?string $town         = null;
+    protected ?string $county       = null;
+    protected ?string $postcode     = null;
+    protected ?string $country      = null;
+    protected ?string $type         = null;
+    protected ?string $addressLine1 = null;
+    protected ?string $addressLine2 = null;
+    protected ?string $addressLine3 = null;
 
     public function getId(): int
     {
