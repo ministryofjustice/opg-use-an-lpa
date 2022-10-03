@@ -34,14 +34,12 @@ class LpaExtensionTest extends TestCase
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
-            'lpa_type_full_name'              => 'lpaTypeFullName'
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
         //  Check each function
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
-            /** @var TwigFunction $function */
             $this->assertContains($function->getName(), array_keys($expectedFunctions));
 
             $functionCallable = $function->getCallable();
@@ -486,21 +484,5 @@ class LpaExtensionTest extends TestCase
         $status = $extension->isDonorSignatureDateOld($lpa);
 
         $this->assertEquals(false, $status);
-    }
-
-    /** @test */
-    public function it_converts_two_character_type_to_full_name(): void
-    {
-        $extension = new LpaExtension();
-
-        $healthAndWelfare = $extension->lpaTypeFullName('hw');
-        $this->assertEquals('Health and welfare', $healthAndWelfare);
-
-        $propertyAndFinance = $extension->lpaTypeFullName('pf');
-        $this->assertEquals('Property and finance', $propertyAndFinance);
-
-        $emptyString = $extension->lpaTypeFullName('AnythingElse');
-        $this->assertEquals('', $emptyString);
-
     }
 }
