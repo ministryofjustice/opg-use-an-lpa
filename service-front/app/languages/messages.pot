@@ -5017,10 +5017,6 @@ msgctxt "flashMessage"
 msgid "Password changed successfully"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:51
-msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once you've requested an activation key for an LPA, you'll always be able to use the LPA on this service."
-msgstr ""
-
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
 msgid "This is a new service, check that the organisation will accept an online summary of the<abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
 msgstr ""
