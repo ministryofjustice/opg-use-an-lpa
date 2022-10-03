@@ -19,8 +19,8 @@
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-l govuk-!-margin-top-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
-                    <span class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Which organisation do you want to give access to?{% endtrans %}</h1>
                 </div>
 
             </div>
@@ -35,26 +35,18 @@
                     {{ govuk_form_element(form.get('lpa_token')) }}
 
                     <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                                <h1 class="govuk-fieldset__heading">
-                                    {% trans %}Which organisation do you want to give access to?{% endtrans %}
-                                </h1>
-                            </legend>
-
                             {% if lpa.caseSubtype|lower == 'hw' %}
-                                <p class="govuk-body">{% trans %}The organisation could be a hospital, care home, or other health care provider.{% endtrans %}</p>
+                                {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' %}
                             {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                                <p class="govuk-body">{% trans %}The organisation could be a bank, energy provider, or another business.{% endtrans %}</p>
+                                {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' %}
                             {% endif %}
+
 
                             {{ govuk_form_element(form.get('org_name'), {
                                 'label': 'Organisation name' | trans,
-                                'hint': 'This is for your reference only' | trans,
-                                'attr' : {'class': 'govuk-!-width-three-quarters'}
+                                'hint':  hint | trans,
+                                'attr' : {'class': 'govuk-!-width-three-quarters', 'label_class': 'govuk-label--s govuk-!-margin-bottom-3'}
                             }) }}
-                        </fieldset>
                     </div>
 
                     {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
