@@ -40,7 +40,7 @@
         "cooperaj/better-twig-i18n": "^1.1",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
-        "laminas/laminas-cache": "^3.1.2",
+        "laminas/laminas-cache": "^3.6.0",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.0",
         "laminas/laminas-cache-storage-adapter-redis": "^2.0",
         "laminas/laminas-component-installer": "^2.1.1",
