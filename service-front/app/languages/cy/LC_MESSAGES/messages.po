@@ -7085,7 +7085,7 @@ msgid "Yes, it is the same as my address on the paper LPA"
 msgstr "Ydy, mae’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:69
-msgid "No, it is different than my address on the paper LPA"
+msgid "No, it is different to my address on the paper LPA"
 msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr atwrneiaeth arhosol bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:73

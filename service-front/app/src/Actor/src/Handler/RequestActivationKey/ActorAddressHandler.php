@@ -46,9 +46,10 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/actor-address',
             [
-                'user' => $this->user,
-                'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request)),
+                'user'      => $this->user,
+                'form'      => $this->form->prepare(),
+                'back'      => $this->lastPage($this->state($request)),
+                'postcode'  => $this->state($request)->postcode
             ]
         ));
     }
