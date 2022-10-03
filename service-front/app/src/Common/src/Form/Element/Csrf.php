@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Common\Form\Element;
 
-use Common\Validator\CsrfGuardValidator as CsrfValidator;
+use Common\Validator\CsrfGuardValidator;
 use Laminas\Form\Element\Csrf as LaminasCsrf;
 use Laminas\Validator\Csrf as LaminasCsrfValidator;
 
-/**
- * Class Csrf
- * @package Common\Form\Element
- */
 class Csrf extends LaminasCsrf
 {
     /**
@@ -24,7 +20,7 @@ class Csrf extends LaminasCsrf
         if (null === $this->csrfValidator) {
             $csrfOptions = $this->getCsrfValidatorOptions();
             $csrfOptions = array_merge($csrfOptions, ['name' => $this->getName()]);
-            $this->setCsrfValidator(new CsrfValidator($csrfOptions));
+            $this->setCsrfValidator(new CsrfGuardValidator($csrfOptions));
         }
         return $this->csrfValidator;
     }

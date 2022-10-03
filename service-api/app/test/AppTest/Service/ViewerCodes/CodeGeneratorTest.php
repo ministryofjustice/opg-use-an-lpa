@@ -7,7 +7,6 @@ namespace AppTest\Service\ViewerCodes;
 use PHPUnit\Framework\TestCase;
 use App\Service\ViewerCodes\CodeGenerator;
 
-
 class CodeGeneratorTest extends TestCase
 {
     public function test_constants()
@@ -18,7 +17,7 @@ class CodeGeneratorTest extends TestCase
          * Thus them appearing here.
          */
         $this->assertEquals(12, CodeGenerator::CODE_LENGTH);
-        $this->assertEquals('346789QWERTYUPADFGHJKLXCVBNM', CodeGenerator::ALLOWED_CHARACTERS);
+        $this->assertEquals('346789BCDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
     }
 
     /**
@@ -32,14 +31,13 @@ class CodeGeneratorTest extends TestCase
 
         // We are going to count the number of times each character is seen, thus we setup an array to do that in.
         $characterCount = [];
-        foreach($allowedCharArray as $char){
+        foreach ($allowedCharArray as $char) {
             $characterCount[$char] = 0;
         }
 
         //---
 
         for ($i = 0; $i < 50000; $i++) {    // We need a large data sample for the last test, thus 50,000.
-
             $code = CodeGenerator::generateCode();
 
             //---
@@ -59,7 +57,7 @@ class CodeGeneratorTest extends TestCase
             //---
 
             // Record each character used
-            foreach($usedCharsArray as $char){
+            foreach ($usedCharsArray as $char) {
                 $characterCount[$char]++;
             }
         }
@@ -67,7 +65,7 @@ class CodeGeneratorTest extends TestCase
         //---
 
         /*
-         * The following test works by looking at the difference between the code character seen least and most frequently.
+         * The following test works by looking at the difference between the least and most frequent code character.
          * Given a large enough data set, the difference between the two frequencies should converge on 1.0
          */
 
@@ -78,9 +76,11 @@ class CodeGeneratorTest extends TestCase
 
         $ratio = $highestFrequency / $lowestFrequency;
 
-        // We want teh value to be 1.0, within 1 decimal place.
+        // We want the value to be 1.0, within 1 decimal place.
         // e.g. 1.03 should pass. 1.09 should not.
-        $this->assertEquals(1, round($ratio, 1),
+        $this->assertEquals(
+            1,
+            round($ratio, 1),
             'There is an element of chance that this test might fail. Try re-running if nothing has changed.'
         );
     }

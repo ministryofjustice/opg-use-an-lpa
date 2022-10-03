@@ -10,6 +10,7 @@ use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class AccountContext
@@ -19,6 +20,7 @@ use GuzzleHttp\Psr7\Response;
  * @property string viewerCode
  * @property string donorSurname
  * @property array lpa
+ * @property string viewerCodeOrganisation
  * @property string lpaViewedBy
  */
 class ViewerContext implements Context
@@ -29,10 +31,11 @@ class ViewerContext implements Context
     /**
      * @Given I have been given access to an LPA via share code
      */
-    public function iHaveBeenGivenAccessToUseAnLPAViaShareCode()
+    public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
         $this->viewerCode = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
+        $this->viewerCodeOrganisation = 'santander';
         $this->lpaViewedBy = 'Santander';
 
         $this->lpa = json_decode(
@@ -44,7 +47,7 @@ class ViewerContext implements Context
     /**
      * @Given I have been given access to a cancelled LPA via share code
      */
-    public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode()
+    public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaShareCode();
         $this->lpa['status'] = 'Cancelled';
@@ -53,7 +56,7 @@ class ViewerContext implements Context
     /**
      * @Given I access the viewer service
      */
-    public function iAccessTheViewerService()
+    public function iAccessTheViewerService(): void
     {
         // Not used in this context
     }
@@ -61,7 +64,7 @@ class ViewerContext implements Context
     /**
      * @When I give a share code that's been cancelled
      */
-    public function iGiveAShareCodeThatHasBeenCancelled()
+    public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
         // ViewerCodes::get
@@ -82,8 +85,7 @@ class ViewerContext implements Context
         );
 
         // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
             '/v1/viewer-codes/summary',
@@ -97,18 +99,18 @@ class ViewerContext implements Context
     /**
      * @Then I can see a message the LPA has been cancelled
      */
-    public function iCanSeeAMessageTheLPAHasBeenCancelled()
+    public function iCanSeeAMessageTheLPAHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
-        assertEquals($lpaData['title'], 'Gone');
-        assertEquals($lpaData['details'], 'Share code cancelled');
+        Assert::assertEquals($lpaData['title'], 'Gone');
+        Assert::assertEquals($lpaData['details'], 'Share code cancelled');
     }
 
     /**
      * @When I give a valid LPA share code
      */
-    public function iGiveAValidLPAShareCode()
+    public function iGiveAValidLPAShareCode(): void
     {
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
@@ -118,10 +120,11 @@ class ViewerContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
-                            'Added'      => (new \DateTime('now'))->format('c'),
-                            'Expires'    => $lpaExpiry
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->viewerCodeOrganisation,
                         ]
                     )
                 ]
@@ -129,8 +132,7 @@ class ViewerContext implements Context
         );
 
         // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
             '/v1/viewer-codes/summary',
@@ -144,17 +146,17 @@ class ViewerContext implements Context
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('expires', $lpaData);
-        assertArrayHasKey('organisation', $lpaData);
-        assertArrayHasKey('lpa', $lpaData);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('expires', $lpaData);
+        Assert::assertArrayHasKey('organisation', $lpaData);
+        Assert::assertArrayHasKey('lpa', $lpaData);
 
-        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+        Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
 
         $lpaExpiry = (new \DateTime('+20 days'))->format('c');
 
@@ -164,10 +166,11 @@ class ViewerContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
-                            'Added'      => (new \DateTime('now'))->format('c'),
-                            'Expires'    => $lpaExpiry
+                            'ViewerCode'   => $this->viewerCode,
+                            'SiriusUid'    => $this->lpa['uId'],
+                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Expires'      => $lpaExpiry,
+                            'Organisation' => $this->viewerCodeOrganisation,
                         ]
                     )
                 ]
@@ -175,8 +178,7 @@ class ViewerContext implements Context
         );
 
         // Lpas::get
-        $this->apiFixtures->get('/v1/use-an-lpa/lpas/' . $this->lpa['uId'])
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // ViewerCodeActivity::recordSuccessfulLookupActivity
         $this->awsFixtures->append(new Result([]));
@@ -194,40 +196,40 @@ class ViewerContext implements Context
     /**
      * @Then I can see the full details of the valid LPA
      */
-    public function iCanSeeTheFullDetailsOfTheValidLPA()
+    public function iCanSeeTheFullDetailsOfTheValidLPA(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('expires', $lpaData);
-        assertArrayHasKey('organisation', $lpaData);
-        assertArrayHasKey('lpa', $lpaData);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('expires', $lpaData);
+        Assert::assertArrayHasKey('organisation', $lpaData);
+        Assert::assertArrayHasKey('lpa', $lpaData);
 
-        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+        Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
     }
 
     /**
      * @Then /^I see a message that LPA has been cancelled$/
      */
-    public function iSeeAMessageThatLPAHasBeenCancelled()
+    public function iSeeAMessageThatLPAHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();
 
-        assertArrayHasKey('date', $lpaData);
-        assertArrayHasKey('expires', $lpaData);
-        assertArrayHasKey('organisation', $lpaData);
-        assertArrayHasKey('lpa', $lpaData);
+        Assert::assertArrayHasKey('date', $lpaData);
+        Assert::assertArrayHasKey('expires', $lpaData);
+        Assert::assertArrayHasKey('organisation', $lpaData);
+        Assert::assertArrayHasKey('lpa', $lpaData);
 
-        assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
-        assertEquals('Cancelled', $lpaData['lpa']['status']);
+        Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+        Assert::assertEquals('Cancelled', $lpaData['lpa']['status']);
     }
 
     /**
      * @When /^I realise the LPA is incorrect$/
      */
-    public function iRealiseTheLPAIsCorrect()
+    public function iRealiseTheLPAIsCorrect(): void
     {
         // Not used in this context
     }
@@ -235,7 +237,7 @@ class ViewerContext implements Context
     /**
      * @Then /^I want to see an option to re-enter code$/
      */
-    public function iWantToSeeAnOptionToReEnterCode()
+    public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // Not used in this context
     }
@@ -243,7 +245,7 @@ class ViewerContext implements Context
     /**
      * @Then /^I want to see an option to check another LPA$/
      */
-    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
     }

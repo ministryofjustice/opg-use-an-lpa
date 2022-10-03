@@ -15,11 +15,15 @@ Feature: Ask for an activation key
     Then I am told that my input is invalid because <reason>
 
     Examples:
-      | reference number | reason |
-      | 70000000000      | The LPA reference number you entered is too short |
-      | 7000-0000-00000  | The LPA reference number you entered is too long  |
+      | reference number | reason                                             |
+      | 70000000000      | The LPA reference number you entered is too short  |
+      | 7000-0000-00000  | The LPA reference number you entered is too long   |
       | 70000000ABCD     | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters |
-      |                  | Enter the LPA reference number |
+      |                  | Enter the LPA reference number                     |
+      | 700000000253     | The LPA reference number provided is not correct   |
+      | 100000000253     | LPA reference numbers that are 12 numbers long must begin with a 7   |
+      | 700000000@53     | Enter the 12 numbers of the LPA reference number. Do not include letters or other characters|
+
 
   @ui
   Scenario Outline: The user cannot request an activation key without inputting their name

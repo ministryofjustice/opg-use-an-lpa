@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Filter;
 
 use Common\Filter\ConvertQuotesToApostrophe;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ConvertQuotesToApostropheTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ConvertQuotesToApostrophe $filter;
 
     public function setUp(): void
@@ -30,7 +35,7 @@ class ConvertQuotesToApostropheTest extends TestCase
             ['Jones’s', 'Jones\'s'],
             ['Swyddfa’r', 'Swyddfa\'r'],
             ['D’Andre', 'D\'Andre'],
-            ['d’Antoine', 'd\'Antoine']
+            ['d’Antoine', 'd\'Antoine'],
         ];
     }
 }

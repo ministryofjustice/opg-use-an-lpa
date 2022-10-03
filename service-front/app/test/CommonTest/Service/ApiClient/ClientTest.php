@@ -6,10 +6,12 @@ namespace CommonTest\Service\ApiClient;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Http\Client\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -18,10 +20,9 @@ use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
 {
-    /**
-     * @var ObjectProphecy|ClientInterface
-     */
-    protected $apiClient;
+    use ProphecyTrait;
+
+    protected ObjectProphecy|ClientInterface $apiClient;
 
     public function setUp(): void
     {
@@ -80,9 +81,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'Not found',
+                        'title'   => 'Not found',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
@@ -103,9 +104,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
                 )->reveal()
@@ -148,9 +149,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
@@ -171,9 +172,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
                 )->reveal()
@@ -216,9 +217,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'Not found',
+                        'title'   => 'Not found',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
@@ -239,14 +240,13 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
                 )->reveal()
-            )
-        ;
+            );
 
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($exceptionProphecy->reveal());
@@ -285,9 +285,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'Not found',
+                        'title'   => 'Not found',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
@@ -308,9 +308,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
                 )->reveal()
@@ -353,9 +353,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'Not found',
+                        'title'   => 'Not found',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
@@ -376,9 +376,9 @@ class ClientTest extends TestCase
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
-                        'title' => 'An API exception has occurred',
+                        'title'   => 'An API exception has occurred',
                         'details' => '',
-                        'data' => [],
+                        'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
                 )->reveal()
@@ -508,46 +508,47 @@ class ClientTest extends TestCase
 
         try {
             $data = $client->httpGet('/simple_get');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPost('/simple_post', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPut('/simple_put', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPatch('/simple_patch', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpDelete('/simple_delete');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
     }
 
     /**
      * Provides expected valid response codes that we know our methods should handle.
+     *
      * @return array
      */
     public function validStatusCodes(): array
     {
         return [
-            [ StatusCodeInterface::STATUS_OK ],
-            [ StatusCodeInterface::STATUS_CREATED ],
-            [ StatusCodeInterface::STATUS_ACCEPTED ],
-            [ StatusCodeInterface::STATUS_NO_CONTENT ],
+            [StatusCodeInterface::STATUS_OK],
+            [StatusCodeInterface::STATUS_CREATED],
+            [StatusCodeInterface::STATUS_ACCEPTED],
+            [StatusCodeInterface::STATUS_NO_CONTENT],
         ];
     }
 }

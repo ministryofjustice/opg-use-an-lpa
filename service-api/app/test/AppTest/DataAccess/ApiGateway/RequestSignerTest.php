@@ -9,11 +9,14 @@ use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\RequestInterface;
 
 class RequestSignerTest extends TestCase
 {
-    public function setUp()
+    use ProphecyTrait;
+
+    public function setUp(): void
     {
         // Keys from the documentation
         // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
@@ -21,7 +24,7 @@ class RequestSignerTest extends TestCase
         putenv('AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');

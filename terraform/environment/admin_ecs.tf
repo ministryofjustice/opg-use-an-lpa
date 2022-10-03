@@ -2,17 +2,16 @@
 // admin ECS Service level config
 
 resource "aws_ecs_service" "admin" {
-  count            = local.environment.build_admin == true ? 1 : 0
+  count            = local.environment.build_admin ? 1 : 0
   name             = "admin-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.admin[0].arn
   desired_count    = 1
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.admin_ecs_service[0].id]
-    subnets          = data.aws_subnet_ids.private.ids
+    subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -20,6 +19,20 @@ resource "aws_ecs_service" "admin" {
     target_group_arn = aws_lb_target_group.admin[0].arn
     container_name   = "app"
     container_port   = 80
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   wait_for_steady_state = true
@@ -35,7 +48,7 @@ resource "aws_ecs_service" "admin" {
 // The service's Security Groups
 
 resource "aws_security_group" "admin_ecs_service" {
-  count       = local.environment.build_admin == true ? 1 : 0
+  count       = local.environment.build_admin ? 1 : 0
   name_prefix = "${local.environment_name}-admin-ecs-service"
   description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
@@ -46,7 +59,7 @@ resource "aws_security_group" "admin_ecs_service" {
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
-  count                    = local.environment.build_admin == true ? 1 : 0
+  count                    = local.environment.build_admin ? 1 : 0
   description              = "Allow Port 80 ingress from the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
@@ -61,7 +74,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
 
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
-  count             = local.environment.build_admin == true ? 1 : 0
+  count             = local.environment.build_admin ? 1 : 0
   description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
@@ -78,7 +91,7 @@ resource "aws_security_group_rule" "admin_ecs_service_egress" {
 // admin ECS Service Task level config
 
 resource "aws_ecs_task_definition" "admin" {
-  count                    = local.environment.build_admin == true ? 1 : 0
+  count                    = local.environment.build_admin ? 1 : 0
   family                   = "${local.environment_name}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -93,13 +106,13 @@ resource "aws_ecs_task_definition" "admin" {
 // Permissions
 
 resource "aws_iam_role" "admin_task_role" {
-  count              = local.environment.build_admin == true ? 1 : 0
+  count              = local.environment.build_admin ? 1 : 0
   name               = "${local.environment_name}-admin-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
-  count  = local.environment.build_admin == true ? 1 : 0
+  count  = local.environment.build_admin ? 1 : 0
   name   = "${local.environment_name}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
   role   = aws_iam_role.admin_task_role[0].id
@@ -159,6 +172,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     resources = [
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/code",
     ]
   }
 }
@@ -171,7 +185,7 @@ locals {
     {
       cpu         = 1,
       essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.container_version}",
+      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.admin_container_version}",
       mountPoints = [],
       name        = "app",
       portMappings = [
@@ -196,17 +210,29 @@ locals {
           value = tostring(local.environment.logging_level)
         },
         {
-          name  = "PORT",
+          name  = "ADMIN_PORT",
           value = tostring(80)
         },
         {
-          name  = "DYNAMODB_TABLE_PREFIX",
+          name  = "ADMIN_DYNAMODB_TABLE_PREFIX",
           value = tostring(local.environment_name)
         },
         {
-          name  = "LOGOUT_URL",
+          name  = "ADMIN_LOGOUT_URL",
           value = "${local.admin_cognito_user_pool_domain_name}/logout"
-        }
+        },
+        {
+          name  = "ADMIN_JWT_SIGNING_KEY_URL",
+          value = "https://public-keys.auth.elb.eu-west-1.amazonaws.com"
+        },
+        {
+          name  = "ADMIN_CLIENT_ID",
+          value = "${aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id}"
+        },
+        {
+          name  = "LPA_CODES_API_ENDPOINT",
+          value = local.environment.lpa_codes_endpoint
+        },
       ]
     }
   )
@@ -214,7 +240,7 @@ locals {
 }
 
 locals {
-  admin_domain = local.environment.build_admin == true ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
+  admin_domain = local.environment.build_admin ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
 }
 
 output "admin_domain" {

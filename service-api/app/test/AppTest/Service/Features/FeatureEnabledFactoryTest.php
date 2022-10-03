@@ -7,6 +7,7 @@ namespace AppTest\Service\Features;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Features\FeatureEnabledFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
@@ -19,6 +20,8 @@ use UnexpectedValueException;
  */
 class FeatureEnabledFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

@@ -6,25 +6,27 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ActorCodes;
 use Aws\DynamoDb\DynamoDbClient;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use DateTime;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorCodesTest extends TestCase
 {
+    use ProphecyTrait;
     use GenerateAwsResultTrait;
 
     const TABLE_NAME = 'test-table-name';
 
     private $dynamoDbClientProphecy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
     /** @test */
-    public function can_lookup_a_code()
+    public function can_lookup_a_code(): void
     {
         $testCode = 'test-code';
         $testSiriusUid = 'test-uid';
@@ -78,7 +80,7 @@ class ActorCodesTest extends TestCase
     }
 
     /** @test */
-    public function cannot_lookup_a_missing_code()
+    public function cannot_lookup_a_missing_code(): void
     {
         $testCode = 'test-code';
 
@@ -109,7 +111,7 @@ class ActorCodesTest extends TestCase
     }
 
     /** @test */
-    public function can_make_a_code_as_used()
+    public function can_make_a_code_as_used(): void
     {
         $testCode = 'test-code';
 

@@ -52,6 +52,14 @@ Feature: Change email
     Then I should be sent an email to both my current and new email
     And I should be told that my request was successful
 
+  @ui
+  Scenario: The user can change their email address with a valid email token
+    Given I have requested to change my email address
+    And My email reset token is still valid
+    When I click the link to verify my new email address
+    Then My account email address should be reset
+    And I see a flash message confirming my email address has been changed
+
   @ui @integration
   Scenario: The user can change their email address with a valid email token
     Given I have requested to change my email address

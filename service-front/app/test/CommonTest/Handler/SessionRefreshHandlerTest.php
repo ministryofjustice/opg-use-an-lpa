@@ -7,10 +7,13 @@ namespace CommonTest\Handler;
 use Common\Handler\SessionRefreshHandler;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SessionRefreshHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -21,7 +24,7 @@ class SessionRefreshHandlerTest extends TestCase
         $handler = new SessionRefreshHandler();
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode($response->getBody()->getContents(), true);
+        $json     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 

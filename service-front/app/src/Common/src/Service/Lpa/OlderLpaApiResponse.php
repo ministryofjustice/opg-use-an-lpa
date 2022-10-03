@@ -7,49 +7,36 @@ namespace Common\Service\Lpa;
 use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
 use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\OlderLpaMatchResponse;
+use RuntimeException;
 
 class OlderLpaApiResponse
 {
-    /** @var string The LPA was successfully added */
-    public const SUCCESS            = 'SUCCESS';
-    /** @var string A match was found for the LPA */
-    public const FOUND              = 'FOUND';
-    /** @var string The LPA reference number was not found */
-    public const NOT_FOUND          = 'NOT_FOUND';
-    /** @var string The LPA is not eligible to be added */
-    public const NOT_ELIGIBLE       = 'NOT_ELIGIBLE';
-    /** @var string The details provided do not match our records */
-    public const DOES_NOT_MATCH     = 'NOT_MATCH';
-    /** @var string There is already an activation key available/in-flight */
-    public const HAS_ACTIVATION_KEY = 'HAS_ACTIVATION_KEY';
-    /** @var string The LPA has already been added to the account */
-    public const LPA_ALREADY_ADDED  = 'LPA_ALREADY_ADDED';
-    /** @var string The LPA needs cleansing */
-    public const OLDER_LPA_NEEDS_CLEANSING  = 'OLDER_LPA_NEEDS_CLEANSING';
-    /** @var string An activation key has already been requested for this LPA but not activated */
-    public const KEY_ALREADY_REQUESTED  = 'KEY_ALREADY_REQUESTED';
+    public const SUCCESS                   = 'SUCCESS';
+    public const FOUND                     = 'FOUND';
+    public const NOT_FOUND                 = 'NOT_FOUND';
+    public const NOT_ELIGIBLE              = 'NOT_ELIGIBLE';
+    public const DOES_NOT_MATCH            = 'NOT_MATCH';
+    public const HAS_ACTIVATION_KEY        = 'HAS_ACTIVATION_KEY';
+    public const LPA_ALREADY_ADDED         = 'LPA_ALREADY_ADDED';
+    public const OLDER_LPA_NEEDS_CLEANSING = 'OLDER_LPA_NEEDS_CLEANSING';
+    public const KEY_ALREADY_REQUESTED     = 'KEY_ALREADY_REQUESTED';
 
-    /** @var array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse */
-    private $data;
-    private string $response;
+    private array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse $data;
 
     /**
-     * OlderLpaApiResponse constructor.
-     *
      * @param string $response
      * @param array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse $data
      */
-    public function __construct(string $response, $data)
+    public function __construct(private string $response, $data)
     {
         if (!$this->validateResponseType($response)) {
-            throw new \RuntimeException('Incorrect response type when creating ' . __CLASS__);
+            throw new RuntimeException('Incorrect response type when creating ' . self::class);
         }
 
         if (!$this->validateDataType($data)) {
-            throw new \RuntimeException('Incorrect data type when creating ' . __CLASS__);
+            throw new RuntimeException('Incorrect data type when creating ' . self::class);
         }
 
-        $this->response = $response;
         $this->data = $data;
     }
 
@@ -61,9 +48,6 @@ class OlderLpaApiResponse
         return $this->data;
     }
 
-    /**
-     * @return string
-     */
     public function getResponse(): string
     {
         return $this->response;
@@ -80,7 +64,7 @@ class OlderLpaApiResponse
             self::HAS_ACTIVATION_KEY,
             self::LPA_ALREADY_ADDED,
             self::OLDER_LPA_NEEDS_CLEANSING,
-            self::KEY_ALREADY_REQUESTED
+            self::KEY_ALREADY_REQUESTED,
         ];
 
         if (in_array($response, $allowedResponses)) {
@@ -95,7 +79,7 @@ class OlderLpaApiResponse
         $allowedDataTypes = [
             ActivationKeyExistsResponse::class,
             LpaAlreadyAddedResponse::class,
-            OlderLpaMatchResponse::class
+            OlderLpaMatchResponse::class,
         ];
 
         if (is_array($data)) {
@@ -103,7 +87,7 @@ class OlderLpaApiResponse
         }
 
         if (is_object($data)) {
-            if (in_array(get_class($data), $allowedDataTypes)) {
+            if (in_array($data::class, $allowedDataTypes)) {
                 return true;
             }
         }

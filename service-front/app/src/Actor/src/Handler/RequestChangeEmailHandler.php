@@ -13,7 +13,8 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\Email\EmailClient;
+use Common\Service\Notify\NotifyService;
+use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -22,28 +23,17 @@ use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use ParagonIE\HiddenString\HiddenString;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class RequestChangeEmailHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
 {
     use CsrfGuard;
-    use User;
     use Session;
-
-    /** @var UserService */
-    private $userService;
-
-    /** @var EmailClient */
-    private $emailClient;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
+    use User;
 
     /**
      * RequestChangeEmailHandler constructor
@@ -53,20 +43,17 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
      * @param UserService $userService
      * @param AuthenticationInterface $authenticator
      * @param ServerUrlHelper $serverUrlHelper
+     * @param NotifyService $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        EmailClient $emailClient,
+        private UserService $userService,
         AuthenticationInterface $authenticator,
-        ServerUrlHelper $serverUrlHelper
+        private ServerUrlHelper $serverUrlHelper,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->emailClient = $emailClient;
-        $this->serverUrlHelper = $serverUrlHelper;
 
         $this->setAuthenticator($authenticator);
     }
@@ -101,13 +88,25 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
-                        $this->emailClient->sendRequestChangeEmailToCurrentEmail($data['Email'], $data['NewEmail']);
+                        $this->notifyService->sendEmailToUser(
+                            NotifyService::REQUEST_CHANGE_EMAIL_TO_CURRENT_EMAIL,
+                            $data['Email'],
+                            newEmailAddress:$data['NewEmail']
+                        );
 
-                        $this->emailClient->sendRequestChangeEmailToNewEmail($data['NewEmail'], $verifyNewEmailUrl);
+                        $this->notifyService->sendEmailToUser(
+                            NotifyService::REQUEST_CHANGE_EMAIL_TO_NEW_EMAIL,
+                            $data['NewEmail'],
+                            completeEmailChangeUrl:$verifyNewEmailUrl
+                        );
+
+                        $session = $this->getSession($request, 'session');
+                        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
+                        $session->regenerate();
 
                         return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                             'user'     => $user,
-                            'newEmail' => $newEmail
+                            'newEmail' => $newEmail,
                         ]));
                     } catch (ApiException $ex) {
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
@@ -115,10 +114,15 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         } elseif ($ex->getCode() === StatusCodeInterface::STATUS_CONFLICT) {
                             // send email to the other user who has not completed their reset saying someone has tried
                             // to use their email
-                            $this->emailClient->sendSomeoneTriedToUseYourEmailInEmailResetRequest($newEmail);
+
+                            $this->notifyService->sendEmailToUser(
+                                NotifyService::SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE,
+                                $newEmail
+                            );
+
                             return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                                 'user'     => $user,
-                                'newEmail' => $newEmail
+                                'newEmail' => $newEmail,
                             ]));
                         }
                     }
@@ -128,7 +132,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
         return new HtmlResponse($this->renderer->render('actor::change-email', [
             'form' => $form->prepare(),
-            'user' => $user
+            'user' => $user,
         ]));
     }
 }

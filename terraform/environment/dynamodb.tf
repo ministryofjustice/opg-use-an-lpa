@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "actor_codes_table" {
-  name         = "${local.environment_name}-ActorCodes"
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ActorCode"
   server_side_encryption {
@@ -21,7 +21,7 @@ resource "aws_dynamodb_table" "actor_codes_table" {
 }
 
 resource "aws_dynamodb_table" "actor_users_table" {
-  name         = "${local.environment_name}-ActorUsers"
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
   server_side_encryption {
@@ -95,7 +95,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
 }
 
 resource "aws_dynamodb_table" "viewer_codes_table" {
-  name         = "${local.environment_name}-ViewerCodes"
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
   server_side_encryption {
@@ -135,7 +135,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
 }
 
 resource "aws_dynamodb_table" "viewer_activity_table" {
-  name         = "${local.environment_name}-ViewerActivity"
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_activity.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "ViewerCode"
   range_key    = "Viewed"
@@ -163,7 +163,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
 }
 
 resource "aws_dynamodb_table" "user_lpa_actor_map" {
-  name         = "${local.environment_name}-UserLpaActorMap"
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
   server_side_encryption {
@@ -180,9 +180,31 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     type = "S"
   }
 
+  attribute {
+    name = "ActivationCode"
+    type = "S"
+  }
+
+  attribute {
+    name = "SiriusUid"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "ActivationCodeIndex"
+    hash_key        = "ActivationCode"
+    projection_type = "ALL"
+  }
+
   global_secondary_index {
     name            = "UserIndex"
     hash_key        = "UserId"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "SiriusUidIndex"
+    hash_key        = "SiriusUid"
     projection_type = "ALL"
   }
 

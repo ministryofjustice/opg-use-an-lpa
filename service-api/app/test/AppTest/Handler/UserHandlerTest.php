@@ -7,12 +7,15 @@ namespace AppTest\Handler;
 use App\Exception\BadRequestException;
 use App\Handler\UserHandler;
 use App\Service\User\UserService;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 class UserHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testHandleGet()
     {
         $email = 'a@b.com';

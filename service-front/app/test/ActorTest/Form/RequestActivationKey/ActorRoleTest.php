@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
@@ -10,10 +12,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorRoleTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected ActorRole $form;
 
@@ -31,13 +35,13 @@ class ActorRoleTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'actor_role_radio' => Radio::class
+            'actor_role_radio' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new ActorRole($guardProphecy->reveal());
+        $this->form    = new ActorRole($guardProphecy->reveal());
     }
 }

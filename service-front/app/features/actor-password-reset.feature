@@ -19,13 +19,19 @@ Feature: Password Reset
     When I follow my unique instructions on how to reset my password
     And I choose a new password
     Then my password has been associated with my user account
-
+    
   @integration @ui
   Scenario: The user cannot follow expired instructions to supply a new password
     Given I have asked for my password to be reset
     When I follow my unique expired instructions on how to reset my password
     Then I am told that my instructions have expired
     And I am unable to continue to reset my password
+
+  @integration @ui
+  Scenario: The user cannot reset password for an account that doesn't exist
+    Given I have forgotten my password
+    When I ask for my password to be reset on an account that doesn't exist
+    Then I receive an email telling me I do not have an account
 
   @integration @ui
   Scenario Outline: The user cannot set an invalid new password

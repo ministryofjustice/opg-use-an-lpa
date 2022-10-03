@@ -6,12 +6,13 @@ namespace AppTest\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\ValidateOlderLpaRequirements;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Service\Features\FeatureEnabled;
 
 /**
  * Class ValidateOlderLpaRequirementsTest
@@ -21,13 +22,12 @@ use App\Service\Features\FeatureEnabled;
  */
 class ValidateOlderLpaRequirementsTest extends TestCase
 {
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -50,6 +50,7 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
 
         $lpa = [
+            'uId'    => '123456789012',
             'status' => 'Pending',
         ];
 
@@ -68,8 +69,9 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
 
         $lpa = [
-            'status'            => 'Registered',
-            'registrationDate'  => '2019-08-31',
+            'uId'              => '123456789012',
+            'status'           => 'Registered',
+            'registrationDate' => '2019-08-31',
         ];
 
         $this->expectException(BadRequestException::class);
@@ -87,8 +89,9 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
 
         $lpa = [
-            'status'            => 'Pending',
-            'registrationDate'  => '2019-09-31',
+            'uId'              => '123456789012',
+            'status'           => 'Pending',
+            'registrationDate' => '2019-09-31',
         ];
 
         $this->expectException(NotFoundException::class);
@@ -106,8 +109,9 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
 
         $lpa = [
-            'status'            => 'Pending',
-            'registrationDate'  => '2019-08-31',
+            'uId'              => '123456789012',
+            'status'           => 'Pending',
+            'registrationDate' => '2019-08-31',
         ];
 
         $this->expectException(NotFoundException::class);
@@ -125,8 +129,9 @@ class ValidateOlderLpaRequirementsTest extends TestCase
         $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
 
         $lpa = [
-            'status'            => 'Registered',
-            'registrationDate'  => '2019-08-31',
+            'uId'              => '123456789012',
+            'status'           => 'Registered',
+            'registrationDate' => '2019-08-31',
         ];
 
         $response = ($this->validateLpaRequirements()($lpa));

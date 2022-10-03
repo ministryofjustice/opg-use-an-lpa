@@ -10,11 +10,15 @@ use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Acpr\I18n\TranslatorInterface;
 
 class CookiesPageHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_a_CookiesPageHandler(): void
     {
@@ -31,6 +35,9 @@ class CookiesPageHandlerFactoryTest extends TestCase
         $containerProphecy
             ->get(UrlValidityCheckService::class)
             ->willReturn($this->prophesize(UrlValidityCheckService::class)->reveal());
+        $containerProphecy
+            ->get(TranslatorInterface::class)
+            ->willReturn($this->prophesize(TranslatorInterface::class)->reveal());
 
         $factory = new CookiesPageHandlerFactory();
 

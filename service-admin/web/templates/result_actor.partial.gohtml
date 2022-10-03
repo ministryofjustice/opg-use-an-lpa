@@ -34,7 +34,7 @@
       <dd class="govuk-summary-list__value">
         <ul class="govuk-list">
         {{ range .LPAs }}
-          <li>{{ .SiriusUID }}</li>
+          <li>{{ .SiriusUID }} {{ if .ActivateBy }}<strong class="govuk-tag govuk-tag--grey">not activated</strong>{{ end }}</li>
         {{ end }}
         </ul>
       </dd>

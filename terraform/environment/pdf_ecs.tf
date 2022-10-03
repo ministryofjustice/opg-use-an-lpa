@@ -6,17 +6,30 @@ resource "aws_ecs_service" "pdf" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
   desired_count    = local.environment.autoscaling.pdf.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.pdf_ecs_service.id]
-    subnets          = data.aws_subnet_ids.private.ids
+    subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.pdf.arn
+    registry_arn = aws_service_discovery_service.pdf_ecs.arn
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   wait_for_steady_state = true
@@ -29,11 +42,11 @@ resource "aws_ecs_service" "pdf" {
 //-----------------------------------------------
 // pdf service discovery
 
-resource "aws_service_discovery_service" "pdf" {
+resource "aws_service_discovery_service" "pdf_ecs" {
   name = "pdf"
 
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
 
     dns_records {
       ttl  = 10
@@ -50,7 +63,7 @@ resource "aws_service_discovery_service" "pdf" {
 
 //
 locals {
-  pdf_service_fqdn = "${aws_service_discovery_service.pdf.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+  pdf_service_fqdn = "${aws_service_discovery_service.pdf_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------

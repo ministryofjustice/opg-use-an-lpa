@@ -9,27 +9,34 @@ use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Service\Lpa\Factory\Sirius;
 use DateTime;
+use Laminas\Stdlib\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class SiriusLpaFactoryTest extends TestCase
 {
-    /** @var array */
-    protected $fullExampleFixtureData;
+    use ProphecyTrait;
 
-    /** @var array */
-    protected $simpleExampleFixtureData;
+    protected array $fullExampleFixtureData;
+    protected array $simpleExampleFixtureData;
 
     public function setUp(): void
     {
-        $this->fullExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'), true);
-        $this->simpleExampleFixtureData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'), true);
+        $this->fullExampleFixtureData   = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'),
+            true
+        );
+        $this->simpleExampleFixtureData = json_decode(
+            file_get_contents(__DIR__ . '/../../../fixtures/simple_example.json'),
+            true
+        );
     }
 
     public function testBadDataThrowsExceptionInCreateLpa()
     {
         $factory = new Sirius();
 
-        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $lpa = $factory->createLpaFromData([]);
     }
 
@@ -37,7 +44,7 @@ class SiriusLpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $caseActor = $factory->createCaseActorFromData([]);
     }
 
@@ -45,7 +52,7 @@ class SiriusLpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $this->expectException(\Laminas\Stdlib\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $address = $factory->createAddressFromData([]);
     }
 
@@ -104,7 +111,7 @@ class SiriusLpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $data = $this->simpleExampleFixtureData;
+        $data                    = $this->simpleExampleFixtureData;
         $data['donor']['linked'] = [
             ['id' => 5, 'uId' => '7000-0000-0033'],
             ['id' => 6, 'uId' => '7000-0000-0133'],

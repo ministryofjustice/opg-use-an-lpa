@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace CommonTest\Validator;
 
 use Common\Validator\CsrfGuardValidator;
-use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use Mezzio\Csrf\CsrfGuardInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 class CsrfGuardValidatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testThrowsExceptionWhenNoGuardOption()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -22,32 +25,32 @@ class CsrfGuardValidatorTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $validator = new CsrfGuardValidator([
-            'guard' => new stdClass()
+            'guard' => new stdClass(),
         ]);
     }
 
     public function testIsValidWhenShouldBe()
     {
         $guard = $this->prophesize(CsrfGuardInterface::class);
-        $guard->validateToken("token")->willReturn(true);
+        $guard->validateToken('token')->willReturn(true);
 
         $validator = new CsrfGuardValidator([
-            'guard' => $guard->reveal()
+            'guard' => $guard->reveal(),
         ]);
 
-        $this->assertTrue($validator->isValid("token"));
+        $this->assertTrue($validator->isValid('token'));
     }
 
     public function testIsNotValidWhenShouldntBe()
     {
         $guard = $this->prophesize(CsrfGuardInterface::class);
-        $guard->validateToken("token")->willReturn(false);
+        $guard->validateToken('token')->willReturn(false);
 
         $validator = new CsrfGuardValidator([
-            'guard' => $guard->reveal()
+            'guard' => $guard->reveal(),
         ]);
 
-        $this->assertFalse($validator->isValid("token"));
+        $this->assertFalse($validator->isValid('token'));
         $this->assertArrayHasKey(CsrfGuardValidator::NOT_SAME, $validator->getMessages());
     }
 }

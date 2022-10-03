@@ -6,10 +6,11 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\User\UserService;
+use Exception;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 
 /**
  * Class UserActivateHandler
@@ -18,26 +19,21 @@ use Laminas\Diactoros\Response\JsonResponse;
  */
 class UserActivateHandler implements RequestHandlerInterface
 {
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
+    public function __construct(
+        private UserService $userService,
+    ) {
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws BadRequestException|Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
 
-        if (!isset($requestData['activation_token'])) {
+        if (empty($requestData['activation_token'])) {
             throw new BadRequestException('Token must be provided');
         }
 

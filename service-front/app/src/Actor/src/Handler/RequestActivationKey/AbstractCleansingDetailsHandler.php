@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\LoggerAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Handler\WorkflowStep;
+use Common\Workflow\State;
+use Common\Workflow\StateNotInitialisedException;
+use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
@@ -21,98 +26,98 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractCleansingDetailsHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
-abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
+abstract class AbstractCleansingDetailsHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    LoggerAware,
+    WorkflowStep
 {
-    use User;
     use CsrfGuard;
+    use Logger;
     use SessionTrait;
+    use State;
+    use User;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
-    /** @var LoggerInterface */
-    protected $logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->logger = $logger;
     }
 
-    /**
-     * @param bool $back optional parameter specifying if the route named should be for the back button
-     *
-     * @return string the name of the route
-     */
-    protected function getRouteNameFromAnswersInSession(bool $back = false): string
-    {
-        if ($this->hasFutureAnswersInSession()) {
-            return 'lpa.add.check-details-and-consent';
-        } else {
-            return $back ? $this->lastPage() : $this->nextPage();
-        }
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
-        if ($this->isMissingPrerequisite()) {
+        if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add.actor-role');
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
-    public function isMissingPrerequisite(): bool
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return !$this->session->has('opg_reference_number')
-            || !$this->session->has('first_names')
-            || !$this->session->has('last_name')
-            || !$this->session->has('dob')
-            || !$this->session->has('postcode');
+        return $this->state($request)->referenceNumber === null
+            || $this->state($request)->firstNames === null
+            || $this->state($request)->lastName === null
+            || $this->state($request)->dob === null
+            || $this->state($request)->postcode === null;
     }
 
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
-    protected function hasFutureAnswersInSession(): bool
+    /**
+     * @param ServerRequestInterface $request
+     * @return RequestActivationKey
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
-        $s = $this->session->toArray();
+        return $this->loadState($request, RequestActivationKey::class);
+    }
 
-        $alwaysRequired =
-            isset($s['telephone_option']['telephone'])
-            ||
-            ($s['telephone_option']['no_phone'] ?? null) === 'yes';
+    protected function hasFutureAnswersInState(RequestActivationKey $state): bool
+    {
+        // address 1 is a required field on it's page so only need to check that.
+        $alwaysRequired = $state->actorAddress1 !== null;
 
-        if ($this->session->get('actor_role') === 'attorney') {
-            return $alwaysRequired &&
-                $this->session->has('donor_first_names') &&
-                $this->session->has('donor_last_name') &&
-                $this->session->has('donor_dob');
+        if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+            $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;
         }
 
-        return $alwaysRequired;
+        $alwaysRequired = $alwaysRequired && $state->getActorRole() !== null;
+
+        if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
+            $alwaysRequired =  $alwaysRequired &&
+                $state->donorFirstNames !== null &&
+                $state->donorLastName !== null &&
+                $state->donorDob !== null;
+        }
+
+        if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
+            $alwaysRequired =  $alwaysRequired &&
+                $state->attorneyFirstNames !== null &&
+                $state->attorneyLastName !== null &&
+                $state->attorneyDob !== null;
+        }
+
+        return $alwaysRequired
+            && ($state->telephone !== null || $state->noTelephone);
     }
 }

@@ -9,16 +9,18 @@ use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ViewerCodeActivityTest extends TestCase
 {
+    use ProphecyTrait;
     use GenerateAwsResultTrait;
 
     const TABLE_NAME = 'test-table-name';
 
     private $dynamoDbClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dynamoDbClient = $this->prophesize(DynamoDbClient::class);
     }
@@ -63,7 +65,7 @@ class ViewerCodeActivityTest extends TestCase
     }
 
     /** @test */
-    public function viewerCodesStatusSetToTrueWithQueryMatch()
+    public function viewerCodesStatusSetToTrueWithQueryMatch(): void
     {
         $testCodes = [
             0 => [
@@ -126,7 +128,7 @@ class ViewerCodeActivityTest extends TestCase
     }
 
     /** @test */
-    public function viewerCodesStatusSetToFalseWithNoQueryMatch()
+    public function viewerCodesStatusSetToFalseWithNoQueryMatch(): void
     {
 
         $testCodes = [['ViewerCode' => 'RT6Y98VEF7A2']];

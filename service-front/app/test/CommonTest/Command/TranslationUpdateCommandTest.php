@@ -13,11 +13,14 @@ use Common\Service\I18n\PotGenerator;
 use Gettext\Translations;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class TranslationUpdateCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_can_be_executed(): void
     {
@@ -26,7 +29,7 @@ class TranslationUpdateCommandTest extends TestCase
             null,
             [
                 'home.html.twig' => '<h1>{%trans%}Some translated twig content{%endtrans%}</h1>',
-                'home.php' => '<?php $translator->translate("Some translated PHP content", []);'
+                'home.php'       => '<?php $translator->translate("Some translated PHP content", []);',
             ]
         );
 

@@ -36,7 +36,7 @@ run:
 .PHONY: run
 
 # Starts the application and seeds initial data.
-up_all: | up_dependencies up_services seed
+up_all: | up_dependencies up_mock up_services seed
 .PHONY: up_all
 
 restart_all: | down_all up_all
@@ -48,7 +48,6 @@ build:
 
 build_all:
 	$(MAKE) build
-	$(MAKE) build --directory=../opg-data-lpa/
 .PHONY: build_all
 
 rebuild:
@@ -61,7 +60,6 @@ down:
 .PHONY: down
 
 down_all:
-	$(MAKE) down --directory=../opg-data-lpa/
 	$(COMPOSE) down
 .PHONY: down_all
 
@@ -70,7 +68,6 @@ destroy:
 .PHONY: destroy
 
 destroy_all:
-	$(MAKE) destroy --directory=../opg-data-lpa/
 	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy_all
 
@@ -84,16 +81,25 @@ logs:
 
 up_dependencies:
 	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms
-	$(MAKE) up-bridge-ual create_secrets --directory=../opg-data-lpa/
 .PHONY: up_dependencies
 
 up_services:
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
-	$(NOTIFY)
-	$(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
+	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer
 .PHONY: up_services
+
+update_mock:
+	@echo "Merging Swagger Documents..."
+	./mock-integrations/merge.sh
+	@echo "Restarting data-lpa API..."
+	$(COMPOSE) restart api-gateway data-lpa
+.PHONY: update_mock
+
+up_mock:
+	$(COMPOSE) up -d --remove-orphans api-gateway data-lpa
+.PHONY: up_mock
 
 seed:
 	$(COMPOSE) up -d api-seeding
@@ -114,10 +120,12 @@ unit_test_api_app:
 	$(COMPOSE) run api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app
 
-development_mode:
-	$(COMPOSE) run front-composer composer development-enable
-	$(COMPOSE) run api-composer composer development-enable
-	clear_config_cache
+enable_development_mode:
+	$(COMPOSE) run front-composer development-enable
+	$(COMPOSE) run api-composer development-enable
+.PHONY: enable_development_mode
+
+development_mode: | enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 run_front_composer:
@@ -129,11 +137,11 @@ run_api_composer:
 .PHONY: run_api_composer
 
 run_front_composer_update:
-	$(COMPOSE) run front-composer update
+	$(COMPOSE) run front-composer update $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer update
+	$(COMPOSE) run api-composer update $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer_update
 
 clear_config_cache:

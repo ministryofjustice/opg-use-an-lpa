@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form;
 
 use Actor\Form\AddLpaTriage;
@@ -9,10 +11,12 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Radio;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AddLpaTriageTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected AddLpaTriage $form;
 
@@ -30,13 +34,13 @@ class AddLpaTriageTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'                => Csrf::class,
-            'activation_key_triage' => Radio::class
+            'activation_key_triage' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new AddLpaTriage($guardProphecy->reveal());
+        $this->form    = new AddLpaTriage($guardProphecy->reveal());
     }
 }

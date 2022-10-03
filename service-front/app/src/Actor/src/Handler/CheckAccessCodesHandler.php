@@ -20,32 +20,25 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
 
 /**
- * Class CheckAccessCodesHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use Session;
     use CsrfGuard;
-
-    private ViewerCodeService $viewerCodeService;
-    private LpaService $lpaService;
+    use Session;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService,
-        ViewerCodeService $viewerCodeService,
-        LoggerInterface $logger
+        private LpaService $lpaService,
+        private ViewerCodeService $viewerCodeService,
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
-        $this->viewerCodeService = $viewerCodeService;
     }
 
     /**
@@ -64,8 +57,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $user     = $this->getUser($request);
+        $identity = !is_null($user) ? $user->getIdentity() : null;
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
@@ -95,19 +88,23 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
 
                 $form->setData([
-                    'lpa_token'     => $actorLpaToken,
-                    'viewer_code'   => $code['ViewerCode'],
-                    'organisation'  => $code['Organisation'],
+                    'lpa_token'    => $actorLpaToken,
+                    'viewer_code'  => $code['ViewerCode'],
+                    'organisation' => $code['Organisation'],
                 ]);
 
                 $shareCodes[$key]['form'] = $form;
+            }
+
+            if (!isset($code['ActorId'])) {
+                continue;
             }
 
             $this->logger->debug(
                 'Resolved actor id to {type}:{actor_id}',
                 [
                     'actor_id' => $code['ActorId'],
-                    'type' => gettype($code['ActorId']),
+                    'type'     => gettype($code['ActorId']),
                 ]
             );
 
@@ -115,7 +112,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 'Donor Id is {type}:{donor_id}',
                 [
                     'donor_id' => $lpa->getDonor()->getUId(),
-                    'type' => gettype($lpa->getDonor()->getUId()),
+                    'type'     => gettype($lpa->getDonor()->getUId()),
                 ]
             );
 
@@ -132,7 +129,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     'Attorney Id is {type}:{attorney_id}',
                     [
                         'attorney_id' => $attorney->getUId(),
-                        'type' => gettype($attorney->getUId()),
+                        'type'        => gettype($attorney->getUId()),
                     ]
                 );
 
@@ -156,11 +153,11 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
-            'actorToken'    => $actorLpaToken,
-            'user'          => $user,
-            'lpa'           => $lpa,
-            'shareCodes'    => $shareCodes,
-            'flash'         => $flash
+            'actorToken' => $actorLpaToken,
+            'user'       => $user,
+            'lpa'        => $lpa,
+            'shareCodes' => $shareCodes,
+            'flash'      => $flash,
         ]));
     }
 }

@@ -5,6 +5,8 @@ namespace AppTest\Service\Lpa;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -15,12 +17,11 @@ use Psr\Log\LoggerInterface;
  */
 class RestrictSendingLpaForCleansingTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    public function setUp()
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -38,6 +39,7 @@ class RestrictSendingLpaForCleansingTest extends TestCase
     public function throws_not_found_exception_when_lpa_status_registered_and_actorMatch_is_null(): void
     {
         $lpa = [
+            'uId'              => '123456789012',
             'registrationDate' => '2020-05-26',
         ];
 

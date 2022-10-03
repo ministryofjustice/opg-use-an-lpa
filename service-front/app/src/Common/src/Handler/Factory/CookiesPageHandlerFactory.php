@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Handler\Factory;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\Handler\CookiesPageHandler;
 use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Helper\UrlHelper;
@@ -25,6 +26,7 @@ class CookiesPageHandlerFactory
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
             $container->get(UrlValidityCheckService::class),
+            $container->get(TranslatorInterface::class),
             $config['application']
         );
     }

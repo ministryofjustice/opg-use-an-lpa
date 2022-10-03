@@ -4,34 +4,24 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Locale;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
-/**
- * Class GenericGlobalVariableExtension
- * @package Common\View\Twig
- */
+use function str_replace;
+use function strtolower;
+
 class GenericGlobalVariableExtension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * @var string
-     */
-    private string $application;
-
-    /**
-     * GenericGlobalVariableExtension constructor.
-     * @param string $application
-     */
-    public function __construct(string $application)
+    public function __construct(private string $application)
     {
-        $this->application = $application;
     }
 
     public function getGlobals(): array
     {
         return [
-            "application"   => $this->application,
-            "currentLocale" => \Locale::getDefault()
+            'application'   => $this->application,
+            'currentLocale' => strtolower(str_replace('_', '-', Locale::getDefault())),
         ];
     }
 }

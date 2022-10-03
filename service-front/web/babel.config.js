@@ -4,7 +4,7 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          node: 'current',
+          ie: 11,
         },
       },
     ],
@@ -16,5 +16,8 @@ module.exports = {
         regenerator: true,
       },
     ],
+    '@babel/plugin-transform-reserved-words',
+    '@babel/plugin-transform-member-expression-literals',
+    '@babel/plugin-transform-property-literals',
   ],
 };

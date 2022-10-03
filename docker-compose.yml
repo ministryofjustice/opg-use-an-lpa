@@ -20,11 +20,11 @@ services:
       - webpack_dist:/dist
 
   # ---------------------------
-  # Viewer Front
+  # PDF Generator
 
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:v1.31.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:latest
     ports:
       - 9004:80
 
@@ -80,16 +80,6 @@ services:
       COOKIE_SECURE: "false"
     depends_on:
       - redis
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   # ---------------------------
   # Actor Front
@@ -149,16 +139,6 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       COOKIE_SECURE: "false"
       NOTIFY_API_KEY:
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   # ---------------------------
   # Front Composer (Shared)
@@ -186,6 +166,8 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
+    depends_on:
+      - api-app
     volumes:
       - ./service-api/web/dist:/web
     ports:
@@ -208,7 +190,6 @@ services:
       - ./service-api/app:/app
     networks:
       - default
-      - lpas-collection
     environment:
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
@@ -216,7 +197,7 @@ services:
       DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
 
-      SIRIUS_API_ENDPOINT: "http://api_gateway:4343"
+      SIRIUS_API_ENDPOINT: "http://api-gateway:5000"
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
 
       # Feature flags
@@ -238,16 +219,6 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000"
-#        ]
-#      interval: 10s
-#      timeout: 30s
-#      retries: 3
-#      start_period: 90s
 
   api-composer:
     image: api-app
@@ -258,7 +229,6 @@ services:
     command:
       - install
       - --prefer-dist
-      - --no-suggest
       - --no-interaction
       - --no-scripts
       - --optimize-autoloader
@@ -279,7 +249,3 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
       CODES_ENDPOINT: codes-gateway:4343
-
-networks:
-  lpas-collection:
-    driver: bridge

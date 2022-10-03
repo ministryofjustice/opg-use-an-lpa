@@ -118,10 +118,10 @@ Feature: View an LPA via sharecode
     When I give an invalid <sharecode> and <surname>
     Then I am told that the share code is invalid because <reason>
     Examples:
-      |surname  | sharecode               | reason                                          |
-      | Billson | V-1110-1111-0111        | We could not find an LPA matching those details |
-      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA matching those details |
-      | Billson | 1110-1111-0111          | We could not find an LPA matching those details |
+      |surname  | sharecode               | reason                                      |
+      | Billson | V-1110-1111-0111        | We could not find an LPA with those details |
+      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA with those details |
+      | Billson | 1110-1111-0111          | We could not find an LPA with those details |
 
   @ui
   Scenario: The user is allowed to re-enter code after an invalid one entered
@@ -141,11 +141,5 @@ Feature: View an LPA via sharecode
     Given I have been given access to an LPA via share code
     And I access the viewer service
     And I waited too long to enter the share code
-    And I give a valid LPA share code
+    And I give a valid LPA share code when my session is timed out
     Then I have an error message informing me to try again.
-    
-  @ui
-  Scenario: The user views an LPA that has been signed before 2016
-    Given I view an LPA successfully
-    When I click on the Read more link
-    Then I am taken to a page explaining why instructions and preferences are not available

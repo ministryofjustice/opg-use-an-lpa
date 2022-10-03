@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Common\Service\Log;
 
 /**
- * Class Event
- *
  * Contains definitions for event codes to be attached to logged messages where needed.
  * Generally only needed when doing work on the logs that require filtering of specific logging entries.
- *
- * @package Common\Service\Log
  */
 class EventCodes
 {
@@ -163,4 +159,19 @@ class EventCodes
      * An LPA that is not clean
      */
     public const OLDER_LPA_NEEDS_CLEANSING = 'OLDER_LPA_NEEDS_CLEANSING';
+
+    /**
+     * User has an activation key
+     */
+    public const ACTIVATION_KEY_EXISTS = 'ACTIVATION_KEY_EXISTS';
+
+    /**
+     * User does not have an activation key
+     */
+    public const ACTIVATION_KEY_NOT_EXISTS = 'ACTIVATION_KEY_NOT_EXISTS';
+
+    /**
+     * User activation key has expired
+     */
+    public const ACTIVATION_KEY_EXPIRED = 'ACTIVATION_KEY_EXPIRED';
 }

@@ -11,14 +11,77 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA matching those details{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA with those details{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}Please check the code and the spelling of the donor's last name{% endtrans %}</p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else.
+                        {% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Donor name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ donor_last_name }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}LPA access code{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpa_access_code }}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <h2 class="govuk-heading-l">{% trans %}Did you enter the donor’s name correctly?{% endtrans %}</h2>
+                    <p class="govuk-body">
+                        {% trans %}
+                            You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for.
+                        {% endtrans %}
+                    </p>
+
+                    <h2 class="govuk-heading-l">{% trans %}Did you enter the LPA access code correctly?{% endtrans %}</h2>
+                    <p class="govuk-body">
+                        {% trans %}
+                            You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            It should not be confused with:
+                        {% endtrans %}
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}an LPA activation key - normally sent to donors and attorneys  when the LPA is registered{% endtrans %}</li>
+                        <li>{% trans %}the LPA reference number - a unique number we give to each LPA{% endtrans %}</li>
+                    </ul>
+
+                    <h2 class="govuk-heading-l">{% trans %}Are you using the right service?{% endtrans %}</h2>
+                    <p class="govuk-body">
+                        {% trans %}
+                            This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            Attorneys or donors who want to see a summary of an LPA, or give  organisations access to a summary of an LPA, can do this through the <a class="govuk-link" href="https://www.gov.uk/use-lasting-power-of-attorney">Use a lasting power of attorney service</a>.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            To do this you will need your own unique LPA activation key.  This is normally found on the letter that told you the LPA had been registered.
+                        {% endtrans %}
+                    </p>
 
                     <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button">
                         {% trans %}Try again{% endtrans %}
                     </a>
-                    
                 </div>
             </div>
         </main>

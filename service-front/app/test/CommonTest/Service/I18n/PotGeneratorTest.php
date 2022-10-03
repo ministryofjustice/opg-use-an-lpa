@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace CommonTest\Service\I18n;
 
 use Common\Service\I18n\PotGenerator;
+use DateTime;
 use Gettext\Generator\GeneratorInterface;
 use Gettext\Headers;
 use Gettext\Translations;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class PotGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_will_write_out_a_catalogue(): void
     {
@@ -22,8 +26,8 @@ class PotGeneratorTest extends TestCase
             'POT-Creation-Date',
             Argument::that(
                 function (string $date) {
-                    $datetime = new \DateTime($date);
-                    $this->assertInstanceOf(\DateTime::class, $datetime);
+                    $datetime = new DateTime($date);
+                    $this->assertInstanceOf(DateTime::class, $datetime);
 
                     return true;
                 }

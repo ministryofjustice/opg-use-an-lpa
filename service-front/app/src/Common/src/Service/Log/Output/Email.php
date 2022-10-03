@@ -8,14 +8,8 @@ use function hash;
 
 class Email
 {
-    /**
-     * @var string
-     */
-    private string $email;
-
-    public function __construct(string $email)
+    public function __construct(private string $email)
     {
-        $this->email = $email;
     }
 
     public function __toString(): string

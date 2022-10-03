@@ -6,38 +6,41 @@ namespace AppTest\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Handler\HealthcheckHandler;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Handler\HealthcheckHandler;
-use Laminas\Diactoros\Response\JsonResponse;
 
 class HealthcheckHandlerTest extends TestCase
 {
-    private $actorUsersProphecy;
+    use ProphecyTrait;
 
-    private $httpClientProphecy;
+    private ObjectProphecy $actorUsersProphecy;
+    private ObjectProphecy $httpClientProphecy;
+    private ObjectProphecy $requestSignerProphecy;
 
-    private $requestSignerProphecy;
+    private string $version;
+    private string $siriusApiUrl;
+    private string $codesApiUrl;
 
-    private $apiUrl;
-
-    private $version;
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->version = 'dev';
         $this->actorUsersProphecy = $this->prophesize(ActorUsersInterface::class);
         $this->httpClientProphecy = $this->prophesize(HttpClient::class);
         $this->requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $this->apiUrl = 'localhost';
+        $this->siriusApiUrl = 'localhost';
+        $this->codesApiUrl = 'localhost';
     }
 
-    public function testReturnsExpectedJsonResponse()
+    public function testReturnsExpectedJsonResponse(): void
     {
         $this->actorUsersProphecy->get('XXXXXXXXXXXX')
             ->willReturn([]);
@@ -52,7 +55,9 @@ class HealthcheckHandlerTest extends TestCase
 
                 return true;
             })
-        )->willReturn($responseProphecy->reveal());
+        )
+            ->shouldBeCalledTimes(2)
+            ->willReturn($responseProphecy->reveal());
 
         $this->requestSignerProphecy
             ->sign(Argument::type(RequestInterface::class))
@@ -65,13 +70,14 @@ class HealthcheckHandlerTest extends TestCase
             $this->actorUsersProphecy->reveal(),
             $this->httpClientProphecy->reveal(),
             $this->requestSignerProphecy->reveal(),
-            $this->apiUrl
+            $this->siriusApiUrl,
+            $this->codesApiUrl,
         );
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $response = $healthcheck->handle($requestProphecy->reveal());
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
 
         $json = json_decode($response->getBody()->getContents(), true);
 

@@ -8,10 +8,7 @@ use ArrayObject;
 use Common\Service\Lpa\SortLpas;
 
 /**
- * Class SortLpasTest
- *
  * @coversDefaultClass \Common\Service\Lpa\SortLpas
- * @package CommonTest\Service\Lpa
  */
 class SortLpasTest extends LpaFixtureTestCase
 {
@@ -23,7 +20,7 @@ class SortLpasTest extends LpaFixtureTestCase
     {
         $lpas = $this->lpaFixtureData();
 
-        $sorter = new SortLpas();
+        $sorter      = new SortLpas();
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         $resultOrder = [];
@@ -47,7 +44,7 @@ class SortLpasTest extends LpaFixtureTestCase
     {
         $lpas = $this->lpaFixtureData();
 
-        $sorter = new SortLpas();
+        $sorter      = new SortLpas();
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         // pare the sorted fixture data back to what we're interested in.
@@ -76,7 +73,7 @@ class SortLpasTest extends LpaFixtureTestCase
     {
         $lpas = $this->lpaFixtureData();
 
-        $sorter = new SortLpas();
+        $sorter      = new SortLpas();
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         // pare the sorted fixture data back to what we're interested in.
@@ -113,7 +110,7 @@ class SortLpasTest extends LpaFixtureTestCase
     {
         $lpas = $this->lpaFixtureData();
 
-        $sorter = new SortLpas();
+        $sorter      = new SortLpas();
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         $expectedOrder = [
@@ -125,7 +122,7 @@ class SortLpasTest extends LpaFixtureTestCase
             '0003-01-01-01-333333',
             '0001-01-01-01-111111', // Daniel Williams 1980-01-01
             '0006-01-01-01-666666',
-            '0005-01-01-01-555555'
+            '0005-01-01-01-555555',
         ];
 
         $this->assertEquals($expectedOrder, array_keys($orderedLpas));

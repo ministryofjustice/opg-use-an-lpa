@@ -19,7 +19,7 @@ class FeatureFlagContext implements Context
     /**
      * @BeforeScenario
      */
-    public function setFeatureFlag(BeforeScenarioScope $scope)
+    public function setFeatureFlag(BeforeScenarioScope $scope): void
     {
         $this->gatherContexts($scope);
         $tags = $scope->getScenario()->getTags();

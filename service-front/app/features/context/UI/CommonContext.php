@@ -7,6 +7,7 @@ namespace BehatTest\Context\UI;
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Lpa\LpaService;
@@ -16,11 +17,12 @@ use DI\Container;
 use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\Definition\Reference;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class CommonContext
@@ -28,18 +30,19 @@ use Mezzio\Session\SessionPersistenceInterface;
  * @package BehatTest\Context\UI
  *
  * @property $traceId  The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
- * @property $basePath The base part of the URL, typically '/' but could be a language prefix i.e. '/cy'
  */
 class CommonContext implements Context
 {
     use BaseUiContextTrait;
+
+    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
 
     /**
      * @Given I access the service home page
      */
     public function iAccessTheServiceHomepage(): void
     {
-        $this->ui->visit($this->basePath . '/home');
+        $this->ui->visit($this->sharedState()->basePath . '/home');
     }
 
     /**
@@ -109,12 +112,14 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I see a cookie consent banner$/
+     * @Then /^I see a (.*) cookie consent banner$/
      */
-    public function iCanSeeACookieConsentBanner()
+    public function iCanSeeACookieConsentBanner($serviceName)
     {
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Tell us whether you accept cookies');
+
+        $this->ui->assertPageContainsText($serviceName);
+        $this->ui->assertPageContainsText('Cookies on ' . $serviceName);
     }
 
     /**
@@ -127,11 +132,11 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /I choose an (.*) and save my choice$/
+     * @Then /I choose (.*) and save my choice$/
      */
     public function iChooseAnOptionAndSaveMyChoice($options)
     {
-        if ($options === 'Use cookies that measure my website use') {
+        if ($options === 'Yes') {
             $this->ui->fillField('usageCookies', 'yes');
         } else {
             $this->ui->fillField('usageCookies', 'no');
@@ -156,28 +161,37 @@ class CommonContext implements Context
 
         if ($userActive) {
             // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(
-                    new Response(
-                        StatusCodeInterface::STATUS_OK,
-                        [],
-                        json_encode(
-                            [
-                                'Id' => $userId,
-                                'Email' => $userEmail,
-                                'LastLogin' => '2020-01-01',
-                            ]
-                        )
-                    )
-                );
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'Id' => $userId,
+                            'Email' => $userEmail,
+                            'LastLogin' => '2020-01-01',
+                        ]
+                    ),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
 
             // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->get('/v1/lpas')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], json_encode([])));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([]),
+                    'LpaService::getLpas'
+                )
+            );
         } else {
             // API call for authentication
-            $this->apiFixtures->patch('/v1/auth')
-                ->respondWith(new Response(StatusCodeInterface::STATUS_UNAUTHORIZED, [], json_encode([])));
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_UNAUTHORIZED,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
         }
 
         $this->ui->pressButton('Sign in');
@@ -196,13 +210,12 @@ class CommonContext implements Context
     }
 
     /**
-     * @When /^I click on Accept all cookies$/
+     * @Then /^I click on the view cookies link$/
      */
-    public function iClickOnAcceptAllCookies()
+    public function iClickOnViewCookies()
     {
-        // Not needed for this context
-        //Accept all cookies is <button type="button">, which means there is no associated action, meant to be handled with a JS event listener
-        // Given that BrowserKitDriver does not run the JS, it does not support such button.
+        $this->ui->assertPageContainsText('View cookies');
+        $this->ui->clickLink('View cookies');
     }
 
     /**
@@ -214,29 +227,40 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /I have a cookie named (.*)$/
+     * @Then /^I have a cookie named cookie_policy$/
      */
     public function iHaveACookieNamedSeenCookieMessage()
     {
-        $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageAddress('/cookies');
 
         $session = $this->ui->getSession();
-
-        $seen = $session->getCookie('seen_cookie_message');
+        $seen = $session->getCookie('cookie_policy');
 
         if ($seen === null) {
-            throw new \Exception('Cookies not set');
+            throw new Exception('Cookies not set');
         }
     }
 
     /**
-     * @Given /^I have seen the cookie banner$/
+     * @Then /^I am shown cookie preferences has been set$/
      */
-    public function iHaveSeenTheCookieBanner()
+    public function iAmShownCookiePreferencesHasBeenSet()
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->assertPageContainsText(
+            'You’ve set your cookie preferences. Go back to the page you were looking at.'
+        );
+        $this->ui->assertElementContains('h2[id=govuk-notification-banner-title]', '');
+    }
+
+    /**
+     * @Given /^I have seen the (.*) cookie banner$/
+     */
+    public function iHaveSeenTheCookieBanner($serviceName)
     {
         $this->iWantToViewALastingPowerOfAttorney();
         $this->iAccessTheServiceHomepage();
-        $this->iCanSeeACookieConsentBanner();
+        $this->iCanSeeACookieConsentBanner($serviceName);
     }
 
     /**
@@ -260,7 +284,7 @@ class CommonContext implements Context
      */
     public function iPrefixAUrlWithTheWelshLanguageCode()
     {
-        $this->basePath = '/cy';
+        $this->sharedState()->basePath = '/cy';
     }
 
     /**
@@ -312,16 +336,18 @@ class CommonContext implements Context
         $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($button1);
         $this->ui->assertPageContainsText($button2);
-        $this->ui->assertElementContainsText('button[name=accept-all-cookies]', 'Accept all cookies');
-        $this->ui->assertElementContainsText('a[name=set-cookie-preferences]', 'Set cookie preferences');
+        $this->ui->assertElementContainsText('button[value=accept]', 'Accept analytics cookies');
+        $this->ui->assertElementContainsText('button[value=reject]', 'Reject analytics cookies');
     }
 
     /**
-     * @Then /^I see options to (.*) and (.*)$/
+     * @Then /^I see options (.*) and (.*) to accept analytics cookies$/
      */
-    public function iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse($option1, $option2)
+    public function iSeeOptionsToAcceptAnalyticsCookies($option1, $option2)
     {
-        $this->ui->assertPageContainsText("Cookies that measure website use");
+        $this->ui->assertPageContainsText('Do you want to accept analytics cookies');
+        $this->ui->assertPageContainsText($option1);
+        $this->ui->assertPageContainsText($option2);
         $this->ui->assertElementContains('input[id=usageCookies-1]', '');
         $this->ui->assertElementContains('input[id=usageCookies-2]', '');
     }
@@ -331,12 +357,12 @@ class CommonContext implements Context
      */
     public function iSetMyCookiePreferences()
     {
-        $this->iClickOnButton('Set cookie preferences');
-        $this->iSeeOptionsToSetAndUnsetCookiesThatMeasureMyWebsiteUse(
-            'Use cookies that measure my website use',
-            'Do not use cookies that measure my website use'
+        $this->iClickOnViewCookies();
+        $this->iSeeOptionsToAcceptAnalyticsCookies(
+            'Yes',
+            'No'
         );
-        $this->iChooseAnOptionAndSaveMyChoice('Use cookies that measure my website use');
+        $this->iChooseAnOptionAndSaveMyChoice('Yes');
     }
 
     /**
@@ -345,6 +371,14 @@ class CommonContext implements Context
     public function iShouldBeOnTheHomePageOfTheService()
     {
         $this->ui->assertPageAddress('/home');
+    }
+
+    /**
+     * @Then /^I should be on the cookies page of the service$/
+     */
+    public function iShouldBeOnTheCookiesPageOfTheService()
+    {
+        $this->ui->assertPageAddress('/cookies');
     }
 
     /**
@@ -373,18 +407,6 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I should not see a cookie banner$/
-     */
-    public function iShouldNotSeeACookieBanner()
-    {
-        $this->ui->assertPageAddress('/home');
-        $cookieBannerDisplay = $this->ui->getSession()->getPage()->find('css', '.cookie-banner--show');
-        if ($cookieBannerDisplay === null) {
-            $this->ui->assertResponseNotContains('cookie-banner--show');
-        }
-    }
-
-    /**
      * @Given /^I want to use my lasting power of attorney$/
      */
     public function iWantToUseMyLastingPowerOfAttorney()
@@ -408,8 +430,8 @@ class CommonContext implements Context
      */
     public function myOutboundRequestsHaveAttachedTracingHeaders()
     {
-        $request = $this->getLastRequest();
-        $request->getRequest()->assertHasHeader(strtolower('X-Amzn-Trace-Id'));
+        $request = $this->apiFixtures->getLastRequest();
+        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')), 'No X-Amzn-Trace-Id header');
     }
 
     /**
@@ -450,6 +472,15 @@ class CommonContext implements Context
      */
     public function setupDefaultContextVariables(): void
     {
-        $this->basePath = '/';
+        $this->sharedState()->basePath = '/';
+    }
+
+    /**
+     * @When /^I click on (.*) on the cookies page$/
+     */
+    public function iClickOnLinkOnTheCookiesPage($link): void
+    {
+        $this->ui->assertPageAddress('/cookies');
+        $this->ui->clickLink($link);
     }
 }

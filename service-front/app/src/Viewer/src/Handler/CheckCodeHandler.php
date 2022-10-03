@@ -24,42 +24,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\Organisation;
 
 /**
- * Class CheckCodeHandler
- *
- * @package Viewer\Handler
- *
  * @codeCoverageIgnore
  */
 class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
-    use SessionTrait;
     use CsrfGuard;
+    use SessionTrait;
 
-    /** @var LpaService */
-    private $lpaService;
-
-    /**
-     * @var RateLimitService
-     */
-    private $failureRateLimiter;
-
-    /**
-     * CheckCodeHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param LpaService $lpaService
-     * @param RateLimitService $failureRateLimiter
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        LpaService $lpaService,
-        RateLimitService $failureRateLimiter
+        private LpaService $lpaService,
+        private RateLimitService $failureRateLimiter,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->lpaService = $lpaService;
-        $this->failureRateLimiter = $failureRateLimiter;
     }
 
     /**
@@ -69,11 +47,11 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->getSession($request, 'session')->get('code');
+        $code    = $this->getSession($request, 'session')->get('code');
         $surname = $this->getSession($request, 'session')->get('surname');
-        $form = new Organisation($this->getCsrfGuard($request));
+        $form    = new Organisation($this->getCsrfGuard($request));
 
-        if ($request->getMethod() === "POST") {
+        if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
             if ($form->isValid()) {
                 $session = $this->getSession($request, 'session');
@@ -89,20 +67,20 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                 if ($lpa instanceof ArrayObject) {
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
-                    $status = strtolower(($lpa->lpa)->getStatus());
-                    if ($this->canDisplayLPA($status)){
+                    $status  = strtolower($lpa->lpa->getStatus());
+                    if ($this->canDisplayLPA($status)) {
                         return new HtmlResponse($this->renderer->render(
                             'viewer::check-code-found',
                             [
                                 'lpa'     => $lpa->lpa,
                                 'expires' => $expires->format('Y-m-d'),
-                                'form'    => $form
+                                'form'    => $form,
                             ]
                         ));
                     }
                 }
             } catch (ApiException $apiEx) {
-                if ($apiEx->getCode() == StatusCodeInterface::STATUS_GONE) {
+                if ($apiEx->getCode() === StatusCodeInterface::STATUS_GONE) {
                     if ($apiEx->getMessage() === 'Share code cancelled') {
                         return new HtmlResponse($this->renderer->render('viewer::check-code-cancelled'));
                     } else {
@@ -112,18 +90,19 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
             }
 
             $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
-            return new HtmlResponse($this->renderer->render('viewer::check-code-not-found'));
-
+            return new HtmlResponse($this->renderer->render(
+                'viewer::check-code-not-found',
+                [
+                    'donor_last_name' => $surname,
+                    'lpa_access_code' => $code,
+                ]
+            ));
         }
 
         //  We don't have a code so the session has timed out
         throw new SessionTimeoutException();
     }
 
-    /**
-     * @param string $status
-     * @return bool
-     */
     public function canDisplayLPA(string $status): bool
     {
         return $status === 'registered' || $status === 'cancelled' || $status === 'revoked';

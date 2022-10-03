@@ -9,6 +9,7 @@
             <configuration_by_sdk interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" executable_path="/app/vendor/behat/behat/bin/behat" />
             <configuration_by_sdk interpreter_id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" executable_path="/home/circleci/project/vendor/behat/behat/bin/behat" />
             <configuration_by_sdk interpreter_id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" executable_path="/app/vendor/behat/behat/bin/behat" />
+            <local_configuration executable_path="$PROJECT_DIR$/service-front/app/vendor/behat/behat/bin/behat" />
           </configurations>
         </settings>
       </tool>

@@ -11,13 +11,8 @@ use Throwable;
 
 class LogStderrListener
 {
-    private bool $includeTrace;
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger, $includeTrace = false)
+    public function __construct(public LoggerInterface $logger, public bool $includeTrace = false)
     {
-        $this->logger = $logger;
-        $this->includeTrace = $includeTrace;
     }
 
     /**
@@ -33,7 +28,7 @@ class LogStderrListener
             'message' => $error->getMessage(),
             'line'    => $error->getLine(),
             'file'    => $error->getFile(),
-            'code'    => $error->getCode()
+            'code'    => $error->getCode(),
         ];
 
         if ($this->includeTrace) {

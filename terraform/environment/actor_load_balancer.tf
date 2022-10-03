@@ -13,7 +13,7 @@ resource "aws_lb" "actor" {
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnet_ids.public.ids
+  subnets                    = data.aws_subnets.public.ids
 
   enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
@@ -131,12 +131,15 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
   priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/actor_maintenance.html")
-      status_code  = "503"
+    redirect {
+      host        = "maintenance.opg.service.justice.gov.uk"
+      path        = "/en-gb/use-a-lasting-power-of-attorney"
+      query       = ""
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
   condition {
@@ -157,17 +160,20 @@ resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
   priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/actor_maintenance_welsh.html")
-      status_code  = "503"
+    redirect {
+      host        = "maintenance.opg.service.justice.gov.uk"
+      path        = "/cy/defnyddio-atwrneiaeth-arhosol"
+      query       = ""
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
   condition {
     path_pattern {
-      values = ["/maintenance-cy"]
+      values = ["/cy/maintenance"]
     }
   }
   lifecycle {
@@ -203,7 +209,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = module.whitelist.moj_sites
+  cidr_blocks       = module.allow_list.moj_sites
   security_group_id = aws_security_group.actor_loadbalancer.id
 }
 

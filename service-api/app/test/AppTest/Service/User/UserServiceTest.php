@@ -17,6 +17,7 @@ use Exception;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -26,12 +27,14 @@ use Ramsey\Uuid\Uuid;
  */
 class UserServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    const PASS = 'test';
-    const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
+    private const PASS = 'test';
+    private const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
     /** @test */
-    public function can_create_a_valid_instance()
+    public function can_create_a_valid_instance(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -42,7 +45,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_add_a_new_user()
+    public function can_add_a_new_user(): void
     {
         $id = '12345678-1234-1234-1234-123456789012';
         $email = 'a@b.com';
@@ -83,7 +86,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_reset_existing_user_for_add()
+    public function can_reset_existing_user_for_add(): void
     {
         $id = '12345678-1234-1234-1234-123456789012';
         $email = 'a@b.com';
@@ -104,7 +107,7 @@ class UserServiceTest extends TestCase
                 'ExpiresTTL' => $ttl,
                 'ActivationToken' => $activationToken
             ]);
-        $repoProphecy->resetActivationDetails($id,$password, Argument::type('integer'))
+        $repoProphecy->resetActivationDetails($id, $password, Argument::type('integer'))
             ->willReturn([
                 'Id' => $id,
                 'Email' => $email
@@ -145,7 +148,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_a_user_from_storage()
+    public function can_get_a_user_from_storage(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -161,7 +164,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_retrieve_a_user_that_doesnt_exist()
+    public function cannot_retrieve_a_user_that_doesnt_exist(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -176,13 +179,20 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_authenticate_a_user_with_valid_credentials()
+    public function can_authenticate_a_user_with_valid_credentials(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01']);
+            ->willReturn(
+                [
+                    'Id' => '1234-1234-1234',
+                    'Email' => 'a@b.com',
+                    'Password' => self::PASS_HASH,
+                    'LastLogin' => '2020-01-01'
+                ]
+            );
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::that(function ($dateTime) {
             $this->assertIsString($dateTime);
 
@@ -194,13 +204,21 @@ class UserServiceTest extends TestCase
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
-        $this->assertEquals(['Id' => '1234-1234-1234', 'Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'LastLogin' => '2020-01-01'], $return);
+        $this->assertEquals(
+            [
+                'Id' => '1234-1234-1234',
+                'Email' => 'a@b.com',
+                'Password' => self::PASS_HASH,
+                'LastLogin' => '2020-01-01'
+            ],
+            $return
+        );
     }
 
     /** @test */
-    public function will_not_authenticate_invalid_credentials()
+    public function will_not_authenticate_invalid_credentials(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -211,11 +229,11 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(ForbiddenException::class);
-        $return = $us->authenticate('a@b.com', 'badpassword');
+        $return = $us->authenticate('a@b.com', new HiddenString('badpassword'));
     }
 
     /** @test */
-    public function will_not_authenticate_unknown_user()
+    public function will_not_authenticate_unknown_user(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -226,26 +244,33 @@ class UserServiceTest extends TestCase
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(NotFoundException::class);
-        $return = $us->authenticate('baduser@b.com', self::PASS);
+        $return = $us->authenticate('baduser@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
-    public function will_not_authenticate_unverfied_account()
+    public function will_not_authenticate_unverfied_account(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH, 'ActivationToken' => 'aToken', 'Id' => '1234-1234-1234']);
+            ->willReturn(
+                [
+                    'Email' => 'a@b.com',
+                    'Password' => self::PASS_HASH,
+                    'ActivationToken' => 'aToken',
+                    'Id' => '1234-1234-1234'
+                ]
+            );
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
         $this->expectException(UnauthorizedException::class);
-        $return = $us->authenticate('a@b.com', self::PASS);
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
     }
 
     /** @test */
-    public function will_generate_and_record_a_password_reset_token()
+    public function will_generate_and_record_a_password_reset_token(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -268,7 +293,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_reset_a_password_given_a_valid_token()
+    public function will_reset_a_password_given_a_valid_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $password = 'newpassword';
@@ -301,7 +326,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_not_reset_password_with_expired_token()
+    public function will_not_reset_password_with_expired_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $password = 'newpassword';
@@ -331,7 +356,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_confirm_valid_password_reset_token()
+    public function will_confirm_valid_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $id = '12345-1234-1234-1234-12345';
@@ -361,7 +386,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_reject_expired_password_reset_token()
+    public function will_reject_expired_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $id = '12345-1234-1234-1234-12345';
@@ -390,7 +415,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_reject_non_existant_password_reset_token()
+    public function will_reject_non_existant_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $id = '12345-1234-1234-1234-12345';
@@ -410,7 +435,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_delete_a_user_account()
+    public function will_delete_a_user_account(): void
     {
         $id = '12345-1234-1234-1234-12345';
 
@@ -442,7 +467,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_request_email_reset()
+    public function can_request_email_reset(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
@@ -498,7 +523,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_throw_exception_for_incorrect_password_in_request_email_reset()
+    public function will_throw_exception_for_incorrect_password_in_request_email_reset(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
@@ -526,7 +551,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_throw_exception_if_new_email_is_taken_by_another_user()
+    public function will_throw_exception_if_new_email_is_taken_by_another_user(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
@@ -558,7 +583,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_throw_exception_if_new_email_has_been_requested_for_reset_by_another_user()
+    public function will_throw_exception_if_new_email_has_been_requested_for_reset_by_another_user(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
@@ -605,7 +630,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_reset_email_function_throws_gone_exception_if_token_not_found_or_expired()
+    public function can_reset_email_function_throws_gone_exception_if_token_not_found_or_expired(): void
     {
         $token = 't0k3n12345';
 
@@ -624,7 +649,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function complete_change_email_function_returns_nothing_when_successful()
+    public function complete_change_email_function_returns_nothing_when_successful(): void
     {
         $id = '12345-1234-1234-1234-12345';
         $token = 're3eT0ken';
@@ -660,7 +685,5 @@ class UserServiceTest extends TestCase
 
         $response = $us->completeChangeEmail($token);
         $this->assertNull($response);
-
     }
-
 }

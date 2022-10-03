@@ -7,18 +7,17 @@ namespace CommonTest\Service\Features;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
 /**
- * Class FeatureEnabledFactoryTest
- *
- * @package CommonTest\Service\Features
- *
  * @coversDefaultClass \Common\Service\Features\FeatureEnabledFactory
  */
 class FeatureEnabledFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke

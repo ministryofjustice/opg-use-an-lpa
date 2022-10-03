@@ -7,7 +7,8 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "laminas/laminas-component-installer": false
+            "laminas/laminas-component-installer": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -35,7 +36,6 @@
         "ext-redis": "*",
         "ext-intl": "*",
         "ext-json": "*",
-        "alphagov/notifications-php-client": "^3.0",
         "aws/aws-sdk-php": "^3.208.9",
         "cooperaj/better-twig-i18n": "^1.1",
         "dflydev/fig-cookies": "^3.0",
@@ -67,11 +67,14 @@
         "behat/behat": "^3.6",
         "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
-        "jshayes/fake-requests": "^3.0",
+        "slevomat/coding-standard": "^8.0",
+        "webimpress/coding-standard": "^1.0",
         "laminas/laminas-development-mode": "^3.1",
         "mezzio/mezzio-tooling": "^2.0",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^8.5",
+        "phpspec/prophecy": "^1.15",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^3.0",
         "vimeo/psalm": "^4.19"

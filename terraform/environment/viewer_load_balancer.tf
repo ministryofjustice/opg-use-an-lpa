@@ -13,7 +13,7 @@ resource "aws_lb" "viewer" {
   internal                   = false #tfsec:ignore:AWS005 - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnet_ids.public.ids
+  subnets                    = data.aws_subnets.public.ids
   enable_deletion_protection = local.environment.load_balancer_deletion_protection_enabled
 
   security_groups = [
@@ -130,12 +130,15 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
   priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/viewer_maintenance.html")
-      status_code  = "503"
+    redirect {
+      host        = "maintenance.opg.service.justice.gov.uk"
+      path        = "/en-gb/view-a-lasting-power-of-attorney"
+      query       = ""
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
   condition {
@@ -157,17 +160,20 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
   priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/viewer_maintenance_welsh.html")
-      status_code  = "503"
+    redirect {
+      host        = "maintenance.opg.service.justice.gov.uk"
+      path        = "/cy/gweld-atwrneiaeth-arhosol"
+      query       = ""
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
   condition {
     path_pattern {
-      values = ["/maintenance-cy"]
+      values = ["/cy/maintenance"]
     }
   }
   lifecycle {
@@ -205,7 +211,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = module.whitelist.moj_sites
+  cidr_blocks       = module.allow_list.moj_sites
   security_group_id = aws_security_group.viewer_loadbalancer.id
 }
 

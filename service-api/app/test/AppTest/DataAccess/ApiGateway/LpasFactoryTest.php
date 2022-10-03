@@ -11,12 +11,16 @@ use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class LpasFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
-    public function can_instantiate()
+    public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -38,13 +42,17 @@ class LpasFactoryTest extends TestCase
             $this->prophesize(SiriusLpaSanitiser::class)->reveal()
         );
 
+        $containerProphecy->get(LoggerInterface::class)->willReturn(
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
         $factory = new LpasFactory();
         $repo = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(Lpas::class, $repo);
     }
 
     /** @test */
-    public function cannot_instantiate()
+    public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

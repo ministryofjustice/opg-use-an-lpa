@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
-namespace ViewerTest\Handler\Factory;
+namespace CommonTest\Handler\Factory;
 
-use Common\Service\ApiClient\Client as ApiClient;
 use Common\Handler\Factory\HealthcheckHandlerFactory;
 use Common\Handler\HealthcheckHandler;
+use Common\Service\ApiClient\Client as ApiClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class HealthcheckHandlerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testItCreatesAHealthcheckHandler()
     {
         $factory = new HealthcheckHandlerFactory();

@@ -11,24 +11,21 @@
                 <a class="govuk-link" href="{{ path('lpa.removed') }}"> {% trans %}Why is this?{% endtrans %}</a>
             </p>
         {%  endif %}
-        {% if actorActive and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-            <p class="govuk-body govuk-!-margin-bottom-1">{% trans %}<strong>Important: </strong>This LPA has instructions or preferences.{% endtrans %}
-                <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"> {% trans %}Read more{% endtrans %}</a>
-            </p>
-        {% endif %}
+
+        {{ include('@actor/partials/lpa-instructions-preferences-important-message.html.twig') }}
     </div>
 
     <div class="lpa-status">
         {% if lpa.status|lower == 'cancelled' %}
-            <span class="moj-badge moj-badge--red govuk-!-margin-bottom-2">{% trans %}cancelled{% endtrans %}</span>
+            <span class="moj-badge moj-badge--large moj-badge--red govuk-!-margin-bottom-2">{% trans %}cancelled{% endtrans %}</span>
         {% endif %}
 
         {% if lpa.status|lower == 'cancelled' and activeCodeCount >= 1 %}
-            <span class="moj-badge moj-badge--grey govuk-!-margin-bottom-2">
+            <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
                 {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
             </span>
         {% elseif activeCodeCount >= 1 %}
-            <span class="moj-badge moj-badge--blue govuk-!-margin-bottom-2">
+            <span class="moj-badge moj-badge--large moj-badge--blue govuk-!-margin-bottom-2">
                 {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
             </span>
         {% elseif actorActive %}
@@ -55,5 +52,5 @@
 {% endif %}
 
 {% if feature_enabled('delete_lpa_feature') %}
-    <a class="govuk-body lpa-account-delete govuk-!-display-inline-block govuk-body-s govuk-!-margin-top-2" href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}">{% trans %}Remove LPA{% endtrans %}</a>
+    <a class="govuk-body lpa-account-delete govuk-!-display-inline-block govuk-body-l govuk-!-margin-top-2" href="{{ path('lpa.remove-lpa', {}, {'lpa': actorToken }) }}">{% trans %}Remove LPA{% endtrans %}</a>
 {% endif %}

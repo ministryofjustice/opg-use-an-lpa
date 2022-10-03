@@ -6,18 +6,31 @@ resource "aws_ecs_service" "api" {
   cluster                           = aws_ecs_cluster.use-an-lpa.id
   task_definition                   = aws_ecs_task_definition.api.arn
   desired_count                     = local.environment.autoscaling.api.minimum
-  launch_type                       = "FARGATE"
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
   network_configuration {
     security_groups  = [aws_security_group.api_ecs_service.id]
-    subnets          = data.aws_subnet_ids.private.ids
+    subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.api.arn
+    registry_arn = aws_service_discovery_service.api_ecs.arn
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   wait_for_steady_state = true
@@ -30,11 +43,11 @@ resource "aws_ecs_service" "api" {
 //-----------------------------------------------
 // Api service discovery
 
-resource "aws_service_discovery_service" "api" {
+resource "aws_service_discovery_service" "api_ecs" {
   name = "api"
 
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal.id
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
 
     dns_records {
       ttl  = 10
@@ -51,7 +64,7 @@ resource "aws_service_discovery_service" "api" {
 
 //
 locals {
-  api_service_fqdn = "${aws_service_discovery_service.api.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------
@@ -349,7 +362,7 @@ locals {
         },
         {
           name  = "USE_LEGACY_CODES_SERVICE",
-          value = tostring(local.environment.use_legacy_codes_service)
+          value = tostring(local.environment.application_flags.use_legacy_codes_service)
         },
         {
           name  = "LOGGING_LEVEL",
@@ -357,19 +370,19 @@ locals {
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.environment.allow_older_lpas)
+          value = tostring(local.environment.application_flags.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.allow_meris_lpas)
+          value = tostring(local.environment.application_flags.allow_meris_lpas)
         },
         {
           name  = "SAVE_OLDER_LPA_REQUESTS",
-          value = tostring(local.environment.save_older_lpa_requests)
+          value = tostring(local.environment.application_flags.save_older_lpa_requests)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         }
       ]
   })

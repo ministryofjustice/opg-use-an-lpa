@@ -7,12 +7,15 @@ namespace AppTest\DataAccess\DynamoDb;
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\DynamoDb\ViewerCodesFactory;
 use Aws\DynamoDb\DynamoDbClient;
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Exception;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class ViewerCodesFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testValidConfig()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

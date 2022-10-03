@@ -12,13 +12,14 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\{Checkbox, Password};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CreateAccountTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
-    /** @var CreateAccount */
-    protected $form;
+    protected CreateAccount $form;
 
     public function getForm(): AbstractForm
     {
@@ -33,16 +34,16 @@ class CreateAccountTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'email'                 => Email::class,
-            'show_hide_password'    => Password::class,
-            'terms'                 => Checkbox::class,
+            '__csrf'             => Csrf::class,
+            'email'              => Email::class,
+            'show_hide_password' => Password::class,
+            'terms'              => Checkbox::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CreateAccount($guardProphecy->reveal());
+        $this->form    = new CreateAccount($guardProphecy->reveal());
     }
 }

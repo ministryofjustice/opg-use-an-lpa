@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\Handler\AbstractHandler;
 use Common\Handler\SessionAware;
 use Common\Handler\Traits\Session;
@@ -12,6 +13,8 @@ use Common\Handler\UserAware;
 use Common\Service\User\UserService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
@@ -19,32 +22,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class CompleteChangeEmailHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, SessionAware
 {
-    use User;
     use Session;
+    use User;
 
-    /** @var UserService */
-    private $userService;
+    public const NEW_EMAIL_ACTIVATED_FLASH_MSG = 'new_email_activated_flash_msg';
 
-    /**
-     * CompleteChangeEmailHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService
+        private UserService $userService,
+        private TranslatorInterface $translator,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
     }
 
     /**
@@ -76,6 +69,17 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
             $session->unset(UserInterface::class);
             $session->regenerate();
         }
+
+        /** @var FlashMessagesInterface $flash */
+        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
+        $message = $this->translator->translate(
+            'Email address changed successfully',
+            [],
+            null,
+            'flashMessage'
+        );
+        $flash->flash(self::NEW_EMAIL_ACTIVATED_FLASH_MSG, $message);
 
         return $this->redirectToRoute('login');
     }

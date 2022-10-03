@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form;
 
 use Actor\Form\RemoveLpa;
@@ -10,10 +12,12 @@ use CommonTest\Form\TestsLaminasForm;
 use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class RemoveLpaTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected RemoveLpa $form;
 
@@ -31,13 +35,13 @@ class RemoveLpaTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'          => Csrf::class,
-            'actor_lpa_token' => Hidden::class
+            'actor_lpa_token' => Hidden::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RemoveLpa($guardProphecy->reveal());
+        $this->form    = new RemoveLpa($guardProphecy->reveal());
     }
 }

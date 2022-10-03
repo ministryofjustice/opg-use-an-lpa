@@ -29,7 +29,7 @@ Feature: Add an LPA triage page
     Given I have added an LPA to my account
     And I am on the dashboard page
     When I select to add an LPA
-    Then I will be taken to the appropriate Add a lasting power of attorney to add an lpa
+    Then I will be taken to the appropriate What is your activation key? to add an lpa
 
   @ui
   Scenario Outline: A user with an activation key is taken to the add an LPA page
@@ -39,8 +39,9 @@ Feature: Add an LPA triage page
 
     Examples:
       | option | page                             |
-      | Yes    | Add a lasting power of attorney  |
+      | Yes    | What is your activation key?     |
       | No     | Ask for an activation key        |
+      | Expired| Ask for an activation key        |
 
   @ui
   Scenario: The user is shown an error message if they do not select either option
@@ -58,6 +59,12 @@ Feature: Add an LPA triage page
   Scenario: The user is taken to information about requesting an activation key
     Given I am on the add an LPA triage page
     When I say I do not have an activation key
+    Then I am taken to page giving me information about asking for an activation key
+
+  @ui
+  Scenario: The user is taken to information about requesting an activation key
+    Given I am on the add an LPA triage page
+    When I say I have an activation key but it has expired
     Then I am taken to page giving me information about asking for an activation key
 
   @ui

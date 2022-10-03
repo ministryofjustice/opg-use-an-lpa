@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa;
 
-use Common\Service\Lpa\Response\Parse\LpaAlreadyAddedResponseTransformer;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
+use Common\Service\Lpa\Response\Parse\LpaAlreadyAddedResponseTransformer;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use Fig\Http\Message\StatusCodeInterface;
-use ArrayObject;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -21,33 +20,24 @@ class AddLpa
     private const ADD_LPA_NOT_ELIGIBLE  = 'LPA status is not registered';
     private const ADD_LPA_ALREADY_ADDED = 'LPA already added';
 
-    private LoggerInterface $logger;
-    private ApiClient $apiClient;
-    private ParseLpaData $parseLpaData;
-    private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
-
     public function __construct(
-        ApiClient $apiClient,
-        LoggerInterface $logger,
-        ParseLpaData $parseLpaData,
-        ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse
+        private ApiClient $apiClient,
+        private LoggerInterface $logger,
+        private ParseLpaData $parseLpaData,
+        private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
     ) {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
-        $this->parseLpaData = $parseLpaData;
-        $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
     }
 
     public function validate(
         string $userToken,
-        string $passcode,
+        string $activation_key,
         string $lpaUid,
-        string $dob
+        string $dob,
     ): AddLpaApiResponse {
         $data = [
-            'actor-code' => $passcode,
-            'uid' => $lpaUid,
-            'dob' => $dob
+            'actor-code' => $activation_key,
+            'uid'        => $lpaUid,
+            'dob'        => $dob,
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -77,8 +67,8 @@ class AddLpa
             'User {id} has found their LPA with Id {uId} using their activation key',
             [
                 'event_code' => EventCodes::ADD_LPA_FOUND,
-                'id'  => $userToken,
-                'uId' => $lpaUid
+                'id'         => $userToken,
+                'uId'        => $lpaUid,
             ]
         );
 
@@ -89,14 +79,14 @@ class AddLpa
 
     public function confirm(
         string $userToken,
-        string $passcode,
+        string $activation_key,
         string $lpaUid,
-        string $dob
+        string $dob,
     ): AddLpaApiResponse {
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
-            'actor-code' => $passcode,
+            'actor-code' => $activation_key,
             'uid'        => $lpaUid,
             'dob'        => $dob,
         ]);
@@ -106,8 +96,8 @@ class AddLpa
                 'Account with Id {id} added LPA with Id {uId} to their account',
                 [
                     'event_code' => EventCodes::ADD_LPA_SUCCESS,
-                    'id'  => $userToken,
-                    'uId' => $lpaUid
+                    'id'         => $userToken,
+                    'uId'        => $lpaUid,
                 ]
             );
 
@@ -118,8 +108,8 @@ class AddLpa
             'An error occured when account with Id {id} confirmed adding their LPA with Id {uId} to their account',
             [
                 'event_code' => EventCodes::ADD_LPA_FAILURE,
-                'id'  => $userToken,
-                'uId' => $lpaUid
+                'id'         => $userToken,
+                'uId'        => $lpaUid,
             ]
         );
 
@@ -133,14 +123,13 @@ class AddLpa
      * @param string $lpaUid
      * @param string $message
      * @param array  $additionalData
-     *
      * @return AddLpaApiResponse
      */
     private function badRequestReturned(string $lpaUid, string $message, array $additionalData): AddLpaApiResponse
     {
         switch ($message) {
             case self::ADD_LPA_NOT_ELIGIBLE:
-                $code = EventCodes::ADD_LPA_NOT_ELIGIBLE;
+                $code     = EventCodes::ADD_LPA_NOT_ELIGIBLE;
                 $response = new AddLpaApiResponse(
                     AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE,
                     $additionalData
@@ -148,7 +137,7 @@ class AddLpa
                 break;
 
             case self::ADD_LPA_ALREADY_ADDED:
-                $code = EventCodes::ADD_LPA_ALREADY_ADDED;
+                $code     = EventCodes::ADD_LPA_ALREADY_ADDED;
                 $response = new AddLpaApiResponse(
                     AddLpaApiResponse::ADD_LPA_ALREADY_ADDED,
                     ($this->parseLpaAlreadyAddedResponse)($additionalData)
@@ -166,8 +155,8 @@ class AddLpa
             'LPA with reference number {uId} was not added because "{reason}"',
             [
                 'event_code' => $code,
-                'uId' => $lpaUid,
-                'reason' => $message,
+                'uId'        => $lpaUid,
+                'reason'     => $message,
             ]
         );
 
@@ -179,7 +168,6 @@ class AddLpa
      *
      * @param string $lpaUid
      * @param array  $additionalData
-     *
      * @return AddLpaApiResponse
      */
     private function notFoundReturned(string $lpaUid, array $additionalData): AddLpaApiResponse
@@ -189,7 +177,7 @@ class AddLpa
             [
                 // attach a code for brute force checking
                 'event_code' => EventCodes::ADD_LPA_NOT_FOUND,
-                'uId' => $lpaUid
+                'uId'        => $lpaUid,
             ]
         );
 

@@ -11,8 +11,7 @@ Feature: The user is able to create access codes for organisations
 
   @acceptance @integration
   Scenario: As a user I want to be told if I have not created any access codes yet
-    Given I have added an LPA to my account
-    And I am on the dashboard page
+    Given I am on the dashboard page
     When I check my access codes
     Then I should be told that I have not created any access codes yet
     And I should be able to click a link to go and create the access codes
@@ -24,7 +23,7 @@ Feature: The user is able to create access codes for organisations
     Then I am given a unique access code
 
   @acceptance @integration
-  Scenario: As a user I wouldn't be able to create a viewer code if  the status of LPA has changed  to Revoked
+  Scenario: As a user I wouldn't be able to create a viewer code if the status of LPA has changed to Revoked
     Given I have added an LPA to my account
     And I am on the dashboard page
     And The status of the LPA got Revoked

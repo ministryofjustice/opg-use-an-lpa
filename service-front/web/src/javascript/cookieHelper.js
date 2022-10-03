@@ -3,6 +3,12 @@ const DEFAULT_COOKIE_CONSENT = {
     'usage': false
 }
 
+const APPROVED_COOKIE_CONSENT = {
+    'essential': true,
+    'usage': true
+}
+
+
 const getCookie = name => {
     const nameEQ = name + '=';
     const cookies = document.cookie.split(';');
@@ -18,40 +24,20 @@ const getCookie = name => {
     return null;
 }
 
-const createCookie = (name, value, options) => {
+const setCookie = (name, value, options) => {
     // Default expiry date of 30 days
     if (typeof options === 'undefined' || options.days === undefined) {
         options = { days: 30 }
     }
 
-    let cookieString = `${name}=${encodeURIComponent(value)}; path=/`;
-    const date = new Date(Date.now());
-    date.setTime(date.getTime() + (options.days * 24 * 60 * 60 * 1000));
-    cookieString = `${cookieString}; expires=${date.toGMTString()}`;
-
-    /* istanbul ignore next */
-    if (window.location.protocol === 'https:') {
-        cookieString = `${cookieString}; Secure`;
-    }
-
-    return cookieString;
+    const maxAge = options.days * 24 * 60 * 60;
+    const cookie =`${name}=${encodeURIComponent(value)}` + "; path=/" + "; max-age=" + maxAge + "; Secure; SameSite=Strict;";
+    document.cookie = cookie;
+    return cookie;
 }
 
-const setCookie = (name, value, options) => {
-    document.cookie = createCookie(name, value, options);
+const setConsentCookie = (accept) => {
+    setCookie('cookie_policy', JSON.stringify(accept ? APPROVED_COOKIE_CONSENT : DEFAULT_COOKIE_CONSENT), { days: 365 });
 }
 
-const approveAllCookieTypes = () => {
-    const approvedConsent = {
-        'essential': true,
-        'usage': true
-    }
-
-    setCookie('cookie_policy', JSON.stringify(approvedConsent), { days: 365 });
-}
-
-const setDefaultConsentCookie = () => {
-    setCookie('cookie_policy', JSON.stringify(DEFAULT_COOKIE_CONSENT), { days: 365 });
-}
-
-export { getCookie, setCookie, setDefaultConsentCookie, approveAllCookieTypes, createCookie };
+export { getCookie, setCookie, setConsentCookie };

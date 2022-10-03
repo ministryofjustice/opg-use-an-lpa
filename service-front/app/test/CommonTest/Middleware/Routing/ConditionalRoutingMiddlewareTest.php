@@ -8,19 +8,24 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Interop\Container\ContainerInterface;
 use Monolog\Test\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use UnexpectedValueException;
 
 class ConditionalRoutingMiddlewareTest extends TestCase
 {
-    private $containerProphecy;
-    private $requestInterfaceProphecy;
-    private $requestHandlerInterfaceProphecy;
+    use ProphecyTrait;
+
+    private ObjectProphecy|ContainerInterface $containerProphecy;
+    private ObjectProphecy|ServerRequestInterface $requestInterfaceProphecy;
+    private ObjectProphecy|RequestHandlerInterface $requestHandlerInterfaceProphecy;
 
     public function setUp(): void
     {
-        $this->containerProphecy = $this->prophesize(ContainerInterface::class);
-        $this->requestInterfaceProphecy = $this->prophesize(ServerRequestInterface::class);
+        $this->containerProphecy               = $this->prophesize(ContainerInterface::class);
+        $this->requestInterfaceProphecy        = $this->prophesize(ServerRequestInterface::class);
         $this->requestHandlerInterfaceProphecy = $this->prophesize(RequestHandlerInterface::class);
     }
 
@@ -98,7 +103,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
             'FalseRoute'
         );
 
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
     }
 }

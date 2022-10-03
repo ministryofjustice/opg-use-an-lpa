@@ -8,7 +8,8 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -18,8 +19,8 @@
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-l govuk-!-margin-top-0">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</span>
-                    <span class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Which organisation do you want to give access to?{% endtrans %}</h1>
                 </div>
 
             </div>
@@ -30,36 +31,45 @@
                 {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-two-thirds">
 
-                        {{ govuk_form_element(form.get('__csrf')) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+                    {{ govuk_form_element(form.get('lpa_token')) }}
 
-                        {{ govuk_form_element(form.get('lpa_token')) }}
+                    <div class="govuk-form-group">
+                            {% if lpa.caseSubtype|lower == 'hw' %}
+                                {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' %}
+                            {% elseif lpa.caseSubtype|lower == 'pfa' %}
+                                {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' %}
+                            {% endif %}
 
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                            <h1 class="govuk-fieldset__heading">
-                                {% trans %}Which organisation do you want to give access to?{% endtrans %}
-                            </h1>
-                        </legend>
-                </div>
-                <div class="govuk-grid-column-two-thirds">
-                    {% if lpa.caseSubtype|lower == 'hw' %}
-                        <p class="govuk-body">{% trans %}The organisation could be a hospital, care home, or other health care provider.{% endtrans %}</p>
-                    {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                        <p class="govuk-body">{% trans %}The organisation could be a bank, energy provider, or another business.{% endtrans %}</p>
-                    {% endif %}
 
-                    {{ govuk_form_element(form.get('org_name'), {
-                        'label': 'Organisation name' | trans,
-                        'hint': 'This is for your reference only' | trans,
-                        'attr' : {'class': 'govuk-!-width-three-quarters'}
-                    }) }}
+                            {{ govuk_form_element(form.get('org_name'), {
+                                'label': 'Organisation name' | trans,
+                                'hint':  hint | trans,
+                                'attr' : {'class': 'govuk-!-width-three-quarters', 'label_class': 'govuk-label--s govuk-!-margin-bottom-3'}
+                            }) }}
+                    </div>
 
+                    {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
                             <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                            {% trans %}This is a new service, check that the organisation will accept an online summary of the <abbr title="lasting power of attorney">LPA</abbr> and how they want to receive the access code you make for them.{% endtrans %}
+                            {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
                         </strong>
                     </div>
+                    {% endif %}
+
+                    {% if not lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}
+                                Check that the organisation will accept an online summary of the <abbr title="lasting power of attorney">LPA</abbr> and how they want to receive the access code you make for them.
+                            {% endtrans %}
+                        </strong>
+                    </div>
+                    {% endif %}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">
                         {% trans %}Continue{% endtrans %}

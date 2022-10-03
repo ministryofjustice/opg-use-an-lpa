@@ -5,45 +5,26 @@ declare(strict_types=1);
 namespace Common\Handler;
 
 use Common\Service\ApiClient\Client as ApiClient;
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class HealthcheckHandler
- * @package Common\Handler
- */
 class HealthcheckHandler implements RequestHandlerInterface
 {
-    /**
-     * @var ApiClient
-     */
-    protected $apiClient;
-
-    /**
-     * @var string
-     */
-    protected $version;
-
-    public function __construct(string $version, ApiClient $api)
+    public function __construct(protected string $version, protected ApiClient $apiClient)
     {
-        $this->apiClient = $api;
-        $this->version = $version;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
-            "overall_healthy" => $this->isHealthy(),
-            "version" => $this->version,
-            "dependencies" => $this->checkDependencyEndpoints()
-        ], 200, [], JSON_PRETTY_PRINT);
+            'overall_healthy' => $this->isHealthy(),
+            'version'         => $this->version,
+            'dependencies'    => $this->checkDependencyEndpoints(),
+        ], StatusCodeInterface::STATUS_OK, [], JSON_PRETTY_PRINT);
     }
 
     protected function isHealthy(): bool
@@ -63,7 +44,7 @@ class HealthcheckHandler implements RequestHandlerInterface
 
         try {
             $data = $this->apiClient->httpGet('/healthcheck');
-        } catch (Exception $e) {
+        } catch (Exception) {
             $data['healthy'] = false;
         }
 

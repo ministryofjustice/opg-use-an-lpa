@@ -5,126 +5,70 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
-use Exception;
-use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Client as HttpClient;
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use App\DataAccess\Repository\ActorUsersInterface;
+use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\Request;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 /**
  * Class HealthcheckHandler
  * @package App\Handler
  */
-class HealthcheckHandler implements RequestHandlerInterface
+final class HealthcheckHandler implements RequestHandlerInterface
 {
-    /**
-     * @var string
-     */
-    protected $version;
-
-    /**
-     * @var ActorUsersInterface
-     */
-    private $actorUsers;
-
-    /**
-     * @var string
-     */
-    private string $apiBaseUri;
-
-    /**
-     * @var RequestSigner
-     */
-    private RequestSigner $awsSignature;
-
-    /**
-     * @var HttpClient
-     */
-    private HttpClient $httpClient;
-
     public function __construct(
-        string $version,
-        ActorUsersInterface $actorUsers,
-        HttpClient $httpClient,
-        RequestSigner $awsSignature,
-        string $apiUrl
+        private string $version,
+        private ActorUsersInterface $actorUsers,
+        private HttpClient $httpClient,
+        private RequestSigner $awsSignature,
+        private string $siriusApiUrl,
+        private string $codesApiUrl,
     ) {
-        $this->version = $version;
-        $this->actorUsers = $actorUsers;
-        $this->httpClient = $httpClient;
-        $this->awsSignature = $awsSignature;
-        $this->apiBaseUri = $apiUrl;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([
-            "version" => $this->version,
-            "lpa_api" => $this->checkApiEndpoint(),
-            "dynamo" => $this->checkDynamoEndpoint(),
-            "lpa_codes_api" => $this->checkLpaCodesApiEndpoint(),
-            "healthy" => $this->isHealthy()
-        ]);
+        $data = [
+            'version'       => $this->version,
+            'lpa_api'       => $this->stopwatch($this->checkApiEndpoint(...)),
+            'dynamo'        => $this->stopwatch($this->checkDynamoEndpoint(...)),
+            'lpa_codes_api' => $this->stopwatch($this->checkCodesApiEndpoint(...)),
+        ];
+
+        $data['healthy'] = $this->isHealthy($data);
+
+        return new JsonResponse($data);
     }
 
-    protected function isHealthy(): bool
+    private function isHealthy(array $data): bool
     {
-        return $this->checkDynamoEndpoint()['healthy']
-        && $this->checkApiEndpoint()['healthy']
-        && $this->checkLpaCodesApiEndpoint()['healthy'];
+        return $data['lpa_api']['healthy']
+            && $data['dynamo']['healthy']
+            && $data['lpa_codes_api']['healthy'];
     }
 
-    protected function checkApiEndpoint(): array
+    private function checkApiEndpoint(): array
     {
-        $data = [];
+        $url = sprintf('%s/v1/healthcheck', $this->siriusApiUrl);
 
-        $start = microtime(true);
-
-        $url  = sprintf("%s/v1/healthcheck", $this->apiBaseUri);
-
-        $request = new Request('GET', $url);
-        $request = $this->awsSignature->sign($request);
-
-        try {
-            $response = $this->httpClient->send($request);
-
-            if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
-                $data['healthy'] = true;
-            } else {
-                $data['healthy'] = false;
-            }
-        } catch (Exception $e) {
-            $data['healthy'] = false;
-        }
-
-        $data['response_time'] = round(microtime(true) - $start, 3);
-        return $data;
+        return $this->apiCall(new Request('GET', $url));
     }
 
-    protected function checkDynamoEndpoint(): array
+    private function checkDynamoEndpoint(): array
     {
         $data = [];
 
-        $start = microtime(true);
-
         try {
-            $dbTables = $this->actorUsers->get('XXXXXXXXXXXX');
+            $this->actorUsers->get('XXXXXXXXXXXX');
 
-            if (is_array($dbTables)) {
-                $data['healthy'] = true;
-            } else {
-                $data['healthy'] = false;
-            }
-        } catch (Exception $e) {
+            $data['healthy'] = true;
+        } catch (Throwable $e) {
             if ($e->getMessage() === 'User not found') {
                 $data['healthy'] = true;
             } else {
@@ -133,35 +77,54 @@ class HealthcheckHandler implements RequestHandlerInterface
             }
         }
 
-        $data['response_time'] = round(microtime(true) - $start, 3);
-
         return $data;
     }
 
-    public function checkLpaCodesApiEndpoint(): array
+    private function checkCodesApiEndpoint(): array
+    {
+        $url  = sprintf('%s/v1/healthcheck', $this->codesApiUrl);
+
+        return $this->apiCall(new Request('GET', $url));
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return array{healthy: bool}
+     */
+    private function apiCall(RequestInterface $request): array
     {
         $data = [];
-
-        $start = microtime(true);
-
-        $url  = sprintf("%s/v1/healthcheck", $this->apiBaseUri);
-
-        $request = new Request('GET', $url);
-        $request = $this->awsSignature->sign($request);
+        $signedRequest = $this->awsSignature->sign($request);
 
         try {
-            $response = $this->httpClient->send($request);
+            $response = $this->httpClient->send($signedRequest);
 
             if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
             } else {
                 $data['healthy'] = false;
             }
-        } catch (GuzzleException $ge) {
+        } catch (Throwable $e) {
             $data['healthy'] = false;
         }
 
+        return $data;
+    }
+
+    /**
+     * @param callable $functionToTime
+     *
+     * @return array{response_time: float}
+     */
+    private function stopwatch(callable $functionToTime): array
+    {
+        $start = microtime(true);
+
+        $data = $functionToTime();
+
         $data['response_time'] = round(microtime(true) - $start, 3);
+
         return $data;
     }
 }

@@ -5,22 +5,18 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ResolveActorTest extends TestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var ObjectProphecy
-     */
-    private $getAttorneyStatusProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
@@ -35,7 +31,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor()
+    public function can_find_actor_who_is_a_donor(): void
     {
         $lpa = [
             'donor' => [
@@ -68,7 +64,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor_by_linked_id()
+    public function can_find_actor_who_is_a_donor_by_linked_id(): void
     {
         $lpa = [
             'donor' => [
@@ -92,7 +88,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_find_actor_who_is_a_donor_by_linked_uid()
+    public function can_find_actor_who_is_a_donor_by_linked_uid(): void
     {
         $lpa = [
             'donor' => [
@@ -116,7 +112,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_not_a_donor_by_linked_id()
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_id(): void
     {
         $lpa = [
             'donor' => [
@@ -134,7 +130,7 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_not_a_donor_by_linked_uid()
+    public function can_not_find_actor_who_is_not_a_donor_by_linked_uid(): void
     {
         $lpa = [
             'donor' => [
@@ -223,6 +219,7 @@ class ResolveActorTest extends TestCase
         $lpa = [
             'donor' => [
                 'id' => 1,
+                'uId' => '456789012345'
             ],
             'original_attorneys' => [
                 ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
@@ -272,11 +269,12 @@ class ResolveActorTest extends TestCase
     }
 
     /** @test */
-    public function can_not_find_actor_who_is_an_inactive_attorney()
+    public function can_not_find_actor_who_is_an_inactive_attorney(): void
     {
         $lpa = [
             'donor' => [
-                'id' => 1,
+                'id'  => 1,
+                'uId' => '456789012345'
             ],
             'original_attorneys' => [
                 ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
@@ -304,5 +302,63 @@ class ResolveActorTest extends TestCase
 
         $result = $resolver($lpa, '234567890123');
         $this->assertNull($result);
+    }
+
+    /**
+     * @test
+     */
+    public function can_find_actor_who_is_a_trust_corporation()
+    {
+        $lpa = [
+            'donor' => [
+                'id' => 1,
+            ],
+            'trustCorporations' => [
+                [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true,
+                ],
+            ],
+        ];
+
+        $resolver = $this->getActorResolver();
+
+        $result = $resolver($lpa, '700000151998');
+
+        $this->assertEquals(
+            [
+                'type' => 'trust-corporation',
+                'details' => [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
+
+        $result = $resolver($lpa, '9');
+
+        $this->assertEquals(
+            [
+                'type' => 'trust-corporation',
+                'details' => [
+                    'id' => 9,
+                    'uId' => '700000151998',
+                    'firstname' => 'trust',
+                    'surname' => 'corporation',
+                    'companyName' => 'trust corporation ltd',
+                    'systemStatus' => true
+                ],
+            ],
+            $result
+        );
     }
 }

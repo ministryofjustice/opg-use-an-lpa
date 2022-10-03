@@ -12,19 +12,10 @@ use function random_bytes;
 
 class SessionCsrfGuard implements CsrfGuardInterface
 {
-    /**
-     * @var string
-     */
-    private $requestId;
+    private string $requestId;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    public function __construct(SessionInterface $session)
+    public function __construct(private SessionInterface $session)
     {
-        $this->session = $session;
 
         $this->requestId = bin2hex(random_bytes(8));
     }
@@ -36,7 +27,7 @@ class SessionCsrfGuard implements CsrfGuardInterface
     {
         $tokens = $this->cleanupTokens($this->session->get($keyName, []));
 
-        $newToken = bin2hex(random_bytes(16));
+        $newToken          = bin2hex(random_bytes(16));
         $tokens[$newToken] = $this->requestId;
 
         $this->session->set($keyName, $tokens);
@@ -51,7 +42,7 @@ class SessionCsrfGuard implements CsrfGuardInterface
         $storedTokens = $this->session->get($csrfKey, []);
 
         $tokenParts = $this->splitHash($token);
-        $tokenId = $tokenParts['token'];
+        $tokenId    = $tokenParts['token'];
 
         return array_key_exists($tokenId, $storedTokens)
             && $token === $this->formatHash($tokenId, $storedTokens[$tokenId]);
@@ -76,8 +67,8 @@ class SessionCsrfGuard implements CsrfGuardInterface
         $data = explode('-', $hash);
 
         return [
-            'token' => $data[0] ?? null,
-            'requestId' => $data[1] ?? null
+            'token'     => $data[0] ?? null,
+            'requestId' => $data[1] ?? null,
         ];
     }
 }

@@ -14,19 +14,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class SetLocaleMiddleware implements MiddlewareInterface
 {
-    private UrlHelper $helper;
-
-    private ?string $defaultLocale;
     private string $fallbackLocale = 'en_GB';
-    private TranslatorInterface $translator;
 
     private const REGEX_LOCALE = '#^/(?P<locale>cy)(?:/|$)#';
 
-    public function __construct(UrlHelper $helper, TranslatorInterface $translator, string $defaultLocale = null)
+    public function __construct(private UrlHelper $helper, private TranslatorInterface $translator, private ?string $defaultLocale = null)
     {
-        $this->helper = $helper;
-        $this->defaultLocale = $defaultLocale;
-        $this->translator = $translator;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -36,13 +29,13 @@ class SetLocaleMiddleware implements MiddlewareInterface
         $path = $uri->getPath();
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
-            Locale::setDefault($this->defaultLocale ?: $this->fallbackLocale);
+            Locale::setDefault($this->defaultLocale ?? $this->fallbackLocale);
 
             return $handler->handle($request->withAttribute('locale', Locale::getDefault()));
         }
 
         $locale = $matches['locale'];
-        Locale::setDefault(Locale::canonicalize($locale));
+        Locale::setDefault(Locale::canonicalize($locale . '_GB'));
         $this->translator->setLocale(Locale::getDefault());
         $this->helper->setBasePath($locale);
 

@@ -8,8 +8,6 @@ import (
 
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -38,12 +36,9 @@ func testFS() (fs.FS, error) {
 func TestLoadTemplates(t *testing.T) {
 	t.Parallel()
 
-	// nop the logger so panic and exit calls (if any) don't do anything.
-	log.Logger = zerolog.Nop()
-
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	ts := LoadTemplates(fs)
@@ -59,7 +54,7 @@ func TestTemplates_Get(t *testing.T) {
 
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	tests := []struct {
@@ -114,7 +109,7 @@ func TestWithTemplates(t *testing.T) {
 
 	fs, err := testFS()
 	if err != nil {
-		t.Errorf("unable to create in memory template filesystem, %w", err)
+		t.Errorf("unable to create in memory template filesystem, %v", err)
 	}
 
 	sut := WithTemplates(next, LoadTemplates(fs))

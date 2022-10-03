@@ -6,12 +6,11 @@ resource "aws_ecs_service" "viewer" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
   desired_count    = local.environment.autoscaling.view.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.viewer_ecs_service.id]
-    subnets          = data.aws_subnet_ids.private.ids
+    subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -19,6 +18,20 @@ resource "aws_ecs_service" "viewer" {
     target_group_arn = aws_lb_target_group.viewer.arn
     container_name   = "web"
     container_port   = 80
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   wait_for_steady_state = true

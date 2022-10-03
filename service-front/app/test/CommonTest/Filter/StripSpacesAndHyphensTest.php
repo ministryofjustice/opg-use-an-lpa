@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Filter;
 
 use Common\Filter\StripSpacesAndHyphens;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class StripSpacesAndHyphensTest extends TestCase
 {
+    use ProphecyTrait;
+
     private StripSpacesAndHyphens $filter;
 
     public function setUp(): void
@@ -36,7 +41,7 @@ class StripSpacesAndHyphensTest extends TestCase
             ['7000–1001–0001', '700010010001'],
             ['7000—1001—0001', '700010010001'],
             ['7000–1001—0001', '700010010001'],
-            ['7000——1001——0001', '700010010001']
+            ['7000——1001——0001', '700010010001'],
         ];
     }
 }

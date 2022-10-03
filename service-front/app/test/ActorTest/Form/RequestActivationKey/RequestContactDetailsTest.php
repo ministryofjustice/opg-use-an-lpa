@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestContactDetails;
@@ -10,10 +12,12 @@ use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class RequestContactDetailsTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected RequestContactDetails $form;
 
@@ -39,6 +43,6 @@ class RequestContactDetailsTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestContactDetails($guardProphecy->reveal());
+        $this->form    = new RequestContactDetails($guardProphecy->reveal());
     }
 }

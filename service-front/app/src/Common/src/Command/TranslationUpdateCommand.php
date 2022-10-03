@@ -16,29 +16,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TranslationUpdateCommand extends Command
 {
     public const DEFAULT_LOCALE = 'en_GB';
-    private array $viewsPaths;
-    private array $phpPaths;
-
-    private TwigFactory $twigExtractorFactory;
-    private PhpFactory $phpExtractorFactory;
-    private CatalogueLoader $loader;
-    private PotGenerator $writer;
 
     public function __construct(
-        TwigFactory $twigExtractorFactory,
-        PhpFactory $phpExtractorFactory,
-        CatalogueLoader $loader,
-        PotGenerator $writer,
-        array $viewsPaths = [],
-        array $phpPaths = []
+        private TwigFactory $twigExtractorFactory,
+        private PhpFactory $phpExtractorFactory,
+        private CatalogueLoader $loader,
+        private PotGenerator $writer,
+        private array $viewsPaths = [],
+        private array $phpPaths = [],
     ) {
-        $this->twigExtractorFactory = $twigExtractorFactory;
-        $this->phpExtractorFactory = $phpExtractorFactory;
-        $this->loader = $loader;
-        $this->writer = $writer;
-        $this->viewsPaths = $viewsPaths;
-        $this->phpPaths = $phpPaths;
-
         parent::__construct();
     }
 
@@ -62,16 +48,16 @@ class TranslationUpdateCommand extends Command
 
         $io->section('Parsing templates...');
         $extractorService = ($this->twigExtractorFactory)();
-        $twigCatalogues = $extractorService->extract($this->viewsPaths);
+        $twigCatalogues   = $extractorService->extract($this->viewsPaths);
         $io->text(sprintf('Found %d domains', count($twigCatalogues)));
 
         $io->section('Parsing php...');
         $extractorService = ($this->phpExtractorFactory)();
-        $phpCatalogues = $extractorService->extract($this->phpPaths);
+        $phpCatalogues    = $extractorService->extract($this->phpPaths);
         $io->text(sprintf('Found %d domains', count($phpCatalogues)));
 
         $io->section('Merging translation catalogues...');
-        $extracted = $extractorService->mergeCatalogues($twigCatalogues, $phpCatalogues, 0);
+        $extracted  = $extractorService->mergeCatalogues($twigCatalogues, $phpCatalogues, 0);
         $catalogues = $extractorService->mergeCatalogues($existing, $extracted);
         $io->text(sprintf('%d domains extracted', count($catalogues)));
 

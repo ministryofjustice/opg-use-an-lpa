@@ -1,14 +1,6 @@
-import {
-    PerformanceAnalytics,
-    ErrorAnalytics,
-} from "@ministryofjustice/opg-performance-analytics";
-
 export default class AnalyticsTracking {
     constructor() {
         this.init();
-
-        PerformanceAnalytics();
-        ErrorAnalytics();
     }
 
     init() {

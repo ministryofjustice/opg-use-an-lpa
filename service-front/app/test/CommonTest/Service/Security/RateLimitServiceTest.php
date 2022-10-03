@@ -8,10 +8,13 @@ use Common\Service\Security\RateLimitService;
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class RateLimitServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function its_name_comes_from_the_cache_definition()
     {
@@ -31,7 +34,7 @@ class RateLimitServiceTest extends TestCase
                 $storageProphecy->reveal(),
                 60,
                 4,
-                $loggerProphecy->reveal()
+                $loggerProphecy->reveal(),
             ]
         );
 

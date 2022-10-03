@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * The majority of this class is taken from mezzio-session-cache.
  * It's been modified to used the cookie for the encrypted session data, rather than the cache id.
@@ -12,6 +10,8 @@ declare(strict_types=1);
  * @license   https://github.com/mezzio/mezzio-session-cache/blob/master/LICENSE.md New BSD License
  */
 
+declare(strict_types=1);
+
 namespace Common\Service\Session;
 
 use Common\Service\Session\Encryption\EncryptInterface;
@@ -19,7 +19,9 @@ use DateInterval;
 use DateTimeImmutable;
 use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
@@ -28,11 +30,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class EncryptedCookiePersistence
- *
  * Utilises Amazon KMS to encrypt the session cookie sent to users
- *
- * @package Common\Service\Session
  */
 class EncryptedCookiePersistence implements SessionPersistenceInterface
 {
@@ -40,7 +38,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * This unusual past date value is taken from the php-engine source code and
      * used "as is" for consistency.
      */
-    public const CACHE_PAST_DATE  = 'Thu, 19 Nov 1981 08:52:00 GMT';
+    public const CACHE_PAST_DATE = 'Thu, 19 Nov 1981 08:52:00 GMT';
 
     public const HTTP_DATE_FORMAT = 'D, d M Y H:i:s T';
 
@@ -54,7 +52,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      */
     public const SESSION_EXPIRED_KEY = '__EXPIRED__';
 
-    /** @var array */
     private const SUPPORTED_CACHE_LIMITERS = [
         'nocache',
         'public',
@@ -62,73 +59,35 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         'private_no_expire',
     ];
 
-    private EncryptInterface $encrypter;
-
-    private string $cookieName;
-
-    private string $cookiePath;
-
     private string $cacheLimiter;
 
-    private int $sessionExpire;
-
     private ?string $lastModified;
-
-    private ?int $cookieTtl;
-
-    private ?string $cookieDomain;
-
-    private bool $cookieSecure;
-
-    private bool $cookieHttpOnly;
 
     private ?int $originalSessionTime;
 
     private ?string $requestPath;
 
-    /**
-     * EncryptedCookiePersistence constructor.
-     *
-     * @param EncryptInterface $encrypter
-     * @param string           $cookieName
-     * @param string           $cookiePath
-     * @param string           $cacheLimiter
-     * @param int              $sessionExpire
-     * @param int|null         $lastModified
-     * @param int|null         $cookieTtl
-     * @param string|null      $cookieDomain
-     * @param bool             $cookieSecure
-     * @param bool             $cookieHttpOnly
-     */
     public function __construct(
-        EncryptInterface $encrypter,
-        string $cookieName,
-        string $cookiePath,
+        private EncryptInterface $encrypter,
+        private string $cookieName,
+        private string $cookiePath,
         string $cacheLimiter,
-        int $sessionExpire,
+        private int $sessionExpire,
         ?int $lastModified,
-        ?int $cookieTtl,
-        ?string $cookieDomain,
-        bool $cookieSecure,
-        bool $cookieHttpOnly
+        private ?int $cookieTtl,
+        private ?string $cookieDomain,
+        private bool $cookieSecure,
+        private bool $cookieHttpOnly,
     ) {
-        $this->encrypter = $encrypter;
-        $this->cookieName = $cookieName;
-        $this->cookiePath = $cookiePath;
         $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
             ? $cacheLimiter
             : 'nocache';
-        $this->sessionExpire = $sessionExpire;
         $this->lastModified = $lastModified
             ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
             : $this->getLastModified();
-        $this->cookieTtl = $cookieTtl;
-        $this->cookieDomain = $cookieDomain;
-        $this->cookieSecure = $cookieSecure;
-        $this->cookieHttpOnly = $cookieHttpOnly;
 
         $this->originalSessionTime = null;
-        $this->requestPath = null;
+        $this->requestPath         = null;
     }
 
     //------------------------------------------------------------------------------------------------------------
@@ -137,10 +96,10 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     public function initializeSessionFromRequest(ServerRequestInterface $request): SessionInterface
     {
         $sessionData = $this->getCookieFromRequest($request);
-        $data = $this->encrypter->decodeCookieValue($sessionData);
+        $data        = $this->encrypter->decodeCookieValue($sessionData);
 
         $this->originalSessionTime = $data[self::SESSION_TIME_KEY] ?? null;
-        $this->requestPath = $request->getUri()->getPath();
+        $this->requestPath         = $request->getUri()->getPath();
 
         // responsible the for expiry of a users session
         if (isset($data[self::SESSION_TIME_KEY])) {
@@ -167,12 +126,15 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Encode to string
         $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
+        $sameSite = $session->has(UserInterface::class) ? SameSite::strict() : SameSite::lax();
+
         $sessionCookie = SetCookie::create($this->cookieName)
             ->withValue($sessionData)
             ->withDomain($this->cookieDomain)
             ->withPath($this->cookiePath)
             ->withSecure($this->cookieSecure)
-            ->withHttpOnly($this->cookieHttpOnly);
+            ->withHttpOnly($this->cookieHttpOnly)
+            ->withSameSite($sameSite);
 
         $persistenceDuration = $this->getCookieLifetime($session);
         if ($persistenceDuration) {
@@ -252,7 +214,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     /**
      * Retrieve the session cookie value.
      *
-     *
      * @param ServerRequestInterface $request
      * @return string
      */
@@ -269,12 +230,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      */
     private function responseAlreadyHasCacheHeaders(ResponseInterface $response): bool
     {
-        return (
+        return
             $response->hasHeader('Expires')
             || $response->hasHeader('Last-Modified')
             || $response->hasHeader('Cache-Control')
-            || $response->hasHeader('Pragma')
-        );
+            || $response->hasHeader('Pragma');
     }
 
     private function getCookieLifetime(SessionInterface $session): int
@@ -295,7 +255,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Checking session or setting current time
         return !is_null($this->originalSessionTime)
         && !is_null($this->requestPath)
-        && preg_match("/^\/session-check(\/|)$/i", $this->requestPath)
+        && preg_match('/^\/session-check(\/|)$/i', $this->requestPath)
             ? $this->originalSessionTime
             : time();
     }

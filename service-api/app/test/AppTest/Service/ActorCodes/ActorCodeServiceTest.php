@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Lpa;
+namespace AppTest\Service\ActorCodes;
 
 use App\DataAccess\Repository;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
@@ -15,26 +15,20 @@ use App\Service\Lpa\ResolveActor;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ActorCodeServiceTest extends TestCase
 {
-    /** @var CodeValidationStrategyInterface|ObjectProphecy */
-    private $codeValidatorProphecy;
+    use ProphecyTrait;
 
-    /** @var LpaService|ObjectProphecy */
-    private $lpaServiceProphecy;
+    private CodeValidationStrategyInterface|ObjectProphecy $codeValidatorProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
     private string $testActorUid;
-
-    /** @var UserLpaActorMapInterface|ObjectProphecy */
-    private $userLpaActorMapInterfaceProphecy;
-
-    /** @var LoggerInterface|ObjectProphecy */
-    private $loggerProphecy;
-
-    /** @var ResolveActor|ObjectProphecy */
-    private $resolveActorProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function setUp(): void
     {
@@ -71,7 +65,10 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            $this->testActorUid
+            $this->testActorUid,
+            null,
+            null,
+            'test-code'
         )
             ->willReturn('00000000-0000-4000-A000-000000000000')
             ->shouldBeCalled();
@@ -94,7 +91,11 @@ class ActorCodeServiceTest extends TestCase
             ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
-        $this->userLpaActorMapInterfaceProphecy->activateRecord('token-3', $this->testActorUid)->shouldBeCalled();
+        $this->userLpaActorMapInterfaceProphecy->activateRecord(
+            'token-3',
+            $this->testActorUid,
+            'test-code'
+        )->shouldBeCalled();
 
         $mapResults = [
             [
@@ -102,7 +103,8 @@ class ActorCodeServiceTest extends TestCase
                 'SiriusUid' => 'test-uid',
                 'ActorId' => 3,
                 'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
-                'Added'   => new DateTime('now')
+                'Added'   => new DateTime('now'),
+                'ActivationCode' => 'test-code'
             ]
         ];
 
@@ -127,7 +129,10 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
             'test-uid',
-            $this->testActorUid
+            $this->testActorUid,
+            null,
+            null,
+            'test-code'
         )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')

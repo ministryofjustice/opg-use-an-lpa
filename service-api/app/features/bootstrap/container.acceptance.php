@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Elie\PHPDI\Config\Config;
+use Elie\PHPDI\Config\ContainerFactory;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
-use Zend\DI\Config\Config;
-use Zend\DI\Config\ContainerFactory;
 
 $aggregator = new ConfigAggregator(
     [

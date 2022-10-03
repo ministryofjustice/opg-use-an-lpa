@@ -6,8 +6,9 @@ resource "aws_flow_log" "vpc_flow_logs" {
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
-  name       = "vpc_flow_logs"
-  kms_key_id = aws_kms_key.cloudwatch.arn
+  name              = "vpc_flow_logs"
+  retention_in_days = 400
+  kms_key_id        = aws_kms_key.cloudwatch.arn
 }
 
 resource "aws_iam_role" "vpc_flow_logs" {

@@ -14,18 +14,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActorSessionExpiredHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ActorSessionExpiredHandler extends AbstractHandler implements SessionAware
 {
     use Session;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // If we're viewing this page then ensure our session is always expired.

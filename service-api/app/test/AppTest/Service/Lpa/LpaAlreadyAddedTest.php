@@ -6,8 +6,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
-use Laminas\Form\Element\DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
@@ -16,23 +16,18 @@ use Psr\Log\LoggerInterface;
  */
 class LpaAlreadyAddedTest extends TestCase
 {
-    /** @var ObjectProphecy|LpaService */
-    private $lpaServiceProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|UserLpaActorMapInterface */
-    private ObjectProphecy $userLpaActorMapProphecy;
-
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
-
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     private string $userId;
     private string $lpaUid;
     private string $userLpaActorToken;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -59,7 +54,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @covers ::__invoke
      * @covers ::preSaveOfRequestFeature
      */
-    public function returns_null_if_lpa_not_already_added_pre_feature()
+    public function returns_null_if_lpa_not_already_added_pre_feature(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
@@ -70,7 +65,7 @@ class LpaAlreadyAddedTest extends TestCase
                     $this->userLpaActorToken => [
                         'user-lpa-actor-token' => $this->userLpaActorToken,
                         'lpa' => [
-                            'uid' => $this->lpaUid
+                            'uId' => $this->lpaUid
                         ],
                     ],
                 ]
@@ -84,7 +79,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function returns_null_if_lpa_not_already_added()
+    public function returns_null_if_lpa_not_already_added(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -100,7 +95,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function returns_not_activated_flag_if_lpa_requested_but_not_active()
+    public function returns_not_activated_flag_if_lpa_requested_but_not_active(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -130,6 +125,7 @@ class LpaAlreadyAddedTest extends TestCase
                             'middlenames'   => '',
                             'surname'       => 'Person',
                         ],
+                        'activationKeyDueDate' => null
                     ],
                 ]
             );
@@ -156,7 +152,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function returns_null_if_lpa_added_but_not_usable_found_in_api()
+    public function returns_null_if_lpa_added_but_not_usable_found_in_api(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
@@ -184,7 +180,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @covers ::__invoke
      * @covers ::preSaveOfRequestFeature
      */
-    public function returns_lpa_data_if_lpa_is_already_added_pre_feature()
+    public function returns_lpa_data_if_lpa_is_already_added_pre_feature(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
 
@@ -238,7 +234,7 @@ class LpaAlreadyAddedTest extends TestCase
      * @test
      * @covers ::__invoke
      */
-    public function returns_lpa_data_if_lpa_is_already_added()
+    public function returns_lpa_data_if_lpa_is_already_added(): void
     {
         $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 

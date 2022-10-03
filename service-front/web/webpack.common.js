@@ -42,15 +42,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-              '@babel/plugin-transform-reserved-words',
-              '@babel/plugin-transform-member-expression-literals',
-              '@babel/plugin-transform-property-literals',
-            ],
-          },
+          loader: 'babel-loader'
         },
       },
     ],

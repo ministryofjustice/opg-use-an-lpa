@@ -11,7 +11,9 @@
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-
+        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\ActivateAccountHandler::ACCOUNT_ACTIVATED_FLASH_MSG'}) }}
+        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\ChangePasswordHandler::PASSWORD_CHANGED_FLASH_MSG'}) }}
+        {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CompleteChangeEmailHandler::NEW_EMAIL_ACTIVATED_FLASH_MSG'}) }}
         <div class="govuk-grid-row">
 
             <div class="govuk-grid-column-two-thirds">
@@ -36,6 +38,8 @@
                                 {% trans  %}If you made an <abbr title="lasting power of attorney"> LPA </abbr> online, you'll still need to create an account on this service to use the LPA online.{% endtrans %}
                             </strong>
                         </div>
+
+                        <p class="govuk-body">{% trans with {'%link%': "https://www.lastingpowerofattorney.service.gov.uk/home"} %}If you want to make an LPA online go to the <a class="govuk-link" href=%link%>Make a lasting power of attorney service.</a>{% endtrans %}</p>
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestDateOfBirth;
@@ -9,10 +11,12 @@ use Common\Form\Fieldset\Date;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected RequestDateOfBirth $form;
 
@@ -30,13 +34,13 @@ class RequestDateOfBirthTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf' => Csrf::class,
-            'dob'    => Date::class
+            'dob'    => Date::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestDateOfBirth($guardProphecy->reveal());
+        $this->form    = new RequestDateOfBirth($guardProphecy->reveal());
     }
 }

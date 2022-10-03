@@ -20,15 +20,6 @@ Feature: View an LPA that I have added to my account
       | Registered | This LPA is registered |
       | Cancelled | This LPA has been cancelled |
 
-  @ui
-  Scenario: The user can read more about why their LPA with donor signature before 2016 is unable to show instructions
-  and preferences
-    Given I have added an LPA to my account which has a donor signature before 2016
-    And I am on the dashboard page
-    And I request to view an LPA which has a donor signature before 2016
-    When I click on the Read more link
-    Then I am taken to a page explaining why instructions and preferences are not available
-
    @integration @ui
    Scenario: The user cannot view an LPA added to their account whose status has changed Revoked
      Given I have added an LPA to my account
@@ -37,3 +28,10 @@ Feature: View an LPA that I have added to my account
      When I request to view an LPA whose status changed to Revoked
      Then I am taken back to the dashboard page
      And The Revoked LPA details are not displayed
+
+  @ui
+  Scenario: The user can view an LPA and see trust corporation details in attorney sections
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which has a trust corporation added
+    Then I can see the trust corporation ABC Ltd  in the list of attorneys

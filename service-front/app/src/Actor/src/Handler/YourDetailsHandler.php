@@ -6,18 +6,15 @@ namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Common\Handler\UserAware;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Common\Handler\UserAware;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class YourDetailsHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class YourDetailsHandler extends AbstractHandler implements UserAware
@@ -27,7 +24,7 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -45,7 +42,7 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
         $user = $this->getUser($request);
 
         return new HtmlResponse($this->renderer->render('actor::your-details', [
-            'user' => $user
+            'user' => $user,
         ]));
     }
 }

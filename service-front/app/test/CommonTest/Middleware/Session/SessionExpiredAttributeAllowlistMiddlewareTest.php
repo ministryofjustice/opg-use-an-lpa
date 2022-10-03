@@ -11,6 +11,7 @@ use Mezzio\Session\Session;
 use Mezzio\Session\SessionMiddleware;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,6 +19,8 @@ use Psr\Log\LoggerInterface;
 
 class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_correctly_handles_request_with_no_session(): void
     {
@@ -72,11 +75,11 @@ class SessionExpiredAttributeAllowlistMiddlewareTest extends TestCase
     public function it_strips_session_values_that_have_not_been_allowed(): void
     {
         $sessionData = [
-            'string' => 'one',
-            'bool' => true,
-            'DateTime' => new DateTime(),
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - 300, // session expired 5 minutes ago
-            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true
+            'string'                                        => 'one',
+            'bool'                                          => true,
+            'DateTime'                                      => new DateTime(),
+            EncryptedCookiePersistence::SESSION_TIME_KEY    => time() - 300, // session expired 5 minutes ago
+            EncryptedCookiePersistence::SESSION_EXPIRED_KEY => true,
         ];
 
         $sessionProphecy = $this->prophesize(Session::class);

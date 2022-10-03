@@ -1,48 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
+use Blazon\PSR11MonoLog\MonologFactory;
+use Common\Service\Log\RequestTracingLogProcessorFactory;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+
 return [
     'dependencies' => [
         'factories' => [
             // Logger using the default keys.
-            \Psr\Log\LoggerInterface::class => \Blazon\PSR11MonoLog\MonologFactory::class,
-        ]
+            LoggerInterface::class => MonologFactory::class,
+        ],
     ],
-
-    'monolog' => [
-        'handlers' => [
+    'monolog'      => [
+        'handlers'   => [
             // Log to stdout
             'default' => [
-                'type' => 'stream',
-                'options' => [
+                'type'       => 'stream',
+                'options'    => [
                     'stream' => 'php://stdout',
-                    'level' => getenv('LOGGING_LEVEL') ?: \Monolog\Logger::NOTICE
+                    'level'  => getenv('LOGGING_LEVEL') ?: Logger::NOTICE,
                 ],
-                'formatter' => 'jsonFormatter',
+                'formatter'  => 'jsonFormatter',
                 'processors' => [
                     'psrLogProcessor',
                     'requestTracingProcessor',
-                    'introspectionProcessor'
+                    'introspectionProcessor',
                 ],
             ],
         ],
         'formatters' => [
             'jsonFormatter' => [
-                'type' => 'json',
+                'type'    => 'json',
                 'options' => [],
             ],
         ],
         'processors' => [
-            'psrLogProcessor' => [
-                'type' => 'psrLogMessage',
+            'psrLogProcessor'         => [
+                'type'    => 'psrLogMessage',
                 'options' => [], // No options
             ],
             'requestTracingProcessor' => [
-                'type' => \Common\Service\Log\RequestTracingLogProcessorFactory::class,
+                'type'    => RequestTracingLogProcessorFactory::class,
                 'options' => [], // No options
             ],
-            'introspectionProcessor' => [
-                'type' => 'introspection'
-            ]
+            'introspectionProcessor'  => [
+                'type' => 'introspection',
+            ],
         ],
     ],
 ];

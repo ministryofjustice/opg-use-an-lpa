@@ -6,16 +6,22 @@ data "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${local.environment.account_name}-lb-access-logs"
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 
   tags = {
     Name = "private"
   }
 }
 
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 
   tags = {
     Name = "public"
@@ -105,8 +111,8 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
-module "whitelist" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-whitelist.git?ref=v1.4.0"
+module "allow_list" {
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v1.7.0"
 }
 
 data "aws_secretsmanager_secret" "notify_api_key" {

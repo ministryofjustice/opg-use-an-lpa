@@ -10,19 +10,19 @@ use Laminas\Form\Element\Text;
 use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\ShareCode;
 
 class ShareCodeTest extends TestCase
 {
-    /**
-     * @var ShareCode
-     */
-    private $form;
+    use ProphecyTrait;
+
+    private ShareCode $form;
 
     /**
      * @var array
      */
-    private $elements = [
+    private array $elements = [
         '__csrf'        => Csrf::class,
         'lpa_code'      => Text::class,
         'donor_surname' => Text::class,
@@ -53,10 +53,17 @@ class ShareCodeTest extends TestCase
             }
 
             $expectedElementClass = $this->elements[$formElementName];
-            $elementClass = get_class($formElement);
+            $elementClass         = $formElement::class;
 
-            if ($expectedElementClass != $elementClass) {
-                $this->fail(sprintf('Class type expectation failure for "%s": Expecting %s but found %s', $formElementName, $expectedElementClass, $elementClass));
+            if ($expectedElementClass !== $elementClass) {
+                $this->fail(
+                    sprintf(
+                        'Class type expectation failure for "%s": Expecting %s but found %s',
+                        $formElementName,
+                        $expectedElementClass,
+                        $elementClass
+                    )
+                );
             }
 
             //  Put an assertion in here so that the test isn't flagged as risky

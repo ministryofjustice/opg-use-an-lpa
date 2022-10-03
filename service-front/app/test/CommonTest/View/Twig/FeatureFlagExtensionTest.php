@@ -7,17 +7,16 @@ namespace CommonTest\View\Twig;
 use Common\Service\Features\FeatureEnabled;
 use Common\View\Twig\FeatureFlagExtension;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Twig\TwigFunction;
 
 /**
- * Class FeatureFlagExtensionTest
- *
- * @package CommonTest\View\Twig
- *
  * @coversDefaultClass \Common\View\Twig\FeatureFlagExtension
  */
 class FeatureFlagExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::getFunctions
@@ -52,7 +51,6 @@ class FeatureFlagExtensionTest extends TestCase
      * @test
      * @covers ::featureEnabled
      * @dataProvider configuredFeatures
-     *
      * @param string $featureName
      * @param bool   $enabled
      */
@@ -76,17 +74,16 @@ class FeatureFlagExtensionTest extends TestCase
     public function configuredFeatures(): array
     {
         return [
-            'feature enabled' =>
-                [
+            'feature enabled'
+                => [
                     'test_feature',
-                    false
+                    false,
                 ],
-            'feature disabled' =>
-                [
+            'feature disabled'
+                => [
                     'test_feature',
-                    true
-                ]
+                    true,
+                ],
         ];
     }
-
 }

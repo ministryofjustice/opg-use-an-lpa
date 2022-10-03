@@ -6,9 +6,12 @@ namespace CommonTest\Filter;
 
 use Common\Filter\ActorViewerCodeFilter;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorViewerCodeFilterTest extends TestCase
 {
+    use ProphecyTrait;
+
     private ActorViewerCodeFilter $filter;
 
     public function setUp(): void
@@ -39,7 +42,7 @@ class ActorViewerCodeFilterTest extends TestCase
             ['C abcd 1234 efgh', 'ABCD1234EFGH'],
             ['C   abcd   1234   efgh', 'ABCD1234EFGH'],
             ['C - ABCD - 1234 - EFGH', 'ABCD1234EFGH'],
-            ['c--ABCD--1234--EFGH', 'ABCD1234EFGH']
+            ['c--ABCD--1234--EFGH', 'ABCD1234EFGH'],
         ];
     }
 }

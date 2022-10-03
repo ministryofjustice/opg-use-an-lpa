@@ -41,3 +41,72 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   threshold                 = 2
   treat_missing_data        = "notBreaching"
 }
+
+
+resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
+  actions_enabled     = true
+  alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_description   = "increase in unexpected data lpa api resposnes"
+  namespace           = "${local.environment_name}_events"
+  metric_name         = "${local.environment_name}_unexpected_data_lpa_api_responses"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  period              = 180
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
+  statistic           = "Sum"
+  threshold           = 5
+  treat_missing_data  = "notBreaching"
+}
+
+resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
+  alarm_name          = "${local.environment_name}_ActorDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.actor.arn
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
+  alarm_name          = "${local.environment_name}_ViewerDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.viewer.arn
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
+  count               = local.environment.build_admin ? 1 : 0
+  alarm_name          = "${local.environment_name}_AdminDDoSDetected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDoSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  dimensions = {
+    ResourceArn = aws_lb.admin[0].arn
+  }
+}

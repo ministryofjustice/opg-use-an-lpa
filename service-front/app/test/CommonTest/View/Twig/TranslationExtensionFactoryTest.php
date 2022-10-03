@@ -9,10 +9,13 @@ use Acpr\I18n\TranslationExtension;
 use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\TranslationExtensionFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class TranslationExtensionFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_an_extension(): void
     {

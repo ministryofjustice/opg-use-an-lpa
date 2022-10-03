@@ -6,18 +6,17 @@ namespace CommonTest\Service\ApiClient;
 
 use Common\Service\ApiClient\GuzzleClientFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * Class GuzzleClientFactoryTest
- *
  * @coversDefaultClass \Common\Service\ApiClient\GuzzleClientFactory
- *
- * @package CommonTest\Service\ApiClient
  */
 class GuzzleClientFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke
@@ -65,11 +64,11 @@ class GuzzleClientFactoryTest extends TestCase
     {
         return [
             [
-                []
+                [],
             ],
             [
                 ['api' => []],
-            ]
+            ],
         ];
     }
 }

@@ -9,32 +9,31 @@ use Common\Entity\CaseActor;
 use Common\Service\Lpa\PopulateLpaMetadata;
 use Common\Service\Lpa\ViewerCodeService;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
- * Class PopulateLpaMetadataTest
- *
  * @property string            userToken
  * @property string            actorToken
  * @property ViewerCodeService viewerCodeServiceProphecy
  * @property ArrayObject       lpas
  * @property CaseActor         lpaActor
- *
  * @coversDefaultClass \Common\Service\Lpa\PopulateLpaMetadata
- * @package CommonTest\Service\Lpa
  */
 class PopulateLpaMetadataTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
-        $this->userToken = '12-1-1-1-1234';
+        $this->userToken  = '12-1-1-1-1234';
         $this->actorToken = '34-3-3-3-3456';
-        $codes = new ArrayObject(
+        $codes            = new ArrayObject(
             [
-                'activeCodeCount' => 1
+                'activeCodeCount' => 1,
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
-        $this->lpaActor = new CaseActor();
+        $this->lpaActor   = new CaseActor();
         $this->lpaActor->setSystemStatus(true);
 
         $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
@@ -42,11 +41,11 @@ class PopulateLpaMetadataTest extends TestCase
             ->getShareCodes($this->userToken, $this->actorToken, true)
             ->willReturn($codes);
 
-        $lpaData = new ArrayObject(
+        $lpaData    = new ArrayObject(
             [
                 'user-lpa-actor-token' => $this->actorToken,
-                'actor' => [
-                    'type' => 'attorney',
+                'actor'                => [
+                    'type'    => 'attorney',
                     'details' => $this->lpaActor,
                 ],
             ],
@@ -54,7 +53,7 @@ class PopulateLpaMetadataTest extends TestCase
         );
         $this->lpas = new ArrayObject(
             [
-                '56-5-5-5-5678' => $lpaData
+                '56-5-5-5-5678' => $lpaData,
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
@@ -66,7 +65,7 @@ class PopulateLpaMetadataTest extends TestCase
      */
     public function it_adds_a_viewer_code_count_per_lpa(): void
     {
-        $sut = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
         $this->assertObjectHasAttribute('56-5-5-5-5678', $result);
@@ -79,7 +78,7 @@ class PopulateLpaMetadataTest extends TestCase
      */
     public function it_adds_an_active_status_for_actor(): void
     {
-        $sut = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
         $this->assertObjectHasAttribute('56-5-5-5-5678', $result);
@@ -92,11 +91,11 @@ class PopulateLpaMetadataTest extends TestCase
      */
     public function it_always_makes_a_donor_be_active(): void
     {
-        $lpaData = new ArrayObject(
+        $lpaData    = new ArrayObject(
             [
                 'user-lpa-actor-token' => $this->actorToken,
-                'actor' => [
-                    'type' => 'donor',
+                'actor'                => [
+                    'type'    => 'donor',
                     'details' => $this->lpaActor,
                 ],
             ],
@@ -104,12 +103,12 @@ class PopulateLpaMetadataTest extends TestCase
         );
         $this->lpas = new ArrayObject(
             [
-                '56-5-5-5-5678' => $lpaData
+                '56-5-5-5-5678' => $lpaData,
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
 
-        $sut = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
         $this->assertObjectHasAttribute('56-5-5-5-5678', $result);

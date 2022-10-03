@@ -1,0 +1,63 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Attorney details{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+
+                    <h1 class="govuk-heading-xl">{% trans %}Attorney details{% endtrans %}</h1>
+                    <p class="govuk-body">
+                        {% trans %}
+                            Tell us the details of an attorney named on the LPA.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            If you  only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them.
+                        {% endtrans %}
+                    </p>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <h2 class="govuk-heading-l">{% trans %}Attorney's name{% endtrans %}</h2>
+                    {{ govuk_form_element(form.get('attorney_first_names'), {
+                        'label': 'First names' | trans,
+                        'autocomplete': 'given-name',
+                    }) }}
+
+                    {{ govuk_form_element(form.get('attorney_last_name'), {
+                        'label': 'Last name' | trans,
+                        'autocomplete': 'family-name',
+                    }) }}
+
+                    {{ govuk_form_fieldset(form.get('attorney_dob'), {
+                        'label': 'Attorney\'s date of birth'| trans,
+                        'hint': 'For example, 08 04 2004'| trans,
+                        'attr': {'class': 'xyz', 'label_class': 'govuk-label--m'}
+                    }) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    {{ govuk_form_close() }}
+
+                </div>
+            </div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
+{% endblock %}

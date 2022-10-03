@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Common\Handler\AbstractHandler;
-use Common\Handler\SessionAware;
-use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class InstructionsPreferencesHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class InstructionsPreferencesHandler extends AbstractHandler implements UserAware
@@ -29,7 +24,7 @@ class InstructionsPreferencesHandler extends AbstractHandler implements UserAwar
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper
+        UrlHelper $urlHelper,
     ) {
         parent::__construct($renderer, $urlHelper);
 

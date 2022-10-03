@@ -1,20 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Common\Middleware\Routing;
 
 use Psr\Container\ContainerInterface;
-use UnexpectedValueException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use UnexpectedValueException;
 
 class ConditionalRoutingMiddleware implements MiddlewareInterface
 {
     private ContainerInterface $middlewareContainer;
-    private string $featureFlagName;
-    private string $trueRoute;
-    private string $falseRoute;
 
     /**
      * @param ContainerInterface $container It is necessary to pass the container so we can resolve the feature flag
@@ -28,14 +27,11 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
      */
     public function __construct(
         ContainerInterface $container,
-        string $featureFlagName,
-        string $trueRoute,
-        string $falseRoute
+        private string $featureFlagName,
+        private string $trueRoute,
+        private string $falseRoute,
     ) {
         $this->middlewareContainer = $container;
-        $this->featureFlagName = $featureFlagName;
-        $this->trueRoute = $trueRoute;
-        $this->falseRoute = $falseRoute;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

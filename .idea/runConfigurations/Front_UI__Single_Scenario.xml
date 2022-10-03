@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Front UI: Single Scenario" type="PhpBehatConfigurationType" singleton="false">
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-front/app/behat.yml" file="$PROJECT_DIR$/service-front/app/features/common-language.feature" scenario="Users can expect to receive notification emails in the language they are viewing" scope="Scenario" options="--profile=acceptance --tags=ui&amp;&amp;wip,ui" use_alternative_configuration_file="true" />
+    <CommandLine parameters="-dapc.enable_cli=1 -dmemory_limit=256m">
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="front-app" />
+      </PhpTestInterpreterSettings>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>

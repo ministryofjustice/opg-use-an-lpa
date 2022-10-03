@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace CommonTest\Form;
 
 use Common\Form\AbstractForm;
+use InvalidArgumentException;
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AbstractFormTest extends TestCase
 {
-    /**
-     * @var AbstractForm
-     */
-    private $form;
+    use ProphecyTrait;
+
+    private AbstractForm $form;
 
     protected function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new class('testConcreteForm', $guardProphecy->reveal()) extends AbstractForm {
+        $this->form = new class ('testConcreteForm', $guardProphecy->reveal()) extends AbstractForm {
             protected array $messageTemplates = ['testKey' => 'testErrorMessage'];
 
             public function __construct(string $formName, CsrfGuardInterface $csrfGuard)
@@ -30,7 +31,7 @@ class AbstractFormTest extends TestCase
                 $this->add(
                     [
                         'name' => 'testElement',
-                        'type' => 'Text'
+                        'type' => 'Text',
                     ]
                 );
             }
@@ -58,14 +59,14 @@ class AbstractFormTest extends TestCase
     /** @test */
     public function adding_an_undefined_error_fails()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('doesNotExist');
     }
 
     /** @test */
     public function adding_an_error_to_a_nonexistent_form_element_fails()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('testKey', 'doesNotExist');
     }
 

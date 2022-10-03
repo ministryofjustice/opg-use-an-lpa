@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace CommonTest\Service\Log;
 
 use Common\Service\Log\LogStderrListener;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -16,6 +18,8 @@ use Psr\Log\LoggerInterface;
  */
 class LogStderrListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__construct
@@ -43,13 +47,13 @@ class LogStderrListenerTest extends TestCase
         )
         ->shouldBeCalled();
 
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
-        $anonClass = new class () extends \Exception {
+        $anonClass = new class () extends Exception {
         };
 
-        $exception = new $anonClass('It is an error!', 40, new \Exception());
+        $exception = new $anonClass('It is an error!', 40, new Exception());
 
         $logStderrListener = new LogStderrListener($loggerProphecy->reveal());
         $logStderrListener($exception, $requestProphecy->reveal(), $responseProphecy->reveal());
@@ -83,13 +87,13 @@ class LogStderrListenerTest extends TestCase
         )
             ->shouldBeCalled();
 
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
-        $anonClass = new class () extends \Exception {
+        $anonClass = new class () extends Exception {
         };
 
-        $exception = new $anonClass('It is an error!', 40, new \Exception());
+        $exception = new $anonClass('It is an error!', 40, new Exception());
 
         $logStderrListener = new LogStderrListener($loggerProphecy->reveal(), true);
         $logStderrListener($exception, $requestProphecy->reveal(), $responseProphecy->reveal());

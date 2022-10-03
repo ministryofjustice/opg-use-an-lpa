@@ -15,43 +15,28 @@ use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandlerTest extends TestCase
 {
-    /**
-     * @var TemplateRendererInterface
-     */
-    private $templateRendererProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelperProphecy;
-
-    /**
-     * @var AuthenticationInterface
-     */
-    private $authenticatorProphecy;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
-
-    /**
-     * @var UserInterface
-     */
-    private $userProphecy;
+    private ObjectProphecy|TemplateRendererInterface $templateRendererProphecy;
+    private ObjectProphecy|UrlHelper $urlHelperProphecy;
+    private ObjectProphecy|AuthenticationInterface $authenticatorProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private ObjectProphecy|UserInterface $userProphecy;
 
     public function setUp(): void
     {
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
-        $this->userProphecy = $this->prophesize(UserInterface::class);
+        $this->authenticatorProphecy    = $this->prophesize(AuthenticationInterface::class);
+        $this->loggerProphecy           = $this->prophesize(LoggerInterface::class);
+        $this->urlHelperProphecy        = $this->prophesize(UrlHelper::class);
+        $this->userProphecy             = $this->prophesize(UserInterface::class);
 
         $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
             ->willReturn($this->userProphecy->reveal());
@@ -82,7 +67,7 @@ class ActorSessionCheckHandlerTest extends TestCase
         );
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode($response->getBody()->getContents(), true);
+        $json     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 
@@ -101,7 +86,7 @@ class ActorSessionCheckHandlerTest extends TestCase
 
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
-            ->willReturn((time() - 950));
+            ->willReturn(time() - 950);
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy
@@ -119,7 +104,7 @@ class ActorSessionCheckHandlerTest extends TestCase
         );
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode($response->getBody()->getContents(), true);
+        $json     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 

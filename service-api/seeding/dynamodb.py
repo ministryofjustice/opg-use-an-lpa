@@ -1,13 +1,12 @@
 import os
 import sys
+from decimal import Decimal
+import datetime
 import botocore
 import boto3
 import simplejson as json
 from passlib.hash import sha256_crypt
-import time
-import datetime
 import pytz
-from decimal import Decimal
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -18,11 +17,10 @@ if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
 else:
 
     if os.getenv('CI'):
-        role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
-            os.environ['AWS_ACCOUNT_ID'])
+        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/opg-use-an-lpa-ci"
+
     else:
-        role_arn = 'arn:aws:iam::{}:role/operator'.format(
-            os.environ['AWS_ACCOUNT_ID'])
+        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/operator"
 
     # Get a auth token
     session = boto3.client(
@@ -64,6 +62,7 @@ viewerCodes = [
         'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
+        'Comment': 'Seeded data: Valid viewer code'
     },
     {
         'ViewerCode': "JLUPAHNXNKFP",
@@ -73,6 +72,7 @@ viewerCodes = [
         'Cancelled': lastWeek.isoformat(),
         'Organisation': "Second Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
+        'Comment': 'Seeded data: Cancelled viewer code'
     },
     {
         'ViewerCode': "N4KBEBEZMNJF",
@@ -81,6 +81,7 @@ viewerCodes = [
         'Added': "2019-01-01T12:34:56.123456Z",
         'Organisation': "Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
+        'Comment': 'Seeded data: Expired viewer code'
     },
 ]
 
@@ -107,7 +108,16 @@ actorUsers = [
         'Id': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Email': 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
         'LastLogin': datetime.datetime.now().isoformat(),
-        'Password': sha256_crypt.hash('umlTest1')
+        'Password': sha256_crypt.hash('umlTest1'),
+        'Comment': 'Seeded data: Default test user'
+    },
+    {
+        'Id': 'gb9e7e88-f283-49c6-a79c-65d5d309ef88',
+        'Email': 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Password': sha256_crypt.hash('umlTest2'),
+        'Comment': 'Seeded data: Default test user',
+        'NeedsReset': datetime.datetime.now().isoformat()
     }
 ]
 
@@ -137,21 +147,27 @@ userLpaActorMap = [
         'SiriusUid': '700000000138',
         'ActorId': 23,
         'Added': '2020-08-19T15:22:32.838097Z ',
-        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'ActivationCode': 'XW34H3HYFDDL',
+        'Comment': 'Seeded data'
     },
     {
         'Id': 'f1315df5-b7c3-430a-baa0-9b96cc629648',
         'SiriusUid': '700000000344',
         'ActorId': 59,
         'Added': '2020-08-20T14:37:49.522828Z',
-        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'ActivationCode': 'WW27H3HYFBBA',
+        'Comment': 'Seeded data'
     },
     {
         'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
         'SiriusUid': '700000000047',
         'ActorId': 9,
         'Added': '2021-04-22T15:01:11.548361Z',
-        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'ActivationCode': 'WWFCCH41R123',
+        'Comment': 'Seeded data'
     },
     {
         'Id': 'e69a80db-0001-45a1-a4c5-06bd7ecf8d2e',
@@ -159,14 +175,16 @@ userLpaActorMap = [
         'ActorId': 78,
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-        'ActivateBy': activateBy
+        'ActivateBy': activateBy,
+        'Comment': 'Seeded data: Code available to use'
     },
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',
         'SiriusUid': '700000000252',
         'ActorId': 43,
         'Added': '2021-04-23T11:44:11.324804Z',
-        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'Comment': 'Seeded data'
     }
 ]
 

@@ -1,11 +1,13 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.pdf.common.js');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const path = require('path');
 
 module.exports = merge(common, {
   mode: "development",
+  target: ["web", "es5"],
   output: {
-    path: '/dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: 'javascript/pdf.bundle.js',
     sourceMapFilename: 'pdf.[name].js.map',
   },

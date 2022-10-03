@@ -10,38 +10,26 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ChangeDetailsHandlerTest extends TestCase
 {
+    use ProphecyTrait;
 
-    const LPA_ID = '98765432-12345-54321-12345-9876543210';
+    private const LPA_ID = '98765432-12345-54321-12345-9876543210';
 
-    /**
-     * @var ObjectProphecy|TemplateRendererInterface
-     */
-    private $templateRendererProphecy;
-
-    /**
-     * @var ObjectProphecy|UrlHelper
-     */
-    private $urlHelperProphecy;
-
-    /**
-     * @var ObjectProphecy|AuthenticationInterface
-     */
-    private $authenticatorProphecy;
-
-    /**
-     * @var ObjectProphecy|ServerRequestInterface
-     */
-    private $requestProphecy;
+    private ObjectProphecy|TemplateRendererInterface $templateRendererProphecy;
+    private ObjectProphecy|UrlHelper $urlHelperProphecy;
+    private ObjectProphecy|AuthenticationInterface $authenticatorProphecy;
+    private ObjectProphecy|ServerRequestInterface $requestProphecy;
 
     public function setUp(): void
     {
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $this->urlHelperProphecy = $this->prophesize(UrlHelper::class);
-        $this->authenticatorProphecy = $this->prophesize(AuthenticationInterface::class);
+        $this->urlHelperProphecy        = $this->prophesize(UrlHelper::class);
+        $this->authenticatorProphecy    = $this->prophesize(AuthenticationInterface::class);
 
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
     }
@@ -56,13 +44,13 @@ class ChangeDetailsHandlerTest extends TestCase
 
         $this->requestProphecy->getQueryParams()
             ->willReturn([
-                'lpa' => self::LPA_ID
+                'lpa' => self::LPA_ID,
             ]);
 
         $this->templateRendererProphecy
             ->render('actor::change-details', [
                 'actorToken' => self::LPA_ID,
-                'user' => null
+                'user'       => null,
             ])
             ->willReturn('');
 

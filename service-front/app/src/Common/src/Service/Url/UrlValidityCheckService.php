@@ -5,87 +5,53 @@ declare(strict_types=1);
 namespace Common\Service\Url;
 
 use Laminas\Diactoros\ServerRequestFactory;
+use Locale;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouterInterface;
-use Locale;
 
-/**
- * Class UrlValidityCheckService
- * @package Common\Service\Url
- */
 class UrlValidityCheckService
 {
-    /**
-     * @var ServerRequestFactory
-     */
-    private $serverRequestFactory;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var UrlHelper
-     */
-    private UrlHelper $urlHelper;
-
     private string $locale;
 
     public function __construct(
-        ServerRequestFactory $serverRequestFactory,
-        RouterInterface $router,
-        UrlHelper $urlHelper
+        private ServerRequestFactory $serverRequestFactory,
+        private RouterInterface $router,
+        private UrlHelper $urlHelper,
     ) {
-        $this->serverRequestFactory = $serverRequestFactory;
-        $this->router               = $router;
-        $this->urlHelper            = $urlHelper;
-        $this->locale               = Locale::getDefault();
+        $this->locale = Locale::getDefault();
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
-    public function isValid(string $refererUrl): bool
+    public function isValid(string $referrerUrl): bool
     {
-        // Remove all illegal characters from a url
-        $url = filter_var($refererUrl, FILTER_SANITIZE_URL);
+        // Remove all illegal characters from a URL
+        $url = filter_var($referrerUrl, FILTER_SANITIZE_URL);
 
         // Validate url
-        if (filter_var($url, FILTER_VALIDATE_URL) !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 
-    public function checkRefererRouteValid(string $refererUrl): bool
+    public function checkReferrerRouteValid(string $referrerUrl): bool
     {
-        if ($refererUrl !== null) {
-
-            if ($this->locale === 'cy') {
-                $refererUrl = str_replace('/cy', '', $refererUrl);
-            }
-
-            $request = $this->serverRequestFactory->createServerRequest('GET', $refererUrl);
-            $result = $this->router->match($request);
-
-            if ($result->isSuccess()) {
-                return true;
-            }
+        if ($this->locale === 'cy_GB') {
+            $referrerUrl = str_replace('/cy', '', $referrerUrl);
         }
-        return false;
+
+        $request = $this->serverRequestFactory->createServerRequest('GET', $referrerUrl);
+        $result  = $this->router->match($request);
+
+        return $result->isSuccess();
     }
 
-    public function setValidReferer(?string $referer): string
+    public function setValidReferrer(?string $referrer): string
     {
-        if (!empty($referer)) {
-            $validUrl = $this->isValid($referer);
+        if (!empty($referrer)) {
+            $validUrl = $this->isValid($referrer);
 
-            $isValidRefererRoute = $this->checkRefererRouteValid($referer);
+            $isValidRefererRoute = $this->checkReferrerRouteValid($referrer);
 
-            return ($validUrl && $isValidRefererRoute ? $referer : $this->generateHomeUrlForCurrentLocale());
+            return $validUrl && $isValidRefererRoute
+                ? $referrer
+                : $this->generateHomeUrlForCurrentLocale();
         }
 
         return $this->generateHomeUrlForCurrentLocale();
@@ -93,7 +59,7 @@ class UrlValidityCheckService
 
     public function generateHomeUrlForCurrentLocale(): string
     {
-        if ($this->locale === "cy") {
+        if ($this->locale === 'cy_GB') {
             $homeUrl = $this->urlHelper->generate('home');
             return str_replace('/home', '/cy/home', $homeUrl);
         } else {

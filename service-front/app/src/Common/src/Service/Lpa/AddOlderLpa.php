@@ -16,51 +16,31 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * Class AddOlderLpa
- *
  * Single action invokeable class that is responsible for calling the APIs necessary to add older
  * LPAs to a users account.
- *
- * @package Common\Service\Lpa
  */
 class AddOlderLpa
 {
     // Exception messages returned from the API layer
-    private const OLDER_LPA_NOT_ELIGIBLE        = 'LPA not eligible due to registration date';
-    private const OLDER_LPA_DOES_NOT_MATCH      = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY  = 'LPA has an activation key already';
-    private const OLDER_LPA_ALREADY_ADDED       = 'LPA already added';
-    private const OLDER_LPA_NEEDS_CLEANSING     = 'LPA needs cleansing';
-    private const OLDER_LPA_KEY_ALREADY_REQUESTED   = 'Activation key already requested for LPA';
-
-    /** @var ApiClient */
-    private ApiClient $apiClient;
-    /** @var LoggerInterface */
-    private LoggerInterface $logger;
-    private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse;
-    private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse;
-    private ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse;
+    private const OLDER_LPA_NOT_ELIGIBLE          = 'LPA not eligible due to registration date';
+    private const OLDER_LPA_DOES_NOT_MATCH        = 'LPA details do not match';
+    private const OLDER_LPA_HAS_ACTIVATION_KEY    = 'LPA has an activation key already';
+    private const OLDER_LPA_ALREADY_ADDED         = 'LPA already added';
+    private const OLDER_LPA_NEEDS_CLEANSING       = 'LPA needs cleansing';
+    private const OLDER_LPA_KEY_ALREADY_REQUESTED = 'Activation key already requested for LPA';
 
     /**
-     * AddOlderLpa constructor.
-     *
      * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
-     *
      * @codeCoverageIgnore
      */
     public function __construct(
-        ApiClient $apiClient,
-        LoggerInterface $logger,
-        ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
-        ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse,
-        ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse
+        private ApiClient $apiClient,
+        private LoggerInterface $logger,
+        private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
+        private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse,
+        private ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse,
     ) {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
-        $this->parseLpaAlreadyAddedResponse = $parseLpaAlreadyAddedResponse;
-        $this->parseActivationKeyExistsResponse = $parseActivationKeyExistsResponse;
-        $this->parseOlderLpaMatchResponse = $parseOlderLpaMatchResponse;
     }
 
     public function validate(
@@ -69,15 +49,15 @@ class AddOlderLpa
         string $firstnames,
         string $lastname,
         DateTimeInterface $dob,
-        string $postcode
+        string $postcode,
     ): OlderLpaApiResponse {
         $data = [
-            'reference_number'      => $lpaUid,
-            'first_names'           => $firstnames,
-            'last_name'             => $lastname,
-            'dob'                   => $dob->format('Y-m-d'),
-            'postcode'              => $postcode,
-            'force_activation_key'  => false
+            'reference_number'     => $lpaUid,
+            'first_names'          => $firstnames,
+            'last_name'            => $lastname,
+            'dob'                  => $dob->format('Y-m-d'),
+            'postcode'             => $postcode,
+            'force_activation_key' => false,
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -107,8 +87,8 @@ class AddOlderLpa
             'Successfully matched LPA {uId} for account with Id {id} ',
             [
                 'event_code' => EventCodes::OLDER_LPA_FOUND,
-                'id'  => $userToken,
-                'uId' => $data['reference_number']
+                'id'         => $userToken,
+                'uId'        => $data['reference_number'],
             ]
         );
 
@@ -122,15 +102,15 @@ class AddOlderLpa
         string $lastname,
         DateTimeInterface $dob,
         string $postcode,
-        bool $forceActivationKey
+        bool $forceActivationKey,
     ): OlderLpaApiResponse {
         $data = [
-            'reference_number'      => $lpaUid,
-            'first_names'           => $firstnames,
-            'last_name'             => $lastname,
-            'dob'                   => $dob->format('Y-m-d'),
-            'postcode'              => $postcode,
-            'force_activation_key'  => $forceActivationKey
+            'reference_number'     => $lpaUid,
+            'first_names'          => $firstnames,
+            'last_name'            => $lastname,
+            'dob'                  => $dob->format('Y-m-d'),
+            'postcode'             => $postcode,
+            'force_activation_key' => $forceActivationKey,
         ];
 
         $this->apiClient->setUserTokenHeader($userToken);
@@ -143,7 +123,7 @@ class AddOlderLpa
                     'Older LPA with id {uId} requires cleansing',
                     [
                         'event_code' => EventCodes::OLDER_LPA_NEEDS_CLEANSING,
-                        'uId' => $data['reference_number'],
+                        'uId'        => $data['reference_number'],
                     ]
                 );
                 return new OlderLpaApiResponse(
@@ -160,8 +140,8 @@ class AddOlderLpa
                 'event_code' => $forceActivationKey
                     ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY
                     : EventCodes::OLDER_LPA_SUCCESS,
-                'id'  => $userToken,
-                'uId' => $data['reference_number']
+                'id'         => $userToken,
+                'uId'        => $data['reference_number'],
             ]
         );
 
@@ -175,7 +155,6 @@ class AddOlderLpa
      * @param int    $lpaUid
      * @param string $message
      * @param array  $additionalData
-     *
      * @return OlderLpaApiResponse
      * @throws RuntimeException
      */
@@ -183,7 +162,7 @@ class AddOlderLpa
     {
         switch ($message) {
             case self::OLDER_LPA_ALREADY_ADDED:
-                $code = EventCodes::OLDER_LPA_ALREADY_ADDED;
+                $code     = EventCodes::OLDER_LPA_ALREADY_ADDED;
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::LPA_ALREADY_ADDED,
                     ($this->parseLpaAlreadyAddedResponse)($additionalData)
@@ -191,17 +170,17 @@ class AddOlderLpa
                 break;
 
             case self::OLDER_LPA_NOT_ELIGIBLE:
-                $code = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
+                $code     = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, $additionalData);
                 break;
 
             case self::OLDER_LPA_DOES_NOT_MATCH:
-                $code = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
+                $code     = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
                 $response = new OlderLpaApiResponse(OlderLpaApiResponse::DOES_NOT_MATCH, $additionalData);
                 break;
 
             case self::OLDER_LPA_HAS_ACTIVATION_KEY:
-                $code = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
+                $code     = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::HAS_ACTIVATION_KEY,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
@@ -209,7 +188,7 @@ class AddOlderLpa
                 break;
 
             case self::OLDER_LPA_KEY_ALREADY_REQUESTED:
-                $code = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
+                $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
                 $response = new OlderLpaApiResponse(
                     OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
@@ -227,8 +206,8 @@ class AddOlderLpa
             'LPA with reference number {uId} not added because "{reason}"',
             [
                 'event_code' => $code,
-                'uId' => $lpaUid,
-                'reason' => $message,
+                'uId'        => $lpaUid,
+                'reason'     => $message,
             ]
         );
 
@@ -240,7 +219,6 @@ class AddOlderLpa
      *
      * @param int   $lpaUid
      * @param array $additionalData
-     *
      * @return OlderLpaApiResponse
      * @throws RuntimeException
      */
@@ -251,7 +229,7 @@ class AddOlderLpa
             [
                 // attach an code for brute force checking
                 'event_code' => EventCodes::OLDER_LPA_NOT_FOUND,
-                'uId' => $lpaUid
+                'uId'        => $lpaUid,
             ]
         );
 

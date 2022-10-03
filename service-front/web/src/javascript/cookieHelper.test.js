@@ -1,4 +1,4 @@
-import { getCookie, setCookie, createCookie, approveAllCookieTypes, setDefaultConsentCookie } from './cookieHelper';
+import { getCookie, setCookie, createCookie, approveAllCookieTypes, setDefaultConsentCookie, setConsentCookie } from './cookieHelper';
 
 describe('When I get a cookie', () => {
     delete global.window.location;
@@ -42,37 +42,29 @@ describe('When I get a cookie', () => {
 });
 
 describe('When I create a cookie', () => {
-    beforeEach(() => {
-        jest
-        .spyOn(global.Date, 'now')
-        .mockImplementation(
-            () =>
-            new Date('2019-05-14T11:01:58.135Z').valueOf()
-        );
-    })
 
   describe('with no days specified', () => {
         test('it should return the correct format for 30 days ahead', () => {
-            const cookieValue = createCookie('test_cookie', 'test value');
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; expires=Thu, 13 Jun 2019 11:01:58 GMT; Secure');
+            const cookieValue = setCookie('test_cookie', 'test value');
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
   describe('with 10 days specified', () => {
-        test('it should return the correct format for 30 days ahead', () => {
-            const cookieValue = createCookie('test_cookie', 'test value', { days: 10 });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; expires=Fri, 24 May 2019 11:01:58 GMT; Secure');
+        test('it should return the correct format for 10 days ahead', () => {
+            const cookieValue = setCookie('test_cookie', 'test value', { days: 10 });
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=864000; Secure; SameSite=Strict;');
         });
     });
   describe('with an empty options parameter', () => {
         test('it should return the correct format for 30 days ahead', () => {
-            const cookieValue = createCookie('test_cookie', 'test value', { });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; expires=Thu, 13 Jun 2019 11:01:58 GMT; Secure');
+            const cookieValue = setCookie('test_cookie', 'test value', { });
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
   describe('with an incorrect options parameter', () => {
         test('it should return the correct format for 30 days ahead', () => {
-            const cookieValue = createCookie('test_cookie', 'test value', { wrongOption: '' });
-            expect(cookieValue).toBe('test_cookie=test%20value; path=/; expires=Thu, 13 Jun 2019 11:01:58 GMT; Secure');
+            const cookieValue = setCookie('test_cookie', 'test value', { wrongOption: '' });
+            expect(cookieValue).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
         });
     });
 });
@@ -80,12 +72,6 @@ describe('When I create a cookie', () => {
 describe('When I call setCookie', () => {
 
     beforeEach(() => {
-        jest
-        .spyOn(global.Date, 'now')
-        .mockImplementation(
-            () =>
-            new Date('2019-05-14T11:01:58.135Z').valueOf()
-        );
         const gettersSetters = {
             value: '',
             get: jest.fn().mockImplementation(() => {
@@ -106,11 +92,11 @@ describe('When I call setCookie', () => {
         setCookie('test_cookie', 'test value');
         const cookieValue = getCookie('test_cookie');
         expect(cookieValue).toBe('test value');
-        expect(document.cookie).toBe('test_cookie=test%20value; path=/; expires=Thu, 13 Jun 2019 11:01:58 GMT; Secure');
+        expect(document.cookie).toBe('test_cookie=test%20value; path=/; max-age=2592000; Secure; SameSite=Strict;');
     });
 });
 
-describe('When I call approveAllCookieTypes', () => {
+describe('When I call setConsentCookie with true', () => {
     beforeEach(() => {
         const gettersSetters = {
             value: '',
@@ -129,7 +115,7 @@ describe('When I call approveAllCookieTypes', () => {
         });
     })
     test('it should set a cookie_policy cookie', () => {
-        approveAllCookieTypes();
+        setConsentCookie(true);
         const cookieValue = getCookie('cookie_policy');
         expect(cookieValue).not.toBeNull();
         expect(document.cookie).not.toBeNull();
@@ -140,7 +126,7 @@ describe('When I call approveAllCookieTypes', () => {
     });
 });
 
-describe('When I call setDefaultConsentCookie', () => {
+describe('When I call setConsentCookie with false', () => {
     beforeEach(() => {
         const gettersSetters = {
             value: '',
@@ -159,7 +145,7 @@ describe('When I call setDefaultConsentCookie', () => {
         });
     })
   test('it should set a cookie_policy cookie', () => {
-        setDefaultConsentCookie();
+        setConsentCookie(false);
 
         const cookieValue = getCookie('cookie_policy');
         expect(cookieValue).not.toBeNull();

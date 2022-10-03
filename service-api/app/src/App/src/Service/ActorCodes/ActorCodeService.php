@@ -44,11 +44,11 @@ class ActorCodeService
      *
      * @param string $userLpaActorMapId the database id to remove the TTL from
      *
-     * @return string|null returns the database ID of the LPA that has had it's TTL removed
+     * @return string returns the database ID of the LPA that has had it's TTL removed
      */
-    private function activateRecord(string $userLpaActorMapId, string $actorId): ?string
+    private function activateRecord(string $userLpaActorMapId, string $actorId, string $code): string
     {
-        $this->userLpaActorMapRepository->activateRecord($userLpaActorMapId, $actorId);
+        $this->userLpaActorMapRepository->activateRecord($userLpaActorMapId, $actorId, $code);
 
         return $userLpaActorMapId;
     }
@@ -113,12 +113,15 @@ class ActorCodeService
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
-            $id = $this->activateRecord($idToLpaMap[$lpaId], $details['actor']['details']['uId']);
+            $id = $this->activateRecord($idToLpaMap[$lpaId], $details['actor']['details']['uId'], $code);
         } else {
             $id = $this->userLpaActorMapRepository->create(
                 $userId,
                 $lpaId,
-                (string)$details['actor']['details']['uId']
+                (string)$details['actor']['details']['uId'],
+                null,
+                null,
+                $code
             );
         }
 

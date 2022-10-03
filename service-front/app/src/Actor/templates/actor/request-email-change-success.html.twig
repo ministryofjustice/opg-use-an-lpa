@@ -4,12 +4,7 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@partials/account-bar.html.twig') }}
         {{ include('@partials/welsh-switch.html.twig') }}
-
-        <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('change-email') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
-        </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -21,7 +16,7 @@
 
                     <p class="govuk-body">{% trans %}You’ve asked us to change your email address.{% endtrans %}</p>
 
-                    <p class="govuk-body">{% trans with {'%email%': newEmail } %}We've emailed a link to %email% – please follow the link in the email to confirm the change.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%email%': newEmail } %}We've emailed a link to <strong class="govuk-!-font-weight-bold">%email%</strong> – please follow the link in the email to confirm the change.{% endtrans %}</p>
 
                     <p class="govuk-body">{% trans %}The email should arrive in a few minutes, check your spam, bulk and junk folders.{% endtrans %}</p>
 

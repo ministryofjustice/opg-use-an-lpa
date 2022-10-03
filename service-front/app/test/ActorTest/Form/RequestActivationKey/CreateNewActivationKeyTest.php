@@ -11,13 +11,14 @@ use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
-    /** @var CreateNewActivationKey */
-    protected $form;
+    protected CreateNewActivationKey $form;
 
     public function getForm(): AbstractForm
     {
@@ -33,14 +34,14 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'           => Csrf::class,
-            'force_activation' => Hidden::class
+            'force_activation' => Hidden::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new CreateNewActivationKey($guardProphecy->reveal());
+        $this->form    = new CreateNewActivationKey($guardProphecy->reveal());
     }
 
     /** @test */

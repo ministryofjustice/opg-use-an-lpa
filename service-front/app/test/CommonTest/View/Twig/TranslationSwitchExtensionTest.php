@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\View\Twig;
 
 use Common\View\Twig\TranslationSwitchExtension;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Twig\TwigFunction;
 
 class TranslationSwitchExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_returns_an_array_of_exported_twig_functions()
     {
@@ -21,7 +26,7 @@ class TranslationSwitchExtensionTest extends TestCase
         $this->assertTrue(is_array($functions));
 
         $expectedFunctions = [
-            'get_route_name'  => 'getRouteName'
+            'get_route_name' => 'getRouteName',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -40,7 +45,7 @@ class TranslationSwitchExtensionTest extends TestCase
     /** @test */
     public function it_returns_the_current_route_name()
     {
-        $urlHelper = $this->prophesize(UrlHelper::class);
+        $urlHelper   = $this->prophesize(UrlHelper::class);
         $routeResult = $this->prophesize(RouteResult::class);
 
         $switchExtension = new TranslationSwitchExtension($urlHelper->reveal());

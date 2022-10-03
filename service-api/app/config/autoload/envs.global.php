@@ -34,4 +34,9 @@ return [
         ]
     ],
 
+    'notify' => [
+        'api' => [
+            'key' => getenv('NOTIFY_API_KEY') ?: null,
+        ],
+    ],
 ];

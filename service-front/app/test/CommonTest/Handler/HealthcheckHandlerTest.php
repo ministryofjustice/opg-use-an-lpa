@@ -2,25 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Common\Handler;
+namespace CommonTest\Handler;
 
+use Common\Handler\HealthcheckHandler;
 use Common\Service\ApiClient\Client as ApiClient;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 class HealthcheckHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testReturnsExpectedJsonResponse()
     {
         $healthyResponse = [
-            'lpa_api' => ['healthy' => true],
-            'dynamo' => ['healthy' => true],
+            'lpa_api'       => ['healthy' => true],
+            'dynamo'        => ['healthy' => true],
             'lpa_codes_api' => ['healthy' => true],
-            'healthy' => true
+            'healthy'       => true,
         ];
 
-        $version = 'dev';
+        $version           = 'dev';
         $apiClientProphecy = $this->prophesize(ApiClient::class);
         $apiClientProphecy->httpGet('/healthcheck')
             ->willReturn($healthyResponse);
@@ -30,7 +34,7 @@ class HealthcheckHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $response = $handler->handle($requestProphecy->reveal());
-        $json = json_decode($response->getBody()->getContents(), true);
+        $json     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertArrayHasKey('overall_healthy', $json);

@@ -4,90 +4,83 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Actor\Workflow\RequestActivationKey;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
+    LoggerAware,
+    SessionAware,
     Traits\CsrfGuard,
+    Traits\Logger,
     Traits\Session as SessionTrait,
-    UserAware,
-    WorkflowStep};
+    UserAware};
 use Common\Handler\Traits\User;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Session\SessionInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Common\Workflow\State;
+use Common\Workflow\StateNotInitialisedException;
+use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Log\LoggerInterface;
 
 /**
- * Class AbstractRequestKeyHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
-abstract class AbstractRequestKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
+abstract class AbstractRequestKeyHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    SessionAware,
+    LoggerAware,
+    WorkflowStep
 {
-    use User;
     use CsrfGuard;
+    use Logger;
     use SessionTrait;
+    use State;
+    use User;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
-    /** @var LoggerInterface */
-    protected $logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
-        $this->logger = $logger;
     }
 
-    /**
-     * @param bool $back optional parameter specifying if the route named should be for the back button
-     *
-     * @return string the name of the route
-     */
-    protected function getRouteNameFromAnswersInSession(bool $back = false): string
-    {
-        if ($this->hasFutureAnswersInSession()) {
-            return 'lpa.check-answers';
-        } else {
-            return $back ? $this->lastPage() : $this->nextPage();
-        }
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->user = $this->getUser($request);
+        $this->user    = $this->getUser($request);
         $this->session = $this->getSession($request, 'session');
 
-        if ($this->isMissingPrerequisite()) {
+        if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-paper');
         }
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
-    protected function hasFutureAnswersInSession(): bool
+    /**
+     * @param ServerRequestInterface $request
+     * @return RequestActivationKey
+     * @throws StateNotInitialisedException
+     */
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
-        return $this->session->has('postcode');
+        return $this->loadState($request, RequestActivationKey::class);
     }
 }

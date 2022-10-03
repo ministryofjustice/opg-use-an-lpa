@@ -9,7 +9,8 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -17,33 +18,38 @@
             {{ govuk_error_summary(form) }}
 
             <div class="govuk-grid-row">
+                {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-two-thirds">
-
-                    <h1 class="govuk-heading-xl">{% trans %}What is your role on the LPA?{% endtrans %}</h1>
-
-                    {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                                <h1 class="govuk-fieldset__heading">
+                                    {% trans %}What is your role on the LPA?{% endtrans %}
+                                </h1>
+                            </legend>
 
                             {{ govuk_form_element(form.get('actor_role_radio'), {'value_options':
                                 [
                                     {
-                                        'label': 'The donor - the person who made the LPA'| trans,
+                                        'label': 'I am the \'donor\''|trans,
+                                        'hint': 'The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf.'| trans,
                                         'value': 'Donor'
                                     },
                                     {
-                                        'label': 'An attorney - a person appointed to make decisions on the donor\'s behalf'| trans,
+                                        'label': 'I am an \'attorney\''|trans,
+                                        'hint': 'An attorney is appointed by the donor to make decisions on the donor\'s behalf.'| trans,
                                         'value': 'Attorney'
                                     }
                                 ]}
-                            )}}
-
+                            ) }}
                         </fieldset>
                     </div>
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    <button data-prevent-double-click="true" type="submit"
+                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
                     {{ govuk_form_close() }}
                 </div>
             </div>

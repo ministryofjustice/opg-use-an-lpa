@@ -9,15 +9,16 @@ use Common\Service\Security\RateLimitServiceFactory;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Argument;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-use const Laminas\Cache\Exception\InvalidArgumentException;
-
 class RateLimitServiceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_requires_a_ratelimits_configuration()
     {
@@ -56,8 +57,8 @@ class RateLimitServiceFactoryTest extends TestCase
             ->willReturn(
                 [
                     'ratelimits' => [
-                        'a-rate-limiter' => []
-                    ]
+                        'a-rate-limiter' => [],
+                    ],
                 ]
             );
 
@@ -83,12 +84,12 @@ class RateLimitServiceFactoryTest extends TestCase
                 [
                     'ratelimits' => [
                         'a-rate-limiter' => [
-                            'type' => 'does-not-exist',
+                            'type'    => 'does-not-exist',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
         $containerProphecy
@@ -119,12 +120,12 @@ class RateLimitServiceFactoryTest extends TestCase
                 [
                     'ratelimits' => [
                         'a-rate-limiter' => [
-                            'type' => 'keyed',
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
         $containerProphecy
@@ -157,25 +158,25 @@ class RateLimitServiceFactoryTest extends TestCase
             ->willReturn(
                 [
                     'ratelimits' => [
-                        'a-rate-limiter' => [
-                            'type' => 'keyed',
+                        'a-rate-limiter'   => [
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
+                                'adapter' => 'memory',
+                            ],
                         ],
                         'a-second-limiter' => [
-                            'type' => 'keyed',
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
+                                'adapter' => 'memory',
+                            ],
                         ],
-                        'a-third-limiter' => [
-                            'type' => 'keyed',
+                        'a-third-limiter'  => [
+                            'type'    => 'keyed',
                             'storage' => [
-                                'adapter' => 'memory'
-                            ]
-                        ]
-                    ]
+                                'adapter' => 'memory',
+                            ],
+                        ],
+                    ],
                 ]
             );
         $containerProphecy
@@ -207,5 +208,4 @@ class RateLimitServiceFactoryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $rateLimiter = $factory->all();
     }
-
 }

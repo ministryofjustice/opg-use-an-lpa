@@ -8,10 +8,14 @@ use Acpr\I18n\TranslatorInterface;
 use Common\I18n\TranslatorFactory;
 use Gettext\GettextTranslator;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class TranslatorFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test
      */
     public function it_returns_a_welsh_translator_instance(): void
@@ -22,7 +26,7 @@ class TranslatorFactoryTest extends TestCase
 
         $gettextTranslator->gettext('LPA access code')->willReturn('LPA access code');
 
-        $gettextTranslator->setLanguage('cy')->will(function($language) {
+        $gettextTranslator->setLanguage('cy')->will(function ($language) {
             $this->gettext('LPA access code')->willReturn('Rhowch god mynediad yr ACLL');
             return $this->reveal();
         });
@@ -35,7 +39,7 @@ class TranslatorFactoryTest extends TestCase
                     'i18n' => [
                         'default_locale' => 'en_GB',
                         'default_domain' => 'messages',
-                        'locale_path' => '/app/languages/'
+                        'locale_path'    => '/app/languages/',
                     ],
                 ]
             );
@@ -68,7 +72,7 @@ class TranslatorFactoryTest extends TestCase
 
         $factory = new TranslatorFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $instance = $factory($containerProphecy->reveal());
     }
 }

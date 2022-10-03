@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
@@ -8,26 +10,29 @@ use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ParseLpaAlreadyAddedResponseTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $donor;
-    /** @var ObjectProphecy|LpaFactory */
-    private $lpaFactory;
+
+    private ObjectProphecy|LpaFactory $lpaFactory;
     private array $response;
 
     public function setUp(): void
     {
         $this->response = [
             'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Example',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+                'uId'         => '12345',
+                'firstname'   => 'Example',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'lpaActorToken' => 'abc-321'
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => 'abc-321',
         ];
 
         $this->donor = new CaseActor();
@@ -46,7 +51,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($this->donor);
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(LpaAlreadyAddedResponse::class, $result);
@@ -58,9 +63,9 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     /** @test */
     public function it_creates_an_already_added_dto_from_array_data_with_null_name_fields()
     {
-        $this->response['donor']['firstname'] = null;
+        $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
-        $this->response['donor']['surname'] = null;
+        $this->response['donor']['surname']     = null;
 
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -69,7 +74,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($donor);
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
         $this->assertInstanceOf(LpaAlreadyAddedResponse::class, $result);
@@ -91,12 +96,12 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
 
         $data = [
             'donor'         => [
-                'uId'           => '12345',
-                'middlenames'   => 'Donor',
-                'surname'       => 'Person',
+                'uId'         => '12345',
+                'middlenames' => 'Donor',
+                'surname'     => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'lpaActorToken' => 'abc-321'
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => 'abc-321',
         ];
 
         $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
@@ -114,12 +119,12 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
 
         $data = [
             'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'surname'       => 'Person',
+                'uId'       => '12345',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'lpaActorToken' => 'abc-321'
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => 'abc-321',
         ];
 
         $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
@@ -137,12 +142,12 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
 
         $data = [
             'donor'         => [
-                'uId'           => '12345',
-                'firstname'     => 'Donor',
-                'middlenames'   => 'Person',
+                'uId'         => '12345',
+                'firstname'   => 'Donor',
+                'middlenames' => 'Person',
             ],
-            'caseSubtype' => 'hw',
-            'lpaActorToken' => 'abc-321'
+            'caseSubtype'   => 'hw',
+            'lpaActorToken' => 'abc-321',
         ];
 
         $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
@@ -171,45 +176,45 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             [
                 [
                     'donor'         => null,
-                    'caseSubtype' => 'hw',
-                    'lpaActorToken' => 'abc-321'
-                ]
+                    'caseSubtype'   => 'hw',
+                    'lpaActorToken' => 'abc-321',
+                ],
             ],
             [
                 [
                     'donor'         => [
-                        'uId'           => null,
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                        'uId'         => null,
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => 'hw',
-                    'lpaActorToken' => 'abc-321'
-                ]
+                    'caseSubtype'   => 'hw',
+                    'lpaActorToken' => 'abc-321',
+                ],
             ],
             [
                 [
                     'donor'         => [
-                        'uId'           => '12345',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                        'uId'         => '12345',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => null,
-                    'lpaActorToken' => 'abc-321'
-                ]
+                    'caseSubtype'   => null,
+                    'lpaActorToken' => 'abc-321',
+                ],
             ],
             [
                 [
                     'donor'         => [
-                        'uId'           => '12345',
-                        'firstname'     => 'Example',
-                        'middlenames'   => 'Donor',
-                        'surname'       => 'Person',
+                        'uId'         => '12345',
+                        'firstname'   => 'Example',
+                        'middlenames' => 'Donor',
+                        'surname'     => 'Person',
                     ],
-                    'caseSubtype' => 'hw',
-                    'lpaActorToken' => null
-                ]
+                    'caseSubtype'   => 'hw',
+                    'lpaActorToken' => null,
+                ],
             ],
         ];
     }

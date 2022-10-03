@@ -1,17 +1,17 @@
 .trans-switch {
-  overflow: auto;
-  display: inline;
+  float: right;
+
   &__list {
     display: inline;
-  }
 
-  &__partition {
-    display: inline;
-    margin-right: 10px;
-    margin-left: 10px;
-  }
+    &:after {
+      padding: 0 5px;
+      content: " | ";
+    }
 
-  &__container {
-    float: right;
+    &:last-child:after {
+      padding-right: 0;
+      content: none;
+    }
   }
 }

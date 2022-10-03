@@ -13,8 +13,8 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
   name     = "view-lasting-power-of-attorney.service.gov.uk"
 }
 
-resource "aws_service_discovery_private_dns_namespace" "internal" {
-  name = "${local.environment_name}-internal"
+resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
+  name = "${local.environment_name}.ual.internal.ecs"
   vpc  = data.aws_vpc.default.id
 }
 
@@ -107,7 +107,7 @@ resource "aws_route53_record" "actor-use-my-lpa" {
 
 resource "aws_route53_record" "admin_use_my_lpa" {
   # admin.lastingpowerofattorney.opg.service.justice.gov.uk
-  count    = local.environment.build_admin == true ? 1 : 0
+  count    = local.environment.build_admin ? 1 : 0
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   name     = "${local.dns_namespace_env}admin.lastingpowerofattorney"

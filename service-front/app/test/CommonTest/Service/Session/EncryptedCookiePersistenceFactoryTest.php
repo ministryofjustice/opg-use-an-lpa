@@ -9,17 +9,17 @@ use Common\Service\Session\EncryptedCookiePersistenceFactory;
 use Common\Service\Session\Encryption\EncryptInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * Class EncryptedCookiePersistenceFactoryTest
- *
- * @package CommonTest\Service\Session
  * @coversDefaultClass \Common\Service\Session\EncryptedCookiePersistenceFactory
  */
 class EncryptedCookiePersistenceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      * @covers ::__invoke
@@ -28,16 +28,16 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
     {
         $config = [
             'session' => [
-                'cookie_name' => 'session',
-                'cookie_path' => '/',
-                'cache_limiter' => 'nocache',
-                'expires' => 1200,
-                'last_modified' => null,
-                'cookie_ttl' => 86400,
-                'cookie_domain' => null,
-                'cookie_secure' => true,
+                'cookie_name'      => 'session',
+                'cookie_path'      => '/',
+                'cache_limiter'    => 'nocache',
+                'expires'          => 1200,
+                'last_modified'    => null,
+                'cookie_ttl'       => 86400,
+                'cookie_domain'    => null,
+                'cookie_secure'    => true,
                 'cookie_http_only' => true,
-            ]
+            ],
         ];
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -82,16 +82,16 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
     {
         $config = [
             'session' => [
-                'cookie_name' => 'session',
-                'cookie_path' => '/',
-                'cache_limiter' => 'nocache',
-                'expires' => 1200,
-                'last_modified' => null,
-                'cookie_ttl' => 86400,
-                'cookie_domain' => null,
-                'cookie_secure' => true,
+                'cookie_name'      => 'session',
+                'cookie_path'      => '/',
+                'cache_limiter'    => 'nocache',
+                'expires'          => 1200,
+                'last_modified'    => null,
+                'cookie_ttl'       => 86400,
+                'cookie_domain'    => null,
+                'cookie_secure'    => true,
                 'cookie_http_only' => true,
-            ]
+            ],
         ];
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -100,7 +100,7 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
         // in an exception, which we count as a good thing. It then loops around and repeats for
         // all the configured values.
         for ($i = 0; $i < count($config['session']); $i++) {
-            $value = array_keys($config['session'])[$i];
+            $value     = array_keys($config['session'])[$i];
             $badConfig = $config;
             unset($badConfig['session'][$value]);
 
@@ -115,7 +115,7 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
 
             try {
                 $ecp = $sut($containerProphecy->reveal());
-            } catch (\RuntimeException $re) {
+            } catch (RuntimeException) {
                 $this->addToAssertionCount(1);
                 continue;
             }

@@ -8,67 +8,34 @@ use App\DataAccess\{ApiGateway\ActorCodes,
     Repository,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
-use App\DataAccess\Repository\Response\{Lpa};
-use App\Service\Lpa\GetAttorneyStatus;
-use App\Service\Lpa\IsValidLpa;
-use App\Service\Lpa\LpaService;
-use App\Service\Lpa\ResolveActor;
+use App\DataAccess\Repository\Response\Lpa;
+use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use stdClass;
 
 class LpaServiceTest extends TestCase
 {
-    /**
-     * @var Repository\ViewerCodesInterface
-     */
-    private $viewerCodesInterfaceProphecy;
+    use ProphecyTrait;
 
-    /**
-     * @var Repository\ViewerCodeActivityInterface
-     */
-    private $viewerCodeActivityInterfaceProphecy;
+    private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+    private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
+    private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private ActorCodes|ObjectProphecy $actorCodesProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
+    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
+    private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
+    private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
 
-    /**
-     * @var Repository\LpasInterface
-     */
-    private $lpasInterfaceProphecy;
-
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMapInterfaceProphecy;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $loggerProphecy;
-
-    /**
-     * @var ActorCodes
-     */
-    public $actorCodesProphecy;
-
-    /**
-     * @var ResolveActor
-     */
-    private $resolveActorProphecy;
-
-    /**
-     * @var GetAttorneyStatus
-     */
-    private $getAttorneyStatusProphecy;
-
-    /**
-     * @var IsValidLpa
-     */
-    private $isValidLpaProphecy;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
@@ -79,6 +46,7 @@ class LpaServiceTest extends TestCase
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
+        $this->getTrustCorporationStatusProphecy = $this->prophesize(GetTrustCorporationStatus::class);
     }
 
     //-------------------------------------------------------------------------
@@ -96,6 +64,7 @@ class LpaServiceTest extends TestCase
             $this->resolveActorProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
+            $this->getTrustCorporationStatusProphecy->reveal(),
         );
     }
 
@@ -113,9 +82,10 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_by_id()
+    public function can_get_by_id(): void
     {
         $testUid = '700012349874';
+
         $lpaResponse = new Lpa([
             'attorneys' => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
@@ -123,8 +93,12 @@ class LpaServiceTest extends TestCase
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 5, 'systemStatus' => true],
+            ],
+            'trustCorporations' => [
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
             ]
         ], new DateTime());
+
         $expectedLpaResponse = new Lpa([
             'attorneys' => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
@@ -138,6 +112,9 @@ class LpaServiceTest extends TestCase
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 5, 'systemStatus' => true],
             ],
+            'trustCorporations' => [
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
+            ]
         ], $lpaResponse->getLookupTime());
 
         //---
@@ -166,9 +143,15 @@ class LpaServiceTest extends TestCase
             ->__invoke(['id' => 5, 'systemStatus' => true])
             ->willReturn(1);
 
-        $result = $service->getByUid($testUid);
+        $this->getTrustCorporationStatusProphecy
+            ->__invoke(['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true])
+            ->willReturn(0);
 
-        //---
+        $this->getTrustCorporationStatusProphecy
+            ->__invoke(['id' => 7, 'companyName' => 'ABC Ltd', 'systemStatus' => true])
+            ->willReturn(2);
+
+        $result = $service->getByUid($testUid);
 
         $this->assertEquals($expectedLpaResponse, $result);
     }
@@ -195,7 +178,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => true
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -221,7 +205,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => true
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ], (string) $t->ActorId)
             ->willReturn([
                 'type' => 'primary-attorney',
@@ -271,7 +256,8 @@ class LpaServiceTest extends TestCase
                         'surname' => 'Test',
                         'systemStatus' => false
                     ]
-                ]
+                ],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -280,7 +266,8 @@ class LpaServiceTest extends TestCase
             [
                 'uId' => $t->SiriusUid,
                 'status' => 'Registered',
-                'attorneys' => []
+                'attorneys' => [],
+                'trustCorporations' => []
             ],
             new DateTime()
         );
@@ -301,6 +288,7 @@ class LpaServiceTest extends TestCase
                     'uId' => $t->SiriusUid,
                     'status' => 'Registered',
                     'attorneys' => [],
+                    'trustCorporations' => []
                 ], (string)$t->ActorId)
             ->willReturn(null);
 
@@ -321,7 +309,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_by_user_token()
+    public function can_get_by_user_token(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -356,12 +344,13 @@ class LpaServiceTest extends TestCase
                     'surname' => 'Test',
                     'systemStatus' => true
                 ]
-            ]
+            ],
+            'trustCorporations' => []
         ], $result['lpa']);
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_inactive_actor()
+    public function cannot_get_by_user_token_with_inactive_actor(): void
     {
         $t = $this->init_valid_user_token_invalid_actor();
 
@@ -373,7 +362,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_invalid_userid()
+    public function cannot_get_by_user_token_with_invalid_userid(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -385,7 +374,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_with_invalid_sirius_uid()
+    public function cannot_get_by_user_token_with_invalid_sirius_uid(): void
     {
         $t = $this->init_valid_user_token_test();
 
@@ -400,7 +389,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_by_user_token_when_not_valid_lpa()
+    public function cannot_get_by_user_token_when_not_valid_lpa(): void
     {
         $t = $this->init_valid_user_token_test(false);
 
@@ -484,7 +473,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user()
+    public function can_get_all_lpas_for_user(): void
     {
         $t = $this->init_valid_get_all_users(false);
 
@@ -516,7 +505,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user_including_not_activated()
+    public function can_get_all_lpas_for_user_including_not_activated(): void
     {
         $t = $this->init_valid_get_all_users(true);
 
@@ -547,7 +536,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_all_lpas_for_user_when_no_maps_found()
+    public function cannot_get_all_lpas_for_user_when_no_maps_found(): void
     {
         $t = $this->init_valid_get_all_users(false);
 
@@ -642,7 +631,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_all_lpas_for_user_when_linked_donor()
+    public function can_get_all_lpas_for_user_when_linked_donor(): void
     {
         $t = $this->init_valid_get_all_users_with_linked();
 
@@ -693,7 +682,9 @@ class LpaServiceTest extends TestCase
             'uId' => $t->SiriusUid,
             'donor' => [
                 'surname' => $t->DonorSurname,
-            ]
+            ],
+            'attorneys' => [],
+            'trustCorporations' => []
         ], new DateTime());
 
 
@@ -710,7 +701,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_lpa_by_viewer_code_no_logging()
+    public function can_get_lpa_by_viewer_code_no_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -741,7 +732,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_get_lpa_by_viewer_code_with_logging()
+    public function can_get_lpa_by_viewer_code_with_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -773,7 +764,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_missing_viewer_code()
+    public function cannot_get_lpa_by_missing_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -788,7 +779,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_missing_lpa_by_viewer_code()
+    public function cannot_get_missing_lpa_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -803,7 +794,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_with_invalid_donor_by_viewer_code()
+    public function cannot_get_lpa_with_invalid_donor_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -815,7 +806,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_missing_expiry()
+    public function cannot_get_lpa_by_viewer_code_with_missing_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -839,7 +830,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_cancelled()
+    public function cannot_get_lpa_by_viewer_code_with_cancelled(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -864,7 +855,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function cannot_get_lpa_by_viewer_code_with_expired_expiry()
+    public function cannot_get_lpa_by_viewer_code_with_expired_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -888,7 +879,7 @@ class LpaServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_return_empty_lpa_array_when_status_invalid()
+    public function will_return_empty_lpa_array_when_status_invalid(): void
     {
         $t = $this->init_valid_user_token_test();
 

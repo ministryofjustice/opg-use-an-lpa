@@ -1,29 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ActorTest\Form\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Laminas\Form\Element\Text;
+use Common\Service\Features\FeatureEnabled;
+use Common\Validator\MerisReferenceCheckValidator;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Text;
+use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
-use Common\Service\Features\FeatureEnabled;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
+    use ProphecyTrait;
 
     protected RequestReferenceNumber $form;
 
-    /** @var ObjectProphecy|FeatureEnabled */
-    private $featureEnabledProphecy;
-
-    /** @var ObjectProphecy|CsrfGuardInterface */
-    private $guardProphecy;
-
+    private ObjectProphecy|FeatureEnabled $featureEnabledProphecy;
+    private ObjectProphecy|CsrfGuardInterface $guardProphecy;
 
     public function getForm(): AbstractForm
     {
@@ -38,26 +40,27 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'                => Csrf::class,
-            'opg_reference_number'  => Text::class
+            '__csrf'               => Csrf::class,
+            'opg_reference_number' => Text::class,
         ];
     }
 
     public function setUp(): void
     {
         $this->guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
+        $this->form          = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
     }
+
     /** @test */
     public function it_sets_correct_validator_when_flag_set_to_true(): void
     {
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
-        $key = array_search(
-            'Common\Validator\ReferenceCheckValidator',
+        $key        = array_search(
+            MerisReferenceCheckValidator::class,
             array_column($validators, 'name')
         );
 
-        $this->assertContains($validators[$key]['name'], 'Common\Validator\ReferenceCheckValidator');
+        $this->assertStringContainsString($validators[$key]['name'], MerisReferenceCheckValidator::class);
     }
 
     /** @test */
@@ -66,8 +69,8 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
         $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false);
 
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
-        $key = array_search('Laminas\Validator\StringLength', array_column($validators, 'name'));
+        $key        = array_search(StringLength::class, array_column($validators, 'name'));
 
-        $this->assertContains($validators[$key]['name'], 'Laminas\Validator\StringLength');
+        $this->assertStringContainsString($validators[$key]['name'], StringLength::class);
     }
 }

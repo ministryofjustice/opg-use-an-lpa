@@ -14,22 +14,18 @@ use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class CodesApiValidationStrategyTest extends TestCase
 {
-    /** @var ObjectProphecy|ActorCodes */
-    private ObjectProphecy $actorCodeApiProphecy;
+    use ProphecyTrait;
 
-    /** @var ObjectProphecy|LoggerInterface */
-    private ObjectProphecy $loggerProphecy;
-
-    /** @var ObjectProphecy|LpaService */
-    private ObjectProphecy $lpaServiceProphecy;
-
-    /** @var ObjectProphecy|ResolveActor */
-    private ObjectProphecy $resolveActorProphecy;
+    private ActorCodes|ObjectProphecy $actorCodeApiProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function initDependencies(): void
     {
@@ -80,6 +76,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->__invoke($lpa->getData(), 'actor-uid')
             ->willReturn(
                 [
+                    'type' => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
                         'dob' => 'actor-dob'
@@ -236,6 +233,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
+                    'type' => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
                         'dob' => 'different-dob'
@@ -298,5 +296,68 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $this->expectException(ActorCodeMarkAsUsedException::class);
         $strategy->flagCodeAsUsed('actor-code');
+    }
+
+    /** @test */
+    public function it_wont_validate_a_code_with_a_bad_dob_for_trust_corporation(): void
+    {
+        $this->initDependencies();
+
+        $actor = new ActorCode(
+            [
+                'actor' => 'actor-uid',
+            ],
+            new \DateTime('now')
+        );
+
+        $this->actorCodeApiProphecy
+            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->willReturn($actor);
+
+        $lpa = new Lpa(
+            [
+                'donor' => [
+                    'id' => 1,
+                    'uId' => 'donor-uid',
+                    'dob' => 'donor-dob',
+                    'salutation' => 'Mr',
+                    'firstname' => 'Test',
+                    'middlenames' => '',
+                    'surname' => 'User',
+                    'addresses' => [
+                        0 => [],
+                    ],
+                ],
+                'uId' => 'lpa-uid',
+            ],
+            new \DateTime('now')
+        );
+
+        $this->lpaServiceProphecy
+            ->getByUid('lpa-uid')
+            ->shouldBeCalled()
+            ->willReturn($lpa);
+
+        $this->resolveActorProphecy
+            ->__invoke($lpa->getData(), 'actor-uid')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'type' => 'trust-corporation',
+                    'details' => [
+                        'id' => 9,
+                        'uId' => 'actor-uid',
+                        'firstname' => 'trust',
+                        'surname' => 'corporation',
+                        'companyName' => 'trust corporation ltd',
+                        'systemStatus' => true
+                    ]
+                ]
+            );
+
+        $strategy = $this->getCodesApiValidationStrategy();
+
+        $this->expectException(ActorCodeValidationException::class);
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 }

@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace Common\Handler\Traits;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
+/**
+ * @psalm-require-implements Common\Handler\UserAware
+ */
 trait User
 {
-    /** @var AuthenticationInterface */
-    private $authenticator;
+    private ?AuthenticationInterface $authenticator = null;
 
-    /**
-     * @param AuthenticationInterface $authenticator
-     */
     public function setAuthenticator(AuthenticationInterface $authenticator): void
     {
         $this->authenticator = $authenticator;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return UserInterface|null
-     */
     public function getUser(ServerRequestInterface $request): ?UserInterface
     {
         if ($this->authenticator === null) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Authentication interface property not initialised before attempt to fetch'
             );
         }

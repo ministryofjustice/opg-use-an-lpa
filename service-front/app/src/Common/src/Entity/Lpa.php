@@ -8,77 +8,38 @@ use DateTime;
 
 class Lpa
 {
-    /** @var int */
-    protected $id;
-
-    /** @var string|null */
-    protected $uId = null;
-
-    /** @var string|null */
-    protected $applicationType = null;
-
-    /** @var string|null */
-    protected $caseSubtype = null;
-
-    /** @var DateTime|null */
-    protected $receiptDate = null;
-
-    /** @var DateTime|null */
-    protected $rejectedDate = null;
-
-    /** @var DateTime|null */
-    protected $cancellationDate = null;
-
-    /** @var DateTime|null */
-    protected $registrationDate = null;
-
-    /** @var string|null */
-    protected $status = null;
-
-    /** @var bool|null */
-    protected $caseAttorneySingular = null;
-
-    /** @var bool|null */
-    protected $caseAttorneyJointlyAndSeverally = null;
-
-    /** @var bool|null */
-    protected $caseAttorneyJointly = null;
-
-    /** @var bool|null */
-    protected $caseAttorneyJointlyAndJointlyAndSeverally = null;
-
-    /** @var bool|null */
-    protected $applicationHasRestrictions = null;
-
-    /** @var bool|null */
-    protected $applicationHasGuidance = null;
-
-    /** @var DateTime|null */
-    protected $lpaDonorSignatureDate = null;
-
-    /** @var string|null */
-    protected $lifeSustainingTreatment = null;
-
-    /** @var string|null */
-    protected $onlineLpaId = null;
-
-    /** @var string|null */
-    protected $attorneyActDecisions = null;
-
-    /** @var CaseActor|null */
-    protected $donor = null;
+    protected int $id;
+    protected ?string $uId                                     = null;
+    protected ?string $applicationType                         = null;
+    protected ?string $caseSubtype                             = null;
+    protected ?DateTime $receiptDate                           = null;
+    protected ?DateTime $rejectedDate                          = null;
+    protected ?DateTime $cancellationDate                      = null;
+    protected ?DateTime $registrationDate                      = null;
+    protected ?string $status                                  = null;
+    protected ?bool $caseAttorneySingular                      = null;
+    protected ?bool $caseAttorneyJointlyAndSeverally           = null;
+    protected ?bool $caseAttorneyJointly                       = null;
+    protected ?bool $caseAttorneyJointlyAndJointlyAndSeverally = null;
+    protected ?bool $applicationHasRestrictions                = null;
+    protected ?bool $applicationHasGuidance                    = null;
+    protected ?DateTime $lpaDonorSignatureDate                 = null;
+    protected ?string $lifeSustainingTreatment                 = null;
+    protected ?string $onlineLpaId                             = null;
+    protected ?string $attorneyActDecisions                    = null;
+    protected ?CaseActor $donor                                = null;
 
     /** @var CaseActor[] */
-    protected $attorneys = [];
+    protected array $attorneys = [];
 
     /** @var CaseActor[] */
-    protected $replacementAttorneys = [];
+    protected array $replacementAttorneys = [];
 
     /** @var CaseActor[] */
-    protected $certificateProviders = [];
+    protected array $certificateProviders = [];
 
     /** @var CaseActor[] */
-    protected $trustCorporations = [];
+    protected array $trustCorporations = [];
 
     public function getUId(): ?string
     {
@@ -315,7 +276,7 @@ class Lpa
         $this->cancellationDate = $date;
     }
 
-    public function getCancellationDate() : ?DateTime
+    public function getCancellationDate(): ?DateTime
     {
         return $this->cancellationDate;
     }

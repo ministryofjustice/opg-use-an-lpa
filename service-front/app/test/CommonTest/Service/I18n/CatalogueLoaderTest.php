@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
+use ArrayObject;
 use Common\Service\I18n\CatalogueLoader;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Translations;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 class CatalogueLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function getMockFileFinder(array $files): ObjectProphecy
     {
         $finderProphecy = $this->prophesize(Finder::class);
@@ -22,7 +26,7 @@ class CatalogueLoaderTest extends TestCase
         $finderProphecy->in('/')->willReturn($finderProphecy->reveal());
         $finderProphecy
             ->getIterator()
-            ->willReturn(new \ArrayObject($files));
+            ->willReturn(new ArrayObject($files));
 
         return $finderProphecy;
     }

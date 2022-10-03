@@ -12,49 +12,16 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class LpaService
- * @package Common\Service\ApiClient
- */
 class LpaService
 {
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var GroupLpas */
-    private GroupLpas $groupLpas;
-    /** @var LoggerInterface */
-    private $logger;
-    /** @var ParseLpaData */
-    private $parseLpaData;
-    /** @var PopulateLpaMetadata */
-    private PopulateLpaMetadata $populateLpaMetadata;
-    /** @var SortLpas */
-    private SortLpas $sortLpas;
-
-    /**
-     * LpaService constructor.
-     *
-     * @param ApiClient           $apiClient
-     * @param ParseLpaData        $parseLpaData
-     * @param PopulateLpaMetadata $populateLpaMetadata
-     * @param SortLpas            $sortLpas
-     * @param GroupLpas           $groupLpas
-     * @param LoggerInterface     $logger
-     */
     public function __construct(
-        ApiClient $apiClient,
-        ParseLpaData $parseLpaData,
-        PopulateLpaMetadata $populateLpaMetadata,
-        SortLpas $sortLpas,
-        GroupLpas $groupLpas,
-        LoggerInterface $logger
+        private ApiClient $apiClient,
+        private ParseLpaData $parseLpaData,
+        private PopulateLpaMetadata $populateLpaMetadata,
+        private SortLpas $sortLpas,
+        private GroupLpas $groupLpas,
+        private LoggerInterface $logger,
     ) {
-        $this->apiClient = $apiClient;
-        $this->parseLpaData = $parseLpaData;
-        $this->populateLpaMetadata = $populateLpaMetadata;
-        $this->logger = $logger;
-        $this->sortLpas = $sortLpas;
-        $this->groupLpas = $groupLpas;
     }
 
     /**
@@ -62,7 +29,6 @@ class LpaService
      *
      * @param string $userToken
      * @param bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
-     *
      * @return ArrayObject|null
      * @throws Exception
      */
@@ -80,7 +46,7 @@ class LpaService
             'Account with Id {id} retrieved {count} LPA(s)',
             [
                 'id'    => $userToken,
-                'count' => count($lpaData)
+                'count' => count($lpaData),
             ]
         );
 
@@ -112,7 +78,7 @@ class LpaService
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
                     'id'  => $userToken,
-                    'uId' => $lpaData['lpa']->getUId()
+                    'uId' => $lpaData['lpa']->getUId(),
                 ]
             );
         }
@@ -137,14 +103,14 @@ class LpaService
         $shareCode = strtoupper($shareCode);
 
         if (!is_null($organisation)) {
-            $trackRoute = "full";
+            $trackRoute  = 'full';
             $requestData = [
-                'code' => $shareCode,
-                'name' => $donorSurname,
-                'organisation' => $organisation
+                'code'         => $shareCode,
+                'name'         => $donorSurname,
+                'organisation' => $organisation,
             ];
         } else {
-            $trackRoute = "summary";
+            $trackRoute  = 'summary';
             $requestData = [
                 'code' => $shareCode,
                 'name' => $donorSurname,
@@ -154,7 +120,7 @@ class LpaService
         $this->logger->debug(
             'User requested {type} view of LPA by share code',
             [
-                'type' => $trackRoute
+                'type' => $trackRoute,
             ]
         );
 
@@ -171,8 +137,8 @@ class LpaService
                             'Share code {code} cancelled when attempting to fetch {type}',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
-                                'code' => $shareCode,
-                                'type' => $trackRoute
+                                'code'       => $shareCode,
+                                'type'       => $trackRoute,
                             ]
                         );
                     } else {
@@ -180,8 +146,8 @@ class LpaService
                             'Share code {code} expired when attempting to fetch {type}',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
-                                'code' => $shareCode,
-                                'type' => $trackRoute
+                                'code'       => $shareCode,
+                                'type'       => $trackRoute,
                             ]
                         );
                     }
@@ -193,7 +159,7 @@ class LpaService
                         [
                             // attach an code for brute force checking
                             'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
-                            'type' => $trackRoute
+                            'type'       => $trackRoute,
                         ]
                     );
             }
@@ -212,7 +178,7 @@ class LpaService
                     'LPA found with Id {uId} retrieved by share code',
                     [
                         'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_SUCCESS,
-                        'uId' => ($lpaData->lpa)->getUId()
+                        'uId'        => $lpaData->lpa->getUId(),
                     ]
                 );
             }

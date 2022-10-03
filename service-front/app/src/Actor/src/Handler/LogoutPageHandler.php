@@ -11,7 +11,7 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -21,49 +21,40 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class CreateAccountHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
 {
+    use Logger;
     use Session;
     use User;
-    use Logger;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authentication,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authentication);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
 
         $session = $this->getSession($request, 'session');
 
-        // TODO UML-1758 session clearing hack till we figure out a better way.
-        $id = $session->get(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE);
-        $session->clear();
-        $session->set(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE, $id);
+        // Tell the SessionExpiredAttributeAllowlistMiddleware to clean out the session when it's done.
+        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
 
         $session->regenerate();
 
         $this->getLogger()->info(
             'Account with Id {id} has logged out of the service',
             [
-                'id' => $user->getIdentity()
+                'id' => $user->getIdentity(),
             ]
         );
 

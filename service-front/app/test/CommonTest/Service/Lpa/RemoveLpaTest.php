@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
@@ -11,39 +13,36 @@ use Common\Service\Lpa\ParseLpaData;
 use Common\Service\Lpa\RemoveLpa;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class RemoveLpaTest
- *
- * @package CommonTest\Service\Lpa
  * @coversDefaultClass \Common\Service\Lpa\RemoveLpa
  */
 class RemoveLpaTest extends TestCase
 {
+    use ProphecyTrait;
+
     private CaseActor $actor;
     private string $actorLpaToken;
-    /** @var ObjectProphecy|ApiClient */
-    private $apiClientProphecy;
+    private ObjectProphecy|ApiClient $apiClientProphecy;
     private Lpa $lpa;
     private array $lpaArrayData;
     private ArrayObject $lpaParsedData;
-    /** @var ObjectProphecy|ParseLpaData */
-    private $parseLpaDataProphecy;
-    /** @var ObjectProphecy|LoggerInterface */
-    private $loggerProphecy;
+    private ObjectProphecy|ParseLpaData $parseLpaDataProphecy;
+    private ObjectProphecy|LoggerInterface $loggerProphecy;
     private RemoveLpa $removeLpa;
     private string $userToken;
 
     public function setUp(): void
     {
         $this->actorLpaToken = '0123-01-01-01-012345';
-        $this->userToken = '12-1-1-1-1234';
+        $this->userToken     = '12-1-1-1-1234';
 
-        $this->apiClientProphecy = $this->prophesize(ApiClient::class);
+        $this->apiClientProphecy    = $this->prophesize(ApiClient::class);
         $this->parseLpaDataProphecy = $this->prophesize(ParseLpaData::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy       = $this->prophesize(LoggerInterface::class);
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
 
@@ -69,9 +68,9 @@ class RemoveLpaTest extends TestCase
 
         $this->lpaArrayData = [
             'lpa' => [
-                'id' => 1111,
-                'uId' => '700000001111'
-            ]
+                'id'  => 1111,
+                'uId' => '700000001111',
+            ],
         ];
     }
 
@@ -91,7 +90,7 @@ class RemoveLpaTest extends TestCase
 
         $result = ($this->removeLpa)($this->userToken, $this->actorLpaToken);
 
-        $this->assertContains($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
+        $this->assertStringContainsString($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
     }
 
     /**

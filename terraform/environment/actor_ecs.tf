@@ -6,12 +6,11 @@ resource "aws_ecs_service" "actor" {
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
   desired_count    = local.environment.autoscaling.use.minimum
-  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.actor_ecs_service.id]
-    subnets          = data.aws_subnet_ids.private.ids
+    subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -19,6 +18,20 @@ resource "aws_ecs_service" "actor" {
     target_group_arn = aws_lb_target_group.actor.arn
     container_name   = "web"
     container_port   = 80
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = local.capacity_provider
+    weight            = 100
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   wait_for_steady_state = true
@@ -296,23 +309,23 @@ locals {
         },
         {
           name  = "USE_OLDER_LPA_JOURNEY",
-          value = tostring(local.environment.use_older_lpa_journey)
+          value = tostring(local.environment.application_flags.use_older_lpa_journey)
         },
         {
           name  = "DELETE_LPA_FEATURE",
-          value = tostring(local.environment.delete_lpa_feature)
+          value = tostring(local.environment.application_flags.delete_lpa_feature)
         },
         {
           name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.environment.allow_older_lpas)
+          value = tostring(local.environment.application_flags.allow_older_lpas)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.allow_meris_lpas)
+          value = tostring(local.environment.application_flags.allow_meris_lpas)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
       ]
   })

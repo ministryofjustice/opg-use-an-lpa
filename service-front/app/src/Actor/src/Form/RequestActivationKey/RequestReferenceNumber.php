@@ -6,32 +6,22 @@ namespace Actor\Form\RequestActivationKey;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
-use Common\Validator\ReferenceCheckValidator;
-use Common\Form\Fieldset\{Date, DatePrefixFilter, DateTrimFilter};
+use Common\Validator\{LuhnCheck, MerisReferenceCheckValidator, SiriusReferenceStartsWithCheck};
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\{Digits, NotEmpty, StringLength};
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class RequestActivationKey
- * @package Actor\Form
- */
 class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    private bool $merisEntryEnabled;
-
     public const FORM_NAME = 'request_activation_key_reference_number';
 
     /**
-     * RequestActivationKey constructor.
      * @param CsrfGuardInterface $csrfGuard
-     * @param bool $merisEntryEnabled
+     * @param bool               $merisEntryEnabled Allow the acceptance of Meris numbers
      */
-    public function __construct(CsrfGuardInterface $csrfGuard, bool $merisEntryEnabled)
+    public function __construct(CsrfGuardInterface $csrfGuard, private bool $merisEntryEnabled)
     {
-        $this->merisEntryEnabled = $merisEntryEnabled;
-
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add([
@@ -46,49 +36,57 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
      */
     public function getInputFilterSpecification(): array
     {
-        $validators = [
+        $validators          = [
             [
-                'name' => NotEmpty::class,
+                'name'                   => NotEmpty::class,
                 'break_chain_on_failure' => true,
-                'options' => [
+                'options'                => [
                     'message' => 'Enter the LPA reference number',
                 ],
             ],
             [
-                'name' => Digits::class,
-                'options' => [
-                    'message' =>
-                        'Enter the 12 numbers of the LPA reference number. ' .
+                'name'                   => Digits::class,
+                'break_chain_on_failure' => true,
+                'options'                => [
+                    'message'
+                        => 'Enter the 12 numbers of the LPA reference number. ' .
                         'Do not include letters or other characters',
                 ],
             ],
+            [
+                'name'                   => SiriusReferenceStartsWithCheck::class,
+                'break_chain_on_failure' => true,
+            ],
+            [
+                'name' => LuhnCheck::class,
+            ],
         ];
-        $stringLength = [
-            'name' => StringLength::class,
+        $stringLength        = [
+            'name'                   => StringLength::class,
             'break_chain_on_failure' => true,
-            'options' => [
+            'options'                => [
                 'encoding' => 'UTF-8',
-                'min' => 12,
-                'max' => 12,
+                'min'      => 12,
+                'max'      => 12,
                 'messages' => [
-                    StringLength::TOO_LONG => 'The LPA reference number you entered is too long',
+                    StringLength::TOO_LONG  => 'The LPA reference number you entered is too long',
                     StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
                 ],
             ],
         ];
-        $referenceCheck = [
-            'name' => ReferenceCheckValidator::class,
+        $merisReferenceCheck = [
+            'name' => MerisReferenceCheckValidator::class,
         ];
 
         if ($this->merisEntryEnabled) {
-            array_push($validators, $referenceCheck);
+            array_push($validators, $merisReferenceCheck);
         } else {
             array_push($validators, $stringLength);
         }
 
         return [
             'opg_reference_number' => [
-                'filters' => [
+                'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => StripSpacesAndHyphens::class],
                 ],

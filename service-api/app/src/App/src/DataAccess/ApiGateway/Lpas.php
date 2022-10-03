@@ -8,6 +8,7 @@ use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
+use App\Service\Log\EventCodes;
 use App\Service\Log\RequestTracing;
 use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
 use Aws\Signature\SignatureV4 as AwsSignatureV4;
@@ -19,6 +20,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -28,9 +30,10 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Lpas implements LpasInterface
 {
-    private HttpClient $httpClient;
     private string $apiBaseUri;
     private AwsSignatureV4 $awsSignature;
+    private HttpClient $httpClient;
+    private LoggerInterface $logger;
     private DataSanitiserStrategy $sanitiser;
     private string $traceId;
 
@@ -39,13 +42,15 @@ class Lpas implements LpasInterface
         AwsSignatureV4 $awsSignature,
         string $apiUrl,
         string $traceId,
-        DataSanitiserStrategy $sanitiser
+        DataSanitiserStrategy $sanitiser,
+        LoggerInterface $logger
     ) {
         $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
         $this->awsSignature = $awsSignature;
         $this->traceId = $traceId;
         $this->sanitiser = $sanitiser;
+        $this->logger = $logger;
     }
 
     /**
@@ -125,7 +130,14 @@ class Lpas implements LpasInterface
                     );
                     break;
                 default:
-                    // We only care about 200s at the moment.
+                    $this->logger->warning(
+                        'Unexpected {status} response from gateway for request of LPA {lpaUid}',
+                        [
+                            'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
+                            'status' => $statusCode,
+                            'lpaUid' => $uid,
+                        ]
+                    );
                     unset($results[$uid]);
             }
         }
@@ -185,7 +197,6 @@ class Lpas implements LpasInterface
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',
         ];
 

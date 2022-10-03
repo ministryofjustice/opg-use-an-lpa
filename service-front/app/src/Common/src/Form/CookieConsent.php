@@ -4,34 +4,33 @@ declare(strict_types=1);
 
 namespace Common\Form;
 
-use Application\Form\AbstractCsrfForm;
-use Common\Form\AbstractForm;
-use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\InputFilter\InputFilterProviderInterface;
+use Mezzio\Csrf\CsrfGuardInterface;
 
 class CookieConsent extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'cookieConsent';
+    public const FORM_NAME = 'cookieConsent';
 
     /**
      * Error codes
+     *
      * @const string
      */
-    const INVALID_LOGIN = 'invalidLogin';
+    public const INVALID_LOGIN = 'invalidLogin';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
         $this->add([
-            'name'       => 'usageCookies',
-            'type'       => 'Radio',
-            'options'    => [
+            'name'    => 'usageCookies',
+            'type'    => 'Radio',
+            'options' => [
                 'value_options' => [
-                    'no' => 'no',
+                    'no'  => 'no',
                     'yes' => 'yes',
-                ]
-            ]
+                ],
+            ],
         ]);
         $this->add([
             'name' => 'referer',
@@ -43,10 +42,10 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
     {
         return [
             'usageCookies' => [
-                'required'   => true,
+                'required' => true,
             ],
-            'referer' => [
-                'required'   => true,
+            'referer'      => [
+                'required' => true,
             ],
         ];
     }

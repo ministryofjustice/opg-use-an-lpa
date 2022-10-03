@@ -10,10 +10,13 @@ use App\DataAccess\ApiGateway\RequestSigner;
 use App\Service\Log\RequestTracing;
 use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class ActorCodesFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @test */
     public function it_creates_an_instance(): void
     {

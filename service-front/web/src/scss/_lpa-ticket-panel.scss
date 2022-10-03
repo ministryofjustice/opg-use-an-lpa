@@ -1,12 +1,17 @@
 .moj-ticket-panel {
 
   .lpa-account-delete {
-    color: govuk-colour('red');
+    color: govuk-shade(govuk-colour("red"), 20);
+  }
+
+  .moj-badge--red {
+    color: govuk-shade(govuk-colour("red"), 20);
+    border-color: govuk-shade(govuk-colour("red"), 20);
   }
 
   @include govuk-media-query($from: desktop) {
 
-    .moj-ticket-panel__row {
+    &__row {
       display: flex;
       justify-content: space-between;
 

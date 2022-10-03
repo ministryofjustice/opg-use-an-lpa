@@ -8,47 +8,31 @@ use Actor\Form\CancelCode;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
- * Class CancelCodeHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use Session;
     use CsrfGuard;
-
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
-
-    /**
-     * @var ViewerCodeService
-     */
-    private $viewerCodeService;
+    use Session;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService,
-        ViewerCodeService $viewerCodeService,
-        UrlHelper $urlHelper)
-    {
+        private LpaService $lpaService,
+        private ViewerCodeService $viewerCodeService,
+        UrlHelper $urlHelper,
+    ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->lpaService = $lpaService;
-        $this->viewerCodeService = $viewerCodeService;
     }
 
     /**
@@ -62,21 +46,19 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, Csr
     {
         $form = new CancelCode($this->getCsrfGuard($request));
 
-        $form->setAttribute('action',$this->urlHelper->generate('lpa.cancel-code'));
+        $form->setAttribute('action', $this->urlHelper->generate('lpa.cancel-code'));
 
         $user = $this->getUser($request);
-        
+
         $form->setData($request->getParsedBody());
 
         if ($form->isValid()) {
-
             return new HtmlResponse($this->renderer->render('actor::confirm-cancel-code', [
-                'form'          => $form,
-                'user'          => $user,
+                'form' => $form,
+                'user' => $user,
             ]));
         }
 
         throw new InvalidRequestException('Invalid form submission');
-
     }
 }

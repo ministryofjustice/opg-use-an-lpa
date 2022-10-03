@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\Handler\AbstractHandler;
-use Common\Service\Email\EmailClient;
+use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Flash\FlashMessageMiddleware;
+use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
@@ -16,48 +19,23 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class ActivateAccountHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class ActivateAccountHandler extends AbstractHandler
 {
-    /** @var UserService */
-    private $userService;
+    public const ACCOUNT_ACTIVATED_FLASH_MSG = 'account_activated_flash_msg';
 
-    /** @var EmailClient */
-    private $emailClient;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
-    /**
-     * ActivateAccountHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param EmailClient $emailClient
-     * @param ServerUrlHelper $serverUrlHelper
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        EmailClient $emailClient,
-        ServerUrlHelper $serverUrlHelper
+        private UserService $userService,
+        private ServerUrlHelper $serverUrlHelper,
+        private TranslatorInterface $translator,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->emailClient = $emailClient;
-        $this->serverUrlHelper = $serverUrlHelper;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     * @throws \Http\Client\Exception
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $activationToken = $request->getAttribute('token');
@@ -73,13 +51,28 @@ class ActivateAccountHandler extends AbstractHandler
             /** @var bool|string $activated */
             $activated = $this->userService->activate($activationToken);
 
+            /** @var FlashMessagesInterface $flash */
+            $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+
             if (is_string($activated)) {
-                $loginUrl = $this->urlHelper->generate('login');
+                $loginUrl   = $this->urlHelper->generate('login');
                 $signInLink = $this->serverUrlHelper->generate($loginUrl);
 
-                $this->emailClient->sendAccountActivatedConfirmationEmail($activated, $signInLink);
+                $this->notifyService->sendEmailToUser(
+                    NotifyService::ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE,
+                    $activated,
+                    signInLink: $signInLink
+                );
 
-                return new HtmlResponse($this->renderer->render('actor::activate-account'));
+                $message = $this->translator->translate(
+                    'Account activated successfully',
+                    [],
+                    null,
+                    'flashMessage'
+                );
+                $flash->flash(self::ACCOUNT_ACTIVATED_FLASH_MSG, $message);
+
+                return $this->redirectToRoute('login');
             }
         }
 

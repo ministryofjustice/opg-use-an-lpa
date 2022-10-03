@@ -14,18 +14,22 @@ use Common\Service\Session\KeyManager\KmsManager;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class KmsManagerTest extends TestCase
 {
-    const TEST_KMS_CMK_ALIAS = 'test-alias-name';
+    use ProphecyTrait;
 
-    private $cacheProphecy;
-    private $kmsClientProphecy;
+    private const TEST_KMS_CMK_ALIAS = 'test-alias-name';
+
+    private ObjectProphecy|KeyCache $cacheProphecy;
+    private ObjectProphecy|KmsClient $kmsClientProphecy;
 
     public function setUp(): void
     {
         // Constructor arguments
-        $this->cacheProphecy = $this->prophesize(KeyCache::class);
+        $this->cacheProphecy     = $this->prophesize(KeyCache::class);
         $this->kmsClientProphecy = $this->prophesize(KmsClient::class);
     }
 
@@ -109,7 +113,7 @@ class KmsManagerTest extends TestCase
     public function testGetDecryptionKeyWhenKeyIsInCache()
     {
         $keyCiphertext = 'test-key';
-        $testMaterial = random_bytes(32);
+        $testMaterial  = random_bytes(32);
 
         //---
 
@@ -135,9 +139,9 @@ class KmsManagerTest extends TestCase
      */
     public function testGetDecryptionKeyWhenKeyIsNotInCache()
     {
-        $keyCiphertext = 'test-key';
+        $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);
-        $keyPlaintext = random_bytes(32);
+        $keyPlaintext         = random_bytes(32);
 
         $testMaterial = new HiddenString(
             $keyPlaintext,
@@ -192,12 +196,12 @@ class KmsManagerTest extends TestCase
     public function testGetEncryptionKeyWhenKeyIsInCache()
     {
         $keyCiphertext = 'test-key';
-        $testMaterial = random_bytes(32);
+        $testMaterial  = random_bytes(32);
 
         //---
 
         $this->cacheProphecy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn([
-            'id' => $keyCiphertext,
+            'id'           => $keyCiphertext,
             'key_material' => new HiddenString($testMaterial),
         ]);
 
@@ -216,12 +220,11 @@ class KmsManagerTest extends TestCase
         $this->assertEquals($testMaterial, $key->getKeyMaterial());
     }
 
-
     public function testGetEncryptionKeyWhenKeyIsNotInCache()
     {
-        $keyCiphertext = 'test-key';
+        $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);
-        $keyPlaintext = random_bytes(32);
+        $keyPlaintext         = random_bytes(32);
 
         $testMaterial = new HiddenString(
             $keyPlaintext,
@@ -245,7 +248,7 @@ class KmsManagerTest extends TestCase
         $this->cacheProphecy->store(
             KmsManager::CURRENT_ENCRYPTION_KEY,
             [
-                'id' => $keyCiphertextEncoded,
+                'id'           => $keyCiphertextEncoded,
                 'key_material' => $testMaterial,
             ],
             KmsManager::ENCRYPTION_KEY_TTL
@@ -259,7 +262,7 @@ class KmsManagerTest extends TestCase
         $awsResultProphecy->get('Plaintext')->willReturn($keyPlaintext);
 
         $this->kmsClientProphecy->generateDataKey([
-            'KeyId' => self::TEST_KMS_CMK_ALIAS,
+            'KeyId'   => self::TEST_KMS_CMK_ALIAS,
             'KeySpec' => 'AES_256',
         ])->willReturn($awsResultProphecy)->shouldBeCalled();
 

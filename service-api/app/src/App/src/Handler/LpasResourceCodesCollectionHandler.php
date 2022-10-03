@@ -8,6 +8,7 @@ use App\DataAccess\Repository;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ViewerCodes\ViewerCodeService;
+use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,29 +22,11 @@ use RuntimeException;
  */
 class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 {
-    /**
-     * @var ViewerCodeService
-     */
-    private $viewerCodeService;
-
-    /**
-     * @var Repository\ViewerCodeActivityInterface
-     */
-    private $viewerCodeActivityRepository;
-
-    /**
-     * @var Repository\UserLpaActorMapInterface
-     */
-    private $userLpaActorMap;
-
     public function __construct(
-        ViewerCodeService $viewerCodeService,
-        Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        Repository\UserLpaActorMapInterface $userLpaActorMap
+        private ViewerCodeService $viewerCodeService,
+        private Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        private Repository\UserLpaActorMapInterface $userLpaActorMap,
     ) {
-        $this->viewerCodeService = $viewerCodeService;
-        $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
-        $this->userLpaActorMap = $userLpaActorMap;
     }
 
     /**
@@ -53,22 +36,21 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            case 'PUT':
-                return $this->handlePut($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            'PUT' => $this->handlePut($request),
+            default => $this->handleGet($request),
+        };
     }
+
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
-     * @throws Exception|BadRequestException|ConflictException|NotFoundException
+     * @throws BadRequestException|RuntimeException|NotFoundException|Exception
      */
-    private function handlePost(ServerRequestInterface $request) : ResponseInterface
+    private function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
@@ -79,7 +61,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         }
 
         $data = $request->getParsedBody();
-        if (!isset($data['organisation'])) {
+        if (empty($data['organisation'])) {
             throw new RuntimeException("'organisation' is missing.");
         }
 
@@ -93,28 +75,27 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         $result = $this->viewerCodeService->addCode(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id'),
-            $organisation
+            $organisation,
         );
 
-        if (is_null($result)) {
+        if ($result === null) {
             throw new NotFoundException();
         }
 
         return new JsonResponse($result);
-
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws BadRequestException|NotFoundException
+     * @throws BadRequestException|RuntimeException|NotFoundException|Exception
      */
-    private function handlePut(ServerRequestInterface $request) : ResponseInterface
+    private function handlePut(ServerRequestInterface $request): ResponseInterface
     {
         $data = $request->getParsedBody();
 
         if (!isset($data['code'])) {
-            throw new RuntimeException("share code is missing.");
+            throw new RuntimeException('share code is missing.');
         }
 
         $code = trim($data['code']);
@@ -122,7 +103,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         $this->viewerCodeService->cancelCode(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id'),
-            $code
+            $code,
         );
 
         return new JsonResponse([]);
@@ -134,9 +115,9 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws BadRequestException|NotFoundException
+     * @throws BadRequestException|NotFoundException|Exception
      */
-    private function handleGet(ServerRequestInterface $request) : ResponseInterface
+    private function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'user-id' missing.");
@@ -149,7 +130,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         //gets access codes for a given user lpa token
         $viewerCodes = $this->viewerCodeService->getCodes(
             $request->getAttribute('user-lpa-actor-token'),
-            $request->getAttribute('actor-id')
+            $request->getAttribute('actor-id'),
         );
 
         // TODO https://opgtransform.atlassian.net/browse/UML-1206

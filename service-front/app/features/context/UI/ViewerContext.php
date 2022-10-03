@@ -6,10 +6,12 @@ namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -27,6 +29,8 @@ class ViewerContext implements Context
 {
     use ViewerContextTrait;
     use BaseUiContextTrait;
+
+    private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
 
     /**
      * @Then /^a PDF is downloaded$/
@@ -46,6 +50,7 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I access the viewer service$/
+     * @Then /^I am taken to viewer service home page$/
      */
     public function iAccessTheViewerService()
     {
@@ -276,39 +281,35 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/view-lpa');
 
         // API call for lpa full fetch
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
             )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
-                }
-            );
+        );
 
         // API to pdf service for pdf rendering
-        $this->apiFixtures->post('/generate-pdf')
-            ->respondWith(new Response(StatusCodeInterface::STATUS_OK, [], ''))
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
-                }
-            );
+        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
 
-        $this->ui->clickLink('Download this LPA summary');
+        $this->ui->pressButton('Download this LPA summary');
+
+        //Full lpa fetch assertions
+        $request = $this->base->mockClientHistoryContainer[2]['request'];
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], str_replace('-', '', $this->lpaShareCode));
+
+        //PDF service assertions
+        $request = $this->apiFixtures->getLastRequest();
+        Assert::assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
     }
 
     /**
@@ -334,33 +335,30 @@ class ViewerContext implements Context
         );
 
         // API call for lpa full fetch
-        $this->apiFixtures->post('/v1/viewer-codes/full')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                            'cancelled' => (new DateTime('-1 day'))->format('c'),
-                        ]
-                    )
-                )
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'cancelled' => (new DateTime('-1 day'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
             )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                    assertEquals($params['organisation'], $this->lpaViewedBy);
-                }
-            );
+        );
 
         $this->ui->fillField('organisation', $this->lpaViewedBy);
         $this->ui->pressButton('View this LPA');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
     /**
@@ -376,28 +374,26 @@ class ViewerContext implements Context
         );
 
         // API call for lpa full fetch
-        $this->apiFixtures->post('/v1/viewer-codes/full')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                            'cancelled' => (new DateTime('-1 day'))->format('c'),
-                        ]
-                    )
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'cancelled' => (new DateTime('-1 day'))->format('c'),
+                    ]
                 )
             )
+        )
             ->inspectRequest(
                 function (RequestInterface $request) {
                     $params = json_decode($request->getBody()->getContents(), true);
 
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                    assertEquals($params['organisation'], $this->lpaViewedBy);
+                    Assert::assertIsArray($params);
+                    Assert::assertEquals($params['name'], $this->lpaSurname);
+                    Assert::assertEquals($params['code'], $this->lpaStoredCode);
+                    Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
                 }
             );
 
@@ -405,6 +401,36 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
     }
 
+    /**
+     * @When /^I enter an organisation name$/
+     */
+    public function iEnterAnOrganisationName()
+    {
+        $this->lpaData['status'] = 'Registered';
+
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageContainsText('Ask the donor or attorney for a new access code if your organisation:');
+        $this->ui->assertPageContainsText(
+            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+        );
+
+        // API call for lpa full fetch
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
+
+        $this->ui->fillField('organisation', $this->lpaViewedBy);
+        $this->ui->pressButton('View this LPA');
+    }
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
@@ -419,32 +445,29 @@ class ViewerContext implements Context
         );
 
         // API call for lpa full fetch
-        $this->apiFixtures->post('/v1/viewer-codes/full')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
             )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                    assertEquals($params['organisation'], $this->lpaViewedBy);
-                }
-            );
+        );
 
         $this->ui->fillField('organisation', $this->lpaViewedBy);
         $this->ui->pressButton('View this LPA');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
+        Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
     /**
@@ -455,20 +478,19 @@ class ViewerContext implements Context
         $this->lpaData['status'] = 'Expired';
         $this->ui->assertPageAddress('/home');
 
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_GONE,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Gone',
-                            'details' => 'Share code expired',
-                            'data' => [],
-                        ]
-                    )
-                )
-            );
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_GONE,
+                json_encode(
+                    [
+                        'title' => 'Gone',
+                        'details' => 'Share code expired',
+                        'data' => [],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
@@ -483,22 +505,19 @@ class ViewerContext implements Context
         $this->lpaData['status'] = 'Cancelled';
         $this->ui->assertPageAddress('/home');
 
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_GONE,
-                    [],
-                    json_encode(
-                        [
-                            'title' => 'Gone',
-                            'details' => 'Share code cancelled',
-                            'data' => [],
-                        ]
-                    ),
-                    '1.1',
-                    'Share code cancelled'
-                )
-            );
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_GONE,
+                json_encode(
+                    [
+                        'title' => 'Gone',
+                        'details' => 'Share code cancelled',
+                        'data' => [],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
@@ -512,35 +531,56 @@ class ViewerContext implements Context
     {
         $this->lpaData['status'] = 'Cancelled';
 
-        $this->ui->assertPageAddress('/home');
+        $this->giveAValidLpaShareCode();
+    }
 
-        // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
-            )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
+    /**
+     * @Given /^The LPA has instructions and preferences$/
+     */
+    public function theLPAHasInstructionsAndPreferences()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = true;
 
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                }
-            );
+        $this->giveAValidLpaShareCode();
+    }
 
-        $this->ui->fillField('donor_surname', $this->lpaSurname);
-        $this->ui->fillField('lpa_code', $this->lpaShareCode);
-        $this->ui->pressButton('Continue');
+    /**
+     * @Given /^The LPA has instructions$/
+     */
+    public function theLPAHasInstructions()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = false;
+        $this->lpaData['applicationHasRestrictions'] = true;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has preferences$/
+     */
+    public function theLPAHasPreferences()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = false;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences and is signed before 2016$/
+     */
+    public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016()
+    {
+        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasRestrictions'] = true;
+
+        $this->lpaData['lpaDonorSignatureDate'] = '2015-01-01';
+
+        $this->giveAValidLpaShareCode();
     }
 
     /**
@@ -550,31 +590,15 @@ class ViewerContext implements Context
     {
         $this->lpaData['status'] = 'Registered';
 
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @When /^I give a valid LPA share code when my session is timed out$/
+     */
+    public function iGiveAValidLPAShareCodeWhenMySessionIsTimedOut()
+    {
         $this->ui->assertPageAddress('/home');
-
-        // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
-            )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                }
-            );
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
@@ -592,6 +616,40 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Then /^I can clearly see the lpa has instructions and preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+    }
+
+    /**
+     * @Then /^I can clearly see the lpa has preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
+    }
+
+
+    /**
+     * @Then /^I can clearly see the lpa has instructions$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructions()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
+    }
+
+    /**
+     * @Then /^I can clearly see the lpa has instructions andor preferences$/
+     */
+    public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
+    {
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+    }
+
+
+    /**
      * @When /^I give an invalid (.*) and (.*)$/
      */
     public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
@@ -599,12 +657,13 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/home');
 
         // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_NOT_FOUND
-                )
-            );
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                '',
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
 
         $this->ui->fillField('donor_surname', $surname);
         $this->ui->fillField('lpa_code', $shareCode);
@@ -698,30 +757,27 @@ class ViewerContext implements Context
         );
 
         // API call for lpa summary check
-        $this->apiFixtures->post('/v1/viewer-codes/summary')
-            ->respondWith(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'lpa' => $this->lpaData,
-                            'expires' => (new DateTime('+30 days'))->format('c'),
-                        ]
-                    )
-                )
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
             )
-            ->inspectRequest(
-                function (RequestInterface $request) {
-                    $params = json_decode($request->getBody()->getContents(), true);
-
-                    assertInternalType('array', $params);
-                    assertEquals($params['name'], $this->lpaSurname);
-                    assertEquals($params['code'], $this->lpaStoredCode);
-                }
-            );
+        );
 
         $this->ui->pressButton('View this LPA');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
     }
 
     /**
@@ -904,5 +960,39 @@ class ViewerContext implements Context
     public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
     {
         $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
+    }
+
+    /**
+     * @return void
+     */
+    private function giveAValidLpaShareCode(): void
+    {
+        $this->ui->assertPageAddress('/home');
+
+        // API call for lpa summary check
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa' => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
+
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->lpaShareCode);
+        $this->ui->pressButton('Continue');
+
+        $request = $this->apiFixtures->getLastRequest();
+
+        $params = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertIsArray($params);
+        Assert::assertEquals($params['name'], $this->lpaSurname);
+        Assert::assertEquals($params['code'], $this->lpaStoredCode);
     }
 }
