@@ -13,11 +13,13 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <div class="govuk-grid-row">
+            <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
+
                 <div class="govuk-grid-column-two-thirds">
-                  <span class="govuk-caption-l">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</span>
-                  <span class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Your access code{% endtrans %}</h1>
                 </div>
+
             </div>
 
             {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
@@ -31,16 +33,14 @@
                                     <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true" tabindex="-1">
                                 </label>
                                 <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
-                                    <span class="js-accesscodecopy-default">{% trans %}Copy code{% endtrans %}</span>
-                                    <span class="js-accesscodecopy-success hide">{% trans %}Code copied{% endtrans %}</span>
+                                    <span class="js-accesscodecopy-default govuk-!-margin-0">{% trans %}Copy code{% endtrans %}</span>
+                                    <span class="js-accesscodecopy-success govuk-!-margin-0 hide">{% trans %}Code copied{% endtrans %}</span>
                                 </button>
                             </div>
-                            <h1 class="govuk-panel__body govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation%{% endtrans %}
-                            </h1>
-                            <span class="govuk-panel__title">
+                            <h2 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-2">
+                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation%{% endtrans %}<br>
                                 {{ add_hyphen_to_viewer_code(code) }}
-                            </span>
+                            </h2>
                             <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': lpa_date(expires)} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
                         </div>
                     </div>
@@ -49,6 +49,30 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters">
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                        {% if is_donor_signature_date_too_old(lpa) %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                    {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                    {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasRestrictions %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                    {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% elseif lpa.applicationHasGuidance %}
+                            <p class="govuk-body"><strong class="govuk-warning-text__text">
+                                    {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                </strong></p>
+                        {% endif %}
+                        </strong>
+                    </div>
+
                     <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What to do next{% endtrans %}</h2>
 
                     <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
@@ -84,29 +108,6 @@
                             </p>
                         {% endif %}
                     {% endif %}
-
-                    <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                        {% if is_donor_signature_date_too_old(lpa) %}
-                            <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                </strong></p>
-                        {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-                            <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                </strong></p>
-                        {% elseif lpa.applicationHasRestrictions %}
-                            <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                </strong></p>
-                        {% elseif lpa.applicationHasGuidance %}
-                            <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                </strong></p>
-                        {% endif %}
-                    </strong>
-                    </div>
 
                     <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
                             {% trans %}Give another organisation access{% endtrans %}
