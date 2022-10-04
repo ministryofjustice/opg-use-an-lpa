@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Common\Middleware\Security;
 
-use Common\Service\Log\EventCodes;
 use Common\Service\Security\UserIdentificationService;
+use Mezzio\Router\RouteResult;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Attempts to uniquely identify the user of an application for the purposes of throttling and brute force
@@ -22,44 +21,48 @@ class UserIdentificationMiddleware implements MiddlewareInterface
 {
     public const IDENTIFY_ATTRIBUTE = 'identity';
 
-    public function __construct(private UserIdentificationService $identificationService, private LoggerInterface $logger)
-    {
+    /**
+     * A list of route names that should bypass identification since browsers are inconsistent about the headers that
+     * are sent when using the javascript fetch api.
+     */
+    public const EXCLUDED_ROUTES = [
+        'session-check',
+        'session-refresh',
+    ];
+
+    public function __construct(
+        private UserIdentificationService $identificationService,
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = $this->identificationService->id($request);
-
-        $this->logger->debug(
-            'Identity of incoming request is {identity}',
-            [
-                'identity' => $id,
-            ]
-        );
-
-        /** @var SessionInterface $session */
+        /** @var SessionInterface|null $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if ($session !== null) {
-            // if the identity in the session does not match the identity we just calculated something about this
-            // request is probably nefarious, log it.
-            $sessionIdentity = $session->get(self::IDENTIFY_ATTRIBUTE);
-            if ($sessionIdentity !== null && $sessionIdentity !== $id) {
-                $this->logger->notice(
-                    'Identity of incoming request is different to session stored identity',
-                    [
-                        'event_code'          => EventCodes::IDENTITY_HASH_CHANGE,
-                        'stored_identity'     => $sessionIdentity,
-                        'calculated_identity' => $id,
-                    ]
-                );
-            }
 
-            $session->set(self::IDENTIFY_ATTRIBUTE, $id);
+        $id = $session?->get(self::IDENTIFY_ATTRIBUTE);
+
+        // Only check identity on valid non-excluded routes
+        if ($this->isValidRoute($request)) {
+            $id = $this->identificationService->id($request->getHeaders(), $id)->hash();
+            $session?->set(self::IDENTIFY_ATTRIBUTE, $id);
         }
 
         return $handler->handle($request->withAttribute(self::IDENTIFY_ATTRIBUTE, $id));
+    }
+
+    private function isValidRoute(ServerRequestInterface $request): bool
+    {
+        /** @var RouteResult|null $routeResult */
+        $routeResult = $request->getAttribute(RouteResult::class);
+
+        if (
+            in_array($routeResult?->getMatchedRouteName(), self::EXCLUDED_ROUTES)
+            && $request->getHeader('accept')[0] === 'application/json'
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
