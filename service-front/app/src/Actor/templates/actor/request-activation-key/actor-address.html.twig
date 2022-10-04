@@ -22,6 +22,7 @@
                     <h1 class="govuk-heading-xl">{% trans %}We need some more details{% endtrans %}</h1>
                     <p class="govuk-body">{% trans %}We need a few extra details to make sure we have the right LPA for your activation key request.{% endtrans %}</p>
                     <h2 class="govuk-heading-l">{% trans %}What is your current address?{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans with {'%postcode%': postcode } %}You've already given your postcode as %postcode%{% endtrans %}
                     <p class="govuk-body">{% trans %}Your activation key will be posted to this address.{% endtrans %}</p>
 
                     {{ govuk_form_element(form.get('__csrf')) }}
@@ -66,7 +67,7 @@
                                         'value':  value_yes
                                     },
                                     {
-                                        'label': 'No, it is different than my address on the paper LPA'|trans,
+                                        'label': 'No, it is different to my address on the paper LPA'|trans,
                                         'value': value_no
                                     },
                                     {
