@@ -64,6 +64,7 @@ func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Ha
 	a.r.Handle("/helloworld", handlers.HelloHandler())
 	a.r.Handle("/logout", handlers.LogoutHandler(cognitoLogoutURL))
 	a.r.Handle("/", authMiddleware(http.HandlerFunc(searchServer.SearchHandler)))
+	a.r.Handle("/stats", handlers.StatsHandler())
 
 	a.r.PathPrefix("/").Handler(handlers.StaticHandler(os.DirFS("web/static")))
 
