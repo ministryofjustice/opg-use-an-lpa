@@ -40,7 +40,7 @@ class UserIdentificationService
 
         // if the identity in the session does not match the identity we just calculated something about this
         // request is probably nefarious, log it.
-        if ($sessionIdentity !== $id->hash()) {
+        if ($sessionIdentity !== null && $sessionIdentity !== $id->hash()) {
             $this->logger->notice(
                 'Identity of incoming request is different to session stored identity',
                 [
