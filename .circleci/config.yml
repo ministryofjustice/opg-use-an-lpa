@@ -931,7 +931,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
@@ -1009,7 +1008,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
@@ -1053,7 +1051,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
@@ -1137,7 +1134,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
@@ -1193,7 +1189,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
