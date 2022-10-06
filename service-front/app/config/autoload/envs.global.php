@@ -150,7 +150,6 @@ return [
         'actor_login_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'name'    => 'redis',
                 'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
                 'options' => [
                     'ttl'           => 60,
