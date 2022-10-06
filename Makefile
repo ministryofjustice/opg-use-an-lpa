@@ -56,7 +56,6 @@ rebuild:
 
 down:
 	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
-.PHONY: exec
 .PHONY: down
 
 down_all:
@@ -133,12 +132,20 @@ development_mode: | enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run front-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
+
+run_front_composer_install:
+	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+.PHONY: run_front_composer_install
+
+run_api_composer_install:
+	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+.PHONY: run_api_composer_install
 
 run_front_composer_update:
 	$(COMPOSE) run front-composer update
