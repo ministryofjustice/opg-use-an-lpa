@@ -20,6 +20,12 @@ class RateLimitMiddleware implements MiddlewareInterface
     {
     }
 
+    /**
+     * @param ServerRequestInterface  $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     * @throws RateLimitExceededException
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (null !== $identity = $request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE)) {

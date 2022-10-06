@@ -1,7 +1,7 @@
 export default class SessionDialog {
     constructor(element)
     {
-        this.requestHeaders = { "Content-type": "application/json" };
+        this.requestHeaders = { "headers": { "Accept": "application/json" } };
         this.element = element;
         this.dialogOverlay = document.querySelector("#dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");

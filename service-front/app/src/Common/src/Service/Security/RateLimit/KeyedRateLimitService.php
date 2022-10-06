@@ -6,6 +6,7 @@ namespace Common\Service\Security\RateLimit;
 
 use Common\Exception\RateLimitExceededException;
 use Common\Service\Security\RateLimitService;
+use Laminas\Cache\Exception\ExceptionInterface;
 
 use function time;
 
@@ -18,9 +19,8 @@ class KeyedRateLimitService extends RateLimitService
      *
      * @param string $identity A unique identity to track
      * @param string $key      An optional piece of information to key this limit for
-     *
      * @return bool Is the identity limited for the given key
-     * @throws \Laminas\Cache\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
     public function isLimited(string $identity, string $key = ''): bool
     {
@@ -33,7 +33,7 @@ class KeyedRateLimitService extends RateLimitService
 
         // walk the time window and drop expired records
         $expiredTime = time() - $this->interval;
-        $accessRecords = array_filter($accessRecords, function ($item) use ($expiredTime) {
+        $accessRecords = array_filter($accessRecords, function (int $item) use ($expiredTime) {
             return $item >= $expiredTime;
         });
 
@@ -49,9 +49,8 @@ class KeyedRateLimitService extends RateLimitService
      *
      * @param string $identity A unique identity to limit
      * @param string $key      An optional piece of information to key this limit for
-     *
      * @throws RateLimitExceededException If a limit check exceeds the configured limit
-     * @throws \Laminas\Cache\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
     public function limit(string $identity, string $key = ''): void
     {
@@ -66,7 +65,9 @@ class KeyedRateLimitService extends RateLimitService
 
         // throw exception if rate limit is exceeded
         if (count($accessRecords) > $this->requestsPerInterval) {
-            throw new RateLimitExceededException($this->getName() . ' rate limit exceeded for identity ' . $identity);
+            throw new RateLimitExceededException(
+                $this->getName() . ' rate limit exceeded for identity ' . $identity
+            );
         }
     }
 
