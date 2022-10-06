@@ -12,6 +12,9 @@ use Psr\Container\ContainerInterface;
 
 use function assert;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class RedisAdapterPluginManagerDelegatorFactory
 {
     public function __invoke(ContainerInterface $container, string $name, callable $callback): AdapterPluginManager
