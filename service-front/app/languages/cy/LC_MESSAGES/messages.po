@@ -7085,7 +7085,7 @@ msgid "Yes, it is the same as my address on the paper LPA"
 msgstr "Ydy, mae’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:69
-msgid "No, it is different than my address on the paper LPA"
+msgid "No, it is different to my address on the paper LPA"
 msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr atwrneiaeth arhosol bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:73
@@ -7168,18 +7168,6 @@ msgstr ""
 msgctxt "flashMessage"
 msgid "Password changed successfully"
 msgstr "Cyfrinair wedi’i newid yn llwyddiannus"
-
-#: src/Actor/templates/actor/home-page.html.twig:51
-msgid ""
-"Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial "
-"basis only, and may be paused temporarily. However, once you've requested an "
-"activation key for an LPA, you'll always be able to use the LPA on this "
-"service."
-msgstr ""
-"Mae ychwanegu LPAs a gofrestrwyd rhwng 1 Ionawr 2016 a 31 Awst 2019 yn digwydd "
-"fel prawf yn unig, ac efallai y byddir yn rhoi’r gorau i wneud hynny dros dro. "
-"Fodd bynnag, unwaith y byddwch wedi gofyn am allwedd cadarnhau cyfrif ar gyfer "
-"LPA, byddwch bob amser yn gallu defnyddio’r LPA ar y gwasanaeth hwn."
 
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64
 msgid ""

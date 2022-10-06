@@ -73,8 +73,8 @@ class RequestActivationKey implements WorkflowState
     /**
      * Reset the workflow to the start.
      *
-     * This does not clear the name, date of birth or postcode as it is likely a repeat journey would use
      * identical information.
+     *
      */
     public function reset(): void
     {
@@ -97,6 +97,11 @@ class RequestActivationKey implements WorkflowState
         $this->actorUid             = null;
         $this->needsCleansing       = false;
         $this->actorAddressResponse = null;
+
+        $this->firstNames = null;
+        $this->lastName = null;
+        $this->dob = null;
+        $this->postcode = null;
     }
 
     /**

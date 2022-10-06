@@ -4942,7 +4942,7 @@ msgid "Yes, it is the same as my address on the paper LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:69
-msgid "No, it is different than my address on the paper LPA"
+msgid "No, it is different to my address on the paper LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:73
@@ -5015,10 +5015,6 @@ msgstr ""
 #: src/Actor/src/Handler/PasswordResetPageHandler.php:96
 msgctxt "flashMessage"
 msgid "Password changed successfully"
-msgstr ""
-
-#: src/Actor/templates/actor/home-page.html.twig:51
-msgid "Adding LPAs registered between 1 January 2016 and 31 August 2019 is on a trial basis only, and may be paused temporarily. However, once you've requested an activation key for an LPA, you'll always be able to use the LPA on this service."
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:64

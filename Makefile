@@ -56,7 +56,6 @@ rebuild:
 
 down:
 	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
-.PHONY: exec
 .PHONY: down
 
 down_all:
@@ -105,7 +104,7 @@ seed:
 	$(COMPOSE) up -d api-seeding
 .PHONY: seed
 
-unit_test_all: | unit_test_viewer_app unit_test_actor_app unit_test_api_app
+unit_test_all: | unit_test_viewer_app unit_test_actor_app unit_test_javascript unit_test_api_app
 .PHONY: unit_test_all
 
 unit_test_viewer_app:
@@ -114,6 +113,10 @@ unit_test_viewer_app:
 
 unit_test_actor_app:
 	$(COMPOSE) run actor-app /app/vendor/bin/phpunit
+.PHONY: unit_test_actor_app
+
+unit_test_javascript:
+	$(COMPOSE) run --entrypoint="/bin/sh -c" webpack "npm run test"
 .PHONY: unit_test_actor_app
 
 unit_test_api_app:
@@ -129,20 +132,39 @@ development_mode: | enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run front-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
 
+run_front_composer_install:
+	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+.PHONY: run_front_composer_install
+
+run_api_composer_install:
+	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+.PHONY: run_api_composer_install
+
 run_front_composer_update:
-	$(COMPOSE) run front-composer update $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run front-composer update
 .PHONY: run_front_composer_update
 
+run_front_npm_update:
+	$(COMPOSE) run --entrypoint="/bin/sh -c" webpack "npm update"
+.PHONY: run_front_npm_update
+
 run_api_composer_update:
-	$(COMPOSE) run api-composer update $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run api-composer update
 .PHONY: run_api_composer_update
+
+run_smoke_composer_update:
+	$(TEST_COMPOSE) run smoke-tests composer update
+.PHONY: run_smoke_composer_update
+
+run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
+.PHONY: run_update
 
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
