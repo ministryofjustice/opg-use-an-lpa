@@ -9,11 +9,14 @@ use Acpr\I18n\TranslatorInterface;
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
+use Common\Service\Cache\RedisAdapterPluginManagerDelegatorFactory;
 use Gettext\Generator\GeneratorInterface;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Loader\PoLoader;
 use Http\Adapter\Guzzle6\Client;
+use Laminas\Cache\Storage\Adapter\Memory;
+use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Laminas\Stratigility\MiddlewarePipe;
 use Laminas\Stratigility\MiddlewarePipeInterface;
@@ -118,11 +121,12 @@ class ConfigProvider
                     => View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
             'delegators' => [
-                ErrorHandler::class => [
+                ErrorHandler::class         => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
-                \Laminas\Cache\Storage\AdapterPluginManager::class => [
-                    Service\Cache\RedisAdapterPluginManagerDelegatorFactory::class,
+                AdapterPluginManager::class => [
+                    Memory\AdapterPluginManagerDelegatorFactory::class,
+                    RedisAdapterPluginManagerDelegatorFactory::class,
                 ],
             ],
         ];

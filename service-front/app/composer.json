@@ -33,16 +33,18 @@
     "require": {
         "php": "^8.1",
         "ext-apcu": "*",
-        "ext-redis": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-redis": "*",
         "aws/aws-sdk-php": "^3.208.9",
+        "blazon/psr11-monolog": "^4.0",
         "cooperaj/better-twig-i18n": "^1.1",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
-        "laminas/laminas-cache": "^3.6.0",
-        "laminas/laminas-cache-storage-adapter-apcu": "^2.0",
-        "laminas/laminas-cache-storage-adapter-redis": "^2.0",
+        "laminas/laminas-cache": "^3.6",
+        "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
+        "laminas/laminas-cache-storage-adapter-memory": "^2.1",
+        "laminas/laminas-cache-storage-adapter-redis": "^2.3",
         "laminas/laminas-component-installer": "^2.1.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-crypt": "^3.3",
@@ -60,15 +62,12 @@
         "mezzio/mezzio-twigrenderer": "^2.3",
         "nesbot/carbon": "^2.56.0",
         "paragonie/halite": "^5.0",
-        "php-http/guzzle6-adapter": "^2.0",
-        "blazon/psr11-monolog": "^4.0"
+        "php-http/guzzle6-adapter": "^2.0"
     },
     "require-dev": {
         "behat/behat": "^3.6",
         "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
-        "slevomat/coding-standard": "^8.0",
-        "webimpress/coding-standard": "^1.0",
         "laminas/laminas-development-mode": "^3.1",
         "mezzio/mezzio-tooling": "^2.0",
         "mikey179/vfsstream": "^1.6",
@@ -76,8 +75,10 @@
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-master",
+        "slevomat/coding-standard": "^8.0",
         "squizlabs/php_codesniffer": "^3.0",
-        "vimeo/psalm": "^4.19"
+        "vimeo/psalm": "^4.19",
+        "webimpress/coding-standard": "^1.0"
     },
     "autoload": {
         "psr-4": {
