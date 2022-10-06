@@ -32,7 +32,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
-            new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld'])
+            new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
         ];
     }
 
@@ -46,12 +46,11 @@ class LpaExtension extends AbstractExtension
 
         return '';
     }
-    
+
     public function actorAddress(CaseActor $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
         if (count($actor->getAddresses()) > 0) {
-
             $address = $actor->getAddresses()[0];
 
             return implode(', ', array_filter([
@@ -104,7 +103,6 @@ class LpaExtension extends AbstractExtension
      * or as a Datetime and converts it for displaying on pages
      *
      * @param DateTimeInterface|string|null $date
-     *
      * @return string
      */
     public function lpaDate(DateTimeInterface|string|null $date): string
@@ -118,7 +116,6 @@ class LpaExtension extends AbstractExtension
      *
      * @param DateTimeInterface|string|null $date
      * @param string                        $parseFormat A PHP Datetime format string that should be used to parse $date
-     *
      * @return string
      */
     public function formatDate(DateTimeInterface|string|null $date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
@@ -144,7 +141,6 @@ class LpaExtension extends AbstractExtension
      * Calculates the days remaining until the viewer code expires
      *
      * @param string|null $expiryDate
-     *
      * @return string
      * @throws Exception
      */
@@ -165,7 +161,6 @@ class LpaExtension extends AbstractExtension
      * Checks whether the code has been cancelled
      *
      * @param array $code
-     *
      * @return bool|null
      */
     public function isCodeCancelled(array $code): ?bool
@@ -208,11 +203,6 @@ class LpaExtension extends AbstractExtension
         return implode(' - ', $viewerCodeParts);
     }
 
-    /**
-     * @param Lpa $lpa
-     *
-     * @return bool
-     */
     public function isLPACancelled(Lpa $lpa): bool
     {
         $status = $lpa->getStatus();
