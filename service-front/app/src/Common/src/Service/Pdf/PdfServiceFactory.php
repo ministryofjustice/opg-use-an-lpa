@@ -6,17 +6,12 @@ namespace Common\Service\Pdf;
 
 use Common\Service\Log\RequestTracing;
 use DI\Factory\RequestedEntry;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Mezzio\Template\TemplateRendererInterface;
 
-/**
- * Class PdfServiceFactory
- *
- * @package Common\Service\Pdf
- */
 class PdfServiceFactory
 {
     public function __invoke(ContainerInterface $container, RequestedEntry $entityClass)

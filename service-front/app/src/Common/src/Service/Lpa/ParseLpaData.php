@@ -7,25 +7,17 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 
 /**
- * Class ParseLpaData
- *
  * Single action invokeable class that transforms incoming LPA data arrays from the API into ones containing
  * value objects and sane values.
- *
- * @package Common\Service\Lpa
  */
 class ParseLpaData
 {
-    /** @var LpaFactory */
-    private LpaFactory $lpaFactory;
-
     /**
      * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
      */
-    public function __construct(LpaFactory $lpaFactory)
+    public function __construct(private LpaFactory $lpaFactory)
     {
-        $this->lpaFactory = $lpaFactory;
     }
 
     /**
@@ -36,7 +28,6 @@ class ParseLpaData
      * may change.
      *
      * @param array $data
-     *
      * @return ArrayObject
      * @throws \Exception
      */

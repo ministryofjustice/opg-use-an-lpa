@@ -16,7 +16,7 @@ class PasswordValidator extends AbstractValidator
     /**
      * @var string[]
      */
-    protected $messageTemplates = [
+    protected array $messageTemplates = [
         self::MUST_INCLUDE_DIGIT      => 'Password must include a number',
         self::MUST_INCLUDE_LOWER_CASE => 'Password must include a lower case letter',
         self::MUST_INCLUDE_UPPER_CASE => 'Password must include a capital letter',

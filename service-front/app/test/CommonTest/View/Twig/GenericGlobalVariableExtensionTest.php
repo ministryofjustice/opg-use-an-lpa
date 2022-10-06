@@ -7,7 +7,6 @@ namespace CommonTest\View\Twig;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use PHPUnit\Framework\TestCase;
 
-
 class GenericGlobalVariableExtensionTest extends TestCase
 {
     /**
@@ -17,13 +16,13 @@ class GenericGlobalVariableExtensionTest extends TestCase
     {
         $application = 'actor';
 
-        $extension = new GenericGlobalVariableExtension($application);
+        $extension     = new GenericGlobalVariableExtension($application);
         $genericConfig = $extension->getGlobals();
         $this->assertTrue(is_array($genericConfig));
         $this->assertEquals(2, count($genericConfig));
 
         $expectedConfig = [
-            'application' => 'actor',
+            'application'   => 'actor',
             'currentLocale' => 'cy-gb',
         ];
 

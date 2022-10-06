@@ -14,25 +14,16 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
+
             <div class="govuk-grid-column-two-thirds">
-                <span class="govuk-caption-l">
-                    {% if lpa.caseSubtype == "pfa" %}
-                        {% trans %}Property and finance{% endtrans %}
-                    {% else %}
-                        {% trans %}Health and welfare{% endtrans %}
-                    {% endif %}
-                </span>
-                <span class="govuk-heading-l govuk-!-margin-bottom-3">{{ actor_name(lpa.donor, false) }}</span>
+                <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}</h1>
             </div>
+
         </div>
 
         {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <h1 class="govuk-heading-xl">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}</h1>
-            </div>
-        </div>
 
         {% if is_lpa_cancelled(lpa) %}
 
@@ -47,9 +38,9 @@
             <div class="govuk-grid-row lpa-valid-border">
                 <div class="govuk-grid-column-full column-full-alt-1">
                     {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}</h2>
+                        <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}</h2>
                     {% else %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</h2>
+                        <h2 class="govuk-heading-m heading-m-alt-1">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</h2>
                     {% endif %}
 
                     <p class="govuk-body body-alt-1">
@@ -72,6 +63,9 @@
                                 {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
                             {% endif %}
                         {% endif %}
+                    </p>
+                    <p class="govuk-body body-alt-1">
+                        {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
                     </p>
                 </div>
             </div>

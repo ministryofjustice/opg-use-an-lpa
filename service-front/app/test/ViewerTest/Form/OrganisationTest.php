@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ViewerTest\Form;
 
 use Common\Form\AbstractForm;
@@ -20,9 +22,9 @@ class OrganisationTest extends TestCase
     /**
      * @var array
      */
-    private $elements = [
-        '__csrf'        => Csrf::class,
-        'organisation'  => Text::class,
+    private array $elements = [
+        '__csrf'       => Csrf::class,
+        'organisation' => Text::class,
     ];
 
     public function setUp(): void
@@ -50,9 +52,9 @@ class OrganisationTest extends TestCase
             }
 
             $expectedElementClass = $this->elements[$formElementName];
-            $elementClass = get_class($formElement);
+            $elementClass         = $formElement::class;
 
-            if ($expectedElementClass != $elementClass) {
+            if ($expectedElementClass !== $elementClass) {
                 $this->fail(
                     sprintf(
                         'Class type expectation failure for "%s": Expecting %s but found %s',

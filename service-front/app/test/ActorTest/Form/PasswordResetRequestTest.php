@@ -8,8 +8,8 @@ use Actor\Form\PasswordResetRequest;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Common\Form\Element\Email;
-use Laminas\Form\Element\Hidden;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
+use Laminas\Form\Element\Hidden;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -19,8 +19,7 @@ class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    /** @var PasswordResetRequest */
-    protected $form;
+    protected PasswordResetRequest $form;
 
     public function getForm(): AbstractForm
     {
@@ -35,16 +34,16 @@ class PasswordResetRequestTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'           => Csrf::class,
-            'email'            => Email::class,
-            'email_confirm'    => Email::class,
-            'forced'           => Hidden::class,
+            '__csrf'        => Csrf::class,
+            'email'         => Email::class,
+            'email_confirm' => Email::class,
+            'forced'        => Hidden::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new PasswordResetRequest($guardProphecy->reveal());
+        $this->form    = new PasswordResetRequest($guardProphecy->reveal());
     }
 }

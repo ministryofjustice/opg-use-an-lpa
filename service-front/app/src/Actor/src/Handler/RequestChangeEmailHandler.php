@@ -13,39 +13,27 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Notify\NotifyService;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use ParagonIE\HiddenString\HiddenString;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Common\Service\Notify\NotifyService;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class RequestChangeEmailHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware
 {
     use CsrfGuard;
-    use User;
     use Session;
-
-    /** @var UserService */
-    private $userService;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
-    /** @var NotifyService */
-    private $notifyService;
+    use User;
 
     /**
      * RequestChangeEmailHandler constructor
@@ -60,16 +48,12 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
+        private UserService $userService,
         AuthenticationInterface $authenticator,
-        ServerUrlHelper $serverUrlHelper,
-        NotifyService $notifyService
+        private ServerUrlHelper $serverUrlHelper,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->notifyService = $notifyService;
 
         $this->setAuthenticator($authenticator);
     }
@@ -122,7 +106,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                             'user'     => $user,
-                            'newEmail' => $newEmail
+                            'newEmail' => $newEmail,
                         ]));
                     } catch (ApiException $ex) {
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
@@ -138,7 +122,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                             return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
                                 'user'     => $user,
-                                'newEmail' => $newEmail
+                                'newEmail' => $newEmail,
                             ]));
                         }
                     }
@@ -148,7 +132,7 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
         return new HtmlResponse($this->renderer->render('actor::change-email', [
             'form' => $form->prepare(),
-            'user' => $user
+            'user' => $user,
         ]));
     }
 }

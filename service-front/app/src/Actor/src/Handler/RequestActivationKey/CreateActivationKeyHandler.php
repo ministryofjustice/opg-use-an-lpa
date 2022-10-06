@@ -12,6 +12,7 @@ use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Se
 use Common\Service\{Lpa\AddOlderLpa};
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Notify\NotifyService;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
@@ -21,46 +22,34 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Common\Service\Notify\NotifyService;
 
 /**
- * Class CreateActivationKeyHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CreateActivationKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
-    use User;
-    use Session;
     use CsrfGuard;
+    use Session;
     use State;
-
-    private AddOlderLpa $addOlderLpa;
-    private LocalisedDate $localisedDate;
-    private NotifyService $notifyService;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        AddOlderLpa $addOlderLpa,
+        private AddOlderLpa $addOlderLpa,
         UrlHelper $urlHelper,
-        LocalisedDate $localisedDate,
-        NotifyService $notifyService
+        private LocalisedDate $localisedDate,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-        $this->addOlderLpa = $addOlderLpa;
-        $this->localisedDate = $localisedDate;
-        $this->notifyService = $notifyService;
     }
 
     /**
      * Handles a request and produces a response
      *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws InvalidRequestException|StateNotInitialisedException
      */
@@ -111,7 +100,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                     );
                 case OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING:
                     $state->needsCleansing = true;
-                    $state->actorUid = (int) $result->getData()['actor_id'];
+                    $state->actorUid       = (int) $result->getData()['actor_id'];
 
                     return $this->redirectToRoute('lpa.add.contact-details');
             }

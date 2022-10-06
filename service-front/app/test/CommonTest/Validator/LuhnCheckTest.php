@@ -9,10 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class LuhnCheckTest extends TestCase
 {
-    /**
-     * @var LuhnCheck
-     */
-    private $validator;
+    private LuhnCheck $validator;
 
     public function setUp(): void
     {
@@ -37,7 +34,7 @@ class LuhnCheckTest extends TestCase
             ['700000000138'],
             ['712121234926'],
             ['322271628'],
-            ['4417123456789113']
+            ['4417123456789113'],
         ];
     }
 

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use RuntimeException;
 
 class GenericGlobalVariableExtensionFactoryTest extends TestCase
 {
@@ -32,7 +33,7 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
         $containerProphecy->get(ClientInterface::class)
             ->willReturn($httpClientProphecy->reveal());
 
-        $factory = new GenericGlobalVariableExtensionFactory();
+        $factory       = new GenericGlobalVariableExtensionFactory();
         $genericConfig = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(GenericGlobalVariableExtension::class, $genericConfig);
@@ -48,9 +49,8 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
 
         $factory = new GenericGlobalVariableExtensionFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing application type, should be one of "viewer" or "actor"');
         $genericConfig = $factory($containerProphecy->reveal());
     }
 }
-

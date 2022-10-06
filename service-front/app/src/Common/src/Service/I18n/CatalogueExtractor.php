@@ -14,17 +14,9 @@ class CatalogueExtractor
         Merge::REFERENCES_THEIRS
         | Merge::EXTRACTED_COMMENTS_THEIRS;
 
-    protected ExtractorInterface $extractor;
-
-    /**
-     * TwigCatalogueExtractor constructor.
-     *
-     * @param ExtractorInterface $extractor
-     */
     public function __construct(
-        ExtractorInterface $extractor
+        protected ExtractorInterface $extractor,
     ) {
-        $this->extractor = $extractor;
     }
 
     public function extract(array $twigPaths): array
@@ -74,7 +66,7 @@ class CatalogueExtractor
         array &$catalogues,
         Translations $translations,
         string $domain,
-        int $mergeFlags = 0
+        int $mergeFlags = 0,
     ): void {
         if (in_array($domain, array_keys($catalogues))) {
             $catalogues[$domain] = $catalogues[$domain]->mergeWith($translations, $mergeFlags);

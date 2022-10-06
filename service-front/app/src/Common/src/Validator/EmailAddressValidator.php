@@ -20,7 +20,7 @@ class EmailAddressValidator extends LaminasEmailAddressValidator
 
         if ($valid === false && count($this->getMessages()) > 0) {
             $this->abstractOptions['messages'] = [
-                'Enter an email address in the correct format, like name@example.com'
+                'Enter an email address in the correct format, like name@example.com',
             ];
         }
 

@@ -34,8 +34,8 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
         parent::setUp();
 
         $this->templateRenderer = $this->createMock(TemplateRendererInterface::class);
-        $this->authenticator = $this->createMock(AuthenticationInterface::class);
-        $this->urlHelper = $this->createMock(UrlHelper::class);
+        $this->authenticator    = $this->createMock(AuthenticationInterface::class);
+        $this->urlHelper        = $this->createMock(UrlHelper::class);
 
         $this->user = $this->createMock(UserInterface::class);
 

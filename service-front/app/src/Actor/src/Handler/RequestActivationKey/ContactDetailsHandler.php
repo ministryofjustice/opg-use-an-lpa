@@ -11,9 +11,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-
 /**
- * @package Actor\RequestActivationKey\Handler
  * @codeCoverageIgnore
  */
 class ContactDetailsHandler extends AbstractCleansingDetailsHandler
@@ -30,11 +28,10 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
     {
         $this->form->setData(
             [
-                'telephone_option' =>
-                    [
-                        'telephone' => $this->state($request)->telephone,
-                        'no_phone' => $this->state($request)->noTelephone ? 'yes' : 'no'
-                    ]
+                'telephone_option' => [
+                    'telephone' => $this->state($request)->telephone,
+                    'no_phone'  => $this->state($request)->noTelephone ? 'yes' : 'no',
+                ],
             ]
         );
 
@@ -43,7 +40,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -55,7 +52,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
         if ($this->form->isValid()) {
             $postData = $this->form->getData();
 
-            $this->state($request)->telephone = $postData['telephone_option']['telephone'] ?? null;
+            $this->state($request)->telephone   = $postData['telephone_option']['telephone'] ?? null;
             $this->state($request)->noTelephone = ($postData['telephone_option']['no_phone'] ?? null) === 'yes';
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
@@ -66,7 +63,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
-                'back' => $this->lastPage($this->state($request))
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
@@ -82,7 +79,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             || $this->state($request)->actorAddress1 === null
             || $this->state($request)->getActorRole() === null;
 
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_ATTORNEY) {
+        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             return $required
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null
@@ -104,7 +101,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             return 'lpa.check-answers';
         }
 
-        return ($state->telephone !== null || $state->noTelephone)
+        return $state->telephone !== null || $state->noTelephone
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.add.actor-role';
     }

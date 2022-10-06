@@ -9,18 +9,14 @@ use JsonSerializable;
 class StatesCollection implements JsonSerializable
 {
     /**
-     * @var array<string, WorkflowState>
+     * @param array<class-string, WorkflowState> $states
      */
-    private array $states;
-
-    public function __construct(array $states = [])
+    public function __construct(private array $states = [])
     {
-        $this->states = $states;
     }
 
     /**
      * @param class-string $workflowStateClass
-     *
      * @return bool
      */
     public function has(string $workflowStateClass): bool
@@ -30,7 +26,6 @@ class StatesCollection implements JsonSerializable
 
     /**
      * @param class-string $workflowStateClass
-     *
      * @return WorkflowState
      * @throws StateNotInitialisedException
      */
@@ -44,9 +39,8 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param string        $workflowStateClass
+     * @param class-string  $workflowStateClass
      * @param WorkflowState $state
-     *
      * @return void
      */
     public function add(string $workflowStateClass, WorkflowState $state): void

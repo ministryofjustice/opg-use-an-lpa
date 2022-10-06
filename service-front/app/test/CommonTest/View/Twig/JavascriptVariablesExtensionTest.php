@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\View\Twig;
 
 use Common\View\Twig\JavascriptVariablesExtension;
-use Common\View\Twig\JavascriptVariablesExtensionFactory;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Client\ClientInterface;
 
 class JavascriptVariablesExtensionTest extends TestCase
 {
@@ -18,12 +15,11 @@ class JavascriptVariablesExtensionTest extends TestCase
     public function testGetGlobals()
     {
         $analyticsId = 'uaid1234';
-        $extension = new JavascriptVariablesExtension($analyticsId);
+        $extension   = new JavascriptVariablesExtension($analyticsId);
 
         $analaytics = $extension->getGlobals();
 
-        $this->assertTrue(is_array($analaytics));
-        $this->assertEquals(1,count($analaytics));
+        $this->assertEquals(1, count($analaytics));
 
         $expectedAnalytics = [
                 'uaId' => 'uaid1234',

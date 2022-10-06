@@ -1,27 +1,190 @@
 <?xml version="1.0"?>
-<ruleset name="Mezzio Skeleton coding standard">
-    <description>Mezzio Skeleton coding standard</description>
+    <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-    <config name="ignore_warnings_on_exit" value="1"/>
-
-    <!-- display progress -->
-    <arg value="p"/>
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
 
-    <!-- inherit rules from: -->
-    <rule ref="PSR12"/>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
-        <properties>
-            <property name="ignoreBlankLines" value="false"/>
-        </properties>
-    </rule>
-    <rule ref="PSR1.Methods.CamelCapsMethodName">
-        <exclude-pattern>*/test/*</exclude-pattern>
-    </rule>
+    <!-- Show progress -->
+    <arg value="p"/>
 
     <!-- Paths to check -->
     <file>config</file>
     <file>src</file>
     <file>test</file>
+    <exclude-pattern>config/config.php</exclude-pattern>
+    <exclude-pattern>config/routes.php</exclude-pattern>
+
+    <rule ref="PSR12" />
+
+    <!-- We use camel_case_methods in our tests -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>*/test/*</exclude-pattern>
+    </rule>
+
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="error" value="true"/>
+            <property name="maxPadding" value="50"/>
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <!--
+        Sniffs provided by https://github.com/webimpress/coding-standard are good
+    -->
+
+    <rule ref="WebimpressCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="WebimpressCodingStandard.Arrays.Format"/>
+    <rule ref="WebimpressCodingStandard.Arrays.DoubleArrow">
+        <properties>
+            <property name="maxPadding" value="50"/>
+        </properties>
+    </rule>
+    <rule ref="WebimpressCodingStandard.Classes.TraitUsage"/>
+    <rule ref="WebimpressCodingStandard.Classes.AlphabeticallySortedTraits"/>
+    <rule ref="WebimpressCodingStandard.Formatting.StringClassReference"/>
+    <rule ref="WebimpressCodingStandard.PHP.DeclareStrictTypes"/>
+
+    <!--
+        Sniffs provided by https://github.com/slevomat/coding-standard seem pretty good and cover most all our bases
+    -->
+
+    <!-- Slevomat FUNCTIONAL sniffs -->
+    <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat">
+        <properties>
+            <property name="withSpaces" value="no" />
+            <property name="shortNullable" value="yes" />
+            <property name="nullPosition" value="last" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
+    <rule ref="SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch" />
+    <rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+
+    <!-- Slevomat CLEANING sniffs -->
+    <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias" />
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses" />
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon" />
+
+    <!-- Slevomat FORMATTING sniffs -->
+    <rule ref="SlevomatCodingStandard.Arrays.MultiLineArrayEndBracketPlacement" />
+    <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace" />
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma" />
+    <rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.ClassMemberSpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.ConstantSpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.MethodSpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.ParentCallSpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration" />
+    <rule ref="SlevomatCodingStandard.Classes.PropertySpacing" />
+    <rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration" />
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Complexity.Cognitive" /> <!-- This one may be fun -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses" />
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator">
+        <properties>
+            <property name="lineLengthLimit" value="100" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullSafeObjectOperator" />
+    <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration" />
+    <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration" />
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration" />
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceSpacing" />
+    <rule ref="SlevomatCodingStandard.PHP.ReferenceSpacing" />
+    <rule ref="SlevomatCodingStandard.Operators.NegationOperatorSpacing" />
+    <rule ref="SlevomatCodingStandard.Operators.SpreadOperatorSpacing" />
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast" />
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing" />
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly" />
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash" />
+    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+        <properties>
+            <property name="linesCountAfterOpeningBrace" value="0" />
+            <property name="linesCountBeforeClosingBrace" value="0" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array">
+                <element value="@api"/>
+                <element value="@author"/>
+                <element value="@category"/>
+                <element value="@copyright"/>
+                <element value="@created"/>
+                <element value="@license"/>
+                <element value="@package"/>
+                <element value="@subpackage"/>
+                <element value="@version"/>
+            </property>
+        </properties>
+        <!-- This file contains license information for the files original source -->
+        <exclude-pattern>src/Common/src/Service/Session/EncryptedCookiePersistence.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+        <properties>
+            <property name="forbiddenCommentPatterns" type="array">
+                <element value="~^(?:(?!private|protected|static)\S+ )?(?:con|de)structor\.\z~i"/>
+                <element value="~^Created by .+\.\z~i"/>
+                <element value="~^(User|Date|Time): \S+\z~i"/>
+                <element value="~^\S+ [gs]etter\.\z~i"/>
+                <element value="~^Class \S+\z~i"/>
+            </property>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="linesCountBeforeFirstContent" value="0"/>
+            <property name="linesCountAfterLastContent" value="0"/>
+            <property name="linesCountBetweenDescriptionAndAnnotations" value="1"/>
+            <property name="linesCountBetweenAnnotationsGroups" value="1"/>
+            <property name="annotationsGroups" type="array">
+                <element value="
+                    @internal,
+                    @deprecated,
+                "/>
+                <element value="
+                    @link,
+                    @uses,
+                    @see,
+                "/>
+                <element value="
+                    @ORM\,
+                    @ODM\,
+                    @PHPCR\,
+                "/>
+                <element value="
+                    @param\,
+                    @return\,
+                    @throws\,
+                "/>
+            </property>
+        </properties>
+        <!-- This file contains license information for the files original source -->
+        <exclude-pattern>src/Common/src/Service/Session/EncryptedCookiePersistence.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment" />
+    <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment" />
 </ruleset>

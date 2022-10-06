@@ -6,51 +6,28 @@ namespace Actor\Handler;
 
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
+use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
-use Common\Service\Notify\NotifyService;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class CreateAccountSuccessHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CreateAccountSuccessHandler extends AbstractHandler
 {
-    /** @var UserService */
-    private $userService;
-
-    /** @var ServerUrlHelper */
-    private $serverUrlHelper;
-
-    /** @var NotifyService */
-    private $notifyService;
-
-    /**
-     * CreateAccountSuccessHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param ServerUrlHelper $serverUrlHelper
-     * @param NotifyService $notifyService
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UserService $userService,
-        ServerUrlHelper $serverUrlHelper,
-        NotifyService $notifyService
+        private UserService $userService,
+        private ServerUrlHelper $serverUrlHelper,
+        private NotifyService $notifyService,
     ) {
         parent::__construct($renderer, $urlHelper);
-
-        $this->userService = $userService;
-        $this->serverUrlHelper = $serverUrlHelper;
-        $this->notifyService = $notifyService;
     }
 
     /**
@@ -71,7 +48,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
         /** @var string $emailAddress */
         $emailAddress = $params['email'] ?? null;
-        $resend = (isset($params['resend']) && $params['resend'] === 'true');
+        $resend       = (isset($params['resend']) && $params['resend'] === 'true');
 
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');
@@ -100,13 +77,13 @@ class CreateAccountSuccessHandler extends AbstractHandler
                         'email' => $emailAddress,
                     ]);
                 }
-            } catch (ApiException $ignore) {
+            } catch (ApiException) {
                 //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
             }
         }
 
         return new HtmlResponse($this->renderer->render('actor::create-account-success', [
-            'emailAddress' => $emailAddress
+            'emailAddress' => $emailAddress,
         ]));
     }
 }

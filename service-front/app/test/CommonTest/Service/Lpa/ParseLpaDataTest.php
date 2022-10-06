@@ -15,7 +15,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @coversDefaultClass \Common\Service\Lpa\ParseLpaData
- *
  * @property array     lpaData
  * @property string    actorToken
  * @property string    lpaId
@@ -27,26 +26,25 @@ class ParseLpaDataTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var ObjectProphecy|LpaFactory */
-    private $lpaFactory;
+    private ObjectProphecy|LpaFactory $lpaFactory;
 
     public function setUp(): void
     {
         $this->actorToken = '34-3-3-3-3456';
-        $this->actorId = '56-5-5-5-5678';
-        $this->lpaId = '78-7-7-7-7891';
+        $this->actorId    = '56-5-5-5-5678';
+        $this->lpaId      = '78-7-7-7-7891';
 
         $this->lpaData = [
             'user-lpa-actor-token' => $this->actorToken,
-            'actor' => [
-                'type' => 'attorney',
+            'actor'                => [
+                'type'    => 'attorney',
                 'details' => [
-                    'uId' => $this->actorId
+                    'uId' => $this->actorId,
                 ],
             ],
-            'lpa' => [
-                'uId' => $this->lpaId
-            ]
+            'lpa'                  => [
+                'uId' => $this->lpaId,
+            ],
         ];
 
         $this->lpa = new Lpa();
@@ -68,10 +66,10 @@ class ParseLpaDataTest extends TestCase
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($this->lpa);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
 
-        $sut = new ParseLpaData($this->lpaFactory->reveal());
+        $sut    = new ParseLpaData($this->lpaFactory->reveal());
         $result = $sut(
             [
-                $this->lpaId => $this->lpaData
+                $this->lpaId => $this->lpaData,
             ]
         );
 

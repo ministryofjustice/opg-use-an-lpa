@@ -26,7 +26,7 @@ class TranslationUpdateCommandFactory
                 'src/Common/templates/error/',
                 'src/Common/templates/layout/',
                 'src/Common/templates/partials/',
-                'src/Viewer/templates/viewer/'
+                'src/Viewer/templates/viewer/',
             ],
             [
                 'src/Actor/src/Handler/',

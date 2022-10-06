@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\View\Twig;
 
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class GenericGlobalVariableExtensionFactory
 {
@@ -13,7 +14,7 @@ class GenericGlobalVariableExtensionFactory
         $config = $container->get('config');
 
         if (!isset($config['application'])) {
-            throw new \RuntimeException('Missing application type, should be one of "viewer" or "actor"');
+            throw new RuntimeException('Missing application type, should be one of "viewer" or "actor"');
         }
 
         return new GenericGlobalVariableExtension(

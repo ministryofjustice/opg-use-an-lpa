@@ -12,20 +12,10 @@ use Common\Validator\DobValidator;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-/**
- * Class LpaAdd
- *
- * @package Actor\Form
- */
 class DateOfBirth extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'lpa_add_dob';
 
-    /**
-     * LpaAdd constructor.
-     *
-     * @param CsrfGuardInterface $csrfGuard
-     */
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);

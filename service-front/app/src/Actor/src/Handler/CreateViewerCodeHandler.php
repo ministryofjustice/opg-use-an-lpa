@@ -23,38 +23,24 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class CreateViewerCodeHandler
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class CreateViewerCodeHandler extends AbstractHandler implements UserAware, CsrfGuardAware
 {
-    use User;
-    use Session;
     use CsrfGuard;
-
-    /**
-     * @var ViewerCodeService
-     */
-    private $viewerCodeService;
-    /**
-     * @var LpaService
-     */
-    private $lpaService;
+    use Session;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        LpaService $lpaService,
-        ViewerCodeService $viewerCodeService
+        private LpaService $lpaService,
+        private ViewerCodeService $viewerCodeService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
         $this->setAuthenticator($authenticator);
-
-        $this->lpaService = $lpaService;
-        $this->viewerCodeService = $viewerCodeService;
     }
 
     /**
@@ -68,8 +54,8 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
     {
         $form = new CreateShareCode($this->getCsrfGuard($request));
 
-        $user = $this->getUser($request);
-        $identity = (!is_null($user)) ? $user->getIdentity() : null;
+        $user     = $this->getUser($request);
+        $identity = !is_null($user) ? $user->getIdentity() : null;
 
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());
@@ -83,8 +69,8 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     $validated['org_name']
                 );
 
-                $lpaData = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
-                $actorRole = ($lpaData['actor']['type'] === 'donor') ? 'Donor' : 'Attorney';
+                $lpaData   = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
+                $actorRole = $lpaData['actor']['type'] === 'donor' ? 'Donor' : 'Attorney';
 
                 return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
                     'user'         => $user,
@@ -93,7 +79,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                     'expires'      => new DateTimeImmutable($codeData['expires']),
                     'organisation' => ucwords($codeData['organisation']),
                     'lpa'          => $lpaData->lpa,
-                    'actorRole'    => $actorRole
+                    'actorRole'    => $actorRole,
                 ]));
             }
         }
@@ -119,7 +105,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
             'user'       => $user,
             'lpa'        => $lpaData->lpa,
             'actorToken' => $form->get('lpa_token')->getValue(),
-            'form'       => $form
+            'form'       => $form,
         ]));
     }
 }

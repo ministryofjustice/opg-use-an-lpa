@@ -13,24 +13,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class InstructionsPreferencesHandler
- *
- * @package Actor\Handler
  * @codeCoverageIgnore
  */
 class InstructionsPreferencesBefore2016Handler extends AbstractHandler
 {
     use User;
 
-    private UrlValidityCheckService $urlValidityCheckService;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        UrlValidityCheckService $urlValidityCheckService
+        private UrlValidityCheckService $urlValidityCheckService,
     ) {
         parent::__construct($renderer, $urlHelper);
-        $this->urlValidityCheckService = $urlValidityCheckService;
     }
 
     /**

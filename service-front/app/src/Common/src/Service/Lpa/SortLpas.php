@@ -7,12 +7,8 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 
 /**
- * Class SortLpas
- *
  * Single action invokeable that sorts incoming LPA array objects according to our criteria.
  * Sort order starts with Surname and uses Firstname and case subtypes to further sort.
- *
- * @package Common\Service\Lpa
  */
 class SortLpas
 {
@@ -20,7 +16,6 @@ class SortLpas
      * Sorts the two LPAs by Surname, forename, case-subtype and finally the added date.
      *
      * @param ArrayObject $lpas
-     *
      * @return ArrayObject
      */
     public function __invoke(ArrayObject $lpas): ArrayObject

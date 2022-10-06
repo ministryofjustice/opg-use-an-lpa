@@ -20,8 +20,8 @@ class GovUkLaminasFormErrorsExtensionTest extends TestCase
         $this->assertTrue(is_array($functions));
 
         $expectedFunctions = [
-            'govuk_error'           => 'errorMessage',
-            'govuk_error_summary'   => 'errorSummary',
+            'govuk_error'         => 'errorMessage',
+            'govuk_error_summary' => 'errorSummary',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 

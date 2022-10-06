@@ -6,7 +6,6 @@ namespace Common\Middleware\Session;
 
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Service\Session\EncryptedCookiePersistence;
-use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
@@ -22,8 +21,6 @@ use Psr\Log\LoggerInterface;
  *
  * Used to log a user out, or remove the expired key after other middle wares have had the chance to work
  * on it.
- *
- * @package Common\Middleware\Session
  */
 class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 {
@@ -33,14 +30,11 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
     public const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         EncryptedCookiePersistence::SESSION_EXPIRED_KEY,
-        FlashMessagesInterface::FLASH_NEXT
+        FlashMessagesInterface::FLASH_NEXT,
     ];
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -59,7 +53,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
             $this->logger->info(
                 'User session expired approx {seconds} seconds ago',
                 [
-                    'seconds' => time() - $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
+                    'seconds' => time() - $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY),
                 ]
             );
         }

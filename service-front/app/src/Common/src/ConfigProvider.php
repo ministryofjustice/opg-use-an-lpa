@@ -4,10 +4,34 @@ declare(strict_types=1);
 
 namespace Common;
 
+use Acpr\I18n\TranslationExtension;
+use Acpr\I18n\TranslatorInterface;
+use Aws\Kms\KmsClient;
+use Aws\Sdk;
+use Aws\SecretsManager\SecretsManagerClient;
+use Gettext\Generator\GeneratorInterface;
+use Gettext\Generator\PoGenerator;
+use Gettext\Loader\LoaderInterface;
+use Gettext\Loader\PoLoader;
+use Http\Adapter\Guzzle6\Client;
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Laminas\Stratigility\MiddlewarePipe;
+use Laminas\Stratigility\MiddlewarePipeInterface;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
+use Mezzio\Csrf\CsrfGuardFactoryInterface;
+use Mezzio\Session\SessionMiddleware;
+use Mezzio\Session\SessionMiddlewareFactory;
+use Mezzio\Session\SessionPersistenceInterface;
+use Psr\Http\Client\ClientInterface;
+
 /**
  * The configuration provider for the Common module
  *
  * @see https://docs.zendframework.com/zend-component-installer/
+ *
  * @codeCoverageIgnore
  */
 class ConfigProvider
@@ -33,77 +57,68 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-
-            'aliases' => [
-                \Psr\Http\Client\ClientInterface::class => \Http\Adapter\Guzzle6\Client::class,
+            'aliases'    => [
+                ClientInterface::class => Client::class,
                 Service\Session\Encryption\EncryptInterface::class
                     => Service\Session\Encryption\KmsEncryptedCookie::class,
-                \Mezzio\Session\SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
+                SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // Custom Guard factory to handle multiple forms per page
-                \Mezzio\Csrf\CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
+                CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
 
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
 
                 // Auth
-                \Mezzio\Authentication\UserRepositoryInterface::class => Service\User\UserService::class,
-                \Mezzio\Authentication\AuthenticationInterface::class =>
-                    \Mezzio\Authentication\Session\PhpSession::class,
-
-                \Laminas\Stratigility\MiddlewarePipeInterface::class => \Laminas\Stratigility\MiddlewarePipe::class,
+                UserRepositoryInterface::class => Service\User\UserService::class,
+                AuthenticationInterface::class
+                    => PhpSession::class,
+                MiddlewarePipeInterface::class => MiddlewarePipe::class,
 
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
-
                 Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class,
 
                 // Language extraction
-                \Gettext\Loader\LoaderInterface::class => \Gettext\Loader\PoLoader::class,
-                \Gettext\Generator\GeneratorInterface::class => \Gettext\Generator\PoGenerator::class
+                LoaderInterface::class    => PoLoader::class,
+                GeneratorInterface::class => PoGenerator::class,
             ],
-
             'factories'  => [
                 // Services
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
-                Service\Pdf\PdfService::class => Service\Pdf\PdfServiceFactory::class,
-                Service\Session\EncryptedCookiePersistence::class =>
-                    Service\Session\EncryptedCookiePersistenceFactory::class,
+                Service\Pdf\PdfService::class   => Service\Pdf\PdfServiceFactory::class,
+                Service\Session\EncryptedCookiePersistence::class
+                    => Service\Session\EncryptedCookiePersistenceFactory::class,
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
-                Service\User\UserService::class => Service\User\UserServiceFactory::class,
-                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
+                Service\User\UserService::class              => Service\User\UserServiceFactory::class,
+                Service\Features\FeatureEnabled::class       => Service\Features\FeatureEnabledFactory::class,
                 Service\Session\Encryption\KmsEncryptedCookie::class
                     => Service\Session\Encryption\KmsEncryptedCookieFactory::class,
-
-                \Aws\Sdk::class => Service\Aws\SdkFactory::class,
-                \Aws\Kms\KmsClient::class => Service\Aws\KmsFactory::class,
-                \Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
-
-                \Http\Adapter\Guzzle6\Client::class => Service\ApiClient\GuzzleClientFactory::class,
+                Sdk::class                  => Service\Aws\SdkFactory::class,
+                KmsClient::class            => Service\Aws\KmsFactory::class,
+                SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
+                Client::class               => Service\ApiClient\GuzzleClientFactory::class,
 
                 // Middleware
-                \Mezzio\Session\SessionMiddleware::class => \Mezzio\Session\SessionMiddlewareFactory::class,
+                SessionMiddleware::class                   => SessionMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
 
                 // Auth
-                \Mezzio\Authentication\UserInterface::class => Entity\UserFactory::class,
+                UserInterface::class => Entity\UserFactory::class,
 
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
-
-                \Acpr\I18n\TranslatorInterface::class => I18n\TranslatorFactory::class,
-                \Acpr\I18n\TranslationExtension::class =>
-                    View\Twig\TranslationExtensionFactory::class,
-
+                TranslatorInterface::class        => I18n\TranslatorFactory::class,
+                TranslationExtension::class
+                    => View\Twig\TranslationExtensionFactory::class,
                 View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
-                View\Twig\GenericGlobalVariableExtension::class =>
-                    View\Twig\GenericGlobalVariableExtensionFactory::class,
+                View\Twig\GenericGlobalVariableExtension::class
+                    => View\Twig\GenericGlobalVariableExtensionFactory::class,
             ],
-
             'delegators' => [
-                \Laminas\Stratigility\Middleware\ErrorHandler::class => [
+                ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
             ],
@@ -120,7 +135,7 @@ class ConfigProvider
                 'error'    => [__DIR__ . '/../templates/error'],
                 'layout'   => [__DIR__ . '/../templates/layout'],
                 'partials' => [__DIR__ . '/../templates/partials'],
-                'common'   => [__DIR__ . '/../templates/common']
+                'common'   => [__DIR__ . '/../templates/common'],
             ],
         ];
     }
@@ -132,7 +147,7 @@ class ConfigProvider
     {
         return [
             'extensions' => [
-                \Acpr\I18n\TranslationExtension::class,
+                TranslationExtension::class,
                 View\Twig\LpaExtension::class,
                 View\Twig\OrdinalNumberExtension::class,
                 View\Twig\GovUKLaminasFormErrorsExtension::class,
@@ -140,8 +155,8 @@ class ConfigProvider
                 View\Twig\JavascriptVariablesExtension::class,
                 View\Twig\GenericGlobalVariableExtension::class,
                 View\Twig\TranslationSwitchExtension::class,
-                View\Twig\FeatureFlagExtension::class
-            ]
+                View\Twig\FeatureFlagExtension::class,
+            ],
         ];
     }
 }
