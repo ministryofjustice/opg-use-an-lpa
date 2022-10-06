@@ -22,10 +22,10 @@ final class RedisAdapterPluginManagerDelegatorFactory
         $pluginManager->configure(
             [
                 'factories' => [
-                    Redis::class => InvokableFactory::class,
+                    Redis::class        => InvokableFactory::class,
                     RedisCluster::class => InvokableFactory::class,
                 ],
-                'aliases' => [
+                'aliases'   => [
                     'redis' => Redis::class,
                     'Redis' => Redis::class,
                 ],
