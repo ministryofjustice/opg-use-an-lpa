@@ -106,12 +106,10 @@ return [
         'viewer_code_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'name'    => 'redis',
                 'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        //'persistent_id' => 'brute-force-cache-replication-group',
                         'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                         'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
                         'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
@@ -130,12 +128,10 @@ return [
         'actor_code_failure'  => [
             'type'    => 'keyed',
             'storage' => [
-                'name'    => 'redis',
                 'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        //'persistent_id' => 'brute-force-cache-replication-group',
                         'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
                         'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
                         'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
