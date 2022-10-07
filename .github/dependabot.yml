@@ -8,6 +8,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
     versioning-strategy: lockfile-only
 
   # Enable version updates for service-pdf npm
@@ -17,6 +19,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
     versioning-strategy: lockfile-only
 
   # Enable version updates for service-front composer
@@ -26,6 +30,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
     versioning-strategy: lockfile-only
 
   # Enable version updates for service-api composer
@@ -35,6 +41,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
     versioning-strategy: lockfile-only
 
     # Enable version updates for smoke tests composer
@@ -44,6 +52,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
     versioning-strategy: lockfile-only
 
     # Enable version updates for account terraform
@@ -53,6 +63,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
 
     # Enable version updates for environment terraform
   - package-ecosystem: "terraform"
@@ -61,6 +73,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
 
     # Enable version updates for service-admin gomod
   - package-ecosystem: "gomod"
@@ -69,6 +83,8 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
 
     # Enable version updates for service-admin docker
   - package-ecosystem: "docker"
@@ -77,3 +93,5 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    ignore:
+      update-types: ["version-update:semver-patch"]
