@@ -17,7 +17,7 @@
       <dd class="govuk-summary-list__value">
         <ul class="govuk-list">
         {{ range .AddedBy }}
-          <li>{{ .Email }}</li>
+          <li>{{ .Email }}{{ if .ActivateBy }}<strong class="govuk-tag govuk-tag--grey">key requested</strong>{{ end }}</li>
           <li class="govuk-hint govuk-!-margin-bottom-2">{{ .DateAdded | readableDateTime }}</li>
         {{ end }}
         </ul>
