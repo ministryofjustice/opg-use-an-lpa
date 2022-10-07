@@ -85,6 +85,8 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
+      - dependency-name: " github.com/aws/aws-sdk-go-v2/*"
+        update-types: [ "version-update:semver-minor" ]
 
     # Enable version updates for service-admin docker
   - package-ecosystem: "docker"
