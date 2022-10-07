@@ -36,17 +36,6 @@ class LpaExtension extends AbstractExtension
         ];
     }
 
-    public function lpaTypeFullName(string $typeShorthand): string
-    {
-        if ($typeShorthand === 'hw') {
-            return 'Health and welfare';
-        } elseif ($typeShorthand === 'pf') {
-            return 'Property and finance';
-        }
-
-        return '';
-    }
-
     public function actorAddress(CaseActor $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
