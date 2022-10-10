@@ -6,16 +6,17 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
 
 $aggregator = new ConfigAggregator([
-    \Mezzio\Authentication\Session\ConfigProvider::class,
-    \Mezzio\Router\FastRouteRouter\ConfigProvider::class,
-    \Laminas\HttpHandlerRunner\ConfigProvider::class,
-    \Mezzio\Authentication\ConfigProvider::class,
-    \Mezzio\Session\ConfigProvider::class,
-    \Mezzio\Helper\ConfigProvider::class,
-    \Mezzio\Router\ConfigProvider::class,
-    \Mezzio\Csrf\ConfigProvider::class,
-    \Mezzio\Twig\ConfigProvider::class,
-    \Mezzio\ConfigProvider::class,
+    Mezzio\Authentication\Session\ConfigProvider::class,
+    Mezzio\Router\FastRouteRouter\ConfigProvider::class,
+    Laminas\HttpHandlerRunner\ConfigProvider::class,
+    Laminas\Cache\ConfigProvider::class,
+    Mezzio\Authentication\ConfigProvider::class,
+    Mezzio\Session\ConfigProvider::class,
+    Mezzio\Helper\ConfigProvider::class,
+    Mezzio\Router\ConfigProvider::class,
+    Mezzio\Csrf\ConfigProvider::class,
+    Mezzio\Twig\ConfigProvider::class,
+    Mezzio\ConfigProvider::class,
 
     // App module(s) config
     Common\ConfigProvider::class,
