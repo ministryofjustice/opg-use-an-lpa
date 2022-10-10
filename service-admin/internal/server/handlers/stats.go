@@ -1,18 +1,28 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/rs/zerolog/log"
 )
 
-func StatsHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Ctx(r.Context()).Debug().Msg("viewed the stats page")
+type TemplateService interface {
+	RenderTemplate(http.ResponseWriter, context.Context, string, interface{}) error
+}
 
-		templateWriterService := NewTemplateWriterService()
-		if err := templateWriterService.RenderTemplate(w, r.Context(), "stats.page.gohtml", nil); err != nil {
-			log.Panic().Err(err).Msg(err.Error())
-		}
+type StatsServer struct {
+	templateService TemplateService
+}
+
+func NewStatsServer(templateService TemplateService) *StatsServer {
+	return &StatsServer{
+		templateService: templateService,
+	}
+}
+
+func (s *StatsServer) StatsHandler(w http.ResponseWriter, r *http.Request) {
+	if err := s.templateService.RenderTemplate(w, r.Context(), "stats.page.gohtml", nil); err != nil {
+		log.Panic().Err(err).Msg(err.Error())
 	}
 }
