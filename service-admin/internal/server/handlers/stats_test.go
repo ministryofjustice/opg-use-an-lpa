@@ -1,49 +1,51 @@
 package handlers_test
 
 import (
-	"os"
 	"testing"
+	"net/http"
+	"context"
+	"net/http/httptest"
+	"strings"
+	"errors"
 
-	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
-	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestStatsHandler(t *testing.T) {
-	t.Parallel()
-
-	handler := server.WithTemplates(
-		StatsHandler(),
-		server.LoadTemplates(os.DirFS("../../../web/templates")),
-	)
-
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/stats", nil)
-	assert.HTTPBodyContains(t, handler.ServeHTTP, "GET", "/stats", nil, "Measuring Impact")
+type mockTemplateService struct {
+	RenderTemplateFunc func(http.ResponseWriter, context.Context, string, interface{}) error
 }
 
-func StatsHandlerWithBadTemplate(t *testing.T) {
+func (m *mockTemplateWriterService) RenderStatsTemplate(w http.ResponseWriter, ctx context.Context, name string, data interface{}) error {
+	return m.RenderTemplateFunc(w, ctx, name, data)
+}
+
+func TestTemplateErrorPanic(t *testing.T) {
 	t.Parallel()
 
-	memfs := afero.NewMemMapFs()
+	t.Run("Template error ends in panic", func(t *testing.T) {
+		t.Parallel()
 
-	err := afero.WriteFile(memfs, "test.page.gohtml", []byte(""), 0644)
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
+		ts := &mockTemplateWriterService{
+			RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, s string, i interface{}) error {
+				return errors.New("I have errored")
+			},
+		}
 
-	fs := afero.NewIOFS(memfs)
+		server := NewStatsServer(ts)
+		reader := strings.NewReader("")
+		var req *http.Request
 
-	//stop panic from failing tests
-	defer func() { _ = recover() }()
+		req, _ = http.NewRequest("GET", "/my_url", reader)
 
-	handler := server.WithTemplates(
-		StatsHandler(),
-		server.LoadTemplates(fs), // bad template location loads no templates
-	)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		w := httptest.NewRecorder()
 
-	// the handler panics but that is handled upstream so it claims success at this point
-	assert.HTTPSuccess(t, handler.ServeHTTP, "GET", "/stats", nil)
+		//recover panic
+		defer func() { _ = recover() }()
 
-	t.Errorf("did not panic")
+		server.StatsHandler(w, req)
+
+		t.Errorf("did not panic")
+
+	})
 }
