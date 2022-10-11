@@ -39,9 +39,9 @@ jobs:
     outputs:
       parsed_branch: ${{ steps.extract_branch.outputs.branch_formatted }}
       short_sha:  ${{ steps.sha.outputs.short_sha }}
-      admin_only: true
-      terraform_only: false
-      specific_path: admin
+      admin_only: false
+      terraform_only: true
+      specific_path: terraform
       one_path_only: true
 #      admin_only: ${{ steps.changed-files-admin.outputs.only_changed }}
 #      terraform_only: ${{ steps.changed-files-terraform.outputs.only_changed }}
@@ -96,24 +96,36 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-      skip: ${{ needs.workflow_variables.outputs.admin_only }}
+#      skip: ${{ needs.workflow_variables.outputs.admin_only }}
     secrets: inherit
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path != 'admin'
 
   node_test:
     name: test node dependencies
     uses: ./.github/workflows/_node-test.yml
     needs:
       - workflow_variables
-    with:
-      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
+#    with:
+#      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
 
   node_build:
     name: build node dependencies
     uses: ./.github/workflows/_node-build.yml
     needs:
       - workflow_variables
-    with:
-      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
+#    with:
+#      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
 
   docker_build_scan_push:
     name: build, test, scan and push
@@ -122,32 +134,32 @@ jobs:
       - workflow_variables
       - node_test
       - node_build
-    if: |
-      always() &&
-      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
-      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
-      needs.workflow_variables.result == 'success'
     with:
       tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets: inherit
+    if: |
+      always() &&
+      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
+      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
+      needs.workflow_variables.result == 'success'
 
   terraform_plan_shared_development:
     name: terraform plan shared development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
-    if: |
-      always() &&
-      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped')
     with:
       workspace: development
       terraform_path: account
-      skip: ${{ needs.workflow_variables.outputs.admin_only }}
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets: inherit
+    if: |
+      always() &&
+      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
+      needs.workflow_variables.outputs.specific_path != 'admin'
 
   terraform_apply_environment:
     name: terraform apply environment
@@ -156,11 +168,6 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
-    if: |
-      always() &&
-      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
-      needs.docker_build_scan_push.result == 'success' &&
-      needs.workflow_variables.result == 'success'
     with:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
       terraform_path: environment
@@ -168,16 +175,21 @@ jobs:
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets: inherit
+    if: |
+      always() &&
+      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
+      needs.docker_build_scan_push.result == 'success' &&
+      needs.workflow_variables.result == 'success'
 
   seed_dynamodb:
     name: seed dynamodb
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_environment
+    secrets: inherit
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success'
-    secrets: inherit
 
   run_behat_suite:
     name: run behat tests against environment
@@ -185,26 +197,26 @@ jobs:
     needs:
       - seed_dynamodb
       - workflow_variables
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets: inherit
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
       needs.seed_dynamodb.result == 'success'
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-    secrets: inherit
 
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - run_behat_suite
-    if: |
-      always() &&
-      needs.run_behat_suite.result == 'success'
     with:
       template: successful_dev_build.txt
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success'
 
   code_coverage:
     name: upload to code coverage
@@ -237,16 +249,16 @@ jobs:
           bash codecov -t ${CC_TOKEN} || echo 'Codecov upload failed'
 
   # Required end of workflow job
-  workflow_end:
-    name: End of workflow
+  end_of_workflow:
+    name: end of workflow
     runs-on: ubuntu-latest
     needs:
       - code_coverage
       - slack_notify
+    steps:
+      - name: notify that workflow has ended without issue
+        run: echo "Workflow has finished without any issues. You may now merge your PR"
     if: |
       always() &&
       needs.code_coverage.result == 'success' &&
       needs.slack_notify.result == 'success'
-    steps:
-      - name: ending workflow
-        run: echo "Workflow has finished without any issues"
