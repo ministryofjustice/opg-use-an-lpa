@@ -20,6 +20,11 @@ on:
         required: false
         default: 'true'
         type: string
+      specific_path:
+        description: "Build on a specific path"
+        required: false
+        default: 'all'
+        type: string
 
 jobs:
   docker_build_scan_push:
@@ -62,7 +67,6 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
       - name: cache node modules
-        if: matrix.svc_prefix == 'front'
         id: cache-npm
         uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # pin@v3.0.8
         env:
@@ -74,11 +78,15 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+        if: |
+          matrix.svc_prefix == 'front' &&
+          inputs.specific_path == 'all'
 
       - uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c # pin@v1.0.3
+        if: |
+          inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        if: inputs.push_to_ecr == 'true'
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
@@ -87,43 +95,51 @@ jobs:
           role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRGithubAction
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
-        if: matrix.artifact_to_dl != ''
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
+        if: |
+          matrix.artifact_to_dl != '' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: docker build development target
-        if: matrix.build_development_docker == 'true'
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [ ${SVC_PREFIX} == "front" ]; then
-            mkdir -p service-${SVC_PREFIX}/app/assets/stylesheets
-            cp -R ./service-${SVC_PREFIX}/web/dist/stylesheets/pdf.css service-${SVC_PREFIX}/app/assets/stylesheets/pdf.css
+          mkdir -p service-${SVC_PREFIX}/app/assets/stylesheets
+          cp -R ./service-${SVC_PREFIX}/web/dist/stylesheets/pdf.css service-${SVC_PREFIX}/app/assets/stylesheets/pdf.css
           fi
           docker build --target development --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
+        if: |
+          matrix.build_development_docker == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: docker unit tests
-        if: matrix.run_unit_tests == 'true'
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [ ${SVC_PREFIX} == 'admin' ]; then
-            mkdir -p build/service-${SVC_PREFIX}
-            cd service-${SVC_PREFIX}/
-            # go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
+          mkdir -p build/service-${SVC_PREFIX}
+          cd service-${SVC_PREFIX}/
+          # go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
           else
-            docker run -d --name tests ${SVC_PREFIX}-app:latest
-            docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-            docker exec tests docker-php-ext-enable xdebug
-            docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+          docker run -d --name tests ${SVC_PREFIX}-app:latest
+          docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+          docker exec tests docker-php-ext-enable xdebug
+          docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           fi
+        if: |
+          matrix.run_unit_tests == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: docker integration tests
-        if: matrix.run_integration_tests == 'true'
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
@@ -132,7 +148,6 @@ jobs:
             --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
             --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
-
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
             docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
@@ -140,7 +155,6 @@ jobs:
             docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
             docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
             /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
-
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
           elif [[ "${SVC_PREFIX}" = "front" ]]; then
@@ -148,24 +162,32 @@ jobs:
             docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
             docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
-              /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+            /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           fi
+        if: |
+          matrix.run_integration_tests == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: fetch test results
-        if: (success() || failure()) && contains(fromJson('["front", "api"]'), matrix.svc_prefix) && matrix.svc_suffix == 'app'
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           mkdir -p build/service-${SVC_PREFIX}
           docker cp tests:/app/build/reports build/service-${SVC_PREFIX}/phpunit
           docker cp inttests:/app/build/reports build/service-${SVC_PREFIX}/behat
+        if: |
+          (success() || failure()) && contains(fromJson('["front", "api"]'), matrix.svc_prefix) &&
+          matrix.svc_suffix == 'app' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        if: matrix.svc_suffix == 'app'
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
+        if: |
+          matrix.svc_suffix == 'app' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: build image for production
         env:
@@ -191,6 +213,7 @@ jobs:
 
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
           fi
+        if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
@@ -200,6 +223,7 @@ jobs:
           severity: 'HIGH,CRITICAL'
           format: 'sarif'
           output: 'trivy-results.sarif'
+        if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
 #      - name: Upload Trivy scan results to GitHub Security tab
 #        id: trivy_upload_sarif
@@ -210,13 +234,14 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        if: inputs.push_to_ecr == 'true'
         uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # pin@v1.5.1
         with:
           registries: 311462405659
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: tag and push container
-        if: inputs.push_to_ecr == 'true'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: use_an_lpa
@@ -226,7 +251,10 @@ jobs:
         run: |
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
           if [[ "${BRANCH_NAME}" == "main" ]]; then
-            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
-            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
+          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
           fi
           docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
+        if: |
+          inputs.push_to_ecr == 'true'
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)

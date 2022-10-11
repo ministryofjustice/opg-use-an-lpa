@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       terraform_path:
-        description: 'The name of the terraform paths'
+        description: 'The name of the terraform path'
         required: true
         type: string
       workspace:
@@ -19,11 +19,41 @@ on:
         required: false
         type: string
         default: 'false'
+      specific_path:
+        description: "Build on a specific path"
+        required: false
+        default: 'all'
+        type: string
+      skip:
+        description: 'Whether to skip the job'
+        required: false
+        type: string
+        default: 'false'
 
 jobs:
   terraform_workflow:
+    if: inputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: export versions to use
+        id: version-output
+        env:
+          TAG: ${{ inputs.container_version }}
+          SPECIFIC_PATH: ${{ inputs.specific_path }}
+        run: |
+          if [[ ${SPECIFIC_PATH} == "terraform" ]]
+          then
+            echo "##[set-output name=tag;]$(echo latest)"
+            echo "##[set-output name=admin-tag;]$(echo latest)"
+          elif [[ ${SPECIFIC_PATH} == "admin" ]]
+          then
+            echo "##[set-output name=tag;]$(echo latest)"
+            echo "##[set-output name=admin-tag;]$(echo ${TAG})"
+          else
+            echo "##[set-output name=tag;]$(echo ${TAG})"
+            echo "##[set-output name=admin-tag;]$(echo ${TAG})"
+          fi
+
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
         with:
           fetch-depth: '0'
@@ -68,11 +98,13 @@ jobs:
         env:
           TF_PATH: ${{ inputs.terraform_path }}
           TF_WORKSPACE: ${{ inputs.workspace }}
-          TAG: ${{ inputs.container_version }}
+          TAG: ${{ steps.version-output.outputs.tag }}
+          ADMIN_TAG: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           echo "Path: ${TF_PATH}"
           echo "Workspace: ${TF_WORKSPACE}"
-          echo "Image_tag: ${TAG}"
+          echo "Image tag: ${TAG}"
+          echo "Admin image tag: ${ADMIN_TAG}"
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 
@@ -83,7 +115,8 @@ jobs:
       - name: terraform plan ${{ inputs.terraform_path }}
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
-          TF_VAR_tag: ${{ inputs.container_version }}
+          TF_VAR_container_version: ${{ steps.version-output.outputs.tag }}
+          TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30
@@ -99,8 +132,8 @@ jobs:
         if: inputs.apply == 'true'
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
-          TF_VAR_container_version: ${{ inputs.container_version }}
-          TF_VAR_admin_container_version: ${{ inputs.container_version }}
+          TF_VAR_container_version: ${{ steps.version-output.outputs.tag }}
+          TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30

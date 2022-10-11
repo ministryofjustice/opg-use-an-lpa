@@ -12,7 +12,7 @@ on:
     branches:
 #      - 'dependabot/npm_and_yarn/**'
 #      - 'dependabot/composer/**'
-      - 'UML-2558**'
+      - 'UML-2560**'
 
 permissions:
   contents: write
@@ -73,7 +73,6 @@ jobs:
           name: service-api
       - name: check paths
         run: |
-          ls -alt
           ls -alt service-api
           ls -alt service-front
       - name: Upload to Codecov
