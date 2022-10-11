@@ -256,5 +256,5 @@ jobs:
           fi
           docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
         if: |
-          inputs.push_to_ecr == 'true'
+          inputs.push_to_ecr == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
