@@ -39,10 +39,14 @@ jobs:
     outputs:
       parsed_branch: ${{ steps.extract_branch.outputs.branch_formatted }}
       short_sha:  ${{ steps.sha.outputs.short_sha }}
-      admin_only: ${{ steps.changed-files-admin.outputs.only_changed }}
-      terraform_only: ${{ steps.changed-files-terraform.outputs.only_changed }}
-      specific_path: ${{ steps.changed-path.outputs.path }}
-      one_path_only: ${{ steps.changed-path.outputs.one_path_only }}
+      admin_only: true
+      terraform_only: false
+      specific_path: admin
+      one_path_only: true
+#      admin_only: ${{ steps.changed-files-admin.outputs.only_changed }}
+#      terraform_only: ${{ steps.changed-files-terraform.outputs.only_changed }}
+#      specific_path: ${{ steps.changed-path.outputs.path }}
+#      one_path_only: ${{ steps.changed-path.outputs.one_path_only }}
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
       - name: Extract branch
@@ -219,11 +223,13 @@ jobs:
         with:
           name: service-front
           path: service-front
+        if: needs.workflow_variables.outputs.specific_path == 'all'
       - name: download artifact for api tests
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: service-api
           path: service-api
+        if: needs.workflow_variables.outputs.specific_path == 'all'
       - name: upload to codecov
         env:
           CC_TOKEN: ${{ secrets.CODECOV_TOKEN }}
