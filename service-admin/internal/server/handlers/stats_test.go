@@ -11,14 +11,6 @@ import (
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 )
 
-type mockTemplateService struct {
-	RenderTemplateFunc func(http.ResponseWriter, context.Context, string, interface{}) error
-}
-
-func (m *mockTemplateWriterService) RenderStatsTemplate(w http.ResponseWriter, ctx context.Context, name string, data interface{}) error {
-	return m.RenderTemplateFunc(w, ctx, name, data)
-}
-
 func TestTemplateErrorPanic(t *testing.T) {
 	t.Parallel()
 
