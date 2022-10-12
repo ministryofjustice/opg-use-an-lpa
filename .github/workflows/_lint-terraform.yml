@@ -11,14 +11,8 @@ on:
         description: 'Terraform workspace'
         required: true
         type: string
-      skip:
-        description: 'Whether to skip the job'
-        required: false
-        type: string
-        default: 'false'
 jobs:
   lint-terraform:
-    if: inputs.skip != 'true'
     runs-on: ubuntu-latest
     strategy:
       matrix:

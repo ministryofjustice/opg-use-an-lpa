@@ -7,13 +7,14 @@ defaults:
 on:
   workflow_call:
     inputs:
-      tag:
-        description: "Tag for docker image"
-        required: true
-        type: string
       branch_name:
         description: "Name of the branch doing the build"
         required: true
+        type: string
+      tag:
+        description: "Tag for docker image"
+        required: false
+        default: 'latest'
         type: string
       push_to_ecr:
         description: "Whether to push to ECR"
@@ -113,8 +114,8 @@ jobs:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [ ${SVC_PREFIX} == "front" ]; then
-          mkdir -p service-${SVC_PREFIX}/app/assets/stylesheets
-          cp -R ./service-${SVC_PREFIX}/web/dist/stylesheets/pdf.css service-${SVC_PREFIX}/app/assets/stylesheets/pdf.css
+            mkdir -p service-${SVC_PREFIX}/app/assets/stylesheets
+            cp -R ./service-${SVC_PREFIX}/web/dist/stylesheets/pdf.css service-${SVC_PREFIX}/app/assets/stylesheets/pdf.css
           fi
           docker build --target development --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
         if: |
@@ -126,14 +127,14 @@ jobs:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [ ${SVC_PREFIX} == 'admin' ]; then
-          mkdir -p build/service-${SVC_PREFIX}
-          cd service-${SVC_PREFIX}/
-          # go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
+            mkdir -p build/service-${SVC_PREFIX}
+            cd service-${SVC_PREFIX}/
+            go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
           else
-          docker run -d --name tests ${SVC_PREFIX}-app:latest
-          docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-          docker exec tests docker-php-ext-enable xdebug
-          docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+            docker run -d --name tests ${SVC_PREFIX}-app:latest
+            docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+            docker exec tests docker-php-ext-enable xdebug
+            docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           fi
         if: |
           matrix.run_unit_tests == 'true' &&
@@ -225,12 +226,12 @@ jobs:
           output: 'trivy-results.sarif'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
-#      - name: Upload Trivy scan results to GitHub Security tab
-#        id: trivy_upload_sarif
-#        uses: github/codeql-action/upload-sarif@v2
-#        if: always()
-#        with:
-#          sarif_file: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
 
       - name: ecr login
         id: login_ecr

@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -64,7 +65,8 @@ func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetIt
 func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 	t.Parallel()
 
-	testConfig, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+	testConfig, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"),
+	config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("FAKE_ID", "FAKE_SECRET_KEY", "FAKE_TOKEN")))
 
 	type fields struct {
 		awsSigner      Signer

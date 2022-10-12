@@ -24,15 +24,9 @@ on:
         required: false
         default: 'all'
         type: string
-      skip:
-        description: 'Whether to skip the job'
-        required: false
-        type: string
-        default: 'false'
 
 jobs:
   terraform_workflow:
-    if: inputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: export versions to use

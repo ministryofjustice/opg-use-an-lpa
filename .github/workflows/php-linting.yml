@@ -1,14 +1,10 @@
 name: "PHP Linting with Code Sniffer"
-
 on:
-  workflow_call:
-
-#on:
-#  pull_request:
-#    paths:
-#      - "**.php"
-#      - "**/app/phpcs.xml.dist"
-#      - ".github/workflows/php-linting.yml"
+  pull_request:
+    paths:
+      - "**.php"
+      - "**/app/phpcs.xml.dist"
+      - ".github/workflows/php-linting.yml"
 
 permissions:
   actions: read
@@ -34,7 +30,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      uses: actions/checkout@v2
       with:
         fetch-depth: 2
 

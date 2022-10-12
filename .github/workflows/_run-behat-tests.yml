@@ -11,14 +11,9 @@ on:
         description: 'Terraform workspace'
         required: true
         type: string
-      skip:
-        description: 'Whether to skip the job'
-        required: false
-        type: string
-        default: 'false'
+
 jobs:
   build-web:
-    if: inputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3

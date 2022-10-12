@@ -1,4 +1,4 @@
-name: "[Workflow] Standard branch based pull requests"
+name: "[Workflow] All branch based pushes"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -10,15 +10,11 @@ defaults:
 on:
   push:
     branches:
-      - 'UML-2559**'
-#      - 'main'
-#      - '*'              # matches every branch that doesn't contain a '/'
-#      - '*/*'            # matches every branch containing a single '/'
-#      - '**'             # matches every branch
-#      - '!main'          # reverse match main
-#      - '!dependabot/**' # reverse match dependabot PRs
-
-# Base permissions are better
+      - '*'              # matches every branch that doesn't contain a '/'
+      - '*/*'            # matches every branch containing a single '/'
+      - '**'             # matches every branch
+      - '!main'          # reverse match main
+      - '!dependabot/**' # reverse match dependabot PRs
 
 permissions:
   contents: write
@@ -37,26 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     name: output workflow variables
     outputs:
-      parsed_branch: ${{ steps.extract_branch.outputs.branch_formatted }}
-      short_sha:  ${{ steps.sha.outputs.short_sha }}
-      admin_only: false
-      terraform_only: true
-      specific_path: terraform
-      one_path_only: true
-#      admin_only: ${{ steps.changed-files-admin.outputs.only_changed }}
-#      terraform_only: ${{ steps.changed-files-terraform.outputs.only_changed }}
-#      specific_path: ${{ steps.changed-path.outputs.path }}
-#      one_path_only: ${{ steps.changed-path.outputs.one_path_only }}
+      parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
+      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      specific_path: ${{ steps.variables.outputs.path }}
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
-      - name: Extract branch
-        shell: bash
-        run: echo "##[set-output name=branch_formatted;]$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')"
-        id: extract_branch
-      - name: Extract short sha
-        shell: bash
-        run: echo "##[set-output name=short_sha;]$(echo ${GITHUB_SHA:0:7})"
-        id: sha
       - name: get changed files in the admin folder
         id: changed-files-admin
         uses: tj-actions/changed-files@270645280afddc7e2cf3f4867089522c8f2f8f9a
@@ -69,25 +50,21 @@ jobs:
         with:
           files: |
             terraform/**
-      - name: export specific path only
-        id: changed-path
+      - name: extract variables for workflow
+        id: variables
         run: |
+          echo "##[set-output name=branch_formatted;]$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')"
+          echo "##[set-output name=short_sha;]$(echo ${GITHUB_SHA:0:7})"
+
           if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
           then
             echo "##[set-output name=path;]$(echo terraform)"
-            echo "##[set-output name=one_path_only;]$(echo true)"
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
             echo "##[set-output name=path;]$(echo admin)"
-            echo "##[set-output name=one_path_only;]$(echo true)"
           else
             echo "##[set-output name=path;]$(echo all)"
-            echo "##[set-output name=one_path_only;]$(echo false)"
           fi
-      - name: show selected path
-        run: echo "Path selected - ${PATH_SELECTION}"
-        env:
-          PATH_SELECTION: ${{ steps.changed-path.outputs.path }}
 
   terraform_lint:
     name: lint terraform code
@@ -96,7 +73,6 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
-#      skip: ${{ needs.workflow_variables.outputs.admin_only }}
     secrets: inherit
     if: |
       always() &&
@@ -108,8 +84,6 @@ jobs:
     uses: ./.github/workflows/_node-test.yml
     needs:
       - workflow_variables
-#    with:
-#      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -120,8 +94,6 @@ jobs:
     uses: ./.github/workflows/_node-build.yml
     needs:
       - workflow_variables
-#    with:
-#      skip: ${{ needs.workflow_variables.outputs.one_path_only }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -255,10 +227,15 @@ jobs:
     needs:
       - code_coverage
       - slack_notify
+      - workflow_variables
     steps:
-      - name: notify that workflow has ended without issue
-        run: echo "Workflow has finished without any issues. You may now merge your PR"
+      - name: workflow has ended without issue
+        run: |
+          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
     if: |
       always() &&
       needs.code_coverage.result == 'success' &&
-      needs.slack_notify.result == 'success'
+      needs.slack_notify.result == 'success' &&
+      needs.workflow_variables.result == 'success'

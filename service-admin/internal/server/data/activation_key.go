@@ -64,7 +64,7 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	if err != nil {
 		log.Error().AnErr("Could not create request in GetActivationKeyFromCodes", err)
 		return nil, ErrActivationKeyNotFound
-}
+	}
 
 	r.Header.Set("Content-Type", "application/json")
 

@@ -1,15 +1,11 @@
 name: Psalm Static analysis - Service Front
 
-#on:
-#  pull_request:
-#    branches: [ main ]
-#    paths:
-#    # only run when service-front is changed
-#      - 'service-front/app/**'
-
-
 on:
-  workflow_call:
+  pull_request:
+    branches: [ main ]
+    paths:
+    # only run when service-front is changed
+      - 'service-front/app/**'
 
 permissions:
   actions: read
@@ -35,7 +31,7 @@ jobs:
         working-directory: ${{ env.SERVICE-PATH }}/app
     steps:
       - name: Checkout code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        uses: actions/checkout@v2
 
       - name: Setup PHP with tools
         uses: shivammathur/setup-php@v2

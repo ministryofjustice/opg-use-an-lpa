@@ -1,1634 +1,1076 @@
-#version: 2.1
-#
-#workflows:
-#  keep_demo_environment_up_to_date:
-#    triggers:
-#      - schedule:
-#          cron: "0 8 * * *" # Every 8am
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - use-my-lpa/apply_environment_terraform:
-#          name: demo_apply_environment_terraform
-#          workspace: demo
-#          image_tag_input: latest
-#          admin_image_tag_input: latest
-#      - use-my-lpa/redeploy_latest:
-#          name: redeploy_demo
-#          environment: demo
-#          requires: [demo_apply_environment_terraform]
-#      - slack_environment_redeploy:
-#          name: post_demo_release_message
-#          environment: demo
-#          requires: [redeploy_demo]
-#
-#  workspace_cleanup:
-#    triggers:
-#      - schedule:
-#          cron: "0 6,18 * * 0-6" # twice a day at 6am and 6pm
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - workspace_cleanup:
-#          name: workspace_cleanup
-#
-#  post_statistics:
-#    triggers:
-#      - schedule:
-#          cron: "0 9 * * 1" # 9am every Monday
-#          filters:
-#            branches:
-#              only:
-#                - main
-#    jobs:
-#      - slack_notify_stats:
-#          name: slack_notify_stats
-#
-#  package_update_pr:
-#      jobs:
-#        - cancel_redundant_builds:
-#            name: cancel_previous_jobs
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/lint_terraform:
-#            name: lint_terraform
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/node_test_web:
-#            name: test_web
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/node_build_web:
-#            name: build_web
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#            requires: [test_web]
-#
-#        - use-my-lpa/docker_build_front_app:
-#            name: app_front_build
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_front_web:
-#            name: web_front_build
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_api_app:
-#            name: app_api_build
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/docker_build_api_web:
-#            name: web_api_build
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/docker_test_admin:
-#            name: admin_app_test
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/docker_build_admin:
-#            name: admin_app_build
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#
-#        - use-my-lpa/codecov_upload:
-#            name: codecov_upload
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#            requires:
-#              [
-#                app_front_build,
-#                app_api_build,
-#                test_web,
-#                admin_app_test,
-#              ]
-#
-#        # Required end of workflow job
-#        - use-my-lpa/end_of_workflow:
-#            name: end_of_workflow
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/npm_and_yarn\/.*/,
-#                  /dependabot\/composer\/.*/,
-#                  ]
-#            requires: [codecov_upload]
-#
-#  terraform_only_pr:
-#      jobs:
-#        - cancel_redundant_builds:
-#            name: cancel_previous_jobs
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#
-#        - use-my-lpa/lint_terraform:
-#            name: lint_terraform
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#
-#            # Provision and test development
-#        - use-my-lpa/plan_shared_terraform:
-#            name: dev_plan_shared_terraform
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#            requires: [cancel_previous_jobs,lint_terraform]
-#
-#        - use-my-lpa/apply_environment_terraform:
-#            name: dev_apply_environment_terraform
-#            image_tag_input: latest
-#            admin_image_tag_input: latest
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#            requires:
-#              [
-#                cancel_previous_jobs,
-#              ]
-#
-#        - use-my-lpa/seed_database:
-#            name: dev_seed_database
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#            requires: [dev_apply_environment_terraform]
-#
-#        - use-my-lpa/run_behat_suite:
-#            name: dev_run_behat_tests
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#            requires: [dev_seed_database]
-#
-#        # Required end of workflow job
-#        - use-my-lpa/end_of_workflow:
-#            name: end_of_workflow
-#            filters:
-#              branches:
-#                only: [
-#                  /dependabot\/terraform\/.*/,
-#                  /tf\/.*/
-#                  ]
-#            requires: [dev_run_behat_tests]
-#
-#  admin_only_pr:
-#      jobs:
-#        - cancel_redundant_builds:
-#            name: cancel_previous_jobs
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#
-#        - use-my-lpa/lint_terraform:
-#            name: lint_terraform
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#
-#        - use-my-lpa/docker_test_admin:
-#            name: admin_app_test
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#
-#        - use-my-lpa/docker_build_admin:
-#            name: admin_app_build
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires:
-#              [
-#                admin_app_test,
-#              ]
-#
-#        - use-my-lpa/codecov_upload:
-#            name: codecov_upload
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires:
-#              [
-#                admin_app_test,
-#              ]
-#
-#            # Provision and test development
-#        - use-my-lpa/plan_shared_terraform:
-#            name: dev_plan_shared_terraform
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires: [cancel_previous_jobs,lint_terraform]
-#
-#        - use-my-lpa/apply_environment_terraform:
-#            name: dev_apply_environment_terraform
-#            image_tag_input: latest
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires:
-#              [
-#                cancel_previous_jobs,
-#                admin_app_build
-#              ]
-#
-#        - use-my-lpa/seed_database:
-#            name: dev_seed_database
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires: [dev_apply_environment_terraform]
-#
-#        - use-my-lpa/run_behat_suite:
-#            name: dev_run_behat_tests
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires: [dev_seed_database]
-#
-#        # Required end of workflow job
-#        - use-my-lpa/end_of_workflow:
-#            name: end_of_workflow
-#            filters:
-#              branches:
-#                only: [
-#                  /admin\/.*/,
-#                  /dependabot\/go_modules\/.*/,
-#                  /dependabot\/docker\/service-admin\/.*/,
-#                  ]
-#            requires: [dev_run_behat_tests]
-#
-#  pr_build:
-#      jobs:
-#        - cancel_redundant_builds:
-#            name: cancel_previous_jobs
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/lint_terraform:
-#            name: lint_terraform
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/node_test_web:
-#            name: test_web
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/node_build_web:
-#            name: build_web
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [test_web]
-#
-#        - use-my-lpa/docker_build_front_app:
-#            name: app_front_build
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_front_web:
-#            name: web_front_build
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_api_app:
-#            name: app_api_build
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/docker_build_api_web:
-#            name: web_api_build
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/docker_test_admin:
-#            name: admin_app_test
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/docker_build_admin:
-#            name: admin_app_build
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#
-#        - use-my-lpa/codecov_upload:
-#            name: codecov_upload
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires:
-#              [
-#                app_front_build,
-#                app_api_build,
-#                test_web,
-#                admin_app_test,
-#              ]
-#
-#            # Provision and test development
-#        - use-my-lpa/plan_shared_terraform:
-#            name: dev_plan_shared_terraform
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [cancel_previous_jobs,lint_terraform]
-#
-#        - use-my-lpa/apply_environment_terraform:
-#            name: dev_apply_environment_terraform
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires:
-#              [
-#                cancel_previous_jobs,
-#                dev_plan_shared_terraform,
-#                app_front_build,
-#                web_front_build,
-#                web_api_build,
-#                app_api_build,
-#                admin_app_build,
-#              ]
-#
-#        - ecr_scan_results:
-#            name: ecr_scan_results
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires:
-#              [
-#                app_front_build,
-#                web_front_build,
-#                web_api_build,
-#                app_api_build,
-#                admin_app_build,
-#              ]
-#
-#        - use-my-lpa/seed_database:
-#            name: dev_seed_database
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [dev_apply_environment_terraform]
-#
-#        - use-my-lpa/run_behat_suite:
-#            name: dev_run_behat_tests
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [dev_seed_database]
-#
-#
-#        - python_templated_slack_notify:
-#            name: post_environment_domains
-#            template: successful_dev_build.txt
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [dev_run_behat_tests]
-#
-#        # Required end of workflow job
-#        - use-my-lpa/end_of_workflow:
-#            name: end_of_workflow
-#            filters: { branches: { ignore: [
-#              main,
-#              /dependabot\/.*/,
-#              /tf\/.*/,
-#              /admin\/.*/,
-#              /dependabot\/go_modules\/.*/,
-#              /dependabot\/docker\/service-admin\/.*/,
-#              ] } }
-#            requires: [post_environment_domains]
-#
-#  path_to_live:
-#      jobs:
-#        # Common tasks
-#        - use-my-lpa/node_test_web:
-#            name: test_web
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/node_build_web:
-#            name: build_web
-#            filters: { branches: { only: [main] } }
-#            requires: [test_web]
-#
-#        - use-my-lpa/docker_build_front_app:
-#            name: app_front_build
-#            filters: { branches: { only: [main] } }
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_front_web:
-#            name: web_front_build
-#            filters: { branches: { only: [main] } }
-#            requires: [build_web]
-#
-#        - use-my-lpa/docker_build_api_app:
-#            name: app_api_build
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/docker_build_api_web:
-#            name: web_api_build
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/docker_test_admin:
-#            name: admin_app_test
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/docker_build_admin:
-#            name: admin_app_build
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/codecov_upload:
-#            name: codecov_upload
-#            filters: { branches: { only: [main] } }
-#            requires:
-#              [
-#                app_front_build,
-#                app_api_build,
-#                test_web,
-#                admin_app_test,
-#              ]
-#
-#        # Provision and test preproduction
-#        - use-my-lpa/apply_shared_terraform:
-#            name: dev_apply_shared_terraform
-#            workspace: development
-#            filters: { branches: { only: [main] } }
-#
-#        - use-my-lpa/apply_shared_terraform:
-#            name: preprod_apply_shared_terraform
-#            workspace: preproduction
-#            filters: { branches: { only: [main] } }
-#            requires:
-#              [
-#                dev_apply_shared_terraform,
-#              ]
-#
-#        - use-my-lpa/apply_environment_terraform:
-#            name: preprod_apply_environment_terraform
-#            workspace: preproduction
-#            filters: { branches: { only: [main] } }
-#            requires:
-#              [
-#                preprod_apply_shared_terraform,
-#                app_front_build,
-#                web_front_build,
-#                web_api_build,
-#                app_api_build,
-#                admin_app_build,
-#              ]
-#
-#        - ecr_scan_results:
-#            name: ecr_scan_results
-#            filters: { branches: { only: [main] } }
-#            requires:
-#              [
-#                app_front_build,
-#                web_front_build,
-#                web_api_build,
-#                app_api_build,
-#                admin_app_build,
-#                preprod_apply_environment_terraform,
-#              ]
-#
-#        - use-my-lpa/seed_database:
-#            name: preprod_seed_database
-#            filters: { branches: { only: [main] } }
-#            requires: [preprod_apply_environment_terraform]
-#
-#        - use-my-lpa/run_behat_suite:
-#            name: preprod_run_behat_tests
-#            workspace: preproduction
-#            filters: { branches: { only: [main] } }
-#            requires: [preprod_seed_database]
-#
-#        # Provision and test production
-#        - use-my-lpa/apply_shared_terraform:
-#            name: production_apply_shared_terraform
-#            workspace: production
-#            filters: { branches: { only: [main] } }
-#            requires: [preprod_run_behat_tests]
-#
-#        - use-my-lpa/apply_environment_terraform:
-#            name: production_apply_environment_terraform
-#            workspace: production
-#            filters: { branches: { only: [main] } }
-#            requires:
-#              [
-#                production_apply_shared_terraform,
-#                app_front_build,
-#                web_front_build,
-#                web_api_build,
-#                app_api_build,
-#                admin_app_build,
-#              ]
-#
-#        - use-my-lpa/run_healthcheck_test:
-#            name: prod_run_healthcheck_test
-#            filters: { branches: { only: [main] } }
-#            requires: [production_apply_environment_terraform]
-#
-#        - python_templated_slack_notify:
-#            name: post_production_release_message
-#            template: production_release.txt
-#            webhook: $PROD_RELEASE_SLACK_WEBHOOK
-#            filters: { branches: { only: [main] } }
-#            requires: [prod_run_healthcheck_test]
-#
-#
-#orbs:
-#  slack: circleci/slack@3.3.0
-#  use-my-lpa:
-#    orbs:
-#      docker: circleci/docker@1.4.0
-#      browser-tools: circleci/browser-tools@1.2.2
-#    commands:
-#      install_aws_cli:
-#        steps:
-#          - run:
-#              name: Install AWS CLI
-#              command: pip install awscli --upgrade
-#      install_python:
-#        steps:
-#          - run:
-#              name: Install Python (for non-python executors)
-#              command: |
-#                sudo apt update
-#                sudo apt install python3 python3-pip
-#                sudo pip3 install --no-cache pipenv poetry boto3
-#
-#                cd /usr/local/bin
-#                sudo ln -sf /usr/bin/pydoc3 pydoc
-#                sudo ln -sf /usr/bin/python3 python
-#                sudo ln -sf /usr/bin/python3-config python-config
-#      dockerhub_login:
-#        steps:
-#          - docker/install-docker-credential-helper
-#          - docker/check:
-#              docker-password: DOCKER_ACCESS_TOKEN
-#              docker-username: DOCKER_USER
-#      ecr_login:
-#        steps:
-#          - run:
-#              name: Login to ECR
-#              command: |
-#                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/opg-use-an-lpa-ci --role-session-name ci)
-#                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
-#                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
-#                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-#                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
-#
-#    executors:
-#      golang:
-#        docker:
-#          - image: cimg/go:1.16
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      puppeteer:
-#        docker:
-#          - image: buildkite/puppeteer
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      php:
-#        docker:
-#          - image: cimg/php:7.4
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      php-browsers:
-#        docker:
-#          - image: cimg/php:8.1-browsers
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      node-browsers:
-#        docker:
-#          - image: cimg/node:14.19-browsers
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      python:
-#        docker:
-#          - image: cimg/python:3.7
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#      terraform:
-#        docker:
-#          - image: hashicorp/terraform:1.2.4
-#            auth:
-#              username: $DOCKER_USER
-#              password: $DOCKER_ACCESS_TOKEN
-#        resource_class: small
-#
-#    jobs:
-#      node_test_web:
-#        #
-#        # Build Docker container for Front App
-#        #   and runs the Unit Tests.
-#        #
-#        executor: node-browsers
-#        steps:
-#          - checkout
-#          - restore_cache:
-#              name: Restore node modules cache
-#              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
-#          - run:
-#              name: Install dependencies
-#              command: |
-#                if [ ! -d service-front/web/node_modules ]; then
-#                  cd service-front/web/ && npm ci
-#                fi
-#          - run:
-#              name: Run tests with Jest
-#              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
-#          - store_test_results:
-#              path: service-front/web/test-results
-#          - store_artifacts:
-#              path: service-front/web/test-results/junit
-#          - run:
-#              name: Run coverage with Jest
-#              command: |
-#                mkdir -p /home/circleci/project/build/web-js
-#                cd service-front/web/
-#                ./node_modules/.bin/jest --ci --runInBand --coverage
-#                cp -a ./coverage /home/circleci/project/build/web-js
-#          - store_test_results:
-#              path: build/web-js/
-#          - store_artifacts:
-#              path: build/web-js/
-#          - persist_to_workspace:
-#              root: build
-#              paths:
-#                - web-js/
-#              when: always
-#          - save_cache:
-#              name: Save node modules cache
-#              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
-#              paths:
-#                - service-front/web/node_modules
-#
-#      node_build_web:
-#        #
-#        # Build frontend assets (css, js, images)
-#        #
-#        executor: node-browsers
-#        steps:
-#          - checkout
-#          - restore_cache:
-#              name: Restore node modules cache
-#              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
-#          - run:
-#              name: Install dependencies
-#              command: |
-#                if [ ! -d service-front/web/node_modules ]; then
-#                  cd service-front/web/ && npm ci
-#                fi
-#          - run:
-#              name: Build assets
-#              command: |
-#                cd service-front/web/ && npm run build && npm run build:pdf_production
-#          - save_cache:
-#              name: Save node modules cache
-#              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
-#              paths:
-#                - service-front/web/node_modules
-#          - persist_to_workspace:
-#              root: ~/project
-#              paths:
-#                - service-front/web/dist
-#              when: always
-#
-#      #----------------------------------------------------
-#      # Front Services (Actor & Viewer)
-#
-#      docker_build_front_app:
-#        #
-#        # Build Docker container for Front App
-#        #   and runs the Unit Tests.
-#        #
-#        executor: python
-#        parameters:
-#          container_repo_url:
-#            type: string
-#            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_app
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - setup_remote_docker:
-#              version: 20.10.11
-#              docker_layer_caching: false
-#          - attach_workspace:
-#              at: ~/project
-#          - dockerhub_login
-#          - run:
-#              name: Docker Build Development Target
-#              command: |
-#                mkdir -p service-front/app/assets/stylesheets \
-#                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
-#                docker build --target development --file service-front/docker/app/Dockerfile --tag front-app:latest .
-#          - run:
-#              name: Run unit tests
-#              command: |
-#                docker run -d --name tests front-app:latest
-#                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-#                docker exec tests docker-php-ext-enable xdebug
-#                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
-#          - run:
-#              name: Run integration/acceptance tests
-#              command: |
-#                docker run -d --name inttests front-app:latest
-#                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-#                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-#                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
-#                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
-#          - run:
-#              name: Fetch test results
-#              command: |
-#                mkdir -p build/service-front
-#                docker cp tests:/app/build/reports build/service-front/phpunit
-#                docker cp inttests:/app/build/reports build/service-front/behat
-#              when: always
-#          - store_test_results:
-#              path: build/service-front/
-#          - store_artifacts:
-#              path: build/service-front/
-#          - persist_to_workspace:
-#              root: build
-#              paths:
-#                - service-front/
-#              when: always
-#          - run:
-#              name: Docker Build Production Target
-#              command: |
-#                mkdir -p service-front/app/assets/stylesheets \
-#                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
-#                docker build --target production --file service-front/docker/app/Dockerfile --tag front-app:latest .
-#          - ecr_login
-#          - run:
-#              name: Push container
-#              command: |
-#                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#                echo $IMAGE_TAG
-#
-#                docker tag front-app:latest << parameters.container_repo_url >>:latest
-#                docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-#
-#                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-#                  # We want all of the tags pushed
-#                  docker push --all-tags << parameters.container_repo_url >>
-#                else
-#                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-#                fi
-#
-#      docker_build_front_web:
-#        #
-#        # Build Docker container for Front Web
-#        #
-#        executor: python
-#        parameters:
-#          container_repo_url:
-#            type: string
-#            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_web
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - setup_remote_docker:
-#              version: 20.10.11
-#              docker_layer_caching: false
-#          - attach_workspace:
-#              at: ~/project
-#          - dockerhub_login
-#          - run:
-#              name: Build
-#              command: |
-#                cp -R ~/project/service-front/web/dist/* service-front/docker/web/web/
-#                docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
-#          - ecr_login
-#          - run:
-#              name: Push container
-#              command: |
-#                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#                echo $IMAGE_TAG
-#
-#                docker tag front-web:latest << parameters.container_repo_url >>:latest
-#                docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-#
-#                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-#                  # We want all of the tags pushed
-#                  docker push --all-tags << parameters.container_repo_url >>
-#                else
-#                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-#                fi
-#
-#      #----------------------------------------------------
-#      # API Service
-#
-#      docker_build_api_app:
-#        #
-#        # Build Docker container for API App
-#        #   and runs the Unit Tests.
-#        #
-#        executor: python
-#        parameters:
-#          container_repo_url:
-#            type: string
-#            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - setup_remote_docker:
-#              version: 20.10.11
-#              docker_layer_caching: false
-#          - dockerhub_login
-#          - run:
-#              name: Docker Build Development Target
-#              command: |
-#                docker build --target development --file service-api/docker/app/Dockerfile --tag api-app:latest .
-#          - run:
-#              name: Run unit tests
-#              command: |
-#                docker run -d --name tests api-app:latest
-#                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-#                docker exec tests docker-php-ext-enable xdebug
-#                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
-#          - run:
-#              name: Run integration/acceptance tests
-#              command: |
-#                ~/project/scripts/pipeline/set_environment_variables/set_pact.sh
-#                docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-#                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
-#                docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-#                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
-#
-#                export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
-#                export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
-#
-#                docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
-#                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-#                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-#                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
-#                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
-#
-#                docker stop lpa-codes-pact-mock
-#                docker stop api-gateway-pact-mock
-#          - run:
-#              name: Fetch test results
-#              command: |
-#                mkdir -p build/service-api
-#                docker cp tests:/app/build/reports build/service-api/phpunit
-#                docker cp inttests:/app/build/reports build/service-api/behat
-#              when: always
-#          - store_test_results:
-#              path: build/service-api/
-#          - store_artifacts:
-#              path: build/service-api/
-#          - persist_to_workspace:
-#              root: build
-#              paths:
-#                - service-api/
-#              when: always
-#          - run:
-#              name: Docker Build Production Target
-#              command: |
-#                docker build --target production --file service-api/docker/app/Dockerfile --tag api-app:latest .
-#          - ecr_login
-#          - run:
-#              name: Push container
-#              command: |
-#                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#                echo $IMAGE_TAG
-#
-#                docker tag api-app:latest << parameters.container_repo_url >>:latest
-#                docker tag api-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-#
-#                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-#                  # We want all of the tags pushed
-#                  docker push --all-tags << parameters.container_repo_url >>
-#                else
-#                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-#                fi
-#
-#      docker_build_api_web:
-#        #
-#        # Build Docker container for API Web
-#        #
-#        executor: python
-#        parameters:
-#          container_repo_url:
-#            type: string
-#            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_web
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - setup_remote_docker:
-#              version: 20.10.11
-#              docker_layer_caching: false
-#          - dockerhub_login
-#          - run:
-#              name: Build
-#              command: |
-#                docker build --file service-api/docker/web/Dockerfile --tag api-web:latest .
-#          - ecr_login
-#          - run:
-#              name: Push container
-#              command: |
-#                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#                echo $IMAGE_TAG
-#
-#                docker tag api-web:latest << parameters.container_repo_url >>:latest
-#                docker tag api-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-#
-#                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-#                  # We want all of the tags pushed
-#                  docker push --all-tags << parameters.container_repo_url >>
-#                else
-#                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-#                fi
-#
-#      docker_test_admin:
-#        #
-#        # Run golang unit tests against admin
-#        #
-#        executor: golang
-#        steps:
-#          - checkout
-#          - run:
-#              name: Run tests and coverage
-#              command: |
-#                mkdir -p build/service-admin
-#                cd service-admin/
-#                go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
-#          - persist_to_workspace:
-#              root: build
-#              paths:
-#                - service-admin/
-#              when: always
-#
-#      docker_build_admin:
-#        #
-#        # Build Docker container for Admin
-#        #
-#        executor: python
-#        parameters:
-#          container_repo_url:
-#            type: string
-#            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/admin_app
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - setup_remote_docker:
-#              version: 20.10.11
-#              docker_layer_caching: false
-#          - dockerhub_login
-#          - run:
-#              name: Build
-#              command: |
-#                docker build --target production --file service-admin/Dockerfile --tag admin_app:latest service-admin/
-#          - ecr_login
-#          - run:
-#              name: Push container
-#              command: |
-#                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#                echo $IMAGE_TAG
-#
-#                docker tag admin_app:latest << parameters.container_repo_url >>:latest
-#                docker tag admin_app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
-#
-#                if [ "${CIRCLE_BRANCH}" == "main" ]; then
-#                  # We want all of the tags pushed
-#                  docker push --all-tags << parameters.container_repo_url >>
-#                else
-#                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
-#                fi
-#
-#
-#
-#      # Code Coverage
-#
-#      codecov_upload:
-#        #
-#        # Upload all php-unit test results
-#        #   to Codecov.
-#        #
-#        executor: python
-#        steps:
-#          - checkout
-#          - attach_workspace:
-#              at: build
-#          - run:
-#              name: Get and Validate Codecov App
-#              command: bash ~/project/scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
-#          - run:
-#              name: Upload to Codecov
-#              command: bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
-#
-#      #----------------------------------------------------
-#      # Terraform
-#
-#      lint_terraform:
-#        #
-#        # Lint the Terraform
-#        #
-#        executor: terraform
-#        parameters:
-#          workspace:
-#            description: Terraform workspace name
-#            type: string
-#            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-#        steps:
-#          - checkout
-#          - run:
-#              name: Lint Shared Terraform
-#              command: |
-#                terraform --version
-#                cd ~/project/terraform/account
-#                terraform init
-#                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-#                echo $TF_WORKSPACE
-#                terraform validate
-#          - run:
-#              name: Lint Environment Terraform
-#              command: |
-#                terraform --version
-#                cd ~/project/terraform/environment
-#                terraform init
-#                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-#                echo $TF_WORKSPACE
-#                terraform validate
-#
-#      plan_shared_terraform:
-#        #
-#        # Plan the shared terraform configuration. This:
-#        #   - Updates the shared infrastructure;
-#        #
-#        executor: terraform
-#        parameters:
-#          workspace:
-#            description: Terraform workspace name
-#            type: string
-#            default: development
-#        environment:
-#          TF_WORKSPACE: "<<parameters.workspace>>"
-#        steps:
-#          - checkout
-#          - run:
-#              name: Plan Shared Terraform
-#              command: |
-#                terraform --version
-#                cd ~/project/terraform/account
-#                terraform init
-#                terraform plan -lock-timeout=300s
-#
-#      apply_shared_terraform:
-#        #
-#        # Apply the shared terraform configuration. This:
-#        #   - Updates the shared infrastructure;
-#        #
-#        executor: terraform
-#        parameters:
-#          workspace:
-#            description: Terraform workspace name
-#            type: string
-#            default: development
-#        environment:
-#          TF_WORKSPACE: "<<parameters.workspace>>"
-#        steps:
-#          - checkout
-#          - run:
-#              name: Apply Shared Terraform
-#              command: |
-#                terraform --version
-#                cd ~/project/terraform/account
-#                terraform init
-#                terraform apply -lock-timeout=300s --auto-approve
-#
-#      apply_environment_terraform:
-#        #
-#        # Apply the environment terraform configuration. This:
-#        #   - Updates per environment infrastructure; and
-#        #   - Triggers a deploy of the updated container (if changed)
-#        #
-#        executor: terraform
-#        parameters:
-#          workspace:
-#            description: Terraform workspace name
-#            type: string
-#            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-#          image_tag_input:
-#            description: Inputs to use for setting image tags
-#            type: string
-#            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
-#          admin_image_tag_input:
-#            description: Inputs to use for setting admin app image tags
-#            type: string
-#            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
-#        steps:
-#          - checkout
-#          - run:
-#              name: Apply Environment Terraform
-#              command: |
-#                terraform --version
-#                cd ~/project/terraform/environment
-#                terraform init
-#                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-#                echo $TF_WORKSPACE
-#                ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
-#
-#                if [ "<<parameters.image_tag_input>>" == "latest" ]; then
-#                  export IMAGE_TAG="latest"
-#                else
-#                  export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
-#                fi
-#                echo "deploying service version ${IMAGE_TAG}"
-#
-#                if [ "<<parameters.admin_image_tag_input>>" == "latest" ]; then
-#                  export ADMIN_IMAGE_TAG="latest"
-#                else
-#                  export ADMIN_IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.admin_image_tag_input>>) >> $BASH_ENV
-#                fi
-#                echo "deploying admin app version ${ADMIN_IMAGE_TAG}"
-#
-#                terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG} -var admin_container_version=${ADMIN_IMAGE_TAG}
-#                mv cluster_config.json /tmp/
-#          - persist_to_workspace:
-#              root: /tmp
-#              paths:
-#                - cluster_config.json
-#
-#      redeploy_latest:
-#        #
-#        # Redeploy ECS services on an environment
-#        #
-#        executor: python
-#        parameters:
-#          environment:
-#            type: string
-#        steps:
-#          - checkout
-#          - install_aws_cli
-#          - run:
-#              name: Redeploy Services
-#              command: |
-#                export ACCOUNT_ID=$(~/project/scripts/pipeline/identify_account_id.sh <<parameters.environment>>)
-#                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
-#                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
-#                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
-#                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-#                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api-service --region eu-west-1
-#                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf-service --region eu-west-1
-#                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor-service --region eu-west-1
-#                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer-service --region eu-west-1
-#                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service admin-service --region eu-west-1
-#      #----------------------------------------------------
-#      # Seeding
-#
-#      seed_database:
-#        #
-#        # Seed database with test data
-#        #
-#        executor: python
-#        steps:
-#          - checkout
-#          - attach_workspace:
-#              at: /tmp
-#          - run:
-#              name: Seed DynamoDB
-#              command: |
-#                pip install -r service-api/seeding/requirements.txt
-#                export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
-#                export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
-#                export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
-#                export DYNAMODB_TABLE_ACTOR_USERS=$(cat /tmp/cluster_config.json | jq .actor_users_table | xargs)
-#                export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat /tmp/cluster_config.json | jq .user_lpa_actor_map | xargs)
-#                python service-api/seeding/dynamodb.py
-#
-#      #----------------------------------------------------
-#      # Tests
-#
-#      run_behat_suite:
-#        executor: php-browsers
-#        parameters:
-#          workspace:
-#            description: Terraform workspace name
-#            type: string
-#            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
-#        steps:
-#          - checkout
-#          - install_python
-#          - browser-tools/install-chrome
-#          - run:
-#              command: |
-#                google-chrome --version
-#          - attach_workspace:
-#              at: /tmp
-#          - run:
-#              name: Install and configure dependencies
-#              command: |
-#                cd tests/smoke
-#                composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
-#          - run:
-#              name: Allow CircleCI ingress to environment
-#              command: |
-#                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-#                echo $TF_WORKSPACE
-#                if [ "${TF_WORKSPACE}" != "production" ]; then
-#                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
-#                fi
-#          - run:
-#              name: Run suite
-#              command: |
-#                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
-#                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
-#                public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
-#                public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-#
-#                ln -sf ../features tests/smoke/features
-#
-#                cd tests/smoke
-#                BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
-#                  BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
-#                  BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
-#                  BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
-#                  vendor/bin/behat
-#          - store_artifacts:
-#              path: tests/smoke/failed_step_screenshots
-#          - run:
-#              name: Remove CircleCI ingress to environment
-#              command: |
-#                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
-#                echo $TF_WORKSPACE
-#                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
-#              when: always
-#
-#      run_healthcheck_test:
-#        #
-#        # Checks the health check is returning 200
-#        #
-#        executor: python
-#        steps:
-#          - checkout
-#          - attach_workspace:
-#              at: /tmp
-#          - run:
-#              name: Run test
-#              command: |
-#                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
-#                viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-#                [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
-#
-#                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-#                actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
-#                [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
-#
-#      end_of_workflow:
-#        #
-#        # creates a common ending for all PR workflows
-#        #
-#        executor: python
-#        steps:
-#          - run:
-#              name: End of Workflow
-#              command: |
-#                echo "end of workflow"
-#
-#jobs:
-#  slack_environment_redeploy:
-#    docker:
-#      - image: cimg/python:3.7
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    parameters:
-#      environment:
-#        type: string
-#    steps:
-#      - checkout
-#      - run:
-#          name: Get Commit Message
-#          command: |
-#            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
-#      - slack/notify:
-#          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
-#          color: "#4287f5"
-#          message: "Scheduled update of <<parameters.environment>> environment complete"
-#          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
-#
-#  python_templated_slack_notify:
-#    docker:
-#      - image: cimg/python:3.7
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    parameters:
-#      template:
-#        type: string
-#      webhook:
-#        type: string
-#        default: $SLACK_WEBHOOK
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: /tmp
-#      - run:
-#          name: Notify Slack
-#          command: |
-#
-#            pip install -r ~/project/scripts/pipeline/requirements.txt
-#            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-#            --slack_webhook <<parameters.webhook>> \
-#            --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
-#            --commit_message "$(git log -1 --pretty=%B)"
-#
-#
-#  slack_notify_stats:
-#    docker:
-#      - image: cimg/python:3.7
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: /tmp
-#      - run:
-#          name: Get Stats
-#          command: |
-#            pip install -r scripts/pipeline/requirements.txt
-#            python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
-#      - slack/notify:
-#          title: "Service Statistics - Use a Lasting Power of Attorney Production"
-#          color: "#9933ff"
-#          message: $(cat ./output.txt)
-#          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
-#          footer: ""
-#
-#  ecr_scan_results:
-#    docker:
-#      - image: cimg/python:3.7
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    steps:
-#      - checkout
-#      - run:
-#          name: Check ECR Scan Results
-#          command: |
-#            pip install -r scripts/pipeline/requirements.txt
-#            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-#            echo $IMAGE_TAG
-#            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
-#
-#  workspace_cleanup:
-#    docker:
-#      - image: hashicorp/terraform:1.0.1
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    steps:
-#      - checkout
-#      - run:
-#          name: Cleanup Workspaces
-#          command: |
-#            cd terraform/environment
-#            terraform init
-#            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
-#
-#  cancel_redundant_builds:
-#    docker:
-#      - image: cimg/python:3.7
-#        auth:
-#          username: $DOCKER_USER
-#          password: $DOCKER_ACCESS_TOKEN
-#    resource_class: small
-#    steps:
-#      - checkout
-#      - run:
-#          name: Cancel Redundant Builds
-#          command: |
-#            pip install -r scripts/pipeline/requirements.txt
-#            python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
-#            --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
-#            --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
-#            --circle_branch ${CIRCLE_BRANCH} \
-#            --circle_builds_token ${CIRCLECI_API_KEY} \
-#            --terms_to_waitfor "dev_plan_shared_terraform,dev_apply_environment_terraform"
+version: 2.1
+
+workflows:
+  keep_demo_environment_up_to_date:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *" # Every 8am
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - use-my-lpa/apply_environment_terraform:
+          name: demo_apply_environment_terraform
+          workspace: demo
+          image_tag_input: latest
+          admin_image_tag_input: latest
+      - use-my-lpa/redeploy_latest:
+          name: redeploy_demo
+          environment: demo
+          requires: [demo_apply_environment_terraform]
+      - slack_environment_redeploy:
+          name: post_demo_release_message
+          environment: demo
+          requires: [redeploy_demo]
+
+  workspace_cleanup:
+    triggers:
+      - schedule:
+          cron: "0 6,18 * * 0-6" # twice a day at 6am and 6pm
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - workspace_cleanup:
+          name: workspace_cleanup
+
+  post_statistics:
+    triggers:
+      - schedule:
+          cron: "0 9 * * 1" # 9am every Monday
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - slack_notify_stats:
+          name: slack_notify_stats
+
+  path_to_live:
+      jobs:
+        # Common tasks
+        - use-my-lpa/node_test_web:
+            name: test_web
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/node_build_web:
+            name: build_web
+            filters: { branches: { only: [main] } }
+            requires: [test_web]
+
+        - use-my-lpa/docker_build_front_app:
+            name: app_front_build
+            filters: { branches: { only: [main] } }
+            requires: [build_web]
+
+        - use-my-lpa/docker_build_front_web:
+            name: web_front_build
+            filters: { branches: { only: [main] } }
+            requires: [build_web]
+
+        - use-my-lpa/docker_build_api_app:
+            name: app_api_build
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/docker_build_api_web:
+            name: web_api_build
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/docker_test_admin:
+            name: admin_app_test
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/docker_build_admin:
+            name: admin_app_build
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/codecov_upload:
+            name: codecov_upload
+            filters: { branches: { only: [main] } }
+            requires:
+              [
+                app_front_build,
+                app_api_build,
+                test_web,
+                admin_app_test,
+              ]
+
+        # Provision and test preproduction
+        - use-my-lpa/apply_shared_terraform:
+            name: dev_apply_shared_terraform
+            workspace: development
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/apply_shared_terraform:
+            name: preprod_apply_shared_terraform
+            workspace: preproduction
+            filters: { branches: { only: [main] } }
+            requires:
+              [
+                dev_apply_shared_terraform,
+              ]
+
+        - use-my-lpa/apply_environment_terraform:
+            name: preprod_apply_environment_terraform
+            workspace: preproduction
+            filters: { branches: { only: [main] } }
+            requires:
+              [
+                preprod_apply_shared_terraform,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                admin_app_build,
+              ]
+
+        - ecr_scan_results:
+            name: ecr_scan_results
+            filters: { branches: { only: [main] } }
+            requires:
+              [
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                admin_app_build,
+                preprod_apply_environment_terraform,
+              ]
+
+        - use-my-lpa/seed_database:
+            name: preprod_seed_database
+            filters: { branches: { only: [main] } }
+            requires: [preprod_apply_environment_terraform]
+
+        - use-my-lpa/run_behat_suite:
+            name: preprod_run_behat_tests
+            workspace: preproduction
+            filters: { branches: { only: [main] } }
+            requires: [preprod_seed_database]
+
+        # Provision and test production
+        - use-my-lpa/apply_shared_terraform:
+            name: production_apply_shared_terraform
+            workspace: production
+            filters: { branches: { only: [main] } }
+            requires: [preprod_run_behat_tests]
+
+        - use-my-lpa/apply_environment_terraform:
+            name: production_apply_environment_terraform
+            workspace: production
+            filters: { branches: { only: [main] } }
+            requires:
+              [
+                production_apply_shared_terraform,
+                app_front_build,
+                web_front_build,
+                web_api_build,
+                app_api_build,
+                admin_app_build,
+              ]
+
+        - use-my-lpa/run_healthcheck_test:
+            name: prod_run_healthcheck_test
+            filters: { branches: { only: [main] } }
+            requires: [production_apply_environment_terraform]
+
+        - python_templated_slack_notify:
+            name: post_production_release_message
+            template: production_release.txt
+            webhook: $PROD_RELEASE_SLACK_WEBHOOK
+            filters: { branches: { only: [main] } }
+            requires: [prod_run_healthcheck_test]
+
+
+orbs:
+  slack: circleci/slack@3.3.0
+  use-my-lpa:
+    orbs:
+      docker: circleci/docker@1.4.0
+      browser-tools: circleci/browser-tools@1.2.2
+    commands:
+      install_aws_cli:
+        steps:
+          - run:
+              name: Install AWS CLI
+              command: pip install awscli --upgrade
+      install_python:
+        steps:
+          - run:
+              name: Install Python (for non-python executors)
+              command: |
+                sudo apt update
+                sudo apt install python3 python3-pip
+                sudo pip3 install --no-cache pipenv poetry boto3
+
+                cd /usr/local/bin
+                sudo ln -sf /usr/bin/pydoc3 pydoc
+                sudo ln -sf /usr/bin/python3 python
+                sudo ln -sf /usr/bin/python3-config python-config
+      dockerhub_login:
+        steps:
+          - docker/install-docker-credential-helper
+          - docker/check:
+              docker-password: DOCKER_ACCESS_TOKEN
+              docker-username: DOCKER_USER
+      ecr_login:
+        steps:
+          - run:
+              name: Login to ECR
+              command: |
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::311462405659:role/opg-use-an-lpa-ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+
+    executors:
+      golang:
+        docker:
+          - image: cimg/go:1.16
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      puppeteer:
+        docker:
+          - image: buildkite/puppeteer
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      php:
+        docker:
+          - image: cimg/php:7.4
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      php-browsers:
+        docker:
+          - image: cimg/php:8.1-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      node-browsers:
+        docker:
+          - image: cimg/node:14.19-browsers
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      python:
+        docker:
+          - image: cimg/python:3.7
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+      terraform:
+        docker:
+          - image: hashicorp/terraform:1.2.4
+            auth:
+              username: $DOCKER_USER
+              password: $DOCKER_ACCESS_TOKEN
+        resource_class: small
+
+    jobs:
+      node_test_web:
+        #
+        # Build Docker container for Front App
+        #   and runs the Unit Tests.
+        #
+        executor: node-browsers
+        steps:
+          - checkout
+          - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-front/web/node_modules ]; then
+                  cd service-front/web/ && npm ci
+                fi
+          - run:
+              name: Run tests with Jest
+              command: cd service-front/web/ && mkdir -p ./test-results/junit && ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+          - store_test_results:
+              path: service-front/web/test-results
+          - store_artifacts:
+              path: service-front/web/test-results/junit
+          - run:
+              name: Run coverage with Jest
+              command: |
+                mkdir -p /home/circleci/project/build/web-js
+                cd service-front/web/
+                ./node_modules/.bin/jest --ci --runInBand --coverage
+                cp -a ./coverage /home/circleci/project/build/web-js
+          - store_test_results:
+              path: build/web-js/
+          - store_artifacts:
+              path: build/web-js/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - web-js/
+              when: always
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
+              paths:
+                - service-front/web/node_modules
+
+      node_build_web:
+        #
+        # Build frontend assets (css, js, images)
+        #
+        executor: node-browsers
+        steps:
+          - checkout
+          - restore_cache:
+              name: Restore node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
+          - run:
+              name: Install dependencies
+              command: |
+                if [ ! -d service-front/web/node_modules ]; then
+                  cd service-front/web/ && npm ci
+                fi
+          - run:
+              name: Build assets
+              command: |
+                cd service-front/web/ && npm run build && npm run build:pdf_production
+          - save_cache:
+              name: Save node modules cache
+              key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
+              paths:
+                - service-front/web/node_modules
+          - persist_to_workspace:
+              root: ~/project
+              paths:
+                - service-front/web/dist
+              when: always
+
+      #----------------------------------------------------
+      # Front Services (Actor & Viewer)
+
+      docker_build_front_app:
+        #
+        # Build Docker container for Front App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.11
+              docker_layer_caching: false
+          - attach_workspace:
+              at: ~/project
+          - dockerhub_login
+          - run:
+              name: Docker Build Development Target
+              command: |
+                mkdir -p service-front/app/assets/stylesheets \
+                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+                docker build --target development --file service-front/docker/app/Dockerfile --tag front-app:latest .
+          - run:
+              name: Run unit tests
+              command: |
+                docker run -d --name tests front-app:latest
+                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+                docker exec tests docker-php-ext-enable xdebug
+                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+          - run:
+              name: Run integration/acceptance tests
+              command: |
+                docker run -d --name inttests front-app:latest
+                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
+                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+          - run:
+              name: Fetch test results
+              command: |
+                mkdir -p build/service-front
+                docker cp tests:/app/build/reports build/service-front/phpunit
+                docker cp inttests:/app/build/reports build/service-front/behat
+              when: always
+          - store_test_results:
+              path: build/service-front/
+          - store_artifacts:
+              path: build/service-front/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-front/
+              when: always
+          - run:
+              name: Docker Build Production Target
+              command: |
+                mkdir -p service-front/app/assets/stylesheets \
+                  && cp -R ~/project/service-front/web/dist/stylesheets/pdf.css service-front/app/assets/stylesheets/pdf.css
+                docker build --target production --file service-front/docker/app/Dockerfile --tag front-app:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag front-app:latest << parameters.container_repo_url >>:latest
+                docker tag front-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+      docker_build_front_web:
+        #
+        # Build Docker container for Front Web
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/front_web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.11
+              docker_layer_caching: false
+          - attach_workspace:
+              at: ~/project
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                cp -R ~/project/service-front/web/dist/* service-front/docker/web/web/
+                docker build --file service-front/docker/web/Dockerfile --tag front-web:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag front-web:latest << parameters.container_repo_url >>:latest
+                docker tag front-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+      #----------------------------------------------------
+      # API Service
+
+      docker_build_api_app:
+        #
+        # Build Docker container for API App
+        #   and runs the Unit Tests.
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.11
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Docker Build Development Target
+              command: |
+                docker build --target development --file service-api/docker/app/Dockerfile --tag api-app:latest .
+          - run:
+              name: Run unit tests
+              command: |
+                docker run -d --name tests api-app:latest
+                docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+                docker exec tests docker-php-ext-enable xdebug
+                docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
+          - run:
+              name: Run integration/acceptance tests
+              command: |
+                ~/project/scripts/pipeline/set_environment_variables/set_pact.sh
+                docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
+                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+                docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
+                  --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+
+                export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
+                export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
+
+                docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
+                docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+                docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+                docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
+                  /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+
+                docker stop lpa-codes-pact-mock
+                docker stop api-gateway-pact-mock
+          - run:
+              name: Fetch test results
+              command: |
+                mkdir -p build/service-api
+                docker cp tests:/app/build/reports build/service-api/phpunit
+                docker cp inttests:/app/build/reports build/service-api/behat
+              when: always
+          - store_test_results:
+              path: build/service-api/
+          - store_artifacts:
+              path: build/service-api/
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-api/
+              when: always
+          - run:
+              name: Docker Build Production Target
+              command: |
+                docker build --target production --file service-api/docker/app/Dockerfile --tag api-app:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag api-app:latest << parameters.container_repo_url >>:latest
+                docker tag api-app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+      docker_build_api_web:
+        #
+        # Build Docker container for API Web
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/api_web
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.11
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --file service-api/docker/web/Dockerfile --tag api-web:latest .
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag api-web:latest << parameters.container_repo_url >>:latest
+                docker tag api-web:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+      docker_test_admin:
+        #
+        # Run golang unit tests against admin
+        #
+        executor: golang
+        steps:
+          - checkout
+          - run:
+              name: Run tests and coverage
+              command: |
+                mkdir -p build/service-admin
+                cd service-admin/
+                go test -race -coverpkg ./... -coverprofile=../build/service-admin/coverage.out -covermode=atomic ./...
+          - persist_to_workspace:
+              root: build
+              paths:
+                - service-admin/
+              when: always
+
+      docker_build_admin:
+        #
+        # Build Docker container for Admin
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/admin_app
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              version: 20.10.11
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --target production --file service-admin/Dockerfile --tag admin_app:latest service-admin/
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
+
+                docker tag admin_app:latest << parameters.container_repo_url >>:latest
+                docker tag admin_app:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
+
+
+
+      # Code Coverage
+
+      codecov_upload:
+        #
+        # Upload all php-unit test results
+        #   to Codecov.
+        #
+        executor: python
+        steps:
+          - checkout
+          - attach_workspace:
+              at: build
+          - run:
+              name: Get and Validate Codecov App
+              command: bash ~/project/scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
+          - run:
+              name: Upload to Codecov
+              command: bash ~/project/codecov -t $CODECOV_TOKEN || echo 'Codecov upload failed'
+
+      #----------------------------------------------------
+      # Terraform
+
+      lint_terraform:
+        #
+        # Lint the Terraform
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+        steps:
+          - checkout
+          - run:
+              name: Lint Shared Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/account
+                terraform init
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                terraform validate
+          - run:
+              name: Lint Environment Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/environment
+                terraform init
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                terraform validate
+
+      plan_shared_terraform:
+        #
+        # Plan the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Plan Shared Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/account
+                terraform init
+                terraform plan -lock-timeout=300s
+
+      apply_shared_terraform:
+        #
+        # Apply the shared terraform configuration. This:
+        #   - Updates the shared infrastructure;
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: development
+        environment:
+          TF_WORKSPACE: "<<parameters.workspace>>"
+        steps:
+          - checkout
+          - run:
+              name: Apply Shared Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/account
+                terraform init
+                terraform apply -lock-timeout=300s --auto-approve
+
+      apply_environment_terraform:
+        #
+        # Apply the environment terraform configuration. This:
+        #   - Updates per environment infrastructure; and
+        #   - Triggers a deploy of the updated container (if changed)
+        #
+        executor: terraform
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+          image_tag_input:
+            description: Inputs to use for setting image tags
+            type: string
+            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
+          admin_image_tag_input:
+            description: Inputs to use for setting admin app image tags
+            type: string
+            default: "${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
+        steps:
+          - checkout
+          - run:
+              name: Apply Environment Terraform
+              command: |
+                terraform --version
+                cd ~/project/terraform/environment
+                terraform init
+                export TF_WORKSPACE=$(~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                ~/project/scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=$TF_WORKSPACE
+
+                if [ "<<parameters.image_tag_input>>" == "latest" ]; then
+                  export IMAGE_TAG="latest"
+                else
+                  export IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.image_tag_input>>) >> $BASH_ENV
+                fi
+                echo "deploying service version ${IMAGE_TAG}"
+
+                if [ "<<parameters.admin_image_tag_input>>" == "latest" ]; then
+                  export ADMIN_IMAGE_TAG="latest"
+                else
+                  export ADMIN_IMAGE_TAG=$(~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh <<parameters.admin_image_tag_input>>) >> $BASH_ENV
+                fi
+                echo "deploying admin app version ${ADMIN_IMAGE_TAG}"
+
+                terraform apply -lock-timeout=300s --auto-approve -var container_version=${IMAGE_TAG} -var admin_container_version=${ADMIN_IMAGE_TAG}
+                mv cluster_config.json /tmp/
+          - persist_to_workspace:
+              root: /tmp
+              paths:
+                - cluster_config.json
+
+      redeploy_latest:
+        #
+        # Redeploy ECS services on an environment
+        #
+        executor: python
+        parameters:
+          environment:
+            type: string
+        steps:
+          - checkout
+          - install_aws_cli
+          - run:
+              name: Redeploy Services
+              command: |
+                export ACCOUNT_ID=$(~/project/scripts/pipeline/identify_account_id.sh <<parameters.environment>>)
+                temp_role=$(aws sts assume-role --role-arn arn:aws:iam::$ACCOUNT_ID:role/opg-use-an-lpa-ci --role-session-name ci)
+                export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
+                export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
+                export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service api-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service pdf-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service actor-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service viewer-service --region eu-west-1
+                aws ecs update-service --cluster <<parameters.environment>>-use-an-lpa --force-new-deployment --service admin-service --region eu-west-1
+      #----------------------------------------------------
+      # Seeding
+
+      seed_database:
+        #
+        # Seed database with test data
+        #
+        executor: python
+        steps:
+          - checkout
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Seed DynamoDB
+              command: |
+                pip install -r service-api/seeding/requirements.txt
+                export AWS_ACCOUNT_ID=$(cat /tmp/cluster_config.json | jq .account_id | xargs)
+                export DYNAMODB_TABLE_ACTOR_CODES=$(cat /tmp/cluster_config.json | jq .actor_lpa_codes_table | xargs)
+                export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
+                export DYNAMODB_TABLE_ACTOR_USERS=$(cat /tmp/cluster_config.json | jq .actor_users_table | xargs)
+                export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat /tmp/cluster_config.json | jq .user_lpa_actor_map | xargs)
+                python service-api/seeding/dynamodb.py
+
+      #----------------------------------------------------
+      # Tests
+
+      run_behat_suite:
+        executor: php-browsers
+        parameters:
+          workspace:
+            description: Terraform workspace name
+            type: string
+            default: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH}"
+        steps:
+          - checkout
+          - install_python
+          - browser-tools/install-chrome
+          - run:
+              command: |
+                google-chrome --version
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Install and configure dependencies
+              command: |
+                cd tests/smoke
+                composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+          - run:
+              name: Allow CircleCI ingress to environment
+              command: |
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                if [ "${TF_WORKSPACE}" != "production" ]; then
+                  python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json --add
+                fi
+          - run:
+              name: Run suite
+              command: |
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .viewer_fqdn | xargs)
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .actor_fqdn | xargs)
+                public_facing_view_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+                public_facing_use_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+
+                ln -sf ../features tests/smoke/features
+
+                cd tests/smoke
+                BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
+                  BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
+                  BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
+                  BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+                  vendor/bin/behat
+          - store_artifacts:
+              path: tests/smoke/failed_step_screenshots
+          - run:
+              name: Remove CircleCI ingress to environment
+              command: |
+                export TF_WORKSPACE=$(bash ~/project/scripts/pipeline/set_environment_variables/set_workspace.sh <<parameters.workspace>>) >> $BASH_ENV
+                echo $TF_WORKSPACE
+                python scripts/pipeline/ci_ingress/ci_ingress.py /tmp/cluster_config.json
+              when: always
+
+      run_healthcheck_test:
+        #
+        # Checks the health check is returning 200
+        #
+        executor: python
+        steps:
+          - checkout
+          - attach_workspace:
+              at: /tmp
+          - run:
+              name: Run test
+              command: |
+                viewer_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+                viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
+                [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+
+                actor_fqdn=$(cat /tmp/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+                actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
+                [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+
+      end_of_workflow:
+        #
+        # creates a common ending for all PR workflows
+        #
+        executor: python
+        steps:
+          - run:
+              name: End of Workflow
+              command: |
+                echo "end of workflow"
+
+jobs:
+  slack_environment_redeploy:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      environment:
+        type: string
+    steps:
+      - checkout
+      - run:
+          name: Get Commit Message
+          command: |
+            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
+      - slack/notify:
+          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
+          color: "#4287f5"
+          message: "Scheduled update of <<parameters.environment>> environment complete"
+          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
+
+  python_templated_slack_notify:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    parameters:
+      template:
+        type: string
+      webhook:
+        type: string
+        default: $SLACK_WEBHOOK
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Notify Slack
+          command: |
+
+            pip install -r ~/project/scripts/pipeline/requirements.txt
+            python ~/project/scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook <<parameters.webhook>> \
+            --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
+            --commit_message "$(git log -1 --pretty=%B)"
+
+
+  slack_notify_stats:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get Stats
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
+      - slack/notify:
+          title: "Service Statistics - Use a Lasting Power of Attorney Production"
+          color: "#9933ff"
+          message: $(cat ./output.txt)
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: ""
+
+  ecr_scan_results:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            echo $IMAGE_TAG
+            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
+
+  workspace_cleanup:
+    docker:
+      - image: hashicorp/terraform:1.0.1
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Cleanup Workspaces
+          command: |
+            cd terraform/environment
+            terraform init
+            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
+
+  cancel_redundant_builds:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Cancel Redundant Builds
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            python scripts/pipeline/cancel_previous_jobs/cancel_redundant_builds.py \
+            --circle_project_username ${CIRCLE_PROJECT_USERNAME} \
+            --circle_project_reponame ${CIRCLE_PROJECT_REPONAME} \
+            --circle_branch ${CIRCLE_BRANCH} \
+            --circle_builds_token ${CIRCLECI_API_KEY} \
+            --terms_to_waitfor "dev_plan_shared_terraform,dev_apply_environment_terraform"
