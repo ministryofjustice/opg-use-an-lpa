@@ -379,6 +379,10 @@ class LpaExtensionTest extends TestCase
                 true,
             ],
             [
+                '',
+                null,
+            ],
+            [
                 null,
                 null,
             ],

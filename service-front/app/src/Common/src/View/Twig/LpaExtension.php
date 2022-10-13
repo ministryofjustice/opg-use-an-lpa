@@ -170,7 +170,7 @@ class LpaExtension extends AbstractExtension
      */
     public function hasCodeExpired(?string $expiryDate): ?bool
     {
-        if ($expiryDate !== null) {
+        if ($expiryDate) {
             $date = new DateTime($expiryDate);
             return $date <= (new DateTime('now'))->setTime(23, 59, 59);
         }
