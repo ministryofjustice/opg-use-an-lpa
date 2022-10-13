@@ -2,132 +2,128 @@
 
 declare(strict_types=1);
 
+use Http\Adapter\Guzzle6\Client;
+use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
+use Aws\Sdk;
+use BehatTest\Common\Service\Aws\SdkFactory;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Mezzio\Middleware\ErrorResponseGenerator;
+use Mezzio\Container\ErrorResponseGeneratorFactory;
+use Common\Service\Log\RequestTracingLogProcessorFactory;
+use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
+use Laminas\Cache\Storage\Adapter\Memory;
+
 return [
-    Laminas\ConfigAggregator\ConfigAggregator::ENABLE_CACHE => false,
-    'debug' => false,
-
-    'dependencies' => [
+    ConfigAggregator::ENABLE_CACHE => false,
+    'debug'                        => false,
+    'dependencies'                 => [
         'factories' => [
-            \Http\Adapter\Guzzle6\Client::class => \BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
-
-            \Aws\Sdk::class => \BehatTest\Common\Service\Aws\SdkFactory::class,
-
-            \Mezzio\Middleware\ErrorResponseGenerator::class => \Mezzio\Container\ErrorResponseGeneratorFactory::class,
+            Client::class                 => TestClientFactory::class,
+            Sdk::class                    => SdkFactory::class,
+            ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
         ],
     ],
-
-    'api' => [
+    'api'                          => [
         'uri' => 'http://localhost',
     ],
-
-    'pdf' => [
+    'pdf'                          => [
         'uri' => 'http://pdf-service',
     ],
-
-    'aws' => [
+    'aws'                          => [
         //'debug'   => true,
     ],
-
-    'feature_flags' => [
-        'use_older_lpa_journey'                                               => true,
-        'delete_lpa_feature'                                                  => true,
-        'allow_older_lpas'                                                    => true,
-        'save_older_lpa_requests'                                             => true,
-        'dont_send_lpas_registered_after_sep_2019_to_cleansing_team'          => true,
+    'feature_flags'                => [
+        'use_older_lpa_journey'                                      => true,
+        'delete_lpa_feature'                                         => true,
+        'allow_older_lpas'                                           => true,
+        'save_older_lpa_requests'                                    => true,
+        'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => true,
     ],
-
-    'notify' => [
+    'notify'                       => [
         'api' => [
             'key' => 'not_a_real_key-22996155-4e04-42d0-8d1a-d1d3998e2149-be30242e-049d-4039-b43e-14aa8a6a76a4',
         ],
     ],
-
-    'monolog' => [
-        'handlers' => [
+    'monolog'                      => [
+        'handlers'   => [
             'default' => [ // default configuration in normal operation
-                'type' => 'test',
+                'type'       => 'test',
                 'processors' => [
                     'psrLogProcessor',
-                    'requestTracingProcessor'
+                    'requestTracingProcessor',
                 ],
             ],
         ],
         'processors' => [
-            'psrLogProcessor' => [
-                'type' => 'psrLogMessage',
+            'psrLogProcessor'         => [
+                'type'    => 'psrLogMessage',
                 'options' => [], // No options
             ],
             'requestTracingProcessor' => [
-                'type' => \Common\Service\Log\RequestTracingLogProcessorFactory::class,
+                'type'    => RequestTracingLogProcessorFactory::class,
                 'options' => [], // No options
             ],
         ],
     ],
-
-    'session' => [
-        'key' => [
+    'session'                      => [
+        'key'           => [
             // KMS alias to use for data key generation.
             'alias' => 'alias/viewer-sessions-cmk-alias',
         ],
-        'cookie_secure' => true
+        'cookie_secure' => true,
     ],
-
-    'ratelimits' => [
+    'ratelimits'                   => [
         'viewer_code_failure' => [
-            'type' => 'keyed',
+            'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'memory',
-                    'options' => [
-                        'memory_limit' => '96M',
-                        'ttl' => 60,
-                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
-                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
-                    ],
+                'adapter' => Memory::class,
+                'options' => [
+                    'memory_limit'  => '96M',
+                    'ttl'           => 60,
+                    'persistent_id' => new MergeRemoveKey(),
+                    'server'        => new MergeRemoveKey(),
+                    'lib_options'   => new MergeRemoveKey(),
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
         ],
-        'actor_code_failure' => [
-            'type' => 'keyed',
+        'actor_code_failure'  => [
+            'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'memory',
-                    'options' => [
-                        'memory_limit' => '96M',
-                        'ttl' => 60,
-                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
-                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
-                    ],
+                'adapter' => Memory::class,
+                'options' => [
+                    'memory_limit'  => '96M',
+                    'ttl'           => 60,
+                    'persistent_id' => new MergeRemoveKey(),
+                    'server'        => new MergeRemoveKey(),
+                    'lib_options'   => new MergeRemoveKey(),
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
         ],
         'actor_login_failure' => [
-            'type' => 'keyed',
+            'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'memory',
-                    'options' => [
-                        'memory_limit' => '96M',
-                        'ttl' => 60,
-                        'server' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
-                        'lib_options' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
-                    ],
+                'adapter' => Memory::class,
+                'options' => [
+                    'memory_limit'  => '96M',
+                    'ttl'           => 60,
+                    'persistent_id' => new MergeRemoveKey(),
+                    'server'        => new MergeRemoveKey(),
+                    'lib_options'   => new MergeRemoveKey(),
                 ],
             ],
             'options' => [
-                'interval' => 60,
-                'requests_per_interval' => 4
-            ]
-        ]
+                'interval'              => 60,
+                'requests_per_interval' => 4,
+            ],
+        ],
     ],
-
-    'whoops' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey()
+    'whoops'                       => new MergeRemoveKey(),
 ];
