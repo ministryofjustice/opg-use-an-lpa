@@ -9,7 +9,7 @@ use Mezzio\Csrf\CsrfMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @psalm-require-implements Common\Handler\CsrfGuardAware
+ * @psalm-require-implements \Common\Handler\CsrfGuardAware
  */
 trait CsrfGuard
 {
