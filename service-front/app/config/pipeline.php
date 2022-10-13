@@ -8,6 +8,7 @@ use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
+use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -66,6 +67,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Load session from request and save it on the return
     $app->pipe(SessionMiddleware::class);
+    $app->pipe(SessionExpiryMiddleware::class);
 
     $app->pipe(UserIdentificationMiddleware::class);
     $app->pipe(RateLimitMiddleware::class);
