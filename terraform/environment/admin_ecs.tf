@@ -147,6 +147,8 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
       aws_dynamodb_table.user_lpa_actor_map.arn,
       "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
+      aws_dynamodb_table.stats_table.arn,
+      "${aws_dynamodb_table.stats_table.arn}/index/*",
     ]
   }
 
