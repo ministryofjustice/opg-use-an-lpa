@@ -16,7 +16,9 @@
     <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('assets/images/govuk-apple-touch-icon-167x167.png') }}">
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
-    <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('stylesheets/lpa.css') }}">
+    <link rel="stylesheet" href="{{ asset('stylesheets/gds.css') }}">
+
 
     {% if application == 'actor' %}
         {% set url = 'https://use-lasting-power-of-attorney.service.gov.uk/' %}
@@ -168,7 +170,7 @@
     </div>
 </footer>
 
-<script src="{{ asset('javascript/bundle.js') }}"></script>
+<script type="module" src="{{ asset('index.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
