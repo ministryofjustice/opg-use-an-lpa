@@ -24,7 +24,7 @@ resource "aws_dynamodb_table" "stats_table" {
   name         = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "TimePeriod"
-  #tfsec:ignore:check aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
+  #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled = true
   }
