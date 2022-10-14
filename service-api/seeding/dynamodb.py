@@ -201,3 +201,50 @@ for i in userLpaActorMap:
         print(error.response['Error']['Code'],
               error.response['Error']['Message'])
         sys.exit(1)
+
+# added lpas on test user account
+
+statsTable = dynamodb.Table(
+    os.environ['DYNAMODB_TABLE_STATS'])
+
+
+stats = [
+    {
+        'TimePeriod': 'Total',
+        'lpas_added': '35',
+    },
+    {
+        'TimePeriod': '2022-04-01',
+        'lpas_added': '5',
+    },
+    {
+        'TimePeriod': '2022-05-01',
+        'lpas_added': '3'
+    },
+    {
+        'TimePeriod': '2022-06-01',
+        'lpas_added': '7'
+    },
+    {
+        'TimePeriod': '2022-07-01',
+        'lpas_added': '5'
+    },
+    {
+        'TimePeriod': '2022-08-01',
+        'lpas_added': '15'
+    }
+]
+
+for i in stats:
+    try:
+        statsTable.put_item(
+            Item=i,
+        )
+        response = statsTable.get_item(
+            Key={'TimePeriod': i['TimePeriod']}
+        )
+        print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    except botocore.exceptions.ClientError as error:
+        print(error.response['Error']['Code'],
+              error.response['Error']['Message'])
+        sys.exit(1)

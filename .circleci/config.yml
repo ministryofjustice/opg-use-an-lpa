@@ -1212,7 +1212,41 @@ orbs:
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
+      docker_build_lambdas:
+        #
+        # Build Docker container for lambdas
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/stats_upload_lambda
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
+                docker tag stats_upload_lambda:latest << parameters.container_repo_url >>:latest
+                docker tag stats_upload_lambda:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
 
       # Code Coverage
 
