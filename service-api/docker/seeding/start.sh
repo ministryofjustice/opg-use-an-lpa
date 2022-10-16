@@ -55,6 +55,14 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
 
+   aws dynamodb create-table \
+      --attribute-definitions AttributeName=TimePeriod,AttributeType=S \
+      --table-name Stats \
+      --key-schema AttributeName=TimePeriod,KeyType=HASH \
+      --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+      --region eu-west-1 \
+      --endpoint $DYNAMODN_ENDPOINT
+
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S AttributeName=ActivationCode,AttributeType=S \

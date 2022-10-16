@@ -97,6 +97,9 @@ variable "environments" {
         user_lpa_actor_map = object({
           name = string
         })
+        stats = object({
+          name = string
+        })
       })
     })
   )
