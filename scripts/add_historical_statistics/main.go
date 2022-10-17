@@ -43,8 +43,10 @@ func main() {
 
 	var roleToAssume string
 	var tableName string
+	var endpoint string
 	flag.StringVar(&roleToAssume, "role", "arn:aws:iam::367815980639:role/operator", "Role to assume when signing requests for using PutItem to dynamo")
-	flag.StringVar(&tableName, "Table", "demo-Stats", "Table to add the statistics to in format {environment}-{tablename}")
+	flag.StringVar(&tableName, "table", "demo-Stats", "Table to add the statistics to in format {environment}-{tablename}")
+	flag.StringVar(&endpoint, "endpoint", "", "Endpoint for dynamo")
 	flag.Parse()
 
 	fmt.Println(roleToAssume)
@@ -65,6 +67,9 @@ func main() {
 			roleProvider := stscreds.NewAssumeRoleProvider(client, roleToAssume)
 			o.Credentials = roleProvider
 		}
+		if endpoint != "" {
+			o.EndpointResolver = dynamodb.EndpointResolverFromURL(endpoint)
+		}
 
 	})
 
@@ -80,7 +85,7 @@ func main() {
 
 		for itemKey, itemValue := range item {
 			if itemKey != "" {
-				dynamoItem[itemKey] = &types.AttributeValueMemberS{Value: itemValue}
+				dynamoItem[itemKey] = &types.AttributeValueMemberN{Value: itemValue}
 			}
 		}
 
@@ -111,10 +116,16 @@ func eventCodeStatsToMap(records [][]string) map[string]map[string]string {
 	monthToEventCodeStats := map[string]map[string]string{}
 
 	for i := 1; i < len(records); i++ {
+
 		eventCodeName := records[i][0]
 
 		for j := 1; j < len(records[i]); j++ {
+
 			timePeriod := records[0][j]
+			lastDash := strings.LastIndex(timePeriod, "-")
+			if lastDash != -1 {
+				timePeriod = timePeriod[:lastDash]
+			}
 
 			if monthToEventCodeStats[timePeriod] == nil {
 				monthToEventCodeStats[timePeriod] = map[string]string{}
@@ -122,9 +133,11 @@ func eventCodeStatsToMap(records [][]string) map[string]map[string]string {
 
 			frequency := records[i][j]
 
-			if frequency != "" {
-				monthToEventCodeStats[timePeriod][eventCodeName] = strings.ReplaceAll(frequency, ",", "")
+			if frequency == "" {
+				frequency = "0"
 			}
+			monthToEventCodeStats[timePeriod][eventCodeName] = strings.ReplaceAll(frequency, ",", "")
+
 		}
 	}
 
