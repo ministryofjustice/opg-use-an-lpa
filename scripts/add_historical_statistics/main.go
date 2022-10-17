@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,8 +12,10 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 )
 
 func readCsvFile(filePath string) [][]string {
@@ -33,15 +36,22 @@ func readCsvFile(filePath string) [][]string {
 }
 
 func main() {
-
-	dbEndpoint := os.Args[0]
-	if dbEndpoint == "" {
-		dbEndpoint = "http://localhost:8000"
+	flag.Usage = func() {
+		fmt.Println("Usage: Add historical data to dynamo db")
+		flag.PrintDefaults()
 	}
+
+	var roleToAssume string
+	var tableName string
+	flag.StringVar(&roleToAssume, "role", "arn:aws:iam::367815980639:role/operator", "Role to assume when signing requests for using PutItem to dynamo")
+	flag.StringVar(&tableName, "Table", "demo-Stats", "Table to add the statistics to in format {environment}-{tablename}")
+	flag.Parse()
+
+	fmt.Println(roleToAssume)
 
 	eventCodeStats := readCsvFile("stats.csv")
 	recordsMap := eventCodeStatsToMap(eventCodeStats)
-	b, err := json.MarshalIndent(recordsMap, "", "  ")
+	_, err := json.MarshalIndent(recordsMap, "", "  ")
 	if err != nil {
 		fmt.Println("error:", err)
 	}
@@ -50,12 +60,13 @@ func main() {
 	config, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
 
 	svc := dynamodb.NewFromConfig(config, func(o *dynamodb.Options) {
-		if dbEndpoint != "" {
-			o.EndpointResolver = dynamodb.EndpointResolverFromURL(dbEndpoint)
+		if roleToAssume != "" {
+			client := sts.NewFromConfig(config)
+			roleProvider := stscreds.NewAssumeRoleProvider(client, roleToAssume)
+			o.Credentials = roleProvider
 		}
-	})
 
-	tableName := "Stats"
+	})
 
 	requestItems := []*dynamodb.PutItemInput{}
 
