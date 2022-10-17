@@ -50,5 +50,6 @@ resource "aws_backup_selection" "main" {
     aws_dynamodb_table.viewer_codes_table.arn,
     aws_dynamodb_table.viewer_activity_table.arn,
     aws_dynamodb_table.user_lpa_actor_map.arn,
+    aws_dynamodb_table.stats_table.arn,
   ]
 }

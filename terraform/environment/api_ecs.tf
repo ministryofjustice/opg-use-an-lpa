@@ -191,6 +191,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
       aws_dynamodb_table.user_lpa_actor_map.arn,
       "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
+      aws_dynamodb_table.stats_table.arn,
+      "${aws_dynamodb_table.stats_table.arn}/index/*",
     ]
   }
 
@@ -347,6 +349,10 @@ locals {
         {
           name  = "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
           value = aws_dynamodb_table.user_lpa_actor_map.name
+        },
+        {
+          name  = "DYNAMODB_TABLE_STATS",
+          value = aws_dynamodb_table.stats_table.name
         },
         {
           name  = "CONTAINER_VERSION",
