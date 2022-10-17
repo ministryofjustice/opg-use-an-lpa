@@ -41,6 +41,7 @@ const fs = fsWithCallbacks.promises;
       treeShaking: false,
     })
     .catch(() => process.exit(1));
+
   console.log(hr);
 
   let text = await esbuild.analyzeMetafile(result.metafile);
