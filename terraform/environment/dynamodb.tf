@@ -20,6 +20,29 @@ resource "aws_dynamodb_table" "actor_codes_table" {
   }
 }
 
+resource "aws_dynamodb_table" "stats_table" {
+  name         = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "TimePeriod"
+  #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
+  server_side_encryption {
+    enabled = true
+  }
+
+  attribute {
+    name = "TimePeriod"
+    type = "S"
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 resource "aws_dynamodb_table" "actor_users_table" {
   name         = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
   billing_mode = "PAY_PER_REQUEST"
