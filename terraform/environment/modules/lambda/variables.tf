@@ -3,11 +3,6 @@ variable "environment" {
   type        = string
 }
 
-#variable "aws_subnet_ids" {
-#  description = "A list of subnet ids for vpc connectivity."
-#  type        = list(string)
-#}
-
 variable "memory" {
   description = "The memory to use."
   type        = number
@@ -59,4 +54,8 @@ variable "ecr_arn" {
   description = "The ECR arn for lambda image."
   type        = string
   default     = null
+}
+
+variable "kms_key" {
+  description = "KMS key for the lambda log group"
 }

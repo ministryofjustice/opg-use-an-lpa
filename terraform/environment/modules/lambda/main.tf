@@ -1,5 +1,6 @@
 resource "aws_cloudwatch_log_group" "lambda" {
-  name = "/aws/lambda/${var.lambda_name}"
+  name       = "/aws/lambda/${var.lambda_name}"
+  kms_key_id = var.kms_key
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -10,11 +11,6 @@ resource "aws_lambda_function" "lambda_function" {
   timeout       = var.timeout
   memory_size   = var.memory
   depends_on    = [aws_cloudwatch_log_group.lambda]
-
-#  vpc_config {
-#    subnet_ids         = var.aws_subnet_ids
-#    security_group_ids = [data.aws_security_group.lambda_api_ingress.id]
-#  }
 
   tracing_config {
     mode = "Active"

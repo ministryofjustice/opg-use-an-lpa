@@ -6,6 +6,7 @@ import botocore
 import boto3
 import simplejson as json
 from passlib.hash import sha256_crypt
+from dateutil.relativedelta import relativedelta
 import pytz
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
@@ -202,49 +203,49 @@ for i in userLpaActorMap:
               error.response['Error']['Message'])
         sys.exit(1)
 
-# # added lpas on test user account
-#
-# statsTable = dynamodb.Table(
-#     os.environ['DYNAMODB_TABLE_STATS'])
-#
-#
-# stats = [
-#     {
-#         'TimePeriod': 'Total',
-#         'lpas_added': '35',
-#     },
-#     {
-#         'TimePeriod': '2022-04-01',
-#         'lpas_added': '5',
-#     },
-#     {
-#         'TimePeriod': '2022-05-01',
-#         'lpas_added': '3'
-#     },
-#     {
-#         'TimePeriod': '2022-06-01',
-#         'lpas_added': '7'
-#     },
-#     {
-#         'TimePeriod': '2022-07-01',
-#         'lpas_added': '5'
-#     },
-#     {
-#         'TimePeriod': '2022-08-01',
-#         'lpas_added': '15'
-#     }
-# ]
-#
-# for i in stats:
-#     try:
-#         statsTable.put_item(
-#             Item=i,
-#         )
-#         response = statsTable.get_item(
-#             Key={'TimePeriod': i['TimePeriod']}
-#         )
-#         print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
-#     except botocore.exceptions.ClientError as error:
-#         print(error.response['Error']['Code'],
-#               error.response['Error']['Message'])
-#         sys.exit(1)
+# added lpas on test user account
+
+statsTable = dynamodb.Table(
+    os.environ['DYNAMODB_TABLE_STATS']
+)
+
+stats = [
+    {
+        'TimePeriod': 'Total',
+        'lpas_added': 35,
+    },
+    {
+        'TimePeriod': (datetime.date.today() - relativedelta(months=5)).strftime('%Y-%m'),
+        'lpas_added': 5,
+    },
+    {
+        'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
+        'lpas_added': 3
+    },
+    {
+        'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
+        'lpas_added': 7
+    },
+    {
+        'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
+        'lpas_added': 5
+    },
+    {
+        'TimePeriod': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m'),
+        'lpas_added': 15
+    }
+]
+
+for i in stats:
+    try:
+        statsTable.put_item(
+            Item=i,
+        )
+        response = statsTable.get_item(
+            Key={'TimePeriod': i['TimePeriod']}
+        )
+        print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
+    except botocore.exceptions.ClientError as error:
+        print(error.response['Error']['Code'],
+              error.response['Error']['Message'])
+        sys.exit(1)

@@ -484,6 +484,17 @@ workflows:
               /dependabot\/docker\/service-admin\/.*/,
               ] } }
 
+        - use-my-lpa/docker_build_lambdas:
+            name: lambda_build
+            filters: { branches: { ignore: [
+              main,
+              /dependabot\/.*/,
+              /tf\/.*/,
+              /admin\/.*/,
+              /dependabot\/go_modules\/.*/,
+              /dependabot\/docker\/service-admin\/.*/,
+              ] } }
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { ignore: [
@@ -534,6 +545,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 admin_app_build,
+                lambda_build,
               ]
 
         - ecr_scan_results:
@@ -644,6 +656,10 @@ workflows:
             name: admin_app_build
             filters: { branches: { only: [main] } }
 
+        - use-my-lpa/docker_build_lambdas:
+            name: lambda_build
+            filters: { branches: { only: [main] } }
+
         - use-my-lpa/codecov_upload:
             name: codecov_upload
             filters: { branches: { only: [main] } }
@@ -682,6 +698,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 admin_app_build,
+                lambda_build,
               ]
 
         - ecr_scan_results:
@@ -1445,6 +1462,7 @@ orbs:
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
                 export DYNAMODB_TABLE_ACTOR_USERS=$(cat /tmp/cluster_config.json | jq .actor_users_table | xargs)
                 export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat /tmp/cluster_config.json | jq .user_lpa_actor_map | xargs)
+                export DYNAMODB_TABLE_STATS=$(cat /tmp/cluster_config.json | jq .stats_table | xargs)
                 python service-api/seeding/dynamodb.py
 
       #----------------------------------------------------

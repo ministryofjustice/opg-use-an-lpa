@@ -65,16 +65,6 @@ data "aws_iam_policy_document" "lambda" {
       "ecr:CompleteLayerUpload",
     ]
   }
-
-#  To be removed after checking
-  statement {
-    sid       = "allowSecretsManagerAccess"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-  }
 }
 
 resource "aws_iam_role_policy_attachment" "vpc_access_execution_role" {
