@@ -81,7 +81,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $identity = !is_null($this->user) ? $this->user->getIdentity() : null;
+        $identity = $this->user?->getIdentity();
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
