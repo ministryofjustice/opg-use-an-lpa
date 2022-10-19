@@ -64,9 +64,9 @@ services:
   data-lpa:
     container_name: data-lpa
     image: stoplight/prism:4
-#    build: # Does not have M1 native / arm64 images as yet but builds fine.
-#      context: https://github.com/stoplightio/prism.git#v4.10.4
-#      dockerfile: Dockerfile
+    build: # Does not have M1 native / arm64 images as yet but builds fine.
+      context: https://github.com/stoplightio/prism.git#v4.10.1
+      dockerfile: Dockerfile
     command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
     volumes:
       - ./mock-integrations/mock-openapi.yaml:/tmp/openapi.yaml:ro
