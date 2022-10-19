@@ -29,7 +29,7 @@ Run following to restart the lambda when making code changes as lambda runs in r
 bringing up again for changes to take effect.
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml up -d upload-stats-lambda
+make up upload-stats-lambda
 ```
 
 # To view logs
