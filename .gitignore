@@ -5,6 +5,7 @@ geckodriver.log
 .vscode/
 **__pycache__
 **/cluster_config.json
+scripts/getStatsResultDemo.json
 
 .python-version
 .pytest_cache
@@ -13,3 +14,4 @@ geckodriver.log
 scripts/analysis_scripts/*.csv
 
 query/s3_objects/**
+terraform/**/modules/**.terraform.lock.hcl
