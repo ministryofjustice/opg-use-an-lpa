@@ -265,7 +265,7 @@ services:
       ENVIRONMENT: local
       REGION: eu-west-1
       AWS_ACCESS_KEY_ID: '-'
-      AWS_SECRET_ACCESS_KEY: 'dummy'
+      AWS_SECRET_ACCESS_KEY: '-'
     volumes:
       - ./lambda-functions/upload-statistics/app:/function/app
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
