@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -44,22 +45,36 @@ func main() {
 	var roleToAssume string
 	var tableName string
 	var endpoint string
+	var outputToJson bool
+	var jsonFileName string
 	flag.StringVar(&roleToAssume, "role", "arn:aws:iam::367815980639:role/operator", "Role to assume when signing requests for using PutItem to dynamo")
 	flag.StringVar(&tableName, "table", "demo-Stats", "Table to add the statistics to in format {environment}-{tablename}")
 	flag.StringVar(&endpoint, "endpoint", "", "Endpoint for dynamo")
+	flag.BoolVar(&outputToJson, "outputJson", false, "Optional flag to save as json file for testing")
+	flag.StringVar(&jsonFileName, "jsonFileName", "test.json", "Optional flag to name the saved json file")
 	flag.Parse()
 
 	fmt.Println(roleToAssume)
 
 	eventCodeStats := readCsvFile("stats.csv")
 	recordsMap := eventCodeStatsToMap(eventCodeStats)
-	_, err := json.MarshalIndent(recordsMap, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	//_ = ioutil.WriteFile("test.json", b, 0644)
 
-	config, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+	if outputToJson {
+		b, err := json.MarshalIndent(recordsMap, "", "  ")
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = ioutil.WriteFile(jsonFileName, b, 0644)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+
+	if err != nil {
+		panic(err)
+	}
 
 	svc := dynamodb.NewFromConfig(config, func(o *dynamodb.Options) {
 		if roleToAssume != "" {
@@ -76,8 +91,6 @@ func main() {
 	requestItems := []*dynamodb.PutItemInput{}
 
 	for key, item := range recordsMap {
-
-		fmt.Println(key)
 
 		dynamoItem := map[string]types.AttributeValue{
 			"TimePeriod": &types.AttributeValueMemberS{Value: key},
@@ -103,13 +116,11 @@ func main() {
 		out, err := svc.PutItem(context.TODO(), request)
 
 		if err != nil {
-			fmt.Println(err)
 			panic(err)
 		}
-
-		fmt.Println(out.Attributes)
 	}
 
+	fmt.Println("Added", len(requestItems), "items")
 }
 
 func eventCodeStatsToMap(records [][]string) map[string]map[string]string {
