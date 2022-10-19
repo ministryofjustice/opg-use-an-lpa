@@ -40,7 +40,6 @@ class LpaExtensionTest extends TestCase
         //  Check each function
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
-            /** @var TwigFunction $function */
             $this->assertContains($function->getName(), array_keys($expectedFunctions));
 
             $functionCallable = $function->getCallable();
@@ -381,6 +380,10 @@ class LpaExtensionTest extends TestCase
             ],
             [
                 '',
+                null,
+            ],
+            [
+                null,
                 null,
             ],
         ];
