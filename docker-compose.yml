@@ -196,6 +196,7 @@ services:
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_VIEWER_ACTIVITY: "ViewerActivity"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
+      DYNAMODB_TABLE_STATS: "Stats"
 
       SIRIUS_API_ENDPOINT: "http://api-gateway:5000"
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
@@ -247,5 +248,27 @@ services:
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
+      DYNAMODB_TABLE_STATS: "Stats"
       AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
       CODES_ENDPOINT: codes-gateway:4343
+
+  # ---------------------------
+  # Lambda to upload stats
+
+  upload-stats-lambda:
+    container_name: upload-statistics
+    image: upload-statistics
+    build:
+      context: ./lambda-functions/upload-statistics
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: local
+      REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: '-'
+      AWS_SECRET_ACCESS_KEY: '-'
+    volumes:
+      - ./lambda-functions/upload-statistics/app:/function/app
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
+    ports:
+      - 9007:8080
+    entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.upload-statistics.lambda_handler
