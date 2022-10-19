@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "lambda" {
-  name       = "/aws/lambda/${var.lambda_name}"
+  name       = "/aws/lambda/${var.environment}-${var.lambda_name}"
   kms_key_id = var.kms_key
 }
 
