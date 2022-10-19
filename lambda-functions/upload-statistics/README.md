@@ -35,7 +35,7 @@ make up upload-stats-lambda
 # To view logs
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml logs -f upload-stats-lambda
+make logs upload-stats-lambda
 ```
 
 # To test lambda in AWS environment
