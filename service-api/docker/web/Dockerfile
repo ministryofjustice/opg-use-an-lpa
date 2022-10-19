@@ -1,5 +1,5 @@
-FROM nginx:stable-alpine
-
+FROM nginxinc/nginx-unprivileged:stable-alpine
+USER root
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
@@ -11,6 +11,11 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
   && chmod +x /usr/local/bin/waitforit
 
 COPY service-api/docker/web/etc /etc
+
+COPY scripts/docker_hardening/harden-nginx.sh /harden-nginx.sh
+RUN /harden-nginx.sh && rm /harden-nginx.sh
+
+USER nginx
 
 CMD confd -onetime -backend env \
   && nginx -g "daemon off;"

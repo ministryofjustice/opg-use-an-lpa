@@ -3,6 +3,11 @@
 #
 FROM php:8.1-fpm-alpine3.15 AS php-base
 
+RUN echo "https://alpine.global.ssl.fastly.net/alpine/v$(cut -d . -f 1,2 < /etc/alpine-release)/main" > /etc/apk/repositories \
+  && echo "https://alpine.global.ssl.fastly.net/alpine/v$(cut -d . -f 1,2 < /etc/alpine-release)/community" >> /etc/apk/repositories
+# Update base system
+RUN apk update && apk add --no-cache ca-certificates && apk upgrade -U
+
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
@@ -16,7 +21,6 @@ COPY service-front/docker/app/fpm-pool.ini /usr/local/etc/php-fpm.d/zz-logging.c
 COPY service-front/docker/app/health-check.sh /usr/local/bin/health-check.sh
 
 WORKDIR /app
-CMD ["php-fpm"]
 
 #
 # Download production dependencies
@@ -40,7 +44,6 @@ COPY --from=dependency /app/vendor /app/vendor
 # Install development dependencies and tools into production image
 #
 FROM app as development
-
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
 
@@ -53,6 +56,9 @@ RUN set -xe \
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
 
+COPY scripts/docker_hardening/harden.sh /harden.sh
+RUN /harden.sh && rm /harden.sh
+
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
 
@@ -60,3 +66,8 @@ CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
 # For safety reasons have the production image be the output
 #
 FROM app as production
+COPY scripts/docker_hardening/harden.sh /harden.sh
+RUN /harden.sh && rm /harden.sh
+USER www-data
+
+CMD ["php-fpm"]
