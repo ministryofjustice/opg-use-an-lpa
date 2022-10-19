@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
-            "version": "4.1.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alphagov/notifications-php-client.git",
-                "reference": "0f078242965e4029015ec2c50b6cd23af77c7b98"
+                "reference": "5bc25ece4261983bbb504fe065df2bfd38e86632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/0f078242965e4029015ec2c50b6cd23af77c7b98",
-                "reference": "0f078242965e4029015ec2c50b6cd23af77c7b98",
+                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/5bc25ece4261983bbb504fe065df2bfd38e86632",
+                "reference": "5bc25ece4261983bbb504fe065df2bfd38e86632",
                 "shasum": ""
             },
             "require": {
@@ -26,15 +26,11 @@
                 "php": "^7.1|^8.0"
             },
             "require-dev": {
-                "php-http/curl-client": "*",
                 "php-http/guzzle6-adapter": "*",
                 "php-http/message": "^1.1",
                 "php-http/mock-client": "*",
                 "php-http/socket-client": "^2.1.0",
                 "phpspec/phpspec": "^5.0|^7.2"
-            },
-            "suggest": {
-                "ext-curl": "To send requests using cURL"
             },
             "type": "library",
             "autoload": {
@@ -59,9 +55,9 @@
             "description": "PHP client for GOV.UK Notifications",
             "support": {
                 "issues": "https://github.com/alphagov/notifications-php-client/issues",
-                "source": "https://github.com/alphagov/notifications-php-client/tree/4.1.0"
+                "source": "https://github.com/alphagov/notifications-php-client/tree/4.2.0"
             },
-            "time": "2022-07-04T11:35:23+00:00"
+            "time": "2022-10-06T13:35:15+00:00"
         },
         {
             "name": "aws/aws-crt-php",
