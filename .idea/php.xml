@@ -177,6 +177,8 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cli" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-composer-autoloading" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-zendframework-bridge" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client-contracts" />

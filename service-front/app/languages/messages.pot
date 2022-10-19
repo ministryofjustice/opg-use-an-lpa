@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2022-09-23T15:57:33+00:00\n"
+"POT-Creation-Date: 2022-09-29T15:05:37+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -559,7 +559,7 @@ msgstr ""
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered and can be used now"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:18
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:25
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:52
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 msgstr ""
@@ -1229,7 +1229,7 @@ msgstr ""
 msgid "Death Notification"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:70
+#: src/Actor/templates/actor/change-details.html.twig:69
 #: src/Actor/templates/actor/death-notification.html.twig:25
 msgid "Let us know if a donor or attorney dies"
 msgstr ""
@@ -1240,7 +1240,7 @@ msgid ""
 "                        This is because an LPA will end when the donor dies, and they can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:31
+#: src/Actor/templates/actor/change-details.html.twig:30
 #: src/Actor/templates/actor/change-lpa-details.html.twig:29
 #: src/Actor/templates/actor/death-notification.html.twig:31
 msgid "You should contact us if:"
@@ -1294,7 +1294,7 @@ msgstr ""
 msgid "there are replacement attorneys"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:54
+#: src/Actor/templates/actor/change-details.html.twig:53
 #: src/Actor/templates/actor/change-lpa-details.html.twig:43
 #: src/Actor/templates/actor/death-notification.html.twig:57
 msgid "How to let us know"
@@ -1794,7 +1794,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:120
 #: src/Actor/templates/actor/check-lpa.html.twig:98
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:37
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:71
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:66
 msgid "Cancel"
@@ -1955,46 +1955,46 @@ msgstr ""
 msgid "Let us know if a donor or attorney's details change"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:27
+#: src/Actor/templates/actor/change-details.html.twig:26
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys. This is because the first\n"
 "                        time you show an <abbr title=\"lasting power of attorney\">LPA</abbr> to an organisation, they might ask you to confirm that your name and\n"
 "                        address match what’s on the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:34
+#: src/Actor/templates/actor/change-details.html.twig:33
 msgid "the donor or an attorney has moved house"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:36
+#: src/Actor/templates/actor/change-details.html.twig:35
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:37
+#: src/Actor/templates/actor/change-details.html.twig:36
 msgid "a date of birth is wrong"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:41
+#: src/Actor/templates/actor/change-details.html.twig:40
 msgid "the donor or an attorney dies"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:45
+#: src/Actor/templates/actor/change-details.html.twig:44
 #: src/Actor/templates/actor/change-lpa-details.html.twig:37
 msgid "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:47
+#: src/Actor/templates/actor/change-details.html.twig:46
 #: src/Actor/templates/actor/change-lpa-details.html.twig:39
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> yourself.\n"
 "                        If you do, you’ll no longer be able to use the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:50
+#: src/Actor/templates/actor/change-details.html.twig:49
 msgid "If you’re the donor, you can tell us about changes to your details and your attorney’s details."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:52
+#: src/Actor/templates/actor/change-details.html.twig:51
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
@@ -2021,13 +2021,13 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:72
+#: src/Actor/templates/actor/change-details.html.twig:71
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys.\n"
 "                        This is because an LPA will end when the donor dies, and can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:79
+#: src/Actor/templates/actor/change-details.html.twig:78
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
 msgstr ""
 
@@ -3813,27 +3813,27 @@ msgstr ""
 msgid "Your date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:15
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:3
 msgid "Are you sure you want to remove this LPA?"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:22
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "If you remove an LPA from your Use a lasting power of attorney account:"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:25
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid "all access codes you’ve created for that LPA will be cancelled"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:26
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
 msgid "you’ll not be able to see how the LPA is being used or has been used"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:28
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:35
 msgid "you must contact us for a new activation key if you want to add the LPA back to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:41
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:48
 msgid "Yes, remove LPA"
 msgstr ""
 
@@ -4430,7 +4430,7 @@ msgstr ""
 msgid "you've changed your name"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:35
+#: src/Actor/templates/actor/change-details.html.twig:34
 msgid "the donor or an attorney has changed their name"
 msgstr ""
 
@@ -5141,42 +5141,42 @@ msgstr ""
 msgid "We've emailed a link to <strong class=\"govuk-!-font-weight-bold\">%email%</strong> – please follow the link in the email to confirm the change."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:55
+#: src/Actor/templates/actor/change-details.html.twig:54
 #: src/Actor/templates/actor/change-lpa-details.html.twig:44
 msgid "Contact us through any of the ways below."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:56
+#: src/Actor/templates/actor/change-details.html.twig:55
 #: src/Actor/templates/actor/change-lpa-details.html.twig:45
 msgid "When you get in touch, you’ll need to tell us:"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:58
+#: src/Actor/templates/actor/change-details.html.twig:57
 #: src/Actor/templates/actor/change-lpa-details.html.twig:47
 msgid "the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:59
+#: src/Actor/templates/actor/change-details.html.twig:58
 #: src/Actor/templates/actor/change-lpa-details.html.twig:48
 msgid "your name"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:60
+#: src/Actor/templates/actor/change-details.html.twig:59
 #: src/Actor/templates/actor/change-lpa-details.html.twig:49
 msgid "your role (ie, whether you are the donor or an attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:61
+#: src/Actor/templates/actor/change-details.html.twig:60
 #: src/Actor/templates/actor/change-lpa-details.html.twig:50
 msgid "the donor’s name (if you are not the donor)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:62
+#: src/Actor/templates/actor/change-details.html.twig:61
 #: src/Actor/templates/actor/change-lpa-details.html.twig:51
 msgid "the donor’s date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:63
+#: src/Actor/templates/actor/change-details.html.twig:62
 #: src/Actor/templates/actor/change-lpa-details.html.twig:52
 msgid "the donor’s address and postcode"
 msgstr ""
@@ -5223,4 +5223,12 @@ msgstr ""
 msgid ""
 "<strong>Important: </strong>This LPA has instructions or preferences.<br>\n"
 "            You might need to show organisations the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:15
+msgid "Are you sure you want to remove %firstname% %surname%'s LPA?"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:22
+msgid "LPA type:"
 msgstr ""
