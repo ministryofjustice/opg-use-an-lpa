@@ -11,13 +11,10 @@ const fs = fsWithCallbacks.promises;
     copy_files: {
       './src/robots.txt': 'robots.txt',
       './node_modules/govuk-frontend/govuk/assets': 'assets',
-      './node_modules/govuk-frontend/govuk/assets': '/assets',
 
       './src/images': 'assets/images',
-      './src/images': '/assets/images',
 
       './node_modules/@ministryofjustice/frontend/moj/assets': 'assets',
-      './node_modules/@ministryofjustice/frontend/moj/assets': '/assets',
     },
     out_dir: './dist',
   };

@@ -1,3 +1,5 @@
 $govuk-typography-use-rem: false;
+$moj-images-path: "../assets/images/";
+$govuk-assets-path: "../assets/";
 @import '../node_modules/govuk-frontend/govuk/all';
 @import '../node_modules/@ministryofjustice/frontend/moj/all';
