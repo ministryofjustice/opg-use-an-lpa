@@ -67,3 +67,23 @@ data "aws_iam_policy_document" "lambda_update_statistics" {
     ]
   }
 }
+
+# Scheduling
+resource "aws_cloudwatch_event_rule" "update_statistics" {
+  name                = "${local.environment_name}-update-statistics"
+  description         = "Kicks off update of statistics into dynamodb"
+  schedule_expression = "cron(0 3 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "update_statistics" {
+  rule = aws_cloudwatch_event_rule.update_statistics.name
+  arn  = module.lambda_update_statistics.lambda.arn
+}
+
+resource "aws_lambda_permission" "cloudwatch_to_update_statistics_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatchUpdateStats"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_update_statistics.lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.update_statistics.arn
+}
