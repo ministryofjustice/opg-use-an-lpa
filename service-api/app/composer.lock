@@ -6610,30 +6610,30 @@
         },
         {
             "name": "laminas/laminas-development-mode",
-            "version": "3.8.0",
+            "version": "3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-development-mode.git",
-                "reference": "a01e937a41909df8a6750d500a819fbda4ce6be0"
+                "reference": "cebe17a3e3c3f751caf6c074cb42a9581adc01a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/a01e937a41909df8a6750d500a819fbda4ce6be0",
-                "reference": "a01e937a41909df8a6750d500a819fbda4ce6be0",
+                "url": "https://api.github.com/repos/laminas/laminas-development-mode/zipball/cebe17a3e3c3f751caf6c074cb42a9581adc01a5",
+                "reference": "cebe17a3e3c3f751caf6c074cb42a9581adc01a5",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ~8.0.0 || ~8.1.0"
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
             },
             "conflict": {
                 "zfcampus/zf-development-mode": "*"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~2.3.0",
-                "mikey179/vfsstream": "^1.6.10",
-                "phpunit/phpunit": "^9.5.21",
+                "laminas/laminas-coding-standard": "~2.4.0",
+                "mikey179/vfsstream": "^1.6.11",
+                "phpunit/phpunit": "^9.5.25",
                 "psalm/plugin-phpunit": "^0.17.0",
-                "vimeo/psalm": "^4.24"
+                "vimeo/psalm": "^4.29"
             },
             "bin": [
                 "bin/laminas-development-mode"
@@ -6667,7 +6667,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-07-26T07:48:21+00:00"
+            "time": "2022-10-18T12:19:36+00:00"
         },
         {
             "name": "league/uri",
