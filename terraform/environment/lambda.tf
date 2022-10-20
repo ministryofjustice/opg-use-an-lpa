@@ -10,11 +10,11 @@ module "lambda_update_statistics" {
   ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  timeout     = 900
   memory      = 1024
 }
 
 # Additional IAM permissions
-
 resource "aws_iam_role_policy" "lambda_update_statistics" {
   name   = "lambda-update-statistics-${local.environment_name}"
   role   = module.lambda_update_statistics.lambda_role.id
@@ -66,4 +66,24 @@ data "aws_iam_policy_document" "lambda_update_statistics" {
       "dynamodb:PutItem"
     ]
   }
+}
+
+# Scheduling
+resource "aws_cloudwatch_event_rule" "update_statistics" {
+  name                = "${local.environment_name}-update-statistics"
+  description         = "Kicks off update of statistics into dynamodb"
+  schedule_expression = "cron(0 3 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "update_statistics" {
+  rule = aws_cloudwatch_event_rule.update_statistics.name
+  arn  = module.lambda_update_statistics.lambda.arn
+}
+
+resource "aws_lambda_permission" "cloudwatch_to_update_statistics_lambda" {
+  statement_id  = "AllowExecutionFromCloudWatchUpdateStats"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_update_statistics.lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.update_statistics.arn
 }
