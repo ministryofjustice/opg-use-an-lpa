@@ -11,8 +11,13 @@ const fs = fsWithCallbacks.promises;
     copy_files: {
       './src/robots.txt': 'robots.txt',
       './node_modules/govuk-frontend/govuk/assets': 'assets',
+      './node_modules/govuk-frontend/govuk/assets': '/assets',
+
       './src/images': 'assets/images',
+      './src/images': '/assets/images',
+
       './node_modules/@ministryofjustice/frontend/moj/assets': 'assets',
+      './node_modules/@ministryofjustice/frontend/moj/assets': '/assets',
     },
     out_dir: './dist',
   };
@@ -39,6 +44,25 @@ const fs = fsWithCallbacks.promises;
       plugins: [],
       metafile: true,
       treeShaking: false,
+    })
+    .catch(() => process.exit(1));
+
+  //For all the fonts and images to be resolved we have to copy assests
+  //to /assets becasue of static references in the gov.css
+  await esbuild
+    .build({
+      entryPoints: ['dist/pdf.css'],
+      allowOverwrite: true,
+      bundle: true,
+      loader: {
+        '.woff': 'base64',
+        '.woff2': 'base64',
+        '.ttf': 'base64',
+        '.eot': 'base64',
+        '.svg': 'base64',
+        '.png': 'base64',
+      },
+      outfile: 'dist/stylesheets/pdf.css',
     })
     .catch(() => process.exit(1));
 
