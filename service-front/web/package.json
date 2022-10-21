@@ -11,7 +11,7 @@
     "build": "npm run build-scss && node build.js && babel dist/index.js -o dist/indexES5.js",
     "watch": "webpack --progress --watch --config webpack.development.js",
     "accessibility-check": "node ./pa11y.js",
-    "build-scss": "npm rebuild sass --verbose && sass --verbose src/main.scss dist/stylesheets/main.css && sass src/pdf.scss dist/pdf.css"
+    "build-scss": "npm rebuild sass --verbose && sass --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
   "license": "MIT",
