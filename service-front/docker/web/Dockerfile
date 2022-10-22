@@ -13,6 +13,10 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 COPY service-front/docker/web/etc /etc
 COPY service-front/docker/web/web /web
 
+RUN apk --no-cache add libcap && \
+    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
+    apk del libcap
+
 COPY scripts/docker_hardening/harden-nginx.sh /harden-nginx.sh
 RUN /harden-nginx.sh && rm /harden-nginx.sh
 

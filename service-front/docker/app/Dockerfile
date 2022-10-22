@@ -2,12 +2,6 @@
 # Base image containing correct PHP, extensions and configuration
 #
 FROM php:8.1-fpm-alpine3.15 AS php-base
-
-RUN echo "https://alpine.global.ssl.fastly.net/alpine/v$(cut -d . -f 1,2 < /etc/alpine-release)/main" > /etc/apk/repositories \
-  && echo "https://alpine.global.ssl.fastly.net/alpine/v$(cut -d . -f 1,2 < /etc/alpine-release)/community" >> /etc/apk/repositories
-# Update base system
-RUN apk update && apk add --no-cache ca-certificates && apk upgrade -U
-
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
@@ -55,9 +49,6 @@ RUN set -xe \
 
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
-
-COPY scripts/docker_hardening/harden.sh /harden.sh
-RUN /harden.sh && rm /harden.sh
 
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
