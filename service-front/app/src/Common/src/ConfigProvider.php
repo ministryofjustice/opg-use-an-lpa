@@ -17,6 +17,7 @@ use Gettext\Generator\PoGenerator;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Loader\PoLoader;
 use Http\Adapter\Guzzle6\Client;
+use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -127,7 +128,7 @@ class ConfigProvider
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
                 AdapterPluginManager::class => [
-                    Memory\AdapterPluginManagerDelegatorFactory::class,
+                    AdapterPluginManagerDelegatorFactory::class,
                     RedisAdapterPluginManagerDelegatorFactory::class,
                 ],
             ],

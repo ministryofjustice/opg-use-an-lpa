@@ -52,7 +52,7 @@ class SessionExpiryMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         // Record the time if the session is not marked as expired
-        $this->recordSessionTimeRemaining($session, $routeResult, $time);
+        $this->recordSessionTime($session, $routeResult, $time);
 
         return $response;
     }
@@ -85,7 +85,7 @@ class SessionExpiryMiddleware implements MiddlewareInterface
      * @param int|null         $currentSessionsExpiryTime
      * @return void
      */
-    private function recordSessionTimeRemaining(
+    private function recordSessionTime(
         SessionInterface $session,
         RouteResult $routeResult,
         ?int $currentSessionsExpiryTime,
@@ -96,13 +96,11 @@ class SessionExpiryMiddleware implements MiddlewareInterface
             return;
         }
 
-        $routeName = $routeResult->getMatchedRouteName();
-
         $session->set(
             self::SESSION_TIME_KEY,
-            $this->sessionTimeRemaining(
+            $this->sessionTime(
                 $currentSessionsExpiryTime,
-                $routeName
+                $routeResult->getMatchedRouteName()
             )
         );
     }
@@ -115,7 +113,7 @@ class SessionExpiryMiddleware implements MiddlewareInterface
      * @param string|false $routeName
      * @return int
      */
-    private function sessionTimeRemaining(?int $currentSessionExpiryTime, string|false $routeName): int
+    private function sessionTime(?int $currentSessionExpiryTime, string|false $routeName): int
     {
         return $currentSessionExpiryTime !== null && $routeName === 'session-check'
             ? $currentSessionExpiryTime

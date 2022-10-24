@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Middleware\Session;
 
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Service\Session\EncryptedCookiePersistence;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
@@ -29,7 +28,7 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
      */
     public const ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
-        EncryptedCookiePersistence::SESSION_EXPIRED_KEY,
+        SessionExpiryMiddleware::SESSION_EXPIRED_KEY,
         FlashMessagesInterface::FLASH_NEXT,
     ];
 
@@ -39,29 +38,27 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // Process the request as normal
-        $response = $handler->handle($request);
-
         // Ensure that we strip out any session information that shouldn't be in there
         // if the session has expired.
-        /** @var SessionInterface $session */
+        /** @var SessionInterface|null $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if ($session !== null && $session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
-            $this->stripSession($session);
 
+        if ($session?->has(SessionExpiryMiddleware::SESSION_EXPIRED_KEY)) {
             // TODO: UML-1449 logs incorrect time value as seconds should equal time() - TIME_KEY + Session Length
             $this->logger->info(
                 'User session expired approx {seconds} seconds ago',
                 [
-                    'seconds' => time() - $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY),
+                    'seconds' => time() - $session->get(SessionExpiryMiddleware::SESSION_TIME_KEY),
                 ]
             );
+
+            $this->stripSession($session);
         }
 
-        return $response;
+        return $handler->handle($request);
     }
 
-    private function stripSession(SessionInterface $session)
+    private function stripSession(SessionInterface $session): void
     {
         foreach ($session->toArray() as $key => $value) {
             if (! in_array($key, self::ALLOWLIST)) {
