@@ -1,6 +1,5 @@
 import os
 import boto3
-import botocore
 import datetime
 from dateutil.relativedelta import relativedelta
 import logging
@@ -122,11 +121,16 @@ class StatisticsCollector:
         return data
 
     def list_metrics_for_environment(self):
+        metrics_to_ignore = [
+            'Application Request Status'
+        ]
         metrics_list = []
         response = self.aws_cloudwatch_client.list_metrics(
             Namespace='{}_events'.format(self.environment))
         for metric in response['Metrics']:
-            metrics_list.append(metric['MetricName'])
+            if metric['MetricName'] not in metrics_to_ignore:
+                metrics_list.append(metric['MetricName'])
+
         return metrics_list
 
     def sum_dynamodb_counts(self, table_name, filter_expression):
@@ -167,8 +171,9 @@ class StatisticsCollector:
             statistics['statistics']['viewer_codes_viewed'] = self.sum_dynamodb_counts(
                 table_name=f'{self.dynamodb_table_prefix}ViewerActivity',
                 filter_expression='Viewed BETWEEN :fromdate AND :todate')
-        except Exception:
-            self.logger.info("Exception gathering data")
+        except Exception as e:
+            self.logger.error("Exception gathering data")
+            self.logger.error(e)
             return None
 
         return statistics
@@ -231,14 +236,14 @@ class StatisticsCollector:
             self.logger.error('No items found in total response object')
             return False
 
-        for key, value in totals_response_dict.items():
+        for key, value in previous_month_dict.items():
             if key != 'TimePeriod':
-                total_metric_count = int(list(value.items())[0][1])
+                last_month_metric_count = int(list(value.items())[0][1])
                 try:
-                    last_month_metric_count = int(list(previous_month_dict[key].items())[0][1])
+                    total_metric_count = int(list(totals_response_dict[key].items())[0][1])
                 except Exception:
-                    self.logger.info(f"{key} not found in previous months metrics.. defaulting to 0")
-                    last_month_metric_count = 0
+                    self.logger.info(f"{key} not found in totals. Creating key and defaulting to 0")
+                    total_metric_count = 0
 
                 new_total_metric_count = total_metric_count + last_month_metric_count
 
@@ -280,6 +285,19 @@ class StatisticsCollector:
 
         return success
 
+    def get_formatted_key(self, key):
+        replacements = {
+            '404_': 'not_found_',
+            '401_': 'unauthorised_',
+            '403_': 'forbidden_',
+            ' ': '_',
+            '-': '_'
+        }
+        for replace_from, replace_to in replacements.items():
+            key = key.replace(replace_from, replace_to)
+
+        return key.lower()
+
     def update_statistics(self):
         dict_of_statistics = self.get_statistics() if self.environment != 'local' else self.local_dev_response()
 
@@ -297,11 +315,11 @@ class StatisticsCollector:
         self.logger.info("=== Starting dynamodb update ===")
         # looping over the individual metrics
         for key, value in dict_of_statistics['statistics'].items():
-            key_edited = key.replace('404_', 'not_found_').replace('401_', 'unauthorised_').replace('403_', 'forbidden_')
-            self.logger.info(f"Updating {key_edited}")
-            success = self.update_dynamodb_with_statistics(key_edited, value)
+            key_formatted = self.get_formatted_key(key)
+            self.logger.info(f"Updating {key_formatted}")
+            success = self.update_dynamodb_with_statistics(key_formatted, value)
             if not success:
-                self.logger.error(f"{key_edited} has failed to update properly")
+                self.logger.error(f"{key_formatted} has failed to update properly")
                 return False
 
         if self.update_totals:
