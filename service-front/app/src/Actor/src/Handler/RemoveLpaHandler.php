@@ -6,6 +6,7 @@ namespace Actor\Handler;
 
 use Acpr\I18n\TranslatorInterface;
 use Actor\Form\RemoveLpa as RemoveLpaForm;
+use App\Exception\BadRequestException;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -14,6 +15,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
+use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -53,25 +55,23 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws InvalidRequestException
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->user = $this->getUser($request);
         $this->form = new RemoveLpaForm($this->getCsrfGuard($request));
 
-        switch ($request->getMethod()) {
-            case 'POST':
-                return $this->handlePost($request);
-            default:
-                return $this->handleGet($request);
-        }
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws InvalidRequestException
+     * @throws Exception
      */
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
@@ -81,18 +81,27 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
+        $identity = $this->user?->getIdentity();
 
         $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
 
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
+        $hw  = $this->translator->translate('Health and welfare', []);
+        $pfa = $this->translator->translate('Property and finance', []);
+
+        if (!empty($lpaData['lpa'])) {
+            $lpaType = $lpaData['lpa']->getCaseSubtype() === 'hw' ? $hw : $pfa;
+        } else {
+            throw new BadRequestException('Lpa to remove cannot be found');
+        }
+
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'user'       => $this->user,
             'actorToken' => $actorLpaToken,
             'form'       => $this->form,
-            'lpa'        => $lpaData->lpa,
+            'lpa'        => $lpaData['lpa'],
+            'lpaType'    => $lpaType,
         ]));
     }
 
@@ -130,5 +139,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
             return $this->redirectToRoute('lpa.dashboard');
         }
+
+        throw new BadRequestException('Invalid Form');
     }
 }

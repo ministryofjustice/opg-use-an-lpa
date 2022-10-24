@@ -111,6 +111,11 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
+data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
+  provider = aws.management
+  name     = "use_an_lpa/stats_upload_lambda"
+}
+
 module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v1.7.0"
 }
@@ -139,3 +144,4 @@ data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
 data "aws_iam_role" "ecs_autoscaling_service_role" {
   name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
+
