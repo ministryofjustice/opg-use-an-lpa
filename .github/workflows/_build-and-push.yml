@@ -64,6 +64,12 @@ jobs:
             run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
+          - svc_prefix: 'stats_upload'
+            svc_suffix: 'lambda'
+            build_development_docker: 'false'
+            run_unit_tests: 'false'
+            run_integration_tests: 'false'
+            artifact_to_dl: ''
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
@@ -213,6 +219,10 @@ jobs:
             fi
 
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
+
+          elif [[ "${SVC_SUFFIX}" = "lambda" ]]; then
+            docker build --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
@@ -224,6 +234,8 @@ jobs:
           severity: 'HIGH,CRITICAL'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          skip-dirs: /app/vendor
+
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: Upload Trivy scan results to GitHub Security tab

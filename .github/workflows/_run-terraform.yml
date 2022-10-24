@@ -37,15 +37,15 @@ jobs:
         run: |
           if [[ ${SPECIFIC_PATH} == "terraform" ]]
           then
-            echo "##[set-output name=tag;]$(echo latest)"
-            echo "##[set-output name=admin-tag;]$(echo latest)"
+            echo "tag=$(echo latest)" >> $GITHUB_OUTPUT
+            echo "admin-tag=$(echo latest)" >> $GITHUB_OUTPUT
           elif [[ ${SPECIFIC_PATH} == "admin" ]]
           then
-            echo "##[set-output name=tag;]$(echo latest)"
-            echo "##[set-output name=admin-tag;]$(echo ${TAG})"
+            echo "tag=$(echo latest)" >> $GITHUB_OUTPUT
+            echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           else
-            echo "##[set-output name=tag;]$(echo ${TAG})"
-            echo "##[set-output name=admin-tag;]$(echo ${TAG})"
+            echo "tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
+            echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           fi
 
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3

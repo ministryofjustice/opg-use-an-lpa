@@ -12,7 +12,6 @@ on:
     branches:
       - 'dependabot/npm_and_yarn/**'
       - 'dependabot/composer/**'
-      - 'UML-2559**'
 
 permissions:
   contents: read
@@ -33,12 +32,10 @@ jobs:
   node_test:
     name: test node dependencies
     uses: ./.github/workflows/_node-test.yml
-    if: github.actor == 'dependabot[bot]'
 
   node_build:
     name: build node dependencies
     uses: ./.github/workflows/_node-build.yml
-    if: github.actor == 'dependabot[bot]'
 
   docker_build_scan_push:
     name: build, test, scan and push
@@ -51,7 +48,6 @@ jobs:
       branch_name: ${{ needs.branch_name.outputs.parsed }}
       push_to_ecr: false
     secrets: inherit
-    if: github.actor == 'dependabot[bot]'
 
   end_of_workflow:
     name: end of workflow

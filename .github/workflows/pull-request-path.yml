@@ -53,18 +53,21 @@ jobs:
       - name: extract variables for workflow
         id: variables
         run: |
-          echo "##[set-output name=branch_formatted;]$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')"
-          echo "##[set-output name=short_sha;]$(echo ${GITHUB_SHA:0:7})"
-
+          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
           if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
           then
-            echo "##[set-output name=path;]$(echo terraform)"
+            echo "path=$(echo terraform)" >> $GITHUB_OUTPUT
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
-            echo "##[set-output name=path;]$(echo admin)"
+            echo "path=$(echo admin)" >> $GITHUB_OUTPUT
           else
-            echo "##[set-output name=path;]$(echo all)"
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
+      - name: show specific path
+        env:
+          SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
+        run: echo "path chosen - $SPECIFIC_PATH"
 
   terraform_lint:
     name: lint terraform code
@@ -158,10 +161,12 @@ jobs:
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_environment
+      - terraform_plan_shared_development
     secrets: inherit
     if: |
       always() &&
-      needs.terraform_apply_environment.result == 'success'
+      (needs.terraform_apply_environment.result == 'success' || needs.terraform_apply_environment.result == 'skipped') &&
+      (needs.terraform_plan_shared_development.result == 'success' || needs.terraform_plan_shared_development.result == 'skipped')
 
   run_behat_suite:
     name: run behat tests against environment
@@ -194,14 +199,13 @@ jobs:
     name: upload to code coverage
     needs:
       - docker_build_scan_push
+      - workflow_variables
     if: |
       always() &&
       needs.docker_build_scan_push.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
-      - name: get and validate codecov app
-        run: bash ./scripts/pipeline/codecov_uploader/validate_codecov_uploader.sh
       - name: download artifact for front tests
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
@@ -214,11 +218,17 @@ jobs:
           name: service-api
           path: service-api
         if: needs.workflow_variables.outputs.specific_path == 'all'
-      - name: upload to codecov
-        env:
-          CC_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          bash codecov -t ${CC_TOKEN} || echo 'Codecov upload failed'
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-admin
+          path: service-admin
+        if: |
+          needs.workflow_variables.outputs.specific_path == 'all' ||
+          needs.workflow_variables.outputs.specific_path == 'admin'
+      - uses: codecov/codecov-action@v3
+        with:
+          name: codecov-use-an-lpa
 
   # Required end of workflow job
   end_of_workflow:
