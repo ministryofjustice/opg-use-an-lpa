@@ -7,7 +7,6 @@ use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
-use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
