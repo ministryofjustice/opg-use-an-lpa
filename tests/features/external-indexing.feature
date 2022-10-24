@@ -8,3 +8,8 @@ Feature: Headers to prevent external Indexing
     When I access the service homepage
     Then I receive headers that block external indexing
 
+  @smoke
+  Scenario: Verify that a suitable Referrer-Policy header is included
+    When I access the service homepage
+    Then I receive headers that cause the browser to not inform the destination site any URL information
+
