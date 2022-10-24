@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - 'dependabot/terraform/**'
+      - 'UML-2559**'
 
 permissions:
   contents: read

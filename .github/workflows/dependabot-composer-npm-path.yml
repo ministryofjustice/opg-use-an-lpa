@@ -12,6 +12,7 @@ on:
     branches:
       - 'dependabot/npm_and_yarn/**'
       - 'dependabot/composer/**'
+      - 'UML-2559**'
 
 permissions:
   contents: read
