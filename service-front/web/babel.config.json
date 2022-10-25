@@ -1,12 +1,16 @@
 {
-  "sourceType": "module",
   "presets": [
     [
       "@babel/preset-env",
       {
         "targets": {
-          "ie": 11
-        }
+          "ie": "11",
+          "esmodules": true 
+        },
+        "useBuiltIns": "usage",
+        "debug": true,
+        "corejs": 3,
+        "modules": false
       }
     ]
   ],

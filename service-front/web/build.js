@@ -7,7 +7,7 @@ const fs = fsWithCallbacks.promises;
   const hr = '\r\n'.padStart(width / 1.5, '-');
 
   let config = {
-    entrypoints: ['./src/index.js'],
+    entrypoints: ['./dist/index.js'],
     copy_files: {
       './src/robots.txt': 'robots.txt',
       './src/images': 'assets/images',
@@ -33,17 +33,23 @@ const fs = fsWithCallbacks.promises;
     .build({
       entryPoints: config.entrypoints,
       bundle: true,
+      allowOverwrite: true,
       outdir: config.out_dir,
       minify: false,
-      target: ['es2016'],
       plugins: [],
+      target: ['es2015', 'ie11'],
+      platform: 'browser',
       metafile: true,
+      supported: {
+        arrow: false,
+      },
       treeShaking: false,
     })
-    .catch(() => process.exit(1));
+    .catch((e) => {
+      console.log(e);
+      process.exit(1);
+    });
 
-  //For all the fonts and images to be resolved we have to copy assests
-  //to /assets becasue of static references in the gov.css
   await esbuild
     .build({
       entryPoints: ['dist/pdf.css'],
