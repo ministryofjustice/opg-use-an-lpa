@@ -229,8 +229,7 @@ class CommonContext implements Context
         $referrerPolicyTag = $session->getResponseHeader("Referrer-Policy");
 
         Assert::assertNotNull($referrerPolicyTag);
-        Assert::assertStringContainsString('strict-origin', $referrerPolicyTag);
-        Assert::assertStringContainsString('no-referrer', $referrerPolicyTag);
+        Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
     }
 
     /**
