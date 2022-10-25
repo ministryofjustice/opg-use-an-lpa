@@ -1,0 +1,251 @@
+name: "[Workflow] All branch based pushes"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - '*'              # matches every branch that doesn't contain a '/'
+      - '*/*'            # matches every branch containing a single '/'
+      - '**'             # matches every branch
+      - '!main'          # reverse match main
+      - '!dependabot/**' # reverse match dependabot PRs
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
+      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      specific_path: ${{ steps.variables.outputs.path }}
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: get changed files in the admin folder
+        id: changed-files-admin
+        uses: tj-actions/changed-files@270645280afddc7e2cf3f4867089522c8f2f8f9a
+        with:
+          files: |
+            service-admin/**
+      - name: get changed files in the terraform folder
+        id: changed-files-terraform
+        uses: tj-actions/changed-files@270645280afddc7e2cf3f4867089522c8f2f8f9a
+        with:
+          files: |
+            terraform/**
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+          if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo terraform)" >> $GITHUB_OUTPUT
+          elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo admin)" >> $GITHUB_OUTPUT
+          else
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
+          fi
+      - name: show specific path
+        env:
+          SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
+        run: echo "path chosen - $SPECIFIC_PATH"
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets: inherit
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path != 'admin'
+
+  node_test:
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  node_build:
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+      - node_test
+      - node_build
+    with:
+      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      push_to_ecr: true
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    secrets: inherit
+    if: |
+      always() &&
+      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
+      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
+      needs.workflow_variables.result == 'success'
+
+  terraform_plan_shared_development:
+    name: terraform plan shared development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_lint
+    with:
+      workspace: development
+      terraform_path: account
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    secrets: inherit
+    if: |
+      always() &&
+      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
+      needs.workflow_variables.outputs.specific_path != 'admin'
+
+  terraform_apply_environment:
+    name: terraform apply environment
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+      - workflow_variables
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      terraform_path: environment
+      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    secrets: inherit
+    if: |
+      always() &&
+      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
+      needs.docker_build_scan_push.result == 'success' &&
+      needs.workflow_variables.result == 'success'
+
+  seed_dynamodb:
+    name: seed dynamodb
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_environment
+      - terraform_plan_shared_development
+    secrets: inherit
+    if: |
+      always() &&
+      (needs.terraform_apply_environment.result == 'success' || needs.terraform_apply_environment.result == 'skipped') &&
+      (needs.terraform_plan_shared_development.result == 'success' || needs.terraform_plan_shared_development.result == 'skipped')
+
+  run_behat_suite:
+    name: run behat tests against environment
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb
+      - workflow_variables
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    secrets: inherit
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.seed_dynamodb.result == 'success'
+
+  slack_notify:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - run_behat_suite
+    with:
+      template: successful_dev_build.txt
+    secrets:
+      webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success'
+
+  code_coverage:
+    name: upload to code coverage
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    if: |
+      always() &&
+      needs.docker_build_scan_push.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: download artifact for front tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-front
+          path: service-front
+        if: needs.workflow_variables.outputs.specific_path == 'all'
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-api
+          path: service-api
+        if: needs.workflow_variables.outputs.specific_path == 'all'
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-admin
+          path: service-admin
+        if: |
+          needs.workflow_variables.outputs.specific_path == 'all' ||
+          needs.workflow_variables.outputs.specific_path == 'admin'
+      - uses: codecov/codecov-action@v3
+        with:
+          name: codecov-use-an-lpa
+
+  # Required end of workflow job
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - code_coverage
+      - slack_notify
+      - workflow_variables
+    steps:
+      - name: workflow has ended without issue
+        run: |
+          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
+    if: |
+      always() &&
+      needs.code_coverage.result == 'success' &&
+      needs.slack_notify.result == 'success' &&
+      needs.workflow_variables.result == 'success'
