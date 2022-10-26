@@ -8,7 +8,7 @@
   "scripts": {
     "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
-    "build": "npm run build-scss && babel src --out-dir dist && node build.js",
+    "build": " npm run build-scss && BABEL_ENV=build babel src --out-dir dist && node build.js",
     "watch": "webpack --progress --watch --config webpack.development.js",
     "accessibility-check": "node ./pa11y.js",
     "build-scss": "npm rebuild sass --verbose && sass --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css"
@@ -26,6 +26,7 @@
     "@babel/runtime-corejs3": "^7.19.6",
     "@testing-library/dom": "^8.18.1",
     "@testing-library/jest-dom": "^5.16.4",
+    "babel-jest": "^29.2.2",
     "core-js": "^3.26.0",
     "coveralls": "^3.1.1",
     "es6-promise": "^4.2.8",
