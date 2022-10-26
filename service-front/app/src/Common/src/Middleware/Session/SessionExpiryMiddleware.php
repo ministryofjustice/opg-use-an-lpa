@@ -78,7 +78,7 @@ class SessionExpiryMiddleware implements MiddlewareInterface
     }
 
     /**
-     * If the session is not expired then record a new expiry time to the session.
+     * Un-expire the session whilst recording a new expiry time to it.
      *
      * @param SessionInterface $session
      * @param RouteResult      $routeResult
@@ -90,11 +90,8 @@ class SessionExpiryMiddleware implements MiddlewareInterface
         RouteResult $routeResult,
         ?int $currentSessionsExpiryTime,
     ): void {
-        // Session has been marked expired so set no time
-        if ($session->has(self::SESSION_EXPIRED_KEY)) {
-            $session->unset(self::SESSION_EXPIRED_KEY);
-            return;
-        }
+        // Clear session expiry marker if there is one.
+        $session->unset(SessionExpiryMiddleware::SESSION_EXPIRED_KEY);
 
         $session->set(
             self::SESSION_TIME_KEY,

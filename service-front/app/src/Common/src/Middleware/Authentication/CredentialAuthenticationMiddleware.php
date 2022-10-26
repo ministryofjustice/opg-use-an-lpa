@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Middleware\Authentication;
 
+use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -37,7 +38,15 @@ class CredentialAuthenticationMiddleware implements MiddlewareInterface
         $user = $this->auth->authenticate($request);
 
         if (null !== $user) {
-            return $handler->handle($request->withAttribute(UserInterface::class, $user));
+            $response = $handler->handle($request->withAttribute(UserInterface::class, $user));
+
+            // something in the handler has removed the users login (probably logout) ensure we tell the
+            // session handling code to strip everything out.
+            if (! $session->has(UserInterface::class)) {
+                $session->set(SessionAttributeAllowlistMiddleware::SESSION_CLEAN_NEEDED, true);
+            }
+
+            return $response;
         }
 
         return $this->auth->unauthorizedResponse($request);
