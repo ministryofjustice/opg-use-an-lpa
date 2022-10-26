@@ -221,6 +221,18 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I receive headers that cause the browser to not inform the destination site any URL information$/
+     */
+    public function iReceiveHeadersThatBlockURLInformation()
+    {
+        $session = $this->ui->getSession();
+        $referrerPolicyTag = $session->getResponseHeader("Referrer-Policy");
+
+        Assert::assertNotNull($referrerPolicyTag);
+        Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
+    }
+
+    /**
      * @Then I am given a PDF file of the summary
      */
     public function IAmGivenAPDFFileOfTheSummary(): void
