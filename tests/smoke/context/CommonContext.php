@@ -66,7 +66,6 @@ class CommonContext implements Context
         $rootUrl = sprintf('http://%s/home', $oldUrlHost);
 
         $this->ui->visit($rootUrl);
-        $this->ui->getMink()->
     }
 
     /**
@@ -250,7 +249,7 @@ class CommonContext implements Context
         $xFrameOptions = $session->getResponseHeader("X-Frame-Options");
 
         Assert::assertNotNull($xFrameOptions);
-        Assert::assertStringContainsString('SAMEORIGIN', $xFrameOptions);
+        Assert::assertStringContainsString('deny', $xFrameOptions);
 
     }
 }
