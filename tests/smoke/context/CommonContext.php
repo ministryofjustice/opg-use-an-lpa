@@ -239,4 +239,17 @@ class CommonContext implements Context
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
+
+    /**
+     * @Then I receive headers that block external iframe embedding
+     */
+    public function IAmNotAllowedToViewThisPageInAnIframe(): void
+    {
+        $session = $this->ui->getSession();
+        $xFrameOptions = $session->getResponseHeader("X-Frame-Options");
+
+        Assert::assertNotNull($xFrameOptions);
+        Assert::assertStringContainsString('deny', $xFrameOptions);
+
+    }
 }
