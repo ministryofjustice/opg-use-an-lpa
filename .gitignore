@@ -5,6 +5,7 @@ geckodriver.log
 .vscode/
 **__pycache__
 **/cluster_config.json
+build/**
 scripts/getStatsResultDemo.json
 
 .python-version
