@@ -6,7 +6,7 @@ use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
+use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
@@ -74,7 +74,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(FlashMessageMiddleware::class);
 
     // Clean out the session if expired
-    $app->pipe(SessionExpiredAttributeAllowlistMiddleware::class);
+    $app->pipe(SessionAttributeAllowlistMiddleware::class);
 
     $app->pipe(CsrfMiddleware::class);
 

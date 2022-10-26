@@ -21,8 +21,15 @@ use Psr\Log\LoggerInterface;
  * Used to log a user out, or remove the expired key after other middle wares have had the chance to work
  * on it.
  */
-class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
+class SessionAttributeAllowlistMiddleware implements MiddlewareInterface
 {
+    /**
+     * A middleware or handler can request that this middleware strip the session to the contents of
+     * the {@link self::ALLOWLIST} when the pipeline is returning up the stack by setting this session
+     * key to any value.
+     */
+    public const SESSION_CLEAN_NEEDED = '__SESSION_CLEAN_NEEDED__';
+
     /**
      * An array of allowed session keys that can persist across session expiry
      */
@@ -55,7 +62,14 @@ class SessionExpiredAttributeAllowlistMiddleware implements MiddlewareInterface
             $this->stripSession($session);
         }
 
-        return $handler->handle($request);
+        $response = $handler->handle($request);
+
+        // a middleware or handler has requested that the session be cleaned of values
+        if ($session?->has(self::SESSION_CLEAN_NEEDED)) {
+            $this->stripSession($session);
+        }
+
+        return $response;
     }
 
     private function stripSession(SessionInterface $session): void
