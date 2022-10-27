@@ -111,16 +111,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.237.2",
+            "version": "3.240.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "6027eb8b9316d208537fba1c12e53e379a4574b6"
+                "reference": "2080f747489b2d4ca291dcfb8078db60dbb6c255"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6027eb8b9316d208537fba1c12e53e379a4574b6",
-                "reference": "6027eb8b9316d208537fba1c12e53e379a4574b6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2080f747489b2d4ca291dcfb8078db60dbb6c255",
+                "reference": "2080f747489b2d4ca291dcfb8078db60dbb6c255",
                 "shasum": ""
             },
             "require": {
@@ -199,9 +199,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.237.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.240.3"
             },
-            "time": "2022-10-03T18:15:06+00:00"
+            "time": "2022-10-26T18:17:08+00:00"
         },
         {
             "name": "blazon/psr11-monolog",
