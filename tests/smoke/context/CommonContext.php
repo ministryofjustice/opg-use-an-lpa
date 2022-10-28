@@ -221,10 +221,35 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I receive headers that cause the browser to not inform the destination site any URL information$/
+     */
+    public function iReceiveHeadersThatBlockURLInformation()
+    {
+        $session = $this->ui->getSession();
+        $referrerPolicyTag = $session->getResponseHeader("Referrer-Policy");
+
+        Assert::assertNotNull($referrerPolicyTag);
+        Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
+    }
+
+    /**
      * @Then I am given a PDF file of the summary
      */
     public function IAmGivenAPDFFileOfTheSummary(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
+     * @Then I receive headers that block external iframe embedding
+     */
+    public function IAmNotAllowedToViewThisPageInAnIframe(): void
+    {
+        $session = $this->ui->getSession();
+        $xFrameOptions = $session->getResponseHeader("X-Frame-Options");
+
+        Assert::assertNotNull($xFrameOptions);
+        Assert::assertStringContainsString('deny', $xFrameOptions);
+
     }
 }
