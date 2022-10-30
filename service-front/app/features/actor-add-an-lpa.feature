@@ -149,4 +149,4 @@ Feature: Add an LPA
 
     Examples:
       | id  | passcode     | companyName       | role              |
-      | 164 | TYUPHWQRECHV | trust corporation | Trust corporation |
+      | 164 | TYUPHWQRECHV | trust corporation | Attorney |
