@@ -63,10 +63,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
     private ?string $lastModified;
 
-    private ?int $originalSessionTime;
-
-    private ?string $requestPath;
-
     public function __construct(
         private EncryptInterface $encrypter,
         private string $cookieName,
@@ -82,12 +78,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $this->cacheLimiter = in_array($cacheLimiter, self::SUPPORTED_CACHE_LIMITERS, true)
             ? $cacheLimiter
             : 'nocache';
-        $this->lastModified = $lastModified
+        $this->lastModified = $lastModified !== null
             ? gmdate(self::HTTP_DATE_FORMAT, $lastModified)
             : $this->getLastModified();
-
-        $this->originalSessionTime = null;
-        $this->requestPath         = null;
     }
 
     //------------------------------------------------------------------------------------------------------------
@@ -98,31 +91,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getCookieFromRequest($request);
         $data        = $this->encrypter->decodeCookieValue($sessionData);
 
-        $this->originalSessionTime = $data[self::SESSION_TIME_KEY] ?? null;
-        $this->requestPath         = $request->getUri()->getPath();
-
-        // responsible the for expiry of a users session
-        if (isset($data[self::SESSION_TIME_KEY])) {
-            $expiredOn = $data[self::SESSION_TIME_KEY] + $this->sessionExpire;
-
-            if (time() > $expiredOn) {
-                // the session has expired and we're just learning about it.
-                $data[self::SESSION_EXPIRED_KEY] = true;
-            }
-        }
-
         return new Session($data);
     }
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
     {
-        // Record the time if the session is not marked as expired
-        if ($session->has(EncryptedCookiePersistence::SESSION_EXPIRED_KEY)) {
-            $session->unset(EncryptedCookiePersistence::SESSION_EXPIRED_KEY);
-        } else {
-            $session->set(self::SESSION_TIME_KEY, $this->sessionTime());
-        }
-
         // Encode to string
         $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
@@ -135,8 +108,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
             ->withHttpOnly($this->cookieHttpOnly)
             ->withSameSite($sameSite);
 
-        $persistenceDuration = $this->getCookieLifetime($session);
-        if ($persistenceDuration) {
+        if ($persistenceDuration = $this->getCookieLifetime($session)) {
             $sessionCookie = $sessionCookie->withExpires(
                 (new DateTimeImmutable())->add(new DateInterval(sprintf('PT%dS', $persistenceDuration)))
             );
@@ -247,15 +219,5 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         }
 
         return $lifetime > 0 ? $lifetime : 0;
-    }
-
-    private function sessionTime(): int
-    {
-        // Checking session or setting current time
-        return !is_null($this->originalSessionTime)
-        && !is_null($this->requestPath)
-        && preg_match('/^\/session-check(\/|)$/i', $this->requestPath)
-            ? $this->originalSessionTime
-            : time();
     }
 }
