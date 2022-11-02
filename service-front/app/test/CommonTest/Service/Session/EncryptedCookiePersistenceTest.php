@@ -32,7 +32,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 
 class EncryptedCookiePersistenceTest extends TestCase
 {
@@ -102,15 +101,6 @@ class EncryptedCookiePersistenceTest extends TestCase
          * If the header does not appear in the message, this method MUST return an empty array
          */
         $requestProphecy->getHeaderLine('Cookie')->willReturn('')->shouldBeCalled();
-
-        $uriProphecy = $this->prophesize(UriInterface::class);
-        $uriProphecy->getPath()
-            ->shouldBeCalled()
-            ->willReturn('/');
-
-        $requestProphecy->getUri()
-            ->shouldBeCalled()
-            ->willReturn($uriProphecy->reveal());
 
         $this->encrypterProphecy->decodeCookieValue('')->willReturn([]);
 
@@ -223,14 +213,11 @@ class EncryptedCookiePersistenceTest extends TestCase
                 $this->assertArrayHasKey('string', $input);
                 $this->assertArrayHasKey('bool', $input);
                 $this->assertArrayHasKey('float', $input);
-                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $input);
 
                 $this->assertEquals($testData['int'], $input['int']);
                 $this->assertEquals($testData['string'], $input['string']);
                 $this->assertEquals($testData['float'], $input['float']);
                 $this->assertEquals($testData['bool'], $input['bool']);
-
-                $this->assertEquals(time(), $input[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
 
                 return true;
             })
@@ -341,14 +328,11 @@ class EncryptedCookiePersistenceTest extends TestCase
                 $this->assertArrayHasKey('string', $input);
                 $this->assertArrayHasKey('bool', $input);
                 $this->assertArrayHasKey('float', $input);
-                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $input);
 
                 $this->assertEquals($testData['int'], $input['int']);
                 $this->assertEquals($testData['string'], $input['string']);
                 $this->assertEquals($testData['float'], $input['float']);
                 $this->assertEquals($testData['bool'], $input['bool']);
-
-                $this->assertEquals(time(), $input[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
 
                 return true;
             })
@@ -426,15 +410,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             )
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
-        $this->encrypterProphecy->encodeCookieValue(
-            Argument::that(function ($input) {
-                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_TIME_KEY, $input);
-
-                $this->assertEquals(time(), $input[EncryptedCookiePersistence::SESSION_TIME_KEY], '', 3);
-
-                return true;
-            })
-        )->willReturn('ENCRYPTED.CIPHER_TEXT');
+        $this->encrypterProphecy->encodeCookieValue(Argument::type('array'))->willReturn('ENCRYPTED.CIPHER_TEXT');
 
         $cp = new EncryptedCookiePersistence(
             $this->encrypterProphecy->reveal(),
@@ -459,67 +435,6 @@ class EncryptedCookiePersistenceTest extends TestCase
 
     //--------------------------------------------------------------------------------------------------
     // Test reading session data out of a request.
-
-    /**
-     * @test
-     *
-     * When cookie data is present along with a valid time, but that time is outside of the allowed window,
-     * we expect a empty/new session to be returned.
-     *
-     * i.e. the session has timed out.
-     *
-     * Note: We never rely on the `Expires` field in the cookie. This is for the browser, not for us.
-     */
-    public function it_should_return_a_session_flagged_as_expired()
-    {
-        $testData = [
-            'bool'                                       => true,
-            'string'                                     => 'here',
-            'int'                                        => 123,
-            'float'                                      => 123.9,
-            EncryptedCookiePersistence::SESSION_TIME_KEY => time() - self::SESSION_EXPIRES - 1,
-            // 1 second after is should expire
-        ];
-
-        $value = 'ENCRYPTED.CIPHER_TEXT';
-
-        $this->encrypterProphecy->decodeCookieValue($value)->willReturn($testData);
-
-        $testCookieValue =
-            'test-cookie-name=' . $value . '; Path=/; Expires=Wed, 08 May 2019 15:34:49 GMT; Secure; HttpOnly';
-
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-
-        $requestProphecy->getHeaderLine('Cookie')->willReturn($testCookieValue);
-
-        //---
-
-        $cp = new EncryptedCookiePersistence(
-            $this->encrypterProphecy->reveal(),
-            self::COOKIE_NAME,
-            self::COOKIE_PATH,
-            'nocache',
-            self::SESSION_EXPIRES,
-            null,
-            self::COOKIE_EXPIRES,
-            null,
-            true,
-            true
-        );
-
-        $uriProphecy = $this->prophesize(UriInterface::class);
-        $uriProphecy->getPath()
-            ->shouldBeCalled()
-            ->willReturn('/');
-
-        $requestProphecy->getUri()
-            ->shouldBeCalled()
-            ->willReturn($uriProphecy->reveal());
-
-        $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
-
-        $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, $session->toArray());
-    }
 
     /**
      * When cookie data is present along with a valid time, we expect the included data to be returned in the session.
@@ -562,15 +477,6 @@ class EncryptedCookiePersistenceTest extends TestCase
             true,
             true
         );
-
-        $uriProphecy = $this->prophesize(UriInterface::class);
-        $uriProphecy->getPath()
-            ->shouldBeCalled()
-            ->willReturn('/');
-
-        $requestProphecy->getUri()
-            ->shouldBeCalled()
-            ->willReturn($uriProphecy->reveal());
 
         $session = $cp->initializeSessionFromRequest($requestProphecy->reveal());
 

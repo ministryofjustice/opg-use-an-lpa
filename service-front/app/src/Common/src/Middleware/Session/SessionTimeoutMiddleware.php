@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Middleware\Session;
 
-use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,7 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class SessionTimeoutMiddleware implements MiddlewareInterface
 {
-    public function __construct(protected TemplateRendererInterface $renderer)
+    public function __construct(protected TemplateRendererInterface $renderer, protected UrlHelper $helper)
     {
     }
 
@@ -25,7 +26,7 @@ class SessionTimeoutMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (SessionTimeoutException) {
-            return new HtmlResponse($this->renderer->render('error::session-timeout'));
+            return new RedirectResponse($this->helper->generate('session-expired'));
         }
     }
 }
