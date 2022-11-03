@@ -1868,10 +1868,15 @@ class AccountContext implements Context
         // retrieving response headers:
         $cookies = $session->getResponseHeaders()['set-cookie'];
 
+       // var_dump($cookies); die;
+
+
         foreach ($cookies as $value) {
-            if (strstr($value, 'session')) {
+            if (strstr($value, '__Host-session')) {
                 Assert::assertStringContainsString('secure', $value);
                 Assert::assertStringContainsString('httponly', $value);
+                Assert::assertStringContainsString('path=/', $value);
+                Assert::assertStringNotContainsString('domain', $value);
             } else {
                 throw new Exception('Cookie named session not found in the response header');
             }
