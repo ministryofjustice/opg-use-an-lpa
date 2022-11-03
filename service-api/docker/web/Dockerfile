@@ -1,5 +1,8 @@
 FROM nginx:stable-alpine
 
+RUN apk upgrade && \
+  apk update curl
+
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
@@ -13,4 +16,4 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/r
 COPY service-api/docker/web/etc /etc
 
 CMD confd -onetime -backend env \
-  && nginx -g "daemon off;"
+  && nginx -g "daemon off;
