@@ -103,7 +103,6 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
         $sessionCookie = SetCookie::create($this->cookieName)
             ->withValue($sessionData)
-            ->withDomain($this->cookieDomain)
             ->withPath($this->cookiePath)
             ->withSecure($this->cookieSecure)
             ->withHttpOnly($this->cookieHttpOnly)
