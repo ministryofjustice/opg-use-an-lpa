@@ -64,7 +64,7 @@ class CommonContext implements Context
      */
     public function iAmGivenASessionCookie()
     {
-        $this->ui->assertSession()->cookieExists('session');
+        $this->ui->assertSession()->cookieExists('__Host-session');
     }
 
     /**
