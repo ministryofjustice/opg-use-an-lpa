@@ -47,6 +47,12 @@ class UserIdentificationMiddlewareTest extends TestCase
         $this->requestProphecy
             ->getHeaders()
             ->willReturn([]);
+        $this->requestProphecy
+            ->hasHeader('accept')
+            ->willReturn(true);
+        $this->requestProphecy
+            ->getHeader('accept')
+            ->willReturn(['text/html']);
 
         $this->idServiceProphecy = $this->prophesize(UserIdentificationService::class);
 

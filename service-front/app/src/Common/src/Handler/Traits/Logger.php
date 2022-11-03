@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * @psalm-require-implements Common\Handler\LoggerAware
+ * @psalm-require-implements \Common\Handler\LoggerAware
  */
 trait Logger
 {

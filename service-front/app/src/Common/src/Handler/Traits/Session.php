@@ -8,7 +8,7 @@ use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @psalm-require-implements Common\Handler\SessionAware
+ * @psalm-require-implements \Common\Handler\SessionAware
  */
 trait Session
 {
