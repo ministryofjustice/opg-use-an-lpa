@@ -3073,21 +3073,21 @@
         },
         {
             "name": "mezzio/mezzio-helpers",
-            "version": "5.9.0",
+            "version": "5.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-helpers.git",
-                "reference": "b460d1d9ded9af5b9e257005afe2da1c4323ea13"
+                "reference": "ac47b19c92e050e53fe9172d3ccf7ab7cf9e9945"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/b460d1d9ded9af5b9e257005afe2da1c4323ea13",
-                "reference": "b460d1d9ded9af5b9e257005afe2da1c4323ea13",
+                "url": "https://api.github.com/repos/mezzio/mezzio-helpers/zipball/ac47b19c92e050e53fe9172d3ccf7ab7cf9e9945",
+                "reference": "ac47b19c92e050e53fe9172d3ccf7ab7cf9e9945",
                 "shasum": ""
             },
             "require": {
                 "mezzio/mezzio-router": "^3.0",
-                "php": "^7.4 || ~8.0.0 || ~8.1.0",
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
                 "psr/container": "^1.0 || ^2.0",
                 "psr/http-message": "^1.0.1",
                 "psr/http-server-middleware": "^1.0"
@@ -3098,12 +3098,10 @@
             "require-dev": {
                 "ext-json": "*",
                 "laminas/laminas-coding-standard": "~2.4.0",
-                "laminas/laminas-diactoros": "^2.11.1",
-                "mockery/mockery": "^1.4.2",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.5.11",
-                "psalm/plugin-phpunit": "^0.15.1",
-                "vimeo/psalm": "^4.17"
+                "laminas/laminas-diactoros": "^2.19",
+                "phpunit/phpunit": "^9.5.25",
+                "psalm/plugin-phpunit": "^0.17.0",
+                "vimeo/psalm": "^4.29"
             },
             "suggest": {
                 "ext-json": "If you wish to use the JsonStrategy with BodyParamsMiddleware"
@@ -3147,7 +3145,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-09-14T07:33:03+00:00"
+            "time": "2022-10-12T21:00:46+00:00"
         },
         {
             "name": "mezzio/mezzio-router",
