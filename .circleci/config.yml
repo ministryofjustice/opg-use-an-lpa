@@ -24,18 +24,6 @@ workflows:
           environment: demo
           requires: [redeploy_demo]
 
-  workspace_cleanup:
-    triggers:
-      - schedule:
-          cron: "0 6,18 * * 0-6" # twice a day at 6am and 6pm
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - workspace_cleanup:
-          name: workspace_cleanup
-
   post_statistics:
     triggers:
       - schedule:
@@ -47,564 +35,6 @@ workflows:
     jobs:
       - slack_notify_stats:
           name: slack_notify_stats
-
-  package_update_pr:
-      jobs:
-        - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/lint_terraform:
-            name: lint_terraform
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/node_test_web:
-            name: test_web
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/node_build_web:
-            name: build_web
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires: [test_web]
-
-        - use-my-lpa/docker_build_front_app:
-            name: app_front_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_front_web:
-            name: web_front_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_api_app:
-            name: app_api_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/docker_build_api_web:
-            name: web_api_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/docker_test_admin:
-            name: admin_app_test
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/docker_build_admin:
-            name: admin_app_build
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-
-        - use-my-lpa/codecov_upload:
-            name: codecov_upload
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires:
-              [
-                app_front_build,
-                app_api_build,
-                test_web,
-                admin_app_test,
-              ]
-
-        # Required end of workflow job
-        - use-my-lpa/end_of_workflow:
-            name: end_of_workflow
-            filters:
-              branches:
-                only: [
-                  /dependabot\/npm_and_yarn\/.*/,
-                  /dependabot\/composer\/.*/,
-                  ]
-            requires: [codecov_upload]
-
-  terraform_only_pr:
-      jobs:
-        - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-
-        - use-my-lpa/lint_terraform:
-            name: lint_terraform
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-            requires: [cancel_previous_jobs,lint_terraform]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            image_tag_input: latest
-            admin_image_tag_input: latest
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-            requires:
-              [
-                cancel_previous_jobs,
-              ]
-
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-            requires: [dev_apply_environment_terraform]
-
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-            requires: [dev_seed_database]
-
-        # Required end of workflow job
-        - use-my-lpa/end_of_workflow:
-            name: end_of_workflow
-            filters:
-              branches:
-                only: [
-                  /dependabot\/terraform\/.*/,
-                  /tf\/.*/
-                  ]
-            requires: [dev_run_behat_tests]
-
-  admin_only_pr:
-      jobs:
-        - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-
-        - use-my-lpa/lint_terraform:
-            name: lint_terraform
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-
-        - use-my-lpa/docker_test_admin:
-            name: admin_app_test
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-
-        - use-my-lpa/docker_build_admin:
-            name: admin_app_build
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires:
-              [
-                admin_app_test,
-              ]
-
-        - use-my-lpa/codecov_upload:
-            name: codecov_upload
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires:
-              [
-                admin_app_test,
-              ]
-
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires: [cancel_previous_jobs,lint_terraform]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            image_tag_input: latest
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires:
-              [
-                cancel_previous_jobs,
-                admin_app_build
-              ]
-
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires: [dev_apply_environment_terraform]
-
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires: [dev_seed_database]
-
-        # Required end of workflow job
-        - use-my-lpa/end_of_workflow:
-            name: end_of_workflow
-            filters:
-              branches:
-                only: [
-                  /admin\/.*/,
-                  /dependabot\/go_modules\/.*/,
-                  /dependabot\/docker\/service-admin\/.*/,
-                  ]
-            requires: [dev_run_behat_tests]
-
-  pr_build:
-      jobs:
-        - cancel_redundant_builds:
-            name: cancel_previous_jobs
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/lint_terraform:
-            name: lint_terraform
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/node_test_web:
-            name: test_web
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/node_build_web:
-            name: build_web
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [test_web]
-
-        - use-my-lpa/docker_build_front_app:
-            name: app_front_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_front_web:
-            name: web_front_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_api_app:
-            name: app_api_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/docker_build_api_web:
-            name: web_api_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/docker_test_admin:
-            name: admin_app_test
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/docker_build_admin:
-            name: admin_app_build
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-
-        - use-my-lpa/codecov_upload:
-            name: codecov_upload
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires:
-              [
-                app_front_build,
-                app_api_build,
-                test_web,
-                admin_app_test,
-              ]
-
-            # Provision and test development
-        - use-my-lpa/plan_shared_terraform:
-            name: dev_plan_shared_terraform
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [cancel_previous_jobs,lint_terraform]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: dev_apply_environment_terraform
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires:
-              [
-                cancel_previous_jobs,
-                dev_plan_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                admin_app_build,
-              ]
-
-        - ecr_scan_results:
-            name: ecr_scan_results
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires:
-              [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                admin_app_build,
-              ]
-
-        - use-my-lpa/seed_database:
-            name: dev_seed_database
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [dev_apply_environment_terraform]
-
-        - use-my-lpa/run_behat_suite:
-            name: dev_run_behat_tests
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [dev_seed_database]
-
-
-        - python_templated_slack_notify:
-            name: post_environment_domains
-            template: successful_dev_build.txt
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [dev_run_behat_tests]
-
-        # Required end of workflow job
-        - use-my-lpa/end_of_workflow:
-            name: end_of_workflow
-            filters: { branches: { ignore: [
-              main,
-              /dependabot\/.*/,
-              /tf\/.*/,
-              /admin\/.*/,
-              /dependabot\/go_modules\/.*/,
-              /dependabot\/docker\/service-admin\/.*/,
-              ] } }
-            requires: [post_environment_domains]
 
   path_to_live:
       jobs:
@@ -642,6 +72,10 @@ workflows:
 
         - use-my-lpa/docker_build_admin:
             name: admin_app_build
+            filters: { branches: { only: [main] } }
+
+        - use-my-lpa/docker_build_lambdas:
+            name: lambda_build
             filters: { branches: { only: [main] } }
 
         - use-my-lpa/codecov_upload:
@@ -682,6 +116,7 @@ workflows:
                 web_api_build,
                 app_api_build,
                 admin_app_build,
+                lambda_build,
               ]
 
         - ecr_scan_results:
@@ -931,7 +366,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
@@ -1009,7 +443,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
@@ -1053,7 +486,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
@@ -1137,7 +569,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
@@ -1193,7 +624,6 @@ orbs:
           - checkout
           - install_aws_cli
           - setup_remote_docker:
-              version: 20.10.11
               docker_layer_caching: false
           - dockerhub_login
           - run:
@@ -1217,7 +647,41 @@ orbs:
                   docker push << parameters.container_repo_url >>:${IMAGE_TAG}
                 fi
 
+      docker_build_lambdas:
+        #
+        # Build Docker container for lambdas
+        #
+        executor: python
+        parameters:
+          container_repo_url:
+            type: string
+            default: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/stats_upload_lambda
+        steps:
+          - checkout
+          - install_aws_cli
+          - setup_remote_docker:
+              docker_layer_caching: false
+          - dockerhub_login
+          - run:
+              name: Build
+              command: |
+                docker build --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+          - ecr_login
+          - run:
+              name: Push container
+              command: |
+                export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+                echo $IMAGE_TAG
 
+                docker tag stats_upload_lambda:latest << parameters.container_repo_url >>:latest
+                docker tag stats_upload_lambda:latest << parameters.container_repo_url >>:${IMAGE_TAG}
+
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                  # We want all of the tags pushed
+                  docker push --all-tags << parameters.container_repo_url >>
+                else
+                  docker push << parameters.container_repo_url >>:${IMAGE_TAG}
+                fi
 
       # Code Coverage
 
@@ -1416,6 +880,7 @@ orbs:
                 export DYNAMODB_TABLE_VIEWER_CODES=$(cat /tmp/cluster_config.json | jq .viewer_codes_table | xargs)
                 export DYNAMODB_TABLE_ACTOR_USERS=$(cat /tmp/cluster_config.json | jq .actor_users_table | xargs)
                 export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat /tmp/cluster_config.json | jq .user_lpa_actor_map | xargs)
+                export DYNAMODB_TABLE_STATS=$(cat /tmp/cluster_config.json | jq .stats_table | xargs)
                 python service-api/seeding/dynamodb.py
 
       #----------------------------------------------------
@@ -1597,22 +1062,6 @@ jobs:
             export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
             python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
-
-  workspace_cleanup:
-    docker:
-      - image: hashicorp/terraform:1.0.1
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - run:
-          name: Cleanup Workspaces
-          command: |
-            cd terraform/environment
-            terraform init
-            ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
 
   cancel_redundant_builds:
     docker:

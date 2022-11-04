@@ -11,9 +11,9 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,19 +42,18 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->getUser($request);
-
         $session = $this->getSession($request, 'session');
+        $user    = $this->getUser($request);
 
-        // Tell the SessionExpiredAttributeAllowlistMiddleware to clean out the session when it's done.
-        $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
-
-        $session->regenerate();
+        // Remove the record of our user object from the session. At this point it is still attached to the
+        // request as an attribute but as this is not a middleware it passes no further.
+        $session?->unset(UserInterface::class);
+        $session?->regenerate();
 
         $this->getLogger()->info(
             'Account with Id {id} has logged out of the service',
             [
-                'id' => $user->getIdentity(),
+                'id' => $user?->getIdentity(),
             ]
         );
 

@@ -90,10 +90,18 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
-    $app->get('/logout', Actor\Handler\LogoutPageHandler::class, 'logout');
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
+
+    $app->get(
+        '/logout',
+        [
+            Common\Middleware\Authentication\AuthenticationMiddleware::class,
+            Actor\Handler\LogoutPageHandler::class
+        ],
+        'logout'
+    );
 
     // User management
     $app->route(

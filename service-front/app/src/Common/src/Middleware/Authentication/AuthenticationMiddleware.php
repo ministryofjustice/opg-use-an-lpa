@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Middleware\Authentication;
 
 use Laminas\Stratigility\MiddlewarePipeInterface;
-use Mezzio\Authentication\AuthenticationMiddleware as MezzioAuthenticationMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -17,7 +16,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
 
     public function __construct(
         MiddlewarePipeInterface $middlewarePipe,
-        MezzioAuthenticationMiddleware $authenticationMiddleware,
+        CredentialAuthenticationMiddleware $authenticationMiddleware,
         ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware,
     ) {
         $this->pipe = $middlewarePipe;

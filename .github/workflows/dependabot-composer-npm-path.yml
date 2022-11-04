@@ -1,0 +1,61 @@
+name: "[Workflow] Dependabot Composer and Npm Changes"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - 'dependabot/npm_and_yarn/**'
+      - 'dependabot/composer/**'
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  branch_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@2d85e0b1b1b84ca98b6ec27d251d8e6319c95df9 # pin@v1.8.0
+
+  node_test:
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+
+  node_build:
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - branch_name
+      - node_test
+      - node_build
+    with:
+      branch_name: ${{ needs.branch_name.outputs.parsed }}
+      push_to_ecr: false
+    secrets: inherit
+
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - docker_build_scan_push
+      - branch_name
+    steps:
+      - name: workflow has ended without issue
+        run: |
+          echo "${{ needs.branch_name.outputs.parsed }} has been built and tested"

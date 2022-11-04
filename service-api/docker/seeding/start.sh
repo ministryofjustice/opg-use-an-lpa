@@ -55,6 +55,13 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --region eu-west-1 \
     --endpoint $DYNAMODN_ENDPOINT
 
+   aws dynamodb create-table \
+      --attribute-definitions AttributeName=TimePeriod,AttributeType=S \
+      --table-name Stats \
+      --key-schema AttributeName=TimePeriod,KeyType=HASH \
+      --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+      --region eu-west-1 \
+      --endpoint $DYNAMODN_ENDPOINT
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S AttributeName=ActivationCode,AttributeType=S \
@@ -67,7 +74,6 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
       IndexName=ActivationCodeIndex,KeySchema=["{AttributeName=ActivationCode,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
       IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
-
 
      aws dynamodb update-time-to-live \
     --table-name UserLpaActorMap \

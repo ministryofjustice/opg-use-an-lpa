@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "redacted_s3_logs_key_policy" {
     ]
 
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci"

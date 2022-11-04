@@ -905,7 +905,7 @@ class ViewerContext implements Context
      */
     public function iWaitedTooLongToEnterTheShareCode()
     {
-        $this->ui->getSession()->setCookie('session');
+        $this->ui->getSession()->setCookie('__Host-session');
     }
 
     /**

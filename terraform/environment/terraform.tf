@@ -86,3 +86,5 @@ provider "aws" {
 provider "pagerduty" {
   token = var.pagerduty_token
 }
+
+data "aws_region" "current" {}

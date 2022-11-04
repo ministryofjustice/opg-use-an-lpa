@@ -36,7 +36,7 @@ run:
 .PHONY: run
 
 # Starts the application and seeds initial data.
-up_all: | up_dependencies up_mock up_services seed
+up_all: | up_dependencies up_mock up_services up_functions seed
 .PHONY: up_all
 
 restart_all: | down_all up_all
@@ -99,6 +99,10 @@ update_mock:
 up_mock:
 	$(COMPOSE) up -d --remove-orphans api-gateway data-lpa
 .PHONY: up_mock
+
+up_functions:
+	$(COMPOSE) up -d --remove-orphans upload-stats-lambda
+.PHONY: up_functions
 
 seed:
 	$(COMPOSE) up -d api-seeding

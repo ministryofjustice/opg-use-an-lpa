@@ -39,7 +39,7 @@ return [
 
         // The name of the session cookie. This name must comply with
         // the syntax outlined in https://tools.ietf.org/html/rfc6265.html
-        'cookie_name' => 'session',
+        'cookie_name' => '__Host-session',
 
         // The (sub)domain that the cookie is available to. Setting this
         // to a subdomain (such as 'www.example.com') will make the cookie
@@ -106,19 +106,17 @@ return [
         'viewer_code_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'redis',
-                    'options' => [
-                        'ttl'         => 60,
-                        'server'      => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
-                        ],
-                        'lib_options' => [
-                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
-                        ],
+                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'options' => [
+                    'ttl'           => 60,
+                    'server'        => [
+                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                    ],
+                    'persistent_id' => 'brute-force-cache-replication-group',
+                    'lib_options'   => [
+                        Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
                     ],
                 ],
             ],
@@ -130,19 +128,17 @@ return [
         'actor_code_failure'  => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'redis',
-                    'options' => [
-                        'ttl'         => 60,
-                        'server'      => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
-                        ],
-                        'lib_options' => [
-                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
-                        ],
+                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'options' => [
+                    'ttl'           => 60,
+                    'server'        => [
+                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                    ],
+                    'persistent_id' => 'brute-force-cache-replication-group',
+                    'lib_options'   => [
+                        Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
                     ],
                 ],
             ],
@@ -154,19 +150,17 @@ return [
         'actor_login_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => [
-                    'name'    => 'redis',
-                    'options' => [
-                        'ttl'         => 60,
-                        'server'      => [
-                            'persistent_id' => 'brute-force-cache-replication-group',
-                            'host'          => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                            'port'          => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                            'timeout'       => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
-                        ],
-                        'lib_options' => [
-                            Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
-                        ],
+                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'options' => [
+                    'ttl'           => 60,
+                    'server'        => [
+                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                    ],
+                    'persistent_id' => 'brute-force-cache-replication-group',
+                    'lib_options'   => [
+                        Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
                     ],
                 ],
             ],

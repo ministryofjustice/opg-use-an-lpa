@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 /**
- * @psalm-require-implements Common\Handler\UserAware
+ * @psalm-require-implements \Common\Handler\UserAware
  */
 trait User
 {
@@ -29,6 +29,8 @@ trait User
             );
         }
 
+        // TODO UML-2710 why are we reauthenticating the user when the UserInterface::class will either
+        //      exist in the session or won't? If it's in the session just return it?
         return $this->authenticator->authenticate($request);
     }
 }

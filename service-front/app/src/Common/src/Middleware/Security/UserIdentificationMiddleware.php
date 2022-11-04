@@ -28,6 +28,7 @@ class UserIdentificationMiddleware implements MiddlewareInterface
     public const EXCLUDED_ROUTES = [
         'session-check',
         'session-refresh',
+        'session-expired',
     ];
 
     public function __construct(
@@ -56,9 +57,11 @@ class UserIdentificationMiddleware implements MiddlewareInterface
         /** @var RouteResult|null $routeResult */
         $routeResult = $request->getAttribute(RouteResult::class);
 
+        $accept = $request->hasHeader('accept') ? $request->getHeader('accept')[0] : null;
+
         if (
             in_array($routeResult?->getMatchedRouteName(), self::EXCLUDED_ROUTES)
-            && $request->getHeader('accept')[0] === 'application/json'
+            && $accept === 'application/json'
         ) {
             return false;
         }
