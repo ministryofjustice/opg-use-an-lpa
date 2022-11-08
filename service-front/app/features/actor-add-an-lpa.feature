@@ -150,5 +150,5 @@ Feature: Add an LPA
     And The LPA is successfully added
 
     Examples:
-      | id  | passcode     | companyName       | role              |
+      | id  | passcode     | companyName       | role     |
       | 164 | TYUPHWQRECHV | trust corporation | Attorney |
