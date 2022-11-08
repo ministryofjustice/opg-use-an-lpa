@@ -7490,10 +7490,9 @@ msgstr ""
 "<br>\n"
 "            Efallai y bydd angen i chi ddangos LPA papur i sefydliadau."
 
-# Current translation is "Are you sure you want to remove this LPA?"
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:15
 msgid "Are you sure you want to remove %firstname% %surname%'s LPA?"
-msgstr "A ydych yn siŵr eich bod am ddileu’r LPA hon?"
+msgstr "Ydych chi’n siŵr eich bod eisiau dileu LPA %firstname% %surname%?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:22
 msgid "LPA type:"

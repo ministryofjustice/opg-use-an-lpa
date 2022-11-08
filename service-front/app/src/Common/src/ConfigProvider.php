@@ -9,13 +9,15 @@ use Acpr\I18n\TranslatorInterface;
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
+use Common\Middleware\Session\SessionExpiryMiddleware;
+use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\Cache\RedisAdapterPluginManagerDelegatorFactory;
 use Gettext\Generator\GeneratorInterface;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Loader\PoLoader;
 use Http\Adapter\Guzzle6\Client;
-use Laminas\Cache\Storage\Adapter\Memory;
+use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -105,6 +107,7 @@ class ConfigProvider
 
                 // Middleware
                 SessionMiddleware::class                   => SessionMiddlewareFactory::class,
+                SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
 
                 // Auth
@@ -125,7 +128,7 @@ class ConfigProvider
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
                 AdapterPluginManager::class => [
-                    Memory\AdapterPluginManagerDelegatorFactory::class,
+                    AdapterPluginManagerDelegatorFactory::class,
                     RedisAdapterPluginManagerDelegatorFactory::class,
                 ],
             ],

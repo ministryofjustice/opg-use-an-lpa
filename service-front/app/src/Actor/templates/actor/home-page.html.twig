@@ -17,6 +17,9 @@
 
                     <div class="govuk-grid-column-two-thirds">
                         {{ include('@actor/partials/lpas-registered-after.html.twig') }}
+
+                        {{ govuk_error_summary(form) }}
+
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         <div class="govuk-form-group">
@@ -43,7 +46,7 @@
 
                             </fieldset>
                         </div>
-                        
+
                     <p class="govuk-body">{% trans %}If you're named on more than one LPA, you can add all those LPAs to your account.{% endtrans %}</p>
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>

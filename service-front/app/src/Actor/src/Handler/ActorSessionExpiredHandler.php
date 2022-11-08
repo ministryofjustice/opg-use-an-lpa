@@ -27,7 +27,7 @@ class ActorSessionExpiredHandler extends AbstractHandler implements SessionAware
         // redirect loops around the session handling code.
         $this
             ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
-            ->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
+            ?->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
 
         return new HtmlResponse($this->renderer->render('actor::actor-session-expired'));
     }

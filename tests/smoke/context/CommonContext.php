@@ -183,7 +183,7 @@ class CommonContext implements Context
      */
     public function theSessionCookiesIsMarkedSecureAndHttponly(): void
     {
-        $this->ui->assertSession()->cookieExists('session');
+        $this->ui->assertSession()->cookieExists('__Host-session');
 
         // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
         /** @var ChromeDriver $driver */
@@ -191,14 +191,14 @@ class CommonContext implements Context
         $cookies = $driver->getCookies();
 
         array_walk($cookies, function (array $cookie) {
-            if ($cookie['name'] === 'session' && !$cookie['httpOnly']) {
+            if ($cookie['name'] === '__Host-session' && !$cookie['httpOnly']) {
                 throw new ExpectationException(
                     sprintf('Unable to verify that the session cookie is "httpOnly"'),
                     $this->ui->getSession()
                 );
             }
 
-            if ($cookie['name'] === 'session' && !$cookie['secure']) {
+            if ($cookie['name'] === '__Host-session' && !$cookie['secure']) {
                 throw new ExpectationException(
                     sprintf('Unable to verify that the session cookie is "secure"'),
                     $this->ui->getSession()
