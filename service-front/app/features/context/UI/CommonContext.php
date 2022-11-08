@@ -8,6 +8,8 @@ use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use Common\Middleware\Session\SessionExpiryMiddleware;
+use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Lpa\LpaService;
@@ -62,7 +64,7 @@ class CommonContext implements Context
      */
     public function iAmGivenASessionCookie()
     {
-        $this->ui->assertSession()->cookieExists('session');
+        $this->ui->assertSession()->cookieExists('__Host-session');
     }
 
     /**
@@ -459,6 +461,10 @@ class CommonContext implements Context
         $container->set(
             SessionMiddleware::class,
             new FactoryDefinitionHelper($container->get(SessionMiddlewareFactory::class))
+        );
+        $container->set(
+            SessionExpiryMiddleware::class,
+            new FactoryDefinitionHelper($container->get(SessionExpiryMiddlewareFactory::class))
         );
 
         // wait 2 seconds to ensure we expire
