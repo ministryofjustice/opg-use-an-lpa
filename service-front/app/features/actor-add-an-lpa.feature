@@ -132,7 +132,7 @@ Feature: Add an LPA
   Scenario Outline: The user can add an LPA to their account when they have the same DOB as others on the LPA
     Given I am on the add an LPA page
     When I request to add an LPA with the code "<passcode>" that is for "<firstName>" "<secondName>" and I will have an Id of <id>
-    Then The Lpa is found correctly
+    Then The LPA is found correctly
     And Has correct name "<firstName>""<secondName>" and role "<role>"
     And The LPA is successfully added
 
@@ -145,7 +145,7 @@ Feature: Add an LPA
   Scenario Outline: I can add a LPA as a trust corporation
     Given I am on the add an LPA page
     When I as trust corporation request to add an LPA with the code "<passcode>" that is for "<companyName>" and I will have an Id of <id>
-    Then The Lpa is found correctly
+    Then The LPA is found correctly
     And Has the correct company name "<companyName>" and role "<role>"
     And The LPA is successfully added
 

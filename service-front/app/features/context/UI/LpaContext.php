@@ -2489,7 +2489,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The Lpa is found correctly$/
+     * @Then /^The LPA is found correctly$/
      */
     public function theLpaIsFoundCorrectly(): void
     {
