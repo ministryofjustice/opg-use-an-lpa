@@ -11,6 +11,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class UserLpaActorMapFactoryTest extends TestCase
 {
@@ -25,12 +26,16 @@ class UserLpaActorMapFactoryTest extends TestCase
             $this->prophesize(DynamoDbClient::class)->reveal()
         );
 
+        $containerProphecy->get(LoggerInterface::class)->willReturn(
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'user-lpa-actor-map' => 'test-table'
-                ]
-            ]
+                    'user-lpa-actor-map' => 'test-table',
+                ],
+            ],
         ]);
 
         $factory = new UserLpaActorMapFactory();
@@ -45,6 +50,10 @@ class UserLpaActorMapFactoryTest extends TestCase
 
         $containerProphecy->get(DynamoDbClient::class)->willReturn(
             $this->prophesize(DynamoDbClient::class)->reveal()
+        );
+
+        $containerProphecy->get(LoggerInterface::class)->willReturn(
+            $this->prophesize(LoggerInterface::class)->reveal()
         );
 
         $containerProphecy->get('config')->willReturn([]);
