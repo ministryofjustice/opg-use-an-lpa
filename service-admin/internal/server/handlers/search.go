@@ -95,6 +95,7 @@ func (s *Search) Validate() error {
 	return e
 }
 
+
 func (s *Search) checkEmailOrCode(value interface{}) error {
 	isEmail := is.Email.Validate(value)
 	if isEmail == nil {
@@ -126,6 +127,7 @@ func stripUnnecessaryCharacters(code string) string {
 }
 
 func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
+
 	search := &Search{}
 
 	if r.Method == "POST" {
