@@ -43,7 +43,6 @@ const fs = fsWithCallbacks.promises;
       supported: {
         arrow: false,
       },
-      treeShaking: false,
     })
     .catch((e) => {
       console.log(e);
