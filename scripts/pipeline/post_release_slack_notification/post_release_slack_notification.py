@@ -38,14 +38,12 @@ class MessageGenerator:
         gh_run_id = str(os.getenv('GITHUB_RUN_ID', ''))
 
         mapping = {
-            'user': str(os.getenv('CIRCLE_USERNAME', 'circleci username')),
             'use_url': 'https://{}/home'.format(
                 self.config['public_facing_use_fqdn']) or 'Use URL not provided',
             'view_url': 'https://{}/home'.format(
                 self.config['public_facing_view_fqdn']) or 'View URL not provided',
             'admin_url': 'https://{}/'.format(
                 self.config['admin_fqdn']) or 'Admin URL not provided',
-            'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', 'Build url not included')),
             'gh_actions_build_url': f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
             'gh_actor': str(os.getenv('GITHUB_ACTOR', 'actor not included')),
             'commit_message': commit_message or 'Commit message not provided'
