@@ -216,7 +216,7 @@ orbs:
         resource_class: small
       node-browsers:
         docker:
-          - image: cimg/node:14.19-browsers
+          - image: cimg/node:18.11.0-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -302,7 +302,7 @@ orbs:
           - run:
               name: Build assets
               command: |
-                cd service-front/web/ && npm run build && npm run build:pdf_production
+                cd service-front/web/ && npm run build
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
