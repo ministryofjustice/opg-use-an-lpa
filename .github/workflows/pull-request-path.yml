@@ -149,6 +149,7 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      add_ttl: true
     secrets: inherit
     if: |
       always() &&
