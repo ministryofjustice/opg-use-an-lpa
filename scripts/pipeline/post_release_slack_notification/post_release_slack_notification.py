@@ -6,7 +6,6 @@ import requests
 
 
 def post_to_slack(slack_webhook, message):
-
     response = requests.post(
         slack_webhook, data=message,
         headers={'Content-Type': 'application/json'}
@@ -15,7 +14,9 @@ def post_to_slack(slack_webhook, message):
         raise ValueError(
             'Request to slack returned an error %s, the response is:\n%s'
             % (response.status_code, response.text)
-            )
+        )
+
+
 class MessageGenerator:
     config = ''
 
@@ -32,22 +33,28 @@ class MessageGenerator:
         with open(template_path, 'r') as file:
             template_str = file.read()
 
+        gh_server = str(os.getenv('GITHUB_SERVER_URL', ''))
+        gh_repository = str(os.getenv('GITHUB_REPOSITORY', ''))
+        gh_run_id = str(os.getenv('GITHUB_RUN_ID', ''))
+
         mapping = {
-          'user': str(os.getenv('CIRCLE_USERNAME', 'circleci username')),
-          'use_url':'https://{}/home'.format(
-            self.config['public_facing_use_fqdn']) or 'Use URL not provided',
-          'view_url': 'https://{}/home'.format(
-            self.config['public_facing_view_fqdn']) or 'View URL not provided',
-          'admin_url': 'https://{}/'.format(
-            self.config['admin_fqdn']) or 'Admin URL not provided',
-          'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', 'Build url not included')),
-          'commit_message': commit_message or 'Commit message not provided'
-          }
+            'user': str(os.getenv('CIRCLE_USERNAME', 'circleci username')),
+            'use_url': 'https://{}/home'.format(
+                self.config['public_facing_use_fqdn']) or 'Use URL not provided',
+            'view_url': 'https://{}/home'.format(
+                self.config['public_facing_view_fqdn']) or 'View URL not provided',
+            'admin_url': 'https://{}/'.format(
+                self.config['admin_fqdn']) or 'Admin URL not provided',
+            'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', 'Build url not included')),
+            'gh_actions_build_url': f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
+            'gh_actor': str(os.getenv('GITHUB_ACTOR', 'actor not included')),
+            'commit_message': commit_message or 'Commit message not provided'
+        }
 
         message = Template(template_str)
 
         text_message = {
-            'text':message.render(**mapping)
+            'text': message.render(**mapping)
         }
 
         post_release_message = json.dumps(text_message)
@@ -82,7 +89,6 @@ def main():
 
     if not args.test_mode:
         post_to_slack(args.slack_webhook, message)
-
 
 
 if __name__ == '__main__':

@@ -1,0 +1,62 @@
+name: "[Workflow] Keep demo environment up to date"
+
+on:
+  schedule:
+    # Every 8am
+    - cron: '0 8 * * *'
+
+permissions:
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  terraform_apply_environment:
+    name: terraform apply demo environment
+    uses: ./.github/workflows/_run-terraform.yml
+    with:
+      workspace: demo
+      terraform_path: environment
+      apply: true
+      specific_path: terraform
+    secrets: inherit
+
+  force_redeployment:
+    name: force redeployment
+    runs-on: ubuntu-latest
+    needs:
+      - terraform_apply_environment
+    steps:
+      - name: configure AWS credentials for ecs update
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::367815980639:role/opg-use-an-lpa-ci
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPADevAssumeGithubAction
+      - name: force new deployment
+        run: |
+          aws ecs update-service --cluster demo-use-an-lpa --force-new-deployment --service api-service --region eu-west-1
+          aws ecs update-service --cluster demo-use-an-lpa --force-new-deployment --service pdf-service --region eu-west-1
+          aws ecs update-service --cluster demo-use-an-lpa --force-new-deployment --service actor-service --region eu-west-1
+          aws ecs update-service --cluster demo-use-an-lpa --force-new-deployment --service viewer-service --region eu-west-1
+          aws ecs update-service --cluster demo-use-an-lpa --force-new-deployment --service admin-service --region eu-west-1
+
+  slack_notify:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - force_redeployment
+    with:
+      template: successful_demo_release.txt
+    secrets:
+      webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}

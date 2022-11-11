@@ -13,11 +13,10 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * Class LpasResourceCodesCollectionHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
@@ -26,6 +25,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         private ViewerCodeService $viewerCodeService,
         private Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
         private Repository\UserLpaActorMapInterface $userLpaActorMap,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -43,10 +43,8 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
         };
     }
 
-
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws BadRequestException|RuntimeException|NotFoundException|Exception
      */
@@ -142,6 +140,16 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
                 if (!empty($viewerCode['UserLpaActor'])) {
                     $codeOwner = $this->userLpaActorMap->get($viewerCode['UserLpaActor']);
+
+                    if ($codeOwner === null) {
+                        $this->logger->error(
+                            'Code owner was not fetched for LPA with UserActorLpaToken {token}',
+                            [
+                                'token' => $viewerCode['UserLpaActor'],
+                            ]
+                        );
+                    }
+
                     $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
                 }
             }
