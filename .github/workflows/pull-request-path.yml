@@ -10,11 +10,12 @@ defaults:
 on:
   push:
     branches:
-      - '*'              # matches every branch that doesn't contain a '/'
-      - '*/*'            # matches every branch containing a single '/'
-      - '**'             # matches every branch
-      - '!main'          # reverse match main
-      - '!dependabot/**' # reverse match dependabot PRs
+      - 'non_existent_branch'
+#      - '*'              # matches every branch that doesn't contain a '/'
+#      - '*/*'            # matches every branch containing a single '/'
+#      - '**'             # matches every branch
+#      - '!main'          # reverse match main
+#      - '!dependabot/**' # reverse match dependabot PRs
 
 permissions:
   contents: write

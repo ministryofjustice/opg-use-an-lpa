@@ -1,6 +1,11 @@
 version: 2.1
 
 workflows:
+  test_journey:
+    jobs:
+      - use-my-lpa/node_test_web:
+          name: test_web
+          filters: { branches: { ignore: [ main ] } }
   path_to_live:
       jobs:
         # Common tasks
