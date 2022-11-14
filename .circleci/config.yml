@@ -1,6 +1,18 @@
 version: 2.1
 
 workflows:
+  post_statistics:
+    triggers:
+      - schedule:
+          cron: "0 9 * * 1" # 9am every Monday
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - slack_notify_stats:
+          name: slack_notify_stats
+
   path_to_live:
       jobs:
         # Common tasks
@@ -981,6 +993,29 @@ jobs:
             export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
             echo $IMAGE_TAG
             python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
+
+  slack_notify_stats:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Get Stats
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
+      - slack/notify:
+          title: "Service Statistics - Use a Lasting Power of Attorney Production"
+          color: "#9933ff"
+          message: $(cat ./output.txt)
+          webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
+          footer: ""
 
   cancel_redundant_builds:
     docker:
