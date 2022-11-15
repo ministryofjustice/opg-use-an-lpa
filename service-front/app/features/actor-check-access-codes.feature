@@ -38,6 +38,12 @@ Feature: The user is able to check the access codes they have created
     When I click to check my access codes that is used to view LPA
     Then I can see the name of the organisation that viewed the LPA
 
+  @ui
+  Scenario: As a trust corporation user I can create a code that is seen by other attorneys
+    Given A trust corporation has created and access code
+    When I click to check my access codes that is used to view LPA
+    Then I can see the name of the trust corporation that created the access code
+
   @ui @integration
   Scenario: As a user I can see the code had not been used to view an LPA
     Given I have shared the access code with organisations to view my LPA
