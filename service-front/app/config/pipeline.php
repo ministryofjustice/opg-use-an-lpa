@@ -6,8 +6,8 @@ use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Middleware\Session\SessionExpiredAttributeAllowlistMiddleware;
-use Common\Middleware\Session\SessionExpiredRedirectMiddleware;
+use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
+use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -66,19 +66,19 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Load session from request and save it on the return
     $app->pipe(SessionMiddleware::class);
+    $app->pipe(SessionExpiryMiddleware::class);
 
     $app->pipe(UserIdentificationMiddleware::class);
     $app->pipe(RateLimitMiddleware::class);
 
+    $app->pipe(FlashMessageMiddleware::class);
+
     // Clean out the session if expired
-    $app->pipe(SessionExpiredAttributeAllowlistMiddleware::class);
-    $app->pipe(SessionExpiredRedirectMiddleware::class);
+    $app->pipe(SessionAttributeAllowlistMiddleware::class);
 
     $app->pipe(CsrfMiddleware::class);
 
     $app->pipe(StatePersistenceMiddleware::class);
-
-    $app->pipe(FlashMessageMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method

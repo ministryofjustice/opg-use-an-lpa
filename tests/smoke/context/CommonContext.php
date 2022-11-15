@@ -183,7 +183,7 @@ class CommonContext implements Context
      */
     public function theSessionCookiesIsMarkedSecureAndHttponly(): void
     {
-        $this->ui->assertSession()->cookieExists('session');
+        $this->ui->assertSession()->cookieExists('__Host-session');
 
         // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
         /** @var ChromeDriver $driver */
@@ -191,14 +191,14 @@ class CommonContext implements Context
         $cookies = $driver->getCookies();
 
         array_walk($cookies, function (array $cookie) {
-            if ($cookie['name'] === 'session' && !$cookie['httpOnly']) {
+            if ($cookie['name'] === '__Host-session' && !$cookie['httpOnly']) {
                 throw new ExpectationException(
                     sprintf('Unable to verify that the session cookie is "httpOnly"'),
                     $this->ui->getSession()
                 );
             }
 
-            if ($cookie['name'] === 'session' && !$cookie['secure']) {
+            if ($cookie['name'] === '__Host-session' && !$cookie['secure']) {
                 throw new ExpectationException(
                     sprintf('Unable to verify that the session cookie is "secure"'),
                     $this->ui->getSession()
@@ -221,10 +221,35 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I receive headers that cause the browser to not inform the destination site any URL information$/
+     */
+    public function iReceiveHeadersThatBlockURLInformation()
+    {
+        $session = $this->ui->getSession();
+        $referrerPolicyTag = $session->getResponseHeader("Referrer-Policy");
+
+        Assert::assertNotNull($referrerPolicyTag);
+        Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
+    }
+
+    /**
      * @Then I am given a PDF file of the summary
      */
     public function IAmGivenAPDFFileOfTheSummary(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
+     * @Then I receive headers that block external iframe embedding
+     */
+    public function IAmNotAllowedToViewThisPageInAnIframe(): void
+    {
+        $session = $this->ui->getSession();
+        $xFrameOptions = $session->getResponseHeader("X-Frame-Options");
+
+        Assert::assertNotNull($xFrameOptions);
+        Assert::assertStringContainsString('deny', $xFrameOptions);
+
     }
 }

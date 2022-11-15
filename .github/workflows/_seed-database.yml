@@ -1,0 +1,47 @@
+on:
+  workflow_call:
+
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        with:
+          fetch-depth: '0'
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPASeedGithubAction
+
+      - name: download cluster_config
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: environment_config_file
+          path: terraform/environment
+
+      - name: check it has downloaded
+        run: ls -alt terraform/environment
+
+      - name: install python
+        uses: actions/setup-python@b55428b1882923874294fa556849718a1d7f2ca5 # pin@v4.2.0
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: install requirements
+        run: pip install -r service-api/seeding/requirements.txt
+
+      - name: seed dynamodb
+        run: |
+          export AWS_ACCOUNT_ID=$(cat ./terraform/environment/cluster_config.json | jq .account_id | xargs)
+          export DYNAMODB_TABLE_ACTOR_CODES=$(cat ./terraform/environment/cluster_config.json | jq .actor_lpa_codes_table | xargs)
+          export DYNAMODB_TABLE_VIEWER_CODES=$(cat ./terraform/environment/cluster_config.json | jq .viewer_codes_table | xargs)
+          export DYNAMODB_TABLE_ACTOR_USERS=$(cat ./terraform/environment/cluster_config.json | jq .actor_users_table | xargs)
+          export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat ./terraform/environment/cluster_config.json | jq .user_lpa_actor_map | xargs)
+          export DYNAMODB_TABLE_STATS=$(cat ./terraform/environment/cluster_config.json | jq .stats_table | xargs)
+          python service-api/seeding/dynamodb.py

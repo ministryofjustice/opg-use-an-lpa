@@ -14,10 +14,10 @@ services:
       context: .
       dockerfile: service-front/web/Dockerfile
     entrypoint: >
-      sh -c "npm ci && npm run build-scss && npm run build:pdf && npm run watch"
+      sh -c "npm ci --verbose && npm run build"
     volumes:
       - ./service-front/web:/web:rw,delegated
-      - webpack_dist:/dist
+      - webpack_dist:/web/dist
 
   # ---------------------------
   # PDF Generator

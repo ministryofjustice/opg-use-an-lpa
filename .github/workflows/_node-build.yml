@@ -1,0 +1,36 @@
+name: "[Docker] Node build web"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: cache node modules
+        id: cache-npm
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # pin@v3.0.8
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ./service-front/web/node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/service-front/web/package-lock.json') }}
+      - name: install dependencies
+        run: |
+          if [ ! -d service-front/web/node_modules ]; then
+          cd service-front/web/ && npm ci
+          fi
+      - name: build assets
+        run: |
+          cd service-front/web/
+          npm run build
+      - name: archive dist
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
+        with:
+          name: dist-web
+          path: service-front/web/dist/

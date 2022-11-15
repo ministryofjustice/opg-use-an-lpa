@@ -1,4 +1,4 @@
-FROM node:14.19-alpine
+FROM node:18.12-alpine
 
 RUN apk add --no-cache \
   chromium \
@@ -11,7 +11,5 @@ RUN apk add --no-cache \
   harfbuzz \
   ca-certificates \
   ttf-freefont
-
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 WORKDIR /web
