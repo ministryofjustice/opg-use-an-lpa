@@ -141,7 +141,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                         'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
                         [
                             'attorney_id' => $trustCorporation->getUId(),
-                            'type'        => gettype($trustCorporation->getUId())
+                            'type'        => gettype($trustCorporation->getUId()),
                         ]
                     );
 
@@ -171,10 +171,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
-    private function idMatch(CaseActor $actor, array $code):bool {
+    private function idMatch(CaseActor $actor, array $code): bool
+    {
 
             return $actor->getId() === $code['ActorId']
             || intval($actor->getUId()) === $code['ActorId'];
-
     }
 }
