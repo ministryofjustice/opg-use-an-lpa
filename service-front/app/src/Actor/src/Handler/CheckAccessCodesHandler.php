@@ -173,7 +173,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
 
     private function idMatch(CaseActor $actor, array $code): bool
     {
-
             return $actor->getId() === $code['ActorId']
             || intval($actor->getUId()) === $code['ActorId'];
     }
