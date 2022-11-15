@@ -15,6 +15,10 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use Common\Service\Features\FeatureEnabled;
 
+use function PHPUnit\Framework\assertContains;
+use function PHPUnit\Framework\assertStringContainsString;
+use function PHPUnit\Framework\assertStringContainsStringIgnoringCase;
+
 /**
  * @property mixed  $lpa
  * @property string $userLpaActorToken
@@ -1128,6 +1132,57 @@ class LpaContext implements Context
      */
     public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => [
+                                0 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => $organisation,
+                                ],
+                                1 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => 'Another Organisation',
+                                ],
+                            ],
+                            'ActorId'      => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
         $this->ui->clickLink('Check access codes');
     }
 
@@ -2507,9 +2562,78 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The correct LPA is found and I can see the correct name which will have a role of "([^"]*)"$/
+     * @Given /^Has correct name "([^"]*)""([^"]*)" and role "([^"]*)"$/
      */
-    public function theCorrectLPAIsFoundAndICanSeeTheCorrectNameWhichWillHaveARoleOf($role): void
+    public function theNameMatchesExpected(string $firstName, string $lastName, string $role): void
+    {
+        $session = $this->ui->getSession();
+        $page    = $session->getPage();
+
+        $summary = $page->findAll('css', '.govuk-summary-list__row');
+
+        $foundName = null;
+        $foundRole = null;
+        foreach ($summary as $row) {
+            $key     = $row->find('css', '.govuk-summary-list__key');
+            $keyText = trim($key->getText());
+            $value   = $row->find('css', '.govuk-summary-list__value');
+
+            if ($keyText === 'Your role on this LPA') {
+                $foundRole = $value->getText();
+                assertStringContainsString($role, $foundRole);
+            }
+
+            if ($keyText === 'Your name') {
+                $foundName = $value->getText();
+                assertStringContainsString($firstName, $foundName);
+                assertStringContainsString($lastName, $foundName);
+            }
+        }
+
+        Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
+        Assert::assertNotNull($foundName, 'Actor\'s name was not found on this page');
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^Has the correct company name "([^"]*)" and role "([^"]*)"$/
+     */
+    public function hasTheCorrectCompanyNameAndRole(string $companyName, string $role): void
+    {
+        $session = $this->ui->getSession();
+        $page    = $session->getPage();
+
+        $summary = $page->findAll('css', '.govuk-summary-list__row');
+
+        $foundName = null;
+        $foundRole = null;
+        foreach ($summary as $row) {
+            $key     = $row->find('css', '.govuk-summary-list__key');
+            $keyText = trim($key->getText());
+            $value   = $row->find('css', '.govuk-summary-list__value');
+
+            if ($keyText === 'Your role on this LPA') {
+                $foundRole = $value->getText();
+                assertStringContainsString($role, $foundRole);
+            }
+
+            if ($keyText === 'Your name') {
+                $foundName = $value->getText();
+                assertStringContainsString($companyName, $foundName);
+            }
+        }
+
+        Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
+        Assert::assertNotNull($foundName, 'Company name was not found on this page');
+
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Then /^The LPA is found correctly$/
+     */
+    public function theLpaIsFoundCorrectly(): void
     {
         // API call for adding an LPA
         $this->apiFixtures->append(
@@ -2539,16 +2663,6 @@ class LpaContext implements Context
         );
 
         $this->ui->assertPageAddress('/lpa/check');
-
-        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
-        if ($role === 'Trust corporation') {
-            $this->ui->assertPageContainsText(sprintf('%s', $this->companyName));
-        } else {
-            $this->ui->assertPageContainsText(sprintf('Mr %s %s', $this->userFirstName, $this->userSurname));
-        }
-        $this->ui->assertPageContainsText($role);
-
-        $this->ui->pressButton('Continue');
     }
 
     /**

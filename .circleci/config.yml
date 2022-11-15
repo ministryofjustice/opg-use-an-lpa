@@ -1,29 +1,6 @@
 version: 2.1
 
 workflows:
-  keep_demo_environment_up_to_date:
-    triggers:
-      - schedule:
-          cron: "0 8 * * *" # Every 8am
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - use-my-lpa/apply_environment_terraform:
-          name: demo_apply_environment_terraform
-          workspace: demo
-          image_tag_input: latest
-          admin_image_tag_input: latest
-      - use-my-lpa/redeploy_latest:
-          name: redeploy_demo
-          environment: demo
-          requires: [demo_apply_environment_terraform]
-      - slack_environment_redeploy:
-          name: post_demo_release_message
-          environment: demo
-          requires: [redeploy_demo]
-
   post_statistics:
     triggers:
       - schedule:
@@ -251,7 +228,7 @@ orbs:
         resource_class: small
       node-browsers:
         docker:
-          - image: cimg/node:14.19-browsers
+          - image: cimg/node:18.11.0-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -337,7 +314,7 @@ orbs:
           - run:
               name: Build assets
               command: |
-                cd service-front/web/ && npm run build && npm run build:pdf_production
+                cd service-front/web/ && npm run build
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
@@ -973,28 +950,6 @@ orbs:
                 echo "end of workflow"
 
 jobs:
-  slack_environment_redeploy:
-    docker:
-      - image: cimg/python:3.7
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    parameters:
-      environment:
-        type: string
-    steps:
-      - checkout
-      - run:
-          name: Get Commit Message
-          command: |
-            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
-          color: "#4287f5"
-          message: "Scheduled update of <<parameters.environment>> environment complete"
-          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
-
   python_templated_slack_notify:
     docker:
       - image: cimg/python:3.7
@@ -1022,6 +977,22 @@ jobs:
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
             --commit_message "$(git log -1 --pretty=%B)"
 
+  ecr_scan_results:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            echo $IMAGE_TAG
+            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
 
   slack_notify_stats:
     docker:
@@ -1045,23 +1016,6 @@ jobs:
           message: $(cat ./output.txt)
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: ""
-
-  ecr_scan_results:
-    docker:
-      - image: cimg/python:3.7
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - run:
-          name: Check ECR Scan Results
-          command: |
-            pip install -r scripts/pipeline/requirements.txt
-            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-            echo $IMAGE_TAG
-            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
 
   cancel_redundant_builds:
     docker:

@@ -24,6 +24,11 @@ on:
         required: false
         default: 'all'
         type: string
+      add_ttl:
+        description: "Build on a specific path"
+        required: false
+        default: 'false'
+        type: string
 
 jobs:
   terraform_workflow:
@@ -117,7 +122,7 @@ jobs:
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: add TTL to dynamodb for environment
-        if: inputs.apply == 'true'
+        if: inputs.apply == 'true' && inputs.add_ttl == 'true'
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=${TF_WORKSPACE}

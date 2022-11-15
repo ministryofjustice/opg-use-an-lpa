@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
+use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateInterval;
@@ -15,11 +16,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class UserLpaActorMapTest extends TestCase
 {
-    use ProphecyTrait;
     use GenerateAwsResultTrait;
+    use ProphecyTrait;
 
     public const TABLE_NAME = 'test-table-name';
 
@@ -42,11 +44,11 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_lookup_a_token(): void
     {
-        $testToken = 'test-token';
+        $testToken     = 'test-token';
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testAdded = gmdate('c');
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testAdded     = gmdate('c');
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -63,25 +65,29 @@ class UserLpaActorMapTest extends TestCase
         }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'Id' => [
+                    'Id'        => [
                         'S' => $testToken,
                     ],
                     'SiriusUid' => [
                         'S' => $testSiriusUid,
                     ],
-                    'UserId' => [
+                    'UserId'    => [
                         'S' => $testUserId,
                     ],
-                    'ActorId' => [
+                    'ActorId'   => [
                         'N' => $testActorId,
                     ],
-                    'Added' => [
+                    'Added'     => [
                         'S' => $testAdded,
                     ],
                 ],
             ]))->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $result = $repo->get($testToken);
 
@@ -112,10 +118,14 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))
             ->willReturn($this->createAWSResult([
-                'Item' => []
+                'Item' => [],
             ]))->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $result = $repo->get($testToken);
 
@@ -131,9 +141,9 @@ class UserLpaActorMapTest extends TestCase
     public function add_unique_token(): void
     {
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testCode = 'test-code';
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testCode      = 'test-code';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
@@ -169,7 +179,11 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode);
     }
@@ -178,7 +192,7 @@ class UserLpaActorMapTest extends TestCase
     public function add_unique_token_without_optional_values(): void
     {
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
+        $testUserId    = 'test-user-id';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
@@ -210,19 +224,22 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $repo->create($testUserId, $testSiriusUid, null);
     }
 
-
     /** @test */
     public function add_unique_token_with_TTL(): void
     {
-        $yearInEpoch = 31536000;
+        $yearInEpoch   = 31536000;
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $yearInEpoch,
@@ -257,7 +274,11 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $repo->create(
             $testUserId,
@@ -285,7 +306,7 @@ class UserLpaActorMapTest extends TestCase
                 $this->throwException(
                     new DynamoDbException(
                         'exception',
-                        $this->prophesize(\Aws\CommandInterface::class)->reveal(),
+                        $this->prophesize(CommandInterface::class)->reveal(),
                         ['code' => 'ConditionalCheckFailedException']
                     )
                 ),
@@ -294,7 +315,11 @@ class UserLpaActorMapTest extends TestCase
 
         //---
 
-        $repo = new UserLpaActorMap($dDBMock, self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $dDBMock,
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $id = $repo->create('test-val', 'test-val', 'test-val');
 
@@ -302,7 +327,7 @@ class UserLpaActorMapTest extends TestCase
     }
 
     /** @test */
-    public function test_unknown_exception_when_adding_code(): void
+    public function unknown_exception_when_adding_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
             ->willThrow(DynamoDbException::class)
@@ -310,7 +335,11 @@ class UserLpaActorMapTest extends TestCase
 
         //---
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         // We should now expect a DynamoDbException
         $this->expectException(DynamoDbException::class);
@@ -324,11 +353,11 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_delete_map(): void
     {
-        $testToken = 'test-token';
+        $testToken     = 'test-token';
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testAdded = gmdate('c');
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testAdded     = gmdate('c');
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -340,25 +369,29 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id' => [
+                'Id'        => [
                     'S' => $testToken,
                 ],
                 'SiriusUid' => [
                     'S' => $testSiriusUid,
                 ],
-                'Added' => [
+                'Added'     => [
                     'S' => $testAdded,
                 ],
-                'ActorId' => [
-                    'S' => (string) $testActorId
+                'ActorId'   => [
+                    'S' => (string) $testActorId,
                 ],
-                'UserId' => [
-                    'S' => $testUserId
+                'UserId'    => [
+                    'S' => $testUserId,
                 ],
-            ]
+            ],
         ]));
 
-        $userLpaActorMapRepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $removeActorMap = $userLpaActorMapRepo->delete($testToken);
 
@@ -371,12 +404,12 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_activate_record(): void
     {
-        $testToken = 'test-token';
-        $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = '1';
-        $testActivationCode = "8EFXFEF48WJ4";
-        $testAdded = gmdate('c');
+        $testToken          = 'test-token';
+        $testSiriusUid      = 'test-uid';
+        $testUserId         = 'test-user-id';
+        $testActorId        = '1';
+        $testActivationCode = '8EFXFEF48WJ4';
+        $testAdded          = gmdate('c');
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -394,25 +427,29 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id' => [
+                'Id'        => [
                     'S' => $testToken,
                 ],
                 'SiriusUid' => [
                     'S' => $testSiriusUid,
                 ],
-                'Added' => [
+                'Added'     => [
                     'S' => $testAdded,
                 ],
-                'ActorId' => [
-                    'S' => $testActorId
+                'ActorId'   => [
+                    'S' => $testActorId,
                 ],
-                'UserId' => [
-                    'S' => $testUserId
+                'UserId'    => [
+                    'S' => $testUserId,
                 ],
-            ]
+            ],
         ]));
 
-        $userLpaActorMapRepo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken, $testActorId, $testActivationCode);
         $this->assertEquals($testToken, $removeActorMap['Id']);
@@ -424,11 +461,11 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_get_all_lpas_for_user(): void
     {
-        $testToken = 'test-token';
+        $testToken     = 'test-token';
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testAdded = gmdate('c');
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testAdded     = gmdate('c');
 
         $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($testUserId) {
             $this->assertArrayHasKey('TableName', $data);
@@ -448,28 +485,34 @@ class UserLpaActorMapTest extends TestCase
 
             return true;
         }))->willReturn(
-            $this->createAWSResult(['Items' => [
+            $this->createAWSResult([
+            'Items' => [
                 [
-                    'Id' => [
+                    'Id'        => [
                         'S' => $testToken,
                     ],
                     'SiriusUid' => [
                         'S' => $testSiriusUid,
                     ],
-                    'UserId' => [
+                    'UserId'    => [
                         'S' => $testUserId,
                     ],
-                    'ActorId' => [
+                    'ActorId'   => [
                         'N' => $testActorId,
                     ],
-                    'Added' => [
+                    'Added'     => [
                         'S' => $testAdded,
                     ],
-                ]
-            ]])
+                ],
+            ],
+            ])
         )->shouldBeCalled();
 
-        $repo = new UserLpaActorMap($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $repo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $result = $repo->getByUserId($testUserId);
 
@@ -493,13 +536,13 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_update_record(): void
     {
-        $testToken = 'test-token';
+        $testToken     = 'test-token';
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testAdded = gmdate('c');
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testAdded     = gmdate('c');
 
-        $now = new DateTimeImmutable();
+        $now    = new DateTimeImmutable();
         $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
@@ -522,34 +565,35 @@ class UserLpaActorMapTest extends TestCase
         }))->willReturn($this->createAWSResult(
             [
                 'Item' => [
-                    'Id' => [
+                    'Id'         => [
                         'S' => $testToken,
                     ],
-                    'SiriusUid' => [
+                    'SiriusUid'  => [
                         'S' => $testSiriusUid,
                     ],
-                    'Added' => [
+                    'Added'      => [
                         'S' => $testAdded,
                     ],
-                    'ActorId' => [
+                    'ActorId'    => [
                         'S' => (string)$testActorId,
                     ],
-                    'UserId' => [
+                    'UserId'     => [
                         'S' => $testUserId,
                     ],
                     'ActivateBy' => [
                         'N' => $expiry,
                     ],
-                    'DueBy' => [
-                        'S' => 'P2W'
-                    ]
+                    'DueBy'      => [
+                        'S' => 'P2W',
+                    ],
                 ],
             ]
         ));
 
         $userLpaActorMapRepo = new UserLpaActorMap(
             $this->dynamoDbClientProphecy->reveal(),
-            self::TABLE_NAME
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
         $renew = $userLpaActorMapRepo->updateRecord(
@@ -564,13 +608,13 @@ class UserLpaActorMapTest extends TestCase
     /** @test */
     public function can_update_record_without_actorId(): void
     {
-        $testToken = 'test-token';
+        $testToken     = 'test-token';
         $testSiriusUid = 'test-uid';
-        $testUserId = 'test-user-id';
-        $testActorId = 1;
-        $testAdded = gmdate('c');
+        $testUserId    = 'test-user-id';
+        $testActorId   = 1;
+        $testAdded     = gmdate('c');
 
-        $now = new DateTimeImmutable();
+        $now    = new DateTimeImmutable();
         $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
@@ -596,34 +640,35 @@ class UserLpaActorMapTest extends TestCase
         }))->willReturn($this->createAWSResult(
             [
                 'Item' => [
-                    'Id' => [
+                    'Id'         => [
                         'S' => $testToken,
                     ],
-                    'SiriusUid' => [
+                    'SiriusUid'  => [
                         'S' => $testSiriusUid,
                     ],
-                    'Added' => [
+                    'Added'      => [
                         'S' => $testAdded,
                     ],
-                    'ActorId' => [
+                    'ActorId'    => [
                         'S' => (string)$testActorId,
                     ],
-                    'UserId' => [
+                    'UserId'     => [
                         'S' => $testUserId,
                     ],
                     'ActivateBy' => [
                         'N' => $expiry,
                     ],
-                    'DueBy' => [
-                        'S' => 'P2W'
-                    ]
+                    'DueBy'      => [
+                        'S' => 'P2W',
+                    ],
                 ],
             ]
         ));
 
         $userLpaActorMapRepo = new UserLpaActorMap(
             $this->dynamoDbClientProphecy->reveal(),
-            self::TABLE_NAME
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
         $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), null);
