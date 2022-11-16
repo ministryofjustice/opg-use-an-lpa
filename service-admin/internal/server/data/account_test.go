@@ -13,17 +13,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockDynamoDBClent struct {
+type mockDynamoDBClient struct {
 	QueryFunc   func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 	GetItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	BatchGetItemFunc func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error)
 }
 
-func (m *mockDynamoDBClent) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
+func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
 	return m.QueryFunc(ctx, params, optFns...)
 }
 
-func (m *mockDynamoDBClent) GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
+func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
 	return m.GetItemFunc(ctx, params, optFns...)
+}
+
+func (m *mockDynamoDBClient) BatchGetItem(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
+  return m.BatchGetItemFunc(ctx, params, optFns...)
 }
 
 func TestGetActorUserByEmail(t *testing.T) {
@@ -83,7 +88,7 @@ func TestGetActorUserByEmail(t *testing.T) {
 			t.Parallel()
 
 			dynamodbConnection := DynamoConnection{
-				Client: &mockDynamoDBClent{
+				Client: &mockDynamoDBClient{
 					QueryFunc: tt.queryFunc,
 				},
 				Prefix: "",
@@ -142,7 +147,7 @@ func TestGetEmailByUserID(t *testing.T) {
 			t.Parallel()
 
 			connection := DynamoConnection{
-				Client: &mockDynamoDBClent{
+				Client: &mockDynamoDBClient{
 					GetItemFunc: tt.getItemFunc,
 				},
 			}

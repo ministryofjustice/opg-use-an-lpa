@@ -48,6 +48,7 @@ func (mc *mockHTTPClient) Do(rq *http.Request) (*http.Response, error) {
 type mockDynamoDBClient struct {
 	QueryFunc   func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 	GetItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	BatchGetItemFunc func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error)
 }
 
 func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
@@ -60,6 +61,10 @@ func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryIn
 
 func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error) {
 	return nil, nil
+}
+
+func (m *mockDynamoDBClient) BatchGetItem(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
+  return m.BatchGetItemFunc(ctx, params, optFns...)
 }
 
 func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {

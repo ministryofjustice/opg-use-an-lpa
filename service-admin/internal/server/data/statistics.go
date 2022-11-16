@@ -1,118 +1,102 @@
 package data
 
 import (
-	"context"
-	"errors"
-	"fmt"
+  "context"
+  "errors"
 
-	//"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-
-	//	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+  "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+  "github.com/aws/aws-sdk-go-v2/service/dynamodb"
+  "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+  "github.com/rs/zerolog/log"
 )
 
 type statisticsService struct {
-	db DynamoConnection
-}
-
-type LpasAddedResult struct {
-	Metric    string
-	Total     string
-	ThisMonth  int
-	LastMonth  int
-	MothBefore int
+  db DynamoConnection
 }
 
 type MetricPerTimePeriod struct {
-	TimePeriod      string
-	lpas_added      int
-}
-
-type LpasAdded struct {
-  metricFor     int
-
-	AddedLPAsPerTimePeriod []*MetricPerTimePeriod
+  LpasAdded        int `json:"lpas_added" dynamodbav:"lpas_added"`
+  LpasRemoved      int `json:"lpa_removed_event" dynamodbav:"lpa_removed_event"`
+  AccountCreated   int `json:"account_created_event" dynamodbav:"account_created_event"`
+  AccountDeleted   int `json:"account_deleted_event" dynamodbav:"account_deleted_event"`
+  AccountActivated int `json:"account_activated_event" dynamodbav:"account_activated_event"`
+  TimePeriod       string
 }
 
 const (
-	StatsTableName  = "Stats"
+  StatsTableName = "Stats"
 )
 
-var ErrTotalLpasAddedNotFound = errors.New("total Lpas added not found")
-var ErrLpasAddedPerTimePeriodNotFound = errors.New("lpas added per month not found")
+var ErrMetricsNotFound = errors.New("metrics not found")
+var ErrMetricsPerTimePeriodNotFound = errors.New("metrics per month not found")
 
 func NewStatisticsService(db DynamoConnection) *statisticsService {
-	return &statisticsService{db: db}
+  return &statisticsService{db: db}
 }
-//lpa *LpasAdded
 
-func (s *statisticsService) GetAddedLpas(ctx context.Context, list []string) (lpa []*MetricPerTimePeriod, err error) {
-	result, err := s.db.Client.BatchGetItem(ctx, &dynamodb.BatchGetItemInput{
-		RequestItems: map[string]types.KeysAndAttributes{
-			s.db.prefixedTableName(StatsTableName): {
-				Keys: []map[string]types.AttributeValue{
-					{
-						"TimePeriod": &types.AttributeValueMemberS{Value: list[0]},
-					},
-					{
-						"TimePeriod": &types.AttributeValueMemberS{Value: list[1]},
-					},
-					{
-						"TimePeriod": &types.AttributeValueMemberS{Value: list[2]},
-					},
-					{
-						"TimePeriod": &types.AttributeValueMemberS{Value: list[3]},
-					},
-			},
-		},
-	},
-	})
+func (s *statisticsService) GetAllMetrics(ctx context.Context, list []string) (metricValues map[string]map[string]float64, err error) {
+  result, err := s.db.Client.BatchGetItem(ctx, &dynamodb.BatchGetItemInput{
+    RequestItems: map[string]types.KeysAndAttributes{
+      s.db.prefixedTableName(StatsTableName): {
+        Keys: []map[string]types.AttributeValue{
+          {
+            "TimePeriod": &types.AttributeValueMemberS{Value: list[0]},
+          },
+          {
+            "TimePeriod": &types.AttributeValueMemberS{Value: list[1]},
+          },
+          {
+            "TimePeriod": &types.AttributeValueMemberS{Value: list[2]},
+          },
+          {
+            "TimePeriod": &types.AttributeValueMemberS{Value: list[3]},
+          },
+        },
+      },
+    },
+  })
 
-	if err != nil {
-    panic(fmt.Errorf("batch load of added lpas failed, err: %w", err))
-	}
+  if err != nil {
+    log.Error().Err(err).Msg("batch load of added lpas failed")
+  }
 
-	//lpasAddedValues := []MetricPerTimePeriod{} 
+  if len(result.Responses) > 0 {
+    metricValues := make(map[string]map[string]float64)
+    for _, table := range result.Responses {
 
+      for _, item := range table {
+        currentMonthValues := make(map[string]float64)
 
-	metricValues := []MetricPerTimePeriod{}
-	for _, table := range result.Responses {
-		for _, item :=range table {
-			
-			//lpasAddedValue := MetricPerTimePeriod{}
-		  timePeriod := MetricPerTimePeriod{}
-			
-			//err = attributevalue.UnmarshalMap(item, &lpasAddedValue)
-			
-			err = attributevalue.UnmarshalMap(item, &timePeriod)
-			
-			if err != nil {
-				panic(fmt.Errorf("failed to unmarshall addedlpas from dynamodb response, err: %w", err))
-			}
+        for metricName, metricValue := range item {
+          if metricName != "TimePeriod" {
+            var unMarshalledValue float64
+    
+            err = attributevalue.Unmarshal(metricValue, &unMarshalledValue)
+            if err != nil {
+              log.Error().Err(err).Msg("unable to convert dynamo result into metricValue")
+            }
 
-			metricValues = append(metricValues, timePeriod)
+            currentMonthValues[metricName] = unMarshalledValue
+          }
+        }      
+        
+        var unMarshalledValue string
 
-		}
+        err = attributevalue.Unmarshal(item["TimePeriod"], &unMarshalledValue)
+        if err != nil {
+          log.Error().Err(err).Msg("unable to convert dynamo result TimePeriod")
+        }
 
-	}
-	//results := []LpasAdded{}
-	
-	if err == nil {
-		timePeriod1 := result.Responses[s.db.prefixedTableName(StatsTableName)][0]
-		timePeriod2 := result.Responses[s.db.prefixedTableName(StatsTableName)][1]
-		timePeriod3 := result.Responses[s.db.prefixedTableName(StatsTableName)][2]
-		total := result.Responses[s.db.prefixedTableName(StatsTableName)][3]
-	
-		fmt.Println(timePeriod1)
-		fmt.Println(timePeriod2)
-		fmt.Println(timePeriod3)
-		fmt.Println(total)
-		return nil, nil
-	}
+        metricValues[unMarshalledValue] = currentMonthValues
+      }
+    }
 
-	fmt.Println(result.Responses)
-	return nil, ErrTotalLpasAddedNotFound
+    for key, value := range metricValues[list[0]]{
+      metricValues["Total"][key] = metricValues["Total"][key]  + value
+    }
+
+  return metricValues, nil
+  }
+
+  return nil, ErrMetricsNotFound
 }

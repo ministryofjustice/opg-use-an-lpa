@@ -6,13 +6,10 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 )
 
 type StatisticsService interface {
-	//GetAddedLpasTotal(context.Context, string) (*data.LpasAdded, error)
-	//GetNumberOfLpasAddedPerTimePeriod(context.Context, string) ([]*data.TimePeriod, error)
-  GetAddedLpas(context.Context, []string) ([]*data.MetricPerTimePeriod, error) //*data.LpasAdded
+  GetAllMetrics(context.Context, []string) (map[string]map[string]float64, error)
 }
 
 type TemplateService interface {
@@ -32,20 +29,19 @@ func NewStatsServer(statisticsService StatisticsService, templateService Templat
 }
 
 func (s *StatsServer) StatsHandler(w http.ResponseWriter, r *http.Request) {
-	//search := &LpasAddedSearch{}
 	search := &Search{}
 
-	search.Result = s.SearchLpasAddedInTheLastThreeMonths(r.Context())
-
+	search.Result = s.GetMetricsInTheLastThreeMonths(r.Context())
+	
 	if err := s.templateService.RenderTemplate(w, r.Context(), "stats.page.gohtml", search); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
 }
 
-func (s *StatsServer) SearchLpasAddedInTheLastThreeMonths(ctx context.Context) interface{} {
+func (s *StatsServer) GetMetricsInTheLastThreeMonths(ctx context.Context) interface{} {
 		checkList := getPeriodsToBeChecked()	
 		
-		r, err := s.statisticsService.GetAddedLpas(ctx, checkList)
+		r, err := s.statisticsService.GetAllMetrics(ctx, checkList)
 		if err != nil {
 		return nil
 		}
