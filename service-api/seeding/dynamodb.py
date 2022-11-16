@@ -213,26 +213,51 @@ stats = [
     {
         'TimePeriod': 'Total',
         'lpas_added': 35,
+        'lpa_removed_event': 40,
+        'account_created_event': 30,
+        'account_deleted_event': 30,
+        'account_activated_event': 20
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=5)).strftime('%Y-%m'),
         'lpas_added': 5,
+        'lpa_removed_event': 6,
+        'account_created_event': 3,
+        'account_deleted_event': 2,
+        'account_activated_event': 2
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
-        'lpas_added': 3
+        'lpas_added': 3,
+        'lpa_removed_event': 7,
+        'account_created_event': 5,
+        'account_deleted_event': 1,
+        'account_activated_event': 15
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
-        'lpas_added': 7
+        'lpas_added': 7,
+        'lpa_removed_event': 8,
+        'account_created_event': 12,
+        'account_deleted_event': 3,
+        'account_activated_event': 12
+
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
-        'lpas_added': 5
+        'lpas_added': 5,
+        'lpa_removed_event': 9,
+        'account_created_event': 15,
+        'account_deleted_event': 1,
+        'account_activated_event': 9
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m'),
-        'lpas_added': 15
+        'lpas_added': 15,
+        'lpa_removed_event': 10,
+        'account_created_event': 6,
+        'account_deleted_event': 4,
+        'account_activated_event': 12
     }
 ]
 
