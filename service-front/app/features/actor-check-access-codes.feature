@@ -40,7 +40,7 @@ Feature: The user is able to check the access codes they have created
 
   @ui
   Scenario: As a trust corporation user I can create a code that is seen by other attorneys
-    Given A trust corporation has created and access code
+    Given A trust corporation has created an access code
     When I click to check my access codes that is used to view LPA
     Then I can see the name of the trust corporation that created the access code
 

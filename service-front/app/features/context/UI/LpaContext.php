@@ -54,7 +54,7 @@ class LpaContext implements Context
     private RequestHandler $requestDashboardLPACodes;
 
     /**
-     * @Given /^A trust corporation has created and access code$/
+     * @Given /^A trust corporation has created an access code$/
      */
     public function zaTrustCorporationHasCreatedAndAccessCode()
     {
