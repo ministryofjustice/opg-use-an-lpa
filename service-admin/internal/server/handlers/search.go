@@ -127,7 +127,6 @@ func stripUnnecessaryCharacters(code string) string {
 }
 
 func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request){
-
 	search := &Search{}
 
 	if r.Method == "POST" {
