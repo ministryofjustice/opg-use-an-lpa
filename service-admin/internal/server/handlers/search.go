@@ -126,7 +126,7 @@ func stripUnnecessaryCharacters(code string) string {
 	return result
 }
 
-func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
+func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request){
 
 	search := &Search{}
 
