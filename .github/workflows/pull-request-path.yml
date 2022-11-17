@@ -219,7 +219,7 @@ jobs:
           name: service-api
           path: service-api
         if: needs.workflow_variables.outputs.specific_path == 'all'
-      - name: download artifact for api tests
+      - name: download artifact for admin tests
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: service-admin
@@ -227,9 +227,30 @@ jobs:
         if: |
           needs.workflow_variables.outputs.specific_path == 'all' ||
           needs.workflow_variables.outputs.specific_path == 'admin'
-      - uses: codecov/codecov-action@v3
+      - name: service front codecov upload
+        uses: codecov/codecov-action@v3
         with:
-          name: codecov-use-an-lpa
+          name: use-an-lpa-front
+          directory: ./service-front
+          fail_ci_if_error: true
+          flags: use-an-lpa-front
+          verbose: true
+      - name: service api codecov upload
+        uses: codecov/codecov-action@v3
+        with:
+          name: use-an-lpa-api
+          directory: ./service-api
+          fail_ci_if_error: true
+          flags: use-an-lpa-api
+          verbose: true
+      - name: service admin codecov upload
+        uses: codecov/codecov-action@v3
+        with:
+          name: use-an-lpa-admin
+          directory: ./service-admin
+          fail_ci_if_error: true
+          flags: use-an-lpa-admin
+          verbose: true
 
   # Required end of workflow job
   end_of_workflow:
