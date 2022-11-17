@@ -29,15 +29,16 @@ func (m *mockDynamoDBBatchClient) BatchGetItem(ctx context.Context, params *dyna
   return m.BatchGetItemFunc(ctx, params, optFns...)
 }
 
-func TestGetAddedLpas(t *testing.T) {
+func TestGetAllMetrics(t *testing.T) {
   t.Parallel()
 
   tests := []struct {
     name      string
     list      []string
     batchGetItemFunc func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error)
-    want      *map[string]map[string]float64
+    want      map[string]map[string]float64
     wantErr   assert.ErrorAssertionFunc
+    errorExpected bool
   }{
     {
       name:   "find metric values for last 3 months",
@@ -48,12 +49,33 @@ func TestGetAddedLpas(t *testing.T) {
 						"Stats": {
               {
                 "TimePeriod": &types.AttributeValueMemberS{Value: "2022-11"},
+                "lpas_added": &types.AttributeValueMemberN{Value: "1"},
+                "lpa_removed_evet": &types.AttributeValueMemberN{Value: "1"},
+                "account_created_event": &types.AttributeValueMemberN{Value: "5"},
               },
+              {
+                "TimePeriod": &types.AttributeValueMemberS{Value: "2022-10"},
+                "lpas_added": &types.AttributeValueMemberN{Value: "4"},
+                "lpa_removed_evet": &types.AttributeValueMemberN{Value: "2"},
+                "account_created_event": &types.AttributeValueMemberN{Value: "7"},
+              },
+              {
+                "TimePeriod": &types.AttributeValueMemberS{Value: "2022-09"},
+                "lpas_added": &types.AttributeValueMemberN{Value: "3"},
+                "lpa_removed_evet": &types.AttributeValueMemberN{Value: "1"},
+                "account_created_event": &types.AttributeValueMemberN{Value: "4"},
+              },
+              {
+               "TimePeriod": &types.AttributeValueMemberS{Value: "Total"},
+                "lpas_added": &types.AttributeValueMemberN{Value: "11"},
+                "lpa_removed_evet": &types.AttributeValueMemberN{Value: "11"},
+                "account_created_event": &types.AttributeValueMemberN{Value: "10"},
+             },
             },
           },	
         }, nil 
       },
-      want: &map[string]map[string]float64{
+      want: map[string]map[string]float64{
         "2022-11": {
           "lpas_added": 1,
           "lpa_removed_evet": 1,
@@ -69,14 +91,24 @@ func TestGetAddedLpas(t *testing.T) {
           "lpa_removed_evet": 1,
           "account_created_event": 4,
         },
-        "Total": {
-          "lpas_added": 10,
-          "lpa_removed_evet": 11,
-          "account_created_event": 12,
+       "Total": {
+          "lpas_added": 12,
+          "lpa_removed_evet": 12,
+          "account_created_event": 15,
         },
       },
-      wantErr: assert.NoError,
+      wantErr: assert.NoError, errorExpected: false,
     },
+    {
+			name:  "doesn't find a metric for time period",
+			list: []string {"2022-11", "2022-10", "2022-09", "Total"},
+      batchGetItemFunc: func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
+        return &dynamodb.BatchGetItemOutput{
+				}, nil
+			},
+			want:    nil,
+			wantErr: assert.Error,
+		},
     {
       name:   "error whilst searching for metrics",
       list: []string {"2022-11", "2022-10", "2022-09", "Total"},
@@ -104,13 +136,13 @@ func TestGetAddedLpas(t *testing.T) {
 
      client := NewStatisticsService(dynamodbConnection)
 
+     metricValues, err := client.GetAllMetrics(context.Background(), tt.list)
 
-     lpas, err := client.GetAllMetrics(context.Background(), tt.list)
+     tt.wantErr(t, err, fmt.Sprintf("GetAllMetrics(%v)", tt.list)) 
 
-     if tt.wantErr(t, err, fmt.Sprintf("GetAllMetrics(%v)", tt.list)) {
-       return
+     if (!tt.errorExpected) {
+      assert.EqualValues(t, tt.want, metricValues)
      }
-     assert.EqualValues(t, tt.want, lpas)
    })
   }
 }

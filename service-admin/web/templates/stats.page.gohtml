@@ -31,6 +31,18 @@
     <th scope="col" class="govuk-table__header">{{ .lpa_removed_event }}</th>
   {{ end }}
 </tr>
+</thead>
+</table>
+
+<table class="govuk-table">
+<thead class="govuk-table__head">
+<tr>
+  <th scope="col" class="govuk-table__header"></th>
+  <th scope="col" class="govuk-table__header">2 months previous</th>
+  <th scope="col" class="govuk-table__header">Previous Month</th>  
+  <th scope="col" class="govuk-table__header">Current Month</th>
+  <th scope="col" class="govuk-table__header">Total</th>
+</tr>
 <tr>
   <th scope="col" class="govuk-table__header">Number of account created</th>
   {{ range .Result }}
@@ -43,15 +55,26 @@
     <th scope="col" class="govuk-table__header">{{ .account_deleted_event }}</th>
   {{ end }}
 </tr>
+</thead>
+</table>
+
+<table class="govuk-table">
+<thead class="govuk-table__head">
+<tr>
+  <th scope="col" class="govuk-table__header"></th>
+  <th scope="col" class="govuk-table__header">2 months previous</th>
+  <th scope="col" class="govuk-table__header">Previous Month</th>  
+  <th scope="col" class="govuk-table__header">Current Month</th>
+  <th scope="col" class="govuk-table__header">Total</th>
+</tr>
 <tr>
   <th scope="col" class="govuk-table__header">Number of account activated</th>
   {{ range .Result }}
     <th scope="col" class="govuk-table__header">{{ .account_activated_event }}</th>
   {{ end }}
 </tr>
- 
 </thead>
 </table>
-{{end}}
 
+{{end}}
 {{ end }}
