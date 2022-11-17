@@ -1,4 +1,4 @@
-name: "[Workflow] Keep demo environment up to date"
+name: "[Scheduled] Keep demo environment up to date"
 
 on:
   schedule:
