@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/aws/aws-sdk-go-v2 v1.16.16
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
+	github.com/aws/aws-sdk-go-v2/credentials v1.12.21
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.6
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
@@ -15,12 +16,11 @@ require (
 	github.com/rs/zerolog v1.28.0
 	github.com/sethvargo/go-retry v0.2.3
 	github.com/spf13/afero v1.9.2
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.8.1
 )
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.12.21 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.17 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.23 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.17 // indirect
@@ -42,5 +42,5 @@ require (
 	golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
