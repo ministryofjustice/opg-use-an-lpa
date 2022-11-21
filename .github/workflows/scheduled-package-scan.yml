@@ -1,4 +1,4 @@
-name: Generate scan report
+name: "[Scheduled] Generate scan report"
 
 on:
   push:
