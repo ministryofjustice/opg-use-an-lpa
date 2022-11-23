@@ -102,6 +102,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->data['actor_role']             = $state->getActorRole();
             $this->data['actor_address_response'] = $state->actorAddressResponse;
 
+
             if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
                 $this->data['donor_first_names'] = $state->donorFirstNames;
                 $this->data['donor_last_name']   = $state->donorLastName;
@@ -114,14 +115,18 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->data['attorney_dob']         = $state->attorneyDob;
             }
 
-            $this->data['actor_current_address'] = array_filter(
-                [
-                    $state->actorAddress1,
-                    $state->actorAddress2,
-                    $state->actorAddressTown,
-                    $state->actorAddressCounty,
-                ]
-            );
+            if ($state->liveInUK === 'Yes') {
+                $this->data['actor_current_address'] = array_filter(
+                    [
+                        $state->actorAddress1,
+                        $state->actorAddress2,
+                        $state->actorAddressTown,
+                        $state->actorAddressCounty,
+                    ]
+                );
+            } else {
+                $this->data['actor_current_address'] = explode(PHP_EOL, $state->actorAbroadAddress);
+            }
 
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE) {
                 $this->data['address_on_paper'] = RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE;
@@ -157,19 +162,25 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         if ($this->form->isValid()) {
             $state = $this->state($request);
 
-            $this->data['first_names']           = $state->firstNames;
-            $this->data['last_name']             = $state->lastName;
-            $this->data['dob']                   = $state->dob;
-            $this->data['actor_id']              = $state->actorUid;
-            $this->data['actor_current_address'] = array_filter(
-                [
-                    $state->actorAddress1,
-                    $state->actorAddress2,
-                    $state->actorAddressTown,
-                    $state->actorAddressCounty,
-                    $state->postcode,
-                ]
-            );
+            $this->data['first_names'] = $state->firstNames;
+            $this->data['last_name']   = $state->lastName;
+            $this->data['dob']         = $state->dob;
+            $this->data['actor_id']    = $state->actorUid;
+
+            $this->data['live_in_uk'] = $state->liveInUK;
+            if ($state->liveInUK === 'Yes') {
+                $this->data['actor_current_address'] = array_filter(
+                    [
+                        $state->actorAddress1,
+                        $state->actorAddress2,
+                        $state->actorAddressTown,
+                        $state->actorAddressCounty,
+                        $state->postcode,
+                    ]
+                );
+            } else {
+                $this->data['actor_current_address'] = explode(PHP_EOL, $state->actorAbroadAddress);
+            }
             if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
                 $this->data['address_on_paper'] = $state->addressOnPaper;
             }
@@ -202,7 +213,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $letterExpectedDate = (new Carbon())->addWeeks(6);
 
             if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
-
                 $this->notifyService->sendEmailToUser(
                     NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE,
                     $this->data['email'],
@@ -242,7 +252,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             || $this->state($request)->firstNames === null
             || $this->state($request)->lastName === null
             || $this->state($request)->dob === null
-            || $this->state($request)->postcode === null
+            || $this->state($request)->liveInUK === null
             || (
                 $this->state($request)->telephone === null
                 && $this->state($request)->noTelephone === null
@@ -254,8 +264,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         }
 
         $alwaysRequired = $alwaysRequired || $this->state($request)->getActorRole() === null
-            || $this->state($request)->actorAddress1 === null
-            || $this->state($request)->actorAddressTown === null;
+            || (($this->state($request)->actorAddress1 === null
+            || $this->state($request)->actorAddressTown === null ) && $this->state($request)->actorAbroadAddress === null);
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             return $alwaysRequired

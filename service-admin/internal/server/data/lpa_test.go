@@ -134,10 +134,11 @@ func TestGetLPAByActivationCode(t *testing.T) {
 
 			lpas, err := client.GetLPAByActivationCode(context.Background(), tt.activationCode)
 
-			if tt.wantErr(t, err, fmt.Sprintf("GetLPAByActivationCode(%v)", tt.activationCode)) {
-				return
+			tt.wantErr(t, err, fmt.Sprintf("GetLPAByActivationCode(%v)", tt.activationCode))
+
+			if tt.want != nil {
+				assert.EqualValues(t, tt.want, lpas)
 			}
-			assert.EqualValues(t, tt.want, lpas)
 		})
 	}
 }

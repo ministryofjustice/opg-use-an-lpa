@@ -83,7 +83,7 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         return parent::isMissingPrerequisite($request)
-            || $this->state($request)->actorAddress1 === null
+            || ($this->state($request)->actorAddress1 === null && $this->state($request)->actorAbroadAddress === null)
             || $this->state($request)->getActorRole() === null;
     }
 

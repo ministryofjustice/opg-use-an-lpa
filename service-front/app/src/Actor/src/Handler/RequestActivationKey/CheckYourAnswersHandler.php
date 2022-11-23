@@ -100,6 +100,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             'last_name'        => $state->lastName,
             'dob'              => $state->dob,
             'postcode'         => $state->postcode,
+            'live_in_uk'       => $state->liveInUK,
         ];
 
         return new HtmlResponse($this->renderer->render(
@@ -125,6 +126,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
         if ($this->form->isValid()) {
             $state = $this->state($request);
+
+            if ($state->liveInUK === 'No') {
+                return $this->redirectToRoute('lpa.add.actor-address');
+            }
 
             $result = $this->addOlderLpa->validate(
                 $this->user?->getIdentity(), // PHP8 nullsafe operator

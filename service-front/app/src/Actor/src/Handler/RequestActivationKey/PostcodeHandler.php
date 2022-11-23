@@ -34,6 +34,13 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
                 ]
             );
         }
+        if (($liveInUK = $this->state($request)->liveInUK) !== null) {
+            $this->form->setData(
+                [
+                    'live_in_uk' => $liveInUK,
+                ]
+            );
+        }
 
         return new HtmlResponse(
             $this->renderer->render(
@@ -56,8 +63,9 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
             //  Set the data in the session and pass to the check your answers handler
             $this->state($request)->postcode = $postData['postcode'];
+            $this->state($request)->liveInUK = $postData['live_in_uk'];
 
-            return $this->redirectToRoute('lpa.check-answers');
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse(
@@ -82,7 +90,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
     public function lastPage(WorkflowState $state): string
     {
         /** @var RequestActivationKey $state */
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        return $state->liveInUK !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function nextPage(WorkflowState $state): string
