@@ -350,6 +350,15 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am redirected to the activation key page$/
+     */
+    public function iAmRedirectedToTheActivationKeyPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+    }
+
+
+    /**
      * @Then /^I am taken to request an activation key form$/
      */
     public function iAmTakenToRequestAnActivationKeyForm(): void
@@ -357,6 +366,24 @@ class LpaContext implements Context
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
         $this->ui->assertPageContainsText('What is the LPA reference number?');
+    }
+
+    /**
+     * @Then /^My filled answers have been cleared$/
+     */
+    public function myFilledAnswersHaveBeenCleared()
+    {
+        $this->ui->assertPageNotContainsText('AB12CD34EF56');
+    }
+
+    /**
+     * @Given /^I go to the check lpa page without filling in all the pages$/
+     */
+    public function iGoToTheCheckLPAPageWithoutFillingInAllThePages()
+    {
+        $this->ui->fillField('activation_key', 'AB12CD34EF56');
+        $this->ui->pressButton('Continue');
+        $this->ui->visit('/lpa/check');
     }
 
     /**

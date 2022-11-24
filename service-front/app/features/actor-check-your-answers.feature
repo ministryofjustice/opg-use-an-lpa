@@ -36,10 +36,3 @@ Feature: Check your answers before requesting an activation key
     When I request to go back and change my postcode
     Then I am taken back to the postcode page where I can see my answers and change them
     Then I press continue and I am taken back to the check answers page
-
-  @ui
-  Scenario: The user cannot get to the check answers page before they have filled in all the prerequisite questions
-    Given I am on the request an activation key page
-    When I go to the check answers page without filling in all the pages
-    Then I am redirected to the activation key page
-    And My filled answers have been cleared

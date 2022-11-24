@@ -94,7 +94,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             || !isset($referenceNumber)
             || !isset($dob)
         ) {
-            return $this->redirectToRoute('lpa.add-by-paper', [], ['startAgain' => true]);
+            $this->state($request)->reset();
+            return $this->redirectToRoute('lpa.add-by-key');
         }
 
         return match ($request->getMethod()) {
