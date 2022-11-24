@@ -249,12 +249,30 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Given /^I go to the check answers page without filling in all the pages$/
+     */
+    public function iGoToTheCheckAnswersPageWithoutFillingInAllThePages()
+    {
+        $this->ui->fillField('opg_reference_number', '7000-0000-0138');
+        $this->ui->pressButton('Continue');
+        $this->ui->visit('/lpa/check');
+    }
+    /**
      * @Then /^I am redirected to the activation key page$/
      */
     public function iAmRedirectedToTheActivationKeyPage()
     {
         $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
+
+    /**
+     * @Then /^My filled answers have been cleared$/
+     */
+    public function myFilledAnswersHaveBeenCleared()
+    {
+        $this->ui->assertPageNotContainsText('700000000138');
+    }
+
 
     /**
      * @Then /^I am shown a warning that my details must match the information on record$/

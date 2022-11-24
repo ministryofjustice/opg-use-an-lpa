@@ -86,7 +86,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         $activation_key  = $this->state($request)->activationKey;
         $referenceNumber = $this->state($request)->lpaReferenceNumber;
-        $dob             = $this->state($request)->dateOfBirth->format('Y-m-d');
+        $dob             = $this->state($request)->dateOfBirth?->format('Y-m-d');
 
         if (
             !isset($this->identity)
@@ -94,10 +94,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             || !isset($referenceNumber)
             || !isset($dob)
         ) {
-            // We don't have a code so the session has timed out
-            // TODO this can be reached if the session is still perfectly valid but the lpa search/response
-            //      failed in some way. Make this better.
-            throw new SessionTimeoutException();
+            return $this->redirectToRoute('lpa.add-by-paper', [], ['startAgain' => true]);
         }
 
         return match ($request->getMethod()) {
