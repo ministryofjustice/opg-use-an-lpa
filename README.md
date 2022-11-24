@@ -2,7 +2,7 @@
 
 OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa.svg?style=svg)](https://circleci.com/gh/ministryofjustice/opg-use-an-lpa)
+![path to live status](https://github.com/ministryofjustice/opg-use-an-lpa/actions/workflows/path-to-live.yml/badge.svg)
 
 [![codecov coverage status](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa/branch/main/graph/badge.svg)](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa)
 

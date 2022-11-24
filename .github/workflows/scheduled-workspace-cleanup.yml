@@ -1,4 +1,4 @@
-name: "[Workflow] Cleanup PR Workspaces"
+name: "[Scheduled] Cleanup PR Workspaces"
 
 on:
   schedule:
