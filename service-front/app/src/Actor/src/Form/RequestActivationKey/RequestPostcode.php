@@ -62,7 +62,7 @@ class RequestPostcode extends AbstractForm implements InputFilterProviderInterfa
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages' => [
-                                NotEmpty::IS_EMPTY => 'Select if you live in the UK',
+                                NotEmpty::IS_EMPTY => 'Select yes if you live in the UK',
                             ],
                         ],
                     ],
