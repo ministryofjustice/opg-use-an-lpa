@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use Common\Service\Lpa\OlderLpaApiResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -143,6 +144,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Then /^I am asked to check my answers$/
+     * @Given /^I am on the check your answers page$/
      */
     public function iAmAskedToCheckMyAnswers()
     {
@@ -151,20 +153,63 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I request an activation key for an LPA$/
+     */
+    public function iRequestAnActivationKey()
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Postcode not supplied',
+                        'details' => 'Postcode not supplied',
+                        'data'    => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE,
+            )
+        );
+
+        $this->iPressTheContinueButton();
+    }
+
+    /**
+     * @When /^I request an activation key for an LPA that already exists in my account$/
+     */
+    public function iRequestAnActivationKeyThatAlreadyExists()
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Bad request',
+                        'details' => 'LPA already added',
+                        'data'    =>
+                        [
+                            'donor'         => [
+                                'uId'         => $this->lpa->donor->uId,
+                                'firstname'   => $this->lpa->donor->firstname,
+                                'middlenames' => $this->lpa->donor->middlenames,
+                                'surname'     => $this->lpa->donor->surname,
+                            ],
+                            'caseSubtype'   => $this->lpa->caseSubtype,
+                            'lpaActorToken' => $this->userLpaActorToken,
+                        ]
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE,
+            )
+        );
+        $this->iPressTheContinueButton();
+    }
+    /**
      * @When /^I press the continue button$/
      */
     public function iPressTheContinueButton(): void
     {
         $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @Given /^I am on the check your answers page$/
-     */
-    public function iAmOnTheCheckYourAnswersPage()
-    {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertPageContainsText('Check your answers');
     }
 
     /**
@@ -1276,7 +1321,7 @@ class RequestActivationKeyContext implements Context
     {
         Assert::assertStringContainsString(
             'Requester is not a UK resident',
-            $this->base->mockClientHistoryContainer[2]['request']->getBody()->getContents()
+            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
         );
     }
 

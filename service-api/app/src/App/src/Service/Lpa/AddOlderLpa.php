@@ -85,6 +85,10 @@ class AddOlderLpa
             }
         }
 
+        if (empty($matchData['postcode'])) {
+            throw new BadRequestException('Postcode not supplied');
+        }
+
         // Fetch the LPA from the LpaServiceOLDER_LPA_KEY_ALREADY_REQUESTED
         $lpa = $this->lpaService->getByUid((string) $matchData['reference_number']);
         if ($lpa === null) {
