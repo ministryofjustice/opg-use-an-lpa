@@ -152,3 +152,10 @@ Feature: Add an LPA
     Examples:
       | id  | passcode     | companyName       | role     |
       | 164 | TYUPHWQRECHV | trust corporation | Attorney |
+
+  @ui
+  Scenario: The user cannot get to the check answers page before they have filled in all the prerequisite questions
+    Given I am on the add an LPA page
+    When I go to the check lpa page without filling in all the pages
+    Then I am redirected to the activation key page
+    And My filled answers have been cleared
