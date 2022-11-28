@@ -42,8 +42,8 @@ func (m *mockActivationKeyService) GetActivationKeyFromCodes(ctx context.Context
 }
 
 type mockDynamoDBClient struct {
-	QueryFunc   func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
-	GetItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	QueryFunc        func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	GetItemFunc      func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 	BatchGetItemFunc func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error)
 }
 
@@ -56,7 +56,7 @@ func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetIt
 }
 
 func (m *mockDynamoDBClient) BatchGetItem(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
-  return m.BatchGetItemFunc(ctx, params, optFns...)
+	return m.BatchGetItemFunc(ctx, params, optFns...)
 }
 
 func Test_withErrorHandling(t *testing.T) {

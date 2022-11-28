@@ -51,10 +51,10 @@ const (
 
 var (
 	//nolint:stylecheck // actual message shown to users
-	ErrNotEmailOrCode error = errors.New("Enter an email address or activation code")
+	ErrNotEmailOrCode = errors.New("Enter an email address or activation code")
 
-	activationCodeRegexp *regexp.Regexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
-	lpaNumberRegex       *regexp.Regexp = regexp.MustCompile(`(?i)(\d[ -]*?){12}$`)
+	activationCodeRegexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)
+	lpaNumberRegex       = regexp.MustCompile(`(?i)(\d[ -]*?){12}$`)
 )
 
 type QueryType int
@@ -67,8 +67,8 @@ type Search struct {
 }
 
 type AddedBy struct {
-	DateAdded string
-	Email     string
+	DateAdded  string
+	Email      string
 	ActivateBy int
 }
 
@@ -94,7 +94,6 @@ func (s *Search) Validate() error {
 
 	return e
 }
-
 
 func (s *Search) checkEmailOrCode(value interface{}) error {
 	isEmail := is.Email.Validate(value)
@@ -126,7 +125,7 @@ func stripUnnecessaryCharacters(code string) string {
 	return result
 }
 
-func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request){
+func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	search := &Search{}
 
 	if r.Method == "POST" {
