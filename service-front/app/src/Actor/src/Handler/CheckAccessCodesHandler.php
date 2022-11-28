@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\CancelCode;
+use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
@@ -116,10 +117,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 ]
             );
 
-            if (
-                $lpa->getDonor()->getId() === $code['ActorId']
-                || intval($lpa->getDonor()->getUId()) === $code['ActorId']
-            ) {
+            if ($this->idMatch($lpa->getDonor(), $code)) {
                 $shareCodes[$key]['CreatedBy'] =
                     $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
             }
@@ -133,11 +131,23 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     ]
                 );
 
-                if (
-                    $attorney->getId() === $code['ActorId']
-                    || intval($attorney->getUId()) === $code['ActorId']
-                ) {
+                if ($this->idMatch($attorney, $code)) {
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
+                }
+            }
+            if (empty($shareCodes[$key]['CreatedBy'])) {
+                foreach ($lpa->getTrustCorporations() as $trustCorporation) {
+                    $this->logger->debug(
+                        'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
+                        [
+                            'attorney_id' => $trustCorporation->getUId(),
+                            'type'        => gettype($trustCorporation->getUId()),
+                        ]
+                    );
+
+                    if ($this->idMatch($trustCorporation, $code)) {
+                        $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
+                    }
                 }
             }
 
@@ -159,5 +169,11 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             'shareCodes' => $shareCodes,
             'flash'      => $flash,
         ]));
+    }
+
+    private function idMatch(CaseActor $actor, array $code): bool
+    {
+            return $actor->getId() === $code['ActorId']
+            || intval($actor->getUId()) === $code['ActorId'];
     }
 }

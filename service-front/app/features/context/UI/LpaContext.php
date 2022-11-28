@@ -54,6 +54,91 @@ class LpaContext implements Context
     private RequestHandler $requestDashboardLPACodes;
 
     /**
+     * @Given /^A trust corporation has created an access code$/
+     */
+    public function zaTrustCorporationHasCreatedAndAccessCode()
+    {
+        $trustCorpActor = [
+        'type'    => 'primary-attorney',
+        'details' => [
+            'addresses'    => [
+                [
+                    'addressLine1' => '',
+                    'addressLine2' => '',
+                    'addressLine3' => '',
+                    'country'      => '',
+                    'county'       => '',
+                    'id'           => 0,
+                    'postcode'     => '',
+                    'town'         => '',
+                    'type'         => 'Primary',
+                ],
+            ],
+            'companyName'  => 'ABC Ltd',
+            'dob'          => '',
+            'email'        => 'string',
+            'firstname'    => '',
+            'id'           => 0,
+            'middlenames'  => null,
+            'salutation'   => '',
+            'surname'      => '',
+            'systemStatus' => true,
+            'uId'          => '700000151998',
+            ],
+        ];
+        $organisation   = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $trustCorpActor,
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => [
+                                0 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => $organisation,
+                                ],
+                                1 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => 'Another Organisation',
+                                ],
+                            ],
+                            'ActorId'      => 700000151998,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+    }
+
+    /**
      * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
      */
     public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable(): void
@@ -86,6 +171,14 @@ class LpaContext implements Context
                 'you must contact us for a new activation key if you want to add the LPA back to your account'
             );
         }
+    }
+
+    /**
+     * @Then /^I can see the name of the trust corporation that created the access code$/
+     */
+    public function iCanSeeTheNameOfTheTrustCorporationThatCreatedTheAccessCode()
+    {
+        $this->ui->assertPageContainsText('ABC Ltd');
     }
 
     /**
@@ -350,6 +443,15 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am redirected to the activation key page$/
+     */
+    public function iAmRedirectedToTheActivationKeyPage()
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+    }
+
+
+    /**
      * @Then /^I am taken to request an activation key form$/
      */
     public function iAmTakenToRequestAnActivationKeyForm(): void
@@ -357,6 +459,24 @@ class LpaContext implements Context
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('lpa/request-code/lpa-reference-number');
         $this->ui->assertPageContainsText('What is the LPA reference number?');
+    }
+
+    /**
+     * @Then /^My filled answers have been cleared$/
+     */
+    public function myFilledAnswersHaveBeenCleared()
+    {
+        $this->ui->assertPageNotContainsText('AB12CD34EF56');
+    }
+
+    /**
+     * @Given /^I go to the check lpa page without filling in all the pages$/
+     */
+    public function iGoToTheCheckLPAPageWithoutFillingInAllThePages()
+    {
+        $this->ui->fillField('activation_key', 'AB12CD34EF56');
+        $this->ui->pressButton('Continue');
+        $this->ui->visit('/lpa/check');
     }
 
     /**
@@ -1039,57 +1159,6 @@ class LpaContext implements Context
      */
     public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
-        $organisation = 'Natwest';
-
-        // API call for get LpaById
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => $this->lpaData['actor'],
-                    ]
-                ),
-                self::LPA_SERVICE_GET_LPA_BY_ID
-            )
-        );
-
-        // API call to get access codes
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        0 => [
-                            'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Expires'      => '2021-01-01T23:59:59+00:00',
-                            'UserLpaActor' => $this->userLpaActorToken,
-                            'Organisation' => $this->organisation,
-                            'ViewerCode'   => $this->accessCode,
-                            'Viewed'       => [
-                                0 => [
-                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
-                                    'ViewerCode' => $this->accessCode,
-                                    'ViewedBy'   => $organisation,
-                                ],
-                                1 => [
-                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
-                                    'ViewerCode' => $this->accessCode,
-                                    'ViewedBy'   => 'Another Organisation',
-                                ],
-                            ],
-                            'ActorId'      => $this->actorId,
-                        ],
-                    ]
-                ),
-                self::LPA_SERVICE_GET_LPA_BY_ID
-            )
-        );
-
         $this->ui->clickLink('Check access codes');
     }
 
@@ -1619,7 +1688,193 @@ class LpaContext implements Context
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
-        // Not needed for this context
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2026-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => '',
+                            'ActorId'      => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2026-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => '',
+                            'ActorId'      => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+    }
+
+    /**
+     * @When /^I have shared the access code with organisations and they have viewed my LPA$/
+     */
+    public function iHaveSharedTheAccessCodeWithOrganisationsAndTheyHaveViewedMyLPA(): void
+    {
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => [
+                                0 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => $organisation,
+                                ],
+                                1 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => 'Another Organisation',
+                                ],
+                            ],
+                            'ActorId'      => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        $organisation = 'Natwest';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Expires'      => '2021-01-01T23:59:59+00:00',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => [
+                                0 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => $organisation,
+                                ],
+                                1 => [
+                                    'Viewed'     => '2020-10-01T15:27:23.263483Z',
+                                    'ViewerCode' => $this->accessCode,
+                                    'ViewedBy'   => 'Another Organisation',
+                                ],
+                            ],
+                            'ActorId'      => $this->actorId,
+                        ],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
     }
 
     /**
