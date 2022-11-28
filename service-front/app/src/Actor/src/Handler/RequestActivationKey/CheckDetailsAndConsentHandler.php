@@ -220,6 +220,15 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                     letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                 );
 
+                if ($state->liveInUK === 'No') {
+                    $this->logger->notice(
+                        'Request for activation key for LPA {uID} with address abroad',
+                        [
+                            'event_code' => EventCodes::USER_ABROAD_ADDRESS_REQUEST_SUCCESS,
+                            'uID' => $state->referenceNumber
+                        ]
+                    );
+                }
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::activation-key-request-received',
