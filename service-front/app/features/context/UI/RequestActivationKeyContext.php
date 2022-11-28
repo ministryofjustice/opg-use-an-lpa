@@ -8,7 +8,6 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
-use Common\Service\Lpa\OlderLpaApiResponse;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -119,8 +118,6 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-    /**
-     *
      * @Then /^I am asked for my contact details$/
      */
     public function iAmAskedForMyContactDetails()
@@ -343,7 +340,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am redirected to the activation key page$/
+     * @Then /^I am redirected to the reference number page$/
      */
     public function iAmRedirectedToTheActivationKeyPage()
     {
