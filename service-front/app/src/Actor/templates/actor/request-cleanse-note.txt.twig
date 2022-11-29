@@ -24,4 +24,3 @@ Donor: {{ data.donor_first_names }} {{ data.donor_last_name }} {{ data.donor_dob
 {% if data.actor_role is defined and data.actor_role == 'donor' %}
 Attorney: {{ data.attorney_first_names }} {{ data.attorney_last_name }} {{ data.attorney_dob.format('d/m/Y') }}
 {% endif %}
-
