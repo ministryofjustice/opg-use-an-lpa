@@ -23,9 +23,15 @@ interface ActorUsersInterface
      * @param HiddenString $password
      * @param string $activationToken
      * @param int $activationTtl
-     * @return array
+     * @return void
      */
-    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array;
+    public function add(
+        string $id, 
+        string $email, 
+        HiddenString $password, 
+        string $activationToken, 
+        int $activationTtl
+    ): void;
 
     /**
      * Get an actor user from the database
