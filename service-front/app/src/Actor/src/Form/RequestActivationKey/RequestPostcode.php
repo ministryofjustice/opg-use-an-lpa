@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form\RequestActivationKey;
 
 use Common\Form\AbstractForm;
+use Common\Validator\NotEmptyConditional;
 use Laminas\Filter\StringToUpper;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -19,10 +20,25 @@ class RequestPostcode extends AbstractForm implements InputFilterProviderInterfa
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
-            'name' => 'postcode',
-            'type' => 'Text',
-        ]);
+        $this->add(
+            [
+               'name' => 'postcode',
+               'type' => 'Text',
+            ]
+        );
+
+        $this->add(
+            [
+               'name'    => 'live_in_uk',
+               'type'    => 'Radio',
+               'options' => [
+                   'value_options' => [
+                       'Yes' => 'Yes',
+                       'No'  => 'No',
+                   ],
+               ],
+            ]
+        );
     }
 
     /**
@@ -31,17 +47,39 @@ class RequestPostcode extends AbstractForm implements InputFilterProviderInterfa
      */
     public function getInputFilterSpecification(): array
     {
+        $emptyValidator = [
+            'name'    => NotEmpty::class,
+            'options' => [
+                'message' => 'Enter your postcode',
+            ],
+        ];
         return [
-            'postcode' => [
+            'live_in_uk' => [
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
+                        'options'                => [
+                            'messages' => [
+                                NotEmpty::IS_EMPTY => 'Select yes if you live in the UK',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'postcode'   => [
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => StringToUpper::class],
                 ],
                 'validators' => [
                     [
-                        'name'    => NotEmpty::class,
+                        'name'    => NotEmptyConditional::class,
                         'options' => [
-                            'message' => 'Enter your postcode',
+                            'message'         => 'Enter your postcode',
+                            'dependant'       => 'live_in_uk',
+                            'dependant_value' => 'No',
                         ],
                     ],
                 ],

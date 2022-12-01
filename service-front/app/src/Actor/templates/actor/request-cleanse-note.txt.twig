@@ -6,6 +6,9 @@ Part Match - cleanse and send activation key
 Requester: {{ data.first_names }} {{ data.last_name }}
 {% if data.actor_id is empty %}
 DOB: {{ data.dob.format('d/m/Y') }}
+{% if data.live_in_uk == 'No' %}
+Requester is not a UK resident
+{% endif %}
 Current postal address: {{ data.actor_current_address | join(', ') }}
 {% endif %}
 {% if data.address_on_paper is defined and data.address_on_paper is not empty %}

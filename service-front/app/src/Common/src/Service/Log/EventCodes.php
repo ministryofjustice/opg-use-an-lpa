@@ -174,4 +174,10 @@ class EventCodes
      * User activation key has expired
      */
     public const ACTIVATION_KEY_EXPIRED = 'ACTIVATION_KEY_EXPIRED';
+
+    /**
+     * Activation key request is successful with a current address that is abroad
+     */
+    public const USER_ABROAD_ADDRESS_REQUEST_SUCCESS = 'USER_ABROAD_ADDRESS_REQUEST_SUCCESS';
+
 }

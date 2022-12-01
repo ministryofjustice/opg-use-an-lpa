@@ -28,6 +28,7 @@ class AddOlderLpa
     private const OLDER_LPA_ALREADY_ADDED         = 'LPA already added';
     private const OLDER_LPA_NEEDS_CLEANSING       = 'LPA needs cleansing';
     private const OLDER_LPA_KEY_ALREADY_REQUESTED = 'Activation key already requested for LPA';
+    private const OLDER_LPA_POSTCODE_NOT_SUPPLIED = 'Postcode not supplied';
 
     /**
      * @param ApiClient       $apiClient
@@ -193,6 +194,10 @@ class AddOlderLpa
                     OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
+                break;
+            case self::OLDER_LPA_POSTCODE_NOT_SUPPLIED:
+                $code = null;
+                $response = new OlderLpaApiResponse(OlderLpaApiResponse::POSTCODE_NOT_SUPPLIED, $additionalData);
                 break;
 
             default:

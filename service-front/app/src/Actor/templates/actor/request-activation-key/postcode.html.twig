@@ -19,35 +19,29 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}What is your UK postcode?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}Do you live in the UK?{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}This must be your current postcode. Your activation key will be posted to this address.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}You can only ask for an activation key if you live in the UK.{% endtrans %}</p>
-
-                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details" data-gaEventType="onClick" data-gaCategory="Details" data-gaAction="Not UK user" data-gaLabel="I do not live in the UK">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                {% trans %}I do not live in the UK{% endtrans %}
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>{% trans %}If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead.{% endtrans %}</p>
-                            {{ include('@partials/contact-details/telephone.html.twig', {title: false}) }}
-                        </div>
-                    </details>
+{#                  <p class="govuk-body">{% trans %}This must be your current postcode. Your activation key will be posted to this address.{% endtrans %}</p>#}
 
                     {{ govuk_form_open(form) }}
 
-                        {{ govuk_form_element(form.get('__csrf')) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
 
-                        {{ govuk_form_element(form.get('postcode'), {
-                            'label': 'Your postcode' | trans,
-                            'label_attr': {'class': 'govuk-!-font-weight-bold'},
-                            'aria_labelledby': 'postcode_heading',
-                            'attr' : {'class': 'govuk-input--width-10', 'label_class': 'govuk-!-font-weight-bold'}
-                        }) }}
-
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+                    {{ govuk_form_element(form.get('live_in_uk'), {'value_options':
+                        [
+                            {
+                                'label': 'Yes'| trans,
+                                'value': 'Yes',
+                                'conditionalContent': {"postcode": govuk_form_element(form.get('postcode'),{'label': 'What is your UK postcode?'| trans})}
+                            },
+                            {
+                                'label': 'No'| trans,
+                                'value': 'No'
+                            },
+                        ]}
+                    ) }}
+                    
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 
                     {{ govuk_form_close() }}
                 </div>

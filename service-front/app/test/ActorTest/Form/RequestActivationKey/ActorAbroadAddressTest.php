@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\RequestActivationKey;
 
-use Actor\Form\RequestActivationKey\RequestPostcode;
+use Actor\Form\RequestActivationKey\ActorAbroadAddress;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use CommonTest\Form\LaminasFormTests;
 use Laminas\Form\Element\Radio;
-use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
-use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class RequestPostcodeTest extends TestCase implements TestsLaminasForm
+class ActorAbroadAddressTest extends TestCase
 {
     use LaminasFormTests;
     use ProphecyTrait;
 
-    protected RequestPostcode $form;
+    protected ActorAbroadAddress $form;
 
     public function getForm(): AbstractForm
     {
@@ -28,21 +28,21 @@ class RequestPostcodeTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'request_activation_key_postcode';
+        return 'actor_address';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf'     => Csrf::class,
-            'postcode'   => Text::class,
-            'live_in_uk' => Radio::class,
+            '__csrf'                    => Csrf::class,
+            'actor_abroad_address'      => Textarea::class,
+            'actor_address_check_radio' => Radio::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new RequestPostcode($guardProphecy->reveal());
+        $this->form    = new ActorAbroadAddress($guardProphecy->reveal());
     }
 }
