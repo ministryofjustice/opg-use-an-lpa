@@ -16,8 +16,8 @@ class ActorUsers implements ActorUsersInterface
     use DynamoHydrateTrait;
 
     public function __construct(
-        private DynamoDbClient $client,
-        private string $actorUsersTable,
+        private readonly DynamoDbClient $client,
+        private readonly string $actorUsersTable,
     ) {
     }
 
@@ -46,7 +46,7 @@ class ActorUsers implements ActorUsersInterface
 
         $code = $result->get('@metadata')['statusCode'];
         if ($code !== 200) {
-            throw new CreationException('Failed to create account with code {code}', ['code' => $code]);
+            throw new CreationException('Failed to create account with code', ['code' => $code]);
         }
     }
 
