@@ -11,6 +11,8 @@ use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
+use function PHPUnit\Framework\assertArrayHasKey;
+
 /**
  * Class AccountContext
  *
@@ -427,20 +429,15 @@ class AccountContext implements Context
         // ActorUsers::add
         $this->awsFixtures->append(new Result());
 
-        // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Email' => $this->userAccountCreateData['Email'],
-                'ActivationToken' => $this->userAccountCreateData['ActivationToken']
-            ])
-        ]));
-
         $this->apiPost('/v1/user', [
             'email' => $this->userAccountCreateData['Email'],
             'password' => $this->userAccountCreateData['Password']
         ], []);
 
-        Assert::assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
+        $result = $this->getResponseAsJson();
+        assertArrayHasKey('Id', $result);
+        assertArrayHasKey('ActivationToken', $result);
+        assertArrayHasKey('ExpiresTTL', $result);
     }
 
     /**
