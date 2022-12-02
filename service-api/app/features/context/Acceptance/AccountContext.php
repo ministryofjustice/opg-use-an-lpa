@@ -14,10 +14,6 @@ use PHPUnit\Framework\Assert;
 use function PHPUnit\Framework\assertArrayHasKey;
 
 /**
- * Class AccountContext
- *
- * @package BehatTest\Context\Acceptance
- *
  * @property array passwordResetData
  * @property array userAccountCreateData
  * @property string newEmail
@@ -59,9 +55,9 @@ class AccountContext implements Context
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
                     'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
-                    'LastLogin' => null
-                ])
-            ]
+                    'LastLogin' => null,
+                ]),
+            ],
         ]));
 
         // ActorUsers::recordSuccessfulLogin
@@ -69,14 +65,14 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'        => $this->base->userAccountId,
-                    'LastLogin' => null
-                ])
-            ]
+                    'LastLogin' => null,
+                ]),
+            ],
         ]));
 
         $this->apiPatch('/v1/auth', [
             'email'    => $this->base->userAccountEmail,
-            'password' => $this->base->userAccountPassword
+            'password' => $this->base->userAccountPassword,
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -111,7 +107,7 @@ class AccountContext implements Context
 
         $this->apiPatch('/v1/auth', [
             'email'    => 'incorrect@email.com',
-            'password' => $this->base->userAccountPassword
+            'password' => $this->base->userAccountPassword,
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -129,14 +125,14 @@ class AccountContext implements Context
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
                     'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
-                    'LastLogin' => null
-                ])
-            ]
+                    'LastLogin' => null,
+                ]),
+            ],
         ]));
 
         $this->apiPatch('/v1/auth', [
             'email'    => $this->base->userAccountEmail,
-            'password' => '1nc0rr3ctPa33w0rd'
+            'password' => '1nc0rr3ctPa33w0rd',
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
@@ -163,14 +159,14 @@ class AccountContext implements Context
                     'Email'           => $this->base->userAccountEmail,
                     'Password'        => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
                     'LastLogin'       => null,
-                    'ActivationToken' => 'a12b3c4d5e'
-                ])
-            ]
+                    'ActivationToken' => 'a12b3c4d5e',
+                ]),
+            ],
         ]));
 
         $this->apiPatch('/v1/auth', [
             'email'    => $this->base->userAccountEmail,
-            'password' => $this->base->userAccountPassword
+            'password' => $this->base->userAccountPassword,
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_UNAUTHORIZED);
@@ -190,8 +186,8 @@ class AccountContext implements Context
     public function iAskForMyPasswordToBeReset(): void
     {
         $this->passwordResetData = [
-            'Id'                  => $this->base->userAccountId,
-            'PasswordResetToken'  => 'AAAABBBBCCCC'
+            'Id'                 => $this->base->userAccountId,
+            'PasswordResetToken' => 'AAAABBBBCCCC',
         ];
 
         // ActorUsers::getByEmail
@@ -199,9 +195,9 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'    => $this->base->userAccountId,
-                    'Email' => $this->base->userAccountEmail
-                ])
-            ]
+                    'Email' => $this->base->userAccountEmail,
+                ]),
+            ],
         ]));
 
         // ActorUsers::requestPasswordReset
@@ -209,8 +205,8 @@ class AccountContext implements Context
             'Attributes' => $this->marshalAwsResultData([
                 'Id'                  => $this->base->userAccountId,
                 'PasswordResetToken'  => $this->passwordResetData['PasswordResetToken'],
-                'PasswordResetExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
-            ])
+                'PasswordResetExpiry' => time() + (60 * 60 * 24), // 24 hours in the future
+            ]),
         ]));
 
         $this->apiPatch('/v1/request-password-reset', ['email' => $this->base->userAccountEmail], []);
@@ -236,7 +232,7 @@ class AccountContext implements Context
         $this->passwordResetData = [
             'Id'                  => $this->base->userAccountId,
             'PasswordResetToken'  => 'AAAABBBBCCCC',
-            'PasswordResetExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'PasswordResetExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
@@ -250,9 +246,9 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'    => $this->base->userAccountId,
-                    'Email' => $this->base->userAccountEmail
-                ])
-            ]
+                    'Email' => $this->base->userAccountEmail,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -260,8 +256,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'                  => $this->base->userAccountId,
                 'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
-            ])
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+            ]),
         ]));
 
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
@@ -282,9 +278,9 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'    => $this->base->userAccountId,
-                    'Email' => $this->base->userAccountEmail
-                ])
-            ]
+                    'Email' => $this->base->userAccountEmail,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -292,8 +288,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'                  => $this->base->userAccountId,
                 'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
-            ])
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+            ]),
         ]));
 
         // ActorUsers::resetPassword
@@ -301,7 +297,7 @@ class AccountContext implements Context
 
         $this->apiPatch('/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
-            'password' => 'newPassw0rd'
+            'password' => 'newPassw0rd',
         ], []);
     }
 
@@ -329,9 +325,9 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'    => $this->base->userAccountId,
-                    'Email' => $this->base->userAccountEmail
-                ])
-            ]
+                    'Email' => $this->base->userAccountEmail,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -339,8 +335,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'                  => $this->base->userAccountId,
                 'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
-            ])
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+            ]),
         ]));
 
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
@@ -368,9 +364,9 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Id'    => $this->base->userAccountId,
-                    'Email' => $this->base->userAccountEmail
-                ])
-            ]
+                    'Email' => $this->base->userAccountEmail,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -378,13 +374,13 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'                  => $this->base->userAccountId,
                 'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry']
-            ])
+                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+            ]),
         ]));
 
         $this->apiPatch('/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
-            'password' => 'newPassw0rd'
+            'password' => 'newPassw0rd',
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -412,15 +408,15 @@ class AccountContext implements Context
     public function iCreateAnAccount(): void
     {
         $this->userAccountCreateData = [
-            'Id'                  => 1,
-            'ActivationToken'     => 'activate1234567890',
-            'Email'               => 'test@test.com',
-            'Password'            => 'Pa33w0rd'
+            'Id'              => 1,
+            'ActivationToken' => 'activate1234567890',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
-            'Items' => []
+            'Items' => [],
         ]));
 
         // ActorUsers::getUserByNewEmail
@@ -430,8 +426,8 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result());
 
         $this->apiPost('/v1/user', [
-            'email' => $this->userAccountCreateData['Email'],
-            'password' => $this->userAccountCreateData['Password']
+            'email'    => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password'],
         ], []);
 
         $result = $this->getResponseAsJson();
@@ -446,58 +442,57 @@ class AccountContext implements Context
     public function iCreateAnAccountUsingDuplicateDetailsNotActivated(): void
     {
         $this->userAccountCreateData = [
-            'Id'                  => '1234567890abcdef',
-            'ActivationToken'     => 'activate1234567890',
-            'ExpiresTTL'          => '232424232244',
-            'Email'               => 'test@test.com',
-            'Password'            => 'Pa33w0rd'
+            'Id'              => '1234567890abcdef',
+            'ActivationToken' => 'activate1234567890',
+            'ExpiresTTL'      => '232424232244',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
-                    'Email' => $this->userAccountCreateData['Email'],
-                    'Password' => $this->userAccountCreateData['Password'],
-                    'Id' => $this->userAccountCreateData['Id'],
-                    'ExpiresTTL' => $this->userAccountCreateData['ExpiresTTL'],
-                ])
-            ]
+                    'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
+                    'Email'           => $this->userAccountCreateData['Email'],
+                    'Password'        => $this->userAccountCreateData['Password'],
+                    'Id'              => $this->userAccountCreateData['Id'],
+                    'ExpiresTTL'      => $this->userAccountCreateData['ExpiresTTL'],
+                ]),
+            ],
         ]));
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
-                    'ExpiresTTL' => $this->userAccountCreateData['ExpiresTTL'],
-                    'Email' => $this->userAccountCreateData['Email'],
-                    'Password' => $this->userAccountCreateData['Password'],
-                    'Id' => $this->userAccountCreateData['Id'],
-                ])
-            ]
+                    'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
+                    'ExpiresTTL'      => $this->userAccountCreateData['ExpiresTTL'],
+                    'Email'           => $this->userAccountCreateData['Email'],
+                    'Password'        => $this->userAccountCreateData['Password'],
+                    'Id'              => $this->userAccountCreateData['Id'],
+                ]),
+            ],
         ]));
 
         // ActorUsers::resetActivationDetails
         $this->awsFixtures->append(new Result([
-            'Item' =>
-                $this->marshalAwsResultData([
-                    'ActivationToken'  => $this->userAccountCreateData['ActivationToken'] ,
-                    'Email' => $this->userAccountCreateData['Email'],
-                    'Password' => $this->userAccountCreateData['Password'],
-                    'Id' => $this->userAccountCreateData['Id'],
-                ])
+            'Item'
+                => $this->marshalAwsResultData([
+                    'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
+                    'Email'           => $this->userAccountCreateData['Email'],
+                    'Password'        => $this->userAccountCreateData['Password'],
+                    'Id'              => $this->userAccountCreateData['Id'],
+                ]),
         ]));
 
 
         $this->apiPost('/v1/user', [
-            'email' => $this->userAccountCreateData['Email'],
-            'password' => $this->userAccountCreateData['Password']
+            'email'    => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password'],
         ], []);
         Assert::assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
     }
-
 
     /**
      * @When I create an account using duplicate details
@@ -505,10 +500,10 @@ class AccountContext implements Context
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $this->userAccountCreateData = [
-            'Id'                  => '1234567890abcdef',
-            'ActivationToken'     => 'activate1234567890',
-            'Email'               => 'test@test.com',
-            'Password'            => 'Pa33w0rd'
+            'Id'              => '1234567890abcdef',
+            'ActivationToken' => 'activate1234567890',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
@@ -516,8 +511,8 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Email' => $this->userAccountCreateData['Email'],
-                ])
-            ]
+                ]),
+            ],
         ]));
 
         // ActorUsers::getByEmail
@@ -525,28 +520,29 @@ class AccountContext implements Context
             'Items' => [
                 $this->marshalAwsResultData([
                     'Email' => $this->userAccountCreateData['Email'],
-                ])
-            ]
+                ]),
+            ],
         ]));
 
         $this->apiPost('/v1/user', [
-            'email' => $this->userAccountCreateData['Email'],
-            'password' => $this->userAccountCreateData['Password']
+            'email'    => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password'],
         ], []);
         Assert::assertContains(
             'User already exists with email address ' . $this->userAccountCreateData['Email'],
             $this->getResponseAsJson()
         );
     }
+
     /**
      * @Given I have asked to create a new account
      */
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->userAccountCreateData = [
-            'Id'                  => '11',
-            'ActivationToken'     => 'activate1234567890',
-            'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                    => '11',
+            'ActivationToken'       => 'activate1234567890',
+            'ActivationTokenExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
@@ -570,8 +566,9 @@ class AccountContext implements Context
             '/v1/email-user/' . $emailTemplate,
             [
                 'recipient' => 'test@example.com',
-                'locale' => 'cy_GB',
-                'activateAccountUrl' => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
+                'locale'    => 'cy_GB',
+                'activateAccountUrl'
+                    => 'http://localhost:9002/cy/activate-account/8tjX_FtUzTrKc9ZtCk8HIQgczYLSX1Ys5paeNjuQFsE=',
             ],
             []
         );
@@ -587,9 +584,9 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'Id'     => $this->userAccountCreateData['Id']
-                ])
-            ]
+                    'Id' => $this->userAccountCreateData['Id'],
+                ]),
+            ],
         ]));
 
         // ActorUsers::activate
@@ -598,14 +595,14 @@ class AccountContext implements Context
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id' => $this->userAccountCreateData['Id']
-            ])
+                'Id' => $this->userAccountCreateData['Id'],
+            ]),
         ]));
 
         $this->apiPatch(
             '/v1/user-activation',
             [
-                'activation_token' => $this->userAccountCreateData['ActivationToken']
+                'activation_token' => $this->userAccountCreateData['ActivationToken'],
             ],
             []
         );
@@ -624,7 +621,7 @@ class AccountContext implements Context
         // ActorUsers::activate
         $this->awsFixtures->append(new Result(
             [
-                'Items' => []
+                'Items' => [],
             ]
         ));
 
@@ -634,20 +631,20 @@ class AccountContext implements Context
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id' => '1'
-            ])
+                'Id' => '1',
+            ]),
         ]));
 
         $this->apiPatch(
             '/v1/user-activation',
             [
-                'activation_token' => $this->userAccountCreateData['ActivationToken']
+                'activation_token' => $this->userAccountCreateData['ActivationToken'],
             ],
             []
         );
 
         $response = $this->getResponseAsJson();
-        Assert::assertContains("User not found for token", $response);
+        Assert::assertContains('User not found for token', $response);
     }
 
     /**
@@ -693,17 +690,17 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         // ActorUsers::resetPassword
         $this->awsFixtures->append(new Result([]));
 
         $this->apiPatch('/v1/change-password', [
-            'user-id'       => $this->base->userAccountId,
-            'password'      => $this->base->userAccountPassword,
-            'new-password'  => $newPassword,
+            'user-id'      => $this->base->userAccountId,
+            'password'     => $this->base->userAccountPassword,
+            'new-password' => $newPassword,
         ]);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -727,21 +724,21 @@ class AccountContext implements Context
     public function iCannotEnterMyCurrentPassword(): void
     {
         $failedPassword = 'S0meS0rt0fPassw0rd';
-        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+        $newPassword    = 'Successful-Raid-on-the-Cooki3s!';
 
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         $this->awsFixtures->append(new Result([]));
 
         $this->apiPatch('/v1/change-password', [
-            'user-id'       => $this->base->userAccountId,
-            'password'      => $failedPassword,
-            'new-password'  => $newPassword,
+            'user-id'      => $this->base->userAccountId,
+            'password'     => $failedPassword,
+            'new-password' => $newPassword,
         ]);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
@@ -800,8 +797,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         // ActorUsers::delete
@@ -825,7 +822,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheChangeEmailPage(): void
     {
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
     }
 
@@ -839,14 +836,14 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         $this->apiPatch('/v1/request-change-email', [
-            'user-id'       => $this->base->userAccountId,
-            'new-email'     => $this->newEmail,
-            'password'      => 'inc0rr3cT'
+            'user-id'   => $this->base->userAccountId,
+            'new-email' => $this->newEmail,
+            'password'  => 'inc0rr3cT',
         ], []);
     }
 
@@ -868,8 +865,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         if ($context === 'is taken by another user on the service') {
@@ -878,10 +875,10 @@ class AccountContext implements Context
                 new Result([
                     'Items' => [
                         $this->marshalAwsResultData([
-                            'Email' => $this->base->userAccountEmail,
-                            'Password' => $this->base->userAccountPassword
-                        ])
-                    ]
+                            'Email'    => $this->base->userAccountEmail,
+                            'Password' => $this->base->userAccountPassword,
+                        ]),
+                    ],
                 ])
             );
         } else {
@@ -900,9 +897,9 @@ class AccountContext implements Context
                             'Id'               => 'aaaaaa1111111',
                             'NewEmail'         => $this->newEmail,
                             'EmailResetToken'  => 't0ken12345',
-                            'Password'         => 'otherU53rsPa55w0rd'
-                        ])
-                    ]
+                            'Password'         => 'otherU53rsPa55w0rd',
+                        ]),
+                    ],
                 ]));
                 break;
             case 'another user has requested to change their email to but their token has expired':
@@ -916,9 +913,9 @@ class AccountContext implements Context
                             'Id'               => 'aaaaaa1111111',
                             'NewEmail'         => $this->newEmail,
                             'EmailResetToken'  => 't0ken12345',
-                            'Password'         => 'otherU53rsPa55w0rd'
-                        ])
-                    ]
+                            'Password'         => 'otherU53rsPa55w0rd',
+                        ]),
+                    ],
                 ]));
 
                 // ActorUsers::recordChangeEmailRequest
@@ -930,17 +927,17 @@ class AccountContext implements Context
                         'Id'               => $this->base->userAccountId,
                         'NewEmail'         => $this->newEmail,
                         'EmailResetToken'  => $this->userEmailResetToken,
-                        'Password'         => $this->base->userAccountPassword
-                    ])
+                        'Password'         => $this->base->userAccountPassword,
+                    ]),
                 ]));
 
                 break;
         }
 
         $this->apiPatch('/v1/request-change-email', [
-            'user-id'       => $this->base->userAccountId,
-            'new-email'     => $this->newEmail,
-            'password'      => $this->base->userAccountPassword
+            'user-id'   => $this->base->userAccountId,
+            'new-email' => $this->newEmail,
+            'password'  => $this->base->userAccountPassword,
         ], []);
     }
 
@@ -996,8 +993,8 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT)
-            ])
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+            ]),
         ]));
 
         // ActorUsers::getByEmail (exists)
@@ -1015,14 +1012,14 @@ class AccountContext implements Context
                 'Id'               => $this->base->userAccountId,
                 'NewEmail'         => $this->newEmail,
                 'EmailResetToken'  => $this->userEmailResetToken,
-                'Password'         => $this->base->userAccountPassword
-            ])
+                'Password'         => $this->base->userAccountPassword,
+            ]),
         ]));
 
         $this->apiPatch('/v1/request-change-email', [
-            'user-id'       => $this->base->userAccountId,
-            'new-email'     => $this->newEmail,
-            'password'      => $this->base->userAccountPassword
+            'user-id'   => $this->base->userAccountId,
+            'new-email' => $this->newEmail,
+            'password'  => $this->base->userAccountPassword,
         ]);
     }
 
@@ -1032,7 +1029,7 @@ class AccountContext implements Context
     public function iHaveRequestedToChangeMyEmailAddress(): void
     {
         $this->userEmailResetToken = '12345abcde';
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
     }
 
     /**
@@ -1054,12 +1051,12 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'EmailResetToken'  => $this->userEmailResetToken
+                    'EmailResetToken' => $this->userEmailResetToken,
                 ]),
                 $this->marshalAwsResultData([
-                    'Id' => $this->base->userAccountId
-                ])
-            ]
+                    'Id' => $this->base->userAccountId,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -1068,11 +1065,11 @@ class AccountContext implements Context
                 'Id'               => $this->base->userAccountId,
                 'Email'            => $this->base->userAccountEmail,
                 'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
-                'EmailResetExpiry' => (time() + (60 * 60)),
+                'EmailResetExpiry' => time() + (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken
-            ])
+                'EmailResetToken'  => $this->userEmailResetToken,
+            ]),
         ]));
 
         $this->apiGet('/v1/can-reset-email?token=' . $this->userEmailResetToken, []);
@@ -1089,25 +1086,25 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'EmailResetToken'  => $this->userEmailResetToken
+                    'EmailResetToken' => $this->userEmailResetToken,
                 ]),
                 $this->marshalAwsResultData([
-                    'Id' => $this->base->userAccountId
-                ])
-            ]
+                    'Id' => $this->base->userAccountId,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
-                'EmailResetExpiry' => (time() + (60 * 60)),
+                'Id'               => $this->base->userAccountId,
+                'Email'            => $this->base->userAccountEmail,
+                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'EmailResetExpiry' => time() + (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken
-            ])
+                'EmailResetToken'  => $this->userEmailResetToken,
+            ]),
         ]));
 
         // ActorUsers::changeEmail
@@ -1149,12 +1146,12 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Items' => [
                 $this->marshalAwsResultData([
-                    'EmailResetToken'  => $this->userEmailResetToken
+                    'EmailResetToken' => $this->userEmailResetToken,
                 ]),
                 $this->marshalAwsResultData([
-                    'Id' => $this->base->userAccountId
-                ])
-            ]
+                    'Id' => $this->base->userAccountId,
+                ]),
+            ],
         ]));
 
         // ActorUsers::get
@@ -1163,11 +1160,11 @@ class AccountContext implements Context
                 'Id'               => $this->base->userAccountId,
                 'Email'            => $this->base->userAccountEmail,
                 'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
-                'EmailResetExpiry' => (time() - (60 * 60)),
+                'EmailResetExpiry' => time() - (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken
-            ])
+                'EmailResetToken'  => $this->userEmailResetToken,
+            ]),
         ]));
 
         $this->apiGet('/v1/can-reset-email?token=' . $this->userEmailResetToken, []);
@@ -1204,15 +1201,15 @@ class AccountContext implements Context
         $this->base->userAccountId = '123456789';
 
         $this->userAccountCreateData = [
-            'Id'                  => 1,
-            'ActivationToken'     => 'activate1234567890',
-            'Email'               => 'test@test.com',
-            'Password'            => 'Pa33w0rd'
+            'Id'              => 1,
+            'ActivationToken' => 'activate1234567890',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([
-            'Items' => []
+            'Items' => [],
         ]));
 
         // ActorUsers::getUserByNewEmail
@@ -1222,16 +1219,17 @@ class AccountContext implements Context
                     'Id'               => $this->base->userAccountId,
                     'Email'            => 'other@user.co.uk',
                     'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT),
-                    'EmailResetExpiry' => (time() + (60 * 60)),
+                    'EmailResetExpiry' => time() + (60 * 60),
                     'LastLogin'        => null,
                     'NewEmail'         => 'test@test.com',
-                    'EmailResetToken'  => 'abc1234567890'
-                ])]
+                    'EmailResetToken'  => 'abc1234567890',
+                ]),
+            ],
         ]));
 
         $this->apiPost('/v1/user', [
-            'email' => $this->userAccountCreateData['Email'],
-            'password' => $this->userAccountCreateData['Password']
+            'email'    => $this->userAccountCreateData['Email'],
+            'password' => $this->userAccountCreateData['Password'],
         ], []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
@@ -1253,9 +1251,9 @@ class AccountContext implements Context
         $this->apiPatch(
             '/v1/request-change-email',
             [
-                'user-id'       => '',
-                'new-email'     => $this->newEmail,
-                'password'      => $this->base->userAccountPassword
+                'user-id'   => '',
+                'new-email' => $this->newEmail,
+                'password'  => $this->base->userAccountPassword,
             ]
         );
     }
@@ -1268,9 +1266,9 @@ class AccountContext implements Context
         $this->apiPatch(
             '/v1/request-change-email',
             [
-                'user-id' => $this->base->userAccountId,
+                'user-id'   => $this->base->userAccountId,
                 'new-email' => '',
-                'password' => $this->base->userAccountPassword
+                'password'  => $this->base->userAccountPassword,
             ]
         );
     }
@@ -1281,9 +1279,9 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyPassword(): void
     {
         $this->apiPatch('/v1/request-change-email', [
-            'user-id' => $this->base->userAccountId,
+            'user-id'   => $this->base->userAccountId,
             'new-email' => $this->newEmail,
-            'password' => ''
+            'password'  => '',
         ]);
     }
 
