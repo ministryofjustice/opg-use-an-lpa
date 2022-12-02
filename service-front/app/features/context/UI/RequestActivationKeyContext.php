@@ -140,6 +140,76 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am asked to check my answers$/
+     * @Given /^I am on the check your answers page$/
+     */
+    public function iAmAskedToCheckMyAnswers()
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
+    }
+
+    /**
+     * @When /^I request an activation key for an LPA$/
+     */
+    public function iRequestAnActivationKey()
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Postcode not supplied',
+                        'details' => 'Postcode not supplied',
+                        'data'    => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE,
+            )
+        );
+
+        $this->iPressTheContinueButton();
+    }
+
+    /**
+     * @When /^I request an activation key for an LPA that already exists in my account$/
+     */
+    public function iRequestAnActivationKeyThatAlreadyExists()
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Bad request',
+                        'details' => 'LPA already added',
+                        'data'    =>
+                        [
+                            'donor'         => [
+                                'uId'         => $this->lpa->donor->uId,
+                                'firstname'   => $this->lpa->donor->firstname,
+                                'middlenames' => $this->lpa->donor->middlenames,
+                                'surname'     => $this->lpa->donor->surname,
+                            ],
+                            'caseSubtype'   => $this->lpa->caseSubtype,
+                            'lpaActorToken' => $this->userLpaActorToken,
+                        ]
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE,
+            )
+        );
+        $this->iPressTheContinueButton();
+    }
+    /**
+     * @When /^I press the continue button$/
+     */
+    public function iPressTheContinueButton(): void
+    {
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @Then /^I am asked to provide the donor's details to verify that I am the attorney$/
      */
     public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney()
@@ -212,6 +282,28 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/request-code/your-name');
         $this->ui->fillField('first_names', 'The Attorney');
         $this->ui->fillField('last_name', 'Person');
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
+     * @Given /^I am on the do you live in the UK page$/
+     */
+    public function iAmOnTheDoYouLiveInTheUKPage()
+    {
+        $this->ui->visit('/lpa/request-code/lpa-reference-number');
+
+        $this->ui->fillField('opg_reference_number', '700018506654');
+        $this->ui->pressButton('Continue');
+
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+        $this->ui->fillField('first_names', 'The Attorney');
+        $this->ui->fillField('last_name', 'Person');
+        $this->ui->pressButton('Continue');
+
+        $this->ui->assertPageAddress('/lpa/request-code/date-of-birth');
+        $this->ui->fillField('dob[day]', 20);
+        $this->ui->fillField('dob[month]', 06);
+        $this->ui->fillField('dob[year]', 1995);
         $this->ui->pressButton('Continue');
     }
 
@@ -568,23 +660,23 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given /^I select the address is (.*) as on paper LPA$/
+     * @Given /^I fill in my (.*) address and I select the address is (.*) as on paper LPA$/
      */
-    public function iSelectTheAddressIsNotSameAsOnPaperLPA($selection)
+    public function iSelectTheAddressIsNotSameAsOnPaperLPA($ukOrAbroad, $selection)
     {
-        if ($selection === 'not the same') {
-            $this->ui->assertPageAddress('/lpa/add/actor-address');
+        $this->ui->assertPageAddress('/lpa/add/actor-address');
+
+        if ($ukOrAbroad === 'UK') {
             $this->ui->fillField('actor_address_1', $this->lpa->donor->addresses[0]->addressLine1);
             $this->ui->fillField('actor_address_town', $this->lpa->donor->addresses[0]->town);
-            $this->ui->fillField('actor_address_check_radio', 'No');
-            $this->ui->pressButton('Continue');
-        } elseif ($selection === 'the same') {
-            $this->ui->assertPageAddress('/lpa/add/actor-address');
-            $this->ui->fillField('actor_address_1', $this->lpa->donor->addresses[0]->addressLine1);
-            $this->ui->fillField('actor_address_town', $this->lpa->donor->addresses[0]->town);
-            $this->ui->fillField('actor_address_check_radio', 'Yes');
-            $this->ui->pressButton('Continue');
+        } elseif ($ukOrAbroad === 'abroad') {
+            $this->ui->fillField('actor_abroad_address', $this->lpa->donor->addresses[0]->addressLine1);
         }
+
+
+        $radioValue = $selection === 'not the same' ? 'No' : 'Yes';
+        $this->ui->fillField('actor_address_check_radio', $radioValue);
+        $this->ui->pressButton('Continue');
     }
 
     /**
@@ -786,6 +878,16 @@ class RequestActivationKeyContext implements Context
         $this->iAmOnTheRequestAnActivationKeyPage();
         $this->iRequestAnActivationKeyWithValidDetails();
         $this->iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey();
+    }
+
+    /**
+     * @Given I have requested an activation key with valid details and do not live in the UK
+     */
+    public function iHaveRequestedAnActivationKeyWithValidDetailsAndDoNotLiveInUK()
+    {
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iRequestAnActivationKeyWithValidDetailsAndDoNotLiveInTheUK();
+        $this->iAmAskedToCheckMyAnswers();
     }
 
     /**
@@ -1018,6 +1120,19 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I request an activation key with an invalid live in the UK answer (.*) (.*)$/
+     */
+    public function iRequestAnActivationKeyWithAnInvalidLiveInTheUKAnswer($liveInUK, $postcode): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/postcode');
+        if ($liveInUK !== '') {
+            $this->ui->fillField('live_in_uk', $liveInUK);
+        }
+        $this->ui->fillField('postcode', $postcode);
+        $this->ui->pressButton('Continue');
+    }
+
+    /**
      * @When /^I request an activation key with an invalid lpa reference number format of "([^"]*)"$/
      */
     public function iRequestAnActivationKeyWithAnInvalidLpaReferenceNumberFormatOf($referenceNumber)
@@ -1035,7 +1150,26 @@ class RequestActivationKeyContext implements Context
             'opg_reference_number' => '700018506654',
             'first_names'          => 'The Attorney',
             'last_name'            => 'Person',
+            'live_in_uk'           => 'Yes',
             'postcode'             => 'ABC123',
+            'dob[day]'             => '09',
+            'dob[month]'           => '02',
+            'dob[year]'            => '1998',
+        ];
+
+        $this->fillForm($formData);
+    }
+
+    /**
+     * @When /^I request an activation key with valid details and I do not live in the UK$/
+     */
+    public function iRequestAnActivationKeyWithValidDetailsAndDoNotLiveInTheUK()
+    {
+        $formData = [
+            'opg_reference_number' => '700018506654',
+            'first_names'          => 'The Attorney',
+            'last_name'            => 'Person',
+            'live_in_uk'           => 'No',
             'dob[day]'             => '09',
             'dob[month]'           => '02',
             'dob[year]'            => '1998',
@@ -1178,6 +1312,17 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^It is recorded in the sirius task that the user lives abroad$/
+     */
+    public function itIsRecordedInTheSiriusTaskThatTheUserLivesAbroad()
+    {
+        Assert::assertStringContainsString(
+            'Requester is not a UK resident',
+            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
+        );
+    }
+
+    /**
      * @When /^I enter my telephone number$/
      * @Given I provide my telephone number
      */
@@ -1259,6 +1404,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->fillField('dob[year]', $date->format('Y'));
         $this->ui->pressButton('Continue');
 
+        $this->ui->fillField('live_in_uk', 'Yes');
         $this->ui->fillField('postcode', $this->lpa->donor->addresses[0]->postcode);
         $this->ui->pressButton('Continue');
     }
@@ -1273,12 +1419,16 @@ class RequestActivationKeyContext implements Context
         $this->ui->fillField('last_name', $array['last_name']);
         $this->ui->pressButton('Continue');
 
+
         $this->ui->fillField('dob[day]', $array['dob[day]']);
         $this->ui->fillField('dob[month]', $array['dob[month]']);
         $this->ui->fillField('dob[year]', $array['dob[year]']);
         $this->ui->pressButton('Continue');
 
-        $this->ui->fillField('postcode', $array['postcode']);
+        $this->ui->fillField('live_in_uk', $array['live_in_uk']);
+        if (!empty($array['postcode'])) {
+            $this->ui->fillField('postcode', $array['postcode']);
+        }
         $this->ui->pressButton('Continue');
     }
 

@@ -55,6 +55,8 @@ class RequestActivationKey implements WorkflowState
         public ?int $actorUid = null,
         public ?bool $needsCleansing = null,
         public ?string $actorAddressResponse = null,
+        public ?string $liveInUK = null,
+        public ?string $actorAbroadAddress = null,
     ) {
         if ($actorType !== null) { // TODO replace with enums at PHP 8.1
             $this->setActorRole($actorType);
@@ -74,7 +76,6 @@ class RequestActivationKey implements WorkflowState
      * Reset the workflow to the start.
      *
      * identical information.
-     *
      */
     public function reset(): void
     {
@@ -86,6 +87,7 @@ class RequestActivationKey implements WorkflowState
         $this->attorneyFirstNames = null;
         $this->attorneyLastName   = null;
         $this->attorneyDob        = null;
+        $this->actorAbroadAddress = null;
         $this->actorAddress1      = null;
         $this->actorAddress2      = null;
         $this->actorAddressTown   = null;
@@ -99,9 +101,10 @@ class RequestActivationKey implements WorkflowState
         $this->actorAddressResponse = null;
 
         $this->firstNames = null;
-        $this->lastName = null;
-        $this->dob = null;
-        $this->postcode = null;
+        $this->lastName   = null;
+        $this->dob        = null;
+        $this->liveInUK   = null;
+        $this->postcode   = null;
     }
 
     /**

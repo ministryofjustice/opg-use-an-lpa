@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Validator;
 
 use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\NotEmpty;
 
 class OptionSelectedValidator extends AbstractValidator
 {
