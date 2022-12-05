@@ -14,15 +14,17 @@ use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Exception;
 
 class ActorUsersTest extends TestCase
 {
-    use ProphecyTrait;
     use GenerateAwsResultTrait;
+    use ProphecyTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    public const TABLE_NAME = 'test-table-name';
 
-    private $dynamoDbClientProphecy;
+    private ObjectProphecy $dynamoDbClientProphecy;
 
     protected function setUp(): void
     {
@@ -32,11 +34,11 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_add_a_new_user(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
-        $password = 'P@55word';
+        $id              = '12345-1234-1234-1234-12345';
+        $email           = 'a@b.com';
+        $password        = 'P@55word';
         $activationToken = 'actok123';
-        $activationTtl = time() + 3600;
+        $activationTtl   = time() + 3600;
 
         $this->dynamoDbClientProphecy
             ->putItem(Argument::that(function ($data) use ($id, $email, $password, $activationToken, $activationTtl) {
@@ -59,63 +61,30 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->shouldBeCalled();
-
-        $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function (array $data) use ($id) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Id', $data['Key']);
-
-                $this->assertEquals(['S' => $id], $data['Key']['Id']);
-
-                return true;
-            }))
-            ->willReturn($this->createAWSResult([
-                'Item' => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                    'Email' => [
-                        'S' => $email,
-                    ],
-                    'Password' => [
-                        'S' => $password,
-                    ],
-                    'ActivationToken' => [
-                        'S' => $activationToken,
-                    ],
-                    'ExpiresTTL' => [
-                        'N' => $activationTtl,
-                    ],
-                ],
-            ]));
+            ->shouldBeCalled()->willReturn($this->createAWSResult(
+                [
+                    '@metadata' => [
+                            'statusCode' => 200,
+                        ],
+                ]
+            ));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
-
-        $this->assertEquals($id, $result['Id']);
-        $this->assertEquals($email, $result['Email']);
-        $this->assertEquals($password, $result['Password']);
-        $this->assertEquals($activationToken, $result['ActivationToken']);
-        $this->assertEquals($activationTtl, $result['ExpiresTTL']);
+        $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
     }
-
 
     /** @test */
     public function will_reset_activation_for_existing_user(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
-        $password = 'P@55word';
+        $id              = '12345-1234-1234-1234-12345';
+        $email           = 'a@b.com';
+        $password        = 'P@55word';
         $activationToken = 'actok123';
-        $activationTtl = time() + 3600;
+        $activationTtl   = time() + 3600;
 
         $this->dynamoDbClientProphecy
-            ->updateItem(Argument::that(function (array $data) use ($id, $password, $activationTtl) {
+            ->updateItem(Argument::that(function (array $data) use ($id, $activationTtl) {
                 $this->assertIsArray($data);
 
                 // we don't care what the array looks like as it's specific to the AWS api and may change
@@ -131,19 +100,19 @@ class ActorUsersTest extends TestCase
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'Id' => [
+                    'Id'              => [
                         'S' => $id,
                     ],
-                    'Email' => [
+                    'Email'           => [
                         'S' => $email,
                     ],
-                    'Password' => [
+                    'Password'        => [
                         'S' => $password,
                     ],
                     'ActivationToken' => [
                         'S' => $activationToken,
                     ],
-                    'ExpiresTTL' => [
+                    'ExpiresTTL'      => [
                         'N' => $activationTtl,
                     ],
                 ],
@@ -162,15 +131,14 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($activationTtl, $result['ExpiresTTL']);
     }
 
-
     /** @test */
     public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
-        $password = 'P@55word';
+        $id              = '12345-1234-1234-1234-12345';
+        $email           = 'a@b.com';
+        $password        = 'P@55word';
         $activationToken = 'actok123';
-        $activationTtl = time() + 3600;
+        $activationTtl   = time() + 3600;
 
         $this->dynamoDbClientProphecy
             ->putItem(Argument::that(function ($data) use ($id, $email, $password, $activationToken, $activationTtl) {
@@ -193,28 +161,18 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-                ->shouldBeCalled();
-
-        $this->dynamoDbClientProphecy
-            ->getItem(Argument::that(function (array $data) use ($id) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
-
-                $this->assertArrayHasKey('Key', $data);
-                $this->assertArrayHasKey('Id', $data['Key']);
-
-                $this->assertEquals(['S' => $id], $data['Key']['Id']);
-
-                return true;
-            }))
-            ->willReturn($this->createAWSResult([
-                'Item' => []
-            ]));
+                ->shouldBeCalled()->willReturn($this->createAWSResult(
+                    [
+                        '@metadata' => [
+                            'statusCode' => 500,
+                        ],
+                    ],
+                ));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
         $this->expectException(CreationException::class);
-        $this->expectExceptionMessage('Unable to retrieve newly created actor from database');
+        $this->expectExceptionMessage('Failed to create account with code');
 
         $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
     }
@@ -255,7 +213,7 @@ class ActorUsersTest extends TestCase
     public function will_get_a_user_record_by_email(): void
     {
         $email = 'a@b.com';
-        $id = '12345-1234-1234-1234-12345';
+        $id    = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
             ->query(Argument::that(function (array $data) use ($email) {
@@ -276,7 +234,7 @@ class ActorUsersTest extends TestCase
                     [
                         'Id' => [
                             'S' => $id,
-                        ]
+                        ],
                     ],
                 ],
             ]));
@@ -293,7 +251,7 @@ class ActorUsersTest extends TestCase
     {
         $token = 'RESET_TOKEN_1234';
         $email = 'a@b.com';
-        $id = '12345-1234-1234-1234-12345';
+        $id    = '12345-1234-1234-1234-12345';
 
         $this->dynamoDbClientProphecy
             ->query(Argument::that(function (array $data) use ($token) {
@@ -314,7 +272,7 @@ class ActorUsersTest extends TestCase
                     [
                         'Id' => [
                             'S' => $id,
-                        ]
+                        ],
                     ],
                 ],
             ]));
@@ -344,7 +302,7 @@ class ActorUsersTest extends TestCase
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Item' => []
+                'Item' => [],
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -380,7 +338,7 @@ class ActorUsersTest extends TestCase
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Item' => []
+                'Item' => [],
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -394,8 +352,8 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_activate_a_user_account(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
+        $id              = '12345-1234-1234-1234-12345';
+        $email           = 'a@b.com';
         $activationToken = 'activateTok123';
 
         $expectedData = [
@@ -420,23 +378,23 @@ class ActorUsersTest extends TestCase
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
-                        'Id' => [
+                        'Id'              => [
                             'S' => $id,
                         ],
-                        'Email' => [
+                        'Email'           => [
                             'S' => $email,
                         ],
-                        'Password' => [
+                        'Password'        => [
                             'S' => 'H@shedP@55word',
                         ],
                         'ActivationToken' => [
                             'S' => $activationToken,
                         ],
-                        'ExpiresTTL' => [
+                        'ExpiresTTL'      => [
                             'N' => time(),
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]));
 
         $this->dynamoDbClientProphecy
@@ -470,22 +428,22 @@ class ActorUsersTest extends TestCase
             }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'Id' => [
+                    'Id'              => [
                         'S' => $id,
                     ],
-                    'Email' => [
+                    'Email'           => [
                         'S' => $email,
                     ],
-                    'Password' => [
+                    'Password'        => [
                         'S' => 'H@shedP@55word',
                     ],
                     'ActivationToken' => [
                         'S' => $activationToken,
                     ],
-                    'ExpiresTTL' => [
+                    'ExpiresTTL'      => [
                         'N' => time(),
                     ],
-                ]
+                ],
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -529,7 +487,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_find_a_user_exists(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id    = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
 
         $this->dynamoDbClientProphecy
@@ -548,7 +506,7 @@ class ActorUsersTest extends TestCase
                     [
                         'Id' => [
                             'S' => $id,
-                        ]
+                        ],
                     ],
                 ],
             ]));
@@ -575,7 +533,7 @@ class ActorUsersTest extends TestCase
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Items' => []
+                'Items' => [],
             ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -610,7 +568,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_record_a_password_reset_request(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id    = '12345-1234-1234-1234-12345';
         $email = 'a@b.com';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
@@ -630,9 +588,9 @@ class ActorUsersTest extends TestCase
                     [
                         'Id' => [
                             'S' => $id,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]));
 
         $time = time() + (60 * 60 * 24);
@@ -652,19 +610,19 @@ class ActorUsersTest extends TestCase
             }))
             ->willReturn($this->createAWSResult([
                 'Attributes' => [
-                    'Id' => [
+                    'Id'                  => [
                         'S' => $id,
                     ],
-                    'Email' => [
+                    'Email'               => [
                         'S' => $email,
                     ],
-                    'PasswordResetToken' => [
+                    'PasswordResetToken'  => [
                         'S' => 'resetTokenAABBCCDDEE',
                     ],
                     'PasswordResetExpiry' => [
                         'N' => '12345678912',
                     ],
-                ]
+                ],
             ]));
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
@@ -696,7 +654,7 @@ class ActorUsersTest extends TestCase
                 return true;
             }))
             ->willReturn($this->createAWSResult([
-                'Items' => []
+                'Items' => [],
             ]));
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
@@ -710,7 +668,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_reset_a_password_when_given_a_correct_user_id(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id       = '12345-1234-1234-1234-12345';
         $password = 'password';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
@@ -738,7 +696,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function will_not_reset_a_password_when_given_an_incorrect_user_id(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id       = '12345-1234-1234-1234-12345';
         $password = 'passwordToHash';
 
         $dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
@@ -754,19 +712,19 @@ class ActorUsersTest extends TestCase
 
                 return true;
             }))
-            ->willThrow(new \Exception());
+            ->willThrow(new Exception());
 
         $actorRepo = new ActorUsers($dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $result = $actorRepo->resetPassword($id, new HiddenString($password));
     }
 
     /** @test */
     public function will_delete_a_users_account(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
+        $id       = '12345-1234-1234-1234-12345';
+        $email    = 'a@b.com';
         $password = 'H@shedP@55word';
 
         $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($id) {
@@ -778,19 +736,19 @@ class ActorUsersTest extends TestCase
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id' => [
+                'Id'        => [
                     'S' => $id,
                 ],
-                'Email' => [
+                'Email'     => [
                     'S' => $email,
                 ],
-                'Password' => [
+                'Password'  => [
                     'S' => $password,
                 ],
                 'LastLogin' => [
-                    'S' => null
+                    'S' => null,
                 ],
-            ]
+            ],
         ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
@@ -826,11 +784,11 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function can_record_email_reset_request(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
-        $password = 'H@shedP@55word';
-        $newEmail = 'new@email.com';
-        $resetToken = 'abcde12345';
+        $id          = '12345-1234-1234-1234-12345';
+        $email       = 'a@b.com';
+        $password    = 'H@shedP@55word';
+        $newEmail    = 'new@email.com';
+        $resetToken  = 'abcde12345';
         $resetExpiry = time() + (60 * 60 * 48);
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($id) {
@@ -842,28 +800,28 @@ class ActorUsersTest extends TestCase
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id' => [
+                'Id'               => [
                     'S' => $id,
                 ],
-                'Email' => [
+                'Email'            => [
                     'S' => $email,
                 ],
-                'NewEmail' => [
+                'NewEmail'         => [
                     'S' => $newEmail,
                 ],
-                'Password' => [
+                'Password'         => [
                     'S' => $password,
                 ],
-                'LastLogin' => [
-                    'S' => null
+                'LastLogin'        => [
+                    'S' => null,
                 ],
-                'EmailResetToken' => [
-                    'S' => $resetToken
+                'EmailResetToken'  => [
+                    'S' => $resetToken,
                 ],
                 'EmailResetExpiry' => [
-                    'S' => $resetExpiry
-                ]
-            ]
+                    'S' => $resetExpiry,
+                ],
+            ],
         ]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
@@ -881,7 +839,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function can_get_id_by_email_reset_token(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id         = '12345-1234-1234-1234-12345';
         $resetToken = 'abcde12345';
 
         $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($resetToken) {
@@ -894,11 +852,11 @@ class ActorUsersTest extends TestCase
         }))->willReturn($this->createAWSResult([
                 'Items' => [
                     [
-                        'Id' => [
+                        'Id'              => [
                             'S' => $id,
                         ],
                         'EmailResetToken' => [
-                            'S' => $resetToken
+                            'S' => $resetToken,
                         ],
                     ],
                 ],
@@ -914,7 +872,7 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function can_get_user_by_new_email(): void
     {
-        $id = '12345-1234-1234-1234-12345';
+        $id       = '12345-1234-1234-1234-12345';
         $newEmail = 'new@email.com';
 
         $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($newEmail) {
@@ -927,11 +885,11 @@ class ActorUsersTest extends TestCase
         }))->willReturn($this->createAWSResult([
             'Items' => [
                 [
-                    'Id' => [
+                    'Id'       => [
                         'S' => $id,
                     ],
                     'NewEmail' => [
-                        'S' => $newEmail
+                        'S' => $newEmail,
                     ],
                 ],
             ],
@@ -970,8 +928,8 @@ class ActorUsersTest extends TestCase
     /** @test */
     public function can_complete_change_email(): void
     {
-        $id = '12345-1234-1234-1234-12345';
-        $newEmail = 'new@email.com';
+        $id         = '12345-1234-1234-1234-12345';
+        $newEmail   = 'new@email.com';
         $resetToken = 'abcde12345';
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($id) {
