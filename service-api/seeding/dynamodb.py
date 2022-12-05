@@ -219,7 +219,7 @@ stats = [
         'account_activated_event': 20
     },
     {
-        'TimePeriod': (datetime.date.today() - relativedelta(months=5)).strftime('%Y-%m'),
+        'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
         'lpas_added': 5,
         'lpa_removed_event': 6,
         'account_created_event': 3,
@@ -227,7 +227,7 @@ stats = [
         'account_activated_event': 2
     },
     {
-        'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
+        'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
         'lpas_added': 3,
         'lpa_removed_event': 7,
         'account_created_event': 5,
@@ -235,7 +235,7 @@ stats = [
         'account_activated_event': 15
     },
     {
-        'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
+        'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
         'lpas_added': 7,
         'lpa_removed_event': 8,
         'account_created_event': 12,
@@ -244,7 +244,7 @@ stats = [
 
     },
     {
-        'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
+        'TimePeriod': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m'),
         'lpas_added': 5,
         'lpa_removed_event': 9,
         'account_created_event': 15,
@@ -252,7 +252,7 @@ stats = [
         'account_activated_event': 9
     },
     {
-        'TimePeriod': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m'),
+        'TimePeriod': datetime.date.today().strftime('%Y-%m'),
         'lpas_added': 15,
         'lpa_removed_event': 10,
         'account_created_event': 6,
