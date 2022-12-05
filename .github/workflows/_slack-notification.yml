@@ -11,6 +11,11 @@ on:
         description: 'Template to use'
         required: true
         type: string
+      success:
+        description: 'Success of job'
+        required: false
+        type: string
+        default: failure
     secrets:
       webhook:
         required: true
@@ -30,18 +35,36 @@ jobs:
       - name: install requirements
         run: pip install -r scripts/pipeline/requirements.txt
 
+      - name: show variable
+        env:
+          INPUT_SUCCESS: ${{ inputs.success }}
+        run: echo ${INPUT_SUCCESS}
+
       - name: download cluster_config
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: environment_config_file
           path: /tmp
+        if: inputs.success == 'success'
 
-      - name: Notify Slack
+      - name: Notify Slack Success
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
+        if: inputs.success == 'success'
         run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
           --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
+          --commit_message "$(git log -1 --pretty=%B)"
+
+      - name: Notify Slack Failure
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+        if: inputs.success != 'success'
+        run: |
+          echo "{}" > /tmp/cluster_config.json
+          python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+          --slack_webhook ${SLACK_WEB_HOOK} \
+          --template_path scripts/pipeline/post_release_slack_notification/unsuccessful_release.txt \
           --commit_message "$(git log -1 --pretty=%B)"

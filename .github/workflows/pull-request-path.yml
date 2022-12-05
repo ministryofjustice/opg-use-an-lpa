@@ -67,7 +67,9 @@ jobs:
       - name: show specific path
         env:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
-        run: echo "path chosen - $SPECIFIC_PATH"
+        run: |
+          echo "path chosen - $SPECIFIC_PATH"
+          echo "testing"
 
   terraform_lint:
     name: lint terraform code
@@ -190,11 +192,10 @@ jobs:
       - run_behat_suite
     with:
       template: successful_dev_build.txt
+      success: ${{ needs.run_behat_suite.result }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
-    if: |
-      always() &&
-      needs.run_behat_suite.result == 'success'
+    if: always()
 
   code_coverage:
     name: upload to code coverage
