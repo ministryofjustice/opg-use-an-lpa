@@ -69,7 +69,7 @@ jobs:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
         run: |
           echo "path chosen - $SPECIFIC_PATH"
-          echo "testing"
+          blah
 
   terraform_lint:
     name: lint terraform code
