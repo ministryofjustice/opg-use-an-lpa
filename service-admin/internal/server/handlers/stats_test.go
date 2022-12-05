@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 )
@@ -24,27 +25,30 @@ func (m *mockStatisticsService) GetAllMetrics(ctx context.Context, list []string
 	return map[string]map[string]float64{}, nil
 }
 
+type mockTimeProvider struct {
+	NowFunk func() time.Time
+}
+
+func (m *mockTimeProvider) Now() time.Time {
+	if m.NowFunk != nil {
+		return m.NowFunk()
+	}
+
+	return time.Now()
+}
+
 func Test_GetAllMetrics(t *testing.T) {
 	t.Parallel()
 
-	type args struct {
-		ctx context.Context
-		q   []string
-	}
-
 	tests := []struct {
 		name              string
-		args              args
 		templateService   TemplateWriterService
 		statisticsService StatisticsService
+		timeProvider      TimeProvider
 		want              interface{}
 	}{
 		{
 			name: "Test retrieving all metrics query",
-			args: args{
-				ctx: context.TODO(),
-				q:   []string{"2022-11", "2022-10", "2022-09", "Total"},
-			},
 			statisticsService: &mockStatisticsService{
 				GetAllMetricsFunc: func(ctx context.Context, list []string) (map[string]map[string]float64, error) {
 					if list[0] == "2022-11" {
@@ -61,6 +65,12 @@ func Test_GetAllMetrics(t *testing.T) {
 					return nil, nil
 				},
 			},
+			timeProvider: &mockTimeProvider{
+				NowFunk: func() time.Time {
+					now, _ := time.Parse(time.RFC3339, "2022-11-01T15:04:05Z")
+					return now
+				},
+			},
 			want: map[string]map[string]float64{
 				"2022-11": {
 					"lpas_added":            1,
@@ -71,16 +81,13 @@ func Test_GetAllMetrics(t *testing.T) {
 		},
 		{
 			name: "Test metrics query with error on time period lookup",
-			args: args{
-				ctx: context.TODO(),
-				q:   []string{"2022-11"},
-			},
 			statisticsService: &mockStatisticsService{
 				GetAllMetricsFunc: func(ctx context.Context, list []string) (map[string]map[string]float64, error) {
 					return nil, errors.New("this is an error")
 				},
 			},
-			want: nil,
+			timeProvider: &mockTimeProvider{},
+			want:         nil,
 		},
 	}
 
@@ -89,9 +96,9 @@ func Test_GetAllMetrics(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := NewStatsServer(tt.statisticsService, tt.templateService)
+			s := NewStatsServer(tt.statisticsService, tt.templateService, tt.timeProvider)
 
-			if got := s.GetMetricsInTheLastThreeMonths(tt.args.ctx); !reflect.DeepEqual(got, tt.want) {
+			if got := s.GetMetricsInTheLastThreeMonths(context.TODO()); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetMetricsInTheLastThreeMonths() = %v, want %v", got, tt.want)
 			}
 		})
@@ -133,13 +140,14 @@ func TestTemplateErrorPanic(t *testing.T) {
 			},
 		}
 
-		server := NewStatsServer(&mockStatisticsService{
+		ss := &mockStatisticsService{
 			GetAllMetricsFunc: func(ctx context.Context, list []string) (map[string]map[string]float64, error) {
 				return *testMetrics, nil
 			},
-		},
-			ts,
-		)
+		}
+
+		server := NewStatsServer(ss, ts, &mockTimeProvider{})
+
 		reader := strings.NewReader("")
 		var req *http.Request
 

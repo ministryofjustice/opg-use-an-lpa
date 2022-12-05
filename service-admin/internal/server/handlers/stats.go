@@ -16,15 +16,25 @@ type TemplateService interface {
 	RenderTemplate(http.ResponseWriter, context.Context, string, interface{}) error
 }
 
+type TimeProvider interface {
+	Now() time.Time
+}
+
 type StatsServer struct {
 	statisticsService StatisticsService
 	templateService   TemplateService
+	timeProvider      TimeProvider
 }
 
-func NewStatsServer(statisticsService StatisticsService, templateService TemplateService) *StatsServer {
+func NewStatsServer(
+	statisticsService StatisticsService,
+	templateService TemplateService,
+	timeProvider TimeProvider,
+) *StatsServer {
 	return &StatsServer{
 		statisticsService: statisticsService,
 		templateService:   templateService,
+		timeProvider:      timeProvider,
 	}
 }
 
@@ -39,7 +49,7 @@ func (s *StatsServer) StatsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *StatsServer) GetMetricsInTheLastThreeMonths(ctx context.Context) interface{} {
-	checkList := getPeriodsToBeChecked()
+	checkList := getPeriodsToBeChecked(s.timeProvider)
 
 	r, err := s.statisticsService.GetAllMetrics(ctx, checkList)
 	if err != nil {
@@ -49,8 +59,8 @@ func (s *StatsServer) GetMetricsInTheLastThreeMonths(ctx context.Context) interf
 	return r
 }
 
-func getPeriodsToBeChecked() []string {
-	currentTime := time.Now()
+func getPeriodsToBeChecked(timeProvider TimeProvider) []string {
+	currentTime := timeProvider.Now()
 	last3Month := currentTime.AddDate(0, -3, 0)
 
 	firstDay := last3Month.AddDate(0, 2, 0)
