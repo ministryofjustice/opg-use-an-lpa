@@ -11,8 +11,8 @@ on:
         description: 'Template to use'
         required: true
         type: string
-      success:
-        description: 'Success of job'
+      workflow_status:
+        description: 'Status of the workflow'
         required: false
         type: string
         default: failure
@@ -35,23 +35,18 @@ jobs:
       - name: install requirements
         run: pip install -r scripts/pipeline/requirements.txt
 
-      - name: show variable
-        env:
-          INPUT_SUCCESS: ${{ inputs.success }}
-        run: echo ${INPUT_SUCCESS}
-
       - name: download cluster_config
         uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
         with:
           name: environment_config_file
           path: /tmp
-        if: inputs.success == 'success'
+        if: inputs.workflow_status == 'success'
 
       - name: Notify Slack Success
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
-        if: inputs.success == 'success'
+        if: inputs.workflow_status == 'success'
         run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
@@ -61,7 +56,7 @@ jobs:
       - name: Notify Slack Failure
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
-        if: inputs.success != 'success'
+        if: inputs.workflow_status != 'success'
         run: |
           echo "{}" > /tmp/cluster_config.json
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
