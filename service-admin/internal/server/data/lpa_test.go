@@ -60,7 +60,7 @@ func TestGetLpasByUserID(t *testing.T) {
 			t.Parallel()
 
 			dynamodbConnection := DynamoConnection{
-				Client: &mockDynamoDBClent{
+				Client: &mockDynamoDBClient{
 					QueryFunc: tt.queryFunc,
 				},
 				Prefix: "",
@@ -124,7 +124,7 @@ func TestGetLPAByActivationCode(t *testing.T) {
 			t.Parallel()
 
 			dynamodbConnection := DynamoConnection{
-				Client: &mockDynamoDBClent{
+				Client: &mockDynamoDBClient{
 					QueryFunc: tt.queryFunc,
 				},
 				Prefix: "",
@@ -211,7 +211,7 @@ func Test_lpaService_GetLPARecordBySiriusID(t *testing.T) {
 		tt := tt
 
 		dynamodbConnection := DynamoConnection{
-			Client: &mockDynamoDBClent{
+			Client: &mockDynamoDBClient{
 				QueryFunc: tt.queryFunc,
 			},
 			Prefix: "",

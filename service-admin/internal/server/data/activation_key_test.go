@@ -46,8 +46,9 @@ func (mc *mockHTTPClient) Do(rq *http.Request) (*http.Response, error) {
 }
 
 type mockDynamoDBClient struct {
-	QueryFunc   func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
-	GetItemFunc func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	QueryFunc        func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	GetItemFunc      func(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	BatchGetItemFunc func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error)
 }
 
 func (m *mockDynamoDBClient) Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
@@ -62,11 +63,15 @@ func (m *mockDynamoDBClient) GetItem(ctx context.Context, params *dynamodb.GetIt
 	return nil, nil
 }
 
+func (m *mockDynamoDBClient) BatchGetItem(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
+	return m.BatchGetItemFunc(ctx, params, optFns...)
+}
+
 func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 	t.Parallel()
 
 	testConfig, _ := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"),
-	config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("FAKE_ID", "FAKE_SECRET_KEY", "FAKE_TOKEN")))
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("FAKE_ID", "FAKE_SECRET_KEY", "FAKE_TOKEN")))
 
 	type fields struct {
 		awsSigner      Signer

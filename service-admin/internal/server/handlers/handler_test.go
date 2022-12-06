@@ -94,7 +94,7 @@ func TestGetTemplate(t *testing.T) {
 
 			got, err := GetTemplate(tt.args.ctx, tt.args.name)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Unexpected error from GetTemplate(), got %v, want %v", (err != nil), tt.wantErr)
+				t.Errorf("Unexpected error from GetTemplate(), got %v, want %v", err != nil, tt.wantErr)
 			}
 
 			assert.Equal(t, got, tt.want, "GetTemplate() = %v, want %v", got, tt.want)
