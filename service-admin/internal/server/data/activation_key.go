@@ -20,7 +20,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var ErrActivationKeyNotFound error = errors.New("ActivationKeyNotFound")
+var ErrActivationKeyNotFound = errors.New("ActivationKeyNotFound")
 
 type ActivationKeyService interface {
 	GetActivationKeyFromCodes(context.Context, string) (*[]ActivationKey, error)
@@ -76,7 +76,7 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	credentials, err := aks.config.Credentials.Retrieve(context.Background())
 
 	if err != nil {
-		log.Error().AnErr("Error retrieveing credentials", err)
+		log.Error().AnErr("Error retrieving credentials", err)
 		return nil, ErrActivationKeyNotFound
 	}
 
