@@ -280,7 +280,7 @@ class LpaService
         foreach ($lpaActorMaps as $item) {
             $lpa = $lpas[$item['SiriusUid']] ?? null;
 
-            if ($lpa == null) {
+            if ($lpa === null) {
                 continue;
             }
 
