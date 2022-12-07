@@ -35,6 +35,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
+
 use function PHPUnit\Framework\assertEquals;
 
 /**

@@ -278,7 +278,7 @@ class LpaService
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
-            $lpa = $lpas[$item['SiriusUid']]?? null;
+            $lpa = $lpas[$item['SiriusUid']] ?? null;
 
             if ($lpa == null) {
                 continue;
