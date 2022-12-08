@@ -11,6 +11,11 @@ on:
         description: 'Template to use'
         required: true
         type: string
+      workflow_status:
+        description: 'Status of the workflow'
+        required: false
+        type: string
+        default: failure
     secrets:
       webhook:
         required: true
@@ -35,13 +40,26 @@ jobs:
         with:
           name: environment_config_file
           path: /tmp
+        if: inputs.workflow_status == 'success'
 
-      - name: Notify Slack
+      - name: Notify Slack Success
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
+        if: inputs.workflow_status == 'success'
         run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
           --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
+          --commit_message "$(git log -1 --pretty=%B)"
+
+      - name: Notify Slack Failure
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+        if: inputs.workflow_status != 'success'
+        run: |
+          echo "{}" > /tmp/cluster_config.json
+          python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+          --slack_webhook ${SLACK_WEB_HOOK} \
+          --template_path scripts/pipeline/post_release_slack_notification/unsuccessful_release.txt \
           --commit_message "$(git log -1 --pretty=%B)"
