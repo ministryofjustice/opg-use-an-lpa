@@ -15,6 +15,7 @@ on:
       - '**'             # matches every branch
       - '!main'          # reverse match main
       - '!dependabot/**' # reverse match dependabot PRs
+      - 'dependabot/docker/**' # match dependabot PRs that update docker
 
 permissions:
   contents: write
