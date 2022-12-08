@@ -1,10 +1,10 @@
 :star: *Use a Lasting Power of Attorney Development Environment Ready* :star:
-*User:* {{ user }}
+*User:* {{ gh_actor }}
 *Links*
     *Use frontend:* {{ use_url }}
     *View frontend:* {{ view_url }}
     *Admin frontend:* {{ admin_url }}
-    *CircleCI build url:* {{ circleci_build_url }}
+    *GH Actions build url:* {{ gh_actions_build_url }}
 
 *Commit message:*
 {{ commit_message }}

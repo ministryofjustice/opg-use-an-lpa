@@ -11,7 +11,6 @@ use ParagonIE\HiddenString\HiddenString;
  * Interface for Data relating to Users of the Actor System.
  *
  * Interface ActorUsersInterface
- * @package App\DataAccess\Repository
  */
 interface ActorUsersInterface
 {
@@ -23,9 +22,15 @@ interface ActorUsersInterface
      * @param HiddenString $password
      * @param string $activationToken
      * @param int $activationTtl
-     * @return array
+     * @return void
      */
-    public function add(string $id, string $email, HiddenString $password, string $activationToken, int $activationTtl): array;
+    public function add(
+        string $id,
+        string $email,
+        HiddenString $password,
+        string $activationToken,
+        int $activationTtl,
+    ): void;
 
     /**
      * Get an actor user from the database
@@ -147,12 +152,10 @@ interface ActorUsersInterface
      */
     public function delete(string $accountId): array;
 
-
     /**
      * resets activation with password and ttl
      *
      * @param string $id
-     * @param string $email
      * @param HiddenString $password
      * @param int $activationTtl
      * @return mixed

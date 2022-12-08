@@ -12,20 +12,18 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 class UserLpaActorMap implements UserLpaActorMapInterface
 {
     use DynamoHydrateTrait;
 
-    private DynamoDbClient $client;
-
-    private string $userLpaActorTable;
-
-    public function __construct(DynamoDbClient $client, string $userLpaActorTable)
-    {
-        $this->client = $client;
-        $this->userLpaActorTable = $userLpaActorTable;
+    public function __construct(
+        private DynamoDbClient $client,
+        private string $userLpaActorTable,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -35,18 +33,31 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function get(string $lpaActorToken): ?array
     {
-        $result = $this->client->getItem([
-            'TableName' => $this->userLpaActorTable,
-            'Key' => [
-                'Id' => [
-                    'S' => $lpaActorToken,
+        $result = $this->client->getItem(
+            [
+                'TableName' => $this->userLpaActorTable,
+                'Key'       => [
+                    'Id' => [
+                        'S' => $lpaActorToken,
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
 
         $codeData = $this->getData($result, ['Added']);
 
-        return !empty($codeData) ? $codeData : null;
+        $codeData = !empty($codeData) ? $codeData : null;
+        if ($codeData === null) {
+            $this->logger->notice(
+                'When marshalling the result for {token} an empty array was returned',
+                [
+                    'token'  => $lpaActorToken,
+                    'result' => json_encode($result->toArray()),
+                ],
+            );
+        }
+
+        return $codeData;
     }
 
     /**
@@ -59,15 +70,15 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $siriusUid,
         ?string $actorId,
         ?DateInterval $expiryInterval = null,
-        ?DateInterval $dueByInterval = null,
-        ?string $code = null
+        ?DateInterval $intervalTillDue = null,
+        ?string $code = null,
     ): string {
         $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
         $array = [
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
-            'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)]
+            'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)],
         ];
 
         if ($actorId !== null) {
@@ -80,23 +91,25 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         // Add ActivateBy field to array if expiry interval is present
         if ($expiryInterval !== null) {
-            $expiry = $added->add($expiryInterval);
+            $expiry              = $added->add($expiryInterval);
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
 
-            $dueBy = $added->add($dueByInterval);
+            $dueBy          = $added->add($intervalTillDue);
             $array['DueBy'] = ['S' => $dueBy->format(DateTimeInterface::ATOM)];
         }
 
         do {
-            $id = Uuid::uuid4()->toString();
+            $id          = Uuid::uuid4()->toString();
             $array['Id'] = ['S' => $id];
 
             try {
-                $this->client->putItem([
-                    'TableName' => $this->userLpaActorTable,
-                    'Item' => $array,
-                    'ConditionExpression' => 'attribute_not_exists(Id)'
-                ]);
+                $this->client->putItem(
+                    [
+                        'TableName'           => $this->userLpaActorTable,
+                        'Item'                => $array,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                    ]
+                );
 
                 return $id;
             } catch (DynamoDbException $e) {
@@ -115,21 +128,23 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function delete(string $lpaActorToken): array
     {
-        $response = $this->client->deleteItem([
-            'TableName' => $this->userLpaActorTable,
-            'Key' => [
-                'Id' => [
-                    'S' => $lpaActorToken,
+        $response = $this->client->deleteItem(
+            [
+                'TableName'                 => $this->userLpaActorTable,
+                'Key'                       => [
+                    'Id' => [
+                        'S' => $lpaActorToken,
+                    ],
                 ],
-            ],
-            'ConditionExpression' => 'Id = :id',
-            'ExpressionAttributeValues' => [
-                ':id' => [
-                    'S' => $lpaActorToken
+                'ConditionExpression'       => 'Id = :id',
+                'ExpressionAttributeValues' => [
+                    ':id' => [
+                        'S' => $lpaActorToken,
+                    ],
                 ],
-            ],
-            'ReturnValues' => 'ALL_OLD'
-        ]);
+                'ReturnValues'              => 'ALL_OLD',
+            ]
+        );
 
         return $this->getData($response);
     }
@@ -141,28 +156,29 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
-        $response = $this->client->updateItem([
-          'TableName' => $this->userLpaActorTable,
-          'Key' => [
-              'Id' => [
-                  'S' => $lpaActorToken,
-              ],
-          ],
-          'UpdateExpression' => 'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
-          'ExpressionAttributeValues' => [
-              ':a' => [
-                  'N' => $actorId
-              ],
-              ':b' => [
-                  'S' => $activationCode
-              ]
-          ],
-          'ReturnValues' => 'ALL_NEW'
-          ]);
+        $response = $this->client->updateItem(
+            [
+                'TableName'                 => $this->userLpaActorTable,
+                'Key'                       => [
+                    'Id' => [
+                        'S' => $lpaActorToken,
+                    ],
+                ],
+                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
+                'ExpressionAttributeValues' => [
+                    ':a' => [
+                        'N' => $actorId,
+                    ],
+                    ':b' => [
+                        'S' => $activationCode,
+                    ],
+                ],
+                'ReturnValues'              => 'ALL_NEW',
+            ]
+        );
 
         return $this->getData($response);
     }
-
 
     /**
      * @inheritDoc
@@ -171,16 +187,18 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function getByUserId(string $userId): ?array
     {
-        $result = $this->client->query([
-            'TableName' => $this->userLpaActorTable,
-            'IndexName' => 'UserIndex',
-            'KeyConditionExpression' => 'UserId = :user_id',
-            'ExpressionAttributeValues' => [
-                ':user_id' => [
-                    'S' => $userId,
+        $result = $this->client->query(
+            [
+                'TableName'                 => $this->userLpaActorTable,
+                'IndexName'                 => 'UserIndex',
+                'KeyConditionExpression'    => 'UserId = :user_id',
+                'ExpressionAttributeValues' => [
+                    ':user_id' => [
+                        'S' => $userId,
+                    ],
                 ],
             ]
-        ]);
+        );
 
         return $this->getDataCollection($result, ['Added']);
     }
@@ -194,29 +212,29 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         string $lpaActorToken,
         DateInterval $expiryInterval,
         DateInterval $intervalTillDue,
-        ?string $actorId
+        ?string $actorId,
     ): array {
-        $now = new DateTimeImmutable();
+        $now    = new DateTimeImmutable();
         $expiry = $now->add($expiryInterval);
-        $dueBy = $now->add($intervalTillDue);
+        $dueBy  = $now->add($intervalTillDue);
 
         $updateRequest = [
-            'TableName' => $this->userLpaActorTable,
-            'Key' => [
+            'TableName'                 => $this->userLpaActorTable,
+            'Key'                       => [
                 'Id' => [
                     'S' => $lpaActorToken,
                 ],
             ],
-            'UpdateExpression' => 'set ActivateBy = :a, DueBy = :b',
+            'UpdateExpression'          => 'set ActivateBy = :a, DueBy = :b',
             'ExpressionAttributeValues' => [
                 ':a' => ['N' => (string) $expiry->getTimestamp()],
-                ':b' => ['S' => $dueBy->format(DateTimeInterface::ATOM)]
+                ':b' => ['S' => $dueBy->format(DateTimeInterface::ATOM)],
             ],
-            'ReturnValues' => 'ALL_NEW',
+            'ReturnValues'              => 'ALL_NEW',
         ];
 
         if ($actorId !== null) {
-            $updateRequest['UpdateExpression'] = $updateRequest['UpdateExpression'] . ', ActorId = :c';
+            $updateRequest['UpdateExpression']                = $updateRequest['UpdateExpression'] . ', ActorId = :c';
             $updateRequest['ExpressionAttributeValues'][':c'] = ['N' => $actorId];
         }
 

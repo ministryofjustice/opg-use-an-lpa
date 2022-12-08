@@ -1,0 +1,7 @@
+:sparkle: *Use a Lasting Power of Attorney Demo Environment Updated* :sparkle:
+*User:* {{ gh_actor }}
+*Links*
+    *Use frontend:* {{ use_url }}
+    *View frontend:* {{ view_url }}
+    *Admin frontend:* {{ admin_url }}
+    *GH Actions build url:* {{ gh_actions_build_url }}

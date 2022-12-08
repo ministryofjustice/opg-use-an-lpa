@@ -75,7 +75,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
             || $this->state($request)->firstNames === null
             || $this->state($request)->lastName === null
             || $this->state($request)->dob === null
-            || $this->state($request)->postcode === null;
+            || $this->state($request)->liveInUK === null;
     }
 
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
@@ -95,7 +95,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     protected function hasFutureAnswersInState(RequestActivationKey $state): bool
     {
         // address 1 is a required field on it's page so only need to check that.
-        $alwaysRequired = $state->actorAddress1 !== null;
+        $alwaysRequired = $state->actorAddress1 !== null || $state->actorAbroadAddress !== null;
 
         if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
             $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;

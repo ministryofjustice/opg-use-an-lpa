@@ -1,29 +1,6 @@
 version: 2.1
 
 workflows:
-  keep_demo_environment_up_to_date:
-    triggers:
-      - schedule:
-          cron: "0 8 * * *" # Every 8am
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - use-my-lpa/apply_environment_terraform:
-          name: demo_apply_environment_terraform
-          workspace: demo
-          image_tag_input: latest
-          admin_image_tag_input: latest
-      - use-my-lpa/redeploy_latest:
-          name: redeploy_demo
-          environment: demo
-          requires: [demo_apply_environment_terraform]
-      - slack_environment_redeploy:
-          name: post_demo_release_message
-          environment: demo
-          requires: [redeploy_demo]
-
   post_statistics:
     triggers:
       - schedule:
@@ -38,144 +15,10 @@ workflows:
 
   path_to_live:
       jobs:
-        # Common tasks
-        - use-my-lpa/node_test_web:
-            name: test_web
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/node_build_web:
-            name: build_web
-            filters: { branches: { only: [main] } }
-            requires: [test_web]
-
-        - use-my-lpa/docker_build_front_app:
-            name: app_front_build
-            filters: { branches: { only: [main] } }
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_front_web:
-            name: web_front_build
-            filters: { branches: { only: [main] } }
-            requires: [build_web]
-
-        - use-my-lpa/docker_build_api_app:
-            name: app_api_build
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/docker_build_api_web:
-            name: web_api_build
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/docker_test_admin:
-            name: admin_app_test
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/docker_build_admin:
-            name: admin_app_build
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/docker_build_lambdas:
-            name: lambda_build
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/codecov_upload:
-            name: codecov_upload
-            filters: { branches: { only: [main] } }
-            requires:
-              [
-                app_front_build,
-                app_api_build,
-                test_web,
-                admin_app_test,
-              ]
-
-        # Provision and test preproduction
-        - use-my-lpa/apply_shared_terraform:
-            name: dev_apply_shared_terraform
-            workspace: development
-            filters: { branches: { only: [main] } }
-
-        - use-my-lpa/apply_shared_terraform:
-            name: preprod_apply_shared_terraform
-            workspace: preproduction
-            filters: { branches: { only: [main] } }
-            requires:
-              [
-                dev_apply_shared_terraform,
-              ]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: preprod_apply_environment_terraform
-            workspace: preproduction
-            filters: { branches: { only: [main] } }
-            requires:
-              [
-                preprod_apply_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                admin_app_build,
-                lambda_build,
-              ]
-
-        - ecr_scan_results:
-            name: ecr_scan_results
-            filters: { branches: { only: [main] } }
-            requires:
-              [
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                admin_app_build,
-                preprod_apply_environment_terraform,
-              ]
-
-        - use-my-lpa/seed_database:
-            name: preprod_seed_database
-            filters: { branches: { only: [main] } }
-            requires: [preprod_apply_environment_terraform]
-
-        - use-my-lpa/run_behat_suite:
-            name: preprod_run_behat_tests
-            workspace: preproduction
-            filters: { branches: { only: [main] } }
-            requires: [preprod_seed_database]
-
-        # Provision and test production
-        - use-my-lpa/apply_shared_terraform:
-            name: production_apply_shared_terraform
-            workspace: production
-            filters: { branches: { only: [main] } }
-            requires: [preprod_run_behat_tests]
-
-        - use-my-lpa/apply_environment_terraform:
-            name: production_apply_environment_terraform
-            workspace: production
-            filters: { branches: { only: [main] } }
-            requires:
-              [
-                production_apply_shared_terraform,
-                app_front_build,
-                web_front_build,
-                web_api_build,
-                app_api_build,
-                admin_app_build,
-              ]
-
+        # Just need a task in here for this PR until we remove the config entirely
         - use-my-lpa/run_healthcheck_test:
-            name: prod_run_healthcheck_test
-            filters: { branches: { only: [main] } }
-            requires: [production_apply_environment_terraform]
-
-        - python_templated_slack_notify:
-            name: post_production_release_message
-            template: production_release.txt
-            webhook: $PROD_RELEASE_SLACK_WEBHOOK
-            filters: { branches: { only: [main] } }
-            requires: [prod_run_healthcheck_test]
-
+            name: stub task
+            filters: { branches: { only: [non_existent_branch] } }
 
 orbs:
   slack: circleci/slack@3.3.0
@@ -251,7 +94,7 @@ orbs:
         resource_class: small
       node-browsers:
         docker:
-          - image: cimg/node:14.19-browsers
+          - image: cimg/node:18.11.0-browsers
             auth:
               username: $DOCKER_USER
               password: $DOCKER_ACCESS_TOKEN
@@ -337,7 +180,7 @@ orbs:
           - run:
               name: Build assets
               command: |
-                cd service-front/web/ && npm run build && npm run build:pdf_production
+                cd service-front/web/ && npm run build
           - save_cache:
               name: Save node modules cache
               key: node_modules-{{ checksum "service-front/web/package-lock.json" }}-{{ arch }}
@@ -973,28 +816,6 @@ orbs:
                 echo "end of workflow"
 
 jobs:
-  slack_environment_redeploy:
-    docker:
-      - image: cimg/python:3.7
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    parameters:
-      environment:
-        type: string
-    steps:
-      - checkout
-      - run:
-          name: Get Commit Message
-          command: |
-            echo 'export COMMIT_MESSAGE="$(git log -1 --pretty=%B)"' >> $BASH_ENV
-      - slack/notify:
-          title: "Use a Lasting Power of Attorney - <<parameters.environment>> environment updated"
-          color: "#4287f5"
-          message: "Scheduled update of <<parameters.environment>> environment complete"
-          footer: "$CIRCLE_BRANCH - Commit Message: $COMMIT_MESSAGE"
-
   python_templated_slack_notify:
     docker:
       - image: cimg/python:3.7
@@ -1022,6 +843,22 @@ jobs:
             --template_path ~/project/scripts/pipeline/post_release_slack_notification/<<parameters.template>> \
             --commit_message "$(git log -1 --pretty=%B)"
 
+  ecr_scan_results:
+    docker:
+      - image: cimg/python:3.7
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_ACCESS_TOKEN
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Check ECR Scan Results
+          command: |
+            pip install -r scripts/pipeline/requirements.txt
+            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
+            echo $IMAGE_TAG
+            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
 
   slack_notify_stats:
     docker:
@@ -1045,23 +882,6 @@ jobs:
           message: $(cat ./output.txt)
           webhook: ${PROD_RELEASE_SLACK_WEBHOOK}
           footer: ""
-
-  ecr_scan_results:
-    docker:
-      - image: cimg/python:3.7
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
-    resource_class: small
-    steps:
-      - checkout
-      - run:
-          name: Check ECR Scan Results
-          command: |
-            pip install -r scripts/pipeline/requirements.txt
-            export IMAGE_TAG=$(bash ~/project/scripts/pipeline/set_environment_variables/set_image_tag.sh $CIRCLE_BRANCH $CIRCLE_SHA1) >> $BASH_ENV
-            echo $IMAGE_TAG
-            python scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag $IMAGE_TAG
 
   cancel_redundant_builds:
     docker:

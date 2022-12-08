@@ -20,20 +20,15 @@ jobs:
         with:
           path: ./service-front/web/node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/service-front/web/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
-            cd service-front/web/ && npm ci
+          cd service-front/web/ && npm ci
           fi
       - name: build assets
         run: |
           cd service-front/web/
           npm run build
-          npm run build:pdf_production
       - name: archive dist
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
         with:

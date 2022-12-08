@@ -18,6 +18,7 @@
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
 
+
     {% if application == 'actor' %}
         {% set url = 'https://use-lasting-power-of-attorney.service.gov.uk/' %}
     {% else %}
@@ -168,7 +169,7 @@
     </div>
 </footer>
 
-<script src="{{ asset('javascript/bundle.js') }}"></script>
+<script src="{{ asset('index.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>

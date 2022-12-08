@@ -1,4 +1,4 @@
-name: "[Workflow] Cleanup PR Workspaces"
+name: "[Scheduled] Cleanup PR Workspaces"
 
 on:
   schedule:
@@ -30,6 +30,23 @@ jobs:
       - uses: webfactory/ssh-agent@fc49353b67b2b7c1e0e6a600572d01a69f2672dd # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
+      - name: configure AWS credentials for getting pagerduty token
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::367815980639:role/opg-use-an-lpa-ci
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPADevAssumeGithubAction
+
+      - name: set pagerduty token
+        run: |
+          export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
+            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+          echo "::add-mask::$TF_VAR_pagerduty_token"
+          echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0

@@ -76,7 +76,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
         }
 
         $required = parent::isMissingPrerequisite($request)
-            || $this->state($request)->actorAddress1 === null
+            || ($this->state($request)->actorAddress1 === null && $this->state($request)->actorAbroadAddress === null)
             || $this->state($request)->getActorRole() === null;
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {

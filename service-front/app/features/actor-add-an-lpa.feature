@@ -132,7 +132,8 @@ Feature: Add an LPA
   Scenario Outline: The user can add an LPA to their account when they have the same DOB as others on the LPA
     Given I am on the add an LPA page
     When I request to add an LPA with the code "<passcode>" that is for "<firstName>" "<secondName>" and I will have an Id of <id>
-    Then The correct LPA is found and I can see the correct name which will have a role of "<role>"
+    Then The LPA is found correctly
+    And Has correct name "<firstName>""<secondName>" and role "<role>"
     And The LPA is successfully added
 
     Examples:
@@ -144,9 +145,17 @@ Feature: Add an LPA
   Scenario Outline: I can add a LPA as a trust corporation
     Given I am on the add an LPA page
     When I as trust corporation request to add an LPA with the code "<passcode>" that is for "<companyName>" and I will have an Id of <id>
-    Then The correct LPA is found and I can see the correct name which will have a role of "<role>"
+    Then The LPA is found correctly
+    And Has the correct company name "<companyName>" and role "<role>"
     And The LPA is successfully added
 
     Examples:
-      | id  | passcode     | companyName       | role              |
-      | 164 | TYUPHWQRECHV | trust corporation | Trust corporation |
+      | id  | passcode     | companyName       | role     |
+      | 164 | TYUPHWQRECHV | trust corporation | Attorney |
+
+  @ui
+  Scenario: The user cannot get to the check answers page before they have filled in all the prerequisite questions
+    Given I am on the add an LPA page
+    When I go to the check lpa page without filling in all the pages
+    Then I am redirected to the activation key page
+    And My filled answers have been cleared

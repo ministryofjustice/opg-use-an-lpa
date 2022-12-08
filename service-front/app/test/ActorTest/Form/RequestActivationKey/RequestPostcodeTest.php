@@ -7,6 +7,7 @@ namespace ActorTest\Form\RequestActivationKey;
 use Actor\Form\RequestActivationKey\RequestPostcode;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Laminas\Form\Element\Radio;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -33,8 +34,9 @@ class RequestPostcodeTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'   => Csrf::class,
-            'postcode' => Text::class,
+            '__csrf'     => Csrf::class,
+            'postcode'   => Text::class,
+            'live_in_uk' => Radio::class,
         ];
     }
 

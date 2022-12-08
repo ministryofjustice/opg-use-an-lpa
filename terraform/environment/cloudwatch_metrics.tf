@@ -39,7 +39,8 @@ locals {
     "key_status.ACTIVATION_KEY_EXISTS",
     "key_status.ACTIVATION_KEY_NOT_EXISTS",
     "key_status.ACTIVATION_KEY_EXPIRED",
-    "event_code.IDENTITY_HASH_CHANGE"
+    "event_code.IDENTITY_HASH_CHANGE",
+    "event_code.USER_ABROAD_ADDRESS_REQUEST_SUCCESS"
   ]
 }
 
