@@ -211,8 +211,10 @@ jobs:
       - production_health_check
     with:
       template: production_release.txt
+      workflow_status: ${{ needs.production_health_check.result }}
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+    if: always()
 
   # Required end of workflow job
   end_of_workflow:
