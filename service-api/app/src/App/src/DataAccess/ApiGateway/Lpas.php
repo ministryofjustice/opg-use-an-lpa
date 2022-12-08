@@ -115,8 +115,6 @@ class Lpas implements LpasInterface
         // Force the pool of requests to complete
         $promise->wait();
 
-        //---
-
         // Handle all request response now
         foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();

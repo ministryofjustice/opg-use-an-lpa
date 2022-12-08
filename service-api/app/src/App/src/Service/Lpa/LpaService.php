@@ -278,7 +278,12 @@ class LpaService
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
-            $lpa = $lpas[$item['SiriusUid']];
+            $lpa = $lpas[$item['SiriusUid']] ?? null;
+
+            if ($lpa === null) {
+                continue;
+            }
+
             $lpaData = $lpa->getData();
             $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
 
