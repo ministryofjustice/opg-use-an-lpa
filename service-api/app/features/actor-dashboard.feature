@@ -32,3 +32,11 @@ Feature: The user is able to see correct information on their dashboard
     Given The status of the LPA changed from Registered to Suspended
     When I am on the dashboard page
     Then I cannot see the added LPA
+
+
+  @integration
+  Scenario: As a user I want to be able to see my other LPAs if one has errored
+    Given An LPA gives an unexpected error
+    When I am on the dashboard page
+    Then I can still see other LPAs in my account
+
