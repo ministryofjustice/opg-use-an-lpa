@@ -1,9 +1,6 @@
 name: "[Scheduled] TFsec update from main"
 
 on:
-  push:
-    branches:
-      - "main"
   schedule:
     # 7am every day
     - cron: '0 7 * * *'
