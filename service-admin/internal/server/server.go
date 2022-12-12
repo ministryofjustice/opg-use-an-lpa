@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/time"
 	"net/http"
 	"net/url"
 	"os"
@@ -57,7 +58,7 @@ func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Ha
 
 	authMiddleware := NewAuthorisationMiddleware(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService(), a.aks)
-	statsServer := *handlers.NewStatsServer(handlers.NewTemplateWriterService())
+	statsServer := *handlers.NewStatsServer(data.NewStatisticsService(a.db), handlers.NewTemplateWriterService(), &time.ServerTime{})
 	JSONLoggingMiddleware := NewJSONLoggingMiddleware(log.Logger)
 	templateMiddleware := NewTemplateMiddleware(LoadTemplates(os.DirFS("web/templates")))
 	errorHandlingMiddleware := NewErrorHandlingMiddleware(a.tw)

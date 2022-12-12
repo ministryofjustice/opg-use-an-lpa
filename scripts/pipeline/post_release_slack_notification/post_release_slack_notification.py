@@ -37,15 +37,14 @@ class MessageGenerator:
         gh_repository = str(os.getenv('GITHUB_REPOSITORY', ''))
         gh_run_id = str(os.getenv('GITHUB_RUN_ID', ''))
 
+        use_url = self.config.get('public_facing_use_fqdn', None)
+        view_url = self.config.get('public_facing_view_fqdn', None)
+        admin_url = self.config.get('admin_fqdn', None)
+
         mapping = {
-            'user': str(os.getenv('CIRCLE_USERNAME', 'circleci username')),
-            'use_url': 'https://{}/home'.format(
-                self.config['public_facing_use_fqdn']) or 'Use URL not provided',
-            'view_url': 'https://{}/home'.format(
-                self.config['public_facing_view_fqdn']) or 'View URL not provided',
-            'admin_url': 'https://{}/'.format(
-                self.config['admin_fqdn']) or 'Admin URL not provided',
-            'circleci_build_url': str(os.getenv('CIRCLE_BUILD_URL', 'Build url not included')),
+            'use_url': 'https://{}/home'.format(use_url) if use_url is not None else 'Use URL not provided',
+            'view_url': 'https://{}/home'.format(view_url) if view_url is not None else 'View URL not provided',
+            'admin_url': 'https://{}/home'.format(admin_url) if admin_url is not None else 'Admin URL not provided',
             'gh_actions_build_url': f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
             'gh_actor': str(os.getenv('GITHUB_ACTOR', 'actor not included')),
             'commit_message': commit_message or 'Commit message not provided'

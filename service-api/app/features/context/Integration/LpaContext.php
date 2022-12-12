@@ -36,6 +36,8 @@ use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
 
+use function PHPUnit\Framework\assertEquals;
+
 /**
  * Class LpaContext
  *
@@ -2310,6 +2312,97 @@ class LpaContext extends BaseIntegrationContext
         $lpa = $this->lpaService->getAllForUser($this->userId);
 
         Assert::assertEmpty($lpa);
+    }
+
+    /**
+     * @Then /^I can still see other LPAs in my account$/
+     */
+    public function iCanStillSeeTheOtherLPAs(): void
+    {
+        // functionality tested in anLPAGivesAnUnexpectedError
+    }
+
+    /**
+     * @Given /^An LPA gives an unexpected error$/
+     */
+    public function anLPAGivesAnUnexpectedError(): void
+    {
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'        => $this->userLpaActorToken,
+                                'ActorId'   => $this->actorLpaId,
+                                'UserId'    => $this->userId,
+                            ]
+                        ),
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => '700000000138',
+                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'        => $this->userLpaActorToken,
+                                'ActorId'   => $this->actorLpaId,
+                                'UserId'    => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaService:getLpas
+
+        // UserLpaActorMap::getUsersLpas
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'        => $this->userLpaActorToken,
+                                'ActorId'   => $this->actorLpaId,
+                                'UserId'    => $this->userId,
+                            ]
+                        ),
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => '700000000138',
+                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'        => $this->userLpaActorToken,
+                                'ActorId'   => $this->actorLpaId,
+                                'UserId'    => $this->userId,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_NOT_FOUND
+        );
+
+        // LpaRepository::get
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/700000000138',
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $lpa = $this->lpaService->getAllForUser($this->userId);
+
+        assertEquals(1, sizeof($lpa));
     }
 
     /**

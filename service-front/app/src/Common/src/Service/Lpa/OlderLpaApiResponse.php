@@ -20,6 +20,7 @@ class OlderLpaApiResponse
     public const LPA_ALREADY_ADDED         = 'LPA_ALREADY_ADDED';
     public const OLDER_LPA_NEEDS_CLEANSING = 'OLDER_LPA_NEEDS_CLEANSING';
     public const KEY_ALREADY_REQUESTED     = 'KEY_ALREADY_REQUESTED';
+    public const POSTCODE_NOT_SUPPLIED     = 'POSTCODE_NOT_SUPPLIED';
 
     private array|ActivationKeyExistsResponse|LpaAlreadyAddedResponse|OlderLpaMatchResponse $data;
 
@@ -65,6 +66,7 @@ class OlderLpaApiResponse
             self::LPA_ALREADY_ADDED,
             self::OLDER_LPA_NEEDS_CLEANSING,
             self::KEY_ALREADY_REQUESTED,
+            self::POSTCODE_NOT_SUPPLIED,
         ];
 
         if (in_array($response, $allowedResponses)) {

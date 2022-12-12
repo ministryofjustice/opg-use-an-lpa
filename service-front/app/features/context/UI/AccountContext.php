@@ -865,8 +865,8 @@ class AccountContext implements Context
                 json_encode(
                     [
                         'Id' => '123',
-                        'Email' => $this->userEmail,
                         'ActivationToken' => $this->activationToken,
+                        'ExpiresTTL' => 2553602798
                     ]
                 ),
                 self::USER_SERVICE_CREATE

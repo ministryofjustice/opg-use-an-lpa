@@ -47,7 +47,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
+        $identity = $user?->getIdentity();
 
         $lpas = $this->lpaService->getLpas($identity, true);
 

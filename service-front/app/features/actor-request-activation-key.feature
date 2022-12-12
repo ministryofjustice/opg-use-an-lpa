@@ -55,6 +55,17 @@ Feature: Ask for an activation key
       | 05  | 12    | 2020 | Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18 |
 
   @ui
+  Scenario Outline: The user cannot request an activation key when they give an invalid response to if they live in the uk
+    Given I am on the do you live in the UK page
+    When I request an activation key with an invalid live in the UK answer <live_in_uk> <postcode>
+    Then I am told that my input is invalid because <reason>
+
+    Examples:
+    | live_in_uk | postcode | reason                       |
+    | Yes        |          | Enter your postcode          |
+    |            |          | Select yes if you live in the UK |
+    
+  @ui
   Scenario: The user is taken to check their answers when they request an activation key with valid details
     Given I am on the request an activation key page
     When I request an activation key with valid details
@@ -64,19 +75,19 @@ Feature: Ask for an activation key
   Scenario: As a user I am unable to visit the your name page without filling in my other details before
     Given I am on the request an activation key page
     When I visit the Your Name page without filling out the form
-    Then I am redirected to the activation key page
+    Then I am redirected to the reference number page
 
   @ui
   Scenario: As a user I am unable to visit the date of birth page without filling in my other details before
     Given I am on the request an activation key page
     When I visit the Date of Birth page without filling out the form
-    Then I am redirected to the activation key page
+    Then I am redirected to the reference number page
 
   @ui
   Scenario: As a user I am unable to visit the postcode page without filling in my other details before
     Given I am on the request an activation key page
     When I visit the Postcode page without filling out the form
-    Then I am redirected to the activation key page
+    Then I am redirected to the reference number page
 
   @ui @ff:allow_meris_lpas:true
   Scenario Outline: The user cannot request an activation key with an invalid Meris reference number

@@ -31,7 +31,7 @@ Feature: Say if the given address is on paper LPA
   @ui @ff:allow_older_lpas:true
   Scenario: A user is asked for their address on paper LPA if they have not provided the same address as in paper
     Given I am asked for my full address
-    And I select the address is not same as on paper LPA
+    And I fill in my UK address and I select the address is not same as on paper LPA
     And I am asked for my address from the paper LPA
 
   @ui @ff:allow_older_lpas:true
@@ -45,7 +45,7 @@ Feature: Say if the given address is on paper LPA
   @ui @ff:allow_older_lpas:true
   Scenario: A user is asked for their paper address on paper LPA if they have not provided the same address as in paper
     Given I am asked for my full address
-    And I select the address is not same as on paper LPA
+    And I fill in my UK address and I select the address is not same as on paper LPA
     And I am asked for my address from the paper LPA
     When I click the Back link on the page
     Then I will be navigated back to address on paper page

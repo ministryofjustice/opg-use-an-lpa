@@ -15,6 +15,7 @@ on:
       - '**'             # matches every branch
       - '!main'          # reverse match main
       - '!dependabot/**' # reverse match dependabot PRs
+      - 'dependabot/docker/**' # match dependabot PRs that update docker
 
 permissions:
   contents: write
@@ -67,7 +68,8 @@ jobs:
       - name: show specific path
         env:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
-        run: echo "path chosen - $SPECIFIC_PATH"
+        run: |
+          echo "path chosen - $SPECIFIC_PATH"
 
   terraform_lint:
     name: lint terraform code
@@ -79,8 +81,7 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      needs.workflow_variables.result == 'success' &&
-      needs.workflow_variables.outputs.specific_path != 'admin'
+      needs.workflow_variables.result == 'success'
 
   node_test:
     name: test node dependencies
@@ -133,8 +134,7 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
-      needs.workflow_variables.outputs.specific_path != 'admin'
+      needs.terraform_lint.result == 'success'
 
   terraform_apply_environment:
     name: terraform apply environment
@@ -153,7 +153,7 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      (needs.terraform_lint.result == 'success' || needs.terraform_lint.result == 'skipped') &&
+      needs.terraform_lint.result == 'success' &&
       needs.docker_build_scan_push.result == 'success' &&
       needs.workflow_variables.result == 'success'
 
@@ -166,8 +166,8 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      (needs.terraform_apply_environment.result == 'success' || needs.terraform_apply_environment.result == 'skipped') &&
-      (needs.terraform_plan_shared_development.result == 'success' || needs.terraform_plan_shared_development.result == 'skipped')
+      needs.terraform_apply_environment.result == 'success' &&
+      needs.terraform_plan_shared_development.result == 'success'
 
   run_behat_suite:
     name: run behat tests against environment
@@ -190,6 +190,7 @@ jobs:
       - run_behat_suite
     with:
       template: successful_dev_build.txt
+      workflow_status: ${{ needs.run_behat_suite.result }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
     if: |

@@ -40,6 +40,7 @@ class AccountContext extends BaseIntegrationContext
     use SetupEnv;
 
     private AwsMockHandler $awsFixtures;
+    private array $createUserResponse;
 
     /**
      * @Given /^I access the login form$/
@@ -656,12 +657,12 @@ class AccountContext extends BaseIntegrationContext
 
         $us = $this->container->get(UserService::class);
 
-        $this->userActivationToken = $us->add(
+        $this->createUserResponse = $us->add(
             [
                 'email' => $this->userAccountEmail,
                 'password' => new HiddenString($this->userAccountPassword),
             ]
-        )['ActivationToken'];
+        );
     }
 
     /**
@@ -1160,7 +1161,10 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount(): void
     {
-        Assert::assertEquals('123456789', $this->userActivationToken);
+        Assert::assertArrayHasKey('Id', $this->createUserResponse);
+        Assert::assertArrayHasKey('ActivationToken', $this->createUserResponse);
+        Assert::assertArrayHasKey('ExpiresTTL', $this->createUserResponse);
+
     }
 
     /**

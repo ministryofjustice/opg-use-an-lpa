@@ -1,0 +1,233 @@
+name: "[Workflow] Path to live"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  push:
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      short_sha:  ${{ steps.variables.outputs.short_sha }}
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: development
+    secrets: inherit
+
+  node_test:
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+    needs:
+      - workflow_variables
+
+  node_build:
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+    needs:
+      - workflow_variables
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+      - node_test
+      - node_build
+    with:
+      tag: main-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: main
+      push_to_ecr: true
+      specific_path: all
+    secrets: inherit
+
+  code_coverage:
+    name: upload to code coverage
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - name: download artifact for front tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-front
+          path: service-front
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-api
+          path: service-api
+      - name: download artifact for api tests
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: service-admin
+          path: service-admin
+      - uses: codecov/codecov-action@v3
+        with:
+          name: codecov-use-an-lpa
+
+  terraform_apply_shared_development:
+    name: terraform apply shared development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+    with:
+      workspace: development
+      terraform_path: account
+      apply: true
+      specific_path: all
+    secrets: inherit
+
+  terraform_apply_shared_preproduction:
+    name: terraform apply shared preproduction
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_shared_development
+    with:
+      workspace: preproduction
+      terraform_path: account
+      apply: true
+      specific_path: all
+    secrets: inherit
+
+  terraform_apply_preproduction:
+    name: terraform apply preproduction
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_shared_preproduction
+      - workflow_variables
+    with:
+      workspace: preproduction
+      terraform_path: environment
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+      specific_path: all
+    secrets: inherit
+
+  seed_dynamodb_preproduction:
+    name: seed dynamodb in preproduction
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_preproduction
+    secrets: inherit
+
+  run_behat_suite_preproduction:
+    name: run behat tests against preproduction
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb_preproduction
+    with:
+      workspace: preproduction
+    secrets: inherit
+
+  terraform_apply_shared_production:
+    name: terraform apply shared production
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - run_behat_suite_preproduction
+    with:
+      workspace: production
+      terraform_path: account
+      apply: true
+      specific_path: all
+    secrets: inherit
+
+  terraform_apply_production:
+    name: terraform apply production
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_shared_production
+      - workflow_variables
+    with:
+      workspace: production
+      terraform_path: environment
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+      specific_path: all
+    secrets: inherit
+
+  production_health_check:
+    name: health check production
+    runs-on: ubuntu-latest
+    needs:
+      - terraform_apply_production
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        with:
+          fetch-depth: '0'
+      - name: download cluster_config
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: environment_config_file
+          path: terraform/environment
+      - name: workflow has ended without issue
+        run: |
+          viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
+          viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
+          [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+
+          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+          actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
+          [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+
+  slack_notify:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - production_health_check
+    with:
+      template: production_release.txt
+      workflow_status: ${{ needs.production_health_check.result }}
+    secrets:
+      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+    if: always()
+
+  # Required end of workflow job
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - code_coverage
+      - slack_notify
+      - production_health_check
+      - workflow_variables
+    steps:
+      - name: workflow has ended without issue
+        run: |
+          echo "Deployment to production successful"
+          echo "Tag Used: main-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"

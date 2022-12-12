@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\User;
 
-use App\DataAccess\Repository;
+use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\BadRequestException;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
@@ -23,37 +23,16 @@ use Ramsey\Uuid\Uuid;
 use function password_verify;
 use function random_bytes;
 
-/**
- * Class UserService
- *
- * @package App\Service\User
- */
 class UserService
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Repository\ActorUsersInterface
-     */
-    private $usersRepository;
-
-    /**
-     * UserService constructor.
-     *
-     * @param Repository\ActorUsersInterface $usersRepository
-     */
-    public function __construct(Repository\ActorUsersInterface $usersRepository, LoggerInterface $logger)
-    {
-        $this->usersRepository = $usersRepository;
-        $this->logger = $logger;
+    public function __construct(
+        private ActorUsersInterface $usersRepository,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
      * @param array $data
-     *
      * @return array
      * @throws Exception|CreationException|ConflictException
      */
@@ -100,26 +79,25 @@ class UserService
 
         //  An unactivated user account can only exist for 24 hours before it is deleted
         $activationToken = $this->getLinkToken();
-        $activationTtl = $this->getExpiryTtl();
+        $activationTtl   = $this->getExpiryTtl();
 
-        $user = $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
+        $this->usersRepository->add($id, $data['email'], $data['password'], $activationToken, $activationTtl);
 
         $this->logger->info(
             'Account with Id {id} created using email {email}',
             [
-                'id' => $id,
+                'id'    => $id,
                 'email' => $data['email'],
             ]
         );
 
-        return $user;
+        return ['Id' => $id, 'ActivationToken' => $activationToken, 'ExpiresTTL' => $activationTtl];
     }
 
     /**
      * Get an actor user using the email address
      *
      * @param string $email
-     *
      * @return array
      * @throws NotFoundException
      */
@@ -132,7 +110,6 @@ class UserService
      * Activate a user account
      *
      * @param string $activationToken
-     *
      * @return array
      */
     public function activate(string $activationToken): array
@@ -152,7 +129,6 @@ class UserService
      *
      * @param string $email
      * @param HiddenString $password
-     *
      * @return array
      * @throws NotFoundException|ForbiddenException|UnauthorizedException|Exception
      */
@@ -179,8 +155,8 @@ class UserService
         $this->logger->info(
             'Authentication successful for account with Id {id}',
             [
-                'id' => $user['Id'],
-                'last-login' => isset($user['LastLogin']) ? $user['LastLogin'] : null,
+                'id'         => $user['Id'],
+                'last-login' => $user['LastLogin'] ?? null,
             ]
         );
 
@@ -192,13 +168,12 @@ class UserService
      * against the actor record alongside its expiry time.
      *
      * @param string $email
-     *
      * @return array
      * @throws Exception
      */
     public function requestPasswordReset(string $email): array
     {
-        $resetToken = $this->getLinkToken();
+        $resetToken  = $this->getLinkToken();
         $resetExpiry = $this->getExpiryTtl();
 
         try {
@@ -224,7 +199,6 @@ class UserService
      * Checks to see if a token exists against a user record and it has not expired
      *
      * @param string $resetToken
-     *
      * @return string
      * @throws Exception
      */
@@ -239,7 +213,7 @@ class UserService
             if (new DateTime('@' . $user['PasswordResetExpiry']) >= new DateTime('now')) {
                 return $userId;
             }
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             $this->logger->notice(
                 'Account not found for password reset token {token}',
                 ['token' => $resetToken]
@@ -256,7 +230,6 @@ class UserService
      *
      * @param string       $resetToken
      * @param HiddenString $password
-     *
      * @throws Exception
      */
     public function completePasswordReset(string $resetToken, HiddenString $password): void
@@ -282,11 +255,6 @@ class UserService
         );
     }
 
-    /**
-     * @param string       $userId
-     * @param HiddenString $password
-     * @param HiddenString $newPassword
-     */
     public function completeChangePassword(string $userId, HiddenString $password, HiddenString $newPassword): void
     {
         $user = $this->usersRepository->get($userId);
@@ -303,7 +271,6 @@ class UserService
 
     /**
      * @param string $accountId
-     *
      * @return array
      */
     public function deleteUserAccount(string $accountId): array
@@ -325,13 +292,12 @@ class UserService
      * @param string       $userId
      * @param string       $newEmail
      * @param HiddenString $password
-     *
      * @return array
      * @throws Exception
      */
-    public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password)
+    public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password): array
     {
-        $resetToken = $this->getLinkToken();
+        $resetToken  = $this->getLinkToken();
         $resetExpiry = $this->getExpiryTtl();
 
         $this->canRequestChangeEmail($userId, $newEmail, $password);
@@ -352,7 +318,6 @@ class UserService
      * @param string       $userId
      * @param string       $newEmail
      * @param HiddenString $password
-     *
      * @return void
      * @throws Exception
      */
@@ -395,32 +360,25 @@ class UserService
     }
 
     /**
-     * @param array  $emailResetExists
-     * @param string $userId
-     *
+     * @param array       $emailResetExists
+     * @param bool        $forAccountCreation
+     * @param string|null $userId
      * @return bool
      * @throws Exception
      */
     private function checkIfEmailResetViable(
         array $emailResetExists,
         bool $forAccountCreation,
-        string $userId = null
+        ?string $userId = null,
     ): bool {
         //checks if the new email chosen has already been requested for reset
         foreach ($emailResetExists as $otherUser) {
             if (
-                $forAccountCreation &&
-                (new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now'))
+                new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') &&
+                ($forAccountCreation || $userId !== $otherUser['Id'])
             ) {
                 // if the other users email reset token has not expired, this user cannot create an account
                 // with this email
-                return false;
-            } elseif (
-                new DateTime('@' . $otherUser['EmailResetExpiry']) >= new DateTime('now') &&
-                ($userId !== $otherUser['Id'])
-            ) {
-                // if the other users email reset token has not expired, and they not the current user, this user
-                // can't request this email
                 return false;
             }
         }
@@ -431,11 +389,10 @@ class UserService
      * Checks to see if an email token exists against a user record and it has not expired
      *
      * @param string $resetToken
-     *
      * @return string
      * @throws Exception
      */
-    public function canResetEmail(string $resetToken)
+    public function canResetEmail(string $resetToken): string
     {
         try {
             $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
@@ -445,7 +402,7 @@ class UserService
             if (new DateTime('@' . $user['EmailResetExpiry']) >= new DateTime('now')) {
                 return $userId;
             }
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             $this->logger->notice(
                 'Account not found for reset email token {token}',
                 ['token' => $resetToken]
@@ -455,12 +412,9 @@ class UserService
         throw new GoneException('Email reset token has expired');
     }
 
-    /**
-     * @param string $resetToken
-     */
-    public function completeChangeEmail(string $resetToken)
+    public function completeChangeEmail(string $resetToken): void
     {
-        $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
+        $userId = $this->usersRepository->  getIdByEmailResetToken($resetToken);
 
         $user = $this->usersRepository->get($userId);
 
@@ -483,7 +437,7 @@ class UserService
      *
      * @return float|int
      */
-    private function getExpiryTtl()
+    private function getExpiryTtl(): float|int
     {
         return time() + (60 * 60 * 24);
     }

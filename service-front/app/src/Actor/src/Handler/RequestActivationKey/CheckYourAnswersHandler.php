@@ -100,6 +100,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             'last_name'        => $state->lastName,
             'dob'              => $state->dob,
             'postcode'         => $state->postcode,
+            'live_in_uk'       => $state->liveInUK,
         ];
 
         return new HtmlResponse($this->renderer->render(
@@ -134,6 +135,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $state->dob,
                 $state->postcode
             );
+
+            if ($state->liveInUK === 'No' && $result->getResponse() !== OlderLpaApiResponse::LPA_ALREADY_ADDED) {
+                return $this->redirectToRoute('lpa.add.actor-address');
+            }
 
             switch ($result->getResponse()) {
                 case OlderLpaApiResponse::LPA_ALREADY_ADDED:
