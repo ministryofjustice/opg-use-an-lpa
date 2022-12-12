@@ -44,6 +44,7 @@ jobs:
           fail_ci_if_error: true
           flags: use-an-lpa-front
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
         if: |
           inputs.specific_path == 'all'
       - name: service api codecov upload
@@ -54,6 +55,7 @@ jobs:
           fail_ci_if_error: true
           flags: use-an-lpa-api
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
         if: |
           inputs.specific_path == 'all'
       - name: service admin codecov upload
@@ -64,6 +66,7 @@ jobs:
           fail_ci_if_error: true
           flags: use-an-lpa-admin
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
         if: |
           inputs.specific_path == 'all' ||
           inputs.specific_path == 'admin'

@@ -15,7 +15,7 @@ coverage:
         flags:
           - use-an-lpa-api
       admin:
-        target: 80%
+        target: 70%
         flags:
           - use-an-lpa-admin
 
@@ -38,7 +38,7 @@ flags:
     paths: #note, accepts globs, not regexes
       - ./service-api
     carryforward: true
-  use-an-lpa:
+  use-an-lpa-admin:
     paths: #note, accepts globs, not regexes
       - ./service-admin
     carryforward: true
