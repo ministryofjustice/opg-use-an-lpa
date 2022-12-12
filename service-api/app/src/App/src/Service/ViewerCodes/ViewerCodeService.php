@@ -4,36 +4,22 @@ declare(strict_types=1);
 
 namespace App\Service\ViewerCodes;
 
-use App\DataAccess\Repository\{KeyCollisionException, UserLpaActorMapInterface, ViewerCodesInterface};
-use App\Service\Lpa\LpaService;
+use App\DataAccess\Repository\{KeyCollisionException,
+    UserLpaActorMapInterface,
+    ViewerCodeActivityInterface,
+    ViewerCodesInterface};
 use DateTime;
 use DateTimeZone;
+use Psr\Log\LoggerInterface;
 
 class ViewerCodeService
 {
-    private ViewerCodesInterface $viewerCodesRepository;
-
-    private UserLpaActorMapInterface $userLpaActorMapRepository;
-
-    /**
-     * @var LpaService
-     */
-    private LpaService $lpaService;
-
-    /**
-     * ViewerCodeService constructor.
-     * @param ViewerCodesInterface $viewerCodesRepository
-     * @param UserLpaActorMapInterface $userLpaActorMapRepository
-     * @param LpaService $lpaService
-     */
     public function __construct(
-        ViewerCodesInterface $viewerCodesRepository,
-        UserLpaActorMapInterface $userLpaActorMapRepository,
-        LpaService $lpaService
+        private ViewerCodesInterface $viewerCodesRepository,
+        private ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private LoggerInterface $logger,
     ) {
-        $this->lpaService = $lpaService;
-        $this->viewerCodesRepository = $viewerCodesRepository;
-        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
     }
 
     public function addCode(string $token, string $userId, string $organisation): ?array
@@ -48,13 +34,9 @@ class ViewerCodeService
         //---
 
         $expires = new DateTime(
-            '23:59:59 +30 days',                   // Set to the last moment of the day, x days from now.
-            new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
+            '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
+            new DateTimeZone('Europe/London') // Ensures we compensate for GMT vs BST.
         );
-
-        //---
-
-        $code = null;
 
         do {
             $added = false;
@@ -71,14 +53,14 @@ class ViewerCodeService
                 );
 
                 $added = true;
-            } catch (KeyCollisionException $e) {
+            } catch (KeyCollisionException) {
                 // Allows the loop to repeat with a new code.
             }
         } while (!$added);
 
         return [
-            'code' => $code,
-            'expires' => $expires->format('c'),
+            'code'         => $code,
+            'expires'      => $expires->format('c'),
             'organisation' => $organisation,
         ];
     }
@@ -94,11 +76,17 @@ class ViewerCodeService
 
         $siriusUid = $map['SiriusUid'];
 
-        return $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
+        $codes = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
+
+        if (!empty($codes)) {
+            $codes = $this->populateCodeStatuses($codes);
+        }
+
+        return $codes;
     }
 
     /**
-     * Cancels a access code initiated by the actor
+     * Cancels an access code initiated by the actor
      *
      * @param string $userLpaActorToken
      * @param string $userId
@@ -109,7 +97,7 @@ class ViewerCodeService
         $map = $this->userLpaActorMapRepository->get($userLpaActorToken);
 
         // Ensure the passed userId matches the passed token
-        if ($userId !== $map['UserId']) {
+        if (empty($map['UserId']) || $userId !== $map['UserId']) {
             return;
         }
 
@@ -121,5 +109,41 @@ class ViewerCodeService
             $code,
             new DateTime()
         );
+    }
+
+    private function populateCodeStatuses(array $codes): array
+    {
+        $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($codes);
+
+        // Get the actor id for the respective viewercode by UserLpaActor
+        foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
+            if (empty($viewerCode['UserLpaActor'])) {
+                continue;
+            }
+
+            $codeOwner = $this->getCodeOwner($viewerCode['UserLpaActor']);
+
+            if ($codeOwner !== null) {
+                $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
+            }
+        }
+
+        return $viewerCodesAndStatuses;
+    }
+
+    private function getCodeOwner(string $userLpaActor): ?array
+    {
+        $codeOwner = $this->userLpaActorMapRepository->get($userLpaActor);
+
+        if ($codeOwner === null) {
+            $this->logger->error(
+                'Code owner was not fetched for LPA with UserActorLpaToken {token}',
+                [
+                    'token' => $userLpaActor,
+                ]
+            );
+        }
+
+        return $codeOwner;
     }
 }
