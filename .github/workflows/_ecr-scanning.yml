@@ -26,8 +26,19 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRScanGithubAction
 
+      - name: install python
+        uses: actions/setup-python@b55428b1882923874294fa556849718a1d7f2ca5 # pin@v4.2.0
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: install requirements
+        run: pip install -r ./scripts/pipeline/check_ecr_scan_results/requirements.txt
+
       - name: Check ECR scan results
         env:
           TAG: ${{ inputs.tag }}
-        run: |
-          aws_ecr_scan_results.py --search use_an_lpa --tag ${TAG}
+        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag ${TAG} --print_to_terminal --fail_pipe
+
+      - name: Check ECR scan results
+        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search pdf_service --print_to_terminal
