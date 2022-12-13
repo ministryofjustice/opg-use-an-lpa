@@ -1,66 +1,44 @@
 codecov:
   require_ci_to_pass: false
-#   bot: opg-use-an-lpa
+# Setting coverage targets per flag
+coverage:
+  status:
+    project:
+      default:
+        target: 80% #overall project/ repo coverage
+      front:
+        target: 80%
+        flags:    # this key tells Codecov to only use the coverage for these flags
+          - use-an-lpa-front
+      api:
+        target: 80%
+        flags:
+          - use-an-lpa-api
+      admin:
+        target: 70%
+        flags:
+          - use-an-lpa-admin
+
+# adding Flags to your `layout` configuration to show up in the PR comment
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
-  require_changes: true  # if true: only post the comment if coverage changes
-coverage:
-  status:
-    patch:
-      default:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        target: auto
-        threshold: 5%
-    project:
-      default:
-        target: 80%    # our target PR coverage to be successful
-        threshold: 1%  # if PR drops coverage by less than % percent, but is still above the target, then successful.
-      api:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        paths:
-        - ^service-api/app/src/App/src.*
-        target: auto
-        threshold: 5%
-      front:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        paths:
-        - ^service-front/app/src.*
-        target: auto
-        threshold: 5%
-      pdf:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        paths:
-        - ^service-pdf/app/src.*
-        target: auto
-        threshold: 5%
-      web:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        paths:
-        - ^service-front/web/src.*
-        target: auto
-        threshold: 5%
-      admin:
-        base: pr
-        if_ci_failed: error
-        if_no_uploads: error
-        if_not_found: success
-        paths:
-        - ^service-admin/*
-        target: auto
-        threshold: 5%
+  require_changes: true
+
+# New root YAML section = `flags:`
+# This is where you would define every flag from your
+# uploader, and update when new Flags added
+
+flags:
+  use-an-lpa-front:
+    paths: #note, accepts globs, not regexes
+      - ./service-front
+    carryforward: true
+  use-an-lpa-api:
+    paths: #note, accepts globs, not regexes
+      - ./service-api
+    carryforward: true
+  use-an-lpa-admin:
+    paths: #note, accepts globs, not regexes
+      - ./service-admin
+    carryforward: true

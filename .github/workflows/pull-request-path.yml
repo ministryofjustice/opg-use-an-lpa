@@ -199,38 +199,16 @@ jobs:
 
   code_coverage:
     name: upload to code coverage
+    uses: ./.github/workflows/_codecov.yml
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     needs:
       - docker_build_scan_push
       - workflow_variables
+    secrets: inherit
     if: |
       always() &&
       needs.docker_build_scan_push.result == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
-      - name: download artifact for front tests
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
-        with:
-          name: service-front
-          path: service-front
-        if: needs.workflow_variables.outputs.specific_path == 'all'
-      - name: download artifact for api tests
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
-        with:
-          name: service-api
-          path: service-api
-        if: needs.workflow_variables.outputs.specific_path == 'all'
-      - name: download artifact for api tests
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
-        with:
-          name: service-admin
-          path: service-admin
-        if: |
-          needs.workflow_variables.outputs.specific_path == 'all' ||
-          needs.workflow_variables.outputs.specific_path == 'admin'
-      - uses: codecov/codecov-action@v3
-        with:
-          name: codecov-use-an-lpa
 
   # Required end of workflow job
   end_of_workflow:
