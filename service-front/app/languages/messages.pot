@@ -3693,11 +3693,6 @@ msgstr ""
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
-#: src/Actor/templates/actor/request-activation-key/info.html.twig:25
-msgid "you live in the UK"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "Where to find the LPA registration date"
 msgstr ""
@@ -4312,14 +4307,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/create-account.html.twig:31
 msgid "If you already have an account on the Use a lasting power of attorney service, please <a href=\"%link%\" class=\"govuk-link\">sign in</a>."
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-msgid "I do not live in the UK"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-msgid "If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead."
 msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:25

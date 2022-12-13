@@ -22,7 +22,6 @@
                     <ul class="govuk-list govuk-list--bullet">
                         <li>{% trans %}the LPA was registered on or after 1 January 2016{% endtrans %}</li>
                         <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
-                        <li>{% trans %}you live in the UK{% endtrans %}</li>
                         <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
                     </ul>
 
@@ -33,24 +32,12 @@
                         <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
                     </ul>
 
-                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Not UK user" data-gaLabel="I do not live in the UK">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                {% trans %}I do not live in the UK{% endtrans %}
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>{% trans %}If you do not live in the UK you cannot ask for an activation key through this service. Please contact us instead.{% endtrans %}</p>
-                            {{ include('@partials/contact-details/telephone.html.twig', {title: false}) }}
-                        </div>
-                    </details>
-
                     <h2 class="govuk-heading-m">{% trans %}What you'll need{% endtrans %}</h2>
 
                     <p class="govuk-body">{% trans %}To ask for a key, you'll need to give us:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}your name, date of birth and UK postcode{% endtrans %}</li>
+                        <li>{% trans %}your name, date of birth and address{% endtrans %}</li>
                         <li>{% trans %}the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG){% endtrans %}</li>
                     </ul>
 

@@ -5267,11 +5267,6 @@ msgstr "os cofrestrwyd eich LPA rhwng 1 Medi 2019 a 16 Gorffennaf 2020"
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr "os ydych yn rhoddwr neu’n atwrnai ar yr LPA (nid yn atwrnai cyfnewid)"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
-#: src/Actor/templates/actor/request-activation-key/info.html.twig:25
-msgid "you live in the UK"
-msgstr "os ydych yn byw yn y Deyrnas Unedig"
-
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "Where to find the LPA registration date"
 msgstr "Lle i ddod o hyd i ddyddiad cofrestru’r LPA"
@@ -5738,7 +5733,7 @@ msgstr "I ofyn am allwedd, bydd angen i chi roi’r canlynol i ni:"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
 msgid "your name, date of birth and UK postcode"
-msgstr "eich enw, dyddiad geni a chod post yn y DU"
+msgstr "eich enw, eich dyddiad geni a’ch cyfeiriad"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
 msgid ""
@@ -6120,18 +6115,6 @@ msgid ""
 msgstr ""
 "Os oes gennych gyfrif yn barod ar y gwasanaeth Defnyddio atwrneiaeth arhosol, "
 "<a href=\"%link%\" class=\"govuk-link\"> mewngofnodwch yma</a>."
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-msgid "I do not live in the UK"
-msgstr "Nid wyf yn byw yn y DU"
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
-msgid ""
-"If you do not live in the UK you cannot ask for an activation key through this "
-"service. Please contact us instead."
-msgstr ""
-"Os nad ydych yn byw yn y DU, ni allwch ofyn am allwedd cadarnhau cyfrif drwy’r "
-"gwasanaeth hwn. Cysylltwch â ni yn lle."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:25
 #: src/Viewer/templates/viewer/view-lpa.html.twig:11
