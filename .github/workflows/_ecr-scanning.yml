@@ -1,0 +1,33 @@
+name: "[AWS] ECR scanning results"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Tag for which to check scanning results'
+        required: true
+        type: string
+jobs:
+  ecr-scan-results:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+
+      - name: configure AWS credentials ECR scan results
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPAECRScanGithubAction
+
+      - name: Check ECR scan results
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          aws_ecr_scan_results.py --search use_an_lpa --tag ${TAG}
