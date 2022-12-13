@@ -1,9 +1,6 @@
 name: "[Scheduled] Generate scan report"
 
 on:
-  push:
-    branches:
-      - "main"
   schedule:
     # Every Monday, at 4pm UTC
     - cron: '00 16 * * 1'
