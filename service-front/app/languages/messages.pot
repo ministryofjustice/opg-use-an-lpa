@@ -4040,7 +4040,7 @@ msgid "To ask for a key, you'll need to give us:"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
-msgid "your name, date of birth and UK postcode"
+msgid "your name, date of birth and address"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
