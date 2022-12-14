@@ -178,4 +178,4 @@ If still not working, run the following command:
 ```shell
 <DOCKER_COMPOSE> run lpa-gateway-setup
 ```
-if that doesn't work try running the api-seeding step, mentioned with the login failure error.
+if that doesn't work try running the api-seeding step, mentioned with the login failure error..
