@@ -210,12 +210,27 @@ jobs:
       always() &&
       needs.docker_build_scan_push.result == 'success'
 
+  ecr_scan_results:
+    name: ecr scan results
+    uses: ./.github/workflows/_ecr-scanning.yml
+    with:
+      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+    needs:
+      - code_coverage
+      - terraform_apply_environment
+      - workflow_variables
+    secrets: inherit
+    if: |
+      always() &&
+      needs.code_coverage.result == 'success' &&
+      needs.terraform_apply_environment.result == 'success'
+
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
     runs-on: ubuntu-latest
     needs:
-      - code_coverage
+      - ecr_scan_results
       - slack_notify
       - workflow_variables
     steps:
@@ -226,6 +241,6 @@ jobs:
           echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
     if: |
       always() &&
-      needs.code_coverage.result == 'success' &&
+      needs.ecr_scan_results.result == 'success' &&
       needs.slack_notify.result == 'success' &&
       needs.workflow_variables.result == 'success'
