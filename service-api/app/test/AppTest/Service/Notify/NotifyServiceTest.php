@@ -329,7 +329,7 @@ class NotifyServiceTest extends TestCase
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
             'referenceNumber' => '700000000138',
-            'letterExpectedDate' => (new DateTime())->modify('+6 weeks')->format('j F Y'),
+            'letterExpectedDate' => (new DateTime())->modify('+4 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
         $result = $notify($emailTemplate, $requestData);
@@ -344,7 +344,7 @@ class NotifyServiceTest extends TestCase
         $requestData = [
             'recipient' => 'test@test.com',
             'locale' => 'en_GB',
-            'letterExpectedDate' => (new DateTime())->modify('+6 weeks')->format('j F Y'),
+            'letterExpectedDate' => (new DateTime())->modify('+4 weeks')->format('j F Y'),
         ];
         $notify = $this->getNotifyService();
 

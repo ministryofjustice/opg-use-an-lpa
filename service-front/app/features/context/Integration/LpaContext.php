@@ -1732,7 +1732,7 @@ class LpaContext extends BaseIntegrationContext
      * @Then /^I should expect it within 2 weeks time$/
      * @Then /^I will receive an email confirming this information$/
      * @Then /^I am told my activation key request has been received$/
-     * @Then /^I should expect it within 6 weeks time$/
+     * @Then /^I should expect it within 4 weeks time$/
      * @Given /^I provide my contact details$/
      */
     public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()

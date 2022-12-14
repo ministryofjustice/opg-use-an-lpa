@@ -3078,7 +3078,7 @@ class LpaContext implements Context
     /**
      * @Then /^I am told a new activation key is posted to the provided postcode$/
      * @Then /^I am asked for my contact details$/
-     * @Then /^I should expect it within 6 weeks time$/
+     * @Then /^I should expect it within 4 weeks time$/
      */
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode(): void
     {
