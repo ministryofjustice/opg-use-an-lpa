@@ -5,7 +5,7 @@ FROM python:3.10.7-alpine3.16 AS python-alpine
 RUN apk add --no-cache \
     libstdc++
 
-RUN apk update && apk upgrade expat
+RUN apk update && apk upgrade expat krb5-libs
 
 FROM python-alpine as build-image
 
@@ -43,6 +43,8 @@ FROM python-alpine
 ARG FUNCTION_DIR
 # Set working directory to function root directory
 WORKDIR ${FUNCTION_DIR}
+# Uninstall installation packages
+RUN pip uninstall -y wheel setuptools
 
 # Copy in the build image dependencies
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
