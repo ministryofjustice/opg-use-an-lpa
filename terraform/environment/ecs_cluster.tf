@@ -79,3 +79,14 @@ data "aws_iam_policy_document" "execution_role" {
     ]
   }
 }
+
+# VPC endpoint SG
+data "aws_security_group" "vpc_endpoints_interface" {
+  tags   = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}" }
+  vpc_id = data.aws_vpc.default.id
+}
+
+data "aws_vpc_endpoint" "s3_endpoint" {
+  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_id       = data.aws_vpc.default.id
+}

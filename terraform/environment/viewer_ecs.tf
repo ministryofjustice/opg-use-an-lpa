@@ -69,15 +69,43 @@ resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
   }
 }
 
-// Anything out
-resource "aws_security_group_rule" "viewer_ecs_service_egress" {
-  description       = "Allow any egress from Use service"
+# Outbound to vpc endpoints
+resource "aws_security_group_rule" "viewer_ecs_service_egress_vpc_endpoints" {
+  description              = "Allow Port 443 egress to the vpc endpoints"
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.viewer_ecs_service.id
+  source_security_group_id = data.aws_security_group.vpc_endpoints_interface.id
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Outbound to s3 (needed for ECR image pull)
+resource "aws_security_group_rule" "viewer_ecs_service_egress_s3_endpoint" {
+  description       = "Allow Port 443 egress to the s3 endpoint"
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
   security_group_id = aws_security_group.viewer_ecs_service.id
+  prefix_list_ids   = [data.aws_vpc_endpoint.s3_endpoint.prefix_list_id]
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Outbound to API layer
+resource "aws_security_group_rule" "viewer_ecs_service_egress_api_service" {
+  description              = "Allow Port 80 egress to the API service"
+  type                     = "egress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.viewer_ecs_service.id
+  source_security_group_id = aws_security_group.api_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }

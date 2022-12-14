@@ -72,16 +72,31 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
   }
 }
 
-// Anything out
-resource "aws_security_group_rule" "admin_ecs_service_egress" {
+# Outbound to vpc endpoints
+resource "aws_security_group_rule" "admin_ecs_service_egress_vpc_endpoints" {
+  count                    = local.environment.build_admin ? 1 : 0
+  description              = "Allow Port 443 egress to the vpc endpoints"
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.admin_ecs_service[0].id
+  source_security_group_id = data.aws_security_group.vpc_endpoints_interface.id
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Outbound to s3 (needed for ECR image pull)
+resource "aws_security_group_rule" "admin_ecs_service_egress_s3_endpoint" {
   count             = local.environment.build_admin ? 1 : 0
-  description       = "Allow any egress from Use service"
+  description       = "Allow Port 443 egress to the s3 endpoint"
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
   security_group_id = aws_security_group.admin_ecs_service[0].id
+  prefix_list_ids   = [data.aws_vpc_endpoint.s3_endpoint.prefix_list_id]
   lifecycle {
     create_before_destroy = true
   }
