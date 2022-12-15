@@ -31,13 +31,26 @@ resource "aws_security_group_rule" "vpc_endpoints_public_subnet_ingress" {
 }
 
 locals {
-  interface_endpoint = toset([
+  interface_endpoint_dev = toset([
     "ec2",
+    "ssm",
+    "secretsmanager",
+    "logs",
+    "ecr.dkr",
+    "ecr.api"
   ])
+  gateway_endpoint_dev = toset([
+    "s3",
+    #    "dynamodb"
+  ])
+  interface_endpoint = toset([
+    "ec2"
+  ])
+  gateway_endpoint = toset([])
 }
 
 resource "aws_vpc_endpoint" "private" {
-  for_each = local.interface_endpoint
+  for_each = local.environment == "development" ? local.interface_endpoint_dev : local.interface_endpoint
 
   vpc_id              = aws_default_vpc.default.id
   service_name        = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
@@ -46,4 +59,14 @@ resource "aws_vpc_endpoint" "private" {
   security_group_ids  = aws_security_group.vpc_endpoints_private[*].id
   subnet_ids          = aws_subnet.private[*].id
   tags                = { Name = "${each.value}-private-${data.aws_region.current.name}" }
+}
+
+resource "aws_vpc_endpoint" "private-gw" {
+  for_each = local.environment == "development" ? local.gateway_endpoint_dev : local.gateway_endpoint
+
+  vpc_id            = aws_default_vpc.default.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = aws_route_table.private[*].id
+  tags              = { Name = "${each.value}-private-${data.aws_region.current.name}" }
 }
