@@ -175,13 +175,37 @@ class ECRScanChecker:
                     f'{response.text}'
                 )
 
+    def ci_check_and_output(self, report):
+        severity_dict = {
+            "LOW": 0,
+            "MEDIUM": 0,
+            "HIGH": 0,
+            "CRITICAL": 0
+        }
+        severity_lines = []
+
+        for line in report.split("\n"):
+            if 'Severity:' in line:
+                severity_lines.append(line)
+
+        for severity_line in severity_lines:
+            severity = severity_line.replace("*Severity:* ", "").strip()
+            severity_dict[severity] += 1
+
+        for severity, count in severity_dict.items():
+            print(f"{severity}: {count}")
+
+        if severity_dict["HIGH"] > 0 or severity_dict["CRITICAL"] > 0:
+            print("Failing the build. Please fix security vulnerabilities")
+            exit(1)
+
 
 def main():
     parser = argparse.ArgumentParser(
         description='Check ECR Scan results for all service container images.')
     parser.add_argument('--search',
                         default='',
-                        help='The root part oof the ECR repositry path, for example online-lpa')
+                        help='The root part of the ECR repository path, for example online-lpa')
     parser.add_argument('--tag',
                         default='latest',
                         help='Image tag to check scan results for.')
@@ -200,6 +224,9 @@ def main():
     parser.add_argument('--skip_post_to_slack', dest='skip_post_to_slack', action='store_const',
                         const=False, default=True,
                         help='Optionally turn off posting messages to slack')
+    parser.add_argument('--fail_pipe', dest='fail_pipe', action='store_const',
+                        const=True, default=False,
+                        help='Optionally fail pipe on error')
 
     args = parser.parse_args()
     work = ECRScanChecker()
@@ -221,6 +248,9 @@ def main():
         )
     else:
         print('Skipping post of results to slack')
+
+    if args.fail_pipe:
+        work.ci_check_and_output(report)
 
 
 if __name__ == '__main__':
