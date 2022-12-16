@@ -257,7 +257,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^I am told that I cannot request an activation key$/
      * @Then /^I should expect it within 2 weeks time$/
-     * @Then /^I should expect it within 6 weeks time$/
+     * @Then /^I should expect it within 4 weeks time$/
      * @Then /^I will receive an email confirming this information$/
      * @Given /^I provide the additional details asked$/
      * @Given /^I am asked to consent and confirm my details$/

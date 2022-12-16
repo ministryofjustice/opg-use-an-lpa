@@ -1770,7 +1770,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I have shared the access code with organisations and they have viewed my LPA$/
+     * @Given /^I have shared the access code with organisations and they have viewed my LPA$/
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsAndTheyHaveViewedMyLPA(): void
     {

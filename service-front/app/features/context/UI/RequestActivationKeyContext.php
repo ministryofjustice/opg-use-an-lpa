@@ -1657,11 +1657,11 @@ class RequestActivationKeyContext implements Context
      */
     public function iShouldExpectItWithin($time)
     {
-        if ($time === '6 weeks') {
-            $date = (new DateTime())->modify('+6 weeks')->format('j F Y');
+        if ($time === '4 weeks') {
+            $date = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
             $this->ui->assertPageContainsText('We\'ve got your activation key request');
-            $this->ui->assertPageContainsText('We\'ll contact you by ' . $date);
+            $this->ui->assertPageContainsText('If you have not heard from us by ' . $date .', please get in touch.');
         } else {
             $date = (new DateTime())->modify('+2 weeks')->format('j F Y');
             $this->ui->assertPageContainsText('We\'re posting you an activation key');

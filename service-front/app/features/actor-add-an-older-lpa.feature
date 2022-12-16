@@ -259,18 +259,18 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is a full match
+  Scenario: User receives a confirmation that key will be sent in 4 weeks, when lpa trying to be added is not cleansed but is a full match
     Given I have provided valid details that match the Lpa
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I provide my contact details
     And I am asked to consent and confirm my details
     When I confirm that the data is correct and click the confirm and submit button
     Then I am told my activation key request has been received
-    And I should expect it within 6 weeks time
+    And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
   @ui @integration @ff:allow_older_lpas:true
-  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is partial match
+  Scenario: User receives a confirmation that key will be sent in 4 weeks, when lpa trying to be added is not cleansed but is partial match
     Given My LPA has been found but my details did not match
     And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I have provided my current address
@@ -278,7 +278,7 @@ Feature: Add an older LPA
     And I am asked to consent and confirm my details
     When I confirm that the data is correct and click the confirm and submit button
     Then I am told my activation key request has been received
-    And I should expect it within 6 weeks time
+    And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
   @ui @integration @ff:allow_older_lpas:true

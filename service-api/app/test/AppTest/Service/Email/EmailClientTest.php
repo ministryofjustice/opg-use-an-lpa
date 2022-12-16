@@ -409,7 +409,7 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -436,7 +436,7 @@ class EmailClientTest extends TestCase
     {
         $recipient = 'a@b.com';
         $referenceNumber = '700000000138';
-        $letterExpectedDate = (new DateTime())->modify('+6 weeks')->format('j F Y');
+        $letterExpectedDate = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,

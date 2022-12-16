@@ -174,14 +174,14 @@ Feature: Add an older LPA
     Then I am told an activation key is being sent
 
   @acceptance @integration @pact @ff:allow_older_lpas:true
-  Scenario: User receives a confirmation that key will be sent in 6 weeks, when lpa trying to be added is not cleansed but is a full match
+  Scenario: User receives a confirmation that key will be sent in 4 weeks, when lpa trying to be added is not cleansed but is a full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I provide the details from a valid paper LPA document
     And I am asked for my contact details
     And I am asked to consent and confirm my details
     When I confirm that the data is correct and click the confirm and submit button
     Then I am told my activation key request has been received
-    And I should expect it within 6 weeks time
+    And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
   @acceptance @integration @pact @ff:allow_older_lpas:true
