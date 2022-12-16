@@ -210,7 +210,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $state->actorUid
             );
 
-            $letterExpectedDate = (new Carbon())->addWeeks(6);
+            $letterExpectedDate = (new Carbon())->addWeeks(4);
 
             if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
                 $this->notifyService->sendEmailToUser(
