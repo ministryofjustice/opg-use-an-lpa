@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\DataAccess\DynamoDb\ViewerCodeActivity;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
@@ -39,11 +37,7 @@ use stdClass;
 use function PHPUnit\Framework\assertEquals;
 
 /**
- * Class LpaContext
- *
  * A place for context steps relating to LPA interactions such as adding, removing etc.
- *
- * @package BehatTest\Context\Integration
  *
  * @property mixed        lpa
  * @property string       oneTimeCode
@@ -713,21 +707,21 @@ class LpaContext extends BaseIntegrationContext
     public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
     {
         $code1 = [
-            'SiriusUid' => $this->lpaUid,
-            'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
+            'SiriusUid'    => $this->lpaUid,
+            'Added'        => '2020-01-01T00:00:00Z',
+            'Expires'      => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
-            'ViewerCode' => $this->accessCode,
+            'ViewerCode'   => $this->accessCode,
         ];
 
         $code2 = [
-            'SiriusUid' => $this->lpaUid,
-            'Added' => '2020-01-01T00:00:00Z',
-            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
+            'SiriusUid'    => $this->lpaUid,
+            'Added'        => '2020-01-01T00:00:00Z',
+            'Expires'      => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
-            'ViewerCode' => $this->accessCode,
+            'ViewerCode'   => $this->accessCode,
         ];
 
         // LpaService:getLpas
@@ -740,10 +734,10 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id' => $this->userLpaActorToken,
-                                'ActorId' => $this->actorLpaId,
-                                'UserId' => $this->userId,
+                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id'        => $this->userLpaActorToken,
+                                'ActorId'   => $this->actorLpaId,
+                                'UserId'    => $this->userId,
                             ]
                         ),
                     ],
@@ -775,10 +769,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -797,33 +791,68 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
+        // ViewerCodeActivity::getStatusesForViewerCodes($code1)
+        $this->awsFixtures->append(
+            new Result([ 'Count' => 0 ])
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes($code2)
+        $this->awsFixtures->append(
+            new Result([ 'Count' => 0 ])
+        );
+
+        // UserLpaActorMap::get - $code1
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // UserLpaActorMap::get - $code2
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        Assert::assertCount(2, $codes);
-        Assert::assertEquals($codes[0], $code1);
-        Assert::assertEquals($codes[1], $code2);
+        $codesWithStatuses = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
-        // ViewerCodeActivity::getStatusesForViewerCodes
-        $this->awsFixtures->append(new Result());
-
-        // This response is duplicated for the 2nd code
-
-        // ViewerCodeActivity::getStatusesForViewerCodes
-        $this->awsFixtures->append(new Result());
-
-        $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
-        $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($codes);
         Assert::assertCount(2, $codesWithStatuses);
+
+        // codes service adds some stuff
+        $code1['Viewed']  = false;
+        $code1['ActorId'] = '700000000054';
+        $code2['Viewed']  = false;
+        $code2['ActorId'] = '700000000054';
+
+        Assert::assertEquals($codesWithStatuses[0], $code1);
+        Assert::assertEquals($codesWithStatuses[1], $code2);
 
         // Loop for Assert::asserting on both the 2 codes returned
         for ($i = 0; $i < 2; $i++) {
-            Assert::assertEquals($codesWithStatuses[$i]['SiriusUid'], $this->lpaUid);
-            Assert::assertEquals($codesWithStatuses[$i]['UserLpaActor'], $this->userLpaActorToken);
-            Assert::assertEquals($codesWithStatuses[$i]['Organisation'], $this->organisation);
-            Assert::assertEquals($codesWithStatuses[$i]['ViewerCode'], $this->accessCode);
-
-            if ($i == 0) {
+            if ($i === 0) {
                 Assert::assertEquals(
                     $codesWithStatuses[$i]['Expires'],
                     (new DateTime())->modify($code1Expiry)->format('Y-m-d')
@@ -835,31 +864,6 @@ class LpaContext extends BaseIntegrationContext
                 );
             }
         }
-
-        // UserLpaActorMap::get
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
-                        ]
-                    ),
-                ]
-            )
-        );
-
-        $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
-        $lpa = $userLpaActorMap->get($this->userLpaActorToken);
-
-        Assert::assertEquals($lpa['SiriusUid'], $this->lpaUid);
-        Assert::assertEquals($lpa['Id'], $this->userLpaActorToken);
-        Assert::assertEquals($lpa['ActorId'], $this->actorLpaId);
-        Assert::assertEquals($lpa['UserId'], $this->userId);
     }
 
     /**
@@ -961,10 +965,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -996,32 +1000,66 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2021-01-05 12:34:56',
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => '2021-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
+                                'ViewerCode'   => $this->accessCode,
                             ]
                         ),
                     ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Viewed'     => '2022-01-04 12:34:56',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy'   => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
                 ]
             )
         );
@@ -1051,10 +1089,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -1086,29 +1124,29 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2020-01-05 12:34:56',
-                                'Expires' => '2021-01-05 12:34:56',
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
+                                'ViewerCode'   => $this->accessCode,
                             ]
                         ),
                     ],
@@ -1116,7 +1154,42 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Viewed'     => '2022-01-04 12:34:56',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy'   => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
+
         $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         Assert::assertArrayHasKey('ViewerCode', $accessCodes[0]);
@@ -1124,7 +1197,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($accessCodes[0]['Organisation'], $this->organisation);
         Assert::assertEquals($accessCodes[0]['SiriusUid'], $this->lpaUid);
         Assert::assertEquals($accessCodes[0]['UserLpaActor'], $this->userLpaActorToken);
-        Assert::assertEquals($accessCodes[0]['Expires'], '2021-01-05 12:34:56');
+        Assert::assertEquals($accessCodes[0]['Expires'], '2022-01-05 12:34:56');
     }
 
     /**
@@ -1133,7 +1206,7 @@ class LpaContext extends BaseIntegrationContext
     public function iClickToCheckMyAccessCodes(): void
     {
         $this->organisation = 'TestOrg';
-        $this->accessCode = 'XYZ321ABC987';
+        $this->accessCode   = 'XYZ321ABC987';
 
         //Get the LPA
 
@@ -1144,10 +1217,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -1179,32 +1252,66 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
             )
         );
 
-        // ViewerCodes::getCodesByUserLpaActorId
+        // ViewerCodes::getCodesByLpaId
         $this->awsFixtures->append(
             new Result(
                 [
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
+                                'ViewerCode'   => $this->accessCode,
                             ]
                         ),
                     ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Viewed'     => '2022-01-04 12:34:56',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy'   => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
                 ]
             )
         );
@@ -1237,10 +1344,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -1272,10 +1379,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
@@ -1289,39 +1396,35 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added' => '2021-01-05 12:34:56',
-                                'Expires' => '2022-01-05 12:34:56',
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode' => $this->accessCode,
-                                'Viewed' => [
-                                    0 => [
-                                        'Viewed' => '2020-10-01T23:59:59+00:00',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => 'organisation1',
-                                    ],
-                                    1 => [
-                                        'Viewed' => '2020-10-20T23:59:59+00:00',
-                                        'ViewerCode' => $this->accessCode,
-                                        'ViewedBy' => 'organisation2',
-                                    ],
-                                ],
+                                'ViewerCode'   => $this->accessCode,
                             ]
                         ),
                     ],
                 ]
             )
         );
-        $viewerCodeService = $this->container->get(ViewerCodeService::class);
-
-        // actor id  does not match the userId returned
-        $accessCodes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         // ViewerCodeActivity::getStatusesForViewerCodes
-        $this->awsFixtures->append(new Result());
-        $viewerCodeService = $this->container->get(ViewerCodeActivity::class);
-        $codesWithStatuses = $viewerCodeService->getStatusesForViewerCodes($accessCodes);
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Viewed'     => '2022-01-04 12:34:56',
+                                'ViewerCode' => $this->accessCode,
+                                'ViewedBy'   => $this->organisation,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -1330,23 +1433,20 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id' => $this->userLpaActorToken,
-                            'ActorId' => $this->actorLpaId,
-                            'UserId' => $this->userId,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
                         ]
                     ),
                 ]
             )
         );
 
-        foreach ($codesWithStatuses as $key => $viewerCode) {
-            if (!empty($viewerCode['UserLpaActor'])) {
-                $userLpaActorMap = $this->container->get(UserLpaActorMap::class);
-                $codeOwner = $userLpaActorMap->get($viewerCode['UserLpaActor']);
-                $codesWithStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
-            }
-        }
+        $viewerCodeService = $this->container->get(ViewerCodeService::class);
+
+        // actor id  does not match the userId returned
+        $codesWithStatuses = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         Assert::assertEquals($codesWithStatuses[0]['Organisation'], $this->organisation);
         Assert::assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
@@ -1764,12 +1864,12 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
+            'reference_number'     => $this->lpaUid,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1784,7 +1884,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists = new stdClass();
+        $codeExists  = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
@@ -1798,7 +1898,7 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa' => $this->lpaUid,
+                'lpa'   => $this->lpaUid,
                 'actor' => $this->actorLpaId,
             ],
             StatusCodeInterface::STATUS_OK,
@@ -1815,13 +1915,13 @@ class LpaContext extends BaseIntegrationContext
             Assert::assertEquals(
                 [
                     'donor'         => [
-                        'uId'           => $this->lpa->donor->uId,
-                        'firstname'     => $this->lpa->donor->firstname,
-                        'middlenames'   => $this->lpa->donor->middlenames,
-                        'surname'       => $this->lpa->donor->surname
+                        'uId'         => $this->lpa->donor->uId,
+                        'firstname'   => $this->lpa->donor->firstname,
+                        'middlenames' => $this->lpa->donor->middlenames,
+                        'surname'     => $this->lpa->donor->surname
                     ],
-                    'caseSubtype'           => $this->lpa->caseSubtype,
-                    'activationKeyDueDate'  => $activationKeyDueDate
+                    'caseSubtype'          => $this->lpa->caseSubtype,
+                    'activationKeyDueDate' => $activationKeyDueDate
                 ],
                 $ex->getAdditionalData()
             );

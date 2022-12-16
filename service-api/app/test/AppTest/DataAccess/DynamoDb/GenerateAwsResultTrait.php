@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\DataAccess\DynamoDb;
 
+use ArrayIterator;
 use Aws\Result;
-use DateTime;
 
 trait GenerateAwsResultTrait
 {
@@ -37,7 +39,7 @@ trait GenerateAwsResultTrait
     private function createAWSResult(array $items = []): Result
     {
         // wrap our array in a basic iterator
-        $iterator = new \ArrayIterator($items);
+        $iterator = new ArrayIterator($items);
 
         // using PHPUnit's mock as opposed to Prophecy since Prophecy doesn't support
         // "return by reference" which is what `foreach` expects.
@@ -46,14 +48,28 @@ trait GenerateAwsResultTrait
         $awsResult
             ->method('offsetExists')
             ->with($this->isType('string'))
-            ->will($this->returnCallback(function($index) use ($iterator) {
+            ->will($this->returnCallback(function ($index) use ($iterator) {
+                return $iterator->offsetExists($index);
+            }));
+
+        $awsResult
+            ->method('hasKey')
+            ->with($this->isType('string'))
+            ->will($this->returnCallback(function ($index) use ($iterator) {
                 return $iterator->offsetExists($index);
             }));
 
         $awsResult
             ->method('offsetGet')
             ->with($this->isType('string'))
-            ->will($this->returnCallback(function($index) use ($iterator) {
+            ->will($this->returnCallback(function ($index) use ($iterator) {
+                return $iterator->offsetGet($index);
+            }));
+
+        $awsResult
+            ->method('get')
+            ->with($this->isType('string'))
+            ->will($this->returnCallback(function ($index) use ($iterator) {
                 return $iterator->offsetGet($index);
             }));
 

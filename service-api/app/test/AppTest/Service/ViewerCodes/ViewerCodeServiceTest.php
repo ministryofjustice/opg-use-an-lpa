@@ -6,14 +6,16 @@ namespace AppTest\Service\ViewerCodes;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\Service\Lpa\LpaService;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
 
 class ViewerCodeServiceTest extends TestCase
 {
@@ -22,14 +24,16 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_ca_be_instantiated(): void
     {
-        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
-        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+        $userActorLpaRepoProphecy       = $this->prophesize(UserLpaActorMapInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $this->assertInstanceOf(ViewerCodeService::class, $service);
@@ -40,7 +44,7 @@ class ViewerCodeServiceTest extends TestCase
     {
         // code will expire 30 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
-            '23:59:59 +30 days',                    // Set to the last moment of the day, x days from now.
+            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
         );
 
@@ -55,6 +59,8 @@ class ViewerCodeServiceTest extends TestCase
             )
             ->shouldBeCalled();
 
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
             ->get('user_actor_lpa_token')
@@ -63,16 +69,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
@@ -88,7 +95,8 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_wont_create_a_code_if_user_does_not_match(): void
     {
-        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -98,16 +106,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'another_user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
@@ -118,7 +127,7 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_will_generate_codes_until_a_new_one_is_found(): void
     {
-        $callCount = 0;
+        $callCount              = 0;
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
             ->add(
@@ -138,6 +147,8 @@ class ViewerCodeServiceTest extends TestCase
                 throw new KeyCollisionException();
             });
 
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
             ->get('user_actor_lpa_token')
@@ -146,16 +157,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
@@ -164,43 +176,144 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_retrieve_codes_of_a_user(): void
+    public function it_will_retrieve_codes_of_an_lpa(): void
     {
+        $codeExpiry = new DateTimeImmutable(
+            '23:59:59 +29 days',          // Set to the last moment of the day, x days from now.
+            new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
+        );
+
+        $viewerCodes = [
+            [   // a complete and unexpired code that has been viewed
+                'SiriusUid'    => '700000000047',
+                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode'   => 'abcdefghijkl',
+                'Organisation' => 'My bank',
+                'UserLpaActor' => '3f0455d4-611f-11ed-9b6a-0242ac120002',
+                'Expires'      => $codeExpiry->format('c'),
+            ],
+            [   // a complete and valid code that has not been viewed
+                'SiriusUid'    => '700000000047',
+                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode'   => '123456789101',
+                'Organisation' => 'My gas company',
+                'UserLpaActor' => 'f4fc15c4-6120-11ed-9b6a-0242ac120002',
+                'Expires'      => $codeExpiry->format('c'),
+            ],
+            [   // a code that does not map to a user record (orphaned)
+                'SiriusUid'    => '700000000047',
+                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode'   => 'asdfghjklzxc',
+                'Organisation' => 'The council',
+                'UserLpaActor' => '19d2d742-437e-438f-8f15-e43e658dcd5b',
+                'Expires'      => $codeExpiry->format('c'),
+            ],
+        ];
+
+        $activities = [
+            [
+                'ViewerCode' => 'abcdefghijkl',
+                'Viewed'     => [
+                    'Viewed'     => (new DateTimeImmutable('now'))->format('c'),
+                    'ViewerCode' => 'abcdefghijkl',
+                    'ViewedBy'   => 'Bank',
+                ],
+            ],
+            [
+                'ViewerCode' => '123456789101',
+                'Viewed'     => false,
+            ],
+            [
+                'ViewerCode' => 'asdfghjklzxc',
+                'Viewed'     => false,
+            ],
+        ];
+
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
             ->getCodesByLpaId('700000000047')
             ->shouldBeCalled()
-            ->willReturn(['some_lpa_code_data']);
+            ->willReturn($viewerCodes);
+
+        // merge our two data fixtures like the repo does
+        $mergedFixtures = array_reduce(
+            $activities,
+            function (array $codes, array $activity) {
+                foreach ($codes as $index => $code) {
+                    if ($code['ViewerCode'] === $activity['ViewerCode']) {
+                        $codes[$index]['Viewed'] = $activity['Viewed'];
+                    }
+                }
+
+                return $codes;
+            },
+            $viewerCodes,
+        );
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+        $viewerCodeActivityRepoProphecy
+            ->getStatusesForViewerCodes($viewerCodes)
+            ->shouldBeCalled()
+            ->willReturn($mergedFixtures);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
-            ->get('user_actor_lpa_token')
+            ->get('3f0455d4-611f-11ed-9b6a-0242ac120002')
             ->shouldBeCalled()
             ->willReturn(
                 [
                     'Id'        => 'id',
+                    'ActorId'   => '12',
                     'UserId'    => 'user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
+        $userActorLpaRepoProphecy
+            ->get('f4fc15c4-6120-11ed-9b6a-0242ac120002')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'Id'        => 'id',
+                    'ActorId'   => '15',
+                    'UserId'    => 'user_id',
+                    'SiriusUid' => '700000000047',
+                ]
+            );
+        $userActorLpaRepoProphecy
+            ->get('19d2d742-437e-438f-8f15-e43e658dcd5b')
+            ->shouldBeCalled()
+            ->willReturn(null);
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
-        $codes = $service->getCodes('user_actor_lpa_token', 'user_id');
+        $codes = $service->getCodes('3f0455d4-611f-11ed-9b6a-0242ac120002', 'user_id');
 
-        $this->assertEquals(['some_lpa_code_data'], $codes);
+        $this->assertEquals('abcdefghijkl', $codes[0]['ViewerCode']);
+        $this->assertEquals(12, $codes[0]['ActorId']);
+        $this->assertIsArray($codes[0]['Viewed']);
+
+        $this->assertEquals('123456789101', $codes[1]['ViewerCode']);
+        $this->assertEquals(15, $codes[1]['ActorId']);
+        $this->assertFalse($codes[1]['Viewed']);
+
+        $this->assertEquals('asdfghjklzxc', $codes[2]['ViewerCode']);
+        $this->assertArrayNotHasKey('ActorId', $codes[2]);
+        $this->assertFalse($codes[2]['Viewed']);
     }
 
     /** @test */
     public function it_wont_get_codes_if_user_does_not_match(): void
     {
-        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -210,16 +323,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'another_user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $codes = $service->getCodes('user_actor_lpa_token', 'user_id');
@@ -236,8 +350,10 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn([]);
         $viewerCodeRepoProphecy
-            ->cancel('123412341234', Argument::type(\DateTime::class))
+            ->cancel('123412341234', Argument::type(DateTime::class))
             ->shouldBeCalled();
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -247,16 +363,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $service->cancelCode('user_actor_lpa_token', 'user_id', '123412341234');
@@ -267,8 +384,10 @@ class ViewerCodeServiceTest extends TestCase
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
-            ->cancel('123412341234', Argument::type(\DateTime::class))
+            ->cancel('123412341234', Argument::type(DateTime::class))
             ->shouldNotBeCalled();
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -278,16 +397,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'another_user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $service->cancelCode('user_actor_lpa_token', 'user_id', '123412341234');
@@ -302,8 +422,10 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
         $viewerCodeRepoProphecy
-            ->cancel('123412341234', Argument::type(\DateTime::class))
+            ->cancel('123412341234', Argument::type(DateTime::class))
             ->shouldNotBeCalled();
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $userActorLpaRepoProphecy
@@ -313,16 +435,17 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
-                    'SiriusUid' => '700000000047'
+                    'SiriusUid' => '700000000047',
                 ]
             );
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
+            $loggerProphecy->reveal(),
         );
 
         $service->cancelCode('user_actor_lpa_token', 'user_id', '123412341234');

@@ -125,37 +125,11 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        //gets access codes for a given user lpa token
+        // gets access codes for a given user lpa token
         $viewerCodes = $this->viewerCodeService->getCodes(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id'),
         );
-
-        // TODO https://opgtransform.atlassian.net/browse/UML-1206
-        // Refactor how all this activity status works.
-        if (!empty($viewerCodes)) {
-            $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($viewerCodes);
-
-            // Get the actor id for the respective sharecode by UserLpaActor
-            foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
-                if (!empty($viewerCode['UserLpaActor'])) {
-                    $codeOwner = $this->userLpaActorMap->get($viewerCode['UserLpaActor']);
-
-                    if ($codeOwner === null) {
-                        $this->logger->error(
-                            'Code owner was not fetched for LPA with UserActorLpaToken {token}',
-                            [
-                                'token' => $viewerCode['UserLpaActor'],
-                            ]
-                        );
-                    }
-
-                    $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
-                }
-            }
-
-            return new JsonResponse($viewerCodesAndStatuses);
-        }
 
         return new JsonResponse($viewerCodes);
     }
