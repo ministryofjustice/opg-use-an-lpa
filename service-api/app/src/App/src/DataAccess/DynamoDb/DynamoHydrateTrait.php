@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataAccess\DynamoDb;
 
 use Aws\DynamoDb\Marshaler;
@@ -8,29 +10,23 @@ use DateTime;
 use Exception;
 use UnexpectedValueException;
 
-/**
- * Trait DynamoHydrateTrait
- * @package App\DataAccess\DynamoDb
- */
 trait DynamoHydrateTrait
 {
     /**
      * @param Result $result
      * @param array  $dateFields
-     *
      * @return array
-     * @throws Exception
-     * @throws UnexpectedValueException
+     * @throws Exception|UnexpectedValueException
      */
     private function getData(Result $result, array $dateFields = []): array
     {
-        if (isset($result['Item'])) {
-            return $this->extractData($result['Item'], $dateFields);
+        if ($result->hasKey('Item')) {
+            return $this->extractData($result->get('Item'), $dateFields);
         }
 
         // updateItem calls return an AWS Result object with "Attributes"
-        if (isset($result['Attributes'])) {
-            return $this->extractData($result['Attributes'], $dateFields);
+        if ($result->hasKey('Attributes')) {
+            return $this->extractData($result->get('Attributes'), $dateFields);
         }
 
         return [];
@@ -39,17 +35,15 @@ trait DynamoHydrateTrait
     /**
      * @param Result $result
      * @param array  $dateFields
-     *
      * @return array
-     * @throws Exception
-     * @throws UnexpectedValueException
+     * @throws Exception|UnexpectedValueException
      */
     private function getDataCollection(Result $result, array $dateFields = []): array
     {
         $items = [];
 
-        if (isset($result['Items'])) {
-            foreach ($result['Items'] as $item) {
+        if ($result->hasKey('Items')) {
+            foreach ($result->get('Items') as $item) {
                 $items[] = $this->extractData($item, $dateFields);
             }
         }
@@ -60,10 +54,8 @@ trait DynamoHydrateTrait
     /**
      * @param array $resultItem
      * @param array $dateFields
-     *
      * @return array
-     * @throws Exception
-     * @throws UnexpectedValueException
+     * @throws Exception|UnexpectedValueException
      */
     private function extractData(array $resultItem, array $dateFields = []): array
     {
