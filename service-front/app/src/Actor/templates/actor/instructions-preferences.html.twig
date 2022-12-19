@@ -26,7 +26,6 @@
                         <p class="govuk-body">{% trans %}On most LPAs, you’ll find the instructions and LPAs on sections 7.{% endtrans %}</p>
                         <p class="govuk-body">{% trans %}On some LPAs made in or before 2015, instructions and preferences are called ‘restrictions and conditions’. You’ll find them on page 9 of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
                     <p class="govuk-body">{% trans %}In some older LPAs, instructions and preferences are called 'restrictions and conditions'.{% endtrans %}</p>
-                </div>
 
                 <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="I do not have the paper LPA">
                     <summary class="govuk-details__summary" role="button" >
@@ -42,11 +41,11 @@
                             <li>{% trans %}someone else, like a solicitor, who helped to fill in the <abbr title="lasting power of attorney">LPA</abbr> form{% endtrans %}</li>
                         </ul>
                     </div>
-                    <div>
-                        <p>{% trans %}Check with these people to see who has the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
-                        <p>{% trans %}If you need more than one copy of the paper <abbr title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified copies</a></strong>.{% endtrans %}</p>
-                    </div>
+
+                    <p>{% trans %}Check with these people to see who has the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                    <p>{% trans %}If you need more than one copy of the paper <abbr title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified copies</a></strong>.{% endtrans %}</p>
                 </details>
+                </div>
             </div>
         </main>
         {{ include('@actor/partials/new-use-service.html.twig') }}
