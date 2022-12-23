@@ -11,7 +11,7 @@ return [
     'twig' => [
         'cache_dir'      => '/tmp/twig_cache',
         'assets_url'     => '/',
-        'assets_version' => '1',
+        'assets_version' => getenv('CONTAINER_VERSION') ?: 'dev',
         'timezone'       => 'Europe/London',
         'optimizations'  => -1,
         'autoescape'     => 'html',
