@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>{% block html_title %}{% trans %}GOV.UK{% endtrans %}{% endblock %}</title>
+    <link rel="preload" href="{{ asset('stylesheets/main.css') }}" as="style" />
+    <link rel="preload" href="{{ asset('index.js') }}" as="script" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0c0c" />
 
@@ -17,6 +19,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
+    <script async src="{{ asset('index.js') }}"></script>
 
 
     {% if application == 'actor' %}
@@ -169,7 +172,6 @@
     </div>
 </footer>
 
-<script src="{{ asset('index.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
