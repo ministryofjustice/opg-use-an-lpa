@@ -183,6 +183,14 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.seed_dynamodb.result == 'success'
 
+  run_lighthouse_tests:
+    name: run lighthouse tests against environment
+    uses: ./.github/workflows/_lighthouse-ci.yml
+    needs:
+      - seed_dynamodb
+      - workflow_variables
+    secrets: inherit
+
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
