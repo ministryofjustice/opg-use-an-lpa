@@ -57,10 +57,7 @@ Feature: Account creation
 
     Examples:
       | password  | reasons                                   |
-      | Sh0rt     | Password must be 8 characters or more     |
-      | n0capital | Password must include a capital letter    |
-      | noNumber  | Password must include a number            |
-      | N0LOWERR  | Password must include a lower case letter |
+      | Sh0rt     | Password must be 12 characters or more    |
       |           | Enter your password                       |
 
   @ui
