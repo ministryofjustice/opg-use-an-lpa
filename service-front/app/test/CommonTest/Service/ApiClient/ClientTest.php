@@ -108,7 +108,7 @@ class ClientTest extends TestCase
                         'details' => '',
                         'data'    => [],
                     ]),
-                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                    StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
 
@@ -118,7 +118,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpGet('/simple_get', ['simple_query' => 'query_value']);
     }
 
@@ -176,7 +176,7 @@ class ClientTest extends TestCase
                         'details' => '',
                         'data'    => [],
                     ]),
-                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                    StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
 
@@ -186,7 +186,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
     }
 
@@ -244,7 +244,7 @@ class ClientTest extends TestCase
                         'details' => '',
                         'data'    => [],
                     ]),
-                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                    StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
 
@@ -254,7 +254,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
     }
 
@@ -312,7 +312,7 @@ class ClientTest extends TestCase
                         'details' => '',
                         'data'    => [],
                     ]),
-                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                    StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
 
@@ -322,7 +322,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
     }
 
@@ -380,7 +380,7 @@ class ClientTest extends TestCase
                         'details' => '',
                         'data'    => [],
                     ]),
-                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                    StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
 
@@ -390,7 +390,7 @@ class ClientTest extends TestCase
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
     }
 
