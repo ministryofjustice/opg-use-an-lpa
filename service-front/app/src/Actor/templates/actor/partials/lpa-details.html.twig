@@ -28,8 +28,10 @@
             <span class="moj-badge moj-badge--large moj-badge--blue govuk-!-margin-bottom-2">
                 {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
             </span>
-        {% elseif actorActive %}
-            <span class="govuk-hint govuk-!-margin-bottom-2 govuk-!-font-size-16 govuk-!-font-weight-bold">{% trans %}No organisations have access{% endtrans %}</span>
+        {% elseif actorActive and shareCodes|length > 1 %}
+            <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
+                {% trans  %}No active codes{% endtrans %}
+            </span>
         {% endif %}
     </div>
 </div>
