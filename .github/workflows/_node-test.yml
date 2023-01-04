@@ -31,7 +31,7 @@ jobs:
           mkdir -p ./test-results/junit
           ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
       - name: test summary
-        uses: test-summary/action@77bb5a9f9c572416423f9a157cbf1159c1e75a4c # pin@v1.0
+        uses: test-summary/action@4ee9ece4bca777a38f05c8fc578ac2007fe266f7 # pin@v2.0
         with:
           paths: |
             **/service-front/web/test-results/junit/results.xml
