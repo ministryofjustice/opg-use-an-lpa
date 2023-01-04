@@ -190,7 +190,7 @@ Feature: Add an older LPA
     And The details I provided resulted in a partial match
     When I make an additional request for the same LPA
     Then I am told my activation key request has been received
-    And I should expect it within 6 weeks time
+    And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
   @acceptance @integration @pact @ff:allow_older_lpas:true
