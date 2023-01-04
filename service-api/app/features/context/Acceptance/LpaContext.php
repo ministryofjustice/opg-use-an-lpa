@@ -286,6 +286,94 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I make an additional request for the same LPA$/
+     */
+    public function iMakeAnAdditionalRequestForTheSameLPA()
+    {
+        //UserLpaActorMap::getByUserId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'UserId' => $this->userId,
+                                'ActivateBy' => (new DateTimeImmutable('now'))->format('U'),
+                                'DueBy' => (new DateTimeImmutable('+2 weeks'))->format('Y-m-d\TH:i:s.u\Z')
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        //UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'UserId' => $this->userId,
+                            'ActivateBy' => (new DateTimeImmutable('now'))->format('U'),
+                            'DueBy' => (new DateTimeImmutable('+2 weeks'))->format('Y-m-d\TH:i:s.u\Z')
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
+
+        // lpaService: getByUid
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // AWS Request letter response in Given steps
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'Id'        => $this->userLpaActorToken,
+                            'UserId'    => $this->base->userAccountId,
+                            'SiriusUid' => $this->lpaUid,
+                            'ActorId'   => $this->actorId,
+                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/cleanse',
+            [
+                'reference_number'  => $this->lpaUid,
+                'user-token'        => $this->userId,
+                'notes'             => 'Notes'
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    /**
      * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
@@ -1852,6 +1940,14 @@ class LpaContext implements Context
      * @Then /^The correct LPA is found and I can confirm to add it$/
      */
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
+    {
+        // not needed for this context
+    }
+
+    /**
+     * @Given /^The details I provided resulted in a partial match$/
+     */
+    public function theDetailsIProvidedResultedInAPartialMatch()
     {
         // not needed for this context
     }
