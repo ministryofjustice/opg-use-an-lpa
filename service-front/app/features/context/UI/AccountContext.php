@@ -726,7 +726,7 @@ class AccountContext implements Context
             )
         );
 
-        $this->ui->fillField('password', 'n3wPassWord!');
+        $this->ui->fillField('password', '☺️✌Password!$');
         $this->ui->pressButton('Change password');
 
         $request = $this->apiFixtures->getLastRequest();
@@ -1411,7 +1411,7 @@ class AccountContext implements Context
      */
     public function iProvideMyNewPassword(): void
     {
-        $newPassword = 'Password123!';
+        $newPassword = 'Password123!$';
 
         // API call for password reset request
         $this->apiFixtures->append(

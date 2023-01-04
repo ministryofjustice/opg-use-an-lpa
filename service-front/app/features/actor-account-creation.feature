@@ -71,8 +71,9 @@ Feature: Account creation
     Examples:
       | email                | password       | terms |
       | TEST@example.com     | Pass   :)word  | 1     |
-      | test@EXAMPLE.com     | Password1      | 1     |
-      |'   TEST@EXAMPLE.COM '| Password1      | 1     |
+      | test@EXAMPLE.com     | Password1$1$   | 1     |
+      | TEST@example.COM     | ☺️✌Password!$  | 1     |
+      |'   TEST@EXAMPLE.COM '| Password§§§§   | 1     |
 
   @ui @integration
   Scenario: The user account cannot create an account with an email address that has been requested for reset
