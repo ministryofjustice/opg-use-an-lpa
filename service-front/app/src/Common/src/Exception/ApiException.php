@@ -57,6 +57,7 @@ class ApiException extends AbstractApiException
         ?string $message = null,
         ?ResponseInterface $response = null,
         ?Throwable $previous = null,
+        ?int $statusCode = null,
     ): ApiException {
         $code           = self::DEFAULT_ERROR;
         $additionalData = null;
@@ -84,6 +85,10 @@ class ApiException extends AbstractApiException
                     );
                 }
             }
+        }
+
+        if ($statusCode != null) {
+            $code = $statusCode;
         }
 
         return new self($message, $code, $response, $additionalData, $previous);
