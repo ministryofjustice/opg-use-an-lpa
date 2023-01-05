@@ -14,15 +14,6 @@ type StatisticsService struct {
 	db DynamoConnection
 }
 
-type MetricPerTimePeriod struct {
-	LpasAdded        int `json:"lpas_added" dynamodbav:"lpas_added"`
-	LpasRemoved      int `json:"lpa_removed_event" dynamodbav:"lpa_removed_event"`
-	AccountCreated   int `json:"account_created_event" dynamodbav:"account_created_event"`
-	AccountDeleted   int `json:"account_deleted_event" dynamodbav:"account_deleted_event"`
-	AccountActivated int `json:"account_activated_event" dynamodbav:"account_activated_event"`
-	TimePeriod       string
-}
-
 const (
 	StatsTableName = "Stats"
 )
