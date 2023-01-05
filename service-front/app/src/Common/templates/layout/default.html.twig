@@ -3,6 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <title>{% block html_title %}{% trans %}GOV.UK{% endtrans %}{% endblock %}</title>
+    <link rel="preload" href="{{ asset('stylesheets/main.css') }}" as="style" />
+    <link rel="preload" href="{{ asset('index.js') }}" as="script" />
+    <link rel="preconnect" href="//www.google-analytics.com" />
+    <link rel="preconnect" href="//www.googletagmanager.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0c0c" />
 
@@ -17,6 +21,11 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/images/govuk-apple-touch-icon-152x152.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/images/govuk-apple-touch-icon.png') }}">
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
+    <script type="application/javascript">
+        window.gaConfig = {};
+        window.gaConfig.uaId = "{{ uaId }}";
+    </script>
+    <script async src="{{ asset('index.js') }}"></script>
 
 
     {% if application == 'actor' %}
@@ -28,12 +37,6 @@
     <link rel="alternate" hreflang="en-gb" href="{{ url }}home" />
     <link rel="alternate" hreflang="cy-gb" href="{{ url }}cy/home" />
     <link rel="alternate" hreflang="x-default" href="{{ url }}home" />
-
-    <script type="application/javascript">
-        window.gaConfig = {};
-        window.gaConfig.uaId = "{{ uaId }}";
-    </script>
-
 
     {% block stylesheets %}{% endblock %}
 
@@ -169,7 +172,6 @@
     </div>
 </footer>
 
-<script src="{{ asset('index.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
