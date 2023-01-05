@@ -6,16 +6,15 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 [![codecov coverage status](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa/branch/main/graph/badge.svg)](https://codecov.io/gh/ministryofjustice/opg-use-an-lpa)
 
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=for-the-badge&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fopg-use-an-lpa)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#opg-use-an-lpa "Link to report")
-
+[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=for-the-badge&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fopg-use-an-lpa)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#opg-use-an-lpa 'Link to report')
 
 ## Setup
 
 Clone the following two repositories into the same base directory:
 
-- https://github.com/ministryofjustice/opg-use-an-lpa
-- https://github.com/ministryofjustice/opg-data-lpa
-- https://github.com/ministryofjustice/opg-data-lpa-codes
+- [https://github.com/ministryofjustice/opg-use-an-lpa](https://github.com/ministryofjustice/opg-use-an-lpa)
+- [https://github.com/ministryofjustice/opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
+- [https://github.com/ministryofjustice/opg-data-lpa-codes](https://github.com/ministryofjustice/opg-data-lpa-codes)
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
@@ -101,11 +100,11 @@ If you plan on developing the application you should also enable development mod
 <DOCKER_COMPOSE> exec api-app rm -f /tmp/config-cache.php
 ```
 
-The Viewer service will be available via http://localhost:9001/home
+The Viewer service will be available via [http://localhost:9001/home](http://localhost:9001/home)
 
-The Actor service will be available via http://localhost:9002/home
+The Actor service will be available via [http://localhost:9002/home](http://localhost:9002/home)
 
-The API service will be available via http://localhost:9003
+The API service will be available via [http://localhost:9003](http://localhost:9003)
 
 ### Tests
 
@@ -155,27 +154,31 @@ Packages can be removed with:
 ```
 
 ## Troubleshooting
-There are occasions when your local dev environment doesn't quite act as it should.
-_Feel free to add further troubleshooting steps here._
+
+There are occasions when your local dev environment doesn't quite act as it should. *Feel free to add further troubleshooting steps here.*
 
 Here are some common problems we've come across:
 
-### I cannot login with the seeded user.
+### I cannot login with the seeded user
 
 Its possible seeding of Use an LPA was not successful.
 make sure all docker compose services are running and have settled first, then try again.
 run the following command:
+
 ```shell
 <DOCKER_COMPOSE> run api-seeding
 ```
+
 then try again
 
-### I cannot add LPA's locally, which are in the seeded data set.
+### I cannot add LPA's locally, which are in the seeded data set
 
 This could be because the LPA Gateway (Sirius Gateway) has not been properly initialised.
 make sure all docker compose services are running and have settled first, then try again.
 If still not working, run the following command:
+
 ```shell
 <DOCKER_COMPOSE> run lpa-gateway-setup
 ```
+
 if that doesn't work try running the api-seeding step, mentioned with the login failure error.
