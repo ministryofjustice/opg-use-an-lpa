@@ -144,7 +144,6 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 			case LPANumberQuery:
 				search.Result = s.SearchByLPANumber(r.Context(), stripUnnecessaryCharacters(search.Query))
 			case EmailQuery:
-				search.Query = strings.ToLower(search.Query)
 				search.Result = s.SearchByEmail(r.Context(), search.Query)
 			case ActivationCodeQuery:
 				search.Result = s.SearchByActivationCode(r.Context(), stripUnnecessaryCharacters(search.Query))
