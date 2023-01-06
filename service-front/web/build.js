@@ -36,7 +36,7 @@ const fs = fsWithCallbacks.promises;
       bundle: true,
       allowOverwrite: true,
       outdir: config.out_dir,
-      minify: false,
+      minify: true,
       plugins: [],
       target: ['es2015', 'ie11'],
       platform: 'browser',
