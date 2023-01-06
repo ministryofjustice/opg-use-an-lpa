@@ -140,7 +140,7 @@ jobs:
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
         with:
           name: environment_config_file
           path: terraform/environment/cluster_config.json
