@@ -118,7 +118,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           terraform workspace show
-          terraform plan -input=false -parallelism=30
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: add TTL to dynamodb for environment
