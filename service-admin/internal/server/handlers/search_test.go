@@ -131,35 +131,6 @@ func Test_SearchByEmail(t *testing.T) {
 			want:                 &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: []*data.LPA{testLPA}},
 		},
 		{
-			name: "Test standard email query isn't case sensitive",
-			args: args{
-				ctx:       context.TODO(),
-				queryType: 0, //Email query
-				q:         "TEST@email.com",
-			},
-			accountService: &mockAccountService{
-				GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
-					if s == "test@email.com" {
-						return &data.ActorUser{
-							ID:        "TestID",
-							LastLogin: "TestTime",
-							Email:     "test@email.com",
-						}, nil
-					}
-					t.Errorf("expected test@email.com got %v", s)
-					t.FailNow()
-					return nil, nil
-				},
-			},
-			lpaService: &mockLPAService{
-				GetLPAsByUserIDFunc: func(ctx context.Context, s string) ([]*data.LPA, error) {
-					return []*data.LPA{testLPA}, nil
-				},
-			},
-			activationKeyService: &mockActivationKeyService{},
-			want:                 &data.ActorUser{ID: "TestID", Email: "test@email.com", LastLogin: "TestTime", LPAs: []*data.LPA{testLPA}},
-		},
-		{
 			name: "Test email query with error on account lookup",
 			args: args{
 				ctx:       context.TODO(),
@@ -667,6 +638,22 @@ func Test_SearchHandler(t *testing.T) {
 				}},
 				lpaService: &mockLPAService{},
 				q:          "query=test@email.com",
+			},
+			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
+		},
+		{
+			name: "Email query is case insensitive",
+			args: args{
+				accountService: &mockAccountService{GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
+					if s == "test@email.com" {
+						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, nil
+					}
+					t.Errorf("Wrong email given expected test@email.com, recieved %s", s)
+					t.FailNow()
+					return nil, nil
+				}},
+				lpaService: &mockLPAService{},
+				q:          "query=TEST@email.com",
 			},
 			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
 		},
