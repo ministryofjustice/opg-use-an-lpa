@@ -188,7 +188,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3.1.0
+        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
