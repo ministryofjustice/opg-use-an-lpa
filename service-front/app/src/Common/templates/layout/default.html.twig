@@ -25,7 +25,6 @@
         window.gaConfig = {};
         window.gaConfig.uaId = "{{ uaId }}";
     </script>
-    <script async src="{{ asset('index.js') }}"></script>
 
 
     {% if application == 'actor' %}
@@ -172,6 +171,7 @@
     </div>
 </footer>
 
+<script async src="{{ asset('index.js') }}"></script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
