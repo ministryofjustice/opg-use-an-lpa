@@ -184,7 +184,7 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance @ff:allow_older_lpas:true @ff:save_older_lpa_requests:true
   Scenario: User is able to request a key for a second time as a partial match
     Given I have previously requested the addition of a paper LPA to my account
     And The details I provided resulted in a partial match
