@@ -19,7 +19,7 @@ Feature: The user is able to see correct information on their dashboard
       | noActiveCodes                | code1Expiry | code2Expiry |
       | 2 active codes               |  +3weeks    | +3weeks     |
       | 1 active code                |  -1week     | +3weeks     |
-      | No organisations have access |  -1day      | -1week      |
+      | No active codes              |  -1day      | -1week      |
 
   @integration @ui
   Scenario: As a user I can see the number of active access codes an LPA has

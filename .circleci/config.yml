@@ -45,13 +45,6 @@ orbs:
                 sudo ln -sf /usr/bin/pydoc3 pydoc
                 sudo ln -sf /usr/bin/python3 python
                 sudo ln -sf /usr/bin/python3-config python-config
-      dockerhub_login:
-        steps:
-          - docker/install-docker-credential-helper:
-              release-tag: v0.6.4
-          - docker/check:
-              docker-password: DOCKER_ACCESS_TOKEN
-              docker-username: DOCKER_USER
       ecr_login:
         steps:
           - run:
@@ -66,52 +59,31 @@ orbs:
     executors:
       golang:
         docker:
-          - image: cimg/go:1.19
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
+          - image: cimg/go:1.16
         resource_class: small
       puppeteer:
         docker:
           - image: buildkite/puppeteer
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php:
         docker:
           - image: cimg/php:7.4
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
         resource_class: small
       php-browsers:
         docker:
-          - image: cimg/php:8.2-browsers
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
+          - image: cimg/php:8.1-browsers
         resource_class: small
       node-browsers:
         docker:
-          - image: cimg/node:18.12.1-browsers
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
+          - image: cimg/node:18.11.0-browsers
         resource_class: small
       python:
         docker:
-          - image: cimg/python:3.11
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
+          - image: cimg/python:3.7
         resource_class: small
       terraform:
         docker:
-          - image: hashicorp/terraform:1.3.7
-            auth:
-              username: $DOCKER_USER
-              password: $DOCKER_ACCESS_TOKEN
+          - image: hashicorp/terraform:1.2.4
         resource_class: small
 
     jobs:
@@ -212,7 +184,6 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
-          - dockerhub_login
           - run:
               name: Docker Build Development Target
               command: |
@@ -289,7 +260,6 @@ orbs:
               docker_layer_caching: false
           - attach_workspace:
               at: ~/project
-          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -330,7 +300,6 @@ orbs:
           - install_aws_cli
           - setup_remote_docker:
               docker_layer_caching: false
-          - dockerhub_login
           - run:
               name: Docker Build Development Target
               command: |
@@ -413,7 +382,6 @@ orbs:
           - install_aws_cli
           - setup_remote_docker:
               docker_layer_caching: false
-          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -468,7 +436,6 @@ orbs:
           - install_aws_cli
           - setup_remote_docker:
               docker_layer_caching: false
-          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -504,7 +471,6 @@ orbs:
           - install_aws_cli
           - setup_remote_docker:
               docker_layer_caching: false
-          - dockerhub_login
           - run:
               name: Build
               command: |
@@ -818,10 +784,7 @@ orbs:
 jobs:
   python_templated_slack_notify:
     docker:
-      - image: cimg/python:3.11
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
+      - image: cimg/python:3.7
     resource_class: small
     parameters:
       template:
@@ -845,10 +808,7 @@ jobs:
 
   ecr_scan_results:
     docker:
-      - image: cimg/python:3.11
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout
@@ -862,10 +822,7 @@ jobs:
 
   slack_notify_stats:
     docker:
-      - image: cimg/python:3.11
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout
@@ -885,10 +842,7 @@ jobs:
 
   cancel_redundant_builds:
     docker:
-      - image: cimg/python:3.11
-        auth:
-          username: $DOCKER_USER
-          password: $DOCKER_ACCESS_TOKEN
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout
