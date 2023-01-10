@@ -40,6 +40,7 @@ class PopulateLpaMetadata
             );
 
             $lpas->$lpaKey->activeCodeCount = $shareCodes->activeCodeCount;
+            $lpas->$lpaKey->shareCodes = $shareCodes;
             $lpas->$lpaKey->actorActive     =
                 $lpaData['actor']['type'] === 'donor' || $lpaData['actor']['details']->getSystemStatus();
         }
