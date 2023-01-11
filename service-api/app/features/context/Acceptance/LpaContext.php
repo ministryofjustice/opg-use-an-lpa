@@ -2269,6 +2269,17 @@ class LpaContext implements Context
      */
     public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
+        $code1 = [
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => '2020-12-01T00:00:00Z',
+            'UserLpaActor' => $this->userLpaActorToken,
+            'Organisation' => $this->organisation,
+            'ViewerCode' => $this->accessCode,
+            'Viewed' => false,
+            'ViewedBy' => 'TestOrg'
+        ];
+
         // Get the LPA
 
         // UserLpaActorMap::get
@@ -2335,20 +2346,7 @@ class LpaContext implements Context
             new Result(
                 [
                     'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation1'
-                            ]
-                        ),
-                        $this->marshalAwsResultData(
-                            [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation2'
-                            ]
-                        )
+                        $this->marshalAwsResultData($code1)
                     ]
                 ]
             )
@@ -2388,8 +2386,7 @@ class LpaContext implements Context
 
         Assert::assertArrayHasKey('Viewed', $response[0]);
         Assert::assertEquals($response[0]['ViewerCode'], $this->accessCode);
-        Assert::assertEquals($response[0]['ViewedBy'], 'organisation1');
-        Assert::assertEquals($response[1]['ViewedBy'], 'organisation2');
+        Assert::assertEquals($response[0]['ViewedBy'], 'TestOrg');
     }
 
     /**
