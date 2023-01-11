@@ -846,8 +846,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
         $this->ui->assertPageContainsText('LPA Viewed');
-        $this->ui->assertPageContainsText('Natwest');
-        $this->ui->assertPageContainsText('Another Organisation');
+        $this->ui->assertPageContainsText('TestOrg');
     }
 
     /**
@@ -1688,8 +1687,6 @@ class LpaContext implements Context
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
-        $organisation = 'Natwest';
-
         // API call for get LpaById
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1727,8 +1724,6 @@ class LpaContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_ID
             )
         );
-
-        $organisation = 'Natwest';
 
         // API call for get LpaById
         $this->apiFixtures->append(
