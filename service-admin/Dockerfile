@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci && node_modules/.bin/webpack -p
 
 # Build Go app
-FROM golang:1.19.1-alpine as build-env
+FROM golang:1.19.4-alpine as build-env
 
 RUN apk --update --no-cache add build-base
 

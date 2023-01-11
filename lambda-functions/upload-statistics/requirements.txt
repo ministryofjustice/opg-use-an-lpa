@@ -1,2 +1,2 @@
-boto3~=1.24.0
+boto3~=1.26.44
 awslambdaric
