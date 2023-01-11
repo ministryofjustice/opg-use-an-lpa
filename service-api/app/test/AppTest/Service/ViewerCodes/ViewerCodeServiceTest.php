@@ -24,10 +24,10 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_ca_be_instantiated(): void
     {
-        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
-        $userActorLpaRepoProphecy       = $this->prophesize(UserLpaActorMapInterface::class);
-        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
+        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
@@ -55,7 +55,8 @@ class ViewerCodeServiceTest extends TestCase
                 'id',
                 '700000000047',
                 Argument::exact($codeExpiry),
-                'token name'
+                'token name',
+                '1234'
             )
             ->shouldBeCalled();
 
@@ -67,9 +68,10 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
+                    'ActorId' => '1234'
                 ]
             );
 
@@ -95,7 +97,7 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_wont_create_a_code_if_user_does_not_match(): void
     {
-        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -104,8 +106,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'another_user_id',
+                    'Id' => 'id',
+                    'UserId' => 'another_user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -127,7 +129,7 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_will_generate_codes_until_a_new_one_is_found(): void
     {
-        $callCount              = 0;
+        $callCount = 0;
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeRepoProphecy
             ->add(
@@ -135,7 +137,8 @@ class ViewerCodeServiceTest extends TestCase
                 'id',
                 '700000000047',
                 Argument::type(DateTime::class),
-                'token name'
+                'token name',
+                '1234'
             )
             ->shouldBeCalledTimes(2)
             ->will(function () use (&$callCount) {
@@ -155,9 +158,10 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
+                    'ActorId' => '1234'
                 ]
             );
 
@@ -185,47 +189,47 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodes = [
             [   // a complete and unexpired code that has been viewed
-                'SiriusUid'    => '700000000047',
-                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
-                'ViewerCode'   => 'abcdefghijkl',
+                'SiriusUid' => '700000000047',
+                'Added' => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode' => 'abcdefghijkl',
                 'Organisation' => 'My bank',
                 'UserLpaActor' => '3f0455d4-611f-11ed-9b6a-0242ac120002',
-                'Expires'      => $codeExpiry->format('c'),
+                'Expires' => $codeExpiry->format('c'),
             ],
             [   // a complete and valid code that has not been viewed
-                'SiriusUid'    => '700000000047',
-                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
-                'ViewerCode'   => '123456789101',
+                'SiriusUid' => '700000000047',
+                'Added' => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode' => '123456789101',
                 'Organisation' => 'My gas company',
                 'UserLpaActor' => 'f4fc15c4-6120-11ed-9b6a-0242ac120002',
-                'Expires'      => $codeExpiry->format('c'),
+                'Expires' => $codeExpiry->format('c'),
             ],
             [   // a code that does not map to a user record (orphaned)
-                'SiriusUid'    => '700000000047',
-                'Added'        => (new DateTimeImmutable('-1 day'))->format('c'),
-                'ViewerCode'   => 'asdfghjklzxc',
+                'SiriusUid' => '700000000047',
+                'Added' => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode' => 'asdfghjklzxc',
                 'Organisation' => 'The council',
                 'UserLpaActor' => '19d2d742-437e-438f-8f15-e43e658dcd5b',
-                'Expires'      => $codeExpiry->format('c'),
+                'Expires' => $codeExpiry->format('c'),
             ],
         ];
 
         $activities = [
             [
                 'ViewerCode' => 'abcdefghijkl',
-                'Viewed'     => [
-                    'Viewed'     => (new DateTimeImmutable('now'))->format('c'),
+                'Viewed' => [
+                    'Viewed' => (new DateTimeImmutable('now'))->format('c'),
                     'ViewerCode' => 'abcdefghijkl',
-                    'ViewedBy'   => 'Bank',
+                    'ViewedBy' => 'Bank',
                 ],
             ],
             [
                 'ViewerCode' => '123456789101',
-                'Viewed'     => false,
+                'Viewed' => false,
             ],
             [
                 'ViewerCode' => 'asdfghjklzxc',
-                'Viewed'     => false,
+                'Viewed' => false,
             ],
         ];
 
@@ -262,9 +266,9 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'ActorId'   => '12',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'ActorId' => '12',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -273,9 +277,9 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'ActorId'   => '15',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'ActorId' => '15',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -312,7 +316,7 @@ class ViewerCodeServiceTest extends TestCase
     /** @test */
     public function it_wont_get_codes_if_user_does_not_match(): void
     {
-        $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
 
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -321,8 +325,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'another_user_id',
+                    'Id' => 'id',
+                    'UserId' => 'another_user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -361,8 +365,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -395,8 +399,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'another_user_id',
+                    'Id' => 'id',
+                    'UserId' => 'another_user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );
@@ -433,8 +437,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'user_id',
+                    'Id' => 'id',
+                    'UserId' => 'user_id',
                     'SiriusUid' => '700000000047',
                 ]
             );

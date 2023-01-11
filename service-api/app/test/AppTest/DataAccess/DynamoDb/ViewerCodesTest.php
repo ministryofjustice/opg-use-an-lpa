@@ -175,6 +175,7 @@ class ViewerCodesTest extends TestCase
         $testSiriusUid          = 'test-uid';
         $testExpires           = new DateTime();
         $testOrganisation       = 'test-organisation';
+        $testActorId            = 'test-actor-id';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function(array $data) use (
             $testCode,
@@ -208,7 +209,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->add($testCode, $testUserLpaActorToken, $testSiriusUid, $testExpires, $testOrganisation);
+        $repo->add($testCode, $testUserLpaActorToken, $testSiriusUid, $testExpires, $testOrganisation, $testActorId);
     }
 
     /** @test */
@@ -229,7 +230,7 @@ class ViewerCodesTest extends TestCase
         // We expect our own KeyCollisionException
         $this->expectException(KeyCollisionException::class);
 
-        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val');
+        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val', 'test-actor-id');
     }
 
     /** @test */
@@ -246,7 +247,7 @@ class ViewerCodesTest extends TestCase
         // We should now expect a DynamoDbException
         $this->expectException(DynamoDbException::class);
 
-        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val');
+        $repo->add('test-val', 'test-val', 'test-val', new DateTime, 'test-val', 'test-actor-id');
     }
 
     /** @test */
