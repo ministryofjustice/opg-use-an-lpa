@@ -184,6 +184,15 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
+  @acceptance @ff:allow_older_lpas:true @ff:save_older_lpa_requests:true
+  Scenario: User is able to request a key for a second time as a partial match
+    Given I have previously requested the addition of a paper LPA to my account
+    And The details I provided resulted in a partial match
+    When I make an additional request for the same LPA
+    Then I am told my activation key request has been received
+    And I should expect it within 4 weeks time
+    And I will receive an email confirming this information
+
   @acceptance @integration @pact @ff:allow_older_lpas:true
   Scenario: User receives a confirmation that key will be sent in 2 weeks, when lpa trying to be added is cleansed and full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
