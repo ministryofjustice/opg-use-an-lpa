@@ -42,8 +42,7 @@ class ResolveActor
         if (isset($lpa['original_attorneys']) && is_array($lpa['original_attorneys'])) {
             foreach ($lpa['original_attorneys'] as $attorney) {
                 if (
-                    ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) &&
-                    ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY
+                    ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) 
                 ) {
                     $actor = $attorney;
                     $actorType = 'primary-attorney';
