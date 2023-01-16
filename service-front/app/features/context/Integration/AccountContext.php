@@ -361,7 +361,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccount()
     {
         $this->activationToken = 'activate1234567890';
-        $this->userPassword = 'n3wPassWord';
+        $this->userPassword = 'n3wPassWord!';
 
         // API call for password reset request
         $this->apiFixtures->append(
