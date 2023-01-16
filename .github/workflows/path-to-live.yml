@@ -31,7 +31,7 @@ jobs:
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
@@ -79,7 +79,7 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
       - name: download artifact for front tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
@@ -186,7 +186,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
