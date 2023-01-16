@@ -7,7 +7,6 @@ namespace Actor\Form;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
 use Common\Validator\EmailAddressValidator;
-use Common\Validator\PasswordValidator;
 use Laminas\Filter\StringToLower;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -98,14 +97,11 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'name'    => StringLength::class,
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 8,
+                            'min'      => 12,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
+                                StringLength::TOO_SHORT => 'Password must be 12 characters or more',
                             ],
                         ],
-                    ],
-                    [
-                        'name' => PasswordValidator::class,
                     ],
                 ],
             ],

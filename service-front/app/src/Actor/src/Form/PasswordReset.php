@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
-use Common\Validator\PasswordValidator;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
@@ -51,14 +50,11 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
                         'name'    => StringLength::class,
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 8,
+                            'min'      => 12,
                             'messages' => [
-                                StringLength::TOO_SHORT => 'Password must be 8 characters or more',
+                                StringLength::TOO_SHORT => 'Password must be 12 characters or more',
                             ],
                         ],
-                    ],
-                    [
-                        'name' => PasswordValidator::class,
                     ],
                 ],
             ],
