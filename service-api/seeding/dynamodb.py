@@ -216,7 +216,8 @@ stats = [
         'lpa_removed_event': 40,
         'account_created_event': 30,
         'account_deleted_event': 30,
-        'account_activated_event': 20
+        'account_activated_event': 20,
+        'viewer_codes_created': 10
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
@@ -224,7 +225,8 @@ stats = [
         'lpa_removed_event': 6,
         'account_created_event': 3,
         'account_deleted_event': 2,
-        'account_activated_event': 2
+        'account_activated_event': 2,
+        'viewer_codes_created': 2
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
@@ -232,7 +234,8 @@ stats = [
         'lpa_removed_event': 7,
         'account_created_event': 5,
         'account_deleted_event': 1,
-        'account_activated_event': 15
+        'account_activated_event': 15,
+        'viewer_codes_created': 4
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
@@ -240,7 +243,8 @@ stats = [
         'lpa_removed_event': 8,
         'account_created_event': 12,
         'account_deleted_event': 3,
-        'account_activated_event': 12
+        'account_activated_event': 12,
+        'viewer_codes_created': 2
 
     },
     {
@@ -249,7 +253,8 @@ stats = [
         'lpa_removed_event': 9,
         'account_created_event': 15,
         'account_deleted_event': 1,
-        'account_activated_event': 9
+        'account_activated_event': 9,
+        'viewer_codes_created': 1
     },
     {
         'TimePeriod': datetime.date.today().strftime('%Y-%m'),
@@ -257,7 +262,8 @@ stats = [
         'lpa_removed_event': 10,
         'account_created_event': 6,
         'account_deleted_event': 4,
-        'account_activated_event': 12
+        'account_activated_event': 12,
+        'viewer_codes_created': 1
     }
 ]
 
