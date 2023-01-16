@@ -624,7 +624,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccount(): void
     {
         $this->userAccountEmail = 'hello@test.com';
-        $this->userAccountPassword = 'n3wPassWord';
+        $this->userAccountPassword = 'n3wPassWord!';
 
         // ActorUsers::getByEmail
         $this->awsFixtures->append(
@@ -672,7 +672,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $userAccountCreateData = [
             'email' => 'hello@test.com',
-            'password' => 'n3wPassWord',
+            'password' => 'n3wPassWord!',
         ];
 
         $id = '1234567890abcdef';

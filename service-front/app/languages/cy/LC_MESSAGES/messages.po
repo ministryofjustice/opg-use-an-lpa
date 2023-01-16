@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-12-19T15:30:28+00:00\n"
+"POT-Creation-Date: 2023-01-03T13:52:32+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -275,8 +275,8 @@ msgid "Warning"
 msgstr "Rhybudd"
 
 #: src/Actor/templates/actor/create-account.html.twig:56
-#: src/Actor/templates/actor/password-change.html.twig:38
-#: src/Actor/templates/actor/password-reset.html.twig:46
+#: src/Actor/templates/actor/password-change.html.twig:33
+#: src/Actor/templates/actor/password-reset.html.twig:40
 msgid "Never share your password with anyone."
 msgstr "Peidiwch â rhoi eich cyfrinair i neb arall."
 
@@ -290,19 +290,14 @@ msgstr "Creu cyfrif"
 msgid "Change your password"
 msgstr "Newid eich cyfrinair"
 
-#: src/Actor/templates/actor/password-reset.html.twig:39
-#: src/Actor/templates/actor/password-change.html.twig:32
-msgid "Your password needs to have:"
-msgstr "Mae’n rhaid i’ch cyfrinair gynnwys:"
-
 #: src/Actor/templates/actor/login.html.twig:49
-#: src/Actor/templates/actor/password-reset.html.twig:49
+#: src/Actor/templates/actor/password-reset.html.twig:43
 #: src/Actor/templates/actor/your-details.html.twig:34
 msgid "Password"
 msgstr "Cyfrinair"
 
-#: src/Actor/templates/actor/password-change.html.twig:51
-#: src/Actor/templates/actor/password-reset.html.twig:53
+#: src/Actor/templates/actor/password-change.html.twig:46
+#: src/Actor/templates/actor/password-reset.html.twig:47
 msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
@@ -735,11 +730,11 @@ msgstr ""
 "                        Byddwch yn cytuno i unrhyw newidiadau os byddwch yn "
 "parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru."
 
-#: src/Actor/templates/actor/password-change.html.twig:41
+#: src/Actor/templates/actor/password-change.html.twig:36
 msgid "Current password"
 msgstr "Cyfrinair presennol"
 
-#: src/Actor/templates/actor/password-change.html.twig:46
+#: src/Actor/templates/actor/password-change.html.twig:41
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
@@ -1972,8 +1967,8 @@ msgstr "Mae’r cyfrinair rydych wedi’i nodi yn anghywir"
 #. Create account, change password, password reset
 #: src/Actor/templates/actor/form-error-messages.html.twig:14
 msgctxt "error"
-msgid "Password must be 8 characters or more"
-msgstr "Rhaid i’r cyfrinair fod yn 8 nod neu fwy"
+msgid "Password must be 12 characters or more"
+msgstr "Rhaid i’r cyfrinair fod yn 12 nod neu fwy"
 
 #. Create account
 #: src/Actor/templates/actor/form-error-messages.html.twig:15
@@ -1981,110 +1976,92 @@ msgctxt "error"
 msgid "Passwords do not match"
 msgstr "Nid yw’r cyfrineiriau’n cyfateb"
 
-#. Create account, change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:16
-msgctxt "error"
-msgid "Password must include a number"
-msgstr "Rhaid i’r cyfrinair gynnwys rhif"
-
-#. Create account, change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:17
-msgctxt "error"
-msgid "Password must include a lower case letter"
-msgstr "Rhaid i’r cyfrinair gynnwys llythyren fach"
-
-#. Create account, change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:18
-msgctxt "error"
-msgid "Password must include a capital letter"
-msgstr "Rhaid i’r cyfrinair gynnwys priflythyren"
-
 #. Create account, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:19
+#: src/Actor/templates/actor/form-error-messages.html.twig:16
 msgctxt "error"
 msgid "Confirm your password"
 msgstr "Cadarnhewch eich cyfrinair"
 
 #. Create account
-#: src/Actor/templates/actor/form-error-messages.html.twig:20
+#: src/Actor/templates/actor/form-error-messages.html.twig:17
 msgctxt "error"
 msgid "You must accept the terms of use to create an account"
 msgstr "Mae’n rhaid i chi dderbyn y telerau defnyddio i greu cyfrif"
 
 #. Triage page
-#: src/Actor/templates/actor/form-error-messages.html.twig:23
+#: src/Actor/templates/actor/form-error-messages.html.twig:20
 msgctxt "error"
 msgid "Select yes if you have a Use a lasting power of attorney account"
 msgstr "Dewiswch oes os oes gennych gyfrif atwrneiaeth arhosol"
 
 #. Login csrf
-#: src/Actor/templates/actor/form-error-messages.html.twig:26
+#: src/Actor/templates/actor/form-error-messages.html.twig:23
 msgctxt "error"
 msgid "Security validation failed. Please try again."
 msgstr "Proses dilysu diogelwch wedi methu. Rhowch gynnig arall arni."
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:30
+#: src/Actor/templates/actor/form-error-messages.html.twig:27
 msgctxt "error"
 msgid "Enter your activation key"
 msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:31
+#: src/Actor/templates/actor/form-error-messages.html.twig:28
 msgctxt "error"
 msgid "Enter an activation key in the correct format"
 msgstr "Nodwch allwedd cadarnhau cyfrif yn y fformat cywir"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:52
+#: src/Actor/templates/actor/form-error-messages.html.twig:49
 msgctxt "error"
 msgid "The LPA reference number you entered is too short"
 msgstr "Mae’r cyfeirnod LPA y bu i chi ei nodi yn rhy fyr"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:51
+#: src/Actor/templates/actor/form-error-messages.html.twig:48
 msgctxt "error"
 msgid "The LPA reference number you entered is too long"
 msgstr "Mae’r cyfeirnod LPA y bu i chi ei nodi yn rhy hir"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:39
+#: src/Actor/templates/actor/form-error-messages.html.twig:36
 msgctxt "error"
 msgid "Enter your date of birth"
 msgstr "Teipiwch eich dyddiad geni"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:40
+#: src/Actor/templates/actor/form-error-messages.html.twig:37
 msgctxt "error"
 msgid "Date of birth must be a real date"
 msgstr "Rhaid i’r dyddiad geni fod yn ddyddiad dilys"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:41
+#: src/Actor/templates/actor/form-error-messages.html.twig:38
 msgctxt "error"
 msgid "Date of birth must include a day"
 msgstr "Rhaid i ddyddiad geni gynnwys diwrnod"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:42
+#: src/Actor/templates/actor/form-error-messages.html.twig:39
 msgctxt "error"
 msgid "Date of birth must include a month"
 msgstr "Rhaid i ddyddiad geni gynnwys mis"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:43
+#: src/Actor/templates/actor/form-error-messages.html.twig:40
 msgctxt "error"
 msgid "Date of birth must include a year"
 msgstr "Rhaid i ddyddiad geni gynnwys blwyddyn"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:44
+#: src/Actor/templates/actor/form-error-messages.html.twig:41
 msgctxt "error"
 msgid "Date of birth must be in the past"
 msgstr "Rhaid i’r dyddiad geni fod yn y gorffennol"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:45
+#: src/Actor/templates/actor/form-error-messages.html.twig:42
 msgctxt "error"
 msgid ""
 "Check your date of birth is correct - you cannot be an attorney or donor if "
@@ -2094,50 +2071,50 @@ msgstr ""
 "neu’n rhoddwr os ydych o dan 18 oed"
 
 #. Create viewer code
-#: src/Actor/templates/actor/form-error-messages.html.twig:73
+#: src/Actor/templates/actor/form-error-messages.html.twig:70
 msgctxt "error"
 msgid "Enter an organisation name"
 msgstr "Nodwch enw sefydliad"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:76
+#: src/Actor/templates/actor/form-error-messages.html.twig:73
 msgctxt "error"
 msgid "Enter your current password"
 msgstr "Teipiwch eich cyfrinair cyfredol"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:77
+#: src/Actor/templates/actor/form-error-messages.html.twig:74
 msgctxt "error"
 msgid "Current password is incorrect"
 msgstr "Mae’r cyfrinair cyfredol yn anghywir"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:78
+#: src/Actor/templates/actor/form-error-messages.html.twig:75
 msgctxt "error"
 msgid "Enter your new password"
 msgstr "Teipiwch eich cyfrinair newydd"
 
 #. Change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:79
+#: src/Actor/templates/actor/form-error-messages.html.twig:76
 msgctxt "error"
 msgid "New password and confirm new password do not match"
 msgstr ""
 "Nid yw eich cyfrinair newydd a’r cyfrinair i gadarnhau eich cyfrif yn cyfateb"
 
 #. Change password
-#: src/Actor/templates/actor/form-error-messages.html.twig:80
+#: src/Actor/templates/actor/form-error-messages.html.twig:77
 msgctxt "error"
 msgid "Enter your password again to confirm it"
 msgstr "Teipiwch eich cyfrinair eto i’w gadarnhau"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:83
+#: src/Actor/templates/actor/form-error-messages.html.twig:80
 msgctxt "error"
 msgid "Confirm your email address"
 msgstr "Cadarnhau eich cyfeiriad e-bost"
 
 #. Password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:84
+#: src/Actor/templates/actor/form-error-messages.html.twig:81
 msgctxt "error"
 msgid "The emails did not match"
 msgstr "Nid oedd y cyfeiriadau e-bost yn cyfateb"
@@ -3388,7 +3365,7 @@ msgstr "Rhowch god mynediad yr LPA yn y fformat cywir"
 
 #. Add Older LPA
 #. ShareCode
-#: src/Actor/templates/actor/form-error-messages.html.twig:63
+#: src/Actor/templates/actor/form-error-messages.html.twig:60
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:11
 msgctxt "error"
 msgid "Enter the donor's last name"
@@ -4115,7 +4092,7 @@ msgid "© Crown copyright"
 msgstr "© Hawlfraint y goron"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:50
+#: src/Actor/templates/actor/form-error-messages.html.twig:47
 msgctxt "error"
 msgid "Enter the LPA reference number"
 msgstr "Nodwch y cyfeirnod LPA"
@@ -4645,7 +4622,7 @@ msgid "Check that your email address is spelt correctly"
 msgstr "Gwiriwch bod eich cyfeiriad e-bost wedi’i sillafu’n gywir"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:38
+#: src/Actor/templates/actor/form-error-messages.html.twig:35
 msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
 msgstr "Nodwch y cyfeirnod LPA yn y fformat cywir"
@@ -4901,13 +4878,13 @@ msgstr ""
 "Nac oes, nid oes gennyf allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:33
+#: src/Actor/templates/actor/form-error-messages.html.twig:30
 msgctxt "error"
 msgid "The activation key you entered is too long"
 msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy hir"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:34
+#: src/Actor/templates/actor/form-error-messages.html.twig:31
 msgctxt "error"
 msgid "The activation key you entered is too short"
 msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy fyr"
@@ -5336,19 +5313,19 @@ msgid "your name or address is spelt wrong on the LPA"
 msgstr "os cafodd eich enw neu’ch cyfeiriad eu sillafu yn anghywir ar yr LPA"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:54
+#: src/Actor/templates/actor/form-error-messages.html.twig:51
 msgctxt "error"
 msgid "Enter your first names"
 msgstr "Nodwch eich enwau cyntaf"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:55
+#: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "Enter your last name"
 msgstr "Nodwch eich enw olaf"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:56
+#: src/Actor/templates/actor/form-error-messages.html.twig:53
 msgctxt "error"
 msgid "Enter your postcode"
 msgstr "Nodwch eich cod post"
@@ -5413,7 +5390,7 @@ msgstr ""
 "Cyhoeddus."
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:53
+#: src/Actor/templates/actor/form-error-messages.html.twig:50
 msgctxt "error"
 msgid ""
 "Enter the 12 numbers of the LPA reference number. Do not include letters or "
@@ -5669,7 +5646,7 @@ msgid "Continue and ask for a new key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:60
+#: src/Actor/templates/actor/form-error-messages.html.twig:57
 msgctxt "error"
 msgid "Select whether you are the donor or an attorney on the LPA"
 msgstr "Dewiswch ai chi yw’r rhoddwr neu’r atwrnai ar yr atwrneiaeth arhosol"
@@ -5769,13 +5746,13 @@ msgstr ""
 "hanfon atyn nhw."
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:62
+#: src/Actor/templates/actor/form-error-messages.html.twig:59
 msgctxt "error"
 msgid "Enter the donor's first names"
 msgstr "Rhowch enw’r rhoddwr"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:64
+#: src/Actor/templates/actor/form-error-messages.html.twig:61
 msgctxt "error"
 msgid "Enter the donor's date of birth"
 msgstr "Rhowch ddyddiad geni’r rhoddwr"
@@ -5860,7 +5837,7 @@ msgid "Confirm and submit request"
 msgstr "Cadarnhau a chyflwyno’r cais"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:61
+#: src/Actor/templates/actor/form-error-messages.html.twig:58
 msgctxt "error"
 msgid ""
 "Either enter your phone number or check the box to say you cannot take calls"
@@ -6099,7 +6076,7 @@ msgid "Give us feedback about this service"
 msgstr "Give us feedback about this service"
 
 #. login
-#: src/Actor/templates/actor/form-error-messages.html.twig:27
+#: src/Actor/templates/actor/form-error-messages.html.twig:24
 msgctxt "error"
 msgid ""
 "We could not find a Use a lasting power of attorney account with that email "
@@ -6128,15 +6105,10 @@ msgstr ""
 "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
 "mynediad LPA ar gyfer eich sefydliad."
 
-#: src/Actor/templates/actor/password-change.html.twig:31
-#: src/Actor/templates/actor/password-reset.html.twig:38
-msgid "Your password needs to have at least:"
-msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf:"
-
 #: src/Actor/templates/actor/password-change.html.twig:34
 #: src/Actor/templates/actor/password-reset.html.twig:41
 msgid "8 characters"
-msgstr "8 o nodau"
+msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:38
 msgid ""
@@ -6156,15 +6128,6 @@ msgstr "1 llythyren fach ac 1 briflythyren"
 #: src/Actor/templates/actor/password-reset.html.twig:43
 msgid "1 number"
 msgstr "1 rhif"
-
-#: src/Actor/templates/actor/create-account.html.twig:47
-msgid ""
-"Your password needs to have at least: <ul class=\"govuk-list--bullet\"><li>8 "
-"characters</li><li>1 lower-case and 1 capital letter</li><li>1 number</li></ul>"
-msgstr ""
-"Mae’n rhaid i’ch cyfrinair gynnwys o leiaf: <ul class=\"govuk-list—"
-"bullet\"><li>8 o nodau</li><li>1 llythyren fach ac 1 briflythyren</li><li>1 "
-"rhif</li></ul>"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:12
 msgid "VIEWED"
@@ -6535,7 +6498,7 @@ msgstr ""
 "ichi nodi’r C-"
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:32
+#: src/Actor/templates/actor/form-error-messages.html.twig:29
 msgctxt "error"
 msgid ""
 "The activation key you entered is too long. Check that you only entered the 12 "
@@ -6562,7 +6525,7 @@ msgstr ""
 "ddydd Sul 10 Ebrill 2022."
 
 #. Triage page
-#: src/Actor/templates/actor/form-error-messages.html.twig:46
+#: src/Actor/templates/actor/form-error-messages.html.twig:43
 msgctxt "error"
 msgid "Select if you have an activation key to add an LPA"
 msgstr "Dewiswch os oes gennych allwedd cadarnhau cyfrif i ychwanegu LPA"
@@ -6617,7 +6580,7 @@ msgstr ""
 "actifadu wahanol ar gyfer pob un."
 
 #. Add LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:47
+#: src/Actor/templates/actor/form-error-messages.html.twig:44
 msgctxt "error"
 msgid "The LPA reference number provided is not correct"
 msgstr "Nid yw’r cyfeirnod LPA a ddarparwyd yn gywir"
@@ -6887,13 +6850,13 @@ msgstr ""
 "tystiolaeth eich bod wedi edrych ar y crynodeb LPA cyn gweithredu."
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:58
+#: src/Actor/templates/actor/form-error-messages.html.twig:55
 msgctxt "error"
 msgid "Enter your address"
 msgstr "Nodwch eich cyfeiriad"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:59
+#: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Enter your town or city"
 msgstr "Nodwch eich tref neu ddinas"
@@ -6915,7 +6878,7 @@ msgid "Town or city"
 msgstr "Tref neu ddinas"
 
 #. Additional information
-#: src/Actor/templates/actor/form-error-messages.html.twig:65
+#: src/Actor/templates/actor/form-error-messages.html.twig:62
 msgctxt "error"
 msgid "Enter your address on the paper LPA"
 msgstr "Rhowch y cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
@@ -6925,19 +6888,19 @@ msgid "What is your address on the paper LPA?"
 msgstr "Beth yw eich cyfeiriad ar yr atwrneiaeth arhosol bapur?"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:66
+#: src/Actor/templates/actor/form-error-messages.html.twig:63
 msgctxt "error"
 msgid "Enter the attorney's first names"
 msgstr "Rhowch enwau cyntaf yr atwrnai"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:67
+#: src/Actor/templates/actor/form-error-messages.html.twig:64
 msgctxt "error"
 msgid "Enter the attorney's last name"
 msgstr "Rhowch enw olaf yr atwrnai"
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:68
+#: src/Actor/templates/actor/form-error-messages.html.twig:65
 msgctxt "error"
 msgid "Enter the attorney's date of birth"
 msgstr "Rhowch ddyddiad geni’r atwrnai"
@@ -7005,7 +6968,7 @@ msgstr ""
 "arhosol cyfatebol."
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:69
+#: src/Actor/templates/actor/form-error-messages.html.twig:66
 msgctxt "error"
 msgid "Select whether this is the same address as your address on the paper LPA"
 msgstr ""
@@ -7469,7 +7432,7 @@ msgid "__Host-session"
 msgstr ""
 
 #. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:57
+#: src/Actor/templates/actor/form-error-messages.html.twig:54
 msgctxt "error"
 msgid "Select yes if you live in the UK"
 msgstr "Dewiswch ydw os ydych yn byw yn y DU"
@@ -7516,16 +7479,16 @@ msgid ""
 "conditions'."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:34
+#: src/Actor/templates/actor/instructions-preferences.html.twig:33
 msgid "I do not have the paper LPA"
 msgstr "Nid oes gen i’r copi papur o’r LPA"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:38
+#: src/Actor/templates/actor/instructions-preferences.html.twig:37
 msgid "When an LPA is registered, we post the LPA to either:"
 msgstr ""
 "Pan fydd LPA yn cael ei chofrestru, rydym yn postio’r LPA papur un ai at:"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:40
+#: src/Actor/templates/actor/instructions-preferences.html.twig:39
 msgid ""
 "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "is for)"
@@ -7533,11 +7496,11 @@ msgstr ""
 "y rhoddwr (yr unigolyn y mae’r <abbr title=\"atwrneiaethau arhosol\">LPA</"
 "abbr> ar ei gyfer)"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:41
+#: src/Actor/templates/actor/instructions-preferences.html.twig:40
 msgid "one of the attorneys"
 msgstr "un o’r atwrneiod"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:42
+#: src/Actor/templates/actor/instructions-preferences.html.twig:41
 msgid ""
 "someone else, like a solicitor, who helped to fill in the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr> form"
@@ -7564,3 +7527,9 @@ msgstr ""
 "attorney\">LPA</abbr> papur, gall y rhoddwr neu gyfreithiwr wneud <strong><a "
 "href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-"
 "link\">copïau wedi’u hardystio</a></strong>."
+
+#: src/Actor/templates/actor/create-account.html.twig:47
+#: src/Actor/templates/actor/password-change.html.twig:31
+#: src/Actor/templates/actor/password-reset.html.twig:38
+msgid "Your password needs to have at least 12 characters"
+msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf 12 o nodau"

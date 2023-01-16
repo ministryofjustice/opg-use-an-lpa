@@ -11,10 +11,10 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@365406cb701e1cc758077b05049298a49a8b71c2 # pin@v3.0.8
+        uses: actions/cache@c9869a589feb07fed17029ccb75a96e3c2e81428 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
