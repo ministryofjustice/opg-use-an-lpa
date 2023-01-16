@@ -3,7 +3,7 @@ version: "3.6"
 services:
     webpack:
         container_name: admin-webpack
-        image: node:14.13.1-alpine3.12
+        image: node:14.18.2-alpine3.12
         working_dir: /app
         entrypoint: |
             sh -c "npm i && npm run watch"
