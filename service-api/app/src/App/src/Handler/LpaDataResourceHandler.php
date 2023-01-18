@@ -7,7 +7,6 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaService;
-use App\Service\Lpa\RemoveLpa;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -21,11 +20,10 @@ use Psr\Log\LoggerInterface;
  * @package App\Handler
  * @codeCoverageIgnore
  */
-class LpasResourceHandler implements RequestHandlerInterface
+class LpaDataResourceHandler implements RequestHandlerInterface
 {
     public function __construct(
         private LpaService $lpaService,
-        private RemoveLpa $removeLpa,
         private LoggerInterface $logger
     ) {
     }
@@ -38,7 +36,6 @@ class LpasResourceHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return match ($request->getMethod()) {
-            'DELETE' => $this->handleDelete($request),
             default => $this->handleGet($request),
         };
     }
@@ -51,7 +48,7 @@ class LpasResourceHandler implements RequestHandlerInterface
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $this->logger->info(
-            '1. I am here...... .......HandleGet in LpaResourceHandler......{req}',
+            '1. I am here...... .......HandleGet in LpaDataResourceHandler......{req}',
             [
                 'req' => $request->getAttribute('actor-id'),
                 'req1' => $request->getAttribute('user-lpa-actor-token'),
@@ -66,7 +63,11 @@ class LpasResourceHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        $result = $this->lpaService->getByUserLpaActorToken(
+        $this->logger->info(
+            'I am here...... .......HandleGet in LpaDataResourceHandler......2'
+        );
+
+        $result = $this->lpaService->getLpaDetailsByUserLpaActorToken(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id')
         );
@@ -76,28 +77,5 @@ class LpasResourceHandler implements RequestHandlerInterface
         }
 
         return new JsonResponse($result);
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     * @throws BadRequestException|Exception
-     */
-    public function handleDelete(ServerRequestInterface $request): ResponseInterface
-    {
-        $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
-        $userToken =  $request->getAttribute('actor-id');
-
-        if (is_null($actorLpaToken)) {
-            throw new BadRequestException('user-lpa-actor-token missing from lpa removal request');
-        }
-
-        if (is_null($userToken)) {
-            throw new BadRequestException('actor-id missing from lpa removal request');
-        }
-
-        $removedLpaData = ($this->removeLpa)($userToken, $actorLpaToken);
-
-        return new JsonResponse(['lpa' => $removedLpaData]);
     }
 }

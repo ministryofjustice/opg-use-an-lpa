@@ -65,6 +65,41 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
+    public function getLpaDataById(string $userToken, string $actorLpaToken): ?ArrayObject
+    {
+        $this->apiClient->setUserTokenHeader($userToken);
+
+//        var_dump($userToken);
+//        var_dump($actorLpaToken); die;
+
+        $this->logger->info(
+            'I am here...... .......common lpa service .. getLpaDataById'
+        );
+
+        $lpaData = $this->apiClient->httpGet('/v1/lpaData/' . $actorLpaToken);
+
+        $lpaData = isset($lpaData['actor']) ? ($this->parseLpaData)($lpaData) : null;
+
+        if ($lpaData['lpa'] !== null) {
+            $this->logger->info(
+                'Account with Id {id} fetched LPA with Id {uId}',
+                [
+                    'id'  => $userToken,
+                    'uId' => $lpaData['lpa']->getUId(),
+                ]
+            );
+        }
+
+        return $lpaData;
+    }
+
+
+    /**
+     * @param string $userToken
+     * @param string $actorLpaToken
+     * @return ArrayObject|null
+     * @throws Exception
+     */
     public function getLpaById(string $userToken, string $actorLpaToken): ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);

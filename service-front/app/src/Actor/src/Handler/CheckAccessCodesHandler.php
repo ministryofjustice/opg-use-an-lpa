@@ -61,7 +61,8 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $user     = $this->getUser($request);
         $identity = !is_null($user) ? $user->getIdentity() : null;
 
-        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpaData = $this->lpaService->getLpaDataById($identity, $actorLpaToken);
+
 
         // TODO UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         if (is_null($lpaData)) {
