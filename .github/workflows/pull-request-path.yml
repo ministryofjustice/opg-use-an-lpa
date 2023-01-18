@@ -40,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - name: get changed files in the admin folder
         id: changed-files-admin
         uses: tj-actions/changed-files@270645280afddc7e2cf3f4867089522c8f2f8f9a
