@@ -184,7 +184,7 @@ locals {
       environment = [
         {
           name  = "WEB_DOMAIN",
-          value = "${aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn}"
+          value = "https://${aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn}"
         },
         {
           name  = "APP_HOST",
