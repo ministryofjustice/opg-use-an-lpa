@@ -50,14 +50,6 @@ class LpasResourceHandler implements RequestHandlerInterface
      */
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->logger->info(
-            '1. I am here...... .......HandleGet in LpaResourceHandler......{req}',
-            [
-                'req' => $request->getAttribute('actor-id'),
-                'req1' => $request->getAttribute('user-lpa-actor-token'),
-            ]
-        );
-
         if (is_null($request->getAttribute('actor-id'))) {
             throw new BadRequestException("'actor-id' missing.");
         }

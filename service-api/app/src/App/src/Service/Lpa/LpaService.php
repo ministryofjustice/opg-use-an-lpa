@@ -22,6 +22,7 @@ use RuntimeException;
 class LpaService
 {
     private const ACTIVE_ATTORNEY = 0;
+    private const INACTIVE_ATTORNEY = 2;
     private const ACTIVE_TC = 0;
 
     private ViewerCodesInterface $viewerCodesRepository;
@@ -66,32 +67,6 @@ class LpaService
      *
      * @return ?LpaInterface A processed LPA data transfer object
      */
-    public function getLpaDataByUid(string $uid): ?LpaInterface
-    {
-        $this->logger->info(
-            ' I am here...... .......getLpaDataByUid in App lpa service......{uid}',
-            [
-                'uid' => $uid
-            ]
-        );
-
-        $lpa = $this->lpaRepository->get($uid);
-        if ($lpa === null) {
-            return null;
-        }
-
-        $lpaData = $lpa->getData();
-
-        return new Lpa($lpaData, $lpa->getLookupTime());
-    }
-
-    /**
-     * Get an LPA using the ID value
-     *
-     * @param string $uid Sirius uId of LPA to fetch
-     *
-     * @return ?LpaInterface A processed LPA data transfer object
-     */
     public function getByUid(string $uid): ?LpaInterface
     {
         $lpa = $this->lpaRepository->get($uid);
@@ -103,9 +78,18 @@ class LpaService
 
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['attorneys'] = array_values(
+            $lpaData['activeAttorneys'] = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
+                })
+            );
+        }
+
+        if ($lpaData['attorneys'] !== null) {
+            $lpaData['original_attorneys'] = $lpaData['attorneys'];
+            $lpaData['inactiveAttorneys'] = array_values(
+                array_filter($lpaData['attorneys'], function ($attorney) {
+                    return ($this->getAttorneyStatus)($attorney) === self::INACTIVE_ATTORNEY;
                 })
             );
         }
@@ -170,57 +154,6 @@ class LpaService
         // LPA was found but is not valid for use.
         return [];
     }
-
-    /**
-     * Given a user token and a user id (who should own the token), return the actor and LPA details
-     *
-     * @param string $token  UserLpaActorToken that map an LPA to a user account
-     * @param string $userId The user account ID that must correlate to the $token
-     *
-     * @return ?array A structure that contains processed LPA data and metadata
-     */
-    public function getLpaDetailsByUserLpaActorToken(string $token, string $userId): ?array
-    {
-        $map = $this->userLpaActorMapRepository->get($token);
-
-        // Ensure the passed userId matches the passed token
-        if ($userId !== $map['UserId']) {
-            return null;
-        }
-
-        $lpa = $this->getLpaDataByUid($map['SiriusUid']);
-
-        if ($lpa === null) {
-            return null;
-        }
-
-        $lpaData = $lpa->getData();
-        unset($lpaData['original_attorneys']);
-
-        $result = [
-            'user-lpa-actor-token'  => $map['Id'],
-            'date'                  => $lpa->getLookupTime()->format('c'),
-            'lpa'                   => $lpaData,
-            'activationKeyDueDate'  => $map['DueBy'] ?? null
-        ];
-
-        // If an actor has been stored against an LPA then attempt to resolve it from the API return
-        if (isset($map['ActorId'])) {
-            $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
-
-            // If an active attorney is not found then we should not return an lpa
-            $result['actor'] = $actor;
-        }
-
-        // Extract and return only LPA's where status is Registered or Cancelled
-        if (($this->isValidLpa)($lpaData)) {
-            return $result;
-        }
-
-        // LPA was found but is not valid for use.
-        return [];
-    }
-
 
     /**
      * Return all LPAs for the given user_id

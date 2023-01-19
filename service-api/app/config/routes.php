@@ -53,8 +53,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.older.cleanse'
     );
 
-    $app->get('/v1/lpaData/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpaDataResourceHandler::class, 'lpa.data.resource');
-
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
     $app->post(
