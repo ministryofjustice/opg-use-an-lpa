@@ -71,6 +71,7 @@ class SiriusLpaFactoryTest extends TestCase
         $factory = new Sirius();
 
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
+
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('700000000054', $lpa->getUId()); // from full_example.json
         $this->assertNull($lpa->getCancellationDate());
