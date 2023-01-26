@@ -2937,4 +2937,38 @@ class LpaContext implements Context
         $this->ui->fillField('activation_key_triage', 'Expired');
         $this->ui->pressButton('Continue');
     }
+
+    /**
+     * @When /^I request to view an LPA which has an inactive attorney named (.*)$/
+     */
+    public function iRequestToViewAnLPAWhichHasAnInactiveAttorney($name): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        $this->ui->clickLink('View LPA summary');
+    }
+
+    /**
+     * @Then /^I will not see (.*) in the attorney section of LPA summary$/
+     */
+    public function iWillNotSeeInactiveAttorneyInTheListOfAttorneys($name): void
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText('The attorneys');
+        $this->ui->assertPageNotContainsText($name);
+    }
 }

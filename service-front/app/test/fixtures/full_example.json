@@ -117,7 +117,7 @@
           "addressLine3": "string"
         }
       ],
-      "systemStatus": true
+      "systemStatus": false
     }
   ],
   "replacementAttorneys": [
@@ -196,6 +196,22 @@
           "addressLine3": "string"
         }
       ]
+    }
+  ],
+  "activeAttorneys": [
+    {
+      "uId": "700000000054",
+      "firstname": "Ian",
+      "surname": "Deputy",
+      "systemStatus": true
+    }
+  ],
+  "inactiveAttorneys": [
+    {
+      "uId": "700000000054",
+      "firstname": "Harold",
+      "surname": "Stallman",
+      "systemStatus": false
     }
   ]
 }

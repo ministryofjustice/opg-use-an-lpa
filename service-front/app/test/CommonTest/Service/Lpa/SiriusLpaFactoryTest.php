@@ -83,6 +83,9 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertInstanceOf(CaseActor::class, $lpa->getAttorneys()[0]);
         $this->assertEquals(new DateTime('1975-10-05'), $lpa->getAttorneys()[0]->getDob()); // from full_example.json
         $this->assertEquals(true, $lpa->getAttorneys()[0]->getSystemStatus());
+
+        $this->assertInstanceOf(CaseActor::class, $lpa->getActiveAttorneys()[0]);
+        $this->assertInstanceOf(CaseActor::class, $lpa->getInactiveAttorneys()[0]);
     }
 
     public function testCanCreateLpaFromSimpleExample()
