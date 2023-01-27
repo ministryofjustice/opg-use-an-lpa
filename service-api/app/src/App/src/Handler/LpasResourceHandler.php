@@ -13,7 +13,6 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class LpasResourceHandler
@@ -25,8 +24,7 @@ class LpasResourceHandler implements RequestHandlerInterface
 {
     public function __construct(
         private LpaService $lpaService,
-        private RemoveLpa $removeLpa,
-        private LoggerInterface $logger
+        private RemoveLpa $removeLpa
     ) {
     }
 
