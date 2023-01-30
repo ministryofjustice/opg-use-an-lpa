@@ -69,13 +69,6 @@ class RemoveLpa
         if (!empty($viewerCodes)) {
             foreach ($viewerCodes as $viewerCodeRecord) {
                 $this->viewerCodesRepository->removeActorAssociation($viewerCodeRecord['ViewerCode']);
-                if (
-                    // only cancel active codes
-                    !array_key_exists('Cancelled', $viewerCodeRecord) &&
-                    new DateTime($viewerCodeRecord['Expires']) >= new DateTime('now')
-                ) {
-                    $this->viewerCodesRepository->cancel($viewerCodeRecord['ViewerCode'], new DateTime());
-                }
             }
         }
 

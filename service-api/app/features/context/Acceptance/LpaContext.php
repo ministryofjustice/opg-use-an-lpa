@@ -2457,8 +2457,6 @@ class LpaContext implements Context
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result());
-        // viewerCodesRepository::cancel
-        $this->awsFixtures->append(new Result()); // 1st code is active therefore is cancelled
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result()); // 2nd code has expired therefore isn't cancelled
