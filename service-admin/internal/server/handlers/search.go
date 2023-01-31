@@ -134,7 +134,7 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 			log.Error().Err(err).Msg("failed to parse form input")
 		}
 
-		search.Query = strings.ToLower(strings.ReplaceAll(r.PostFormValue("query"), " ", ""))
+		search.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
 
 		err = search.Validate()
 		if err != nil {
@@ -144,7 +144,7 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 			case LPANumberQuery:
 				search.Result = s.SearchByLPANumber(r.Context(), stripUnnecessaryCharacters(search.Query))
 			case EmailQuery:
-				search.Result = s.SearchByEmail(r.Context(), search.Query)
+				search.Result = s.SearchByEmail(r.Context(), strings.ToLower(search.Query))
 			case ActivationCodeQuery:
 				search.Result = s.SearchByActivationCode(r.Context(), stripUnnecessaryCharacters(search.Query))
 			}
