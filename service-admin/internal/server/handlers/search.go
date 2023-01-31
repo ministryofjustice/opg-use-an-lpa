@@ -134,7 +134,7 @@ func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
 			log.Error().Err(err).Msg("failed to parse form input")
 		}
 
-		search.Query = strings.ReplaceAll(r.PostFormValue("query"), " ", "")
+		search.Query = strings.ToLower(strings.ReplaceAll(r.PostFormValue("query"), " ", ""))
 
 		err = search.Validate()
 		if err != nil {
