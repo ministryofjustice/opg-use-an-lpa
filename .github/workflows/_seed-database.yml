@@ -5,7 +5,7 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
         with:
           fetch-depth: '0'
 
@@ -19,7 +19,7 @@ jobs:
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
-        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: environment_config_file
           path: terraform/environment
@@ -28,7 +28,7 @@ jobs:
         run: ls -alt terraform/environment
 
       - name: install python
-        uses: actions/setup-python@dec86ecf4e7508d3930ae42abcdc575f35ea490d # pin@v4.2.0
+        uses: actions/setup-python@f60fe39c45f23b4a7683b4ae8e08239d4a2089bd # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'

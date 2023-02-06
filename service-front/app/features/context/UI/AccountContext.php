@@ -726,7 +726,7 @@ class AccountContext implements Context
             )
         );
 
-        $this->ui->fillField('password', 'n3wPassWord');
+        $this->ui->fillField('password', '☺️✌Password!$');
         $this->ui->pressButton('Change password');
 
         $request = $this->apiFixtures->getLastRequest();
@@ -853,7 +853,7 @@ class AccountContext implements Context
     public function iCreateAnAccount(): void
     {
         $this->userEmail = 'test@example.com';
-        $this->password = 'n3wPassWord';
+        $this->password = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
 
         $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
@@ -900,7 +900,7 @@ class AccountContext implements Context
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $this->userEmail = 'test@example.com';
-        $this->password = 'n3wPassWord';
+        $this->password = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
 
         $this->ui->assertPageAddress('/create-account');
@@ -1273,7 +1273,7 @@ class AccountContext implements Context
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord';
+        $this->password = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
     }
 
@@ -1411,7 +1411,7 @@ class AccountContext implements Context
      */
     public function iProvideMyNewPassword(): void
     {
-        $newPassword = 'Password123';
+        $newPassword = 'Password123!$';
 
         // API call for password reset request
         $this->apiFixtures->append(
@@ -1437,7 +1437,7 @@ class AccountContext implements Context
      */
     public function iProvidedIncorrectCurrentPassword(): void
     {
-        $newPassword = 'Password123';
+        $newPassword = 'Password123!';
 
         // API call for password reset request
         $this->apiFixtures->append(

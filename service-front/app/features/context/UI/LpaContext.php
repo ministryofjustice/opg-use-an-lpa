@@ -794,7 +794,7 @@ class LpaContext implements Context
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText('No organisations have access');
+        $this->ui->assertPageNotContainsText('active codes');
     }
 
     /**

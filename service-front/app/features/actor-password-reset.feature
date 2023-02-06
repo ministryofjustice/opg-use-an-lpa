@@ -42,10 +42,7 @@ Feature: Password Reset
 
     Examples:
       | password | reason |
-      | cheese | 8 characters or more |
-      | bigCheese |  a number |
-      | bigch33se | a capital letter |
-      | BIGCH33SE | a lower case letter |
+      | cheese | 12 characters or more |
 
   @ui
   Scenario Outline: A user is allowed to provide email address in caps

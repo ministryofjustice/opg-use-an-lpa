@@ -29,8 +29,5 @@ Feature: Authenticated Account Password Change
     Then I am told that my new password is invalid because it needs at least <reason>
 
     Examples:
-      | password      | reason                |
-      | Dino9         | 8 characters or more  |
-      | TinyTrexArms  | a number              |
-      | t1nytr3xarms  | a capital letter    |
-      | T1NYTR3XARMS  | a lower case letter |
+      | password      | reason                 |
+      | Dino9         | 12 characters or more  |

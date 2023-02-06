@@ -57,10 +57,7 @@ Feature: Account creation
 
     Examples:
       | password  | reasons                                   |
-      | Sh0rt     | Password must be 8 characters or more     |
-      | n0capital | Password must include a capital letter    |
-      | noNumber  | Password must include a number            |
-      | N0LOWERR  | Password must include a lower case letter |
+      | Sh0rt     | Password must be 12 characters or more    |
       |           | Enter your password                       |
 
   @ui
@@ -72,10 +69,11 @@ Feature: Account creation
     Then An account is created using <email> <password> <terms>
 
     Examples:
-      | email                | password  | terms |
-      | TEST@example.com     | Password1 | 1     |
-      | test@EXAMPLE.com     | Password1 | 1     |
-      |'   TEST@EXAMPLE.COM '| Password1 | 1     |
+      | email                | password       | terms |
+      | TEST@example.com     | Pass   :)word  | 1     |
+      | test@EXAMPLE.com     | Password1$1$   | 1     |
+      | TEST@example.COM     | ☺️✌Password!$  | 1     |
+      |'   TEST@EXAMPLE.COM '| Password§§§§   | 1     |
 
   @ui @integration
   Scenario: The user account cannot create an account with an email address that has been requested for reset
