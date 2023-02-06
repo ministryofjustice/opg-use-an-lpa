@@ -642,6 +642,22 @@ func Test_SearchHandler(t *testing.T) {
 			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
 		},
 		{
+			name: "Email query is case insensitive",
+			args: args{
+				accountService: &mockAccountService{GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
+					if s == "test@email.com" {
+						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, nil
+					}
+					t.Errorf("Wrong email given expected test@email.com, recieved %s", s)
+					t.FailNow()
+					return nil, nil
+				}},
+				lpaService: &mockLPAService{},
+				q:          "query=TEST@email.com",
+			},
+			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
+		},
+		{
 			name: "Normal LPA number query",
 			args: args{
 				accountService: &mockAccountService{
