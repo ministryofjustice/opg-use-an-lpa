@@ -195,6 +195,10 @@ locals {
           value = "60"
         },
         {
+          name  = "APP_DOMAIN",
+          value = aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn
+        },
+        {
           name  = "CONTAINER_VERSION",
           value = var.container_version
       }]

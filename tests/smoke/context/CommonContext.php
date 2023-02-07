@@ -32,6 +32,14 @@ class CommonContext implements Context
     }
 
     /**
+     * @When I access the service homepage from (.*)
+     */
+    public function iAccessTheServiceHomepageFromLocalhost($local): void
+    {
+        $this->ui->visit('http://localhost:9002/');
+    }
+
+    /**
      * @Given I access the service homepage insecurely
      * @Given I access the viewer service insecurely
      * @Given I access the actor service insecurely
@@ -230,6 +238,19 @@ class CommonContext implements Context
 
         Assert::assertNotNull($referrerPolicyTag);
         Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
+    }
+
+    /**
+     * @Then /^I see headers that ensures avoiding everyone freely accessing any resources of that domain$/
+     */
+    public function iReceiveHeadersThatEnsuresAvoidingEveryoneFreelyAccessingAnyResourcesOfThatDomain()
+    {
+        $session = $this->ui->getSession();
+
+        $referrerPolicyTag = $session->getResponseHeader("Access-Control-Allow-Origin");
+
+        Assert::assertNotNull($referrerPolicyTag);
+        Assert::assertStringContainsString('localhost:9002', $referrerPolicyTag);
     }
 
     /**
