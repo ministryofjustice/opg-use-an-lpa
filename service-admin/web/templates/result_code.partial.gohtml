@@ -18,16 +18,21 @@
       </dd>
     </div>
 
-    {{ if .Email }}
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
         Email
       </dt>
-      <dd class="govuk-summary-list__value">
+      {{ if .Email }}
+        <dd class="govuk-summary-list__value">
           {{ .Email }}
-      </dd>
+        </dd>
+      {{ else }}
+        <dd class="govuk-summary-list__value">
+          Not applicable
+        </dd>    
+      {{ end }}
     </div>
-    {{ end }}
+    
 
     {{ if .ActivationKey }}
 
