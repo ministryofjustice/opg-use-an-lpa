@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Service\Security\CSPNonce;
 use Common\View\Twig\JavascriptVariablesExtension;
 use PHPUnit\Framework\TestCase;
 
 class JavascriptVariablesExtensionTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function testGetGlobals()
+    /** @test */
+    public function testGetGlobals(): void
     {
         $analyticsId = 'uaid1234';
-        $extension   = new JavascriptVariablesExtension($analyticsId);
+        $nonce       = new CSPNonce('test');
+        $extension   = new JavascriptVariablesExtension($nonce, $analyticsId);
 
-        $analaytics = $extension->getGlobals();
+        $analytics = $extension->getGlobals();
 
-        $this->assertEquals(1, count($analaytics));
+        $this->assertEquals(2, count($analytics));
 
         $expectedAnalytics = [
-                'uaId' => 'uaid1234',
+            'cspNonce' => $nonce,
+            'uaId'     => 'uaid1234',
         ];
 
-        $this->assertEquals($expectedAnalytics, $analaytics);
-        foreach ($analaytics as $analyticsId) {
-            $this->assertEquals($expectedAnalytics['uaId'], $analyticsId);
-        }
+        $this->assertEquals($expectedAnalytics, $analytics);
     }
 }
