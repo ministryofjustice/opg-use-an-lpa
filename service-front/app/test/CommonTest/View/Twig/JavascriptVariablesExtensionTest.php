@@ -8,9 +8,16 @@ use Common\Service\Security\CSPNonce;
 use Common\View\Twig\JavascriptVariablesExtension;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Common\View\Twig\JavascriptVariablesExtension
+ */
 class JavascriptVariablesExtensionTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @covers ::__construct
+     * @covers ::getGlobals
+     */
     public function testGetGlobals(): void
     {
         $analyticsId = 'uaid1234';
