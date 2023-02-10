@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Common\Service\Security\CSPNonce;
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
@@ -18,7 +19,8 @@ class JavascriptVariablesExtensionFactory
         }
 
         return new JavascriptVariablesExtension(
-            $config['analytics']['uaid']
+            $container->get(CSPNonce::class),
+            $config['analytics']['uaid'],
         );
     }
 }
