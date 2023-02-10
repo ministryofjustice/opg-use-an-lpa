@@ -11,10 +11,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
 /**
- * Class CommonContext
- *
- * @package Test\Context
- *
  * @property array responseJson The json returned from a previous step
  */
 class CommonContext implements Context
@@ -52,7 +48,7 @@ class CommonContext implements Context
     public function iAccessTheServiceRoot(): void
     {
         $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $rootUrl = sprintf('http://%s/', $baseUrlHost);
+        $rootUrl     = sprintf('http://%s/', $baseUrlHost);
 
         $this->ui->visit($rootUrl);
     }
@@ -63,7 +59,7 @@ class CommonContext implements Context
     public function iAccessTheOldServiceUrl(): void
     {
         $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
-        $rootUrl = sprintf('http://%s/home', $oldUrlHost);
+        $rootUrl    = sprintf('http://%s/home', $oldUrlHost);
 
         $this->ui->visit($rootUrl);
     }
@@ -73,7 +69,7 @@ class CommonContext implements Context
      * @Given I access the Welsh viewer service
      * @Given I access the Welsh actor service
      */
-    public function iAccessTheWelshServiceHomepage()
+    public function iAccessTheWelshServiceHomepage(): void
     {
         $this->ui->visit('/cy/home');
     }
@@ -81,17 +77,17 @@ class CommonContext implements Context
     /**
      * @Then I can see English text
      */
-    public function iCanSeeEnglishText()
+    public function iCanSeeEnglishText(): void
     {
-        $this->ui->assertPageContainsText("a lasting power of attorney");
+        $this->ui->assertPageContainsText('a lasting power of attorney');
     }
 
     /**
      * @Then /^I can see Welsh text$/
      */
-    public function iCanSeeWelshText()
+    public function iCanSeeWelshText(): void
     {
-        $this->ui->assertPageContainsText("atwrneiaeth arhosol");
+        $this->ui->assertPageContainsText('atwrneiaeth arhosol');
     }
 
     /**
@@ -103,9 +99,31 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I receive headers that describe a content security policy$/
+     */
+    public function iReceiveHeadersThatDescribeAContentSecurityPolicy(): void
+    {
+        $session         = $this->ui->getSession();
+        $cspHeader       = $session->getResponseHeader('Content-Security-Policy');
+        $cspHeaderReport = $session->getResponseHeader('Content-Security-Policy-Report-Only');
+
+        if ($cspHeader === null && $cspHeaderReport === null) {
+            throw new ExpectationException(
+                'CSP header or CSP report only header not in response',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
+
+        $header = $cspHeader ?? $cspHeaderReport;
+
+        // default, highly restrictive, policy
+        Assert::assertStringContainsString("default-src 'none';", $header);
+    }
+
+    /**
      * @Given /^the documents language is set to English$/
      */
-    public function theDocumentsLanguageIsSetToEnglish()
+    public function theDocumentsLanguageIsSetToEnglish(): void
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
 
@@ -120,7 +138,7 @@ class CommonContext implements Context
     /**
      * @Given the documents language is set to Welsh
      */
-    public function theDocumentsLanguageIsSetToWelsh()
+    public function theDocumentsLanguageIsSetToWelsh(): void
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
 
@@ -170,7 +188,7 @@ class CommonContext implements Context
      */
     public function itContainsAKeyValuePair(string $key): void
     {
-        if (! array_key_exists($key, $this->responseJson)) {
+        if (!array_key_exists($key, $this->responseJson)) {
             throw new ExpectationException(
                 sprintf('Failed to find the key %s in the Json response', $key),
                 $this->ui->getSession()
@@ -187,20 +205,20 @@ class CommonContext implements Context
 
         // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
         /** @var ChromeDriver $driver */
-        $driver = $this->ui->getSession()->getDriver();
+        $driver  = $this->ui->getSession()->getDriver();
         $cookies = $driver->getCookies();
 
         array_walk($cookies, function (array $cookie) {
             if ($cookie['name'] === '__Host-session' && !$cookie['httpOnly']) {
                 throw new ExpectationException(
-                    sprintf('Unable to verify that the session cookie is "httpOnly"'),
+                    'Unable to verify that the session cookie is "httpOnly"',
                     $this->ui->getSession()
                 );
             }
 
             if ($cookie['name'] === '__Host-session' && !$cookie['secure']) {
                 throw new ExpectationException(
-                    sprintf('Unable to verify that the session cookie is "secure"'),
+                    'Unable to verify that the session cookie is "secure"',
                     $this->ui->getSession()
                 );
             }
@@ -210,10 +228,10 @@ class CommonContext implements Context
     /**
      * @Then /^I receive headers that block external indexing$/
      */
-    public function iReceiveHeadersThatBlockExternalIndexing()
+    public function iReceiveHeadersThatBlockExternalIndexing(): void
     {
-        $session = $this->ui->getSession();
-        $xrobotstag = $session->getResponseHeader("X-Robots-Tag");
+        $session    = $this->ui->getSession();
+        $xrobotstag = $session->getResponseHeader('X-Robots-Tag');
 
         Assert::assertNotNull($xrobotstag);
         Assert::assertStringContainsString('nofollow', $xrobotstag);
@@ -223,10 +241,10 @@ class CommonContext implements Context
     /**
      * @Then /^I receive headers that cause the browser to not inform the destination site any URL information$/
      */
-    public function iReceiveHeadersThatBlockURLInformation()
+    public function iReceiveHeadersThatBlockURLInformation(): void
     {
-        $session = $this->ui->getSession();
-        $referrerPolicyTag = $session->getResponseHeader("Referrer-Policy");
+        $session           = $this->ui->getSession();
+        $referrerPolicyTag = $session->getResponseHeader('Referrer-Policy');
 
         Assert::assertNotNull($referrerPolicyTag);
         Assert::assertStringContainsString('same-origin', $referrerPolicyTag);
@@ -245,11 +263,10 @@ class CommonContext implements Context
      */
     public function IAmNotAllowedToViewThisPageInAnIframe(): void
     {
-        $session = $this->ui->getSession();
-        $xFrameOptions = $session->getResponseHeader("X-Frame-Options");
+        $session       = $this->ui->getSession();
+        $xFrameOptions = $session->getResponseHeader('X-Frame-Options');
 
         Assert::assertNotNull($xFrameOptions);
         Assert::assertStringContainsString('deny', $xFrameOptions);
-
     }
 }
