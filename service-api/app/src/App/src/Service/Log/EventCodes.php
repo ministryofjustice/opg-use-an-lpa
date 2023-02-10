@@ -37,4 +37,24 @@ class EventCodes
     public const OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED = 'OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED';
 
     public const OLDER_LPA_PARTIAL_MATCH_TOO_RECENT = 'OLDER_LPA_PARTIAL_MATCH_TOO_RECENT';
+
+    /**
+     * Activation key request is successful for full match LPA type hw
+     */
+    public const FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW = 'FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW';
+
+    /**
+     * Activation key request is successful for full match LPA type hw
+     */
+    public const FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF = 'FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF';
+
+    /**
+     * Activation key request is successful for partial match LPA type hw
+     */
+    public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW';
+
+    /**
+     * Activation key request is successful for partial match LPA type hw
+     */
+    public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF';
 }
