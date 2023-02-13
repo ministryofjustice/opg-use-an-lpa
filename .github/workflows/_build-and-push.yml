@@ -241,7 +241,8 @@ jobs:
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@v2
         if: |
-          always() && (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+          (steps.trivy_scan.outcome == 'success' || steps.trivy_scan.outcome == 'failure') &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         with:
           sarif_file: 'trivy-results.sarif'
 
