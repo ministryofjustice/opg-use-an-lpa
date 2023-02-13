@@ -50,11 +50,11 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
-//        $lpa = $this->lpaService->getByUid((string) $requestData['reference_number']);
-//        $lpaData = $lpa->getData();
+        $lpa        = $this->lpaService->getByUid((string) $requestData['reference_number']);
+        $lpaData    = $lpa->getData();
 
-        $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
-        $actorId = $requestData['actor_id'] ?? null;
+        $addedData  = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
+        $actorId    = $requestData['actor_id'] ?? null;
 
         $this->olderLpaService->requestAccessAndCleanseByLetter(
             (string) $requestData['reference_number'],
@@ -64,15 +64,17 @@ class RequestCleanseHandler implements RequestHandlerInterface
             $addedData['lpaActorToken'] ?? null,
         );
 
-//        $this->logger->notice(
-//            'Successfully submitted cleanse for partially matched LPA {uId} for account {id} ',
-//            [
-//                'event_code' => ($lpaData['caseSubtype'] === 'hw') ? EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW : EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF,
-//                'id'         => $userId,
-//                'uId'        => (string) $requestData['reference_number'],
-//                'lpaType'    => $lpaData['caseSubtype'],
-//            ],
-//        );
+        $this->logger->notice(
+            'Successfully submitted cleanse for partially matched LPA {uId} for account {id} ',
+            [
+                'event_code' => ($lpaData['caseSubtype'] === 'hw') ?
+                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
+                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF,
+                'id'         => $userId,
+                'uId'        => (string) $requestData['reference_number'],
+                'lpaType'    => $lpaData['caseSubtype'],
+            ],
+        );
 
         $this->logger->notice(
             'Successfully submitted cleanse for LPA {uId} for account {id} ',
