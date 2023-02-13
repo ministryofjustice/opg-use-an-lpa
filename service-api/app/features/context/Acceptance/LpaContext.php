@@ -290,6 +290,9 @@ class LpaContext implements Context
      */
     public function iMakeAnAdditionalRequestForTheSameLPA()
     {
+        // lpaService: getByUid
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
         //UserLpaActorMap::getByUserId
         $this->awsFixtures->append(
             new Result(
@@ -3534,7 +3537,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // AWS Request letter response in Given steps
-
         $this->awsFixtures->append(
             new Result(
                 [
