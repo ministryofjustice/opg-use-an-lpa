@@ -43,6 +43,3 @@ Feature: Remove an LPA from my account
     Given I am on the dashboard page
     When I request to remove an LPA from my account without the lpa actor token
     Then I should be shown an error page
-
-
-

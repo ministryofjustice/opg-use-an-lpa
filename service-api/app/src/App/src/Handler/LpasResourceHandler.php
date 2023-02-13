@@ -24,7 +24,7 @@ class LpasResourceHandler implements RequestHandlerInterface
 {
     public function __construct(
         private LpaService $lpaService,
-        private RemoveLpa $removeLpa
+        private RemoveLpa $removeLpa,
     ) {
     }
 
@@ -58,7 +58,7 @@ class LpasResourceHandler implements RequestHandlerInterface
 
         $result = $this->lpaService->getByUserLpaActorToken(
             $request->getAttribute('user-lpa-actor-token'),
-            $request->getAttribute('actor-id')
+            $request->getAttribute('actor-id'),
         );
 
         if (is_null($result)) {

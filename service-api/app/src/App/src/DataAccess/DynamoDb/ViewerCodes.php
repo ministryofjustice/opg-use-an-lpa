@@ -106,7 +106,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'Expires' => ['S' => $expires->format('c')],
                     // We use 'c' so not to assume UTC.
                     'Organisation' => ['S' => $organisation],
-                    'CreatedBy' => ['N' => $actorId]
+                    'CreatedBy' => ['N' => $actorId],
                     ],
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
@@ -134,9 +134,9 @@ class ViewerCodes implements ViewerCodesInterface
             'UpdateExpression' => 'SET Cancelled=:c',
             'ExpressionAttributeValues' => [
                 ':c' => [
-                'S' => $cancelledDate->format('c'),
-                ],
-            ],
+                    'S' => $cancelledDate->format('c'),
+                ]
+            ]
         ]);
 
         return true;
@@ -159,8 +159,8 @@ class ViewerCodes implements ViewerCodesInterface
             'ExpressionAttributeValues' => [
                 ':c' => [
                     'S' => '',
-                ],
-            ],
+                ]
+            ]
         ]);
 
         return true;
