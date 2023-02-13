@@ -92,18 +92,17 @@ class ViewerCodesTest extends TestCase
                 return true;
             })
         )
-            ->willReturn(
-                $this->createAWSResult([
-                                           'Item' => [],
-                                       ])
-            );
+        ->willReturn($this->createAWSResult(
+            [
+                'Item' => [],
+            ]
+        ));
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
         $result = $repo->get($testCode);
 
         // Null is returned on a Not Found
-
         $this->assertNull($result);
     }
 
