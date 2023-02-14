@@ -5,7 +5,9 @@ FROM python:3.11.1-alpine3.16 AS python-alpine
 RUN apk add --no-cache \
     libstdc++
 
-RUN apk update && apk upgrade expat krb5-libs
+# Upgrade insecure packages (can't use alpine 3.17 as no libexecinfo-dev)
+RUN apk update && apk upgrade expat krb5-libs libcrypto1.1 libssl1.1
+RUN pip install setuptools --upgrade
 
 FROM python-alpine as build-image
 
