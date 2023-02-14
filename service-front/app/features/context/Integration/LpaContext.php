@@ -997,6 +997,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @When /^I have shared the access code with organisations to view my LPA$/
+     * @Given /^I have shared the access code with organisations and they have viewed my LPA$/
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
     {

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-01-03T13:52:32+00:00\n"
+"POT-Creation-Date: 2023-02-08T14:13:49+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -36,7 +36,7 @@ msgstr "Yn ôl i’ch LPAs"
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:61
 #: src/Actor/templates/actor/lpa-already-added.html.twig:36
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:71
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:20
 #: src/Viewer/templates/viewer/check-code-found.html.twig:27
@@ -49,7 +49,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:63
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:22
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:71
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:20
 #: src/Viewer/templates/viewer/check-code-found.html.twig:27
@@ -102,7 +102,7 @@ msgid "Access codes for this LPA"
 msgstr "Codau mynediad ar gyfer yr LPA hon"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:23
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:44
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr "Gwirio codau mynediad"
@@ -120,7 +120,7 @@ msgstr ""
 "                            codau mynediad a’r manylion yma."
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:39
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:40
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr "Rhoi mynediad i sefydliad"
@@ -302,7 +302,7 @@ msgid "Change password"
 msgstr "Newid eich cyfrinair"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:12
-#: src/Common/templates/layout/default.html.twig:122
+#: src/Common/templates/layout/default.html.twig:124
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:14
 msgid "Terms of use"
 msgstr "Telerau defnyddio"
@@ -1032,7 +1032,7 @@ msgid "Use a lasting power of attorney"
 msgstr "Defnyddio atwrneiaeth arhosol"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:12
-#: src/Common/templates/layout/default.html.twig:127
+#: src/Common/templates/layout/default.html.twig:129
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:12
 msgid "Privacy notice"
 msgstr "Hysbysiad preifatrwydd"
@@ -2506,7 +2506,7 @@ msgstr "Enw’r sefydliad"
 msgid "This is for your reference only"
 msgstr "Mae hyn er gwybodaeth i chi yn unig"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:48
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr "Gweld crynodeb LPA"
@@ -3112,7 +3112,7 @@ msgid "Error:"
 msgstr "Gwall:"
 
 #: src/Common/templates/common/cookies.html.twig:18
-#: src/Common/templates/layout/default.html.twig:132
+#: src/Common/templates/layout/default.html.twig:134
 msgid "Cookies"
 msgstr "Cwcis"
 
@@ -4026,7 +4026,7 @@ msgstr "I weld LPA, bydd yn rhaid ichi ddechrau eto."
 msgid "Start again"
 msgstr "Dechrau eto"
 
-#: src/Common/templates/layout/default.html.twig:47
+#: src/Common/templates/layout/default.html.twig:49
 msgid "Skip to main content"
 msgstr "Neidio i’r prif gynnwys"
 
@@ -4058,20 +4058,20 @@ msgstr "Gosod dewisiadau ar gyfer cwcis"
 msgid "GOV.UK"
 msgstr "GOV.UK"
 
-#: src/Common/templates/layout/default.html.twig:118
+#: src/Common/templates/layout/default.html.twig:120
 msgid "Support links"
 msgstr "Dolenni cymorth"
 
 #: src/Common/templates/common/contact-us.html.twig:15
-#: src/Common/templates/layout/default.html.twig:142
+#: src/Common/templates/layout/default.html.twig:144
 msgid "Contact us"
 msgstr "Cysylltwch â ni"
 
-#: src/Common/templates/layout/default.html.twig:147
+#: src/Common/templates/layout/default.html.twig:149
 msgid "Built by OPG Digital"
 msgstr "Adeiladwyd gan OPG Digidol"
 
-#: src/Common/templates/layout/default.html.twig:157
+#: src/Common/templates/layout/default.html.twig:159
 msgid ""
 "All content is available under the\n"
 "                    <a class=\"govuk-footer__link\" href=\"https://www."
@@ -4087,7 +4087,7 @@ msgstr ""
 "                        Trwydded Llywodraeth Agored v3.0\n"
 "                    </a>, oni nodir yn wahanol"
 
-#: src/Common/templates/layout/default.html.twig:166
+#: src/Common/templates/layout/default.html.twig:168
 msgid "© Crown copyright"
 msgstr "© Hawlfraint y goron"
 
@@ -4137,7 +4137,7 @@ msgid "Hide"
 msgstr "Cuddio"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/layout/default.html.twig:137
+#: src/Common/templates/layout/default.html.twig:139
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr "Datganiad hygyrchedd"
@@ -5445,7 +5445,7 @@ msgstr ""
 msgid "Yes, remove LPA"
 msgstr "Le, dileu LPA"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
@@ -6538,12 +6538,12 @@ msgstr "Beth yw eich enw?"
 msgid "Check you entered the right LPA reference number"
 msgstr "Gwiriwch eich bod wedi rhoi’r cyfeirnod LPA cywir"
 
-#: src/Common/templates/layout/default.html.twig:61
+#: src/Common/templates/layout/default.html.twig:63
 msgid "We use some essential cookies to make this service work."
 msgstr ""
 "Rydym yn defnyddio rhai cwcis hanfodol i wneud i’r gwasanaeth hwn weithio."
 
-#: src/Common/templates/layout/default.html.twig:62
+#: src/Common/templates/layout/default.html.twig:64
 msgid ""
 "We’d also like to use analytics cookies so we can understand how you use the "
 "service and make improvements."
@@ -6551,19 +6551,19 @@ msgstr ""
 "Hoffem hefyd ddefnyddio cwcis dadansoddeg er mwyn i ni allu deall sut rydych "
 "chi’n defnyddio’r gwasanaeth a gwneud gwelliannau."
 
-#: src/Common/templates/layout/default.html.twig:69
+#: src/Common/templates/layout/default.html.twig:71
 msgid "Accept analytics cookies"
 msgstr "Derbyn cwcis dadansoddeg"
 
-#: src/Common/templates/layout/default.html.twig:72
+#: src/Common/templates/layout/default.html.twig:74
 msgid "Reject analytics cookies"
 msgstr "Gwrthod cwcis dadansoddeg"
 
-#: src/Common/templates/layout/default.html.twig:74
+#: src/Common/templates/layout/default.html.twig:76
 msgid "View cookies"
 msgstr "Gweld y cwcis"
 
-#: src/Common/templates/layout/default.html.twig:58
+#: src/Common/templates/layout/default.html.twig:60
 msgid "Cookies on %service_name%"
 msgstr "Cwcis ar Wasanaeth %service_name%"
 
@@ -7533,3 +7533,7 @@ msgstr ""
 #: src/Actor/templates/actor/password-reset.html.twig:38
 msgid "Your password needs to have at least 12 characters"
 msgstr "Mae’n rhaid i’ch cyfrinair gynnwys o leiaf 12 o nodau"
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:34
+msgid "No active codes"
+msgstr "dim codau yn weithredol"

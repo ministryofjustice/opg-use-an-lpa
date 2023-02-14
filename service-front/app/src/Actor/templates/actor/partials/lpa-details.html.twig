@@ -29,9 +29,9 @@
                 {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
             </span>
         {# shareCodes array contains activecodecount as an item so we need to factor in this when checking if empty #}
-        {% elseif actorActive and shareCodes|length > 1 %}
+        {% elseif actorActive and activeCodeCount < 1 %}
             <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
-                {% trans  %}No active codes{% endtrans %}
+                {% trans %}No active codes{% endtrans %}
             </span>
         {% endif %}
     </div>
