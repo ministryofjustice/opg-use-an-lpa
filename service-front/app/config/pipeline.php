@@ -56,8 +56,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
-    $app->pipe(CSPNonceMiddleware::class);
-
     $app->pipe(RequestTracingMiddleware::class);
 
     // Discern the intended locale
@@ -80,6 +78,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(SessionAttributeAllowlistMiddleware::class);
 
     $app->pipe(CsrfMiddleware::class);
+
+    $app->pipe(CSPNonceMiddleware::class);
 
     $app->pipe(StatePersistenceMiddleware::class);
 
