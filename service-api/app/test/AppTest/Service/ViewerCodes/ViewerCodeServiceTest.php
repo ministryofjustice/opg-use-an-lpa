@@ -295,7 +295,6 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertEquals('123456789101', $codes[1]['ViewerCode']);
 
-        //var_dump($codes[1]['ActorId']); die;
         $this->assertEquals('name', $codes[1]['ActorId']);
         $this->assertFalse($codes[1]['Viewed']);
 
