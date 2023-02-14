@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Service\Security\CSPNonce;
 use Common\View\Twig\JavascriptVariablesExtension;
 use Common\View\Twig\JavascriptVariablesExtensionFactory;
 use PHPUnit\Framework\TestCase;
@@ -16,10 +17,8 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function can_create_an_instance_of_the_variable_extension()
+    /** @test */
+    public function can_create_an_instance_of_the_variable_extension(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -27,10 +26,13 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
             ->willReturn(
                 [
                     'analytics' => [
-                            'uaid' => 'uaid1234',
+                        'uaid'     => 'uaid1234',
                     ],
                 ]
             );
+
+        $containerProphecy->get(CSPNonce::class)
+            ->willReturn(new CSPNonce());
 
         $httpClientProphecy = $this->prophesize(ClientInterface::class);
 
@@ -44,10 +46,8 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
         $this->assertInstanceOf(JavascriptVariablesExtension::class, $analyticsConfig);
     }
 
-    /**
-     * @test
-     */
-    public function throws_exception_when_missing_configuration()
+    /** @test */
+    public function throws_exception_when_missing_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')->willReturn([]);

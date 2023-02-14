@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\Logging\RequestTracingMiddleware;
+use Common\Middleware\Security\CSPNonceMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
@@ -77,6 +78,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(SessionAttributeAllowlistMiddleware::class);
 
     $app->pipe(CsrfMiddleware::class);
+
+    $app->pipe(CSPNonceMiddleware::class);
 
     $app->pipe(StatePersistenceMiddleware::class);
 

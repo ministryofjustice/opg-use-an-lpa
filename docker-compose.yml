@@ -42,6 +42,7 @@ services:
     ports:
       - 9001:80
     environment:
+      WEB_DOMAIN: http://localhost:9001
       APP_HOST: viewer-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
@@ -95,6 +96,7 @@ services:
     ports:
       - 9002:80
     environment:
+      WEB_DOMAIN: http://localhost:9002
       APP_HOST: actor-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
