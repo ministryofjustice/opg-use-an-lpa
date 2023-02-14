@@ -104,3 +104,16 @@ resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
     unit          = "Count"
   }
 }
+
+resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
+  name           = "${local.environment_name}_api_5xx_errors"
+  pattern        = "{($.service_name = \"api\") && ($.status = 5*)}"
+  log_group_name = aws_cloudwatch_log_group.application_logs.name
+
+  metric_transformation {
+    name          = "api_5xx_errors"
+    namespace     = "${local.environment_name}_events"
+    value         = "1"
+    default_value = "0"
+  }
+}
