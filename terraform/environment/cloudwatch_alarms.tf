@@ -42,7 +42,6 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   treat_missing_data        = "notBreaching"
 }
 
-
 resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   actions_enabled     = true
   alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
@@ -56,6 +55,21 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   datapoints_to_alarm = 1
   statistic           = "Sum"
   threshold           = 5
+  treat_missing_data  = "notBreaching"
+}
+
+resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
+  actions_enabled     = true
+  alarm_name          = "${local.environment_name}_api_5xx_errors"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  period              = 60
+  evaluation_periods  = 2
+  datapoints_to_alarm = 2
+  statistic           = "Sum"
+  threshold           = 1
+  namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   treat_missing_data  = "notBreaching"
 }
 
