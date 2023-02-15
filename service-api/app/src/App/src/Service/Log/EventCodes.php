@@ -39,9 +39,9 @@ class EventCodes
     public const FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW = 'FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW';
 
     /**
-     * Activation key request is successful for full match LPA type hw
+     * Activation key request is successful for full match LPA type pfa
      */
-    public const FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF = 'FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF';
+    public const FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA = 'FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA';
 
     /**
      * Activation key request is successful for partial match LPA type hw
@@ -49,7 +49,7 @@ class EventCodes
     public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW';
 
     /**
-     * Activation key request is successful for partial match LPA type hw
+     * Activation key request is successful for partial match LPA type pfa
      */
-    public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF';
+    public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA';
 }

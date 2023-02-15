@@ -69,7 +69,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
             [
                 'event_code' => ($lpaData['caseSubtype'] === 'hw') ?
                     EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
-                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PF,
+                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,
                 'uId'        => (string) $requestData['reference_number'],
                 'lpaType'    => $lpaData['caseSubtype'],
