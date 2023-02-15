@@ -10,7 +10,6 @@ locals {
     "event_code.OLDER_LPA_NOT_ELIGIBLE",
     "event_code.OLDER_LPA_NOT_FOUND",
     "event_code.OLDER_LPA_SUCCESS",
-    "event_code.OLDER_LPA_CLEANSE_SUCCESS",
     "event_code.OLDER_LPA_TOO_OLD",
     "event_code.OLDER_LPA_ALREADY_ADDED",
     "event_code.OLDER_LPA_FORCE_ACTIVATION_KEY",

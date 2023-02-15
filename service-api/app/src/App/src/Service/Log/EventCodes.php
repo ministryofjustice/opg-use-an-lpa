@@ -25,11 +25,6 @@ class EventCodes
     public const OLDER_LPA_TOO_OLD = 'OLDER_LPA_TOO_OLD';
 
     /**
-     * Older LPA cleanse requested
-     */
-    public const OLDER_LPA_CLEANSE_SUCCESS = 'OLDER_LPA_CLEANSE_SUCCESS';
-
-    /**
      * Unexpected Data LPA API Response
      */
     public const UNEXPECTED_DATA_LPA_API_RESPONSE = 'UNEXPECTED_DATA_LPA_API_RESPONSE';

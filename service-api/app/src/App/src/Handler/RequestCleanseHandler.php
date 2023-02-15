@@ -76,15 +76,6 @@ class RequestCleanseHandler implements RequestHandlerInterface
             ],
         );
 
-        $this->logger->notice(
-            'Successfully submitted cleanse for LPA {uId} for account {id} ',
-            [
-                'event_code' => EventCodes::OLDER_LPA_CLEANSE_SUCCESS,
-                'id'         => $userId,
-                'uId'        => (string) $requestData['reference_number'],
-            ],
-        );
-
         return new EmptyResponse();
     }
 }
