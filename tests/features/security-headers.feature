@@ -18,3 +18,7 @@ Feature: Headers to increase service security
     When I access the service homepage
     Then I receive headers that cause the browser to not inform the destination site any URL information
 
+  @smoke
+  Scenario: Content Security Policy headers are attached
+    When I access the service homepage
+    Then I receive headers that describe a content security policy
