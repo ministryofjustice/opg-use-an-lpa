@@ -2269,6 +2269,27 @@ class LpaContext implements Context
      */
     public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
+        $code1 = [
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => '2020-12-01T00:00:00Z',
+            'UserLpaActor' => $this->userLpaActorToken,
+            'Organisation' => $this->organisation,
+            'ViewerCode' => $this->accessCode,
+            'Viewed' => true,
+            'ViewedBy' => 'TestOrg1'
+        ];
+        $code2 = [
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => '2020-12-01T00:00:00Z',
+            'UserLpaActor' => $this->userLpaActorToken,
+            'Organisation' => $this->organisation,
+            'ViewerCode' => 'B97LRK3U68PE',
+            'Viewed' => true,
+            'ViewedBy' => 'TestOrg2'
+        ];
+
         // Get the LPA
 
         // UserLpaActorMap::get
@@ -2335,20 +2356,8 @@ class LpaContext implements Context
             new Result(
                 [
                     'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation1'
-                            ]
-                        ),
-                        $this->marshalAwsResultData(
-                            [
-                                'Viewed' => '2020-10-01T23:59:59+00:00',
-                                'ViewerCode' => $this->accessCode,
-                                'ViewedBy' => 'organisation2'
-                            ]
-                        )
+                        $this->marshalAwsResultData($code1),
+                        $this->marshalAwsResultData($code2),
                     ]
                 ]
             )
@@ -2356,6 +2365,26 @@ class LpaContext implements Context
 
         // ViewerCodeActivity::getStatusesForViewerCodes
         $this->awsFixtures->append(new Result());
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ],
+                    ),
+                ]
+            )
+        );
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -2388,8 +2417,9 @@ class LpaContext implements Context
 
         Assert::assertArrayHasKey('Viewed', $response[0]);
         Assert::assertEquals($response[0]['ViewerCode'], $this->accessCode);
-        Assert::assertEquals($response[0]['ViewedBy'], 'organisation1');
-        Assert::assertEquals($response[1]['ViewedBy'], 'organisation2');
+        Assert::assertEquals($response[0]['ViewedBy'], 'TestOrg1');
+        Assert::assertEquals($response[1]['ViewerCode'], 'B97LRK3U68PE');
+        Assert::assertEquals($response[1]['ViewedBy'], 'TestOrg2');
     }
 
     /**
@@ -2460,8 +2490,6 @@ class LpaContext implements Context
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result());
-        // viewerCodesRepository::cancel
-        $this->awsFixtures->append(new Result()); // 1st code is active therefore is cancelled
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result()); // 2nd code has expired therefore isn't cancelled

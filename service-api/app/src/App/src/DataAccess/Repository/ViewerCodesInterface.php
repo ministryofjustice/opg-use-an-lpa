@@ -13,6 +13,7 @@ interface ViewerCodesInterface
      * Get a viewer code from the database
      *
      * @param string $code
+     *
      * @return array
      */
     public function get(string $code): ?array;
@@ -21,6 +22,7 @@ interface ViewerCodesInterface
      * Gets a list of viewer codes for a given LPA
      *
      * @param string $siriusUid
+     *
      * @return array
      */
     public function getCodesByLpaId(string $siriusUid): array;
@@ -30,19 +32,26 @@ interface ViewerCodesInterface
      *
      * $siriusUid is denormalised.
      *
-     * @param string $code
-     * @param string $userLpaActorToken
-     * @param string $siriusUid
+     * @param string   $code
+     * @param string   $userLpaActorToken
+     * @param string   $siriusUid
      * @param DateTime $expires
-     * @param string $organisation
+     * @param string   $organisation
      * @return mixed
      */
-    public function add(string $code, string $userLpaActorToken, string $siriusUid, DateTime $expires, string $organisation);
+    public function add(
+        string $code,
+        string $userLpaActorToken,
+        string $siriusUid,
+        DateTime $expires,
+        string $organisation,
+        ?string $actorId
+    );
 
     /**
      * Cancels a code in the database.
      *
-     * @param string $code
+     * @param string   $code
      * @param DateTime $cancelledDate
      * @return bool The code cancellation was successful or not
      */

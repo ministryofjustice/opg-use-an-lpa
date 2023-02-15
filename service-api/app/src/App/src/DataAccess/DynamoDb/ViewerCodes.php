@@ -27,8 +27,9 @@ class ViewerCodes implements ViewerCodesInterface
 
     /**
      * ViewerCodeActivity constructor.
+     *
      * @param DynamoDbClient $client
-     * @param string $viewerCodesTable
+     * @param string         $viewerCodesTable
      */
     public function __construct(DynamoDbClient $client, string $viewerCodesTable)
     {
@@ -50,7 +51,7 @@ class ViewerCodes implements ViewerCodesInterface
             ],
         ]);
 
-        $codeData = $this->getData($result, ['Added','Expires','Cancelled']);
+        $codeData = $this->getData($result, ['Added', 'Expires', 'Cancelled']);
 
         return !empty($codeData) ? $codeData : null;
     }
@@ -83,8 +84,14 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function add(string $code, string $userLpaActorToken, string $siriusUid, DateTime $expires, string $organisation)
-    {
+    public function add(
+        string $code,
+        string $userLpaActorToken,
+        string $siriusUid,
+        DateTime $expires,
+        string $organisation,
+        ?string $actorId
+    ) {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
@@ -92,14 +99,16 @@ class ViewerCodes implements ViewerCodesInterface
             $this->client->putItem([
                 'TableName' => $this->viewerCodesTable,
                 'Item' => [
-                    'ViewerCode'    => ['S' => $code],
-                    'UserLpaActor'  => ['S' => $userLpaActorToken],
-                    'SiriusUid'     => ['S' => $siriusUid],
-                    'Added'         => ['S' => $now],
-                    'Expires'       => ['S' => $expires->format('c')],  // We use 'c' so not to assume UTC.
-                    'Organisation'  => ['S' => $organisation],
-                ],
-                'ConditionExpression' => 'attribute_not_exists(ViewerCode)'
+                    'ViewerCode' => ['S' => $code],
+                    'UserLpaActor' => ['S' => $userLpaActorToken],
+                    'SiriusUid' => ['S' => $siriusUid],
+                    'Added' => ['S' => $now],
+                    'Expires' => ['S' => $expires->format('c')],
+                    // We use 'c' so not to assume UTC.
+                    'Organisation' => ['S' => $organisation],
+                    'CreatedBy' => ['N' => $actorId],
+                    ],
+                'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
         } catch (DynamoDbException $e) {
             if ($e->getAwsErrorCode() === 'ConditionalCheckFailedException') {
@@ -123,9 +132,9 @@ class ViewerCodes implements ViewerCodesInterface
                 ],
             ],
             'UpdateExpression' => 'SET Cancelled=:c',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':c' => [
-                    'S' => $cancelledDate->format('c')
+                    'S' => $cancelledDate->format('c'),
                 ]
             ]
         ]);
@@ -147,9 +156,9 @@ class ViewerCodes implements ViewerCodesInterface
                 ],
             ],
             'UpdateExpression' => 'SET UserLpaActor=:c',
-            'ExpressionAttributeValues'=> [
+            'ExpressionAttributeValues' => [
                 ':c' => [
-                    'S' => ''
+                    'S' => '',
                 ]
             ]
         ]);

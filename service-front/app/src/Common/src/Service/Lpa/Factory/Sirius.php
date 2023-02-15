@@ -111,6 +111,12 @@ final class Sirius implements LpaFactory
         if (isset($data['cancellationDate'])) {
             $lpa->setCancellationDate(new DateTime($data['cancellationDate']));
         }
+        if (isset($data['activeAttorneys'])) {
+            $lpa->setActiveAttorneys($this->createCaseActorsFromData($data['activeAttorneys']));
+        }
+        if (isset($data['inactiveAttorneys'])) {
+            $lpa->setInactiveAttorneys($this->createCaseActorsFromData($data['inactiveAttorneys']));
+        }
         return $lpa;
     }
 

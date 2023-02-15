@@ -73,7 +73,8 @@ viewerCodes = [
         'Cancelled': lastWeek.isoformat(),
         'Organisation': "Second Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
-        'Comment': 'Seeded data: Cancelled viewer code'
+        'Comment': 'Seeded data: Cancelled viewer code',
+        'CreatedBy': 23
     },
     {
         'ViewerCode': "N4KBEBEZMNJF",

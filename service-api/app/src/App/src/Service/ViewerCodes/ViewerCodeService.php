@@ -49,7 +49,8 @@ class ViewerCodeService
                     $map['Id'],
                     $map['SiriusUid'],
                     $expires,
-                    $organisation
+                    $organisation,
+                    (string)$map['ActorId']
                 );
 
                 $added = true;
@@ -115,9 +116,10 @@ class ViewerCodeService
     {
         $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($codes);
 
-        // Get the actor id for the respective viewercode by UserLpaActor
+        // Get the actor id for the respective viewer code by UserLpaActor
         foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
             if (empty($viewerCode['UserLpaActor'])) {
+                $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
                 continue;
             }
 

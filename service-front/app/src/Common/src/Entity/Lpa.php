@@ -41,6 +41,12 @@ class Lpa
     /** @var CaseActor[] */
     protected array $trustCorporations = [];
 
+    /** @var CaseActor[] */
+    protected array $activeAttorneys = [];
+
+    /** @var CaseActor[] */
+    protected array $inactiveAttorneys = [];
+
     public function getUId(): ?string
     {
         return $this->uId;
@@ -259,6 +265,26 @@ class Lpa
     public function setCertificateProviders(array $certificateProviders): void
     {
         $this->certificateProviders = $certificateProviders;
+    }
+
+    public function getActiveAttorneys(): array
+    {
+        return $this->activeAttorneys;
+    }
+
+    public function setActiveAttorneys(array $activeAttorneys): void
+    {
+        $this->activeAttorneys = $activeAttorneys;
+    }
+
+    public function getInactiveAttorneys(): array
+    {
+        return $this->inactiveAttorneys;
+    }
+
+    public function setInactiveAttorneys(array $inactiveAttorneys): void
+    {
+        $this->inactiveAttorneys = $inactiveAttorneys;
     }
 
     public function getTrustCorporations(): array

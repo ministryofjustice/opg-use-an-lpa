@@ -146,7 +146,7 @@ class RemoveLpaTest extends TestCase
         $this->viewerCodesInterfaceProphecy
             ->cancel($this->viewerCodes[0]['ViewerCode'], Argument::type('Datetime'))
             ->willReturn(true)
-            ->shouldBeCalled();
+            ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
             ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'])

@@ -1868,9 +1868,6 @@ class AccountContext implements Context
         // retrieving response headers:
         $cookies = $session->getResponseHeaders()['set-cookie'];
 
-       // var_dump($cookies); die;
-
-
         foreach ($cookies as $value) {
             if (strstr($value, '__Host-session')) {
                 Assert::assertStringContainsString('secure', $value);

@@ -117,7 +117,7 @@
                     </div>
                 </dl>
 
-                {% for attorney in lpa.attorneys %}
+                {% for attorney in lpa.activeAttorneys %}
                     <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">

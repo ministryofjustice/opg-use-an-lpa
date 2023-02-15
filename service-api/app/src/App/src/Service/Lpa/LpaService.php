@@ -22,6 +22,7 @@ use RuntimeException;
 class LpaService
 {
     private const ACTIVE_ATTORNEY = 0;
+    private const INACTIVE_ATTORNEY = 2;
     private const ACTIVE_TC = 0;
 
     private ViewerCodesInterface $viewerCodesRepository;
@@ -77,9 +78,18 @@ class LpaService
 
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['attorneys'] = array_values(
+            $lpaData['activeAttorneys'] = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
+                })
+            );
+        }
+
+        if ($lpaData['attorneys'] !== null) {
+            $lpaData['original_attorneys'] = $lpaData['attorneys'];
+            $lpaData['inactiveAttorneys'] = array_values(
+                array_filter($lpaData['attorneys'], function ($attorney) {
+                    return ($this->getAttorneyStatus)($attorney) === self::INACTIVE_ATTORNEY;
                 })
             );
         }
@@ -113,6 +123,7 @@ class LpaService
         }
 
         $lpa = $this->getByUid($map['SiriusUid']);
+
         if ($lpa === null) {
             return null;
         }
