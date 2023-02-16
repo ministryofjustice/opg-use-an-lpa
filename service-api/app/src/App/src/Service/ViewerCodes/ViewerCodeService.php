@@ -119,7 +119,9 @@ class ViewerCodeService
         // Get the actor id for the respective viewer code by UserLpaActor
         foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
             if (empty($viewerCode['UserLpaActor'])) {
-                $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
+                if (!empty($viewerCode['CreatedBy'])) {
+                    $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
+                }
                 continue;
             }
 
