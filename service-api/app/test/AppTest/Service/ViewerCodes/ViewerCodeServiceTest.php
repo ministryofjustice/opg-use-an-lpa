@@ -202,7 +202,7 @@ class ViewerCodeServiceTest extends TestCase
                 'Organisation'  => 'My gas company',
                 'UserLpaActor'  => '',
                 'Expires'       => $codeExpiry->format('c'),
-                'CreatedBy'     => 'name'
+                'CreatedBy'     => ''
             ],
             [   // a code that does not map to a user record (orphaned)
                 'SiriusUid'     => '700000000047',
@@ -295,7 +295,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertEquals('123456789101', $codes[1]['ViewerCode']);
 
-        $this->assertEquals('name', $codes[1]['ActorId']);
+        $this->assertArrayNotHasKey('ActorId', $codes[1]);
         $this->assertFalse($codes[1]['Viewed']);
 
         $this->assertEquals('asdfghjklzxc', $codes[2]['ViewerCode']);

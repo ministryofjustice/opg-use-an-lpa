@@ -2426,9 +2426,10 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^The LPA is removed and my active codes are cancelled$/
+     * @Then /^The LPA is removed$/
+     * @Then /^The LPA is removed and I am taken back to dashboard page$/
      */
-    public function theLPAIsRemovedAndMyActiveCodesAreCancelled(): void
+    public function theLPAIsRemoved(): void
     {
         // UserLpaActorMap::get
         $this->awsFixtures->append(
