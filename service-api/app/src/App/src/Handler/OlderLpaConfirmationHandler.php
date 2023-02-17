@@ -72,7 +72,7 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
                     EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
                     EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,
-                'uId'        => (string) $requestData['reference_number'],
+                'uId'        => (string)$requestData['reference_number'],
                 'lpaType'    => $lpaMatchResponse['caseSubtype'],
             ],
         );

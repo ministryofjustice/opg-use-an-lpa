@@ -50,11 +50,11 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
-        $lpa        = $this->lpaService->getByUid((string) $requestData['reference_number']);
-        $lpaData    = $lpa->getData();
+        $lpa = $this->lpaService->getByUid((string) $requestData['reference_number']);
+        $lpaData = $lpa->getData();
 
-        $addedData  = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
-        $actorId    = $requestData['actor_id'] ?? null;
+        $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
+        $actorId = $requestData['actor_id'] ?? null;
 
         $this->olderLpaService->requestAccessAndCleanseByLetter(
             (string) $requestData['reference_number'],

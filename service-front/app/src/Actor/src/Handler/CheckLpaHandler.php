@@ -86,9 +86,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         $this->user     = $this->getUser($request);
         $this->identity = !is_null($this->user) ? $this->user->getIdentity() : null;
 
-        $activation_key     = $this->state($request)->activationKey;
-        $referenceNumber    = $this->state($request)->lpaReferenceNumber;
-        $dob                = $this->state($request)->dateOfBirth?->format('Y-m-d');
+        $activation_key  = $this->state($request)->activationKey;
+        $referenceNumber = $this->state($request)->lpaReferenceNumber;
+        $dob             = $this->state($request)->dateOfBirth?->format('Y-m-d');
 
         if (
             !isset($this->identity)
@@ -136,10 +136,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->renderer->render(
                         'actor::lpa-already-added',
                         [
-                            'user'          => $this->user,
-                            'donor'         => $lpaAddedData->getDonor(),
-                            'lpaType'       => $lpaAddedData->getCaseSubtype(),
-                            'actorToken'    => $lpaAddedData->getLpaActorToken(),
+                            'user'       => $this->user,
+                            'donor'      => $lpaAddedData->getDonor(),
+                            'lpaType'    => $lpaAddedData->getCaseSubtype(),
+                            'actorToken' => $lpaAddedData->getLpaActorToken(),
                         ]
                     )
                 );
@@ -153,10 +153,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->renderer->render(
                         'actor::lpa-not-found',
                         [
-                            'user'              => $this->user,
-                            'dob'               => $dob,
-                            'referenceNumber'   => $referenceNumber,
-                            'activation_key'    => $activation_key,
+                            'user'            => $this->user,
+                            'dob'             => $dob,
+                            'referenceNumber' => $referenceNumber,
+                            'activation_key'  => $activation_key,
                         ]
                     )
                 );
@@ -175,9 +175,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 $this->logger->debug(
                     'Account with Id {id} identified as Role {role} on LPA with Id {uId}',
                     [
-                        'id'    => $this->identity,
-                        'role'  => $actorRole,
-                        'uId'   => $lpa->getUId(),
+                        'id'   => $this->identity,
+                        'role' => $actorRole,
+                        'uId'  => $lpa->getUId(),
                     ]
                 );
 
@@ -195,10 +195,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->renderer->render(
                         'actor::check-lpa',
                         [
-                            'form'      => $this->form,
-                            'lpa'       => $lpa,
-                            'user'      => $actor,
-                            'userRole'  => $actorRole,
+                            'form'     => $this->form,
+                            'lpa'      => $lpa,
+                            'user'     => $actor,
+                            'userRole' => $actorRole,
                         ]
                     )
                 );
@@ -224,9 +224,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             switch ($result->getResponse()) {
                 case AddLpaApiResponse::ADD_LPA_SUCCESS:
                     /** @var FlashMessagesInterface $flash */
-                    $flash      = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-                    $donor      = $this->session->get('donor_name');
-                    $lpaType    = $this->session->get('lpa_type');
+                    $flash   = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+                    $donor   = $this->session->get('donor_name');
+                    $lpaType = $this->session->get('lpa_type');
 
                     $this->logger->notice(
                         'Account with Id {id} added LPA of type {lpaType} to their account',
@@ -257,10 +257,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                'user'              => $this->user,
-                'dob'               => $dob,
-                'referenceNumber'   => $referenceNumber,
-                'activation_key'    => $activation_key,
+                'user'            => $this->user,
+                'dob'             => $dob,
+                'referenceNumber' => $referenceNumber,
+                'activation_key'  => $activation_key,
             ]));
     }
 
