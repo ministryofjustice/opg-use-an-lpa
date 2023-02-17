@@ -136,22 +136,21 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
                 }
             }
-            if (empty($shareCodes[$key]['CreatedBy'])) {
-                foreach ($lpa->getTrustCorporations() as $trustCorporation) {
-                    $this->logger->debug(
-                        'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
-                        [
-                            'attorney_id' => $trustCorporation->getUId(),
-                            'type'        => gettype($trustCorporation->getUId()),
-                        ]
-                    );
 
-                    if ($this->idMatch($trustCorporation, $code)) {
-                        $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
-                    }
+            foreach ($lpa->getTrustCorporations() as $trustCorporation) {
+                $this->logger->debug(
+                    'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
+                    [
+                        'attorney_id' => $trustCorporation->getUId(),
+                        'type'        => gettype($trustCorporation->getUId()),
+                    ]
+                );
+
+                if ($this->idMatch($trustCorporation, $code)) {
+                    $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
                 }
             }
-
+            
             $this->logger->debug(
                 'Created by resolved to {actor_name}',
                 [
