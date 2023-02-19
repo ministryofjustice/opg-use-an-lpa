@@ -145,9 +145,9 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function removeActorAssociation(string $code): bool
+    public function removeActorAssociation(string $code, ?string $codeOwner): bool
     {
-        //  Update the item by cancelling the code and setting cancelled date
+        //   //  Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
             'TableName' => $this->viewerCodesTable,
             'Key' => [
@@ -155,10 +155,13 @@ class ViewerCodes implements ViewerCodesInterface
                     'S' => $code,
                 ],
             ],
-            'UpdateExpression' => 'SET UserLpaActor=:c',
+            'UpdateExpression' => 'SET UserLpaActor=:c, CreatedBy=:d',
             'ExpressionAttributeValues' => [
                 ':c' => [
                     'S' => '',
+                ],
+                ':d' => [
+                    'N' => $codeOwner,
                 ]
             ]
         ]);

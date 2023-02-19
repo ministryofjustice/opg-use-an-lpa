@@ -68,7 +68,12 @@ class RemoveLpa
 
         if (!empty($viewerCodes)) {
             foreach ($viewerCodes as $viewerCodeRecord) {
-                $this->viewerCodesRepository->removeActorAssociation($viewerCodeRecord['ViewerCode']);
+                $codeOwner = $this->userLpaActorMapRepository->get($viewerCodeRecord['UserLpaActor']);
+
+                $this->viewerCodesRepository->removeActorAssociation(
+                    $viewerCodeRecord['ViewerCode'],
+                    (string)$codeOwner['ActorId']
+                );
             }
         }
 
