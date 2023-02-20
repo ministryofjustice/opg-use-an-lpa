@@ -62,13 +62,13 @@ class UserService
         if (!empty($emailResetExists) && !$this->checkIfEmailResetViable($emailResetExists, true)) {
             //checks if the new email chosen has already been requested for reset
             $this->logger->notice(
-                'Could not create account with email {email} as another user has already requested to 
+                'Could not create account with email {email} as another user has already requested to
                 change their email that email address',
                 ['email' => $data['email']]
             );
 
             throw new ConflictException(
-                'Account creation email conflict - another user has requested to change their 
+                'Account creation email conflict - another user has requested to change their
                 email to ' . $data['email'],
                 ['email' => $data['email']]
             );
@@ -138,6 +138,12 @@ class UserService
 
         if (!password_verify($password->getString(), $user['Password'])) {
             throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email]);
+        }
+
+        // as the login is successful ensure that we're updating our password storage inline with
+        // current best practices.
+        if (password_needs_rehash($user['Password'], PASSWORD_DEFAULT, ['cost' => 13])) {
+            $this->usersRepository->rehashPassword($user['Id'], $password);
         }
 
         if (array_key_exists('ActivationToken', $user)) {
@@ -352,7 +358,7 @@ class UserService
             );
 
             throw new ConflictException(
-                'Change email conflict - another user has already requested to change their email 
+                'Change email conflict - another user has already requested to change their email
                 address to ' . $newEmail,
                 ['email' => $newEmail]
             );
