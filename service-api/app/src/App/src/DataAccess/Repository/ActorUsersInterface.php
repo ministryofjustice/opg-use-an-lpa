@@ -161,4 +161,16 @@ interface ActorUsersInterface
      * @return mixed
      */
     public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array;
+
+    /**
+     * updates the password field of a user with the supplied password. This is intended
+     * to be used as a part of the password rehashing that occurs to keep us up to date with
+     * standards
+     *
+     * @param string       $id
+     * @param HiddenString $password
+     *
+     * @return bool
+     */
+    public function rehashPassword(string $id, HiddenString $password): bool;
 }
