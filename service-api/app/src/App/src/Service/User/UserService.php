@@ -62,14 +62,14 @@ class UserService
         if (!empty($emailResetExists) && !$this->checkIfEmailResetViable($emailResetExists, true)) {
             //checks if the new email chosen has already been requested for reset
             $this->logger->notice(
-                'Could not create account with email {email} as another user has already requested to
-                change their email that email address',
+                'Could not create account with email {email} as another user has already requested to ' .
+                    'change their email that email address',
                 ['email' => $data['email']]
             );
 
             throw new ConflictException(
-                'Account creation email conflict - another user has requested to change their
-                email to ' . $data['email'],
+                'Account creation email conflict - another user has requested to change their ' .
+                    'email to ' . $data['email'],
                 ['email' => $data['email']]
             );
         }
