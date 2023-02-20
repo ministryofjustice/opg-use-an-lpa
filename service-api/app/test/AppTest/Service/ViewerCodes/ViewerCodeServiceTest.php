@@ -187,22 +187,32 @@ class ViewerCodeServiceTest extends TestCase
         );
 
         $viewerCodes = [
-            [   // a complete and unexpired code that has been viewed
+            [   // a complete and unexpired historically created code that has been viewed
                 'SiriusUid'     => '700000000047',
                 'Added'         => (new DateTimeImmutable('-1 day'))->format('c'),
                 'ViewerCode'    => 'abcdefghijkl',
                 'Organisation'  => 'My bank',
                 'UserLpaActor'  => '3f0455d4-611f-11ed-9b6a-0242ac120002',
                 'Expires'       => $codeExpiry->format('c'),
+                'CreatedBy'     => ''
             ],
-            [   // a complete and valid code that has not been viewed
+            [   // a complete and valid code that has not been viewed and deleted from account
                 'SiriusUid'     => '700000000047',
                 'Added'         => (new DateTimeImmutable('-1 day'))->format('c'),
                 'ViewerCode'    => '123456789101',
                 'Organisation'  => 'My gas company',
                 'UserLpaActor'  => '',
                 'Expires'       => $codeExpiry->format('c'),
-                'CreatedBy'     => ''
+                'CreatedBy'     => '23'
+            ],
+            [   // a code that corresponds to a deleted lpa and deleted from account [UserLpaActor details removed]
+                'SiriusUid'     => '700000000047',
+                'Added'         => (new DateTimeImmutable('-1 day'))->format('c'),
+                'ViewerCode'    => 'abcdefghijkl',
+                'Organisation'  => 'The council',
+                'UserLpaActor'  => '',
+                'Expires'       => $codeExpiry->format('c'),
+                'CreatedBy'     => '23'
             ],
             [   // a code that does not map to a user record (orphaned)
                 'SiriusUid'     => '700000000047',
@@ -211,14 +221,7 @@ class ViewerCodeServiceTest extends TestCase
                 'Organisation'  => 'The council',
                 'UserLpaActor'  => '19d2d742-437e-438f-8f15-e43e658dcd5b',
                 'Expires'       => $codeExpiry->format('c'),
-            ],
-            [   // a code that corresponds to a deleted lpa and does not have access code owner details
-                'SiriusUid'     => '700000000047',
-                'Added'         => (new DateTimeImmutable('-1 day'))->format('c'),
-                'ViewerCode'    => 'abcdefghijkl',
-                'Organisation'  => 'The council',
-                'Expires'       => $codeExpiry->format('c'),
-                'CreatedBy'     => '23'
+                'CreatedBy'     => ''
             ],
         ];
 
@@ -303,16 +306,16 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertEquals('123456789101', $codes[1]['ViewerCode']);
 
-        $this->assertArrayNotHasKey('ActorId', $codes[1]);
+        $this->assertArrayHasKey('ActorId', $codes[1]);
         $this->assertFalse($codes[1]['Viewed']);
 
-        $this->assertEquals('asdfghjklzxc', $codes[2]['ViewerCode']);
-        $this->assertArrayNotHasKey('ActorId', $codes[2]);
-        $this->assertFalse($codes[2]['Viewed']);
+        $this->assertArrayHasKey('CreatedBy', $codes[2]);
+        $this->assertArrayHasKey('ActorId', $codes[2]);
+        $this->assertEquals($codes[2]['CreatedBy'], $codes[2]['ActorId']);
 
-        $this->assertArrayHasKey('CreatedBy', $codes[3]);
+        $this->assertEquals('asdfghjklzxc', $codes[3]['ViewerCode']);
         $this->assertArrayHasKey('ActorId', $codes[3]);
-        $this->assertEquals($codes[3]['CreatedBy'], $codes[3]['ActorId']);
+        $this->assertFalse($codes[3]['Viewed']);
     }
 
     /** @test */
