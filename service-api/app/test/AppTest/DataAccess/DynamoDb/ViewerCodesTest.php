@@ -318,6 +318,7 @@ class ViewerCodesTest extends TestCase
     public function can_remove_actor_and_code_association(): void
     {
         $testCode = 'test-code';
+        $codeOwner = '23';
 
         $this->dynamoDbClientProphecy->updateItem(
             Argument::that(function (array $data) use (
@@ -329,7 +330,7 @@ class ViewerCodesTest extends TestCase
                 $this->assertEquals(['S' => $testCode], $data['Key']['ViewerCode']);
 
                 $this->assertArrayHasKey('UpdateExpression', $data);
-                $this->assertEquals('SET UserLpaActor=:c', $data['UpdateExpression']);
+                $this->assertEquals('SET UserLpaActor=:c, CreatedBy=:d', $data['UpdateExpression']);
 
                 $this->assertArrayHasKey(':c', $data['ExpressionAttributeValues']);
                 $this->assertEquals(['S' => ''], $data['ExpressionAttributeValues'][':c']);
@@ -340,7 +341,7 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $result = $repo->removeActorAssociation($testCode);
+        $result = $repo->removeActorAssociation($testCode, $codeOwner);
 
         $this->assertTrue($result);
     }
