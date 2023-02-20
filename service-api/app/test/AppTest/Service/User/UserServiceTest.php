@@ -27,7 +27,9 @@ class UserServiceTest extends TestCase
 
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
     private const PASS      = 'test';
-    private const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
+
+    private const INSECURE_PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
+    private const PASS_HASH = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
     private int $expiresTTL;
 
     private string $id;
@@ -82,7 +84,14 @@ class UserServiceTest extends TestCase
 
         $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
-        $this->assertEquals(['Id' => $this->id, 'ActivationToken' => $this->activationToken, 'ExpiresTTL' => $this->expiresTTL], $return);
+        $this->assertEquals(
+            [
+                'Id' => $this->id,
+                'ActivationToken' => $this->activationToken,
+                'ExpiresTTL' => $this->expiresTTL,
+            ],
+            $return
+        );
     }
 
     /** @test */
@@ -201,6 +210,41 @@ class UserServiceTest extends TestCase
 
             return true;
         }));
+        $repoProphecy->rehashPassword(Argument::any(), Argument::any())
+            ->shouldNotBeCalled();
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
+
+        $this->assertEquals(
+            [
+                'Id'        => '1234-1234-1234',
+                'Email'     => 'a@b.com',
+                'Password'  => self::PASS_HASH,
+                'LastLogin' => '2020-01-01',
+            ],
+            $return
+        );
+    }
+
+    public function will_update_the_password_hash_on_successful_authentication(): void
+    {
+        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy->getByEmail('a@b.com')
+            ->willReturn(
+                [
+                    'Id'        => '1234-1234-1234',
+                    'Email'     => 'a@b.com',
+                    'Password'  => self::INSECURE_PASS_HASH,
+                    'LastLogin' => '2020-01-01',
+                ]
+            );
+        $repoProphecy->rehashPassword('1234-1234-1234', Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -248,7 +292,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_not_authenticate_unverfied_account(): void
+    public function will_not_authenticate_unverified_account(): void
     {
         $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -262,6 +306,8 @@ class UserServiceTest extends TestCase
                     'Id'              => '1234-1234-1234',
                 ]
             );
+        $repoProphecy->rehashPassword(Argument::any(), Argument::any())
+            ->shouldNotBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -415,7 +461,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function will_reject_non_existant_password_reset_token(): void
+    public function will_reject_non_existent_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_123';
         $id    = '12345-1234-1234-1234-12345';
