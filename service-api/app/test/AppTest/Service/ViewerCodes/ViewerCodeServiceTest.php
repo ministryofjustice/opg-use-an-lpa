@@ -314,7 +314,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals($codes[2]['CreatedBy'], $codes[2]['ActorId']);
 
         $this->assertEquals('asdfghjklzxc', $codes[3]['ViewerCode']);
-        $this->assertArrayHasKey('ActorId', $codes[3]);
+        $this->assertArrayNotHasKey('ActorId', $codes[3]);
         $this->assertFalse($codes[3]['Viewed']);
     }
 

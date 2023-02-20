@@ -138,8 +138,9 @@ class RemoveLpaTest extends TestCase
             ->getCodesByLpaId($this->userActorLpa['SiriusUid'])
             ->willReturn($this->viewerCodes);
 
+
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -149,7 +150,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -158,7 +159,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
