@@ -2491,12 +2491,59 @@ class LpaContext implements Context
                 ]
             )
         );
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result());
 
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result()); // 2nd code has expired therefore isn't cancelled
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorId,
+                            'UserId' => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result()); // 3rd code has already been cancelled
