@@ -28,11 +28,19 @@ jobs:
       specific_path: terraform
     secrets: inherit
 
+  seed_dynamodb:
+    name: seed dynamodb
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_environment
+    secrets: inherit
+
   force_redeployment:
     name: force redeployment
     runs-on: ubuntu-latest
     needs:
       - terraform_apply_environment
+      - seed_dynamodb
     steps:
       - name: configure AWS credentials for ecs update
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # pin@v1.7.0

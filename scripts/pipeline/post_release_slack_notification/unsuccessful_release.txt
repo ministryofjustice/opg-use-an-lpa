@@ -1,4 +1,4 @@
-:x: *Use a Lasting Power of Attorney Path to Live Failure* :x:
+:x: *Use a Lasting Power of Attorney Pipeline Failure* :x:
 *User:* {{ gh_actor }}
 *Links*
     *GH Actions build url:* {{ gh_actions_build_url }}
