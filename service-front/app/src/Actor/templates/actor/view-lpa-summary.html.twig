@@ -170,7 +170,6 @@
 
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
                     {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
-                        {{ "hello" }}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
                             <dd class="govuk-summary-list__value">
