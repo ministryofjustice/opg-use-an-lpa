@@ -65,10 +65,10 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = 60
-  evaluation_periods  = 2
+  evaluation_periods  = 3
   datapoints_to_alarm = 2
   statistic           = "Sum"
-  threshold           = 1
+  threshold           = 5
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   treat_missing_data  = "notBreaching"
 }
