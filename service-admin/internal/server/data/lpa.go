@@ -20,6 +20,7 @@ type LPA struct {
 	Added      string
 	UserID     string `json:"UserId"`
 	ActivateBy int
+	Updated    string
 }
 
 const (

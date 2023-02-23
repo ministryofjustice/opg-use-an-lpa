@@ -10,20 +10,28 @@
     </div>
 
     {{ if .AddedBy }}
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-        Added by
-      </dt>
-      <dd class="govuk-summary-list__value">
-        <ul class="govuk-list">
-        {{ range .AddedBy }}
-          <li>{{ .Email }}{{ if .ActivateBy }}<strong class="govuk-tag govuk-tag--grey">key requested</strong>{{ end }}</li>
-          <li class="govuk-hint govuk-!-margin-bottom-2">{{ .DateAdded | readableDateTime }}</li>
-        {{ end }}
-        </ul>
-      </dd>
-    </div>
+      {{ range .AddedBy }}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Added by
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <ul class="govuk-list">
+              <li>{{ .Email }}{{ if .ActivateBy }}<strong class="govuk-tag govuk-tag--grey">key requested</strong>{{ end }}</li>
+              <li>Added on:   {{ .DateAdded | readableDateTime }}</li>
+              <li> Activated on:
+              {{ if not .ActivateBy  }}
+                {{ .DateAdded | readableDateTime }}
+              {{ else if not .DateUpdated  }}
+                {{ "Not activated" }}
+              {{ else }}
+                {{ .DateUpdated | readableDateTime }}
+              {{ end }}
+              </li>
+            </ul>
+          </dd>
+        </div>
+      {{ end }}
     {{ end }}
   </dl>
 {{ end }}
-
