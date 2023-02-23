@@ -256,13 +256,7 @@ func Test_SearchByLPANumber(t *testing.T) {
 			activationKeyService: &mockActivationKeyService{},
 			want: map[string]interface{}{
 				"LPANumber": "7000-0000-0000",
-				"AddedBy":   []AddedBy{
-				    {
-				        DateAdded: "2020-08-19T15:22:32.838097Z",
-				        Email: "Test@email.com",
-				        DateUpdated: "2020-08-20T15:22:32.838097Z"
-				    }
-				},
+				"AddedBy":   []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "Test@email.com", DateUpdated: "2020-08-20T15:22:32.838097Z"}},
 
 			},
 		},
