@@ -672,7 +672,7 @@ func Test_SearchHandler(t *testing.T) {
 				},
 				q: "query=7000-0000-0000",
 			},
-			expected: &Search{Query: "7000-0000-0000", Type: 2, Result: map[string]interface{}{"LPANumber": "700000000000", "AddedBy": []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "test@email.com", DateUpdated: "2020-08-20T15:22:32.838097Z"}}}, Errors: nil}
+			expected: &Search{Query: "7000-0000-0000", Type: 2, Result: map[string]interface{}{"LPANumber": "700000000000", "AddedBy": []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "test@email.com", DateUpdated: "2020-08-20T15:22:32.838097Z"}}}, Errors: nil},
 		},
 		{
 			name: "Test validation failure",
