@@ -173,7 +173,7 @@ func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interfac
 			    Email: email,
 			    DateAdded: userID.Added,
 			    ActivateBy: userID.ActivateBy,
-			    DateUpdated: userID.Updated
+			    DateUpdated: userID.Updated,
 			}
 
 			emails = append(emails, addedBy)
