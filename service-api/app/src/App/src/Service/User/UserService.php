@@ -158,6 +158,9 @@ class UserService
             (new DateTime('now'))->format(DateTimeInterface::ATOM)
         );
 
+        // Ensure we don't return our Password over the wire.
+        unset($user['Password']);
+
         $this->logger->info(
             'Authentication successful for account with Id {id}',
             [

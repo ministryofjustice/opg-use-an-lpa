@@ -221,13 +221,13 @@ class UserServiceTest extends TestCase
             [
                 'Id'        => '1234-1234-1234',
                 'Email'     => 'a@b.com',
-                'Password'  => self::PASS_HASH,
                 'LastLogin' => '2020-01-01',
             ],
             $return
         );
     }
 
+    /** @test */
     public function will_update_the_password_hash_on_successful_authentication(): void
     {
         $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
@@ -245,6 +245,8 @@ class UserServiceTest extends TestCase
         $repoProphecy->rehashPassword('1234-1234-1234', Argument::any())
             ->shouldBeCalled()
             ->willReturn(true);
+        $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::any())
+            ->shouldBeCalled();
 
         $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
 
@@ -254,7 +256,6 @@ class UserServiceTest extends TestCase
             [
                 'Id'        => '1234-1234-1234',
                 'Email'     => 'a@b.com',
-                'Password'  => self::PASS_HASH,
                 'LastLogin' => '2020-01-01',
             ],
             $return
