@@ -423,7 +423,7 @@ class UserService
 
     public function completeChangeEmail(string $resetToken): void
     {
-        $userId = $this->usersRepository->  getIdByEmailResetToken($resetToken);
+        $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
 
         $user = $this->usersRepository->get($userId);
 

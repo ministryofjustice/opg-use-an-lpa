@@ -156,6 +156,38 @@ class UserServiceTest extends TestCase
         $us->add($userData);
     }
 
+    /** @test
+     * @throws Exception
+     */
+    public function cannot_add_existing_user_as_email_used_in_reset()
+    {
+        $id       = '12345678-1234-1234-1234-123456789012';
+        $email    = 'a@b.com';
+        $password = 'password1';
+        $userData = ['email' => 'a@b.com', 'password' => $password];
+
+        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy->exists($userData['email'])
+            ->willReturn(false);
+        $repoProphecy->getUserByNewEmail($userData['email'])
+            ->willReturn(
+                [
+                    [
+                        'Id'               => $id,
+                        'Email'            => $email,
+                        'EmailResetExpiry' => '' . time() + (60 * 60 * 16), // expires in 16 hours
+                    ]
+                ]
+            );
+
+        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $this->expectException(ConflictException::class);
+        $us->add($userData);
+    }
+
     /** @test */
     public function can_get_a_user_from_storage(): void
     {
