@@ -7,6 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaAlreadyAdded;
+use App\Service\Lpa\LpaService;
 use App\Service\Lpa\OlderLpaService;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -24,6 +25,7 @@ use Psr\Log\LoggerInterface;
 class RequestCleanseHandler implements RequestHandlerInterface
 {
     public function __construct(
+        private LpaService $lpaService,
         private OlderLpaService $olderLpaService,
         private LpaAlreadyAdded $lpaAlreadyAdded,
         private LoggerInterface $logger,
@@ -48,6 +50,9 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
+        $lpa = $this->lpaService->getByUid((string) $requestData['reference_number']);
+        $lpaData = $lpa->getData();
+
         $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
         $actorId = $requestData['actor_id'] ?? null;
 
@@ -60,11 +65,14 @@ class RequestCleanseHandler implements RequestHandlerInterface
         );
 
         $this->logger->notice(
-            'Successfully submitted cleanse for LPA {uId} for account {id} ',
+            'Successfully submitted cleanse for partially matched LPA {uId} for account {id} ',
             [
-                'event_code' => EventCodes::OLDER_LPA_CLEANSE_SUCCESS,
+                'event_code' => ($lpaData['caseSubtype'] === 'hw') ?
+                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
+                    EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,
                 'uId'        => (string) $requestData['reference_number'],
+                'lpaType'    => $lpaData['caseSubtype'],
             ],
         );
 
