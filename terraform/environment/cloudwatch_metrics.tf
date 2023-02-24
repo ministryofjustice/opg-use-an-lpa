@@ -10,7 +10,6 @@ locals {
     "event_code.OLDER_LPA_NOT_ELIGIBLE",
     "event_code.OLDER_LPA_NOT_FOUND",
     "event_code.OLDER_LPA_SUCCESS",
-    "event_code.OLDER_LPA_CLEANSE_SUCCESS",
     "event_code.OLDER_LPA_TOO_OLD",
     "event_code.OLDER_LPA_ALREADY_ADDED",
     "event_code.OLDER_LPA_FORCE_ACTIVATION_KEY",
@@ -40,7 +39,13 @@ locals {
     "key_status.ACTIVATION_KEY_NOT_EXISTS",
     "key_status.ACTIVATION_KEY_EXPIRED",
     "event_code.IDENTITY_HASH_CHANGE",
-    "event_code.USER_ABROAD_ADDRESS_REQUEST_SUCCESS"
+    "event_code.USER_ABROAD_ADDRESS_REQUEST_SUCCESS",
+    "event_code.ADDED_LPA_TYPE_HW",
+    "event_code.ADDED_LPA_TYPE_PFA",
+    "event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW",
+    "event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA",
+    "event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW",
+    "event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA",
   ]
 }
 

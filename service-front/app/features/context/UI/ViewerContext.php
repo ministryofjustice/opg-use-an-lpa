@@ -571,6 +571,18 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^The LPA has no instructions or preferences and is signed before 2016$/
+     */
+    public function theLPAHasNoInstructionsOrPreferences()
+    {
+        $this->lpaData['lpaDonorSignatureDate'] = '2014-01-01';
+        $this->lpaData['applicationHasGuidance'] = false;
+        $this->lpaData['applicationHasRestrictions'] = false;
+
+        $this->giveAValidLpaShareCode();
+    }
+
+    /**
      * @Given /^The LPA has instructions and preferences and is signed before 2016$/
      */
     public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016()
@@ -641,13 +653,30 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Then /^I can see the lpa has instructions and preferences set in summary$/
+     */
+    public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
+    {
+        $this->ui->assertPageContainsText('Instructions and preferences');
+        $this->ui->assertPageContainsText( 'Yes, the donor made instructions and/or preferences on their LPA.');
+    }
+
+    /**
+     * @Then /^I can see the lpa has no instructions and preferences set in summary$/
+     */
+    public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
+    {
+        $this->ui->assertPageContainsText('Instructions and preferences');
+        $this->ui->assertPageContainsText( 'No');
+    }
+
+    /**
      * @Then /^I can clearly see the lpa has instructions andor preferences$/
      */
     public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
     }
-
 
     /**
      * @When /^I give an invalid (.*) and (.*)$/

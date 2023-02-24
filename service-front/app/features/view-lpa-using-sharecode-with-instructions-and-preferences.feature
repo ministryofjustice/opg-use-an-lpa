@@ -36,4 +36,16 @@ Feature: View an LPA via sharecode
     Then I can see the full details of the valid LPA
     And I can clearly see the lpa has instructions andor preferences
 
+  @ui
+  Scenario:test
+    Given The LPA has instructions and preferences and is signed before 2016
+    When I enter an organisation name and confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    And I can see the lpa has instructions and preferences set in summary
 
+  @ui
+  Scenario:test
+    Given The LPA has no instructions or preferences and is signed before 2016
+    When I enter an organisation name and confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    And I can see the lpa has no instructions and preferences set in summary

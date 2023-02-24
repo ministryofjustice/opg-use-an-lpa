@@ -18,6 +18,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResponse;
 use Common\Service\Lpa\LpaService;
@@ -72,6 +73,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      * @throws \Http\Client\Exception|\Exception
      */
@@ -161,8 +163,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             case AddLpaApiResponse::ADD_LPA_FOUND:
                 $lpaData = $result->getData();
 
-                $lpa   = $lpaData['lpa'];
-                $actor = $lpaData['actor']['details'];
+                $lpa    = $lpaData['lpa'];
+                $actor  = $lpaData['actor']['details'];
 
                 $actorRole =
                     $lpaData['actor']['type'] === 'donor' ? 'Donor'
@@ -226,6 +228,16 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $donor   = $this->session->get('donor_name');
                     $lpaType = $this->session->get('lpa_type');
 
+                    $this->logger->notice(
+                        'Account with Id {id} added LPA of type {lpaType} to their account',
+                        [
+                            'event_code' =>
+                                ($lpaType === 'health and welfare') ?
+                                    EventCodes::ADDED_LPA_TYPE_HW : EventCodes::ADDED_LPA_TYPE_PFA,
+                            'lpaType' => $lpaType,
+                        ]
+                    );
+
                     $message = $this->translator->translate(
                         "You've added %donor%'s %lpaType% LPA",
                         [
@@ -245,11 +257,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-            'user'            => $this->user,
-            'dob'             => $dob,
-            'referenceNumber' => $referenceNumber,
-            'activation_key'  => $activation_key,
-        ]));
+                'user'            => $this->user,
+                'dob'             => $dob,
+                'referenceNumber' => $referenceNumber,
+                'activation_key'  => $activation_key,
+            ]));
     }
 
     /**
