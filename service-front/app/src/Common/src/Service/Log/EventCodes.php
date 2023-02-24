@@ -180,4 +180,13 @@ class EventCodes
      */
     public const USER_ABROAD_ADDRESS_REQUEST_SUCCESS = 'USER_ABROAD_ADDRESS_REQUEST_SUCCESS';
 
+    /**
+     * LPA type added is pfa
+     */
+    public const ADDED_LPA_TYPE_PFA = 'ADDED_LPA_TYPE_PFA';
+
+    /**
+     * LPA type added is hw
+     */
+    public const ADDED_LPA_TYPE_HW = 'ADDED_LPA_TYPE_HW';
 }

@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Features\FeatureEnabled;
+use App\Service\Log\EventCodes;
 use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\OlderLpaService;
@@ -13,6 +14,7 @@ use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class OlderLpaConfirmationHandler
@@ -26,6 +28,7 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
         private OlderLpaService $olderLpaService,
         private FeatureEnabled $featureEnabled,
         private CheckLpaCleansed $checkLpaCleansed,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -60,6 +63,18 @@ class OlderLpaConfirmationHandler implements RequestHandlerInterface
             $lpaMatchResponse['actor']['uId'],
             $userId,
             $lpaMatchResponse['lpaActorToken'] ?? null,
+        );
+
+        $this->logger->notice(
+            'Successfully matched data for LPA {uId} and requested letter for account {id} ',
+            [
+                'event_code' => ($lpaMatchResponse['caseSubtype'] === 'hw') ?
+                    EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
+                    EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
+                'id'         => $userId,
+                'uId'        => (string)$requestData['reference_number'],
+                'lpaType'    => $lpaMatchResponse['caseSubtype'],
+            ],
         );
 
         return new EmptyResponse();
