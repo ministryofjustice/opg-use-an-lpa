@@ -78,7 +78,7 @@ class AccountContext extends BaseIntegrationContext
                             [
                                 'Id' => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->password, PASSWORD_DEFAULT),
+                                'Password' => password_hash($this->password, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -194,7 +194,7 @@ class AccountContext extends BaseIntegrationContext
                             [
                                 'Id' => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                                 'ActivationToken' => 'a12b3c4d5e',
                             ]
@@ -234,7 +234,7 @@ class AccountContext extends BaseIntegrationContext
                             [
                                 'Id' => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -362,7 +362,7 @@ class AccountContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'Id' => $this->userAccountId,
-                            'Password' => password_hash($failedPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($failedPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -488,7 +488,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'EmailResetExpiry' => time() + (60 * 60),
                             'LastLogin' => null,
                             'NewEmail' => $this->newEmail,
@@ -535,7 +535,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'EmailResetExpiry' => (time() + (60 * 60)),
                             'LastLogin' => null,
                             'NewEmail' => $this->newEmail,
@@ -587,7 +587,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'EmailResetExpiry' => (time() - (60 * 60)),
                             'LastLogin' => null,
                             'NewEmail' => $this->newEmail,
@@ -831,7 +831,7 @@ class AccountContext extends BaseIntegrationContext
                             [
                                 'Id' => '123456789',
                                 'Email' => 'other@user.co.uk',
-                                'Password' => password_hash('passW0rd', PASSWORD_DEFAULT),
+                                'Password' => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
                                 'EmailResetExpiry' => (time() + (60 * 60)),
                                 'LastLogin' => null,
                                 'NewEmail' => 'test@test.com',
@@ -1131,7 +1131,7 @@ class AccountContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'Id' => $this->userAccountId,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -1188,7 +1188,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -1234,7 +1234,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -1359,7 +1359,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -1508,7 +1508,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
                 ]
@@ -1523,7 +1523,7 @@ class AccountContext extends BaseIntegrationContext
                         [
                             'Id' => $this->userAccountId,
                             'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT),
+                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'LastLogin' => null,
                         ]
                     ),

@@ -62,14 +62,14 @@ class UserService
         if (!empty($emailResetExists) && !$this->checkIfEmailResetViable($emailResetExists, true)) {
             //checks if the new email chosen has already been requested for reset
             $this->logger->notice(
-                'Could not create account with email {email} as another user has already requested to 
-                change their email that email address',
+                'Could not create account with email {email} as another user has already requested to ' .
+                    'change their email that email address',
                 ['email' => $data['email']]
             );
 
             throw new ConflictException(
-                'Account creation email conflict - another user has requested to change their 
-                email to ' . $data['email'],
+                'Account creation email conflict - another user has requested to change their ' .
+                    'email to ' . $data['email'],
                 ['email' => $data['email']]
             );
         }
@@ -140,6 +140,12 @@ class UserService
             throw new ForbiddenException('Authentication failed for email ' . $email, ['email' => $email]);
         }
 
+        // as the login is successful ensure that we're updating our password storage inline with
+        // current best practices.
+        if (password_needs_rehash($user['Password'], PASSWORD_DEFAULT, ['cost' => 13])) {
+            $this->usersRepository->rehashPassword($user['Id'], $password);
+        }
+
         if (array_key_exists('ActivationToken', $user)) {
             throw new UnauthorizedException(
                 'Authentication attempted against inactive account with Id ' . $user['Id'],
@@ -151,6 +157,9 @@ class UserService
             $user['Id'],
             (new DateTime('now'))->format(DateTimeInterface::ATOM)
         );
+
+        // Ensure we don't return our Password over the wire.
+        unset($user['Password']);
 
         $this->logger->info(
             'Authentication successful for account with Id {id}',
@@ -352,7 +361,7 @@ class UserService
             );
 
             throw new ConflictException(
-                'Change email conflict - another user has already requested to change their email 
+                'Change email conflict - another user has already requested to change their email
                 address to ' . $newEmail,
                 ['email' => $newEmail]
             );
@@ -414,7 +423,7 @@ class UserService
 
     public function completeChangeEmail(string $resetToken): void
     {
-        $userId = $this->usersRepository->  getIdByEmailResetToken($resetToken);
+        $userId = $this->usersRepository->getIdByEmailResetToken($resetToken);
 
         $user = $this->usersRepository->get($userId);
 

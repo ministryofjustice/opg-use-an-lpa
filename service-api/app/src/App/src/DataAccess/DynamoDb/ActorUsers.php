@@ -11,6 +11,8 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use ParagonIE\HiddenString\HiddenString;
 
+use function password_hash;
+
 class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
@@ -37,7 +39,7 @@ class ActorUsers implements ActorUsersInterface
                 'Item'      => [
                     'Id'              => ['S' => $id],
                     'Email'           => ['S' => $email],
-                    'Password'        => ['S' => password_hash($password->getString(), PASSWORD_DEFAULT)],
+                    'Password'        => ['S' => $this->hashPassword($password)],
                     'ActivationToken' => ['S' => $activationToken],
                     'ExpiresTTL'      => ['N' => (string)$activationTtl],
                 ],
@@ -263,7 +265,7 @@ class ActorUsers implements ActorUsersInterface
                     => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry, NeedsReset',
                 'ExpressionAttributeValues' => [
                     ':p' => [
-                        'S' => password_hash($password->getString(), PASSWORD_DEFAULT),
+                        'S' => $this->hashPassword($password),
                     ],
                 ],
             ]
@@ -428,7 +430,7 @@ class ActorUsers implements ActorUsersInterface
                 'UpdateExpression'          => 'SET Password=:p, ExpiresTTL=:et',
                 'ExpressionAttributeValues' => [
                     ':p'  => [
-                        'S' => password_hash($password->getString(), PASSWORD_DEFAULT),
+                        'S' => $this->hashPassword($password),
                     ],
                     ':et' => [
                         'N' => (string)$activationTtl,
@@ -438,5 +440,42 @@ class ActorUsers implements ActorUsersInterface
             ]
         );
         return $this->getData($result);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rehashPassword(string $id, HiddenString $password): bool
+    {
+        //  Update the item by setting the password
+        $this->client->updateItem(
+            [
+                'TableName'                 => $this->actorUsersTable,
+                'Key'                       => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
+                ],
+                'UpdateExpression'          => 'SET Password=:p',
+                'ExpressionAttributeValues' => [
+                    ':p' => [
+                        'S' => $this->hashPassword($password),
+                    ],
+                ],
+            ]
+        );
+
+        return true;
+    }
+
+    private function hashPassword(HiddenString $password): string
+    {
+        return password_hash(
+            $password->getString(),
+            PASSWORD_DEFAULT,
+            [
+                'cost' => 13,
+            ]
+        );
     }
 }

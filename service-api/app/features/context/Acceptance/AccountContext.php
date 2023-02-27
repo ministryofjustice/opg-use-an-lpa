@@ -54,7 +54,7 @@ class AccountContext implements Context
                 $this->marshalAwsResultData([
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
-                    'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                    'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin' => null,
                 ]),
             ],
@@ -124,7 +124,7 @@ class AccountContext implements Context
                 $this->marshalAwsResultData([
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
-                    'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                    'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin' => null,
                 ]),
             ],
@@ -157,7 +157,7 @@ class AccountContext implements Context
                 $this->marshalAwsResultData([
                     'Id'              => $this->base->userAccountId,
                     'Email'           => $this->base->userAccountEmail,
-                    'Password'        => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                    'Password'        => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin'       => null,
                     'ActivationToken' => 'a12b3c4d5e',
                 ]),
@@ -690,7 +690,7 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -729,7 +729,7 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -797,7 +797,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -836,7 +836,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -865,7 +865,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -993,7 +993,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'       => $this->base->userAccountId,
                 'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
             ]),
         ]));
 
@@ -1064,7 +1064,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'               => $this->base->userAccountId,
                 'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                 'EmailResetExpiry' => time() + (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
@@ -1099,7 +1099,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'               => $this->base->userAccountId,
                 'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                 'EmailResetExpiry' => time() + (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
@@ -1159,7 +1159,7 @@ class AccountContext implements Context
             'Item' => $this->marshalAwsResultData([
                 'Id'               => $this->base->userAccountId,
                 'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT),
+                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                 'EmailResetExpiry' => time() - (60 * 60),
                 'LastLogin'        => null,
                 'NewEmail'         => $this->newEmail,
@@ -1218,7 +1218,7 @@ class AccountContext implements Context
                 $this->marshalAwsResultData([
                     'Id'               => $this->base->userAccountId,
                     'Email'            => 'other@user.co.uk',
-                    'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT),
+                    'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
                     'EmailResetExpiry' => time() + (60 * 60),
                     'LastLogin'        => null,
                     'NewEmail'         => 'test@test.com',
