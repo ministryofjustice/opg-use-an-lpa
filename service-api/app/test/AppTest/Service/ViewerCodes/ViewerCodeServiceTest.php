@@ -303,19 +303,23 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals('abcdefghijkl', $codes[0]['ViewerCode']);
         $this->assertEquals(12, $codes[0]['ActorId']);
         $this->assertIsArray($codes[0]['Viewed']);
+        $this->assertEquals('700000000047', $codes[0]['SiriusUid']);
 
         $this->assertEquals('123456789101', $codes[1]['ViewerCode']);
 
         $this->assertArrayHasKey('ActorId', $codes[1]);
         $this->assertFalse($codes[1]['Viewed']);
+        $this->assertEquals('700000000047', $codes[0]['SiriusUid']);
 
         $this->assertArrayHasKey('CreatedBy', $codes[2]);
         $this->assertArrayHasKey('ActorId', $codes[2]);
         $this->assertEquals($codes[2]['CreatedBy'], $codes[2]['ActorId']);
+        $this->assertEquals('700000000047', $codes[0]['SiriusUid']);
 
         $this->assertEquals('asdfghjklzxc', $codes[3]['ViewerCode']);
         $this->assertArrayNotHasKey('ActorId', $codes[3]);
         $this->assertFalse($codes[3]['Viewed']);
+        $this->assertEquals('700000000047', $codes[0]['SiriusUid']);
     }
 
     /** @test */

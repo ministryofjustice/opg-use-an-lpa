@@ -123,7 +123,7 @@ class ViewerCodeService
             }
             else {
                 $codeOwner = $this->getCodeOwner($viewerCode['UserLpaActor']);
-                if ($codeOwner !== NULL) {
+                if ($codeOwner !== null) {
                     $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];
                 }
             }
