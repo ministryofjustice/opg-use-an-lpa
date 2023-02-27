@@ -25,7 +25,7 @@ jobs:
           path: terraform/environment
 
       - name: install python
-        uses: actions/setup-python@f60fe39c45f23b4a7683b4ae8e08239d4a2089bd # pin@v4.2.0
+        uses: actions/setup-python@7b9ef6fc5a7a74dfb7c0924eb42615d7af1e4de5 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
