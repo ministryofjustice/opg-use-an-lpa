@@ -48,6 +48,15 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         if ($this->form->isValid()) {
             $selected = $this->form->getData()['actor_role_radio'];
+            
+            if ($selected === 'ReplacementAttorney') {
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::request-activation-key/stop-replacement-attorney',
+                        ['user' => $this->user]
+                    )
+                );
+            }
 
             if ($selected === 'Donor') {
                 $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_DONOR);
