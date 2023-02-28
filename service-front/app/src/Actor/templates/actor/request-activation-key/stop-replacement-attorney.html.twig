@@ -1,0 +1,49 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Attorney details{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}You cannot request an activation key if you are a replacement attorney{% endtrans %}</h1>
+                    <p class="govuk-body">
+                        {% trans %}
+                            Only the donor or an active attorney can request an activation key.
+                        {% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:
+                        {% endtrans %}
+                    </p>
+
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}have died{% endtrans %}</li>
+                        <li>{% trans with {'%link%': "https://www.gov.uk/lasting-power-attorney-duties/stop-attorney" } %}have <a href="%link%" class="govuk-link">formally stepped down</a>(‘disclaimed their appointment’){% endtrans %}</p></li>
+                        <li>{% trans with {'%link%': "https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney" } %}have been <a href="%link%" class="govuk-link">removed from the LPA by the donor</a>{% endtrans %}</p></li>
+                        <li>{% trans %}have lost mental capacity{% endtrans %}</p></li>
+                        <li>{% trans %}have been declared bankrupt or have a debt relief order (property and finance attorneys only){% endtrans %}</p></li>
+                        <li>{% trans %}were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the LPA){% endtrans %}</p></li>
+                    </ul>
+
+                    <p class="govuk-body">
+                        {% trans with {'%link%': "https://www.gov.uk/lasting-power-attorney-duties/changes-you-need-to-report" } %}
+                            You must <a href="%link%" class="govuk-link">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key.
+                        {% endtrans %}
+                    </p>
+                </div>
+            </div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
+{% endblock %}
