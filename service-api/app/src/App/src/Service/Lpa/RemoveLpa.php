@@ -72,7 +72,7 @@ class RemoveLpa
 
                 $this->viewerCodesRepository->removeActorAssociation(
                     $viewerCodeRecord['ViewerCode'],
-                    (int)$codeOwner['ActorId']
+                    (string)$codeOwner['ActorId']
                 );
             }
         }

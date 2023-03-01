@@ -318,7 +318,7 @@ class ViewerCodesTest extends TestCase
     public function can_remove_actor_and_code_association(): void
     {
         $testCode = 'test-code';
-        $codeOwner = 23;
+        $codeOwner = '23';
 
         $this->dynamoDbClientProphecy->updateItem(
             Argument::that(function (array $data) use (

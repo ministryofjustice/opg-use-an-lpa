@@ -145,9 +145,9 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function removeActorAssociation(string $code, ?int $codeOwner): bool
+    public function removeActorAssociation(string $code, ?string $codeOwner): bool
     {
-        //   //  Update the item by removing association with userlpactor and setting the code owner
+        // Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
             'TableName' => $this->viewerCodesTable,
             'Key' => [
