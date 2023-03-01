@@ -158,7 +158,7 @@ userLpaActorMap = [
         'SiriusUid': '700000000344',
         'ActorId': 59,
         'Added': '2020-08-20T14:37:49.522828Z',
-        'Updated': '2020-08-22T11:44:11.324804Z',
+        'ActivatedOn': '2020-08-22T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivationCode': 'WW27H3HYFBBA',
         'Comment': 'Seeded data'
@@ -186,7 +186,7 @@ userLpaActorMap = [
         'SiriusUid': '700000000252',
         'ActorId': 43,
         'Added': '2021-04-23T11:44:11.324804Z',
-        'Updated': '2021-04-24T11:44:11.324804Z',
+        'ActivatedOn': '2021-04-24T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Comment': 'Seeded data'
     }

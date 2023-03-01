@@ -20,12 +20,12 @@
               <li>{{ .Email }}{{ if .ActivateBy }}<strong class="govuk-tag govuk-tag--grey">key requested</strong>{{ end }}</li>
               <li>Added on:   {{ .DateAdded | readableDateTime }}</li>
               <li> Activated on:
-              {{ if not .ActivateBy  }}
-                {{ .DateAdded | readableDateTime }}
-              {{ else if not .DateUpdated  }}
+              {{ if .DateActivated  }}
+                {{ .DateActivated | readableDateTime }}
+              {{ else if and .ActivateBy (not .DateActivated) }}
                 {{ "Not activated" }}
-              {{ else }}
-                {{ .DateUpdated | readableDateTime }}
+              {{ else if .DateAdded}}
+                {{ .DateAdded | readableDateTime }}
               {{ end }}
               </li>
             </ul>
