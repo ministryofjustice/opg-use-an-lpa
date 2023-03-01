@@ -48,3 +48,12 @@ Feature: Choose your role
     When I am asked for my role on the LPA
     And I click the Back link on the page
     Then I am asked for my address from the paper LPA
+
+  @ui @ff:allow_older_lpas:true
+  Scenario: The user is navigated back to correct address page from cannot request key as a replacement attorney page
+    Given I have provided my current address
+    And I am asked for my role on the LPA
+    And I confirm that I am the ReplacementAttorney
+    And I am told I cannot request an activation key
+    When I click the Back link on the page
+    Then I am taken back to the dashboard page
