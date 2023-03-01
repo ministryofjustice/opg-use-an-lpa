@@ -6,6 +6,7 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
 use Actor\Workflow\RequestActivationKey;
+use Common\Service\Log\EventCodes;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -50,6 +51,14 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             $selected = $this->form->getData()['actor_role_radio'];
             
             if ($selected === 'ReplacementAttorney') {
+                $this->logger->notice(
+                    'Request for activation key made by replacement attorney by user {user}',
+                    [
+                        'event_code' => EventCodes::ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY,
+                        'user' => $this->user->getIdentity()
+                    ]
+                );
+
                 return new HtmlResponse(
                     $this->renderer->render(
                         'actor::request-activation-key/stop-replacement-attorney',
