@@ -149,8 +149,8 @@ paths:
                           - addressLine1: 22 Prospect Hill
                             addressLine2: DRONFIELD
                             addressLine3: ""
-                            country: ""
-                            county: "England"
+                            country: "England"
+                            county: ""
                             id: 25
                             postcode: S18 2BY
                             town: ""
