@@ -49,6 +49,7 @@ class LpaExtension extends AbstractExtension
                 $address->getTown(),
                 $address->getCounty(),
                 $address->getPostcode(),
+                $address->getCountry(),
             ]));
         }
 
