@@ -71,7 +71,7 @@ orbs:
         resource_class: small
       php-browsers:
         docker:
-          - image: cimg/php:8.2-browsers
+          - image: cimg/php:8.1-browsers
         resource_class: small
       node-browsers:
         docker:
@@ -79,7 +79,7 @@ orbs:
         resource_class: small
       python:
         docker:
-          - image: cimg/python:3.11
+          - image: cimg/python:3.7
         resource_class: small
       terraform:
         docker:
@@ -784,7 +784,7 @@ orbs:
 jobs:
   python_templated_slack_notify:
     docker:
-      - image: cimg/python:3.11
+      - image: cimg/python:3.7
     resource_class: small
     parameters:
       template:
@@ -808,7 +808,7 @@ jobs:
 
   ecr_scan_results:
     docker:
-      - image: cimg/python:3.11
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout
@@ -822,7 +822,7 @@ jobs:
 
   slack_notify_stats:
     docker:
-      - image: cimg/python:3.11
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout
@@ -842,7 +842,7 @@ jobs:
 
   cancel_redundant_builds:
     docker:
-      - image: cimg/python:3.11
+      - image: cimg/python:3.7
     resource_class: small
     steps:
       - checkout

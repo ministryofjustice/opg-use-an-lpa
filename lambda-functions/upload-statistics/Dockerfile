@@ -6,7 +6,7 @@ RUN apk add --no-cache \
     libstdc++
 
 # Upgrade insecure packages (can't use alpine 3.17 as no libexecinfo-dev)
-RUN apk update && apk upgrade expat krb5-libs libcrypto1.1 libssl1.1
+RUN apk update && apk upgrade expat krb5-libs libcrypto1.1 libssl1.1 libcom_err
 RUN pip install setuptools --upgrade
 
 FROM python-alpine as build-image
