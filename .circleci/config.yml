@@ -833,6 +833,9 @@ jobs:
           command: |
             pip install -r scripts/pipeline/requirements.txt
             python ~/project/scripts/get_statistics/get_statistics.py --text > ./output.txt
+      - run:
+          name: Print out Stats
+          command: cat ./output.txt
       - slack/notify:
           title: "Service Statistics - Use a Lasting Power of Attorney Production"
           color: "#9933ff"
