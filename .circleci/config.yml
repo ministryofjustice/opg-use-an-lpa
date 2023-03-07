@@ -2,16 +2,13 @@ version: 2.1
 
 workflows:
   post_statistics:
-    when:
-      and:
-        - not: { equal: [ main, << pipeline.git.branch >> ] }
-#    triggers:
-#      - schedule:
-#          cron: "0 9 * * 1" # 9am every Monday
-#          filters:
-#            branches:
-#              only:
-#                - main
+    triggers:
+      - schedule:
+          cron: "0 9 * * 1" # 9am every Monday
+          filters:
+            branches:
+              only:
+                - main
     jobs:
       - slack_notify_stats:
           name: slack_notify_stats
