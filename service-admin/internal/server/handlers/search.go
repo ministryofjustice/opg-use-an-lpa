@@ -70,7 +70,7 @@ type AddedBy struct {
 	DateAdded     string
 	Email         string
 	ActivateBy    int
-	DateActivated string
+	ActivatedOn string
 }
 
 func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
@@ -173,7 +173,7 @@ func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interfac
 			    Email: email,
 			    DateAdded: userID.Added,
 			    ActivateBy: userID.ActivateBy,
-			    DateActivated: userID.ActivatedOn,
+			    ActivatedOn: userID.ActivatedOn,
 			}
 
 			emails = append(emails, addedBy)
