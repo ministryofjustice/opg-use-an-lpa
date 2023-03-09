@@ -311,14 +311,14 @@ class LpaContext extends BaseIntegrationContext
         $addLpaService = $this->container->get(AddLpa::class);
 
         $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken
+            'lpaActorToken' => $this->userLpaActorToken,
         ];
 
         try {
@@ -348,12 +348,12 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'  => $this->lpa->uId,
-            'dob'               => $this->lpa->attorneys[0]->dob,
-            'postcode'          => $this->lpa->attorneys[0]->addresses[0]->postcode,
-            'first_names'       => $this->lpa->attorneys[0]->firstname,
-            'last_name'         => $this->lpa->attorneys[0]->surname,
-            'force_activation_key' => false
+            'reference_number' => $this->lpa->uId,
+            'dob' => $this->lpa->attorneys[0]->dob,
+            'postcode' => $this->lpa->attorneys[0]->addresses[0]->postcode,
+            'first_names' => $this->lpa->attorneys[0]->firstname,
+            'last_name' => $this->lpa->attorneys[0]->surname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -374,7 +374,7 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpa->uId,
+                'lpa' => $this->lpa->uId,
                 'actor' => $this->lpa->attorneys[0]->uId,
             ],
             StatusCodeInterface::STATUS_OK,
@@ -386,21 +386,21 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'     => json_decode(json_encode($this->lpa->attorneys[0]), true),
-            'role'      => 'attorney',
-            'lpa-id'    => $this->lpa->uId,
-            'caseSubtype'    => $this->lpa->caseSubtype,
-            'donor'          => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname
+            'actor' => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'role' => 'attorney',
+            'lpa-id' => $this->lpa->uId,
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
             ],
             'attorney' => [
-                'uId'           => $this->lpa->attorneys[0]->uId,
-                'firstname'     => $this->lpa->attorneys[0]->firstname,
-                'middlenames'   => $this->lpa->attorneys[0]->middlenames,
-                'surname'       => $this->lpa->attorneys[0]->surname,
+                'uId' => $this->lpa->attorneys[0]->uId,
+                'firstname' => $this->lpa->attorneys[0]->firstname,
+                'middlenames' => $this->lpa->attorneys[0]->middlenames,
+                'surname' => $this->lpa->attorneys[0]->surname,
             ],
         ];
 
@@ -537,7 +537,7 @@ class LpaContext extends BaseIntegrationContext
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => $this->actorLpaId,
                                 'UserId' => $this->userId,
-                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                             ]
                         ),
                     ],
@@ -556,7 +556,7 @@ class LpaContext extends BaseIntegrationContext
                             'Id' => $this->userLpaActorToken,
                             'ActorId' => $this->actorLpaId,
                             'UserId' => $this->userId,
-                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                            'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                         ]
                     ),
                 ]
@@ -576,9 +576,9 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/validate',
             [
-                'lpa'   => $this->lpaUid,
-                'dob'   => $this->userDob,
-                'code'  => $this->oneTimeCode,
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob,
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -591,8 +591,8 @@ class LpaContext extends BaseIntegrationContext
         $validatedLpa = $addLpaService->validateAddLpaData(
             [
                 'actor-code' => $this->oneTimeCode,
-                'uid'        => $this->lpaUid,
-                'dob'        => $this->userDob,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
             ],
             $this->userId
         );
@@ -619,7 +619,7 @@ class LpaContext extends BaseIntegrationContext
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => '700000000001',
                                 'UserId' => $this->userId,
-                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                             ]
                         ),
                     ],
@@ -642,7 +642,7 @@ class LpaContext extends BaseIntegrationContext
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => $this->actorLpaId,
                                 'UserId' => $this->userId,
-                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp()
+                                'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                             ]
                         ),
                     ]
@@ -707,21 +707,21 @@ class LpaContext extends BaseIntegrationContext
     public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
     {
         $code1 = [
-            'SiriusUid'    => $this->lpaUid,
-            'Added'        => '2020-01-01T00:00:00Z',
-            'Expires'      => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => (new DateTime())->modify($code1Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
-            'ViewerCode'   => $this->accessCode,
+            'ViewerCode' => $this->accessCode,
         ];
 
         $code2 = [
-            'SiriusUid'    => $this->lpaUid,
-            'Added'        => '2020-01-01T00:00:00Z',
-            'Expires'      => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
+            'SiriusUid' => $this->lpaUid,
+            'Added' => '2020-01-01T00:00:00Z',
+            'Expires' => (new DateTime())->modify($code2Expiry)->format('Y-m-d'),
             'UserLpaActor' => $this->userLpaActorToken,
             'Organisation' => $this->organisation,
-            'ViewerCode'   => $this->accessCode,
+            'ViewerCode' => $this->accessCode,
         ];
 
         // LpaService:getLpas
@@ -734,10 +734,10 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                     ],
@@ -769,10 +769,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -793,12 +793,12 @@ class LpaContext extends BaseIntegrationContext
 
         // ViewerCodeActivity::getStatusesForViewerCodes($code1)
         $this->awsFixtures->append(
-            new Result([ 'Count' => 0 ])
+            new Result(['Count' => 0])
         );
 
         // ViewerCodeActivity::getStatusesForViewerCodes($code2)
         $this->awsFixtures->append(
-            new Result([ 'Count' => 0 ])
+            new Result(['Count' => 0])
         );
 
         // UserLpaActorMap::get - $code1
@@ -808,10 +808,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -825,10 +825,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -842,9 +842,9 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertCount(2, $codesWithStatuses);
 
         // codes service adds some stuff
-        $code1['Viewed']  = false;
+        $code1['Viewed'] = false;
         $code1['ActorId'] = '700000000054';
-        $code2['Viewed']  = false;
+        $code2['Viewed'] = false;
         $code2['ActorId'] = '700000000054';
 
         Assert::assertEquals($codesWithStatuses[0], $code1);
@@ -965,10 +965,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1000,10 +1000,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1017,12 +1017,12 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid'    => $this->lpaUid,
-                                'Added'        => '2021-01-05 12:34:56',
-                                'Expires'      => '2021-01-05 12:34:56',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2021-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
+                                'ViewerCode' => $this->accessCode,
                             ]
                         ),
                     ],
@@ -1037,9 +1037,9 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Viewed'     => '2022-01-04 12:34:56',
+                                'Viewed' => '2022-01-04 12:34:56',
                                 'ViewerCode' => $this->accessCode,
-                                'ViewedBy'   => $this->organisation,
+                                'ViewedBy' => $this->organisation,
                             ]
                         ),
                     ],
@@ -1054,10 +1054,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1089,10 +1089,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1124,10 +1124,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1141,12 +1141,12 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid'    => $this->lpaUid,
-                                'Added'        => '2021-01-05 12:34:56',
-                                'Expires'      => '2022-01-05 12:34:56',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
+                                'ViewerCode' => $this->accessCode,
                             ]
                         ),
                     ],
@@ -1161,9 +1161,9 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Viewed'     => '2022-01-04 12:34:56',
+                                'Viewed' => '2022-01-04 12:34:56',
                                 'ViewerCode' => $this->accessCode,
-                                'ViewedBy'   => $this->organisation,
+                                'ViewedBy' => $this->organisation,
                             ]
                         ),
                     ],
@@ -1178,10 +1178,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1206,7 +1206,7 @@ class LpaContext extends BaseIntegrationContext
     public function iClickToCheckMyAccessCodes(): void
     {
         $this->organisation = 'TestOrg';
-        $this->accessCode   = 'XYZ321ABC987';
+        $this->accessCode = 'XYZ321ABC987';
 
         //Get the LPA
 
@@ -1217,10 +1217,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1252,10 +1252,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1269,12 +1269,12 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid'    => $this->lpaUid,
-                                'Added'        => '2021-01-05 12:34:56',
-                                'Expires'      => '2022-01-05 12:34:56',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
+                                'ViewerCode' => $this->accessCode,
                             ]
                         ),
                     ],
@@ -1289,9 +1289,9 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Viewed'     => '2022-01-04 12:34:56',
+                                'Viewed' => '2022-01-04 12:34:56',
                                 'ViewerCode' => $this->accessCode,
-                                'ViewedBy'   => $this->organisation,
+                                'ViewedBy' => $this->organisation,
                             ]
                         ),
                     ],
@@ -1306,10 +1306,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1344,10 +1344,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1379,10 +1379,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1396,12 +1396,12 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'SiriusUid'    => $this->lpaUid,
-                                'Added'        => '2021-01-05 12:34:56',
-                                'Expires'      => '2022-01-05 12:34:56',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => '2021-01-05 12:34:56',
+                                'Expires' => '2022-01-05 12:34:56',
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => $this->organisation,
-                                'ViewerCode'   => $this->accessCode,
+                                'ViewerCode' => $this->accessCode,
                             ]
                         ),
                     ],
@@ -1416,9 +1416,9 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Viewed'     => '2022-01-04 12:34:56',
+                                'Viewed' => '2022-01-04 12:34:56',
                                 'ViewerCode' => $this->accessCode,
-                                'ViewedBy'   => $this->organisation,
+                                'ViewedBy' => $this->organisation,
                             ]
                         ),
                     ],
@@ -1433,10 +1433,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -1537,12 +1537,12 @@ class LpaContext extends BaseIntegrationContext
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'  => $this->lpa->uId,
-            'dob'               => $this->lpa->donor->dob,
-            'postcode'          => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'       => $this->lpa->donor->firstname,
-            'last_name'         => $this->lpa->donor->surname,
-            'force_activation_key' => true
+            'reference_number' => $this->lpa->uId,
+            'dob' => $this->lpa->donor->dob,
+            'postcode' => $this->lpa->donor->addresses[0]->postcode,
+            'first_names' => $this->lpa->donor->firstname,
+            'last_name' => $this->lpa->donor->surname,
+            'force_activation_key' => true,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1565,16 +1565,16 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'         => json_decode(json_encode($lpa->donor), true),
-            'role'          => 'donor',
-            'lpa-id'        => $lpa->uId,
-            'caseSubtype'   => $lpa->caseSubtype,
-            'donor'         => [
-                'uId'           => $lpa->donor->uId,
-                'firstname'     => $lpa->donor->firstname,
-                'middlenames'   => $lpa->donor->middlenames,
-                'surname'       => $lpa->donor->surname
-            ]
+            'actor' => json_decode(json_encode($lpa->donor), true),
+            'role' => 'donor',
+            'lpa-id' => $lpa->uId,
+            'caseSubtype' => $lpa->caseSubtype,
+            'donor' => [
+                'uId' => $lpa->donor->uId,
+                'firstname' => $lpa->donor->firstname,
+                'middlenames' => $lpa->donor->middlenames,
+                'surname' => $lpa->donor->surname,
+            ],
         ];
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
@@ -1767,7 +1767,7 @@ class LpaContext extends BaseIntegrationContext
             'postcode' => $postcode,
             'first_names' => $firstnames,
             'last_name' => $lastname,
-            'force_activation_key' => false
+            'force_activation_key' => false,
 
         ];
 
@@ -1804,12 +1804,12 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'  => $this->lpa->uId,
-            'dob'               => $this->lpa->donor->dob,
-            'postcode'          => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'       => $this->lpa->donor->firstname,
-            'last_name'         => $this->lpa->donor->surname,
-            'force_activation_key' => false
+            'reference_number' => $this->lpa->uId,
+            'dob' => $this->lpa->donor->dob,
+            'postcode' => $this->lpa->donor->addresses[0]->postcode,
+            'first_names' => $this->lpa->donor->firstname,
+            'last_name' => $this->lpa->donor->surname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1832,7 +1832,7 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpa->uId,
+                'lpa' => $this->lpa->uId,
                 'actor' => $this->lpa->donor->uId,
             ],
             StatusCodeInterface::STATUS_OK,
@@ -1843,16 +1843,16 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'     => json_decode(json_encode($this->lpa->donor), true),
-            'role'      => 'donor',
-            'lpa-id'    => $this->lpa->uId,
-            'caseSubtype'    => $this->lpa->caseSubtype,
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname
-            ]
+            'actor' => json_decode(json_encode($this->lpa->donor), true),
+            'role' => 'donor',
+            'lpa-id' => $this->lpa->uId,
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
+            ],
         ];
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
@@ -1864,11 +1864,11 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $data = [
-            'reference_number'     => $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
             'force_activation_key' => false,
         ];
 
@@ -1884,7 +1884,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists  = new stdClass();
+        $codeExists = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
@@ -1898,7 +1898,7 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpaUid,
+                'lpa' => $this->lpaUid,
                 'actor' => $this->actorLpaId,
             ],
             StatusCodeInterface::STATUS_OK,
@@ -1914,14 +1914,14 @@ class LpaContext extends BaseIntegrationContext
             Assert::assertEquals('LPA has an activation key already', $ex->getMessage());
             Assert::assertEquals(
                 [
-                    'donor'         => [
-                        'uId'         => $this->lpa->donor->uId,
-                        'firstname'   => $this->lpa->donor->firstname,
+                    'donor' => [
+                        'uId' => $this->lpa->donor->uId,
+                        'firstname' => $this->lpa->donor->firstname,
                         'middlenames' => $this->lpa->donor->middlenames,
-                        'surname'     => $this->lpa->donor->surname
+                        'surname' => $this->lpa->donor->surname,
                     ],
-                    'caseSubtype'          => $this->lpa->caseSubtype,
-                    'activationKeyDueDate' => $activationKeyDueDate
+                    'caseSubtype' => $this->lpa->caseSubtype,
+                    'activationKeyDueDate' => $activationKeyDueDate,
                 ],
                 $ex->getAdditionalData()
             );
@@ -1947,9 +1947,9 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/validate',
             [
-                'lpa'   => $this->lpaUid,
-                'dob'   => $this->userDob, //'1980-10-10', // donors DOB as details are now of 'Trust Corporation'
-                'code'  => $this->oneTimeCode,
+                'lpa' => $this->lpaUid,
+                'dob' => $this->userDob, //'1980-10-10', // donors DOB as details are now of 'Trust Corporation'
+                'code' => $this->oneTimeCode,
             ],
             StatusCodeInterface::STATUS_OK,
             [
@@ -1970,8 +1970,8 @@ class LpaContext extends BaseIntegrationContext
         $validatedLpa = $addLpaService->validateAddLpaData(
             [
                 'actor-code' => $this->oneTimeCode,
-                'uid'        => $this->lpaUid,
-                'dob'        => $this->userDob,
+                'uid' => $this->lpaUid,
+                'dob' => $this->userDob,
             ],
             $this->userId
         );
@@ -1988,6 +1988,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->organisation = 'TestOrg';
         $this->accessCode = 'XYZ321ABC987';
+        $actorLpaId = 700000000054;
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -1995,11 +1996,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2033,11 +2034,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2188,17 +2189,19 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAIsRemoved(): void
     {
+        $actorLpaId = 700000000054;
+
         // UserLpaActorMap::get
         $this->awsFixtures->append(
             new Result(
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2212,36 +2215,36 @@ class LpaContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData( // 1st code is active
                             [
-                                'Id'           => '1',
-                                'ViewerCode'   => '123ABCD6789',
-                                'SiriusUid'    => $this->lpaUid,
-                                'Added'        => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                                'Expires'      => (new DateTime())->modify('+1 month')->format('Y-m-d'),
+                                'Id' => '1',
+                                'ViewerCode' => '123ABCD6789',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                                 'UserLpaActor' => $this->userLpaActorToken,
                                 'Organisation' => 'Some Organisation 1',
                             ]
                         ),
                         $this->marshalAwsResultData( // 2nd code has expired
                             [
-                                'Id'            => '2',
-                                'ViewerCode'    => 'YG41BCD693FH',
-                                'SiriusUid'     => $this->lpaUid,
-                                'Added'         => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                                'Expires'       => (new DateTime())->modify('-1 month')->format('Y-m-d'),
-                                'UserLpaActor'  => $this->userLpaActorToken,
-                                'Organisation'  => 'Some Organisation 2',
+                                'Id' => '2',
+                                'ViewerCode' => 'YG41BCD693FH',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 2',
                             ]
                         ),
                         $this->marshalAwsResultData( // 3rd code has already been cancelled
                             [
-                                'Id'            => '3',
-                                'ViewerCode'    => 'RL2AD1936KV2',
-                                'SiriusUid'     => $this->lpaUid,
-                                'Added'         => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                                'Expires'       => (new DateTime())->modify('-1 month')->format('Y-m-d'),
-                                'Cancelled'     => (new DateTime())->modify('-2 months')->format('Y-m-d'),
-                                'UserLpaActor'  => $this->userLpaActorToken,
-                                'Organisation'  => 'Some Organisation 3',
+                                'Id' => '3',
+                                'ViewerCode' => 'RL2AD1936KV2',
+                                'SiriusUid' => $this->lpaUid,
+                                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                                'Cancelled' => (new DateTime())->modify('-2 months')->format('Y-m-d'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => 'Some Organisation 3',
                             ]
                         ),
                     ],
@@ -2255,11 +2258,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2274,11 +2277,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2293,11 +2296,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'SiriusUid'     => $this->lpaUid,
-                            'Added'         => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                            'Id'            => $this->userLpaActorToken,
-                            'ActorId'       => $this->actorLpaId,
-                            'UserId'        => $this->userId,
+                            'SiriusUid' => $this->lpaUid,
+                            'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2321,10 +2324,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2353,11 +2356,11 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id'        => $this->userLpaActorToken,
-                                'UserId'    => $this->userId,
+                                'Id' => $this->userLpaActorToken,
+                                'UserId' => $this->userId,
                                 'SiriusUid' => $this->lpaUid,
-                                'ActorId'   => $this->actorLpaId,
-                                'Added'     => $now,
+                                'ActorId' => $this->actorLpaId,
+                                'Added' => $now,
                             ]
                         ),
                     ],
@@ -2437,10 +2440,10 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                     ],
@@ -2482,19 +2485,19 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => '700000000138',
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                     ],
@@ -2512,19 +2515,19 @@ class LpaContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                         $this->marshalAwsResultData(
                             [
                                 'SiriusUid' => '700000000138',
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
+                                'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'Id' => $this->userLpaActorToken,
+                                'ActorId' => $this->actorLpaId,
+                                'UserId' => $this->userId,
                             ]
                         ),
                     ],
@@ -2577,10 +2580,10 @@ class LpaContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'SiriusUid' => $this->lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $this->actorLpaId,
-                            'UserId'    => $this->userId,
+                            'Added' => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id' => $this->userLpaActorToken,
+                            'ActorId' => $this->actorLpaId,
+                            'UserId' => $this->userId,
                         ]
                     ),
                 ]
@@ -2623,12 +2626,12 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestForANewActivationKeyAgain(): void
     {
         $data = [
-            'reference_number'      => $this->lpa->uId,
-            'first_names'           => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
-            'last_name'             => $this->lpa->donor->surname,
-            'dob'                   => $this->lpa->donor->dob,
-            'postcode'              => $this->lpa->donor->addresses[0]->postcode,
-            'force_activation_key'  => true
+            'reference_number' => $this->lpa->uId,
+            'first_names' => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
+            'last_name' => $this->lpa->donor->surname,
+            'dob' => $this->lpa->donor->dob,
+            'postcode' => $this->lpa->donor->addresses[0]->postcode,
+            'force_activation_key' => true,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -2647,16 +2650,16 @@ class LpaContext extends BaseIntegrationContext
         $response = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'     => json_decode(json_encode($this->lpa->donor), true),
-            'role'      => 'donor',
-            'lpa-id'    => $this->lpa->uId,
-            'caseSubtype'    => $this->lpa->caseSubtype,
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname
-            ]
+            'actor' => json_decode(json_encode($this->lpa->donor), true),
+            'role' => 'donor',
+            'lpa-id' => $this->lpa->uId,
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
+            ],
         ];
 
         Assert::assertEquals($expectedResponse, $response);
@@ -2670,12 +2673,12 @@ class LpaContext extends BaseIntegrationContext
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'      => $this->lpaUid,
-            'dob'                   => $this->userDob,
-            'postcode'              => $this->userPostCode,
-            'first_names'           => $this->userFirstname,
-            'last_name'             => $this->userSurname,
-            'force_activation_key'  => false
+            'reference_number' => $this->lpaUid,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+            'force_activation_key' => false,
         ];
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
@@ -2795,7 +2798,7 @@ class LpaContext extends BaseIntegrationContext
             'postcode' => $this->userPostCode,
             'first_names' => $this->userFirstname,
             'last_name' => $this->userSurname,
-            'force_activation_key' => false
+            'force_activation_key' => false,
         ];
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
@@ -2810,7 +2813,7 @@ class LpaContext extends BaseIntegrationContext
                                 'Id' => $this->userLpaActorToken,
                                 'ActorId' => $this->actorLpaId,
                                 'UserId' => $this->userId,
-                                'ActivateBy' => 123456789
+                                'ActivateBy' => 123456789,
                             ]
                         ),
                     ],
@@ -2829,7 +2832,7 @@ class LpaContext extends BaseIntegrationContext
                             'Id' => $this->userLpaActorToken,
                             'ActorId' => $this->actorLpaId,
                             'UserId' => $this->userId,
-                            'ActivateBy' => 123456789
+                            'ActivateBy' => 123456789,
                         ]
                     ),
                 ]
@@ -2866,14 +2869,14 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $expectedResponse = [
-            'donor'         => [
-                'uId'           => $this->lpa->donor->uId,
-                'firstname'     => $this->lpa->donor->firstname,
-                'middlenames'   => $this->lpa->donor->middlenames,
-                'surname'       => $this->lpa->donor->surname,
+            'donor' => [
+                'uId' => $this->lpa->donor->uId,
+                'firstname' => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname' => $this->lpa->donor->surname,
             ],
             'caseSubtype' => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => $activationKeyDueDate
+            'activationKeyDueDate' => $activationKeyDueDate,
         ];
 
         $addOlderLpa = $this->container->get(AddOlderLpa::class);
@@ -2901,10 +2904,10 @@ class LpaContext extends BaseIntegrationContext
 
         $data = [
             'reference_number' => $this->lpaUid,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
+            'dob' => $this->userDob,
+            'postcode' => $this->userPostCode,
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -2954,7 +2957,7 @@ class LpaContext extends BaseIntegrationContext
     public function iAmToldMyActivationKeyRequestHasBeenReceived(): void
     {
         $data = [
-            'queuedForCleansing' => true
+            'queuedForCleansing' => true,
         ];
 
         // Lpas::requestLetter
@@ -2963,7 +2966,7 @@ class LpaContext extends BaseIntegrationContext
             '/v1/use-an-lpa/lpas/requestCode',
             [
                 'case_uid' => (int)$this->lpaUid,
-                'notes' =>  'notes'
+                'notes' => 'notes',
             ],
             StatusCodeInterface::STATUS_OK,
             $data
@@ -2988,15 +2991,14 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
     {
-
         $this->lpa->status = 'Registered';
         $data = [
             'reference_number' => $this->lpaUid,
-            'dob'              => $this->userDob,
-            'postcode'         => 'WRONG',
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
-            'force_activation_key' => false
+            'dob' => $this->userDob,
+            'postcode' => 'WRONG',
+            'first_names' => $this->userFirstname,
+            'last_name' => $this->userSurname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser

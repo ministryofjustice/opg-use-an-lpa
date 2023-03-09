@@ -7,7 +7,8 @@ namespace App\Service\ViewerCodes;
 use App\DataAccess\Repository\{KeyCollisionException,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
-    ViewerCodesInterface};
+    ViewerCodesInterface
+};
 use DateTime;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
@@ -50,7 +51,7 @@ class ViewerCodeService
                     $map['SiriusUid'],
                     $expires,
                     $organisation,
-                    (string)$map['ActorId']
+                    $map['ActorId']
                 );
 
                 $added = true;
@@ -120,8 +121,7 @@ class ViewerCodeService
         foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
             if (empty($viewerCode['UserLpaActor'])) {
                 $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
-            }
-            else {
+            } else {
                 $codeOwner = $this->getCodeOwner($viewerCode['UserLpaActor']);
                 if ($codeOwner !== null) {
                     $viewerCodesAndStatuses[$key]['ActorId'] = $codeOwner['ActorId'];

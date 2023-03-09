@@ -92,11 +92,13 @@ class ViewerCodesTest extends TestCase
                 return true;
             })
         )
-        ->willReturn($this->createAWSResult(
-            [
-                'Item' => [],
-            ]
-        ));
+            ->willReturn(
+                $this->createAWSResult(
+                    [
+                        'Item' => [],
+                    ]
+                )
+            );
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
@@ -190,7 +192,7 @@ class ViewerCodesTest extends TestCase
         $testSiriusUid = 'test-uid';
         $testExpires = new DateTime();
         $testOrganisation = 'test-organisation';
-        $testActorId = 'test-actor-id';
+        $testActorId = 123;
 
         $this->dynamoDbClientProphecy->putItem(
             Argument::that(function (array $data) use (
@@ -252,9 +254,10 @@ class ViewerCodesTest extends TestCase
         $repo->add(
             'test-val',
             'test-val',
-            'test-val', new DateTime,
             'test-val',
-            'test-actor-id'
+            new DateTime,
+            'test-val',
+            123
         );
     }
 
@@ -275,9 +278,10 @@ class ViewerCodesTest extends TestCase
         $repo->add(
             'test-val',
             'test-val',
-            'test-val', new DateTime,
             'test-val',
-            'test-actor-id'
+            new DateTime,
+            'test-val',
+            123
         );
     }
 
@@ -318,7 +322,7 @@ class ViewerCodesTest extends TestCase
     public function can_remove_actor_and_code_association(): void
     {
         $testCode = 'test-code';
-        $codeOwner = '23';
+        $codeOwner = 23;
 
         $this->dynamoDbClientProphecy->updateItem(
             Argument::that(function (array $data) use (

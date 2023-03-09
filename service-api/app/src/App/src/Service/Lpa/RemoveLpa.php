@@ -72,7 +72,7 @@ class RemoveLpa
 
                 $this->viewerCodesRepository->removeActorAssociation(
                     $viewerCodeRecord['ViewerCode'],
-                    (string)$codeOwner['ActorId']
+                    $codeOwner['ActorId']
                 );
             }
         }
@@ -89,7 +89,7 @@ class RemoveLpa
                 for UserLpaActorId {expectedId}, actual deletion of data for UserLpaActorId {deletedId}',
                 [
                     'expectedId' => $deletedData['Id'],
-                    'deletedId'  => $userActorLpa['Id']
+                    'deletedId' => $userActorLpa['Id']
                 ]
             );
             throw new ApiException('Incorrect LPA data deleted from users account');

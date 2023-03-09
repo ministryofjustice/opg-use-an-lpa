@@ -37,6 +37,7 @@ interface ViewerCodesInterface
      * @param string   $siriusUid
      * @param DateTime $expires
      * @param string   $organisation
+     *
      * @return mixed
      */
     public function add(
@@ -45,7 +46,7 @@ interface ViewerCodesInterface
         string $siriusUid,
         DateTime $expires,
         string $organisation,
-        ?string $actorId
+        ?int $actorId
     );
 
     /**
@@ -53,6 +54,7 @@ interface ViewerCodesInterface
      *
      * @param string   $code
      * @param DateTime $cancelledDate
+     *
      * @return bool The code cancellation was successful or not
      */
     public function cancel(string $code, DateTime $cancelledDate): bool;
@@ -61,7 +63,8 @@ interface ViewerCodesInterface
      * update a viewer code from the database
      *
      * @param string $code
+     *
      * @return bool
      */
-    public function removeActorAssociation(string $code, ?string $codeOwner): bool;
+    public function removeActorAssociation(string $code, ?int $codeOwner): bool;
 }

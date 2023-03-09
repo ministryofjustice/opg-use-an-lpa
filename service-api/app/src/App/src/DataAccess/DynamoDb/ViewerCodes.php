@@ -90,7 +90,7 @@ class ViewerCodes implements ViewerCodesInterface
         string $siriusUid,
         DateTime $expires,
         string $organisation,
-        ?string $actorId
+        ?int $actorId
     ) {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
@@ -99,14 +99,14 @@ class ViewerCodes implements ViewerCodesInterface
             $this->client->putItem([
                 'TableName' => $this->viewerCodesTable,
                 'Item' => [
-                    'ViewerCode' => ['S' => $code],
-                    'UserLpaActor' => ['S' => $userLpaActorToken],
-                    'SiriusUid' => ['S' => $siriusUid],
-                    'Added' => ['S' => $now],
-                    'Expires' => ['S' => $expires->format('c')],
+                    'ViewerCode'    => ['S' => $code],
+                    'UserLpaActor'  => ['S' => $userLpaActorToken],
+                    'SiriusUid'     => ['S' => $siriusUid],
+                    'Added'         => ['S' => $now],
+                    'Expires'       => ['S' => $expires->format('c')],
                     // We use 'c' so not to assume UTC.
-                    'Organisation' => ['S' => $organisation],
-                    'CreatedBy' => ['N' => $actorId],
+                    'Organisation'  => ['S' => $organisation],
+                    'CreatedBy'     => ['N' => (string)$actorId],
                     ],
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
@@ -145,7 +145,7 @@ class ViewerCodes implements ViewerCodesInterface
     /**
      * @inheritDoc
      */
-    public function removeActorAssociation(string $code, ?string $codeOwner): bool
+    public function removeActorAssociation(string $code, ?int $codeOwner): bool
     {
         // Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
@@ -161,7 +161,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'S' => '',
                 ],
                 ':d' => [
-                    'N' => $codeOwner,
+                    'N' => (string)$codeOwner,
                 ]
             ]
         ]);
