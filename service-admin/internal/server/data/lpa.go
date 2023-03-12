@@ -16,10 +16,11 @@ type lpaService struct {
 }
 
 type LPA struct {
-	SiriusUID  string `json:"SiriusUid"`
-	Added      string
-	UserID     string `json:"UserId"`
-	ActivateBy int
+	SiriusUID    string `json:"SiriusUid"`
+	Added        string
+	UserID       string `json:"UserId"`
+	ActivateBy   int
+	ActivatedOn  string
 }
 
 const (

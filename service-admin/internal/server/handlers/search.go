@@ -67,9 +67,10 @@ type Search struct {
 }
 
 type AddedBy struct {
-	DateAdded  string
-	Email      string
-	ActivateBy int
+	DateAdded   string
+	Email       string
+	ActivateBy  int
+	ActivatedOn string
 }
 
 func NewSearchServer(accountService AccountService, lpaService LPAService, templateWriterService TemplateWriterService, activationKeyService data.ActivationKeyService) *SearchServer {
@@ -168,7 +169,13 @@ func (s *SearchServer) SearchByLPANumber(ctx context.Context, q string) interfac
 	for _, userID := range r {
 		email, err := s.accountService.GetEmailByUserID(ctx, userID.UserID)
 		if err == nil {
-			addedBy := AddedBy{Email: email, DateAdded: userID.Added, ActivateBy: userID.ActivateBy}
+			addedBy := AddedBy{
+				Email:       email,
+				DateAdded:   userID.Added,
+				ActivateBy:  userID.ActivateBy,
+				ActivatedOn: userID.ActivatedOn,
+			}
+
 			emails = append(emails, addedBy)
 		}
 	}
