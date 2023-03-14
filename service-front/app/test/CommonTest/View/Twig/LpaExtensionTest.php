@@ -75,6 +75,9 @@ class LpaExtensionTest extends TestCase
         if (isset($addressLines['postcode'])) {
             $address->setPostcode($addressLines['postcode']);
         }
+        if (isset($addressLines['country'])) {
+            $address->setCountry($addressLines['country']);
+        }
 
         $actor = new CaseActor();
         $actor->setAddresses([$address]);
@@ -95,8 +98,9 @@ class LpaExtensionTest extends TestCase
                     'town'         => 'Some Town',
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
+                    'country'      => 'Some country',
                 ],
-                'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD',
+                'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD, Some country',
             ],
             [
                 [
@@ -106,6 +110,7 @@ class LpaExtensionTest extends TestCase
                     'town'         => 'Some Town4',
                     'county'       => 'Some County5',
                     'postcode'     => 'AB1 2CQ',
+                    'country'      => '',
                 ],
                 'Some House1, Some Place2, Somewhere3, Some Town4, Some County5, AB1 2CQ',
             ],
@@ -116,8 +121,9 @@ class LpaExtensionTest extends TestCase
                     'town'         => 'Some Town',
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
+                    'country'      => 'Some country',
                 ],
-                'Some House, Somewhere, Some Town, Some County, AB1 2CD',
+                'Some House, Somewhere, Some Town, Some County, AB1 2CD, Some country',
             ],
             [
                 [

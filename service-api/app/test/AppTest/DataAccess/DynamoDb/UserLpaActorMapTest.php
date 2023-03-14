@@ -410,6 +410,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId        = '1';
         $testActivationCode = '8EFXFEF48WJ4';
         $testAdded          = gmdate('c');
+        $testActivated      = gmdate('c');
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -420,7 +421,7 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertArrayHasKey('UpdateExpression', $data);
             $this->assertEquals(
-                'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
+                'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c remove ActivateBy, DueBy',
                 $data['UpdateExpression']
             );
 
@@ -441,6 +442,9 @@ class UserLpaActorMapTest extends TestCase
                 ],
                 'UserId'    => [
                     'S' => $testUserId,
+                ],
+                'ActivatedOn'   => [
+                    'S' => $testActivated,
                 ],
             ],
         ]));

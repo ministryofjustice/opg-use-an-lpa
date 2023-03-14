@@ -156,6 +156,9 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
+        $current = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
+        $activatedTime = $current->format(DateTimeInterface::ATOM);
+
         $response = $this->client->updateItem(
             [
                 'TableName'                 => $this->userLpaActorTable,
@@ -164,13 +167,16 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                         'S' => $lpaActorToken,
                     ],
                 ],
-                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b remove ActivateBy, DueBy',
+                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c remove ActivateBy, DueBy',
                 'ExpressionAttributeValues' => [
                     ':a' => [
                         'N' => $actorId,
                     ],
                     ':b' => [
                         'S' => $activationCode,
+                    ],
+                    ':c' => [
+                        'S' => $activatedTime,
                     ],
                 ],
                 'ReturnValues'              => 'ALL_NEW',
