@@ -67,7 +67,7 @@ orbs:
         resource_class: small
       php:
         docker:
-          - image: cimg/php:7.4
+          - image: cimg/php:8.2
         resource_class: small
       php-browsers:
         docker:
