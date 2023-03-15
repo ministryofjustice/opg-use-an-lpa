@@ -32,8 +32,11 @@ class AddAccessForAllLpa
     private const OLDER_LPA_POSTCODE_NOT_SUPPLIED = 'Postcode not supplied';
 
     /**
-     * @param ApiClient       $apiClient
-     * @param LoggerInterface $logger
+     * @param ApiClient                $apiClient
+     * @param LoggerInterface          $logger
+     * @param ParseLpaAlreadyAdded     $parseLpaAlreadyAddedResponse
+     * @param ParseActivationKeyExists $parseActivationKeyExistsResponse
+     * @param ParseLpaMatch            $parseAccessForAllLpaMatchResponse
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -67,22 +70,18 @@ class AddAccessForAllLpa
         try {
             $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
         } catch (ApiException $apiEx) {
-            switch ($apiEx->getCode()) {
-                case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned(
-                        $data['reference_number'],
-                        $apiEx->getMessage(),
-                        $apiEx->getAdditionalData()
-                    );
-                case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned(
-                        $data['reference_number'],
-                        $apiEx->getAdditionalData()
-                    );
-                default:
-                    // An API exception that we don't want to handle has been caught, pass it up the stack
-                    throw $apiEx;
-            }
+            return match ($apiEx->getCode()) {
+                StatusCodeInterface::STATUS_BAD_REQUEST => $this->badRequestReturned(
+                    $data['reference_number'],
+                    $apiEx->getMessage(),
+                    $apiEx->getAdditionalData()
+                ),
+                StatusCodeInterface::STATUS_NOT_FOUND => $this->notFoundReturned(
+                    $data['reference_number'],
+                    $apiEx->getAdditionalData()
+                ),
+                default => throw $apiEx,
+            };
         }
 
         $this->logger->notice(
@@ -94,7 +93,10 @@ class AddAccessForAllLpa
             ]
         );
 
-        return new AccessForAllApiResult(AccessForAllResult::FOUND, ($this->parseAccessForAllLpaMatchResponse)($response));
+        return new AccessForAllApiResult(
+            AccessForAllResult::FOUND,
+            ($this->parseAccessForAllLpaMatchResponse)($response),
+        );
     }
 
     public function confirm(
@@ -157,9 +159,7 @@ class AddAccessForAllLpa
      * @param int    $lpaUid
      * @param string $message
      * @param array  $additionalData
-     *
-     * @return AccessForAllResult
-     * @throws RuntimeException
+     * @return AccessForAllApiResult
      */
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {
@@ -198,7 +198,7 @@ class AddAccessForAllLpa
                 );
                 break;
             case self::OLDER_LPA_POSTCODE_NOT_SUPPLIED:
-                $code = null;
+                $code     = null;
                 $response = new AccessForAllApiResult(AccessForAllResult::POSTCODE_NOT_SUPPLIED, $additionalData);
                 break;
 
@@ -226,8 +226,7 @@ class AddAccessForAllLpa
      *
      * @param int   $lpaUid
      * @param array $additionalData
-     *
-     * @return AccessForAllResult
+     * @return AccessForAllApiResult
      * @throws RuntimeException
      */
     private function notFoundReturned(int $lpaUid, array $additionalData): AccessForAllApiResult

@@ -8,6 +8,7 @@ use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
+use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -21,6 +22,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     private CaseActor $attorney;
 
     private ObjectProphecy|LpaFactory $lpaFactory;
+
+    /** @var array<string, ?string|array<string, ?string>>  */
     private array $response;
 
     public function setUp(): void
@@ -56,7 +59,10 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @throws Exception
+     */
     public function it_creates_a_lpa_match_actor_details_dto_from_array_data()
     {
         $this->lpaFactory
@@ -76,7 +82,9 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $this->assertNotNull($result->getAttorney());
     }
 
-    /** @test */
+    /** @test
+     * @throws Exception
+     */
     public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields()
     {
         $this->response['donor']['firstname']   = null;
@@ -187,7 +195,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    public function lpaMatchActorDetailsDataProvider()
+    public function lpaMatchActorDetailsDataProvider(): array
     {
         return [
             [

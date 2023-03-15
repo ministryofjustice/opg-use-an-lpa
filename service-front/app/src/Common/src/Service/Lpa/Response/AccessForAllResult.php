@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa\Response;
 
-enum AccessForAllResult: string {
+enum AccessForAllResult: string
+{
     case SUCCESS                   = 'SUCCESS';
     case FOUND                     = 'FOUND';
     case NOT_FOUND                 = 'NOT_FOUND';
