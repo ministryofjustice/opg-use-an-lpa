@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Common\Service\Lpa\Response\Parse;
 
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\LpaMatch;
 use InvalidArgumentException;
 
-class ParseActivationKeyExistsResponse
+class ParseLpaMatch
 {
     /**
      * @param LpaFactory $lpaFactory
@@ -18,9 +18,10 @@ class ParseActivationKeyExistsResponse
     {
     }
 
-    public function __invoke(array $data): ActivationKeyExistsResponse
+    public function __invoke(array $data): LpaMatch
     {
         if (
+            // if the actor is the donor then the attorney data wont exist
             !isset($data['donor']['uId']) ||
             !array_key_exists('firstname', $data['donor']) ||
             !array_key_exists('middlenames', $data['donor']) ||
@@ -32,13 +33,13 @@ class ParseActivationKeyExistsResponse
             );
         }
 
-        $response = new ActivationKeyExistsResponse();
+        $response = new LpaMatch();
+
+        if (array_key_exists('attorney', $data)) {
+            $response->setAttorney($this->lpaFactory->createCaseActorFromData($data['attorney']));
+        }
         $response->setDonor($this->lpaFactory->createCaseActorFromData($data['donor']));
         $response->setCaseSubtype($data['caseSubtype']);
-
-        if (isset($data['activationKeyDueDate'])) {
-            $response->setDueDate($data['activationKeyDueDate']);
-        }
 
         return $response;
     }

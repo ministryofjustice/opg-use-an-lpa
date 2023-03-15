@@ -6,14 +6,14 @@ namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\OlderLpaMatchResponse;
-use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
+use Common\Service\Lpa\Response\LpaMatch;
+use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class ParseOlderLpaMatchResponseTest extends TestCase
+class ParseAccessForAllLpaMatchResponseTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -67,10 +67,10 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ->createCaseActorFromData($this->response['attorney'])
             ->willReturn($this->attorney);
 
-        $sut    = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaMatch($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(OlderLpaMatchResponse::class, $result);
+        $this->assertInstanceOf(LpaMatch::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertNotNull($result->getAttorney());
@@ -94,10 +94,10 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             ->createCaseActorFromData($this->response['attorney'])
             ->willReturn($this->attorney);
 
-        $sut    = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaMatch($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(OlderLpaMatchResponse::class, $result);
+        $this->assertInstanceOf(LpaMatch::class, $result);
         $this->assertNull($result->getDonor()->getFirstname());
         $this->assertNull($result->getDonor()->getMiddlenames());
         $this->assertNull($result->getDonor()->getSurname());
@@ -110,7 +110,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaMatch::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -123,7 +123,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             'caseSubtype' => 'hw',
         ];
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaMatch($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -132,7 +132,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaMatch::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -145,7 +145,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             'caseSubtype' => 'hw',
         ];
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaMatch($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -154,7 +154,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaMatch::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -167,7 +167,7 @@ class ParseOlderLpaMatchResponseTest extends TestCase
             'caseSubtype' => 'hw',
         ];
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaMatch($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -179,11 +179,11 @@ class ParseOlderLpaMatchResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaMatch::__invoke ' .
              'does not contain the required fields'
         );
 
-        $sut = new ParseOlderLpaMatchResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaMatch($this->lpaFactory->reveal());
         ($sut)($data);
     }
 

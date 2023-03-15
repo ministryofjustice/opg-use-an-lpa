@@ -6,8 +6,8 @@ namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\ActivationKeyExists;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -51,10 +51,10 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($this->donor);
 
-        $sut    = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut    = new ParseActivationKeyExists($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
+        $this->assertInstanceOf(ActivationKeyExists::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertEquals('2021-12-06', $result->getDueDate());
@@ -74,10 +74,10 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($donor);
 
-        $sut    = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut    = new ParseActivationKeyExists($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(ActivationKeyExistsResponse::class, $result);
+        $this->assertInstanceOf(ActivationKeyExists::class, $result);
         $this->assertNull($result->getDonor()->getFirstname());
         $this->assertNull($result->getDonor()->getMiddlenames());
         $this->assertNull($result->getDonor()->getSurname());
@@ -89,7 +89,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExists::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -102,7 +102,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             'caseSubtype' => null,
         ];
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut = new ParseActivationKeyExists($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -111,7 +111,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExists::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -124,7 +124,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             'caseSubtype' => null,
         ];
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut = new ParseActivationKeyExists($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -133,7 +133,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExists::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -146,7 +146,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             'caseSubtype' => null,
         ];
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut = new ParseActivationKeyExists($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -155,7 +155,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExists::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -169,7 +169,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
             'caseSubtype' => null,
         ];
 
-        $sut = new ParseActivationKeyExistsResponse($this->lpaFactory->reveal());
+        $sut = new ParseActivationKeyExists($this->lpaFactory->reveal());
         ($sut)($data);
     }
 }

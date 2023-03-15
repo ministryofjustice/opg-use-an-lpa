@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Common\Service\Lpa\Response\Parse;
 
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Laminas\Stdlib\Exception\InvalidArgumentException;
 
-class ParseLpaAlreadyAddedResponse
+class ParseLpaAlreadyAdded
 {
     /**
      * @param LpaFactory $lpaFactory
@@ -18,7 +18,7 @@ class ParseLpaAlreadyAddedResponse
     {
     }
 
-    public function __invoke(array $data): LpaAlreadyAddedResponse
+    public function __invoke(array $data): LpaAlreadyAdded
     {
         if (
             !isset($data['donor']['uId']) ||
@@ -33,7 +33,7 @@ class ParseLpaAlreadyAddedResponse
             );
         }
 
-        $response = new LpaAlreadyAddedResponse();
+        $response = new LpaAlreadyAdded();
         $response->setDonor($this->lpaFactory->createCaseActorFromData($data['donor']));
         $response->setCaseSubtype($data['caseSubtype']);
         $response->setLpaActorToken($data['lpaActorToken']);

@@ -25,8 +25,8 @@ class CheckLpaHandlerFactory
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
             $container->get(AuthenticationInterface::class),
-            $container->get(LpaService::class),
             $container->get(LoggerInterface::class),
+            $container->get(LpaService::class),
             $rateLimitFactory->factory('actor_code_failure'),
             $container->get(TranslatorInterface::class),
             $container->get(AddLpa::class)

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use RuntimeException;
 
-class AddLpaApiResponse
+class AddLpaApiResult
 {
     public const ADD_LPA_FOUND         = 'ADD_LPA_FOUND';
     public const ADD_LPA_NOT_FOUND     = 'ADD_LPA_NOT_FOUND';
@@ -17,11 +17,11 @@ class AddLpaApiResponse
     public const ADD_LPA_SUCCESS       = 'ADD_LPA_SUCCESS';
     public const ADD_LPA_FAILURE       = 'ADD_LPA_FAILURE';
 
-    private array|ArrayObject|LpaAlreadyAddedResponse $data;
+    private array|ArrayObject|LpaAlreadyAdded $data;
 
     /**
-     * @param string $response
-     * @param array|ArrayObject|LpaAlreadyAddedResponse $data
+     * @param string                            $response
+     * @param array|ArrayObject|LpaAlreadyAdded $data
      */
     public function __construct(private string $response, $data)
     {
@@ -37,7 +37,7 @@ class AddLpaApiResponse
     }
 
     /**
-     * @return array|ArrayObject|LpaAlreadyAddedResponse
+     * @return array|ArrayObject|LpaAlreadyAdded
      */
     public function getData()
     {
@@ -71,7 +71,7 @@ class AddLpaApiResponse
     {
         $allowedDataTypes = [
             ArrayObject::class,
-            LpaAlreadyAddedResponse::class,
+            LpaAlreadyAdded::class,
         ];
 
         if (is_array($data)) {

@@ -10,10 +10,10 @@ use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AddLpa;
-use Common\Service\Lpa\AddLpaApiResponse;
+use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\ParseLpaData;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -35,14 +35,14 @@ class AddLpaTest extends TestCase
     private ObjectProphecy|ApiClient $apiClientProphecy;
     private ObjectProphecy|ParseLpaData $parseLpaDataProphecy;
     private ObjectProphecy|LoggerInterface $loggerProphecy;
-    private ObjectProphecy|ParseLpaAlreadyAddedResponse $parseAlreadyAddedProphecy;
+    private ObjectProphecy|ParseLpaAlreadyAdded $parseAlreadyAddedProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy         = $this->prophesize(ApiClient::class);
         $this->parseLpaDataProphecy      = $this->prophesize(ParseLpaData::class);
         $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
-        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
+        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAdded::class);
 
         $this->data = [
             'uid'        => '700000000321',
@@ -117,7 +117,7 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_FOUND, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_FOUND, $result->getResponse());
         $this->assertEquals($this->lpaParsedData, $result->getData());
     }
 
@@ -158,7 +158,7 @@ class AddLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new LpaAlreadyAddedResponse();
+        $dto = new LpaAlreadyAdded();
         $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
         $dto->setLpaActorToken($response['lpaActorToken']);
@@ -174,7 +174,7 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $result->getResponse());
         $this->assertEquals($dto, $result->getData());
     }
 
@@ -209,7 +209,7 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE, $result->getResponse());
         $this->assertEquals([], $result->getData());
     }
 
@@ -244,7 +244,7 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_NOT_FOUND, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_NOT_FOUND, $result->getResponse());
         $this->assertEquals([], $result->getData());
     }
 
@@ -331,7 +331,7 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_SUCCESS, $result->getResponse());
     }
 
     /** @test */
@@ -354,6 +354,6 @@ class AddLpaTest extends TestCase
             $this->data['dob']
         );
 
-        $this->assertEquals(AddLpaApiResponse::ADD_LPA_FAILURE, $result->getResponse());
+        $this->assertEquals(AddLpaApiResult::ADD_LPA_FAILURE, $result->getResponse());
     }
 }

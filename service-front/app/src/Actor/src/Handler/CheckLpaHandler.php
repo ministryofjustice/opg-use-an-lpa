@@ -11,19 +11,20 @@ use Common\Exception\RateLimitExceededException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\AddLpa;
-use Common\Service\Lpa\AddLpaApiResponse;
+use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use Common\Workflow\State;
+use Common\Workflow\StateNotInitialisedException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -40,7 +41,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAware, LoggerAware
+class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAware, SessionAware, LoggerAware
 {
     use CsrfGuard;
     use Logger;
@@ -60,8 +61,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        private LpaService $lpaService,
         LoggerInterface $logger,
+        private LpaService $lpaService,
         private RateLimitService $rateLimitService,
         private TranslatorInterface $translator,
         private AddLpa $addLpa,
@@ -73,9 +74,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
-     * @throws \Http\Client\Exception|\Exception
+     * @throws StateNotInitialisedException
+     * @throws RateLimitExceededException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -113,6 +114,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
      * @param string                 $dob
      * @return ResponseInterface
      * @throws RateLimitExceededException
+     * @throws StateNotInitialisedException
      */
     public function handleGet(
         ServerRequestInterface $request,
@@ -124,11 +126,11 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             $this->identity,
             $activation_key,
             $referenceNumber,
-            $dob
+            $dob,
         );
 
         switch ($result->getResponse()) {
-            case AddLpaApiResponse::ADD_LPA_ALREADY_ADDED:
+            case AddLpaApiResult::ADD_LPA_ALREADY_ADDED:
                 $lpaAddedData = $result->getData();
 
                 $this->state($request)->reset();
@@ -143,10 +145,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         ]
                     )
                 );
-            case AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE:
-            case AddLpaApiResponse::ADD_LPA_NOT_FOUND:
-                $this->rateLimitService->
-                limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+            case AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE:
+            case AddLpaApiResult::ADD_LPA_NOT_FOUND:
+                $this->rateLimitService
+                    ->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
                 $this->state($request)->reset();
                 return new HtmlResponse(
@@ -160,16 +162,18 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         ]
                     )
                 );
-            case AddLpaApiResponse::ADD_LPA_FOUND:
+            case AddLpaApiResult::ADD_LPA_FOUND:
                 $lpaData = $result->getData();
 
-                $lpa    = $lpaData['lpa'];
-                $actor  = $lpaData['actor']['details'];
+                $lpa   = $lpaData['lpa'];
+                $actor = $lpaData['actor']['details'];
 
                 $actorRole =
-                    $lpaData['actor']['type'] === 'donor' ? 'Donor'
-                        : ($lpaData['actor']['type'] === 'primary-attorney' ? 'Attorney'
-                        : 'Trust corporation'
+                    $lpaData['actor']['type'] === 'donor'
+                        ? 'Donor'
+                        : ($lpaData['actor']['type'] === 'primary-attorney'
+                            ? 'Attorney'
+                            : 'Trust corporation'
                     );
 
                 $this->logger->debug(
@@ -203,8 +207,14 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     )
                 );
         }
+
+        // will never hit this but the method should return
+        return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
     }
 
+    /**
+     * @throws StateNotInitialisedException
+     */
     public function handlePost(
         ServerRequestInterface $request,
         string $activation_key,
@@ -222,7 +232,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             );
 
             switch ($result->getResponse()) {
-                case AddLpaApiResponse::ADD_LPA_SUCCESS:
+                case AddLpaApiResult::ADD_LPA_SUCCESS:
                     /** @var FlashMessagesInterface $flash */
                     $flash   = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
                     $donor   = $this->session->get('donor_name');
@@ -231,10 +241,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->logger->notice(
                         'Account with Id {id} added LPA of type {lpaType} to their account',
                         [
-                            'event_code' =>
-                                ($lpaType === 'health and welfare') ?
-                                    EventCodes::ADDED_LPA_TYPE_HW : EventCodes::ADDED_LPA_TYPE_PFA,
-                            'lpaType' => $lpaType,
+                            'event_code' => $lpaType === 'health and welfare'
+                                ? EventCodes::ADDED_LPA_TYPE_HW
+                                : EventCodes::ADDED_LPA_TYPE_PFA,
+                            'lpaType'    => $lpaType,
                         ]
                     );
 
@@ -251,7 +261,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
                     $this->state($request)->reset();
                     return new RedirectResponse($this->urlHelper->generate('lpa.dashboard'));
-                case AddLpaApiResponse::ADD_LPA_FAILURE:
+                case AddLpaApiResult::ADD_LPA_FAILURE:
                     break;
             }
         }

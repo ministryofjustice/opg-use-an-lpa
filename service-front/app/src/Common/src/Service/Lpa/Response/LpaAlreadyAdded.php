@@ -6,22 +6,15 @@ namespace Common\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
 
-class OlderLpaMatchResponse
+class LpaAlreadyAdded extends Response
 {
     protected CaseActor $donor;
-
-    protected ?CaseActor $attorney = null;
     protected string $caseSubtype;
-    protected string $activationKeyDueDate;
+    protected string $lpaActorToken;
 
     public function getDonor(): ?CaseActor
     {
         return $this->donor;
-    }
-
-    public function getAttorney(): ?CaseActor
-    {
-        return $this->attorney;
     }
 
     public function getCaseSubtype(): ?string
@@ -29,9 +22,9 @@ class OlderLpaMatchResponse
         return $this->caseSubtype;
     }
 
-    public function getDueDate(): string
+    public function getLpaActorToken(): ?string
     {
-        return $this->activationKeyDueDate;
+        return $this->lpaActorToken;
     }
 
     public function setDonor(CaseActor $donor): void
@@ -39,18 +32,13 @@ class OlderLpaMatchResponse
         $this->donor = $donor;
     }
 
-    public function setAttorney(CaseActor $attorney): void
-    {
-        $this->attorney = $attorney;
-    }
-
     public function setCaseSubtype(string $caseSubtype): void
     {
         $this->caseSubtype = $caseSubtype;
     }
 
-    public function setDueDate(string $activationKeyDueDate): void
+    public function setLpaActorToken(string $lpaActorToken): void
     {
-        $this->activationKeyDueDate = $activationKeyDueDate;
+        $this->lpaActorToken = $lpaActorToken;
     }
 }

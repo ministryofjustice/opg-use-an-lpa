@@ -7,14 +7,14 @@ namespace CommonTest\Service\Lpa;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Lpa\AddOlderLpa;
-use Common\Service\Lpa\OlderLpaApiResponse;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\OlderLpaMatchResponse;
-use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
+use Common\Service\Lpa\AddAccessForAllLpa;
+use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyExists;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use Common\Service\Lpa\Response\LpaMatch;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
+use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
@@ -24,27 +24,27 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * @property array olderLpa
- * @property AddOlderLpa $sut
- * @coversDefaultClass \Common\Service\Lpa\AddOlderLpa
+ * @property array              olderLpa
+ * @property AddAccessForAllLpa $sut
+ * @coversDefaultClass \Common\Service\Lpa\AddAccessForAllLpa
  */
-class AddOlderLpaTest extends TestCase
+class AddAccessForAllLpaTest extends TestCase
 {
     use ProphecyTrait;
 
     private ObjectProphecy|ApiClient $apiClientProphecy;
     private ObjectProphecy|LoggerInterface $loggerProphecy;
-    private ObjectProphecy|ParseActivationKeyExistsResponse $parseKeyExistsProphecy;
-    private ObjectProphecy|ParseLpaAlreadyAddedResponse $parseAlreadyAddedProphecy;
-    private ObjectProphecy|ParseOlderLpaMatchResponse $parseOlderLpaMatchProphecy;
+    private ObjectProphecy|ParseActivationKeyExists $parseKeyExistsProphecy;
+    private ObjectProphecy|ParseLpaAlreadyAdded $parseAlreadyAddedProphecy;
+    private ObjectProphecy|ParseLpaMatch $parseOlderLpaMatchProphecy;
 
     public function setUp(): void
     {
         $this->apiClientProphecy          = $this->prophesize(ApiClient::class);
         $this->loggerProphecy             = $this->prophesize(LoggerInterface::class);
-        $this->parseKeyExistsProphecy     = $this->prophesize(ParseActivationKeyExistsResponse::class);
-        $this->parseAlreadyAddedProphecy  = $this->prophesize(ParseLpaAlreadyAddedResponse::class);
-        $this->parseOlderLpaMatchProphecy = $this->prophesize(ParseOlderLpaMatchResponse::class);
+        $this->parseKeyExistsProphecy     = $this->prophesize(ParseActivationKeyExists::class);
+        $this->parseAlreadyAddedProphecy  = $this->prophesize(ParseLpaAlreadyAdded::class);
+        $this->parseOlderLpaMatchProphecy = $this->prophesize(ParseLpaMatch::class);
 
         $this->olderLpa = [
             'reference_number' => 700000000000,
@@ -56,7 +56,7 @@ class AddOlderLpaTest extends TestCase
 
         $this->apiClientProphecy->setUserTokenHeader('12-1-1-1-1234')->shouldBeCalled();
 
-        $this->sut = new AddOlderLpa(
+        $this->sut = new AddAccessForAllLpa(
             $this->apiClientProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->parseAlreadyAddedProphecy->reveal(),
@@ -102,7 +102,7 @@ class AddOlderLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
 
@@ -119,7 +119,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::FOUND, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::FOUND, $result->getResponse());
     }
 
     /**
@@ -156,7 +156,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::NOT_ELIGIBLE, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::NOT_ELIGIBLE, $result->getResponse());
     }
 
     /**
@@ -193,7 +193,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::DOES_NOT_MATCH, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::DOES_NOT_MATCH, $result->getResponse());
     }
 
     /**
@@ -241,7 +241,7 @@ class AddOlderLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new ActivationKeyExistsResponse();
+        $dto = new ActivationKeyExists();
         $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
 
@@ -258,7 +258,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::HAS_ACTIVATION_KEY, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::HAS_ACTIVATION_KEY, $result->getResponse());
         $this->assertEquals($dto, $result->getData());
     }
 
@@ -305,7 +305,7 @@ class AddOlderLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new ActivationKeyExistsResponse();
+        $dto = new ActivationKeyExists();
         $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
 
@@ -322,7 +322,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::KEY_ALREADY_REQUESTED, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::KEY_ALREADY_REQUESTED, $result->getResponse());
         $this->assertEquals($dto, $result->getData());
     }
 
@@ -370,7 +370,7 @@ class AddOlderLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new LpaAlreadyAddedResponse();
+        $dto = new LpaAlreadyAdded();
         $dto->setDonor($donor);
         $dto->setCaseSubtype($response['caseSubtype']);
         $dto->setLpaActorToken($response['lpaActorToken']);
@@ -388,7 +388,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::LPA_ALREADY_ADDED, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::LPA_ALREADY_ADDED, $result->getResponse());
         $this->assertEquals($dto, $result->getData());
     }
 
@@ -426,7 +426,7 @@ class AddOlderLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(OlderLpaApiResponse::NOT_FOUND, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::NOT_FOUND, $result->getResponse());
     }
 
     /**
@@ -524,7 +524,7 @@ class AddOlderLpaTest extends TestCase
                 ]
             )->willReturn($response);
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $this->parseOlderLpaMatchProphecy
             ->__invoke($response)
             ->willReturn($dto);
@@ -539,7 +539,7 @@ class AddOlderLpaTest extends TestCase
             true
         );
 
-        $this->assertEquals(OlderLpaApiResponse::SUCCESS, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::SUCCESS, $result->getResponse());
     }
 
     /**
@@ -617,7 +617,7 @@ class AddOlderLpaTest extends TestCase
         );
 
         $this->assertEquals('1234', $result->getData()['actor_id']);
-        $this->assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
+        $this->assertEquals(AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
     /**

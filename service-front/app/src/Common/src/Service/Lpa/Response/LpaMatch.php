@@ -6,12 +6,12 @@ namespace Common\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
 
-class ActivationKeyExistsResponse
+class LpaMatch extends Response
 {
     protected CaseActor $donor;
 
+    protected ?CaseActor $attorney = null;
     protected string $caseSubtype;
-
     protected string $activationKeyDueDate;
 
     public function getDonor(): ?CaseActor
@@ -19,12 +19,17 @@ class ActivationKeyExistsResponse
         return $this->donor;
     }
 
+    public function getAttorney(): ?CaseActor
+    {
+        return $this->attorney;
+    }
+
     public function getCaseSubtype(): ?string
     {
         return $this->caseSubtype;
     }
 
-    public function getDueDate(): ?string
+    public function getDueDate(): string
     {
         return $this->activationKeyDueDate;
     }
@@ -32,6 +37,11 @@ class ActivationKeyExistsResponse
     public function setDonor(CaseActor $donor): void
     {
         $this->donor = $donor;
+    }
+
+    public function setAttorney(CaseActor $attorney): void
+    {
+        $this->attorney = $attorney;
     }
 
     public function setCaseSubtype(string $caseSubtype): void

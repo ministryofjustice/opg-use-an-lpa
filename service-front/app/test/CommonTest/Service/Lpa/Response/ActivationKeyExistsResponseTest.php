@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
+use Common\Service\Lpa\Response\ActivationKeyExists;
 use PHPUnit\Framework\TestCase;
 
 class ActivationKeyExistsResponseTest extends TestCase
@@ -13,9 +13,9 @@ class ActivationKeyExistsResponseTest extends TestCase
     /** @test */
     public function it_can_create_a_response_dto()
     {
-        $dto = new ActivationKeyExistsResponse();
+        $dto = new ActivationKeyExists();
 
-        $this->assertInstanceOf(ActivationKeyExistsResponse::class, $dto);
+        $this->assertInstanceOf(ActivationKeyExists::class, $dto);
     }
 
     /** @test */
@@ -27,7 +27,7 @@ class ActivationKeyExistsResponseTest extends TestCase
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
 
-        $dto = new ActivationKeyExistsResponse();
+        $dto = new ActivationKeyExists();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
         $dto->setDueDate('2021-12-06');
