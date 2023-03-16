@@ -7,7 +7,7 @@ namespace Common\Service\Lpa\Response\Parse;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Exception;
-use Laminas\Stdlib\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 
 class ParseLpaAlreadyAdded
 {
