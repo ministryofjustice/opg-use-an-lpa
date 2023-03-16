@@ -44,23 +44,4 @@ class ParseActivationKeyExists
 
         return $response;
     }
-
-    /**
-     * @param array{donor: array, caseSubtype: string} $data
-     * @return bool
-     */
-    private function isValidData(array $data): bool
-    {
-        if (
-            !isset($data['donor']['uId']) ||
-            !array_key_exists('firstname', $data['donor']) ||
-            !array_key_exists('middlenames', $data['donor']) ||
-            !array_key_exists('surname', $data['donor']) ||
-            !isset($data['caseSubtype'])
-        ) {
-            return false;
-        }
-
-        return true;
-    }
 }
