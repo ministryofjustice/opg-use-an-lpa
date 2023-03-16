@@ -11,6 +11,8 @@ use InvalidArgumentException;
 
 class ParseLpaMatch
 {
+    use BaselineValidData;
+
     /**
      * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
@@ -41,25 +43,5 @@ class ParseLpaMatch
         $response->setCaseSubtype($data['caseSubtype']);
 
         return $response;
-    }
-
-    /**
-     * @param array{donor: array, caseSubtype: string, lpaActorToken: string} $data
-     * @return bool
-     */
-    private function isValidData(array $data): bool
-    {
-        if (
-            // if the actor is the donor then the attorney data wont exist
-            !isset($data['donor']['uId']) ||
-            !array_key_exists('firstname', $data['donor']) ||
-            !array_key_exists('middlenames', $data['donor']) ||
-            !array_key_exists('surname', $data['donor']) ||
-            !isset($data['caseSubtype'])
-        ) {
-            return false;
-        }
-
-        return true;
     }
 }

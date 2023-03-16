@@ -11,6 +11,10 @@ use Laminas\Stdlib\Exception\InvalidArgumentException;
 
 class ParseLpaAlreadyAdded
 {
+    use BaselineValidData {
+        BaselineValidData::isValidData as baseLineData;
+    }
+
     /**
      * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
@@ -45,13 +49,12 @@ class ParseLpaAlreadyAdded
      */
     private function isValidData(array $data): bool
     {
+        $baseLine         = $this->baseLineData($data);
+        $hasLpaActorToken = isset($data['lpaActorToken']);
+
         if (
-            !isset($data['donor']['uId']) ||
-            !array_key_exists('firstname', $data['donor']) ||
-            !array_key_exists('middlenames', $data['donor']) ||
-            !array_key_exists('surname', $data['donor']) ||
-            !isset($data['caseSubtype']) ||
-            !isset($data['lpaActorToken'])
+            !$baseLine ||
+            !$hasLpaActorToken
         ) {
             return false;
         }
