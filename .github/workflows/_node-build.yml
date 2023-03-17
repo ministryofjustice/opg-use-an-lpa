@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@e0d62270e20d6eeecf2fd6397a1b8871b6269e38 # pin@v3.0.8
+        uses: actions/cache@ea0503788c59256f4da17725d04df850ca027df5 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
