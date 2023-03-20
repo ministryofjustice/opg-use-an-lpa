@@ -11,8 +11,6 @@ use DateInterval;
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
  * Interface UserLpaActorMapInterface
- *
- * @package App\DataAccess\Repository
  */
 interface UserLpaActorMapInterface
 {
@@ -28,7 +26,6 @@ interface UserLpaActorMapInterface
      *                                           about the LPA
      * @param string|null       $code            The Activation code which has been used to add the LPA to the users
      *                                           account
-     *
      * @return string The lpaActorToken of the newly created mapping
      */
     public function create(
@@ -37,14 +34,13 @@ interface UserLpaActorMapInterface
         ?string $actorId,
         ?DateInterval $expiryInterval = null,
         ?DateInterval $intervalTillDue = null,
-        ?string $code = null
+        ?string $code = null,
     ): string;
 
     /**
      * Returns the LPA relation record for the given token.
      *
      * @param string $lpaActorToken
-     *
      * @return ?array
      */
     public function get(string $lpaActorToken): ?array;
@@ -53,7 +49,6 @@ interface UserLpaActorMapInterface
      * Returns LPA relation records for the given user_id.
      *
      * @param string $userId
-     *
      * @return ?array
      */
     public function getByUserId(string $userId): ?array;
@@ -62,7 +57,6 @@ interface UserLpaActorMapInterface
      * Deletes a LPA relation. Should only be called if a rollback is needed.
      *
      * @param string $lpaActorToken
-     *
      * @return array The record that was deleted
      */
     public function delete(string $lpaActorToken): array;
@@ -73,7 +67,6 @@ interface UserLpaActorMapInterface
      * @param string $lpaActorToken
      * @param string $actorId
      * @param string $activationCode
-     *
      * @return array The record that was activated
      */
     public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array;
@@ -84,10 +77,10 @@ interface UserLpaActorMapInterface
      *
      * @see https://www.php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
      *
-     * @param string      $lpaActorToken
-     * @param string      $expiryInterval  The interval of when this record should expire
-     * @param string      $intervalTillDue The interval of when an action will be due on the LPA
-     * @param string|null $actorId         The actor related to the record if users details have matched
+     * @param string       $lpaActorToken
+     * @param DateInterval $expiryInterval  The interval of when this record should expire
+     * @param DateInterval $intervalTillDue The interval of when an action will be due on the LPA
+     * @param string|null  $actorId         The actor related to the record if users details have matched
      *
      * @return array The record that was renewed
      */
@@ -95,6 +88,6 @@ interface UserLpaActorMapInterface
         string $lpaActorToken,
         DateInterval $expiryInterval,
         DateInterval $intervalTillDue,
-        ?string $actorId
+        ?string $actorId,
     ): array;
 }

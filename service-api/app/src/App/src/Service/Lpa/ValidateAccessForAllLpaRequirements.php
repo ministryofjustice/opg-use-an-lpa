@@ -13,32 +13,23 @@ use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
 
 /**
- * Class ValidateOlderLpaRequirements
- *
  * Single action invokable class that validates an LPA data structure as being able to be added to a users account
- *
- * @package App\Service\Lpa
  */
-class ValidateOlderLpaRequirements
+class ValidateAccessForAllLpaRequirements
 {
     public const EARLIEST_REG_DATE = '2019-09-01';
-    public const NECESSARY_STATUS = 'Registered';
+    public const NECESSARY_STATUS  = 'Registered';
 
     private DateTimeImmutable $earliestDate;
-    private LoggerInterface $logger;
-    private FeatureEnabled $featureEnabled;
 
     /**
-     * ValidateOlderLpaRequirements constructor.
-     *
      * @param LoggerInterface $logger
+     * @param FeatureEnabled  $featureEnabled
      * @codeCoverageIgnore
      */
-    public function __construct(LoggerInterface $logger, FeatureEnabled $featureEnabled)
+    public function __construct(private LoggerInterface $logger, private FeatureEnabled $featureEnabled)
     {
-        $this->logger = $logger;
         $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
-        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -52,21 +43,21 @@ class ValidateOlderLpaRequirements
                 'User entered LPA {uId} does not have the required status',
                 [
                     'event_code' => EventCodes::OLDER_LPA_INVALID_STATUS,
-                    'uId' => $lpa['uId'],
+                    'uId'        => $lpa['uId'],
                 ]
             );
             throw new NotFoundException('LPA status invalid');
         }
 
         if (
-            (!($this->featureEnabled)('allow_older_lpas')) &&
+            !($this->featureEnabled)('allow_older_lpas') &&
             (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
         ) {
             $this->logger->notice(
                 'User entered LPA {uId} has a registration date before 1 September 2019',
                 [
                     'event_code' => EventCodes::OLDER_LPA_TOO_OLD,
-                    'uId' => $lpa['uId'],
+                    'uId'        => $lpa['uId'],
                 ]
             );
             throw new BadRequestException('LPA not eligible due to registration date');

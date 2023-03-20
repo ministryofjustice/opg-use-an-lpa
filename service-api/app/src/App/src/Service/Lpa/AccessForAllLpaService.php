@@ -13,30 +13,19 @@ use DateInterval;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
-class OlderLpaService
+class AccessForAllLpaService
 {
-    private const CLEANSE_INTERVAL = 'P6W';
-    private const EXPIRY_INTERVAL = 'P1Y';
+    private const CLEANSE_INTERVAL     = 'P6W';
+    private const EXPIRY_INTERVAL      = 'P1Y';
     private const SEND_LETTER_INTERVAL = 'P2W';
 
-    private ActorCodes $actorCodes;
-    private LoggerInterface $logger;
-    private LpasInterface $lpaRepository;
-    private FeatureEnabled $featureEnabled;
-    private UserLpaActorMapInterface $userLpaActorMap;
-
     public function __construct(
-        ActorCodes $actorCodes,
-        LpasInterface $lpaRepository,
-        UserLpaActorMapInterface $userLpaActorMap,
-        FeatureEnabled $featureEnabled,
-        LoggerInterface $logger
+        private ActorCodes $actorCodes,
+        private LpasInterface $lpaRepository,
+        private UserLpaActorMapInterface $userLpaActorMap,
+        private FeatureEnabled $featureEnabled,
+        private LoggerInterface $logger,
     ) {
-        $this->actorCodes = $actorCodes;
-        $this->lpaRepository = $lpaRepository;
-        $this->userLpaActorMap = $userLpaActorMap;
-        $this->featureEnabled = $featureEnabled;
-        $this->logger = $logger;
     }
 
     /**
@@ -44,7 +33,6 @@ class OlderLpaService
      *
      * @param string $lpaId
      * @param string $actorId
-     *
      * @return DateTime|null
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
@@ -60,13 +48,13 @@ class OlderLpaService
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
                 'actorId' => $lpaId,
-                'lpaId' => $actorId,
+                'lpaId'   => $actorId,
             ]
         );
         return $createdDate;
     }
 
-    private function removeLpa(string $requestId)
+    private function removeLpa(string $requestId): void
     {
         $this->userLpaActorMap->delete($requestId);
 
@@ -96,7 +84,7 @@ class OlderLpaService
         string $uid,
         string $actorUid,
         string $userId,
-        ?string $existingRecordId = null
+        ?string $existingRecordId = null,
     ): void {
         $recordId = null;
         if (($this->featureEnabled)('save_older_lpa_requests')) {
@@ -111,15 +99,15 @@ class OlderLpaService
             }
         }
 
-        $uidInt = (int)$uid;
+        $uidInt      = (int)$uid;
         $actorUidInt = (int)$actorUid;
 
         $this->logger->info(
             'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
-                'user_id' => $userId,
+                'user_id'  => $userId,
                 'attorney' => $actorUidInt,
-                'lpa' => $uidInt,
+                'lpa'      => $uidInt,
             ]
         );
 
@@ -129,9 +117,9 @@ class OlderLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
-                    'user_id' => $userId,
+                    'user_id'  => $userId,
                     'attorney' => $actorUidInt,
-                    'lpa' => $uidInt,
+                    'lpa'      => $uidInt,
                 ]
             );
             if ($recordId !== null) {
@@ -166,7 +154,6 @@ class OlderLpaService
      * @param string $uid Sirius uId for an LPA
      * @param string $userId
      * @param string $additionalInfo
-     *
      * @param ?int $actorId
      * @param ?string $existingRecordId
      */
@@ -175,7 +162,7 @@ class OlderLpaService
         string $userId,
         string $additionalInfo,
         ?int $actorId = null,
-        ?string $existingRecordId = null
+        ?string $existingRecordId = null,
     ): void {
 
         $recordId = null;
@@ -196,7 +183,7 @@ class OlderLpaService
             'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
                 'user_id' => $userId,
-                'lpa' => $uidInt,
+                'lpa'     => $uidInt,
             ]
         );
 
@@ -207,7 +194,7 @@ class OlderLpaService
                 'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
                 [
                     'user_id' => $userId,
-                    'lpa' => $uidInt,
+                    'lpa'     => $uidInt,
                 ]
             );
 
