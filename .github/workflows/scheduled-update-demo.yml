@@ -43,7 +43,7 @@ jobs:
       - seed_dynamodb
     steps:
       - name: configure AWS credentials for ecs update
-        uses: aws-actions/configure-aws-credentials@bab55d3830fe69833c9fecaa51fe2c829a7508f3 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@cb1361ade3c0ad3551e7d2be86bf97afcb51e4d6 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
