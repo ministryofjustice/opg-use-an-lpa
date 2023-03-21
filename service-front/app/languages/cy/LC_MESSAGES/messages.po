@@ -7558,42 +7558,56 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:18
 msgid "You cannot request an activation key if you are a replacement attorney"
 msgstr ""
+"Ni allwch wneud cais am allwedd actifadu os ydych yn gweithredu fel atwrnai "
+"wrth gefn"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:20
 msgid "Only the donor or an active attorney can request an activation key."
 msgstr ""
+"Dim ond y rhoddwr neu’r atwrnai gweithredol all ofyn am allwedd cadarnhau "
+"cyfrif."
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:25
 msgid ""
 "You can only become an active attorney if one of the attorneys has stopped "
 "carrying out their role. This happens if they:"
 msgstr ""
+"Dim ond os yw un o’r atwrneiod wedi rhoi’r gorau i gyflawni ei rôl y gallwch "
+"ddod yn atwrnai\n"
+"gweithredol. Bydd hyn yn digwydd os ydyw:"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:31
 msgid "have died"
-msgstr ""
+msgstr "wedi marw"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:32
 msgid ""
 "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</"
 "a>(‘disclaimed their appointment’)"
 msgstr ""
+"wedi <a href=\"%link%\" class=\"govuk-link\">sefyll i lawr </a>(‘ymwrthod â’i "
+"benodiad’)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:33
 msgid ""
 "have been <a href=\"%link%\" class=\"govuk-link\">removed from the LPA by the "
 "donor</a>"
 msgstr ""
+"wedi cael ei <a href=\"%link%\" class=\"govuk-link\">dynnu o’r LPA</a>gan y "
+"rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:34
 msgid "have lost mental capacity"
-msgstr ""
+msgstr "wedi colli galluedd meddyliol"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:35
 msgid ""
 "have been declared bankrupt or have a debt relief order (property and finance "
 "attorneys only)"
 msgstr ""
+"wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion "
+"(atwrneiod eiddo\n"
+"a chyllid yn unig)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:36
 msgid ""
@@ -7601,6 +7615,9 @@ msgid ""
 "relationship has legally ended (unless the donor said otherwise in the "
 "instructions they made on the LPA)"
 msgstr ""
+"yn briod efo’r rhoddwr neu mewn partneriaeth sifil efo’r rhoddwr, ac mae’r "
+"berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel "
+"arall yn y cyfarwyddiadau a roesant ar yr LPA)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:40
 msgid ""
@@ -7608,3 +7625,7 @@ msgid ""
 "become an active attorney</a>. Once we’ve updated our records to show you are "
 "an active attorney, you’ll be able to request an activation key."
 msgstr ""
+"Rhaid i chi <a href=\"%link%\" class=\"govuk-link\">roi gwybod i ni os ydych "
+"chi wedi dod yn atwrnai gweithredol</a>.Ar ôl i ni ddiweddaru ein cofnodion i "
+"ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am allwedd "
+"cadarnhau cyfrif."
