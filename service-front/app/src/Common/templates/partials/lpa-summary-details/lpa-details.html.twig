@@ -1,0 +1,97 @@
+{% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% trans %}Yes, the donor made instructions and/or preferences on their LPA.
+                <br>To view these, ask to see the paper LPA{% endtrans %}
+        </dd>
+    </div>
+{% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% trans %}No{% endtrans %}
+        </dd>
+    </div>
+{% else %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.applicationHasGuidance %}
+                {% trans %}Yes, the donor made preferences on their LPA.
+                    <br>To view these, ask to see the paper LPA{% endtrans %}
+            {% else %}
+                {% trans %}No{% endtrans %}
+            {% endif %}
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.applicationHasRestrictions %}
+                {% trans %}Yes, the donor set instructions on their LPA.
+                    <br>To view these, ask to see the paper LPA{% endtrans %}
+            {% else %}
+                {% trans %}No{% endtrans %}
+            {% endif %}
+        </dd>
+    </div>
+{% endif %}
+
+{% if lpa.caseSubtype == "pfa" %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
+                    title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.attorneyActDecisions|lower == 'when registered' %}
+                {% if actor.type == 'donor' %}
+                    {% trans %}You have said that this <abbr
+                            title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
+                        <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
+                {% else %}
+                    {% trans %}The donor has said that this <abbr
+                            title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
+                        <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                {% endif %}
+            {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                {% trans %}This <abbr
+                        title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+            {% elseif lpa.attorneyActDecisions == null %}
+                {% trans %}This <abbr
+                        title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+            {% endif %}
+        </dd>
+    </div>
+{% else %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Life-sustaining
+                <br>treatment{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
+                {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+            {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
+                {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
+            {% else %}
+                {% trans %}To view this, ask to see the paper <abbr
+                        title="lasting power of attorney">LPA</abbr>{% endtrans %}
+            {% endif %}
+        </dd>
+    </div>
+{% endif %}
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">{% trans %}Date donor signed <abbr
+                title="lasting power of attorney">LPA</abbr>{% endtrans %}</dt>
+    <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
+</div>
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">{% trans %}Registration date{% endtrans %}</dt>
+    <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate) }}</dd>
+</div>
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">{% trans %}<abbr
+                title="lasting power of attorney">LPA</abbr> reference number{% endtrans %}</dt>
+    <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
+</div>

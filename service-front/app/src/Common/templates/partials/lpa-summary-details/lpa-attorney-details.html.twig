@@ -1,0 +1,51 @@
+<h2 class="govuk-heading-l">{% trans %}The attorneys{% endtrans %}</h2>
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}How decisions are made{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.caseAttorneySingular %}
+                {% trans %}Decisions are made by one attorney{% endtrans %}
+            {% elseif lpa.caseAttorneyJointly %}
+                {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
+            {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+                {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
+            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+                {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
+                    <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
+            {% endif %}
+        </dd>
+    </div>
+</dl>
+
+{% for attorney in lpa.activeAttorneys %}
+    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
+        </div>
+    </dl>
+{% endfor %}
+
+{% for tc in lpa.trustCorporations %}
+    {% set i = loop.index + lpa.attorneys | length %}
+    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': i | ordinal } %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">{{ tc.companyName }} {{ "(Trust corporation)" }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">{{ actor_address(tc) }}</dd>
+        </div>
+    </dl>
+{% endfor %}
