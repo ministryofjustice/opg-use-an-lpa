@@ -8,10 +8,16 @@ use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Actor\Workflow\RequestActivationKey;
 use Carbon\Carbon;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
-use Common\Service\{Lpa\AddOlderLpa};
+use Common\Handler\{AbstractHandler,
+    CsrfGuardAware,
+    SessionAware,
+    Traits\CsrfGuard,
+    Traits\Session,
+    Traits\User,
+    UserAware};
+use Common\Service\{Lpa\AddAccessForAllLpa, Lpa\Response\AccessForAllResult};
 use Common\Service\Lpa\LocalisedDate;
-use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Notify\NotifyService;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
@@ -26,7 +32,11 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 /**
  * @codeCoverageIgnore
  */
-class CreateActivationKeyHandler extends AbstractHandler implements UserAware, CsrfGuardAware, WorkflowStep
+class CreateActivationKeyHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    SessionAware,
+    WorkflowStep
 {
     use CsrfGuard;
     use Session;
@@ -36,7 +46,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
     public function __construct(
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
-        private AddOlderLpa $addOlderLpa,
+        private AddAccessForAllLpa $addAccessForAllLpa,
         UrlHelper $urlHelper,
         private LocalisedDate $localisedDate,
         private NotifyService $notifyService,
@@ -67,7 +77,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
         if ($form->isValid()) {
             $state = $this->state($request);
 
-            $result = $this->addOlderLpa->confirm(
+            $result = $this->addAccessForAllLpa->confirm(
                 $user->getIdentity(),
                 $state->referenceNumber,
                 $state->firstNames,
@@ -78,7 +88,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
             );
 
             switch ($result->getResponse()) {
-                case OlderLpaApiResponse::SUCCESS:
+                case AccessForAllResult::SUCCESS:
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
                     $this->notifyService->sendEmailToUser(
@@ -98,7 +108,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements UserAware, C
                             ]
                         )
                     );
-                case OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING:
+                case AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING:
                     $state->needsCleansing = true;
                     $state->actorUid       = (int) $result->getData()['actor_id'];
 

@@ -19,7 +19,7 @@ use Common\Handler\UserAware;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LocalisedDate;
-use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Notify\NotifyService;
 use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
@@ -212,7 +212,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
             $letterExpectedDate = (new Carbon())->addWeeks(4);
 
-            if ($result->getResponse() === OlderLpaApiResponse::SUCCESS) {
+            if ($result->getResponse() === AccessForAllResult::SUCCESS) {
                 $this->notifyService->sendEmailToUser(
                     NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE,
                     $this->data['email'],

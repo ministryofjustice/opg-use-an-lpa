@@ -7,12 +7,15 @@ namespace Common\Workflow;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @template T of WorkflowState
+ */
 trait State
 {
     /**
-     * @param ServerRequestInterface      $request
-     * @param class-string<WorkflowState> $workflowStateClass
-     * @return WorkflowState
+     * @param ServerRequestInterface $request
+     * @param class-string<T> $workflowStateClass
+     * @return T
      * @throws StateNotInitialisedException
      */
     public function loadState(ServerRequestInterface $request, string $workflowStateClass): WorkflowState

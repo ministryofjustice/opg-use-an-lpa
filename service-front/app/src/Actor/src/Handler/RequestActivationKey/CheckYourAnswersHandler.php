@@ -17,9 +17,9 @@ use Common\Handler\{AbstractHandler,
     Traits\User,
     UserAware};
 use Common\Service\Features\FeatureEnabled;
-use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\LocalisedDate;
-use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
@@ -53,7 +53,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         TemplateRendererInterface $renderer,
         AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        private AddOlderLpa $addOlderLpa,
+        private AddAccessForAllLpa $addAccessForAllLpa,
         LoggerInterface $logger,
         private LocalisedDate $localisedDate,
         private FeatureEnabled $featureEnabled,
@@ -120,6 +120,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
      */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        // TODO UML-2817 this clearing step should be handled by workflow (maybe already is)
         $this->removeAccessForAllSessionValues->removePostLPAMatchSessionValues($this->session);
 
         $this->form->setData($request->getParsedBody());
@@ -127,7 +128,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         if ($this->form->isValid()) {
             $state = $this->state($request);
 
-            $result = $this->addOlderLpa->validate(
+            $result = $this->addAccessForAllLpa->validate(
                 $this->user?->getIdentity(), // PHP8 nullsafe operator
                 $state->referenceNumber,
                 $state->firstNames,
@@ -136,12 +137,12 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $state->postcode
             );
 
-            if ($state->liveInUK === 'No' && $result->getResponse() !== OlderLpaApiResponse::LPA_ALREADY_ADDED) {
+            if ($state->liveInUK === 'No' && $result->getResponse() !== AccessForAllResult::LPA_ALREADY_ADDED) {
                 return $this->redirectToRoute('lpa.add.actor-address');
             }
 
             switch ($result->getResponse()) {
-                case OlderLpaApiResponse::LPA_ALREADY_ADDED:
+                case AccessForAllResult::LPA_ALREADY_ADDED:
                     $lpaAddedData = $result->getData();
                     return new HtmlResponse(
                         $this->renderer->render(
@@ -155,13 +156,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
 
-                case OlderLpaApiResponse::NOT_ELIGIBLE:
+                case AccessForAllResult::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-send-activation-key',
                         ['user' => $this->user]
                     ));
 
-                case OlderLpaApiResponse::HAS_ACTIVATION_KEY:
+                case AccessForAllResult::HAS_ACTIVATION_KEY:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
                     $form->setAttribute(
                         'action',
@@ -184,7 +185,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
 
-                case OlderLpaApiResponse::KEY_ALREADY_REQUESTED:
+                case AccessForAllResult::KEY_ALREADY_REQUESTED:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
                     $form->setAttribute(
                         'action',
@@ -207,7 +208,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         )
                     );
 
-                case OlderLpaApiResponse::DOES_NOT_MATCH:
+                case AccessForAllResult::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {
                         return $this->redirectToRoute('lpa.add.actor-address');
                     } else {
@@ -224,7 +225,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ));
                     }
 
-                case OlderLpaApiResponse::NOT_FOUND:
+                case AccessForAllResult::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
                         [
@@ -237,7 +238,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         ],
                     ));
 
-                case OlderLpaApiResponse::FOUND:
+                case AccessForAllResult::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute(
                         'action',

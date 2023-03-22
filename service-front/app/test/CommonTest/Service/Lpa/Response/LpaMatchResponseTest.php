@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
-use Common\Service\Lpa\Response\OlderLpaMatchResponse;
+use Common\Service\Lpa\Response\LpaMatch;
 use PHPUnit\Framework\TestCase;
 
-class OlderLpaMatchResponseTest extends TestCase
+class LpaMatchResponseTest extends TestCase
 {
     /** @test */
     public function it_can_create_a_response_dto()
     {
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
 
-        $this->assertInstanceOf(OlderLpaMatchResponse::class, $dto);
+        $this->assertInstanceOf(LpaMatch::class, $dto);
     }
 
     /** @test */
@@ -33,7 +33,7 @@ class OlderLpaMatchResponseTest extends TestCase
         $attorney->setMiddlenames('Attorney');
         $attorney->setSurname('Person');
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $dto->setDonor($donor);
         $dto->setAttorney($attorney);
         $dto->setCaseSubtype('pfa');
@@ -58,7 +58,7 @@ class OlderLpaMatchResponseTest extends TestCase
         $attorney->setMiddlenames('');
         $attorney->setSurname('');
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $dto->setDonor($donor);
         $dto->setAttorney($attorney);
         $dto->setCaseSubtype('pfa');
@@ -78,7 +78,7 @@ class OlderLpaMatchResponseTest extends TestCase
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
 
@@ -96,7 +96,7 @@ class OlderLpaMatchResponseTest extends TestCase
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
 
-        $dto = new OlderLpaMatchResponse();
+        $dto = new LpaMatch();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
         $dto->setDueDate('2021-12-06');

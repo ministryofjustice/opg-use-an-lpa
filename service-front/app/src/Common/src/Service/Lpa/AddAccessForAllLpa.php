@@ -7,9 +7,10 @@ namespace Common\Service\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
-use Common\Service\Lpa\Response\Parse\ParseActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\Parse\ParseOlderLpaMatchResponse;
+use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
@@ -19,7 +20,7 @@ use RuntimeException;
  * Single action invokeable class that is responsible for calling the APIs necessary to add older
  * LPAs to a users account.
  */
-class AddOlderLpa
+class AddAccessForAllLpa
 {
     // Exception messages returned from the API layer
     private const OLDER_LPA_NOT_ELIGIBLE          = 'LPA not eligible due to registration date';
@@ -31,16 +32,19 @@ class AddOlderLpa
     private const OLDER_LPA_POSTCODE_NOT_SUPPLIED = 'Postcode not supplied';
 
     /**
-     * @param ApiClient       $apiClient
-     * @param LoggerInterface $logger
+     * @param ApiClient                $apiClient
+     * @param LoggerInterface          $logger
+     * @param ParseLpaAlreadyAdded     $parseLpaAlreadyAddedResponse
+     * @param ParseActivationKeyExists $parseActivationKeyExistsResponse
+     * @param ParseLpaMatch            $parseAccessForAllLpaMatchResponse
      * @codeCoverageIgnore
      */
     public function __construct(
         private ApiClient $apiClient,
         private LoggerInterface $logger,
-        private ParseLpaAlreadyAddedResponse $parseLpaAlreadyAddedResponse,
-        private ParseActivationKeyExistsResponse $parseActivationKeyExistsResponse,
-        private ParseOlderLpaMatchResponse $parseOlderLpaMatchResponse,
+        private ParseLpaAlreadyAdded $parseLpaAlreadyAddedResponse,
+        private ParseActivationKeyExists $parseActivationKeyExistsResponse,
+        private ParseLpaMatch $parseAccessForAllLpaMatchResponse,
     ) {
     }
 
@@ -51,7 +55,7 @@ class AddOlderLpa
         string $lastname,
         DateTimeInterface $dob,
         string $postcode,
-    ): OlderLpaApiResponse {
+    ): AccessForAllApiResult {
         $data = [
             'reference_number'     => $lpaUid,
             'first_names'          => $firstnames,
@@ -66,22 +70,18 @@ class AddOlderLpa
         try {
             $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
         } catch (ApiException $apiEx) {
-            switch ($apiEx->getCode()) {
-                case StatusCodeInterface::STATUS_BAD_REQUEST:
-                    return $this->badRequestReturned(
-                        $data['reference_number'],
-                        $apiEx->getMessage(),
-                        $apiEx->getAdditionalData()
-                    );
-                case StatusCodeInterface::STATUS_NOT_FOUND:
-                    return $this->notFoundReturned(
-                        $data['reference_number'],
-                        $apiEx->getAdditionalData()
-                    );
-                default:
-                    // An API exception that we don't want to handle has been caught, pass it up the stack
-                    throw $apiEx;
-            }
+            return match ($apiEx->getCode()) {
+                StatusCodeInterface::STATUS_BAD_REQUEST => $this->badRequestReturned(
+                    $data['reference_number'],
+                    $apiEx->getMessage(),
+                    $apiEx->getAdditionalData()
+                ),
+                StatusCodeInterface::STATUS_NOT_FOUND => $this->notFoundReturned(
+                    $data['reference_number'],
+                    $apiEx->getAdditionalData()
+                ),
+                default => throw $apiEx,
+            };
         }
 
         $this->logger->notice(
@@ -93,7 +93,10 @@ class AddOlderLpa
             ]
         );
 
-        return new OlderLpaApiResponse(OlderLpaApiResponse::FOUND, ($this->parseOlderLpaMatchResponse)($response));
+        return new AccessForAllApiResult(
+            AccessForAllResult::FOUND,
+            ($this->parseAccessForAllLpaMatchResponse)($response),
+        );
     }
 
     public function confirm(
@@ -104,7 +107,7 @@ class AddOlderLpa
         DateTimeInterface $dob,
         string $postcode,
         bool $forceActivationKey,
-    ): OlderLpaApiResponse {
+    ): AccessForAllApiResult {
         $data = [
             'reference_number'     => $lpaUid,
             'first_names'          => $firstnames,
@@ -127,8 +130,8 @@ class AddOlderLpa
                         'uId'        => $data['reference_number'],
                     ]
                 );
-                return new OlderLpaApiResponse(
-                    OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING,
+                return new AccessForAllApiResult(
+                    AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING,
                     $apiEx->getAdditionalData()
                 );
             }
@@ -146,7 +149,7 @@ class AddOlderLpa
             ]
         );
 
-        return new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, $response);
+        return new AccessForAllApiResult(AccessForAllResult::SUCCESS, $response);
     }
 
     /**
@@ -156,48 +159,47 @@ class AddOlderLpa
      * @param int    $lpaUid
      * @param string $message
      * @param array  $additionalData
-     * @return OlderLpaApiResponse
-     * @throws RuntimeException
+     * @return AccessForAllApiResult
      */
-    private function badRequestReturned(int $lpaUid, string $message, array $additionalData): OlderLpaApiResponse
+    private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {
         switch ($message) {
             case self::OLDER_LPA_ALREADY_ADDED:
                 $code     = EventCodes::OLDER_LPA_ALREADY_ADDED;
-                $response = new OlderLpaApiResponse(
-                    OlderLpaApiResponse::LPA_ALREADY_ADDED,
+                $response = new AccessForAllApiResult(
+                    AccessForAllResult::LPA_ALREADY_ADDED,
                     ($this->parseLpaAlreadyAddedResponse)($additionalData)
                 );
                 break;
 
             case self::OLDER_LPA_NOT_ELIGIBLE:
                 $code     = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
-                $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, $additionalData);
+                $response = new AccessForAllApiResult(AccessForAllResult::NOT_ELIGIBLE, $additionalData);
                 break;
 
             case self::OLDER_LPA_DOES_NOT_MATCH:
                 $code     = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
-                $response = new OlderLpaApiResponse(OlderLpaApiResponse::DOES_NOT_MATCH, $additionalData);
+                $response = new AccessForAllApiResult(AccessForAllResult::DOES_NOT_MATCH, $additionalData);
                 break;
 
             case self::OLDER_LPA_HAS_ACTIVATION_KEY:
                 $code     = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
-                $response = new OlderLpaApiResponse(
-                    OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+                $response = new AccessForAllApiResult(
+                    AccessForAllResult::HAS_ACTIVATION_KEY,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
                 break;
 
             case self::OLDER_LPA_KEY_ALREADY_REQUESTED:
                 $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
-                $response = new OlderLpaApiResponse(
-                    OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
+                $response = new AccessForAllApiResult(
+                    AccessForAllResult::KEY_ALREADY_REQUESTED,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
                 break;
             case self::OLDER_LPA_POSTCODE_NOT_SUPPLIED:
-                $code = null;
-                $response = new OlderLpaApiResponse(OlderLpaApiResponse::POSTCODE_NOT_SUPPLIED, $additionalData);
+                $code     = null;
+                $response = new AccessForAllApiResult(AccessForAllResult::POSTCODE_NOT_SUPPLIED, $additionalData);
                 break;
 
             default:
@@ -224,10 +226,10 @@ class AddOlderLpa
      *
      * @param int   $lpaUid
      * @param array $additionalData
-     * @return OlderLpaApiResponse
+     * @return AccessForAllApiResult
      * @throws RuntimeException
      */
-    private function notFoundReturned(int $lpaUid, array $additionalData): OlderLpaApiResponse
+    private function notFoundReturned(int $lpaUid, array $additionalData): AccessForAllApiResult
     {
         $this->logger->notice(
             'LPA with reference number {uId} not found',
@@ -238,6 +240,6 @@ class AddOlderLpa
             ]
         );
 
-        return new OlderLpaApiResponse(OlderLpaApiResponse::NOT_FOUND, $additionalData);
+        return new AccessForAllApiResult(AccessForAllResult::NOT_FOUND, $additionalData);
     }
 }

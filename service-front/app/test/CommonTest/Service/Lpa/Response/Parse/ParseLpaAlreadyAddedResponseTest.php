@@ -6,8 +6,8 @@ namespace CommonTest\Service\Lpa\Response\Parse;
 
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -51,10 +51,10 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($this->donor);
 
-        $sut    = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(LpaAlreadyAddedResponse::class, $result);
+        $this->assertInstanceOf(LpaAlreadyAdded::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertEquals('abc-321', $result->getLpaActorToken());
@@ -74,10 +74,10 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             ->createCaseActorFromData($this->response['donor'])
             ->willReturn($donor);
 
-        $sut    = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut    = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(LpaAlreadyAddedResponse::class, $result);
+        $this->assertInstanceOf(LpaAlreadyAdded::class, $result);
         $this->assertNull($result->getDonor()->getFirstname());
         $this->assertNull($result->getDonor()->getMiddlenames());
         $this->assertNull($result->getDonor()->getSurname());
@@ -90,7 +90,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -104,7 +104,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             'lpaActorToken' => 'abc-321',
         ];
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -113,7 +113,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -127,7 +127,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             'lpaActorToken' => 'abc-321',
         ];
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -136,7 +136,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded::__invoke ' .
             'does not contain the required fields'
         );
 
@@ -150,7 +150,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
             'lpaActorToken' => 'abc-321',
         ];
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         ($sut)($data);
     }
 
@@ -162,11 +162,11 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAddedResponse::__invoke ' .
+            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded::__invoke ' .
              'does not contain the required fields'
         );
 
-        $sut = new ParseLpaAlreadyAddedResponse($this->lpaFactory->reveal());
+        $sut = new ParseLpaAlreadyAdded($this->lpaFactory->reveal());
         ($sut)($data);
     }
 

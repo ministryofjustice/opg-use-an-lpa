@@ -6,8 +6,9 @@ namespace CommonTest\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\CleanseLpa;
-use Common\Service\Lpa\OlderLpaApiResponse;
+use Common\Service\Lpa\Response\AccessForAllResult;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -55,7 +56,7 @@ class CleanseLpaTest extends TestCase
         $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $response  = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
 
-        self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
+        self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
 
     /**
@@ -76,7 +77,7 @@ class CleanseLpaTest extends TestCase
         $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
         $response  = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, $this->actorId);
 
-        self::assertEquals(new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []), $response);
+        self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
 
     /**

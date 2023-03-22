@@ -6,13 +6,13 @@ namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
 use Common\Entity\CaseActor;
-use Common\Service\Lpa\AddLpaApiResponse;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\AddLpaApiResult;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * @coversDefaultClass \Common\Service\Lpa\AddLpaApiResponse
+ * @coversDefaultClass \Common\Service\Lpa\AddLpaApiResult
  */
 class AddLpaApiResponseTest extends TestCase
 {
@@ -25,7 +25,7 @@ class AddLpaApiResponseTest extends TestCase
      */
     public function it_can_be_created_with_a_recognised_response_and_data_type($responseType, $additionalData): void
     {
-        $response = new AddLpaApiResponse($responseType, $additionalData);
+        $response = new AddLpaApiResult($responseType, $additionalData);
         $this->assertEquals($responseType, $response->getResponse());
         $this->assertEquals($additionalData, $response->getData());
     }
@@ -33,7 +33,7 @@ class AddLpaApiResponseTest extends TestCase
     /**
      * Creates the already added DTO for the data provider
      *
-     * @return LpaAlreadyAddedResponse
+     * @return LpaAlreadyAdded
      */
     private function createAlreadyAddedDTO()
     {
@@ -43,7 +43,7 @@ class AddLpaApiResponseTest extends TestCase
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
 
-        $dto = new LpaAlreadyAddedResponse();
+        $dto = new LpaAlreadyAdded();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('hw');
         $dto->setLpaActorToken('abc');
@@ -56,12 +56,12 @@ class AddLpaApiResponseTest extends TestCase
     public function validDataTypeProvider()
     {
         return [
-            [AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
-            [AddLpaApiResponse::ADD_LPA_FOUND, new ArrayObject(['lpa' => 'data'])],
-            [AddLpaApiResponse::ADD_LPA_NOT_FOUND, []],
-            [AddLpaApiResponse::ADD_LPA_NOT_ELIGIBLE, []],
-            [AddLpaApiResponse::ADD_LPA_SUCCESS,[]],
-            [AddLpaApiResponse::ADD_LPA_FAILURE,[]],
+            [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
+            [AddLpaApiResult::ADD_LPA_FOUND, new ArrayObject(['lpa' => 'data'])],
+            [AddLpaApiResult::ADD_LPA_NOT_FOUND, []],
+            [AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE, []],
+            [AddLpaApiResult::ADD_LPA_SUCCESS,[]],
+            [AddLpaApiResult::ADD_LPA_FAILURE,[]],
         ];
     }
 
@@ -74,7 +74,7 @@ class AddLpaApiResponseTest extends TestCase
     public function it_throws_an_exception_with_an_unrecognised_response_data_type($data): void
     {
         $this->expectException(RuntimeException::class);
-        new AddLpaApiResponse(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $data);
+        new AddLpaApiResult(AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $data);
     }
 
     /**
@@ -99,6 +99,6 @@ class AddLpaApiResponseTest extends TestCase
     public function it_throws_an_exception_with_an_unrecognised_response_type(): void
     {
         $this->expectException(RuntimeException::class);
-        new AddLpaApiResponse('BAD TYPE', new ArrayObject());
+        new AddLpaApiResult('BAD TYPE', new ArrayObject());
     }
 }

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Common\Service\Lpa\Response\Parse;
 
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\OlderLpaMatchResponse;
+use Common\Service\Lpa\Response\LpaMatch;
+use Exception;
 use InvalidArgumentException;
 
-class ParseOlderLpaMatchResponse
+class ParseLpaMatch
 {
+    use BaselineValidData;
+
     /**
      * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
@@ -18,22 +21,20 @@ class ParseOlderLpaMatchResponse
     {
     }
 
-    public function __invoke(array $data): OlderLpaMatchResponse
+    /**
+     * @param array{donor: array, caseSubtype: string} $data
+     * @return LpaMatch
+     * @throws Exception
+     */
+    public function __invoke(array $data): LpaMatch
     {
-        if (
-            // if the actor is the donor then the attorney data wont exist
-            !isset($data['donor']['uId']) ||
-            !array_key_exists('firstname', $data['donor']) ||
-            !array_key_exists('middlenames', $data['donor']) ||
-            !array_key_exists('surname', $data['donor']) ||
-            !isset($data['caseSubtype'])
-        ) {
+        if (!$this->isValidData($data)) {
             throw new InvalidArgumentException(
                 'The data array passed to ' . __METHOD__ . ' does not contain the required fields'
             );
         }
 
-        $response = new OlderLpaMatchResponse();
+        $response = new LpaMatch();
 
         if (array_key_exists('attorney', $data)) {
             $response->setAttorney($this->lpaFactory->createCaseActorFromData($data['attorney']));
