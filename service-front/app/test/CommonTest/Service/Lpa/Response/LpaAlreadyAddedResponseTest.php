@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use PHPUnit\Framework\TestCase;
 
 class LpaAlreadyAddedResponseTest extends TestCase
@@ -13,9 +13,9 @@ class LpaAlreadyAddedResponseTest extends TestCase
     /** @test */
     public function it_can_create_a_response_dto()
     {
-        $dto = new LpaAlreadyAddedResponse();
+        $dto = new LpaAlreadyAdded();
 
-        $this->assertInstanceOf(LpaAlreadyAddedResponse::class, $dto);
+        $this->assertInstanceOf(LpaAlreadyAdded::class, $dto);
     }
 
     /** @test */
@@ -27,7 +27,7 @@ class LpaAlreadyAddedResponseTest extends TestCase
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
 
-        $dto = new LpaAlreadyAddedResponse();
+        $dto = new LpaAlreadyAdded();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
         $dto->setLpaActorToken('abc-321');

@@ -6,28 +6,26 @@ namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
-use BehatTest\Context\UI\BaseUiContext;
 use Common\Entity\CaseActor;
 use Common\Service\Log\RequestTracing;
+use Common\Service\Lpa\AccessForAllApiResult;
+use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\AddLpa;
-use Common\Service\Lpa\AddLpaApiResponse;
-use Common\Service\Lpa\AddOlderLpa;
+use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\OlderLpaApiResponse;
 use Common\Service\Lpa\RemoveLpa;
-use Common\Service\Lpa\Response\ActivationKeyExistsResponse;
-use Common\Service\Lpa\Response\LpaAlreadyAddedResponse;
-use Common\Service\Lpa\Response\OlderLpaMatchResponse;
+use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyExists;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Lpa\ViewerCodeService;
+use Common\Service\Notify\NotifyService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
-use Psr\Http\Message\RequestInterface;
-use Common\Service\Notify\NotifyService;
 
 /**
  * A behat context that encapsulates user account steps
@@ -101,7 +99,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
@@ -118,12 +116,12 @@ class LpaContext extends BaseIntegrationContext
         $donor->setMiddlenames($this->lpa['donor']['middlenames']);
         $donor->setSurname($this->lpa['donor']['surname']);
 
-        $keyExistsDTO = new ActivationKeyExistsResponse();
+        $keyExistsDTO = new ActivationKeyExists();
         $keyExistsDTO->setDonor($donor);
         $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
 
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::KEY_ALREADY_REQUESTED,
+        $response = new AccessForAllApiResult(
+            AccessForAllResult::KEY_ALREADY_REQUESTED,
             $keyExistsDTO
         );
 
@@ -241,7 +239,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->confirm(
             $this->userIdentity,
@@ -253,7 +251,7 @@ class LpaContext extends BaseIntegrationContext
             false
         );
 
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        $response = new AccessForAllApiResult(AccessForAllResult::SUCCESS, []);
         Assert::assertEquals($response, $result);
     }
     /**
@@ -290,12 +288,12 @@ class LpaContext extends BaseIntegrationContext
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         $allowedErrorMessages = [
-            OlderLpaApiResponse::DOES_NOT_MATCH,
-            OlderLpaApiResponse::NOT_FOUND,
-            OlderLpaApiResponse::NOT_ELIGIBLE
+            AccessForAllResult::DOES_NOT_MATCH,
+            AccessForAllResult::NOT_FOUND,
+            AccessForAllResult::NOT_ELIGIBLE
         ];
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
@@ -347,7 +345,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
@@ -358,7 +356,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userPostCode
         );
 
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::NOT_ELIGIBLE, []);
+        $response = new AccessForAllApiResult(AccessForAllResult::NOT_ELIGIBLE, []);
 
         Assert::assertEquals($response, $result);
     }
@@ -1061,9 +1059,9 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber()
     {
-        $allowedErrorMessages = [OlderLpaApiResponse::NOT_FOUND, OlderLpaApiResponse::NOT_ELIGIBLE];
+        $allowedErrorMessages = [AccessForAllResult::NOT_FOUND, AccessForAllResult::NOT_ELIGIBLE];
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result = $addOlderLpa->validate(
             $this->userIdentity,
             intval($this->referenceNo),
@@ -1114,8 +1112,8 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
-        Assert::assertInstanceOf(AddLpaApiResponse::class, $lpaData);
-        Assert::assertEquals(AddLpaApiResponse::ADD_LPA_FOUND, $lpaData->getResponse());
+        Assert::assertInstanceOf(AddLpaApiResult::class, $lpaData);
+        Assert::assertEquals(AddLpaApiResult::ADD_LPA_FOUND, $lpaData->getResponse());
         Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa['uId']);
     }
 
@@ -1384,7 +1382,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
-        Assert::assertEquals(AddLpaApiResponse::ADD_LPA_NOT_FOUND, $response->getResponse());
+        Assert::assertEquals(AddLpaApiResult::ADD_LPA_NOT_FOUND, $response->getResponse());
     }
 
     /**
@@ -1414,7 +1412,7 @@ class LpaContext extends BaseIntegrationContext
 
 
 
-        Assert::assertEquals(AddLpaApiResponse::ADD_LPA_SUCCESS, $response->getResponse());
+        Assert::assertEquals(AddLpaApiResult::ADD_LPA_SUCCESS, $response->getResponse());
     }
 
     protected function prepareContext(): void
@@ -1472,7 +1470,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
@@ -1489,13 +1487,13 @@ class LpaContext extends BaseIntegrationContext
         $donor->setMiddlenames($this->lpa['donor']['middlenames']);
         $donor->setSurname($this->lpa['donor']['surname']);
 
-        $keyExistsDTO = new ActivationKeyExistsResponse();
+        $keyExistsDTO = new ActivationKeyExists();
         $keyExistsDTO->setDonor($donor);
         $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
         $keyExistsDTO->setDueDate($createdDate->format('c'));
 
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::HAS_ACTIVATION_KEY,
+        $response = new AccessForAllApiResult(
+            AccessForAllResult::HAS_ACTIVATION_KEY,
             $keyExistsDTO
         );
         Assert::assertEquals($response, $result);
@@ -1530,7 +1528,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
@@ -1548,13 +1546,13 @@ class LpaContext extends BaseIntegrationContext
         $donor->setMiddlenames($this->lpa['donor']['middlenames']);
         $donor->setSurname($this->lpa['donor']['surname']);
 
-        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO = new LpaAlreadyAdded();
         $alreadyAddedDTO->setDonor($donor);
         $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
         $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
 
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::LPA_ALREADY_ADDED,
+        $response = new AccessForAllApiResult(
+            AccessForAllResult::LPA_ALREADY_ADDED,
             $alreadyAddedDTO
         );
 
@@ -1605,7 +1603,7 @@ class LpaContext extends BaseIntegrationContext
         $donor->setSurname($this->lpa['donor']['surname']);
 
         $addLpa = $this->container->get(AddLpa::class);
-        $alreadyAddedDTO = new LpaAlreadyAddedResponse();
+        $alreadyAddedDTO = new LpaAlreadyAdded();
         $alreadyAddedDTO->setDonor($donor);
         $alreadyAddedDTO->setCaseSubtype($this->lpa['caseSubtype']);
         $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
@@ -1617,7 +1615,7 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
-        Assert::assertEquals(AddLpaApiResponse::ADD_LPA_ALREADY_ADDED, $response->getResponse());
+        Assert::assertEquals(AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $response->getResponse());
         Assert::assertEquals($alreadyAddedDTO, $response->getData());
     }
 
@@ -1646,7 +1644,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
@@ -1664,12 +1662,12 @@ class LpaContext extends BaseIntegrationContext
         $donor->setMiddlenames($this->lpa['donor']['middlenames']);
         $donor->setSurname($this->lpa['donor']['surname']);
 
-        $foundMatchLpaDTO = new OlderLpaMatchResponse();
+        $foundMatchLpaDTO = new LpaMatch();
         $foundMatchLpaDTO->setDonor($donor);
         $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
 
-        $response = new OlderLpaApiResponse(
-            OlderLpaApiResponse::FOUND,
+        $response = new AccessForAllApiResult(
+            AccessForAllResult::FOUND,
             $foundMatchLpaDTO
         );
         Assert::assertEquals($response, $result);
@@ -1765,7 +1763,7 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-            $addOlderLpa = $this->container->get(AddOlderLpa::class);
+            $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
             $result = $addOlderLpa->confirm(
                 $this->userIdentity,
@@ -1777,7 +1775,7 @@ class LpaContext extends BaseIntegrationContext
                 true
             );
 
-            Assert::assertEquals(OlderLpaApiResponse::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
+            Assert::assertEquals(AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
         } else {
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
@@ -1789,7 +1787,7 @@ class LpaContext extends BaseIntegrationContext
             // API call for Notify
             $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-            $addOlderLpa = $this->container->get(AddOlderLpa::class);
+            $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
             $result = $addOlderLpa->confirm(
                 $this->userIdentity,
@@ -1801,7 +1799,7 @@ class LpaContext extends BaseIntegrationContext
                 true
             );
 
-            $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+            $response = new AccessForAllApiResult(AccessForAllResult::SUCCESS, []);
             Assert::assertEquals($response, $result);
         }
     }
@@ -1828,7 +1826,7 @@ class LpaContext extends BaseIntegrationContext
             null
         );
 
-        $response = new OlderLpaApiResponse(OlderLpaApiResponse::SUCCESS, []);
+        $response = new AccessForAllApiResult(AccessForAllResult::SUCCESS, []);
         Assert::assertEquals($response, $result);
     }
 

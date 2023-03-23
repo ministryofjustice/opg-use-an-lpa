@@ -6,304 +6,136 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
 
-    <div class="govuk-panel govuk-!-padding-bottom-2 govuk-!-margin-top-4 govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
-
-        {% if is_lpa_cancelled(lpa) %}
-
-            <h1 class="govuk-panel__title">
-                {% if lpa.caseSubtype|lower == "pfa" %}
-                    {% trans %}This property and finance LPA has been cancelled{% endtrans %}
-                {% else %}
-                    {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
-                {% endif %}
-            </h1>
-            <div class="govuk-panel__body govuk-!-font-size-24">
-            {% if lpa.cancellationDate is not null %}
-                <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
-            {% endif %}
-
-        {% else %}
-
-
-            <h1 class="govuk-panel__title">
-                {% if lpa.caseSubtype|lower == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
-                    {% trans %}This property and finance LPA is valid and can be used now{% endtrans %}
-                {% else %}
+            <div class="govuk-panel govuk-!-padding-bottom-2 govuk-!-margin-top-4 govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
+                {% if is_lpa_cancelled(lpa) %}
+                <h1 class="govuk-panel__title">
                     {% if lpa.caseSubtype|lower == "pfa" %}
-                        {% trans %}This property and finance LPA is valid{% endtrans %}
+                        {% trans %}This property and finance LPA has been cancelled{% endtrans %}
                     {% else %}
-                        {% trans %}This health and welfare LPA is valid{% endtrans %}
+                        {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
                     {% endif %}
-                {% endif %}
-            </h1>
-
-
-            <div class="govuk-panel__body">
-                <p class="govuk-!-font-size-24">
-                    {% if lpa.caseSubtype|lower == "pfa" %}
-                        {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                            {% trans %}This LPA can only be used when the donor has lost capacity{% endtrans %}
-                        {% elseif lpa.attorneyActDecisions == null %}
-                            {% trans %}This LPA can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
-                        {% endif %}
+                </h1>
+                <div class="govuk-panel__body govuk-!-font-size-24">
+                    {% if lpa.cancellationDate is not null %}
+                        <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
+                    {% endif %}
                     {% else %}
-                        {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
-                            {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                        {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                            {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                    <h1 class="govuk-panel__title">
+                        {% if lpa.caseSubtype|lower == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
+                            {% trans %}This property and finance LPA is valid and can be used now{% endtrans %}
+                        {% else %}
+                            {% if lpa.caseSubtype|lower == "pfa" %}
+                                {% trans %}This property and finance LPA is valid{% endtrans %}
+                            {% else %}
+                                {% trans %}This health and welfare LPA is valid{% endtrans %}
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                </p>
-
-        {% endif %}
-
-                {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
-                    <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
-                        {% if is_donor_signature_date_too_old(lpa) %}
-                            {% trans %}This LPA has instructions and/or preferences{% endtrans %}
-                        {% elseif lpa.applicationHasGuidance and lpa.applicationHasRestrictions %}
-                            {% trans %}This LPA has instructions and preferences{% endtrans %}
-                        {% elseif lpa.applicationHasGuidance %}
-                            {% trans %}This LPA has preferences{% endtrans %}
-                        {% elseif lpa.applicationHasRestrictions %}
-                            {% trans %}This LPA has instructions{% endtrans %}
-                        {% endif %}
-                    </p>
-
-                {% endif %}
-
-            </div>
-
-    </div>
-
-
-
-        <div class="govuk-grid-column-two-thirds">
-
-            {% if lpa.caseSubtype|lower == "pfa" %}
-                {% set type = "Property and finance" %}
-            {% else %}
-                {% set type = "Health and welfare" %}
-            {% endif %}
-
-
-            <h2 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}, {{ type|trans }}</h2>
-
-            {% if not forDownload %}
-
-                <div class="govuk-inset-text">
-                    {% trans %}You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it.{% endtrans %}
-                </div>
-
-                <form action={{ path('download-lpa') }}>
-                    <button class="govuk-button" type="submit">{% trans %}Download this LPA summary{% endtrans %}</button>
-                </form>
-            {% endif %}
-        </div>
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-full">
-                <h2 class="govuk-heading-l">{% trans %}The donor{% endtrans %}</h2>
-
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ actor_name(lpa.donor) }}</dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.donor.dob) }} </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ actor_address(lpa.donor) }}</dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-
-                    </div>
-                </dl>
-            </div>
-
-        </div>
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-
-                <h2 class="govuk-heading-l">{% trans %}The attorneys{% endtrans %}</h2>
-
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-                    <dt class="govuk-summary-list__key">{% trans %}How decisions are made{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">
-                        {% if lpa.caseAttorneySingular %}
-                            {% trans %}Decisions are made by one attorney{% endtrans %}
-                        {% elseif lpa.caseAttorneyJointly %}
-                            {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
-                        {% elseif lpa.caseAttorneyJointlyAndSeverally %}
-                            {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
-                        {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-                            {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper LPA to find out what decisions must be made jointly.{% endtrans %}
-                        {% endif %}
-                    </dd>
-                </dl>
-
-                {% for attorney in lpa.activeAttorneys %}
-                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': loop.index | ordinal} %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
-
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ actor_name(attorney) }}</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Date of birth{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ lpa_date(attorney.dob) }}</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ actor_address(attorney) }}</dd>
-                        </div>
-                    </dl>
-                {% endfor %}
-
-                {% for tc in lpa.trustCorporations %}
-                    {% set i = loop.index + lpa.attorneys | length %}
-
-                    <h3 class="govuk-heading-m">{% trans count loop.index with {'%attorneyOrdinal%': i | ordinal } %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
-
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Name{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ tc.companyName }}</dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Address{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">{{ actor_address(tc) }}</dd>
-                        </div>
-                    </dl>
-                {% endfor %}
-
-            </div>
-        </div>
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        <div class="govuk-grid-row">
-
-            <div class="govuk-grid-column-full">
-
-                <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
-
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
-
-                    {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
-                                {% trans %}Yes, the donor made instructions and/or preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
-                            </dd>
-                        </div>
-                    {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
-                                {% trans %}No{% endtrans %}
-                            </dd>
-                        </div>
-                    {% else %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
-                                {% if lpa.applicationHasGuidance %}
-                                    {% trans %}Yes, the donor made preferences on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
-                                {% else %}
-                                    {% trans %}No{% endtrans %}
-                                {% endif %}
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
-                                {% if lpa.applicationHasRestrictions %}
-                                    {% trans %}Yes, the donor set instructions on their LPA.<br>To view these, ask to see the paper LPA{% endtrans %}
-                                {% else %}
-                                    {% trans %}No{% endtrans %}
-                                {% endif %}
-                            </dd>
-                        </div>
-
-                    {% endif %}
-
-                    {% if lpa.caseSubtype == "pfa" %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}When can the LPA be used?{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
-                                {% if lpa.attorneyActDecisions|lower == 'when registered' %}
-                                    {% trans %}The donor has said that this LPA can be used now. While the donor has mental capacity, their attorneys can only use the LPA if the donor allows them to.{% endtrans %}
-                                {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                    </h1>
+                    <div class="govuk-panel__body">
+                        <p class="govuk-!-font-size-24">
+                            {% if lpa.caseSubtype|lower == "pfa" %}
+                                {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                                     {% trans %}This LPA can only be used when the donor has lost capacity{% endtrans %}
                                 {% elseif lpa.attorneyActDecisions == null %}
-                                    {% trans %}This LPA can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                                    {% trans %}This LPA can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
                                 {% endif %}
-                            </dd>
-                        </div>
-                    {% else %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">{% trans %}Life-sustaining<br>treatment{% endtrans %}</dt>
-                            <dd class="govuk-summary-list__value">
+                            {% else %}
                                 {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
                                     {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
                                 {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                                    {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                {% else %}
-                                    {% trans %}To view this, ask to see the paper LPA{% endtrans %}
+                                    {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
                                 {% endif %}
-                            </dd>
-                        </div>
+                            {% endif %}
+                        </p>
+                        {% endif %}
+
+                        {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
+                            <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
+                                {% if is_donor_signature_date_too_old(lpa) %}
+                                    {% trans %}This LPA has instructions and/or preferences{% endtrans %}
+                                {% elseif lpa.applicationHasGuidance and lpa.applicationHasRestrictions %}
+                                    {% trans %}This LPA has instructions and preferences{% endtrans %}
+                                {% elseif lpa.applicationHasGuidance %}
+                                    {% trans %}This LPA has preferences{% endtrans %}
+                                {% elseif lpa.applicationHasRestrictions %}
+                                    {% trans %}This LPA has instructions{% endtrans %}
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="govuk-grid-column-two-thirds">
+                    {% if lpa.caseSubtype|lower == "pfa" %}
+                        {% set type = "Property and finance" %}
+                    {% else %}
+                        {% set type = "Health and welfare" %}
                     {% endif %}
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Date donor signed LPA{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{  lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
-                    </div>
+                    <h2 class="govuk-heading-l">{{ lpa.donor.firstname }} {{ lpa.donor.surname }}, {{ type|trans }}</h2>
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Registration date{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate) }}</dd>
-                    </div>
+                    {% if not forDownload %}
+                        <div class="govuk-inset-text">
+                            {% trans %}You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it.{% endtrans %}
+                        </div>
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}LPA reference number{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
-                    </div>
+                        <form action={{ path('download-lpa') }}>
+                            <button class="govuk-button" type="submit">
+                                {% trans %}Download this LPA summary{% endtrans %}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
 
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
-                        <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
+                {{ include('@partials/section-break.html.twig') }}
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        {% include '@partials/lpa-summary-details/lpa-donor-details.html.twig' %}
                     </div>
-                </dl>
+                </div>
+
+                {{ include('@partials/section-break.html.twig') }}
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        {% include '@partials/lpa-summary-details/lpa-attorney-details.html.twig' %}
+                    </div>
+                </div>
+
+                {{ include('@partials/section-break.html.twig') }}
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
+                        <dl class="govuk-summary-list govuk-summary-list--no-border">
+                            {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
+                                <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                {{ include('@partials/section-break.html.twig') }}
+
+                {% if not forDownload %}
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
+                            <form action={{ path('download-lpa') }}>
+                                <button class="govuk-button"
+                                        type="submit">{% trans %}Download this LPA summary{% endtrans %}
+                                </button>
+                            </form>
+                            <p class="govuk-body">
+                                <a class="govuk-link check-another"
+                                   href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
-
-        {{ include('@partials/section-break.html.twig') }}
-
-        {% if not forDownload %}
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <form action={{ path('download-lpa') }}>
-                        <button class="govuk-button" type="submit">{% trans %}Download this LPA summary{% endtrans %}</button>
-                    </form>
-                    <p class="govuk-body">
-                        <a class="govuk-link check-another"
-                           href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}</a>
-                    </p>
-                </div>
-            </div>
-        {% endif %}
     </main>
 </div>
