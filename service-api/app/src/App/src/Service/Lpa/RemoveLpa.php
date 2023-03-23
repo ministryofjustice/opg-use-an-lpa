@@ -68,7 +68,22 @@ class RemoveLpa
 
         if (!empty($viewerCodes)) {
             foreach ($viewerCodes as $viewerCodeRecord) {
-                $this->viewerCodesRepository->removeActorAssociation($viewerCodeRecord['ViewerCode']);
+                $codeOwner = $this->userLpaActorMapRepository->get($viewerCodeRecord['UserLpaActor']);
+
+                if (is_null($codeOwner)) {
+                    $this->logger->notice(
+                        'User actor lpa record not found for actor token {Id}',
+                        ['Id' => $viewerCodeRecord['UserLpaActor']]
+                    );
+                    throw new NotFoundException(
+                        'User actor lpa record not found for actor token - ' . $viewerCodeRecord['UserLpaActor']
+                    );
+                }
+
+                $this->viewerCodesRepository->removeActorAssociation(
+                    $viewerCodeRecord['ViewerCode'],
+                    $codeOwner['ActorId'],
+                );
             }
         }
 
@@ -84,7 +99,7 @@ class RemoveLpa
                 for UserLpaActorId {expectedId}, actual deletion of data for UserLpaActorId {deletedId}',
                 [
                     'expectedId' => $deletedData['Id'],
-                    'deletedId'  => $userActorLpa['Id']
+                    'deletedId' => $userActorLpa['Id']
                 ]
             );
             throw new ApiException('Incorrect LPA data deleted from users account');

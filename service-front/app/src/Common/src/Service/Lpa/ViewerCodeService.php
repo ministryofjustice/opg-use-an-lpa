@@ -99,9 +99,9 @@ class ViewerCodeService
 
         foreach ($shareCodes as $code) {
             if (
+                // We want to count codes that have been soft-deleted
                 new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)
                 && !array_key_exists('Cancelled', $code)
-                && !empty($code['UserLpaActor']) // We don't want to count codes that have been soft-deleted
             ) {
                 $counter += 1;
             }

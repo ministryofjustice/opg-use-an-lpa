@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
@@ -36,17 +38,17 @@ class RemoveLpaTest extends TestCase
 
     public function setUp(): void
     {
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->viewerCodesInterfaceProphecy = $this->prophesize(ViewerCodesInterface::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $this->viewerCodesInterfaceProphecy     = $this->prophesize(ViewerCodesInterface::class);
+        $this->lpaServiceProphecy               = $this->prophesize(LpaService::class);
 
-        $this->lpaUid = '700000055554';
+        $this->lpaUid        = '700000055554';
         $this->actorLpaToken = '2345Token0123';
-        $this->userId = '1234-0000-1234-0000';
-        $this->lpa = new Lpa(
+        $this->userId        = '1234-0000-1234-0000';
+        $this->lpa           = new Lpa(
             [
-                'uId' => $this->lpaUid,
+                'uId'   => $this->lpaUid,
                 'other' => 'data',
             ],
             new DateTime()
@@ -54,49 +56,49 @@ class RemoveLpaTest extends TestCase
 
         $this->userActorLpa = [
             'SiriusUid' => $this->lpaUid,
-            'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d'),
-            'Id' => $this->actorLpaToken,
-            'ActorId' => '1',
-            'UserId' => $this->userId,
+            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'        => $this->actorLpaToken,
+            'ActorId'   => 1,
+            'UserId'    => $this->userId,
         ];
 
         $this->viewerCodes = [
             0 => [ // this code is active
-                'Id' => '1',
-                'ViewerCode' => '123ABCD6789R',
-                'SiriusUid' => $this->lpaUid,
-                'Added' => (new DateTime())->format('Y-m-d'),
-                'Expires' => (new DateTime())->modify('+1 month')->format('Y-m-d'),
+                'Id'           => '1',
+                'ViewerCode'   => '123ABCD6789R',
+                'SiriusUid'    => $this->lpaUid,
+                'Added'        => (new DateTime())->format('Y-m-d'),
+                'Expires'      => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
                 'Organisation' => 'Some Organisation',
             ],
             1 => [ // this code has expired
-                'Id' => '2',
-                'ViewerCode' => 'YG41BCD693FH',
-                'SiriusUid' => $this->lpaUid,
-                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                'Id'           => '2',
+                'ViewerCode'   => 'YG41BCD693FH',
+                'SiriusUid'    => $this->lpaUid,
+                'Added'        => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                'Expires'      => (new DateTime())->modify('-1 month')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
                 'Organisation' => 'Some Organisation 2',
             ],
             2 => [ // this code is already cancelled
-                'Id' => '3',
-                'ViewerCode' => 'RL2AD1936KV2',
-                'SiriusUid' => $this->lpaUid,
-                'Added' => (new DateTime())->modify('-3 months')->format('Y-m-d'),
-                'Expires' => (new DateTime())->modify('-1 month')->format('Y-m-d'),
-                'Cancelled' => (new DateTime())->modify('-2 months')->format('Y-m-d'),
+                'Id'           => '3',
+                'ViewerCode'   => 'RL2AD1936KV2',
+                'SiriusUid'    => $this->lpaUid,
+                'Added'        => (new DateTime())->modify('-3 months')->format('Y-m-d'),
+                'Expires'      => (new DateTime())->modify('-1 month')->format('Y-m-d'),
+                'Cancelled'    => (new DateTime())->modify('-2 months')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
                 'Organisation' => 'Some Organisation 3',
             ],
         ];
 
         $this->removedData = [
-            'Id' => $this->actorLpaToken,
+            'Id'        => $this->actorLpaToken,
             'SiriusUid' => $this->lpaUid,
-            'Added' => (new DateTime())->modify('-6 months')->format('Y-m-d'),
-            'ActorId' => '1',
-            'UserId' => $this->userId,
+            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'ActorId'   => '1',
+            'UserId'    => $this->userId,
         ];
     }
 
@@ -138,8 +140,9 @@ class RemoveLpaTest extends TestCase
             ->getCodesByLpaId($this->userActorLpa['SiriusUid'])
             ->willReturn($this->viewerCodes);
 
+
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -149,7 +152,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -158,7 +161,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'])
+            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], $this->userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
