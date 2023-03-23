@@ -117,10 +117,15 @@ class ViewerCodeService
     {
         $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($codes);
 
-        // Get the actor id for the respective viewer code from either CreatedBy or using UserLpaActor
+        /* Get the actor id for the respective viewer code from either CreatedBy or using UserLpaActor
+           A viewer record will have either UserLpaActor data or CreatedBy data.
+           Around 49 viewer code records missing both and will not be able to show the code creator name on UI
+        */
         foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
             if (empty($viewerCode['UserLpaActor'])) {
-                $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
+                if (!empty($viewerCode['CreatedBy'])) {
+                    $viewerCodesAndStatuses[$key]['ActorId'] = $viewerCode['CreatedBy'];
+                }
             } else {
                 $codeOwner = $this->getCodeOwner($viewerCode['UserLpaActor']);
                 if ($codeOwner !== null) {

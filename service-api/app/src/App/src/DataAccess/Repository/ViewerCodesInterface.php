@@ -66,5 +66,5 @@ interface ViewerCodesInterface
      *
      * @return bool
      */
-    public function removeActorAssociation(string $code, ?int $codeOwner): bool;
+    public function removeActorAssociation(string $code, int $codeOwner): bool;
 }

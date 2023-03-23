@@ -70,9 +70,19 @@ class RemoveLpa
             foreach ($viewerCodes as $viewerCodeRecord) {
                 $codeOwner = $this->userLpaActorMapRepository->get($viewerCodeRecord['UserLpaActor']);
 
+                if (is_null($codeOwner)) {
+                    $this->logger->notice(
+                        'User actor lpa record not found for actor token {Id}',
+                        ['Id' => $viewerCodeRecord['UserLpaActor']]
+                    );
+                    throw new NotFoundException(
+                        'User actor lpa record not found for actor token - ' . $viewerCodeRecord['UserLpaActor']
+                    );
+                }
+
                 $this->viewerCodesRepository->removeActorAssociation(
                     $viewerCodeRecord['ViewerCode'],
-                    $codeOwner['ActorId']
+                    $codeOwner['ActorId'],
                 );
             }
         }
