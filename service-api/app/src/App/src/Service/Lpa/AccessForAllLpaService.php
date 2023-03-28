@@ -51,6 +51,7 @@ class AccessForAllLpaService
                 'lpaId'   => $actorId,
             ]
         );
+
         return $createdDate;
     }
 
