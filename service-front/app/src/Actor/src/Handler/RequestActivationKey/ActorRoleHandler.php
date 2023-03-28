@@ -52,6 +52,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         if ($this->form->isValid()) {
             $selected = $this->form->getData()['actor_role_radio'];
+
             return match ($selected) {
                 'Donor', 'Attorney' => $this->checkDonorOrAttorney($request, $selected),
                 'ReplacementAttorney' => $this->nextPageWhenRoleIsReplacementAttorney($request),
@@ -102,7 +103,10 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     private function checkDonorOrAttorney(ServerRequestInterface $request, string $selected): RedirectResponse
     {
-        $this->state($request)->setActorRole($selected === 'Donor' ? RequestActivationKey::ACTOR_TYPE_DONOR : RequestActivationKey::ACTOR_TYPE_ATTORNEY);
+        $this->state($request)->setActorRole(
+            $selected === 'Donor' ?
+                RequestActivationKey::ACTOR_TYPE_DONOR : RequestActivationKey::ACTOR_TYPE_ATTORNEY
+        );
         return $this->redirectToRoute($this->nextPage($this->state($request)));
     }
 
