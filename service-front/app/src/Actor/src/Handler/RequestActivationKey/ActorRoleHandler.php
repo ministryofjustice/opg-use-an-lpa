@@ -9,6 +9,8 @@ use Actor\Workflow\RequestActivationKey;
 use Common\Service\Log\EventCodes;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
+use phpDocumentor\Reflection\PseudoTypes\HtmlEscapedString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -33,14 +35,16 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             $this->form->setData(['actor_role_radio' => 'Attorney']);
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-role',
-            [
-                'user' => $this->user,
-                'form' => $this->form,
-                'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/actor-role',
+                [
+                    'user' => $this->user,
+                    'form' => $this->form,
+                    'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -49,38 +53,19 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
         if ($this->form->isValid()) {
             $selected = $this->form->getData()['actor_role_radio'];
-            
-            if ($selected === 'ReplacementAttorney') {
-                $this->logger->notice(
-                    'Request for activation key made by replacement attorney by user {user}',
-                    [
-                        'event_code' => EventCodes::ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY,
-                        'user' => $this->user->getIdentity()
-                    ]
-                );
-
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::request-activation-key/stop-replacement-attorney',
-                        ['user' => $this->user]
-                    )
-                );
-            }
-
-            if ($selected === 'Donor') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_DONOR);
-            } elseif ($selected === 'Attorney') {
-                $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_ATTORNEY);
-            }
-
-            return $this->redirectToRoute($this->nextPage($this->state($request)));
+            return match ($selected) {
+                'Donor', 'Attorney' => $this->checkDonorOrAttorney($request, $selected),
+                'ReplacementAttorney' => $this->nextPageWhenRoleIsReplacementAttorney($request),
+            };
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/actor-role', [
-            'user' => $this->user,
-            'form' => $this->form,
-            'back' => $this->lastPage($this->state($request)),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render('actor::request-activation-key/actor-role', [
+                'user' => $this->user,
+                'form' => $this->form,
+                'back' => $this->lastPage($this->state($request)),
+            ])
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
@@ -91,7 +76,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /** @var RequestActivationKey $state * */
         if ($this->hasFutureAnswersInState($state)) {
             return 'lpa.add.check-details-and-consent';
         }
@@ -103,7 +88,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /** @var RequestActivationKey $state * */
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : $this->lastPageByPreviousAnswers(
@@ -115,4 +100,32 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
     {
         return $filledAddressOnPaper ? 'lpa.add.address-on-paper' : 'lpa.add.actor-address';
     }
+
+    private function checkDonorOrAttorney(ServerRequestInterface $request, string $selected): RedirectResponse
+    {
+        $this->state($request)->setActorRole($selected === 'Donor' ? RequestActivationKey::ACTOR_TYPE_DONOR : RequestActivationKey::ACTOR_TYPE_ATTORNEY);
+        return $this->redirectToRoute($this->nextPage($this->state($request)));
+        //return $this->nextPage($this->state($request));
+    }
+
+    private function nextPageWhenRoleIsReplacementAttorney(ServerRequestInterface $request): HtmlResponse
+    {
+        $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_REPLACEMENT_ATTORNEY);
+
+        $this->logger->notice(
+            'Request for activation key made by replacement attorney by user {user}',
+            [
+                'event_code' => EventCodes::ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY,
+                'user' => $this->user->getIdentity(),
+            ]
+        );
+
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/stop-replacement-attorney',
+                ['user' => $this->user]
+            )
+        );
+    }
+
 }
