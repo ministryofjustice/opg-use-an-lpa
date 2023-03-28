@@ -10,7 +10,6 @@ use Common\Service\Log\EventCodes;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
-use phpDocumentor\Reflection\PseudoTypes\HtmlEscapedString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -70,8 +69,8 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return parent::isMissingPrerequisite($request)
-            || ($this->state($request)->actorAddress1 === null && $this->state($request)->actorAbroadAddress === null);
+        return parent::isMissingPrerequisite($request) ||
+            ($this->state($request)->actorAddress1 === null && $this->state($request)->actorAbroadAddress === null);
     }
 
     public function nextPage(WorkflowState $state): string
@@ -105,18 +104,15 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
     {
         $this->state($request)->setActorRole($selected === 'Donor' ? RequestActivationKey::ACTOR_TYPE_DONOR : RequestActivationKey::ACTOR_TYPE_ATTORNEY);
         return $this->redirectToRoute($this->nextPage($this->state($request)));
-        //return $this->nextPage($this->state($request));
     }
 
     private function nextPageWhenRoleIsReplacementAttorney(ServerRequestInterface $request): HtmlResponse
     {
-        $this->state($request)->setActorRole(RequestActivationKey::ACTOR_TYPE_REPLACEMENT_ATTORNEY);
-
         $this->logger->notice(
             'Request for activation key made by replacement attorney by user {user}',
             [
                 'event_code' => EventCodes::ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY,
-                'user' => $this->user->getIdentity(),
+                'user'       => $this->user->getIdentity(),
             ]
         );
 
@@ -127,5 +123,4 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             )
         );
     }
-
 }
