@@ -34,21 +34,22 @@ class ValidateAccessForAllLpaRequirements
 
     /**
      * @param array $lpa An LPA data structure
-     * @throws Exception Thrown when unable to parse LPA registration date as a date
+     * @throws NotFoundException|BadRequestException|Exception Thrown when unable to parse LPA registration date
+     *                                                         as a date
      */
     public function __invoke(array $lpa): void
     {
-        if ($lpa['status'] !== self::NECESSARY_STATUS) {
-            $this->logger->notice(
-                'User entered LPA {uId} does not have the required status',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_INVALID_STATUS,
-                    'uId'        => $lpa['uId'],
-                ]
-            );
-            throw new NotFoundException('LPA status invalid');
-        }
+        $this->lpaHasNecessaryStatus($lpa);
+        $this->lpaHasAcceptableRegistrationDate($lpa);
+    }
 
+    /**
+     * @param array $lpa
+     * @return void
+     * @throws Exception
+     */
+    public function lpaHasAcceptableRegistrationDate(array $lpa): void
+    {
         if (
             !($this->featureEnabled)('allow_older_lpas') &&
             (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
@@ -61,6 +62,24 @@ class ValidateAccessForAllLpaRequirements
                 ]
             );
             throw new BadRequestException('LPA not eligible due to registration date');
+        }
+    }
+
+    /**
+     * @param array $lpa
+     * @return void
+     */
+    public function lpaHasNecessaryStatus(array $lpa): void
+    {
+        if ($lpa['status'] !== self::NECESSARY_STATUS) {
+            $this->logger->notice(
+                'User entered LPA {uId} does not have the required status',
+                [
+                    'event_code' => EventCodes::OLDER_LPA_INVALID_STATUS,
+                    'uId'        => $lpa['uId'],
+                ]
+            );
+            throw new NotFoundException('LPA status invalid');
         }
     }
 }

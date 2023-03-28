@@ -12,14 +12,12 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class OlderLpaValidationHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class AccessForAllLpaValidationHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private AddAccessForAllLpa $addOlderLpa,
+        private AddAccessForAllLpa $addAccessForAllLpa,
     ) {
     }
 
@@ -42,7 +40,7 @@ class AccessForAllLpaValidationHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an activation key');
         }
 
-        $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
+        $lpaMatchResponse = $this->addAccessForAllLpa->validateRequest($userId, $requestData);
 
         return new JsonResponse($lpaMatchResponse);
     }

@@ -37,6 +37,7 @@ class AccessForAllLpaServiceTest extends TestCase
     public string $actorUid;
     public string $additionalInfo;
     public string $lpaActorToken;
+    /** @var array<string, mixed> */
     public array $dataToMatch;
     private DateInterval $oneYearInterval;
     private DateInterval $sixWeekInterval;
