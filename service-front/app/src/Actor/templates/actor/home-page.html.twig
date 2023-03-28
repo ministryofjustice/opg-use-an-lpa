@@ -51,6 +51,8 @@
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
 
+                    {{ include('@actor/partials/warning-upcoming-service-downtime.html.twig') }}
+
                     {{ govuk_form_close() }}
 
                 </div>
