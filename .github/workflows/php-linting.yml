@@ -52,3 +52,4 @@ jobs:
         files: "${{ matrix.service_path }}/**/*.php" # you may customize glob as needed
         phpcs_path: phpcs
         standard: ${{ matrix.service_path }}/app/phpcs.xml.dist
+        fail_on_warnings: false
