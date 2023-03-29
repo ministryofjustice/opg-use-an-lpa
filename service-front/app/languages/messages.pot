@@ -4530,7 +4530,7 @@ msgstr ""
 #: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
 #: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
 #: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:6
-msgid "This service will be unavailable between 9pm on Saturday 31st March 2023 and 9:30 am 1st April 2023."
+msgid "This service will be unavailable between 9pm on Friday 31st March 2023 and 9:30am on Saturday 1st April 2023."
 msgstr ""
 
 #. Triage page
