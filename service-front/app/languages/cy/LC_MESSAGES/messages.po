@@ -6508,6 +6508,7 @@ msgstr ""
 "dim ond y 12 llythyren a rhifau sy’n dilyn C-"
 
 #: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:11
+#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:10
 msgid ""
 "If you need to use your lasting power of attorney during this time you can "
 "still use the paper LPA document."
@@ -6517,12 +6518,13 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
 #: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
+#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:6
 msgid ""
-"This service will be unavailable between 3pm on Friday 8 April and 6pm on "
-"Sunday 10 April 2022."
+"This service will be unavailable between 9pm on Friday 31st March 2023 and "
+"9:30am on Saturday 1st April 2023."
 msgstr ""
-"Ni fydd y gwasanaeth hwn ar gael rhwng 3pm ar ddydd Gwener 8 Ebrill a 6pm ar "
-"ddydd Sul 10 Ebrill 2022."
+"Ni fydd y gwasanaeth hwn ar gael rhwng 9pm ar Ddydd Gwener 31 Mawrth hyd "
+"9:30am ar Ddydd Sadwrn 1 Ebrill."
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:43
