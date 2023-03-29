@@ -24,10 +24,10 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@03eb867e3d1d557bdb958602013c4b401deef7a0 # pin@v4.2.0
+        uses: actions/setup-python@dfa76f8d0df0f92390ab2d42e57c6537748ecc71 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'

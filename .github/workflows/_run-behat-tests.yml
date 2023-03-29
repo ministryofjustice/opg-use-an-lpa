@@ -16,10 +16,10 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@03eb867e3d1d557bdb958602013c4b401deef7a0 # pin@v4.2.0
+        uses: actions/setup-python@dfa76f8d0df0f92390ab2d42e57c6537748ecc71 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
@@ -51,7 +51,7 @@ jobs:
           path: terraform/environment
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@bab55d3830fe69833c9fecaa51fe2c829a7508f3 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

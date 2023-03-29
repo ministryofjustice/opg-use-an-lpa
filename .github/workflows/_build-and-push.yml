@@ -71,11 +71,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@e0d62270e20d6eeecf2fd6397a1b8871b6269e38 # pin@v3.0.8
+        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -94,7 +94,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@bab55d3830fe69833c9fecaa51fe2c829a7508f3 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -248,7 +248,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@6a2e18ec5c0195b923b06b71ab3586eda1b9c795 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
