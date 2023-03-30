@@ -7,7 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
+use App\Service\Lpa\ValidateOlderLpaRequirements;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -15,9 +15,12 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
- * @coversDefaultClass \App\Service\Lpa\ValidateAccessForAllLpaRequirements
+ * Class ValidateOlderLpaRequirementsTest
+ *
+ * @package AppTest\Service\Lpa
+ * @coversDefaultClass \App\Service\Lpa\ValidateOlderLpaRequirements
  */
-class ValidateAccessForAllLpaRequirementsTest extends TestCase
+class ValidateOlderLpaRequirementsTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -27,12 +30,12 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     public function setUp(): void
     {
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
-        $this->loggerProphecy         = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
-    public function validateLpaRequirements(): ValidateAccessForAllLpaRequirements
+    public function validateLpaRequirements(): ValidateOlderLpaRequirements
     {
-        return new ValidateAccessForAllLpaRequirements(
+        return new ValidateOlderLpaRequirements(
             $this->loggerProphecy->reveal(),
             $this->featureEnabledProphecy->reveal(),
         );
@@ -54,7 +57,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA status invalid');
 
-        $this->validateLpaRequirements()($lpa);
+        ($this->validateLpaRequirements()($lpa));
     }
 
     /**
@@ -74,7 +77,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('PA not eligible due to registration date');
 
-        $this->validateLpaRequirements()($lpa);
+        ($this->validateLpaRequirements()($lpa));
     }
 
     /**
@@ -94,7 +97,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA status invalid');
 
-        $this->validateLpaRequirements()($lpa);
+        ($this->validateLpaRequirements()($lpa));
     }
 
     /**
@@ -114,7 +117,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA status invalid');
 
-        $this->validateLpaRequirements()($lpa);
+        ($this->validateLpaRequirements()($lpa));
     }
 
     /**
@@ -131,7 +134,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
             'registrationDate' => '2019-08-31',
         ];
 
-        $response = $this->validateLpaRequirements()($lpa);
+        $response = ($this->validateLpaRequirements()($lpa));
         $this->assertNull($response);
     }
 }
