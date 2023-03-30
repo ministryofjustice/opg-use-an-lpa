@@ -189,4 +189,9 @@ class EventCodes
      * LPA type added is hw
      */
     public const ADDED_LPA_TYPE_HW = 'ADDED_LPA_TYPE_HW';
+
+    /**
+     * Activation key request made by replacement attorney
+     */
+    public const ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY = 'ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY';
 }

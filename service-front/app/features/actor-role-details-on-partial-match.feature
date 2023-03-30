@@ -12,6 +12,12 @@ Feature: Provide role details when adding an older LPA
     And I have provided my current address
 
   @ui @ff:allow_older_lpas:true
+  Scenario: The user is showed they cannot request an activation key if they are a replacement attorney on the LPA
+    Given I am asked for my role on the LPA
+    When I confirm that I am the ReplacementAttorney
+    Then I am told I cannot request an activation key
+
+  @ui @ff:allow_older_lpas:true
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given I am asked for my role on the LPA
     When I confirm that I am the Attorney

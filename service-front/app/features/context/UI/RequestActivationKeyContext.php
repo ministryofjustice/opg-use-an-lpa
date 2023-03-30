@@ -94,6 +94,15 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @Then /^I am told I cannot request an activation key$/
+     */
+    public function iAmToldICannotRequestAnActivationKey()
+    {
+        $this->ui->assertPageAddress('/lpa/add/actor-role');
+        $this->ui->assertPageContainsText('You cannot request an activation key if you are a replacement attorney');
+    }
+
+    /**
      * @Then /^I am asked for the attorney details$/
      */
     public function iAmAskedForTheAttorneyDetails()
