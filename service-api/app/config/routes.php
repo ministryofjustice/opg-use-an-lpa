@@ -38,12 +38,12 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
     $app->post(
         '/v1/older-lpa/validate',
-        App\Handler\AccessForAllLpaValidationHandler::class,
+        App\Handler\OlderLpaValidationHandler::class,
         'lpa.older.validate'
     );
     $app->patch(
         '/v1/older-lpa/confirm',
-        App\Handler\AccessForAllLpaConfirmationHandler::class,
+        App\Handler\OlderLpaConfirmationHandler::class,
         'lpa.older.confirm'
     );
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
@@ -11,7 +9,7 @@ use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\AccessForAllLpaService;
+use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
@@ -21,7 +19,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class AccessForAllLpaServiceTest extends TestCase
+class OlderLpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -37,8 +35,6 @@ class AccessForAllLpaServiceTest extends TestCase
     public string $actorUid;
     public string $additionalInfo;
     public string $lpaActorToken;
-
-    /** @var array<string, mixed> */
     public array $dataToMatch;
     private DateInterval $oneYearInterval;
     private DateInterval $sixWeekInterval;
@@ -46,17 +42,17 @@ class AccessForAllLpaServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->lpasInterfaceProphecy   = $this->prophesize(LpasInterface::class);
-        $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
-        $this->actorCodesProphecy      = $this->prophesize(ActorCodes::class);
+        $this->lpasInterfaceProphecy = $this->prophesize(LpasInterface::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
-        $this->featureEnabledProphecy  = $this->prophesize(FeatureEnabled::class);
-        $this->resolveActorProphecy    = $this->prophesize(ResolveActor::class);
+        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
+        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
 
-        $this->userId         = 'user-zxywq-54321';
-        $this->lpaUid         = '700000012345';
-        $this->actorUid       = '700000055554';
-        $this->lpaActorToken  = '00000000-0000-4000-A000-000000000000';
+        $this->userId = 'user-zxywq-54321';
+        $this->lpaUid = '700000012345';
+        $this->actorUid = '700000055554';
+        $this->lpaActorToken = '00000000-0000-4000-A000-000000000000';
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
 
         $this->twoWeekInterval = new DateInterval('P2W');
@@ -64,18 +60,18 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->oneYearInterval = new DateInterval('P1Y');
 
         $this->dataToMatch = [
-            'reference_number'     => $this->lpaUid,
-            'dob'                  => '1980-03-01',
-            'first_names'          => 'Test Tester',
-            'last_name'            => 'Testing',
-            'postcode'             => 'Ab1 2Cd',
-            'force_activation_key' => false,
+            'reference_number'      => $this->lpaUid,
+            'dob'                   => '1980-03-01',
+            'first_names'           => 'Test Tester',
+            'last_name'             => 'Testing',
+            'postcode'              => 'Ab1 2Cd',
+            'force_activation_key'  => false,
         ];
     }
 
-    private function getOlderLpaService(): AccessForAllLpaService
+    private function getOlderLpaService(): OlderLpaService
     {
-        return new AccessForAllLpaService(
+        return new OlderLpaService(
             $this->actorCodesProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
@@ -288,7 +284,7 @@ class AccessForAllLpaServiceTest extends TestCase
 
         $lpaCodesResponse = new ActorCode(
             [
-                'Created' => $createdDate,
+                'Created' => $createdDate
             ],
             new DateTime('now')
         );
@@ -308,7 +304,7 @@ class AccessForAllLpaServiceTest extends TestCase
     {
         $lpaCodesResponse = new ActorCode(
             [
-                'Created' => null,
+                'Created' => null
             ],
             new DateTime()
         );

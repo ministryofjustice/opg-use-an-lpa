@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Lpa\AddAccessForAllLpa;
+use App\Service\Lpa\AddOlderLpa;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
+ * Class OlderLpaValidationHandler
+ * @package App\Handler
  * @codeCoverageIgnore
  */
-class AccessForAllLpaValidationHandler implements RequestHandlerInterface
+class OlderLpaValidationHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private AddAccessForAllLpa $addAccessForAllLpa,
+        private AddOlderLpa $addOlderLpa,
     ) {
     }
 
@@ -29,7 +31,7 @@ class AccessForAllLpaValidationHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
-        $userId      = $request->getHeader('user-token')[0];
+        $userId = $request->getHeader('user-token')[0];
 
         if (
             empty($requestData['reference_number']) ||
@@ -40,7 +42,7 @@ class AccessForAllLpaValidationHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an activation key');
         }
 
-        $lpaMatchResponse = $this->addAccessForAllLpa->validateRequest($userId, $requestData);
+        $lpaMatchResponse = $this->addOlderLpa->validateRequest($userId, $requestData);
 
         return new JsonResponse($lpaMatchResponse);
     }
