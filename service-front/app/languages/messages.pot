@@ -3798,7 +3798,7 @@ msgid "If you remove an LPA from your Use a lasting power of attorney account:"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
-msgid "all access codes you’ve created for that LPA will be cancelled"
+msgid "all access codes you've created for this LPA will be valid until they are cancelled or expire"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
