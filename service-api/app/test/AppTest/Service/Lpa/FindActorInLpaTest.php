@@ -198,7 +198,7 @@ class FindActorInLpaTest extends TestCase
                     'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Test Tester',
-                    'last_name'   => 'Testing',
+                    'last_name'   => 'T"esting',
                     'postcode'    => 'Ab1 2Cd'
                 ],
             ],
