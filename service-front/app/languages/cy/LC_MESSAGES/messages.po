@@ -5427,7 +5427,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid ""
-"all access codes you've created for this LPA will be valid until they are "
+"all access codes you’ve created for this LPA will be valid until they are "
 "cancelled or expire"
 msgstr ""
 "bydd pob cod mynediad yr ydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes "
