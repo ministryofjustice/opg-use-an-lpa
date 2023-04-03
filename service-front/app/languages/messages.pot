@@ -3806,7 +3806,7 @@ msgid "you’ll not be able to see how the LPA is being used or has been used"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:35
-msgid "you must contact us for a new activation key if you want to add the LPA back to your account"
+msgid "you will need to request a new activation key if you want to add the LPA back to your account"
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:48
