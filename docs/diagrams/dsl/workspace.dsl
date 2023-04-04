@@ -4,38 +4,42 @@ workspace {
         !include https://raw.githubusercontent.com/ministryofjustice/opg-technical-guidance/main/dsl/poas/persons.dsl
 
         group "Use and View an LPA" {
-            !include ualpa-use.dsl
-            !include ualpa-view.dsl
+            lpaCaseManagement = softwareSystem "LPA Case Management" "PKA Sirius." "Existing System" {
+                lpaCaseManagement_lpaCodesService = container "LPA Codes Service" "Container"
+                lpaCaseManagement_siriusCaseManagement = container "Sirius Case Management" "Container" {
+                    -> lpaCaseManagement_lpaCodesService "Makes requests to"
+                }
+                lpaCaseManagement_lpasCollectionService = container "LPAs Collection" "Container" {
+                    -> lpaCaseManagement_siriusCaseManagement "Makes requests to"
+                }
+                lpaCaseManagement_opgDataApiGateway = container "OPG Data Api Gateway" "Container" {
+                    -> lpaCaseManagement_lpaCodesService "Makes requests to"
+                    -> lpaCaseManagement_lpasCollectionService "Makes requests to"
+                }
+            }
 
-            donor -> ualpa_useSoftwareSystem
-            attorney -> ualpa_useSoftwareSystem
-            thirdparty -> ualpa_viewSoftwareSystem
+            !include ualpa.dsl
+
+            donor -> ualpa_useFrontEnd
+            attorney -> ualpa_useFrontEnd
+            thirdparty -> ualpa_viewFrontEnd
+            caseWorker -> ualpa_adminApplication
         }
     }
 
     views {
 
-        systemlandscape "SystemLandscape" {
+        systemContext ualpa_SoftwareSystem {
             include *
             autoLayout
         }
 
-        systemContext ualpa_useSoftwareSystem {
+        container ualpa_SoftwareSystem {
             include *
             autoLayout
         }
 
-        systemContext ualpa_viewSoftwareSystem {
-            include *
-            autoLayout
-        }
-
-        container ualpa_useSoftwareSystem {
-            include *
-            autoLayout
-        }
-
-        container ualpa_viewSoftwareSystem {
+        container lpaCaseManagement {
             include *
             autoLayout
         }
