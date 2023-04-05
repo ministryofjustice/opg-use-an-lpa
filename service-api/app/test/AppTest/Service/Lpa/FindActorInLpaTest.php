@@ -31,7 +31,7 @@ class FindActorInLpaTest extends TestCase
     public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
         $lpa = [
-            'uId' => '700000012345',
+            'uId' => '700000012346',
             'donor' => [
                 'uId'       => '700000001111',
                 'dob'       => '1975-10-05',
@@ -87,7 +87,7 @@ class FindActorInLpaTest extends TestCase
                     'uId'       => '700000001234',
                     'dob'       => '1980-03-01',
                     'firstname' => 'Test',
-                    'surname'   => 'Testing',
+                    'surname'   => 'T\'esting',
                     'addresses' => [
                         [
                             'postcode' => 'Ab1 2Cd'
@@ -155,7 +155,7 @@ class FindActorInLpaTest extends TestCase
                     'uId'       => '700000001234',
                     'dob'       => '1980-03-01',
                     'firstname' => 'Test',
-                    'surname'   => 'Testing',
+                    'surname'   => 'T\'esting',
                     'addresses' => [
                         [
                             'postcode' => 'Ab1 2Cd'
@@ -171,6 +171,7 @@ class FindActorInLpaTest extends TestCase
         );
 
         $matchData = $sut($lpa, $userData);
+
         $this->assertEquals($expectedResponse, $matchData);
     }
 
@@ -183,7 +184,7 @@ class FindActorInLpaTest extends TestCase
                         'uId'       => '700000001234',
                         'dob'       => '1980-03-01',
                         'firstname' => 'Test',
-                        'surname'   => 'Testing',
+                        'surname'   => 'T\'esting',
                         'addresses' => [
                             [
                                 'postcode' => 'Ab1 2Cd'
@@ -192,13 +193,13 @@ class FindActorInLpaTest extends TestCase
                         'systemStatus' => true,
                     ],
                     'role' => 'attorney', // successful match for attorney
-                    'lpa-id'    => '700000012345'
+                    'lpa-id'    => '700000012346'
                 ],
                 [
                     'reference_number' => '700000000001',
                     'dob'         => '1980-03-01',
                     'first_names' => 'Test Tester',
-                    'last_name'   => 'T’esting',
+                    'last_name'   => 'T\'esting',
                     'postcode'    => 'Ab1 2Cd'
                 ],
             ],
@@ -216,7 +217,7 @@ class FindActorInLpaTest extends TestCase
                         ]
                     ],
                     'role' => 'donor', // successful match for donor
-                    'lpa-id'    => '700000012345'
+                    'lpa-id'    => '700000012346'
                 ],
                 [
                     'reference_number' => '700000000001',
