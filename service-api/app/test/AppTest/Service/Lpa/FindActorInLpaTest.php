@@ -31,84 +31,84 @@ class FindActorInLpaTest extends TestCase
     public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
         $lpa = [
-            'uId' => '700000012346',
-            'donor' => [
+            'uId'       => '700000012346',
+            'donor'     => [
                 'uId'       => '700000001111',
                 'dob'       => '1975-10-05',
                 'firstname' => 'Donor',
                 'surname'   => 'Person',
                 'addresses' => [
                     [
-                        'postcode' => 'PY1 3Kd'
-                    ]
-                ]
+                        'postcode' => 'PY1 3Kd',
+                    ],
+                ],
             ],
             'attorneys' => [
                 [
-                    'uId'       => '700000002222',
-                    'dob'       => '1977-11-21',
-                    'firstname' => 'Attorneyone',
-                    'surname'   => 'Person',
-                    'addresses' => [
+                    'uId'          => '700000002222',
+                    'dob'          => '1977-11-21',
+                    'firstname'    => 'Attorneyone',
+                    'surname'      => 'Person',
+                    'addresses'    => [
                         [
-                            'postcode' => 'Gg1 2ff'
-                        ]
+                            'postcode' => 'Gg1 2ff',
+                        ],
                     ],
                     'systemStatus' => false, // inactive attorney
                 ],
                 [
-                    'uId'       => '700000003333',
-                    'dob'       => '1960-05-05',
-                    'firstname' => '', // ghost attorney
-                    'surname'   => '',
-                    'addresses' => [
+                    'uId'          => '700000003333',
+                    'dob'          => '1960-05-05',
+                    'firstname'    => '', // ghost attorney
+                    'surname'      => '',
+                    'addresses'    => [
                         [
-                            'postcode' => 'BB1 9ee'
-                        ]
+                            'postcode' => 'BB1 9ee',
+                        ],
                     ],
                     'systemStatus' => true,
                 ],
                 [
-                    'uId'       => '700000004444',
-                    'dob'       => '1980-03-01',
-                    'firstname' => 'Attorneythree',
-                    'surname'   => 'Person',
-                    'addresses' => [ // multiple addresses
+                    'uId'          => '700000004444',
+                    'dob'          => '1980-03-01',
+                    'firstname'    => 'Attorneythree',
+                    'surname'      => 'Person',
+                    'addresses'    => [ // multiple addresses
                         [
-                            'postcode' => 'Ab1 2Cd'
+                            'postcode' => 'Ab1 2Cd',
                         ],
                         [
-                            'postcode' => 'Bc2 3Df'
-                        ]
+                            'postcode' => 'Bc2 3Df',
+                        ],
                     ],
                     'systemStatus' => true,
                 ],
                 [
-                    'uId'       => '700000001234',
-                    'dob'       => '1980-03-01',
-                    'firstname' => 'Test',
-                    'surname'   => 'T\'esting',
-                    'addresses' => [
+                    'uId'          => '700000001234',
+                    'dob'          => '1980-03-01',
+                    'firstname'    => 'Test',
+                    'surname'      => 'T\'esting',
+                    'addresses'    => [
                         [
-                            'postcode' => 'Ab1 2Cd'
-                        ]
+                            'postcode' => 'Ab1 2Cd',
+                        ],
                     ],
                     'systemStatus' => true,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'uId'       => '700000002222',
-                    'dob'       => '1977-11-21',
-                    'firstname' => 'Attorneyone',
-                    'surname'   => 'Person',
-                    'addresses' => [
+                    'uId'          => '700000002222',
+                    'dob'          => '1977-11-21',
+                    'firstname'    => 'Attorneyone',
+                    'surname'      => 'Person',
+                    'addresses'    => [
                         [
-                            'postcode' => 'Gg1 2ff'
-                        ]
+                            'postcode' => 'Gg1 2ff',
+                        ],
                     ],
                     'systemStatus' => false, // inactive attorney
                 ]
@@ -117,14 +117,14 @@ class FindActorInLpaTest extends TestCase
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'uId'       => '700000003333',
-                    'dob'       => '1960-05-05',
-                    'firstname' => '', // ghost attorney
-                    'surname'   => '',
-                    'addresses' => [
+                    'uId'          => '700000003333',
+                    'dob'          => '1960-05-05',
+                    'firstname'    => '', // ghost attorney
+                    'surname'      => '',
+                    'addresses'    => [
                         [
-                            'postcode' => 'BB1 9ee'
-                        ]
+                            'postcode' => 'BB1 9ee',
+                        ],
                     ],
                     'systemStatus' => true,
                 ]
@@ -133,17 +133,17 @@ class FindActorInLpaTest extends TestCase
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'uId'       => '700000004444',
-                    'dob'       => '1980-03-01',
-                    'firstname' => 'Attorneythree',
-                    'surname'   => 'Person',
-                    'addresses' => [ // multiple addresses
+                    'uId'          => '700000004444',
+                    'dob'          => '1980-03-01',
+                    'firstname'    => 'Attorneythree',
+                    'surname'      => 'Person',
+                    'addresses'    => [ // multiple addresses
                         [
-                            'postcode' => 'Ab1 2Cd'
+                            'postcode' => 'Ab1 2Cd',
                         ],
                         [
-                            'postcode' => 'Bc2 3Df'
-                        ]
+                            'postcode' => 'Bc2 3Df',
+                        ],
                     ],
                     'systemStatus' => true,
                 ]
@@ -152,14 +152,14 @@ class FindActorInLpaTest extends TestCase
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'uId'       => '700000001234',
-                    'dob'       => '1980-03-01',
-                    'firstname' => 'Test',
-                    'surname'   => 'T\'esting',
-                    'addresses' => [
+                    'uId'          => '700000001234',
+                    'dob'          => '1980-03-01',
+                    'firstname'    => 'Test',
+                    'surname'      => 'T\'esting',
+                    'addresses'    => [
                         [
-                            'postcode' => 'Ab1 2Cd'
-                        ]
+                            'postcode' => 'Ab1 2Cd',
+                        ],
                     ],
                     'systemStatus' => true,
                 ]
@@ -180,113 +180,113 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 [
-                    'actor'     => [
-                        'uId'       => '700000001234',
-                        'dob'       => '1980-03-01',
-                        'firstname' => 'Test',
-                        'surname'   => 'T\'esting',
-                        'addresses' => [
+                    'actor'  => [
+                        'uId'          => '700000001234',
+                        'dob'          => '1980-03-01',
+                        'firstname'    => 'Test',
+                        'surname'      => 'T\'esting',
+                        'addresses'    => [
                             [
-                                'postcode' => 'Ab1 2Cd'
-                            ]
+                                'postcode' => 'Ab1 2Cd',
+                            ],
                         ],
                         'systemStatus' => true,
                     ],
-                    'role' => 'attorney', // successful match for attorney
-                    'lpa-id'    => '700000012346'
+                    'role'   => 'attorney', // successful match for attorney
+                    'lpa-id' => '700000012346',
                 ],
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1980-03-01',
-                    'first_names' => 'Test Tester',
-                    'last_name'   => 'T\'esting',
-                    'postcode'    => 'Ab1 2Cd'
+                    'dob'              => '1980-03-01',
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'T\'esting',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
             [
                 [
-                    'actor'     => [
+                    'actor'  => [
                         'uId'       => '700000001111',
                         'dob'       => '1975-10-05',
                         'firstname' => 'Donor',
                         'surname'   => 'Person',
                         'addresses' => [
                             [
-                                'postcode' => 'PY1 3Kd'
-                            ]
-                        ]
+                                'postcode' => 'PY1 3Kd',
+                            ],
+                        ],
                     ],
-                    'role' => 'donor', // successful match for donor
-                    'lpa-id'    => '700000012346'
+                    'role'   => 'donor', // successful match for donor
+                    'lpa-id' => '700000012346',
                 ],
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1975-10-05',
-                    'first_names' => 'Donor',
-                    'last_name'   => 'Person',
-                    'postcode'    => 'PY1 3Kd'
-                ],
-            ],
-            [
-                null,
-                [
-                    'reference_number' => '700000000001',
-                    'dob'         => '1982-01-20', // dob will not match
-                    'first_names' => 'Test Tester',
-                    'last_name'   => 'Testing',
-                    'postcode'    => 'Ab1 2Cd'
+                    'dob'              => '1975-10-05',
+                    'first_names'      => 'Donor',
+                    'last_name'        => 'Person',
+                    'postcode'         => 'PY1 3Kd',
                 ],
             ],
             [
                 null,
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1980-03-01',
-                    'first_names' => 'Wrong', // firstname will not match
-                    'last_name'   => 'Testing',
-                    'postcode'    => 'Ab1 2Cd'
+                    'dob'              => '1982-01-20', // dob will not match
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'Testing',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
             [
                 null,
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1980-03-01',
-                    'first_names' => 'Test Tester',
-                    'last_name'   => 'Incorrect', // surname will not match
-                    'postcode'    => 'Ab1 2Cd'
+                    'dob'              => '1980-03-01',
+                    'first_names'      => 'Wrong', // firstname will not match
+                    'last_name'        => 'Testing',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
             [
                 null,
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1980-03-01',
-                    'first_names' => 'Test Tester',
-                    'last_name'   => 'Testing',
-                    'postcode'    => 'WR0 NG1' // postcode will not match
+                    'dob'              => '1980-03-01',
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'Incorrect', // surname will not match
+                    'postcode'         => 'Ab1 2Cd',
+                ],
+            ],
+            [
+                null,
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => '1980-03-01',
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'Testing',
+                    'postcode'         => 'WR0 NG1', // postcode will not match
                 ],
             ],
             [
                 null, // will not find a match as this attorney is inactive
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1977-11-21',
-                    'first_names' => 'Attorneyone',
-                    'last_name'   => 'Person',
-                    'postcode'    => 'Gg1 2ff'
+                    'dob'              => '1977-11-21',
+                    'first_names'      => 'Attorneyone',
+                    'last_name'        => 'Person',
+                    'postcode'         => 'Gg1 2ff',
                 ],
             ],
             [
                 null, // will not find a match as this attorney is a ghost
                 [
                     'reference_number' => '700000000001',
-                    'dob'         => '1960-05-05',
-                    'first_names' => 'Attorneytwo',
-                    'last_name'   => 'Person',
-                    'postcode'    => 'BB1 9ee'
+                    'dob'              => '1960-05-05',
+                    'first_names'      => 'Attorneytwo',
+                    'last_name'        => 'Person',
+                    'postcode'         => 'BB1 9ee',
                 ],
-            ]
+            ],
         ];
     }
 }
