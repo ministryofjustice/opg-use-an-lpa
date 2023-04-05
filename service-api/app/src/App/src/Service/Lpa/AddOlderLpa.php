@@ -77,7 +77,7 @@ class AddOlderLpa
                 $this->logger->notice(
                     'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                     [
-                        'id' => $userId,
+                        'id'  => $userId,
                         'uId' => $matchData['reference_number'],
                     ]
                 );

@@ -1863,12 +1863,14 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
+        $userSurname = 'D’eputy';
+
         $data = [
             'reference_number'     => $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
+            'last_name'            => $userSurname,
             'force_activation_key' => false,
         ];
 
@@ -2670,6 +2672,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
+        //$userSurname  = 'D’eputy';
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
@@ -2790,6 +2793,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
+        $userSurname = 'D’eputy';
         $createdDate = (new DateTime())->modify('-14 days');
 
         $data = [
@@ -2797,7 +2801,7 @@ class LpaContext extends BaseIntegrationContext
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
+            'last_name'            => $userSurname,
             'force_activation_key' => false,
         ];
 
