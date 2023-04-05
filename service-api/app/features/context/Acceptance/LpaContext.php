@@ -102,7 +102,7 @@ class LpaContext implements Context
 
         $this->userPostCode          = 'string';
         $this->userFirstnames        = 'Ian Deputy';
-        $this->userSurname           = 'D"eputy';
+        $this->userSurname           = 'D’eputy';
         $this->lpa->registrationDate = '2019-09-01';
         $this->userDob               = '1975-10-05';
     }

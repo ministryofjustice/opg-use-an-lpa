@@ -162,7 +162,7 @@ paths:
                         id: 25
                         middlenames: ""
                         salutation: Mr
-                        surname: M'atthews
+                        surname: M’atthews
                         systemStatus: true
                         uId: 7000-0000-0997
                       - addresses:
@@ -352,7 +352,7 @@ paths:
                           uId: 7000-0000-0971
                       middlenames: Suzanne
                       salutation: Mrs
-                      surname: Gilson
+                      surname: O’Gilson
                       uId: 7000-0000-0971
                     id: 5
                     invalidDate: null

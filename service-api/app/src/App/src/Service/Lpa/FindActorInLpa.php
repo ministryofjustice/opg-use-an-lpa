@@ -152,24 +152,24 @@ class FindActorInLpa
      */
     private function normaliseComparisonData(array $data): ?array
     {
-        $data['first_names'] = $this->removeSpecialCharacters(
+        $data['first_names'] = $this->turnUnicodeCharToAscii(
             strtolower(explode(' ', $data['first_names'])[0])
         );
-        $data['last_name']   = $this->removeSpecialCharacters(strtolower($data['last_name']));
-        $data['postcode']    = $this->removeSpecialCharacters(strtolower($data['postcode']));
+        $data['last_name']   = $this->turnUnicodeCharToAscii(strtolower($data['last_name']));
+        $data['postcode']    = strtolower(str_replace(' ', '', $data['postcode']));
 
         return $data;
     }
 
     /**
-     * Removes special characters in given string
+     * Replace any unicode apostrophe's in string to an ascii [introduced to resolve iphone entry issue]
      *
      * @param string $string
      * @return string
      */
-    private function removeSpecialCharacters(string $string): string
+    private function turnUnicodeCharToAscii(string $string): string
     {
-        $charsToRemove = ['\'', '"', ',', ';', '-', '.', ' '];
-        return str_ireplace($charsToRemove, '', $string);
+        $charsToReplace = ['’'];
+        return str_ireplace($charsToReplace, '\'', $string);
     }
 }
