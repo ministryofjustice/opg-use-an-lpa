@@ -2896,6 +2896,72 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that match a valid paper document$/
+     */
+    public function iProvideDetailsThatMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+
+        $this->lpa->lpaIsCleansed    = true;
+        $this->lpa->donor->firstname = 'Rachel';
+        $this->lpa->donor->surname   = 'S’anderson';
+
+        $this->lpaUid         = '700000000047';
+        $this->userFirstnames = $firstnames;
+        $this->userSurname    = $lastname;
+        $this->userDob        = $dob;
+        $this->userPostCode   = $postcode;
+        $this->actorId        = '700000000799';
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(new Result([]));
+
+        // LpaRepository::get
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
+
+        // check if actor has a code
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
+
+        // API call to request an activation key
+        $this->apiPost(
+            '/v1/older-lpa/validate',
+            [
+                'reference_number'     => $this->lpaUid,
+                'first_names'          => $this->userFirstnames,
+                'last_name'            => $this->userSurname,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
+                'force_activation_key' => false,
+            ],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $expectedResponse = [
+            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'role'        => 'donor',
+            'lpa-id'      => $this->lpaUid,
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'donor'       => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
+        ];
+
+        Assert::assertArrayNotHasKey('attorney', $this->getResponseAsJson());
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
+    }
+
+    /**
      * @Then /^I am informed that an LPA could not be found with these details$/
      * @Then /^I am asked for my role on the LPA$/
      */
