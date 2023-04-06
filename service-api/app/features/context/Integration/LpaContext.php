@@ -1768,7 +1768,6 @@ class LpaContext extends BaseIntegrationContext
             'first_names'          => $firstnames,
             'last_name'            => $lastname,
             'force_activation_key' => false,
-
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1794,6 +1793,70 @@ class LpaContext extends BaseIntegrationContext
         }
 
         throw new ExpectationFailedException('LPA should not have matched data provided');
+    }
+
+    /**
+     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that match a valid paper document$/
+     */
+    public function iProvideDetailsThatMatchAValidPaperDocument($firstnames, $lastname, $postcode, $dob)
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+
+        $this->lpa->donor->firstname = 'Rachel';
+        $this->lpa->donor->surname   =  'S’anderson';
+
+        $data = [
+            'reference_number'     => $this->lpaUid,
+            'dob'                  => $dob,
+            'postcode'             => $postcode,
+            'first_names'          => $firstnames,
+            'last_name'            => $lastname,
+            'force_activation_key' => false,
+        ];
+
+        //UserLpaActorMap: getAllForUser
+        $this->awsFixtures->append(
+            new Result([])
+        );
+
+        $this->pactGetInteraction(
+            $this->apiGatewayPactProvider,
+            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa
+        );
+
+        $codeExists          = new stdClass();
+        $codeExists->Created = null;
+
+        $this->pactPostInteraction(
+            $this->codesApiPactProvider,
+            '/v1/exists',
+            [
+                'lpa'   => $this->lpa->uId,
+                'actor' => $this->lpa->donor->uId,
+            ],
+            StatusCodeInterface::STATUS_OK,
+            $codeExists
+        );
+
+        $addOlderLpa      = $this->container->get(AddOlderLpa::class);
+        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+
+        $expectedResponse = [
+            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'role'        => 'donor',
+            'lpa-id'      => $this->lpa->uId,
+            'caseSubtype' => $this->lpa->caseSubtype,
+            'donor'       => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
+        ];
+
+        Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
 
     /**
