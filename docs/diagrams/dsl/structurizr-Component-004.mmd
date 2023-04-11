@@ -1,0 +1,36 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [Use A Lasting Power of Attorney - API Layer - Components]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    36("<div style='font-weight: bold'>View an LPA Frontend</div><div style='font-size: 70%; margin-top: 0px'>[Container: PHP, CSS, JS, TWIG]</div><div style='font-size: 80%; margin-top:10px'>Provides features to view<br />LPAs shared by LPA Actors.</div>")
+    style 36 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    17[("<div style='font-weight: bold'>Application Database</div><div style='font-size: 70%; margin-top: 0px'>[Container: DynamoDB]</div><div style='font-size: 80%; margin-top:10px'>Stores generated code, user<br />accounts, Sirius LPA IDs, and<br />LPA/Actor codes.</div>")]
+    style 17 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    7("<div style='font-weight: bold'>LPA Case Management</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>PKA Sirius.</div>")
+    style 7 fill:#999999,stroke:#6b6b6b,color:#ffffff
+    52("<div style='font-weight: bold'>Use an LPA Frontend</div><div style='font-size: 70%; margin-top: 0px'>[Container: PHP, CSS, JS, TWIG]</div><div style='font-size: 80%; margin-top:10px'>Provides features to retrieve<br />LPAs and generate codes for<br />sharing LPAs.</div>")
+    style 52 fill:#438dd5,stroke:#2e6295,color:#ffffff
+
+    subgraph 20 [API Layer]
+      style 20 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+      21("<div style='font-weight: bold'>Web Router</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>Routes traffic.</div>")
+      style 21 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      22("<div style='font-weight: bold'>Domain Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>Manages domain specific<br />logic.</div>")
+      style 22 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      23("<div style='font-weight: bold'>Security Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>TBC.</div>")
+      style 23 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      24("<div style='font-weight: bold'>Data Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>TBC.</div>")
+      style 24 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+    21-. "<div></div><div style='font-size: 70%'></div>" .->22
+    22-. "<div></div><div style='font-size: 70%'></div>" .->23
+    22-. "<div></div><div style='font-size: 70%'></div>" .->24
+    22-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->7
+    24-. "<div>Connects to</div><div style='font-size: 70%'></div>" .->17
+    36-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->21
+    52-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->21
+  end

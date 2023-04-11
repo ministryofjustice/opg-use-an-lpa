@@ -45,6 +45,26 @@ workspace {
             autoLayout
         }
 
+        component ualpa_adminApplication {
+            include *
+            autoLayout
+        }
+
+        component ualpa_viewFrontEnd {
+            include *
+            autoLayout
+        }
+
+        component ualpa_useFrontEnd {
+            include *
+            autoLayout
+        }
+
+        component ualpa_apiLayer {
+            include *
+            autoLayout
+        }
+
         theme default
 
         styles {

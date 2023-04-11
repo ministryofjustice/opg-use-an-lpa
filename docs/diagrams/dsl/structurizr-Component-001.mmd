@@ -1,0 +1,33 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [Use A Lasting Power of Attorney - Admin Application - Components]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    17[("<div style='font-weight: bold'>Application Database</div><div style='font-size: 70%; margin-top: 0px'>[Container: DynamoDB]</div><div style='font-size: 80%; margin-top:10px'>Stores generated code, user<br />accounts, Sirius LPA IDs, and<br />LPA/Actor codes.</div>")]
+    style 17 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    18[("<div style='font-weight: bold'>AWS Cloudwatch</div><div style='font-size: 70%; margin-top: 0px'>[Container: AWS Cloudwatch]</div><div style='font-size: 80%; margin-top:10px'>Logging and observability.</div>")]
+    style 18 fill:#438dd5,stroke:#2e6295,color:#ffffff
+
+    subgraph 68 [Admin Application]
+      style 68 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+      69("<div style='font-weight: bold'>Web Router</div><div style='font-size: 70%; margin-top: 0px'>[Component: Go]</div><div style='font-size: 80%; margin-top:10px'>Routes traffic.</div>")
+      style 69 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      70("<div style='font-weight: bold'>Static Assets</div><div style='font-size: 70%; margin-top: 0px'>[Component: CSS, JS]</div><div style='font-size: 80%; margin-top:10px'>Contains static assets.</div>")
+      style 70 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      71("<div style='font-weight: bold'>View Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: Go]</div><div style='font-size: 80%; margin-top:10px'>Serves correct template and<br />content.</div>")
+      style 71 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      72("<div style='font-weight: bold'>Session Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: Go]</div><div style='font-size: 80%; margin-top:10px'>Maintains session state.</div>")
+      style 72 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      73("<div style='font-weight: bold'>Domain Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: Go]</div><div style='font-size: 80%; margin-top:10px'>Manages domain specific<br />logic.</div>")
+      style 73 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+    69-. "<div></div><div style='font-size: 70%'></div>" .->71
+    71-. "<div></div><div style='font-size: 70%'></div>" .->73
+    73-. "<div></div><div style='font-size: 70%'></div>" .->72
+    71-. "<div></div><div style='font-size: 70%'></div>" .->70
+    73-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->17
+    73-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->18
+  end
