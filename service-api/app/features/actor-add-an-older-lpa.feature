@@ -71,6 +71,18 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I am told that I cannot request an activation key
 
+  @integration @acceptance @pact @ff:allow_older_lpas:false
+  Scenario Outline: The user can add an old LPA to their account using iphone and apostrophe in name is not a problem
+    Given I am on the add an older LPA page
+    When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that match a valid paper document
+    And I confirm the details I provided are correct
+    Then I am shown the details of an LPA
+
+    Examples:
+      | firstnames  | lastname   | postcode   |    dob      |
+      | Rachel      | S’anderson |  DN37 5SH  | 1948-11-01  |
+      | Rachel      | S'anderson |  DN37 5SH  | 1948-11-01  |
+
   @integration @acceptance @pact
   Scenario: The user is informed if they have an activation key
     Given I am on the add an older LPA page
