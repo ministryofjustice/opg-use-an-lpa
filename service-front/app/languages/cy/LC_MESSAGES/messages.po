@@ -5426,8 +5426,12 @@ msgstr ""
 "Os byddwch yn dileu LPA oddi ar eich cyfrif Defnyddio atwrneiaeth arhosol:"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
-msgid "all access codes you’ve created for that LPA will be cancelled"
-msgstr "diddymir pob cod mynediad a grëwyd gennych ar gyfer yr LPA honno"
+msgid ""
+"all access codes you’ve created for this LPA will be valid until they are "
+"cancelled or expire"
+msgstr ""
+"bydd pob cod mynediad yr ydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes "
+"y byddant yn dod i ben neu yn cael eu dileu"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:33
 msgid "you’ll not be able to see how the LPA is being used or has been used"
@@ -5437,7 +5441,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:35
 msgid ""
-"you must contact us for a new activation key if you want to add the LPA back "
+"you will need to request a new activation key if you want to add the LPA back "
 "to your account"
 msgstr ""
 "bydd rhaid ichi gysylltu â ni i gael allweddair newydd os byddwch am roi’r LPA "

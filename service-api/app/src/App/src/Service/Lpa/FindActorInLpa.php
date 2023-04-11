@@ -67,16 +67,15 @@ class FindActorInLpa
 
         return [
             'actor' => $actor,
-            'role'  => $role,
+            'role' => $role,
             'lpa-id' => $lpaId,
         ];
     }
 
     /**
-     * Compares LPA data retrieved from Sirius to the data provided by
-     * the user to check if it matches
+     * Compares LPA data retrieved from Sirius to the data provided by the user to check if it matches
      *
-     * @param array $actor     The actor details being compared against
+     * @param array $actor The actor details being compared against
      * @param array $matchData The user provided data we're searching for a match against
      *
      * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
@@ -97,27 +96,30 @@ class FindActorInLpa
         $matchData = $this->normaliseComparisonData($matchData);
         $actorData = $this->normaliseComparisonData(
             [
-                'first_names'   => $actor['firstname'],
-                'last_name'     => $actor['surname'],
-                'postcode'      => $actor['addresses'][0]['postcode'],
+                'first_names' => $actor['firstname'],
+                'last_name'   => $actor['surname'],
+                'postcode'    => $actor['addresses'][0]['postcode'],
             ]
         );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'      => $actor['uId'],
-                'to_match'      => $matchData,
-                'actor_data'    => array_merge($actorData, ['dob' => $actor['dob']]),
+                'actor_id'   => $actor['uId'],
+                'to_match'   => $matchData,
+                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
             ]
         );
 
         $match = self::MATCH;
 
         $match = $actor['dob'] !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
-        $match = $actorData['first_names'] !== $matchData['first_names'] ? $match | self::NO_MATCH__FIRSTNAMES : $match;
-        $match = $actorData['last_name'] !== $matchData['last_name'] ? $match | self::NO_MATCH__SURNAME : $match;
-        $match = $actorData['postcode'] !== $matchData['postcode'] ? $match | self::NO_MATCH__POSTCODE : $match;
+        $match = $actorData['first_names'] !== $matchData['first_names'] ?
+            $match | self::NO_MATCH__FIRSTNAMES : $match;
+        $match = $actorData['last_name'] !== $matchData['last_name'] ?
+            $match | self::NO_MATCH__SURNAME : $match;
+        $match = $actorData['postcode'] !== $matchData['postcode'] ?
+            $match | self::NO_MATCH__POSTCODE : $match;
 
         if ($match === self::MATCH) {
             $this->logger->info(
@@ -129,11 +131,11 @@ class FindActorInLpa
         } else {
             $this->logger->info(
                 'User entered data failed to match for LPA {uId} and actor {actor_id}. '
-                    . 'Fields in error: {fields_in_error}',
+                . 'Fields in error: {fields_in_error}',
                 [
-                    'uId' => $matchData['reference_number'],
-                    'actor_id' => $actor['uId'],
-                    'fields_in_error' => $match
+                    'uId'             => $matchData['reference_number'],
+                    'actor_id'        => $actor['uId'],
+                    'fields_in_error' => $match,
                 ]
             );
         }
@@ -145,15 +147,28 @@ class FindActorInLpa
      * Formats data attributes for comparison in the older lpa journey
      *
      * @param array $data
-     *
      * @return ?array
      */
     private function normaliseComparisonData(array $data): ?array
     {
-        $data['first_names'] = strtolower(explode(' ', $data['first_names'])[0]);
-        $data['last_name'] = strtolower($data['last_name']);
-        $data['postcode'] = strtolower(str_replace(' ', '', $data['postcode']));
+        $data['first_names'] = $this->turnUnicodeCharToAscii(
+            strtolower(explode(' ', $data['first_names'])[0])
+        );
+        $data['last_name']   = $this->turnUnicodeCharToAscii(strtolower($data['last_name']));
+        $data['postcode']    = strtolower(str_replace(' ', '', $data['postcode']));
 
         return $data;
+    }
+
+    /**
+     * Replace any unicode apostrophe's in string to an ascii [introduced to resolve iphone entry issue]
+     *
+     * @param string $string
+     * @return string
+     */
+    private function turnUnicodeCharToAscii(string $string): string
+    {
+        $charsToReplace = ['’'];
+        return str_ireplace($charsToReplace, '\'', $string);
     }
 }
