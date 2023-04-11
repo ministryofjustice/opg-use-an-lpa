@@ -168,7 +168,7 @@ class LpaContext implements Context
         }
         if ($status === 'Cancelled') {
             $this->ui->assertPageNotContainsText(
-                'you must contact us for a new activation key if you want to add the LPA back to your account'
+                'you will need to request a new activation key if you want to add the LPA back to your account'
             );
         }
     }
