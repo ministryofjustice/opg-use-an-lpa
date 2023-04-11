@@ -3,28 +3,29 @@ workspace {
     model {
         !include https://raw.githubusercontent.com/ministryofjustice/opg-technical-guidance/main/dsl/poas/persons.dsl
 
-        group "Use and View an LPA" {
-            lpaCaseManagement = softwareSystem "LPA Case Management" "PKA Sirius." "Existing System" {
-                lpaCaseManagement_lpaCodesService = container "LPA Codes Service" "Container"
-                lpaCaseManagement_siriusCaseManagement = container "Sirius Case Management" "Container" {
-                    -> lpaCaseManagement_lpaCodesService "Makes requests to"
-                }
-                lpaCaseManagement_lpasCollectionService = container "LPAs Collection" "Container" {
-                    -> lpaCaseManagement_siriusCaseManagement "Makes requests to"
-                }
-                lpaCaseManagement_opgDataApiGateway = container "OPG Data Api Gateway" "Container" {
-                    -> lpaCaseManagement_lpaCodesService "Makes requests to"
-                    -> lpaCaseManagement_lpasCollectionService "Makes requests to"
-                }
+        lpaCaseManagement = softwareSystem "LPA Case Management" "PKA Sirius." "Existing System" {
+            lpaCaseManagement_lpaCodesService = container "LPA Codes Service" "Manages User Verification" "Software System" "Existing System"
+            lpaCaseManagement_siriusCaseManagement = container "Sirius Case Management" "Stores data about LPAs" "Software System" "Existing System" {
+                -> lpaCaseManagement_lpaCodesService "Makes requests to"
             }
-
-            !include ualpa.dsl
-
-            donor -> ualpa_useFrontEnd
-            attorney -> ualpa_useFrontEnd
-            thirdparty -> ualpa_viewFrontEnd
-            caseWorker -> ualpa_adminApplication
+            lpaCaseManagement_lpasCollectionService = container "LPAs Collection" "Provides LPA data" "Software System" "Existing System" {
+                -> lpaCaseManagement_siriusCaseManagement "Makes requests to"
+            }
+            lpaCaseManagement_opgDataApiGateway = container "OPG Data Api Gateway" "API Gateway" "AWS Service" "Existing System" {
+                -> lpaCaseManagement_lpaCodesService "Makes requests to"
+                -> lpaCaseManagement_lpasCollectionService "Makes requests to"
+            }
         }
+
+        !include ualpa.dsl
+
+        ualpa_adminApplication -> lpaCaseManagement_opgDataApiGateway "Makes REST requests to"
+        ualpa_apiLayer -> lpaCaseManagement_opgDataApiGateway "Makes REST requests to"
+
+        donor -> ualpa_useFrontEnd
+        attorney -> ualpa_useFrontEnd
+        organisation -> ualpa_viewFrontEnd
+        caseWorker -> ualpa_adminApplication
     }
 
     views {
