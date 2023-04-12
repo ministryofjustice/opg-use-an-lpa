@@ -32,8 +32,15 @@ graph TB
       style 52 fill:#438dd5,stroke:#2e6295,color:#ffffff
       68("<div style='font-weight: bold'>Admin Application</div><div style='font-size: 70%; margin-top: 0px'>[Container: Go, CSS, JS, TWIG]</div><div style='font-size: 80%; margin-top:10px'>Provides search and stats<br />features for service team<br />users.</div>")
       style 68 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      82("<div style='font-weight: bold'>Instructions & Preferences</div><div style='font-size: 70%; margin-top: 0px'>[Container: Go, Serverless]</div><div style='font-size: 80%; margin-top:10px'>Generates Instructions &<br />Preferences images from<br />scanned LPA Documents.</div>")
+      style 82 fill:#438dd5,stroke:#2e6295,color:#ffffff
     end
 
+    68-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->7
+    3-. "<div></div><div style='font-size: 70%'></div>" .->52
+    2-. "<div></div><div style='font-size: 70%'></div>" .->52
+    6-. "<div></div><div style='font-size: 70%'></div>" .->36
+    5-. "<div></div><div style='font-size: 70%'></div>" .->68
     20-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->7
     20-. "<div>Connects to</div><div style='font-size: 70%'></div>" .->17
     36-. "<div></div><div style='font-size: 70%'></div>" .->19
@@ -42,9 +49,5 @@ graph TB
     52-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->20
     68-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->17
     68-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->18
-    68-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->7
-    3-. "<div></div><div style='font-size: 70%'></div>" .->52
-    2-. "<div></div><div style='font-size: 70%'></div>" .->52
-    6-. "<div></div><div style='font-size: 70%'></div>" .->36
-    5-. "<div></div><div style='font-size: 70%'></div>" .->68
+    52-. "<div>request image with signing<br />key</div><div style='font-size: 70%'></div>" .->82
   end

@@ -65,6 +65,11 @@ workspace {
             autoLayout
         }
 
+        component ualpa_instructionsPreferences {
+            include *
+            autoLayout
+        }
+
         theme default
 
         styles {
