@@ -38,7 +38,7 @@ class AddAccessForAllLpaTest extends TestCase
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     private string $userId;
-    private string $lpaUid;
+    private int $lpaUid;
 
     /** @var array<string, mixed> */
     private array $dataToMatch;
@@ -63,7 +63,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->featureEnabledProphecy                      = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
-        $this->lpaUid = '700000012345';
+        $this->lpaUid = 700000012345;
 
         $this->lpa     = $this->older_lpa_get_by_uid_response();
         $this->lpaData = $this->lpa->getData();
@@ -119,11 +119,11 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn(false);
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -134,7 +134,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
             ->willReturn(null);
 
         $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
@@ -166,7 +166,7 @@ class AddAccessForAllLpaTest extends TestCase
         $expectedException = new BadRequestException('LPA already added', $alreadyAddedData);
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
         $this->expectExceptionObject($expectedException);
@@ -200,11 +200,11 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -215,7 +215,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
             ->willReturn($createdDate);
 
         $expectedException = new BadRequestException(
@@ -266,11 +266,11 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -288,12 +288,12 @@ class AddAccessForAllLpaTest extends TestCase
     public function older_lpa_lookup_throws_an_exception_if_lpa_not_found(): void
     {
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->shouldBeCalled()
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
@@ -316,12 +316,12 @@ class AddAccessForAllLpaTest extends TestCase
         );
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->shouldBeCalled()
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -348,12 +348,12 @@ class AddAccessForAllLpaTest extends TestCase
         );
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->shouldBeCalled()
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -383,12 +383,12 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->shouldBeCalled()
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -415,11 +415,11 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
             ->willReturn(false);
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -430,7 +430,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode($this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
             ->willReturn($createdDate);
 
         $expectedException = new BadRequestException(
@@ -455,11 +455,11 @@ class AddAccessForAllLpaTest extends TestCase
         $this->dataToMatch['force_activation_key'] = true;
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -552,11 +552,11 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn(true);
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, $this->lpaUid)
+            ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
         $this->lpaServiceProphecy
-            ->getByUid($this->lpaUid)
+            ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy

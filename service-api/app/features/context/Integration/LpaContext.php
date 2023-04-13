@@ -348,7 +348,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->attorneys[0]->dob,
             'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
             'first_names'          => $this->lpa->attorneys[0]->firstname,
@@ -1537,7 +1537,7 @@ class LpaContext extends BaseIntegrationContext
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1686,7 +1686,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->registrationDate = '2019-08-31';
 
         $data = [
-            'reference_number' => $this->lpaUid,
+            'reference_number' => (int) $this->lpaUid,
             'dob'              => $this->userDob,
             'postcode'         => $this->userPostCode,
             'first_names'      => $this->userFirstname,
@@ -1721,14 +1721,15 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
-        $invalidLpaId = '700000004321';
+        $invalidLpaId = 700000004321;
 
         $data = [
-            'reference_number' => $invalidLpaId,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
+            'reference_number'     => $invalidLpaId,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1762,7 +1763,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $dob,
             'postcode'             => $postcode,
             'first_names'          => $firstnames,
@@ -1867,7 +1868,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1927,7 +1928,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -2689,7 +2690,7 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestForANewActivationKeyAgain(): void
     {
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'first_names'          => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
             'last_name'            => $this->lpa->donor->surname,
             'dob'                  => $this->lpa->donor->dob,
@@ -2736,7 +2737,7 @@ class LpaContext extends BaseIntegrationContext
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -2856,7 +2857,7 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days');
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -2966,7 +2967,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number' => $this->lpaUid,
+            'reference_number' => (int) $this->lpaUid,
             'dob'              => $this->userDob,
             'postcode'         => $this->userPostCode,
             'first_names'      => $this->userFirstname,
@@ -3056,7 +3057,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa->status = 'Registered';
         $data              = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => 'WRONG',
             'first_names'          => $this->userFirstname,

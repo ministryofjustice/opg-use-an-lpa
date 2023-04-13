@@ -454,7 +454,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -747,7 +747,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -2701,7 +2701,7 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -2787,7 +2787,7 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -2842,7 +2842,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => '700000004321',
+                'reference_number'     => 700000004321,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -2880,7 +2880,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $firstnames,
                 'last_name'            => $lastname,
                 'dob'                  => $dob,
@@ -2995,7 +2995,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3057,7 +3057,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3099,7 +3099,7 @@ class LpaContext implements Context
     public function aMalformedRequestIsSentWhichIsMissingADataAttribute(): void
     {
         $dataAttributes = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'first_names'          => $this->userFirstnames,
             'last_name'            => $this->userSurname,
             'dob'                  => $this->userDob,
@@ -3310,7 +3310,7 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3361,7 +3361,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpa->uId,
+                'reference_number'     => (int) $this->lpa->uId,
                 'first_names'          => $this->lpa->attorneys[0]->firstname,
                 'last_name'            => $this->lpa->attorneys[0]->surname,
                 'dob'                  => $this->lpa->attorneys[0]->dob,
@@ -3430,7 +3430,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3493,7 +3493,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3552,7 +3552,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3620,7 +3620,7 @@ class LpaContext implements Context
         $this->apiPatch(
             '/v1/older-lpa/confirm',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
@@ -3730,11 +3730,11 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number' => $this->lpaUid,
-                'first_names' => $this->userFirstnames,
-                'last_name' => $this->userSurname,
-                'dob' => $this->userDob,
-                'postcode' => 'Wrong',
+                'reference_number'     => (int) $this->lpaUid,
+                'first_names'          => $this->userFirstnames,
+                'last_name'            => $this->userSurname,
+                'dob'                  => $this->userDob,
+                'postcode'             => 'Wrong',
                 'force_activation_key' => false,
             ],
             [
@@ -3742,7 +3742,7 @@ class LpaContext implements Context
             ]
         );
 
-        if ($flagStatus == 'ON') {
+        if ($flagStatus === 'ON') {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
