@@ -1,0 +1,40 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [Use A Lasting Power of Attorney - Instructions & Preferences - Components]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    52("<div style='font-weight: bold'>Use an LPA Frontend</div><div style='font-size: 70%; margin-top: 0px'>[Container: PHP, CSS, JS, TWIG]</div><div style='font-size: 80%; margin-top:10px'>Provides features to retrieve<br />LPAs and generate codes for<br />sharing LPAs.</div>")
+    style 52 fill:#438dd5,stroke:#2e6295,color:#ffffff
+
+    subgraph 82 [Instructions & Preferences]
+      style 82 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+      83("<div style='font-weight: bold'>Signed image</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS S3]</div><div style='font-size: 80%; margin-top:10px'>Returns a generated image<br />with a passed signed URL.</div>")
+      style 83 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      84("<div style='font-weight: bold'>REST API Endpoint</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS API Gateway]</div><div style='font-size: 80%; margin-top:10px'>Returns a signed image URL to<br />be requested.</div>")
+      style 84 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      85("<div style='font-weight: bold'>Request I&P Image</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS Lambda, Python]</div><div style='font-size: 80%; margin-top:10px'>Checks for existing image, if<br />not, create job and return<br />signed temporary url.</div>")
+      style 85 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      86("<div style='font-weight: bold'>SQS Queue</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS SQS Queue]</div><div style='font-size: 80%; margin-top:10px'>Manages requests for new I&P<br />Image Generation.</div>")
+      style 86 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      87("<div style='font-weight: bold'>Image Processor</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS Lambda, Python]</div><div style='font-size: 80%; margin-top:10px'>Generates image from scanned<br />PDF documents.</div>")
+      style 87 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      88("<div style='font-weight: bold'>Sirius Document Bucket</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS S3]</div><div style='font-size: 80%; margin-top:10px'>Stores original scans of LPA<br />Documents.</div>")
+      style 88 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      89("<div style='font-weight: bold'>Image Parser Logs</div><div style='font-size: 70%; margin-top: 0px'>[Component: AWS Cloudwatch]</div><div style='font-size: 80%; margin-top:10px'>Stores logs from image<br />parser.</div>")
+      style 89 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      90("<div style='font-weight: bold'>Pagerduty</div><div style='font-size: 70%; margin-top: 0px'>[Component: Pagerduty]</div><div style='font-size: 80%; margin-top:10px'>Alerts of errors and alarms.</div>")
+      style 90 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+    89-. "<div>Create metric for errors and<br />alarms</div><div style='font-size: 70%'></div>" .->90
+    52-. "<div>request image with signing<br />key</div><div style='font-size: 70%'></div>" .->83
+    52-. "<div>request signed image URL(s)</div><div style='font-size: 70%'></div>" .->84
+    85-. "<div>Add temp image and check for<br />existing</div><div style='font-size: 70%'></div>" .->83
+    85-. "<div>Add message containing lpa id<br />to queue</div><div style='font-size: 70%'></div>" .->86
+    86-. "<div>trigger lambda on push</div><div style='font-size: 70%'></div>" .->87
+    87-. "<div>download and process document</div><div style='font-size: 70%'></div>" .->88
+    87-. "<div>logs</div><div style='font-size: 70%'></div>" .->89
+    87-. "<div>writes generated images</div><div style='font-size: 70%'></div>" .->83
+  end

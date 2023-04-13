@@ -1,0 +1,25 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [Use A Lasting Power of Attorney - System Context]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    16("<div style='font-weight: bold'>Use A Lasting Power of Attorney</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Allows LPA Actors to retrieve<br />and share LPAs with People<br />and Organisations interested<br />in LPAs</div>")
+    style 16 fill:#1168bd,stroke:#0b4884,color:#ffffff
+    2["<div style='font-weight: bold'>Attorney</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Attorney interacting with a<br />Lasting Power of Attorney.</div>"]
+    style 2 fill:#08427b,stroke:#052e56,color:#ffffff
+    3["<div style='font-weight: bold'>Donor</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Donor drafting the Lasting<br />Power of Attorney.</div>"]
+    style 3 fill:#08427b,stroke:#052e56,color:#ffffff
+    5["<div style='font-weight: bold'>Case Worker</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Case worker.</div>"]
+    style 5 fill:#08427b,stroke:#052e56,color:#ffffff
+    6["<div style='font-weight: bold'>Organisation</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Organisation or charity.</div>"]
+    style 6 fill:#08427b,stroke:#052e56,color:#ffffff
+    7("<div style='font-weight: bold'>LPA Case Management</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>PKA Sirius.</div>")
+    style 7 fill:#999999,stroke:#6b6b6b,color:#ffffff
+
+    3-. "<div></div><div style='font-size: 70%'></div>" .->16
+    2-. "<div></div><div style='font-size: 70%'></div>" .->16
+    6-. "<div></div><div style='font-size: 70%'></div>" .->16
+    5-. "<div></div><div style='font-size: 70%'></div>" .->16
+    16-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->7
+  end

@@ -1,0 +1,33 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [Use A Lasting Power of Attorney - Use an LPA Frontend - Components]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    19[("<div style='font-weight: bold'>Brute Force Cache</div><div style='font-size: 70%; margin-top: 0px'>[Container: AWS Elasticache (Redis)]</div><div style='font-size: 80%; margin-top:10px'>Brute force protection.</div>")]
+    style 19 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    20("<div style='font-weight: bold'>API Layer</div><div style='font-size: 70%; margin-top: 0px'>[Container: PHP]</div><div style='font-size: 80%; margin-top:10px'>Provides features to generate<br />sharing codes, and look up<br />LPA data from Sirius.</div>")
+    style 20 fill:#438dd5,stroke:#2e6295,color:#ffffff
+
+    subgraph 52 [Use an LPA Frontend]
+      style 52 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+      53("<div style='font-weight: bold'>Web Router</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>Routes traffic.</div>")
+      style 53 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      54("<div style='font-weight: bold'>Static Assets</div><div style='font-size: 70%; margin-top: 0px'>[Component: CSS, JS]</div><div style='font-size: 80%; margin-top:10px'>Contains static assets.</div>")
+      style 54 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      55("<div style='font-weight: bold'>View Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP, Twig]</div><div style='font-size: 80%; margin-top:10px'>Serves correct template and<br />content.</div>")
+      style 55 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      56("<div style='font-weight: bold'>Session Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>Maintains session state.</div>")
+      style 56 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      57("<div style='font-weight: bold'>Domain Layer</div><div style='font-size: 70%; margin-top: 0px'>[Component: PHP]</div><div style='font-size: 80%; margin-top:10px'>Manages domain specific<br />logic.</div>")
+      style 57 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+    53-. "<div></div><div style='font-size: 70%'></div>" .->55
+    55-. "<div></div><div style='font-size: 70%'></div>" .->57
+    57-. "<div></div><div style='font-size: 70%'></div>" .->56
+    55-. "<div></div><div style='font-size: 70%'></div>" .->54
+    57-. "<div></div><div style='font-size: 70%'></div>" .->19
+    57-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->20
+  end

@@ -1,0 +1,28 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram [LPA Case Management - Containers]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    16("<div style='font-weight: bold'>Use A Lasting Power of Attorney</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Allows LPA Actors to retrieve<br />and share LPAs with People<br />and Organisations interested<br />in LPAs</div>")
+    style 16 fill:#1168bd,stroke:#0b4884,color:#ffffff
+
+    subgraph 7 [LPA Case Management]
+      style 7 fill:#ffffff,stroke:#6b6b6b,color:#6b6b6b
+
+      11("<div style='font-weight: bold'>LPAs Collection</div><div style='font-size: 70%; margin-top: 0px'>[Container: Software System]</div><div style='font-size: 80%; margin-top:10px'>Provides LPA data</div>")
+      style 11 fill:#999999,stroke:#6b6b6b,color:#ffffff
+      13("<div style='font-weight: bold'>OPG Data Api Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Container: AWS Service]</div><div style='font-size: 80%; margin-top:10px'>API Gateway</div>")
+      style 13 fill:#999999,stroke:#6b6b6b,color:#ffffff
+      8("<div style='font-weight: bold'>LPA Codes Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Software System]</div><div style='font-size: 80%; margin-top:10px'>Manages User Verification</div>")
+      style 8 fill:#999999,stroke:#6b6b6b,color:#ffffff
+      9("<div style='font-weight: bold'>Sirius Case Management</div><div style='font-size: 70%; margin-top: 0px'>[Container: Software System]</div><div style='font-size: 80%; margin-top:10px'>Stores data about LPAs</div>")
+      style 9 fill:#999999,stroke:#6b6b6b,color:#ffffff
+    end
+
+    9-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->8
+    11-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->9
+    13-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->8
+    13-. "<div>Makes requests to</div><div style='font-size: 70%'></div>" .->11
+    16-. "<div>Makes REST requests to</div><div style='font-size: 70%'></div>" .->13
+  end
