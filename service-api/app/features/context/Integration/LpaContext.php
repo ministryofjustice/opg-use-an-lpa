@@ -1807,7 +1807,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->donor->surname   =  'S’anderson';
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $dob,
             'postcode'             => $postcode,
             'first_names'          => $firstnames,
@@ -1841,8 +1841,8 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa      = $this->container->get(AddOlderLpa::class);
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+        $addAccessForAllLpa = $this->container->get(AddAccessForAllLpa::class);
+        $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
             'actor'       => json_decode(json_encode($this->lpa->donor), true),
