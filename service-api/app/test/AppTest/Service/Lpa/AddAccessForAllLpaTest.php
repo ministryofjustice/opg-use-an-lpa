@@ -39,9 +39,15 @@ class AddAccessForAllLpaTest extends TestCase
 
     private string $userId;
     private string $lpaUid;
+
+    /** @var array<string, mixed> */
     private array $dataToMatch;
+
+    /** @var array<string, mixed> */
     private array $resolvedActor;
     private Lpa $lpa;
+
+    /** @var array<string, mixed> */
     private array $lpaData;
 
     public function setUp(): void
@@ -539,7 +545,7 @@ class AddAccessForAllLpaTest extends TestCase
     }
 
     /** @test */
-    public function older_lpa_lookup_throws_not_found_exception_if_lpa_registered_after_2019_and_restrict_flag_true(): void
+    public function older_lpa_lookup_throws_not_found_exception_lpa_registered_after_2019_and_restrict_flag_true(): void
     {
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
@@ -558,10 +564,10 @@ class AddAccessForAllLpaTest extends TestCase
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
-            ->willReturn(null);
+            ->willReturn($this->resolvedActor);
 
         $this->restrictSendingLpaForCleansingProphecy
-            ->__invoke($this->lpaData, null)
+            ->__invoke($this->lpaData, $this->resolvedActor)
             ->willThrow(new NotFoundException('LPA not found'));
 
         $this->expectException(NotFoundException::class);
