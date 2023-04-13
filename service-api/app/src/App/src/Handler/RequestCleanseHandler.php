@@ -8,7 +8,7 @@ use App\Exception\BadRequestException;
 use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
-use App\Service\Lpa\OlderLpaService;
+use App\Service\Lpa\AccessForAllLpaService;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -17,16 +17,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class RequestCleanseHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class RequestCleanseHandler implements RequestHandlerInterface
 {
     public function __construct(
         private LpaService $lpaService,
-        private OlderLpaService $olderLpaService,
+        private AccessForAllLpaService $accessForAllLpaService,
         private LpaAlreadyAdded $lpaAlreadyAdded,
         private LoggerInterface $logger,
     ) {
@@ -34,14 +31,13 @@ class RequestCleanseHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestData = $request->getParsedBody();
-        $userId = $request->getAttribute('actor-id');
+        $userId      = $request->getAttribute('actor-id');
 
         if (
             empty($requestData['reference_number']) ||
@@ -50,13 +46,13 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
-        $lpa = $this->lpaService->getByUid((string) $requestData['reference_number']);
+        $lpa     = $this->lpaService->getByUid((string) $requestData['reference_number']);
         $lpaData = $lpa->getData();
 
         $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
-        $actorId = $requestData['actor_id'] ?? null;
+        $actorId   = $requestData['actor_id'] ?? null;
 
-        $this->olderLpaService->requestAccessAndCleanseByLetter(
+        $this->accessForAllLpaService->requestAccessAndCleanseByLetter(
             (string) $requestData['reference_number'],
             $userId,
             $requestData['notes'],
@@ -67,7 +63,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
         $this->logger->notice(
             'Successfully submitted cleanse for partially matched LPA {uId} for account {id} ',
             [
-                'event_code' => ($lpaData['caseSubtype'] === 'hw') ?
+                'event_code' => $lpaData['caseSubtype'] === 'hw' ?
                     EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
                     EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,

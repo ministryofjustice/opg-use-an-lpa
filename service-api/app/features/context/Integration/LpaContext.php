@@ -10,10 +10,10 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\AccessForAllLpaService;
+use App\Service\Lpa\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa;
-use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\LpaService;
-use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\CommandInterface;
@@ -94,7 +94,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
@@ -124,7 +124,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId, '00-0-0-0-00');
@@ -381,7 +381,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
@@ -629,7 +629,7 @@ class LpaContext extends BaseIntegrationContext
 
         // UserLpaActorMap:: activateRecord
         $this->awsFixtures->append(
-            function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
+            function (CommandInterface $cmd, RequestInterface $req) {
                 $newID = $cmd->toArray()['ExpressionAttributeValues'][':a']['N'];
                 Assert::assertEquals($this->actorLpaId, $newID);
 
@@ -1520,7 +1520,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
+        $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
         Assert::assertEquals(
             0,
@@ -1560,7 +1560,7 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
@@ -1705,7 +1705,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1743,7 +1743,7 @@ class LpaContext extends BaseIntegrationContext
             []
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1782,7 +1782,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1902,7 +1902,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa      = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
@@ -1968,7 +1968,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2709,7 +2709,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $response = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
@@ -2834,7 +2834,7 @@ class LpaContext extends BaseIntegrationContext
             ];
         }
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2942,7 +2942,7 @@ class LpaContext extends BaseIntegrationContext
             'activationKeyDueDate' => $activationKeyDueDate,
         ];
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2985,7 +2985,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -3040,7 +3040,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
@@ -3076,7 +3076,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         if ($flagStatus == 'ON') {
             try {

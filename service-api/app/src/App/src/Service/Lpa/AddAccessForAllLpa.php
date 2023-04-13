@@ -9,50 +9,32 @@ use App\Exception\NotFoundException;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use Exception;
 use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
 
-class AddOlderLpa
+class AddAccessForAllLpa
 {
-    private FindActorInLpa $findActorInLpa;
-
-    private LpaAlreadyAdded $lpaAlreadyAdded;
-    private LpaService $lpaService;
-    private OlderLpaService $olderLpaService;
-    private ValidateOlderLpaRequirements $validateOlderLpaRequirements;
-    private RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing;
-    private LoggerInterface $logger;
-    private FeatureEnabled $featureEnabled;
-
-
     /**
-     * @param FindActorInLpa               $findActorInLpa
-     * @param LpaService                   $lpaService
-     * @param LpaAlreadyAdded              $lpaAlreadyAdded
-     * @param ValidateOlderLpaRequirements $validateOlderLpaRequirements
-     * @param LoggerInterface              $logger
-     * @param OlderLpaService              $olderLpaService
+     * @param FindActorInLpa                      $findActorInLpa
+     * @param LpaService                          $lpaService
+     * @param LpaAlreadyAdded                     $lpaAlreadyAdded
+     * @param ValidateAccessForAllLpaRequirements $validateOlderLpaRequirements
+     * @param LoggerInterface                     $logger
+     * @param AccessForAllLpaService              $accessForAllLpaService
      *
      * @codeCoverageIgnore
      */
     public function __construct(
-        FindActorInLpa $findActorInLpa,
-        LpaService $lpaService,
-        LpaAlreadyAdded $lpaAlreadyAdded,
-        OlderLpaService $olderLpaService,
-        ValidateOlderLpaRequirements $validateOlderLpaRequirements,
-        RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing,
-        LoggerInterface $logger,
-        FeatureEnabled $featureEnabled
+        private FindActorInLpa $findActorInLpa,
+        private LpaService $lpaService,
+        private LpaAlreadyAdded $lpaAlreadyAdded,
+        private AccessForAllLpaService $accessForAllLpaService,
+        private ValidateAccessForAllLpaRequirements $validateOlderLpaRequirements,
+        private RestrictSendingLpaForCleansing $restrictSendingLpaForCleansing,
+        private LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
     ) {
-        $this->findActorInLpa = $findActorInLpa;
-        $this->lpaService = $lpaService;
-        $this->lpaAlreadyAdded = $lpaAlreadyAdded;
-        $this->olderLpaService = $olderLpaService;
-        $this->validateOlderLpaRequirements = $validateOlderLpaRequirements;
-        $this->restrictSendingLpaForCleansing = $restrictSendingLpaForCleansing;
-        $this->logger = $logger;
-        $this->featureEnabled = $featureEnabled;
     }
 
     /**
@@ -62,10 +44,8 @@ class AddOlderLpa
      *
      * @param string $userId The users database ID
      * @param array  $matchData The user supplied information to attempt to match an LPA to
-     *
      * @return array
-     *
-     * @throws BadRequestException|NotFoundException
+     * @throws BadRequestException|NotFoundException|Exception
      */
     public function validateRequest(string $userId, array $matchData): array
     {
@@ -77,7 +57,7 @@ class AddOlderLpa
                 $this->logger->notice(
                     'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                     [
-                        'id' => $userId,
+                        'id'  => $userId,
                         'uId' => $matchData['reference_number'],
                     ]
                 );
@@ -89,7 +69,7 @@ class AddOlderLpa
             throw new BadRequestException('Postcode not supplied');
         }
 
-        // Fetch the LPA from the LpaServiceOLDER_LPA_KEY_ALREADY_REQUESTED
+        // Fetch the LPA from the LpaService OLDER_LPA_KEY_ALREADY_REQUESTED
         $lpa = $this->lpaService->getByUid((string) $matchData['reference_number']);
         if ($lpa === null) {
             $this->logger->info(
@@ -132,10 +112,10 @@ class AddOlderLpa
         // Attach donor/attorney data to be used by the front
         if ($resolvedActor['role'] === 'attorney') {
             $resolvedActor['attorney'] = [
-                'uId'           => $resolvedActor['actor']['uId'],
-                'firstname'     => $resolvedActor['actor']['firstname'],
-                'middlenames'   => $resolvedActor['actor']['middlenames'],
-                'surname'       => $resolvedActor['actor']['surname']
+                'uId'         => $resolvedActor['actor']['uId'],
+                'firstname'   => $resolvedActor['actor']['firstname'],
+                'middlenames' => $resolvedActor['actor']['middlenames'],
+                'surname'     => $resolvedActor['actor']['surname'],
             ];
         }
 
@@ -144,31 +124,31 @@ class AddOlderLpa
         }
 
         $resolvedActor['caseSubtype'] = $lpaData['caseSubtype'];
-        $resolvedActor['donor'] = [
-            'uId'           => $lpaData['donor']['uId'],
-            'firstname'     => $lpaData['donor']['firstname'],
-            'middlenames'   => $lpaData['donor']['middlenames'],
-            'surname'       => $lpaData['donor']['surname'],
+        $resolvedActor['donor']       = [
+            'uId'         => $lpaData['donor']['uId'],
+            'firstname'   => $lpaData['donor']['firstname'],
+            'middlenames' => $lpaData['donor']['middlenames'],
+            'surname'     => $lpaData['donor']['surname'],
         ];
 
         // Checks if the actor already has an active activation key or has requested one. If forced ignore
         if (!$matchData['force_activation_key']) {
-            if (isset($lpaAddedData['notActivated'])) { // array_key_exists breaks if $lpaAddedData is null
+            if (isset($lpaAddedData['notActivated'])) {
                 $this->logger->notice(
                     'User {id} attempted to request a key for the LPA {uId} which they have already requested',
                     [
-                        'id' => $userId,
+                        'id'  => $userId,
                         'uId' => $matchData['reference_number'],
-                    ]
+                    ],
                 );
 
                 $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
 
-                //if activation key due date is null, check activation code exist in sirius
+                // if activation key due date is null, check activation code exist in sirius
                 if ($activationKeyDueDate === null) {
-                    $hasActivationCode = $this->olderLpaService->hasActivationCode(
+                    $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
                         $resolvedActor['lpa-id'],
-                        $resolvedActor['actor']['uId']
+                        $resolvedActor['actor']['uId'],
                     );
 
                     if ($hasActivationCode instanceof DateTime) {
@@ -184,12 +164,12 @@ class AddOlderLpa
                     [
                         'donor'                => $lpaAddedData['donor'],
                         'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                        'activationKeyDueDate' => $activationKeyDueDate
-                    ]
+                        'activationKeyDueDate' => $activationKeyDueDate,
+                    ],
                 );
             }
 
-            $hasActivationCode = $this->olderLpaService->hasActivationCode(
+            $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
                 $resolvedActor['lpa-id'],
                 $resolvedActor['actor']['uId']
             );
@@ -203,9 +183,9 @@ class AddOlderLpa
                 throw new BadRequestException(
                     'LPA has an activation key already',
                     [
-                        'donor'                 => $resolvedActor['donor'],
-                        'caseSubtype'           => $resolvedActor['caseSubtype'],
-                        'activationKeyDueDate'  => $activationKeyDueDate
+                        'donor'                => $resolvedActor['donor'],
+                        'caseSubtype'          => $resolvedActor['caseSubtype'],
+                        'activationKeyDueDate' => $activationKeyDueDate,
                     ]
                 );
             }
