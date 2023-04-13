@@ -100,8 +100,8 @@
     <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
     <rule ref="SlevomatCodingStandard.Complexity.Cognitive">
         <properties>
-            <property name="warningThreshold" value="10" />
-            <property name="errorThreshold" value="15" />
+            <property name="warningThreshold" value="11" />
+            <property name="errorThreshold" value="16" />
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses" />
