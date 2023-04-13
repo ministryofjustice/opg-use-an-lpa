@@ -40,15 +40,15 @@ class AddAccessForAllLpa
 
     /**
      * @param string $userId
-     * @param string $referenceNumber
+     * @param int    $referenceNumber
      * @param array  $lpaAddedData
      * @param array  $resolvedActor
      * @return void
      * @throws BadRequestException
      */
-    public function existentCodeNotActivated(
+    private function existentCodeNotActivated(
         string $userId,
-        string $referenceNumber,
+        int $referenceNumber,
         array $lpaAddedData,
         array $resolvedActor,
     ): void {
@@ -65,8 +65,8 @@ class AddAccessForAllLpa
         // if activation key due date is null, check activation code exist in sirius
         if ($activationKeyDueDate === null) {
             $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-                $resolvedActor['lpa-id'],
-                $resolvedActor['actor']['uId'],
+                (string) $resolvedActor['lpa-id'],
+                (string) $resolvedActor['actor']['uId'],
             );
 
             if ($hasActivationCode instanceof DateTime) {
@@ -89,15 +89,17 @@ class AddAccessForAllLpa
 
     /**
      * @param string     $userId
-     * @param string     $referenceNumber
+     * @param int        $referenceNumber
      * @param array      $resolvedActor
-     * @param array|null $lpaAddedData
+     * @param array{
+     *     notActivated: bool
+     * }|null            $lpaAddedData
      * @return void
      * @throws BadRequestException
      */
-    public function processActivationCode(
+    private function processActivationCode(
         string $userId,
-        string $referenceNumber,
+        int $referenceNumber,
         array $resolvedActor,
         ?array $lpaAddedData,
     ): void {
@@ -106,8 +108,8 @@ class AddAccessForAllLpa
         }
 
         $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-            $resolvedActor['lpa-id'],
-            $resolvedActor['actor']['uId']
+            (string) $resolvedActor['lpa-id'],
+            (string) $resolvedActor['actor']['uId']
         );
 
         if ($hasActivationCode instanceof DateTime) {
@@ -128,13 +130,13 @@ class AddAccessForAllLpa
     }
 
     /**
-     * @param string $referenceNumber
+     * @param int $referenceNumber
      * @return array|null
      * @throws NotFoundException|Exception
      */
-    public function fetchLPAData(string $referenceNumber): ?array
+    private function fetchLPAData(int $referenceNumber): ?array
     {
-        $lpa = $this->lpaService->getByUid($referenceNumber);
+        $lpa = $this->lpaService->getByUid((string) $referenceNumber);
         if ($lpa === null) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',
@@ -148,7 +150,7 @@ class AddAccessForAllLpa
         return $lpa->getData();
     }
 
-    public function flattenActorData(array $resolvedActor, array $lpaData, ?string $lpaActorToken): array
+    private function flattenActorData(array $resolvedActor, array $lpaData, ?string $lpaActorToken): array
     {
         if ($resolvedActor['role'] === 'attorney') {
             $resolvedActor['attorney'] = [
@@ -180,16 +182,19 @@ class AddAccessForAllLpa
      * throw an exception that details why the match was not able to be made.
      *
      * @param string $userId The users database ID
-     * @param array  $matchData The user supplied information to attempt to match an LPA to
+     * @param array{
+     *     reference_number: int,
+     *     dob: string,
+     *     first_names: string,
+     *     last_name: string,
+     *     post_code: string,
+     *     force_activation_key: bool,
+     * }             $matchData The user supplied information to attempt to match an LPA to
      * @return array
      * @throws BadRequestException|NotFoundException|Exception
      */
     public function validateRequest(string $userId, array $matchData): array
     {
-        if (empty($matchData['postcode'])) {
-            throw new BadRequestException('Postcode not supplied');
-        }
-
         // Check if it's been added to the users account already
         $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number']);
 
@@ -204,7 +209,7 @@ class AddAccessForAllLpa
             throw new BadRequestException('LPA already added', $lpaAddedData);
         }
 
-        $lpaData = $this->fetchLPAData((string) $matchData['reference_number']);
+        $lpaData = $this->fetchLPAData($matchData['reference_number']);
 
         // Ensure LPA meets our registration requirements
         ($this->validateAccessForAllLpaRequirements)($lpaData);
