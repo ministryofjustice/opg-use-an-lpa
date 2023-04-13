@@ -6,13 +6,17 @@ namespace BehatTest\Context;
 
 use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
 use GuzzleHttp\Handler\MockHandler;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
+use Psr\Log\LoggerInterface;
 
 trait BaseAcceptanceContextTrait
 {
@@ -32,6 +36,30 @@ trait BaseAcceptanceContextTrait
         $this->ui = $this->base->ui; // MinkContext gathered in BaseUiContext
         $this->apiFixtures = $this->base->apiFixtures;
         $this->awsFixtures = $this->base->awsFixtures;
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function outputLogsOnFailure(AfterScenarioScope $scope): void
+    {
+        $logger = $this->base->container->get(LoggerInterface::class);
+
+        if ($logger instanceof Logger) {
+            /** @var TestHandler $testHandler */
+            $testHandler = array_filter(
+                $logger->getHandlers(),
+                fn ($handler) => $handler instanceof TestHandler
+            )[0];
+
+            if (!$scope->getTestResult()->isPassed()) {
+                foreach ($testHandler->getRecords() as $record) {
+                    print_r($record['formatted']);
+                }
+            }
+
+            $logger->reset();
+        }
     }
 
     protected function getResponseAsJson(): array
@@ -69,33 +97,30 @@ trait BaseAcceptanceContextTrait
 
     protected function apiPost(string $url, array $data, ?array $headers = null): void
     {
-        $this->ui->getSession()->getDriver()->getClient()->request(
+        $this->ui->getSession()->getDriver()->getClient()->jsonRequest(
             'POST',
             $url,
             $data,
-            [],
             $this->createServerParams($headers)
         );
     }
 
     protected function apiPut(string $url, array $data, ?array $headers = null): void
     {
-        $this->getSession()->getDriver()->getClient()->request(
+        $this->getSession()->getDriver()->getClient()->jsonRequest(
             'PUT',
             $url,
             $data,
-            [],
             $this->createServerParams($headers)
         );
     }
 
     protected function apiPatch(string $url, array $data, ?array $headers = null): void
     {
-        $this->ui->getSession()->getDriver()->getClient()->request(
+        $this->ui->getSession()->getDriver()->getClient()->jsonRequest(
             'PATCH',
             $url,
             $data,
-            [],
             $this->createServerParams($headers)
         );
     }
