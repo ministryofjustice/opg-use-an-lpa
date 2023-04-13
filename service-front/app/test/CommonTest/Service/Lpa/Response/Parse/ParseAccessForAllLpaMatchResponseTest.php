@@ -23,7 +23,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
 
     private ObjectProphecy|LpaFactory $lpaFactory;
 
-    /** @var array<string, string|array<string, ?string>> $response */
+    /** @var array<string, ?string|array<string, ?string>>  */
     private array $response;
 
     public function setUp(): void
