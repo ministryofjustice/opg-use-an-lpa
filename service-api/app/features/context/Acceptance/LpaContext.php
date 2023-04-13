@@ -2932,7 +2932,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => $this->lpaUid,
+                'reference_number'     => (int) $this->lpaUid,
                 'first_names'          => $this->userFirstnames,
                 'last_name'            => $this->userSurname,
                 'dob'                  => $this->userDob,
