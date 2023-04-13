@@ -11,6 +11,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
+use Closure;
 use GuzzleHttp\Handler\MockHandler;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
@@ -141,18 +142,16 @@ trait BaseAcceptanceContextTrait
         // this headerThief madness allows access to the private 'serverParameters' property of the BrowserKitDriver
         // the reason we need this is that by calling `request()` on the client directly we skip the merging of
         // headers that the driver does before calling the client, so we do that manually here with this magic.
-        $driverHeaders = \Closure::bind(
-            function (BrowserKitDriver $driver): array {
-                return $driver->serverParameters;
-            },
-            null,
-            $this->ui->getSession()->getDriver()
+        $driverHeaders = Closure::bind(
+            fn (): array => $this->serverParameters,
+            $this->ui->getSession()->getDriver(),
+            BrowserKitDriver::class
         );
-        $presetHeaders = $driverHeaders($this->ui->getSession()->getDriver());
+        $presetHeaders = $driverHeaders();
 
         $serverParams = [];
         foreach (($headers ?: []) as $headerName => $value) {
-            $serverParams['HTTP_'.$headerName] = $value;
+            $serverParams['HTTP_' . $headerName] = $value;
         }
 
         return array_merge($presetHeaders, $serverParams);
@@ -160,7 +159,7 @@ trait BaseAcceptanceContextTrait
 
     /**
      * Allows context steps to optionally store an api request as made to guzzle and fetched
-     * with `getLastRequest()`
+     * with {@link getLastRequest()}
      *
      * @param RequestInterface $request
      */
