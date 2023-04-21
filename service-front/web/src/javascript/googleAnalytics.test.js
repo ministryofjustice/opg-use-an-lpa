@@ -1,6 +1,8 @@
 import googleAnalytics from './googleAnalytics';
 
 describe('given Google Analytics is enabled', () => {
+    const oldWindowLocation = window.location;
+
     let useAnalytics;
     beforeEach(() => {
         document = document.documentElement;
@@ -17,6 +19,11 @@ describe('given Google Analytics is enabled', () => {
         global.dataLayer = [];
         useAnalytics = new googleAnalytics('UA-12345');
     });
+    afterAll(() => {
+        // restore `window.location` to the original `jsdom`
+        // `Location` object
+        window.location = oldWindowLocation
+    })
 
     test('it should have the correct config setup', () => {
         expect(global.dataLayer).toEqual(

@@ -1,26 +1,29 @@
 import {getCookie, setConsentCookie, setCookie} from './cookieHelper';
 
 describe('When I get a cookie', () => {
-    // delete global.window.location;
-    // global.window = Object.create(window);
-    // global.window.location = {
-    //     port: '80',
-    //     protocol: 'https:',
-    //     hostname: 'localhost',
-    //     pathname: '/'
-    // };
+    const oldWindowLocation = window.location;
 
-    /**
-     * @jest-environment jsdom
-     * @jest-environment-options {"url": "https://localhost/"}
-     */
+    beforeEach(() => {
+        delete window.location;
+        window.location = {
+            port: '80',
+            protocol: 'https:',
+            host: 'localhost',
+        };
+    });
+    afterAll(() => {
+        // restore `window.location` to the original `jsdom`
+        // `Location` object
+        window.location = oldWindowLocation;
+    })
+
     describe('and it exists', () => {
         beforeEach(() => {
             const gettersSetters = {
                 get: jest.fn().mockImplementation(() => {
                     return 'true'
                 }),
-            set: jest.fn()
+                set: jest.fn()
             }
             Object.defineProperty(document, 'cookie', {
                 value: gettersSetters,
