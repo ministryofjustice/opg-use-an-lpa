@@ -1,29 +1,19 @@
+/**
+ * @jest-environment jsdom
+ * @jest-environment-options {"url": "https://localhost/use-lpa?email=email@test.com"}
+ */
+
 import googleAnalytics from './googleAnalytics';
 
 describe('given Google Analytics is enabled', () => {
-    const oldWindowLocation = window.location;
-
     let useAnalytics;
     beforeEach(() => {
         document = document.documentElement;
         document.title = 'Test Page Title';
-        delete window.location;
-        window.location = {
-            port: '80',
-            protocol: 'https:',
-            host: 'localhost',
-            hostname: 'localhost',
-            pathname: '/use-lpa?email=email@test.com',
-            search: "?v=email@test.com"
-        };
+
         global.dataLayer = [];
         useAnalytics = new googleAnalytics('UA-12345');
     });
-    afterAll(() => {
-        // restore `window.location` to the original `jsdom`
-        // `Location` object
-        window.location = oldWindowLocation
-    })
 
     test('it should have the correct config setup', () => {
         expect(global.dataLayer).toEqual(

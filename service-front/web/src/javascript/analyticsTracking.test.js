@@ -1,3 +1,8 @@
+/**
+ * @jest-environment jsdom
+ * @jest-environment-options {"url": "https://localhost/use-lpa?email=email@test.com"}
+ */
+
 import GoogleAnalytics from './googleAnalytics';
 import AnalyticsTracking from './analyticsTracking';
 
@@ -89,24 +94,10 @@ describe('given Google Analytics is enabled', () => {
         document.body.innerHTML = linkList;
 
         document.title = 'Test Page Title';
-        delete window.location;
-        window.location = {
-            port: '80',
-            protocol: 'https:',
-            host: 'localhost',
-            hostname: 'localhost',
-            pathname: '/use-lpa?email=email@test.com',
-            search: "?v=email@test.com"
-        };
 
         global.dataLayer = [];
         useAnalytics = new GoogleAnalytics('UA-12345');
         analyticsTracking = new AnalyticsTracking();
-    });
-    afterAll(() => {
-        // restore `window.location` to the original `jsdom`
-        // `Location` object
-        window.location = oldWindowLocation;
     });
 
     test('it fires click events on the 2 external links', () => {

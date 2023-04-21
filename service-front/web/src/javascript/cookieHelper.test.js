@@ -1,22 +1,6 @@
 import {getCookie, setConsentCookie, setCookie} from './cookieHelper';
 
 describe('When I get a cookie', () => {
-    const oldWindowLocation = window.location;
-
-    beforeEach(() => {
-        delete window.location;
-        window.location = {
-            port: '80',
-            protocol: 'https:',
-            host: 'localhost',
-        };
-    });
-    afterAll(() => {
-        // restore `window.location` to the original `jsdom`
-        // `Location` object
-        window.location = oldWindowLocation;
-    });
-
     describe('and it exists', () => {
         beforeEach(() => {
             const gettersSetters = {
