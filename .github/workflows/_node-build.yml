@@ -23,7 +23,7 @@ jobs:
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
-          cd service-front/web/ && npm ci
+            cd ./service-front/web/ && npm ci
           fi
       - name: build assets
         run: |
