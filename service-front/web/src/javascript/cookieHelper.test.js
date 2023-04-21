@@ -15,7 +15,7 @@ describe('When I get a cookie', () => {
         // restore `window.location` to the original `jsdom`
         // `Location` object
         window.location = oldWindowLocation;
-    })
+    });
 
     describe('and it exists', () => {
         beforeEach(() => {
@@ -84,9 +84,9 @@ describe('When I call setCookie', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-        }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,
@@ -110,9 +110,9 @@ describe('When I call setConsentCookie with true', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-          }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,
@@ -140,9 +140,9 @@ describe('When I call setConsentCookie with false', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-          }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,

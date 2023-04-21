@@ -79,15 +79,18 @@ describe('given Google Analytics datalayer is not setup', () => {
 });
 
 describe('given Google Analytics is enabled', () => {
+    const oldWindowLocation = window.location;
+
     let useAnalytics;
     let analyticsTracking;
+
     beforeEach(() => {
         document = document.documentElement;
         document.body.innerHTML = linkList;
+
         document.title = 'Test Page Title';
-        delete global.window.location;
-        global.window = Object.create(window);
-        global.window.location = {
+        delete window.location;
+        window.location = {
             port: '80',
             protocol: 'https:',
             host: 'localhost',
@@ -95,9 +98,15 @@ describe('given Google Analytics is enabled', () => {
             pathname: '/use-lpa?email=email@test.com',
             search: "?v=email@test.com"
         };
+
         global.dataLayer = [];
         useAnalytics = new GoogleAnalytics('UA-12345');
         analyticsTracking = new AnalyticsTracking();
+    });
+    afterAll(() => {
+        // restore `window.location` to the original `jsdom`
+        // `Location` object
+        window.location = oldWindowLocation;
     });
 
     test('it fires click events on the 2 external links', () => {
