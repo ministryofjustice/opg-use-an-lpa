@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # pin@v3.6.0
+        with:
+          node-version-file: '.nvmrc'
       - name: cache node modules
         id: cache-npm
         uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
@@ -23,7 +26,7 @@ jobs:
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
-          cd service-front/web/ && npm ci
+            cd ./service-front/web/ && npm ci
           fi
       - name: build assets
         run: |

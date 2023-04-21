@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # pin@v3.6.0
+        with:
+          node-version-file: '.nvmrc'
       - name: cache node modules
         id: cache-npm
         uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
@@ -19,7 +22,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ./service-front/web/node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**service-front/web/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/service-front/web/package-lock.json') }}
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
@@ -29,7 +32,7 @@ jobs:
         run: |
           cd service-front/web/
           mkdir -p ./test-results/junit
-          ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+          ./node_modules/.bin/jest --ci --runInBand --reporters=summary --reporters=github-actions --reporters=jest-junit
       - name: test summary
         uses: test-summary/action@77bb5a9f9c572416423f9a157cbf1159c1e75a4c # pin@v1.0
         with:

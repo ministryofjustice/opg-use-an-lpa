@@ -1,22 +1,13 @@
-import { getCookie, setCookie, createCookie, approveAllCookieTypes, setDefaultConsentCookie, setConsentCookie } from './cookieHelper';
+import {getCookie, setConsentCookie, setCookie} from './cookieHelper';
 
 describe('When I get a cookie', () => {
-    delete global.window.location;
-    global.window = Object.create(window);
-    global.window.location = {
-        port: '80',
-        protocol: 'https:',
-        hostname: 'localhost',
-        pathname: '/'
-    };
-
     describe('and it exists', () => {
         beforeEach(() => {
             const gettersSetters = {
                 get: jest.fn().mockImplementation(() => {
                     return 'true'
                 }),
-            set: jest.fn()
+                set: jest.fn()
             }
             Object.defineProperty(document, 'cookie', {
                 value: gettersSetters,
@@ -77,9 +68,9 @@ describe('When I call setCookie', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-        }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,
@@ -103,9 +94,9 @@ describe('When I call setConsentCookie with true', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-          }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,
@@ -133,9 +124,9 @@ describe('When I call setConsentCookie with false', () => {
             get: jest.fn().mockImplementation(() => {
                 return this.value;
             }),
-        set: jest.fn().mockImplementation((val) => {
-            this.value = val;
-          }),
+            set: jest.fn().mockImplementation((val) => {
+                this.value = val;
+            }),
         }
         Object.defineProperty(document, 'cookie', {
             value: gettersSetters,
