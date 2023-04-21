@@ -1,15 +1,19 @@
-import { getCookie, setCookie, createCookie, approveAllCookieTypes, setDefaultConsentCookie, setConsentCookie } from './cookieHelper';
+import {getCookie, setConsentCookie, setCookie} from './cookieHelper';
 
 describe('When I get a cookie', () => {
-    delete global.window.location;
-    global.window = Object.create(window);
-    global.window.location = {
-        port: '80',
-        protocol: 'https:',
-        hostname: 'localhost',
-        pathname: '/'
-    };
+    // delete global.window.location;
+    // global.window = Object.create(window);
+    // global.window.location = {
+    //     port: '80',
+    //     protocol: 'https:',
+    //     hostname: 'localhost',
+    //     pathname: '/'
+    // };
 
+    /**
+     * @jest-environment jsdom
+     * @jest-environment-options {"url": "https://localhost/"}
+     */
     describe('and it exists', () => {
         beforeEach(() => {
             const gettersSetters = {
