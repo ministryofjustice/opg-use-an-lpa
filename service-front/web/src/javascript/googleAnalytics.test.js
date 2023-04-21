@@ -5,24 +5,19 @@ describe('given Google Analytics is enabled', () => {
     beforeEach(() => {
         document = document.documentElement;
         document.title = 'Test Page Title';
-        // delete global.window.location;
-        // global.window = Object.create(window);
-        // global.window.location = {
-        //     port: '80',
-        //     protocol: 'https:',
-        //     host: 'localhost',
-        //     hostname: 'localhost',
-        //     pathname: '/use-lpa?email=email@test.com',
-        //     search: "?v=email@test.com"
-        // };
+        delete window.location;
+        window.location = {
+            port: '80',
+            protocol: 'https:',
+            host: 'localhost',
+            hostname: 'localhost',
+            pathname: '/use-lpa?email=email@test.com',
+            search: "?v=email@test.com"
+        };
         global.dataLayer = [];
         useAnalytics = new googleAnalytics('UA-12345');
     });
 
-    /**
-     * @jest-environment jsdom
-     * @jest-environment-options {"url": "https://localhost/use-lpa?email=email@test.com"}
-     */
     test('it should have the correct config setup', () => {
         expect(global.dataLayer).toEqual(
             expect.arrayContaining([
