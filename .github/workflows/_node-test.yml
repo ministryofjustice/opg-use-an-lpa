@@ -32,7 +32,7 @@ jobs:
         run: |
           cd service-front/web/
           mkdir -p ./test-results/junit
-          ./node_modules/.bin/jest --ci --runInBand --reporters=default --reporters=jest-junit
+          ./node_modules/.bin/jest --ci --runInBand --reporters=summary --reporters=github-actions --reporters=jest-junit
       - name: test summary
         uses: test-summary/action@77bb5a9f9c572416423f9a157cbf1159c1e75a4c # pin@v1.0
         with:
