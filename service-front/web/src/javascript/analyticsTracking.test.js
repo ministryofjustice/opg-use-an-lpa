@@ -1,3 +1,8 @@
+/**
+ * @jest-environment jsdom
+ * @jest-environment-options {"url": "https://localhost/use-lpa?email=email@test.com"}
+ */
+
 import GoogleAnalytics from './googleAnalytics';
 import AnalyticsTracking from './analyticsTracking';
 
@@ -79,22 +84,17 @@ describe('given Google Analytics datalayer is not setup', () => {
 });
 
 describe('given Google Analytics is enabled', () => {
+    const oldWindowLocation = window.location;
+
     let useAnalytics;
     let analyticsTracking;
+
     beforeEach(() => {
         document = document.documentElement;
         document.body.innerHTML = linkList;
+
         document.title = 'Test Page Title';
-        delete global.window.location;
-        global.window = Object.create(window);
-        global.window.location = {
-            port: '80',
-            protocol: 'https:',
-            host: 'localhost',
-            hostname: 'localhost',
-            pathname: '/use-lpa?email=email@test.com',
-            search: "?v=email@test.com"
-        };
+
         global.dataLayer = [];
         useAnalytics = new GoogleAnalytics('UA-12345');
         analyticsTracking = new AnalyticsTracking();
