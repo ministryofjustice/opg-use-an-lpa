@@ -10,10 +10,10 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\AccessForAllLpaService;
+use App\Service\Lpa\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa;
-use App\Service\Lpa\AddOlderLpa;
 use App\Service\Lpa\LpaService;
-use App\Service\Lpa\OlderLpaService;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\CommandInterface;
@@ -94,7 +94,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
@@ -124,7 +124,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId, '00-0-0-0-00');
@@ -348,7 +348,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->attorneys[0]->dob,
             'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
             'first_names'          => $this->lpa->attorneys[0]->firstname,
@@ -381,7 +381,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
@@ -629,7 +629,7 @@ class LpaContext extends BaseIntegrationContext
 
         // UserLpaActorMap:: activateRecord
         $this->awsFixtures->append(
-            function (CommandInterface $cmd, RequestInterface $req) use (&$fixtureCount) {
+            function (CommandInterface $cmd, RequestInterface $req) {
                 $newID = $cmd->toArray()['ExpressionAttributeValues'][':a']['N'];
                 Assert::assertEquals($this->actorLpaId, $newID);
 
@@ -1520,7 +1520,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $codeData = $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
+        $viewerCodeService->cancelCode($this->userLpaActorToken, $this->userId, $this->accessCode);
 
         Assert::assertEquals(
             0,
@@ -1537,7 +1537,7 @@ class LpaContext extends BaseIntegrationContext
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1560,7 +1560,7 @@ class LpaContext extends BaseIntegrationContext
                 )
             );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
@@ -1686,7 +1686,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->registrationDate = '2019-08-31';
 
         $data = [
-            'reference_number' => $this->lpaUid,
+            'reference_number' => (int) $this->lpaUid,
             'dob'              => $this->userDob,
             'postcode'         => $this->userPostCode,
             'first_names'      => $this->userFirstname,
@@ -1705,7 +1705,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1721,14 +1721,15 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
-        $invalidLpaId = '700000004321';
+        $invalidLpaId = 700000004321;
 
         $data = [
-            'reference_number' => $invalidLpaId,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
+            'reference_number'     => $invalidLpaId,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
         ];
 
         //UserLpaActorMap: getAllForUser
@@ -1743,7 +1744,7 @@ class LpaContext extends BaseIntegrationContext
             []
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1762,7 +1763,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $dob,
             'postcode'             => $postcode,
             'first_names'          => $firstnames,
@@ -1782,7 +1783,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -1806,7 +1807,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->donor->surname   =  'S’anderson';
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $dob,
             'postcode'             => $postcode,
             'first_names'          => $firstnames,
@@ -1840,8 +1841,8 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa      = $this->container->get(AddOlderLpa::class);
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+        $addAccessForAllLpa = $this->container->get(AddAccessForAllLpa::class);
+        $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
             'actor'       => json_decode(json_encode($this->lpa->donor), true),
@@ -1867,7 +1868,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1902,7 +1903,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa      = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
@@ -1927,7 +1928,7 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -1968,7 +1969,7 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2689,7 +2690,7 @@ class LpaContext extends BaseIntegrationContext
     public function iRequestForANewActivationKeyAgain(): void
     {
         $data = [
-            'reference_number'     => $this->lpa->uId,
+            'reference_number'     => (int) $this->lpa->uId,
             'first_names'          => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
             'last_name'            => $this->lpa->donor->surname,
             'dob'                  => $this->lpa->donor->dob,
@@ -2709,7 +2710,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $response = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
@@ -2736,7 +2737,7 @@ class LpaContext extends BaseIntegrationContext
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -2834,7 +2835,7 @@ class LpaContext extends BaseIntegrationContext
             ];
         }
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2856,7 +2857,7 @@ class LpaContext extends BaseIntegrationContext
         $createdDate = (new DateTime())->modify('-14 days');
 
         $data = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => $this->userPostCode,
             'first_names'          => $this->userFirstname,
@@ -2942,7 +2943,7 @@ class LpaContext extends BaseIntegrationContext
             'activationKeyDueDate' => $activationKeyDueDate,
         ];
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -2966,7 +2967,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa->status = 'Pending';
 
         $data = [
-            'reference_number' => $this->lpaUid,
+            'reference_number' => (int) $this->lpaUid,
             'dob'              => $this->userDob,
             'postcode'         => $this->userPostCode,
             'first_names'      => $this->userFirstname,
@@ -2985,7 +2986,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
@@ -3040,7 +3041,7 @@ class LpaContext extends BaseIntegrationContext
             $this->awsFixtures->append(new Result([]));
         }
 
-        $olderLpaService = $this->container->get(OlderLpaService::class);
+        $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
             $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
@@ -3056,7 +3057,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa->status = 'Registered';
         $data              = [
-            'reference_number'     => $this->lpaUid,
+            'reference_number'     => (int) $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => 'WRONG',
             'first_names'          => $this->userFirstname,
@@ -3076,7 +3077,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $addOlderLpa = $this->container->get(AddOlderLpa::class);
+        $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         if ($flagStatus == 'ON') {
             try {
