@@ -48,7 +48,7 @@
         "laminas/laminas-component-installer": "^2.1.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-crypt": "^3.3",
-        "laminas/laminas-diactoros": "^1.7.1 || ^2.0",
+        "laminas/laminas-diactoros": "^2.24",
         "laminas/laminas-form": "^3.1.1",
         "laminas/laminas-servicemanager": "^3.4",
         "laminas/laminas-stdlib": "^3.1",
