@@ -1552,14 +1552,17 @@ class RequestActivationKeyContext implements Context
                         'title'   => 'Bad request',
                         'details' => 'Activation key already requested for LPA',
                         'data'    => [
-                            'donor'                => [
+                            'donor'       => [
                                 'uId'         => $this->lpa->donor->uId,
                                 'firstname'   => $this->lpa->donor->firstname,
                                 'middlenames' => $this->lpa->donor->middlenames,
                                 'surname'     => $this->lpa->donor->surname,
                             ],
-                            'caseSubtype'          => $this->lpa->caseSubtype,
-                            'activationKeyDueDate' => '2022-01-30',
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'activationKeyDueDate'
+                                => (new DateTimeImmutable('+5 days'))->format(DateTimeInterface::ATOM),
+                            'activationKeyRequestedDate'
+                                => (new DateTimeImmutable('-9 days'))->format(DateTimeInterface::ATOM),
                         ],
                     ]
                 ),

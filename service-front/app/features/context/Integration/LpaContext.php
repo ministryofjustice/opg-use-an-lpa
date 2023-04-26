@@ -23,6 +23,8 @@ use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Lpa\ViewerCodeService;
 use Common\Service\Notify\NotifyService;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
 use PHPUnit\Framework\Assert;
@@ -1444,7 +1446,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
     {
-        $createdDate = (new DateTime())->modify('-14 days');
+        $createdDate = (new DateTimeImmutable())->modify('-14 days')->format(DateTimeInterface::ATOM);
 
         // API call for requesting activation code
         $this->apiFixtures->append(
@@ -1452,18 +1454,18 @@ class LpaContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title' => 'Bad Request',
+                        'title'   => 'Bad Request',
                         'details' => 'LPA has an activation key already',
-                        'data' => [
-                            'donor' => [
-                                'uId' => $this->lpa['donor']['uId'],
-                                'firstname' => $this->lpa['donor']['firstname'],
+                        'data'    => [
+                            'donor'                => [
+                                'uId'         => $this->lpa['donor']['uId'],
+                                'firstname'   => $this->lpa['donor']['firstname'],
                                 'middlenames' => $this->lpa['donor']['middlenames'],
-                                'surname' => $this->lpa['donor']['surname'],
+                                'surname'     => $this->lpa['donor']['surname'],
                             ],
-                            'caseSubtype' => $this->lpa['caseSubtype'],
-                            'activationKeyDueDate' => $createdDate->format('c')
-                        ]
+                            'caseSubtype'          => $this->lpa['caseSubtype'],
+                            'activationKeyDueDate' => $createdDate,
+                        ],
                     ]
                 ),
                 self::ADD_OLDER_LPA_VALIDATE
@@ -1474,7 +1476,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            (int) $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1490,7 +1492,7 @@ class LpaContext extends BaseIntegrationContext
         $keyExistsDTO = new ActivationKeyExists();
         $keyExistsDTO->setDonor($donor);
         $keyExistsDTO->setCaseSubtype($this->lpa['caseSubtype']);
-        $keyExistsDTO->setDueDate($createdDate->format('c'));
+        $keyExistsDTO->setDueDate(new DateTimeImmutable($createdDate));
 
         $response = new AccessForAllApiResult(
             AccessForAllResult::HAS_ACTIVATION_KEY,
