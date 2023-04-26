@@ -12,7 +12,6 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
