@@ -6526,11 +6526,11 @@ msgstr ""
 #: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
 #: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:6
 msgid ""
-"This service will be unavailable between 9pm on Friday 31st March 2023 and "
-"9:30am on Saturday 1st April 2023."
+"This service will be unavailable between 2pm "
+"and 3pm on Thursday 27th April 2023."
 msgstr ""
-"Ni fydd y gwasanaeth hwn ar gael rhwng 9pm ar Ddydd Gwener 31 Mawrth hyd "
-"9:30am ar Ddydd Sadwrn 1 Ebrill."
+"Ni fydd y gwasanaeth hwn ar gael rhwng 2pm a 3pm ddydd Iau 27 Ebrill 2023 "
+"ddydd Iau 27 Ebrill 2023."
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:43
