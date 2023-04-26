@@ -12,9 +12,12 @@ use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
 use App\Service\Features\FeatureEnabled;
+use DateTimeInterface;
 
 class AddAccessForAllLpa
 {
+    private const CODE_ARRIVAL_INTERVAL = 'P10D';
+
     /**
      * @param FindActorInLpa                      $findActorInLpa
      * @param LpaService                          $lpaService
@@ -69,10 +72,10 @@ class AddAccessForAllLpa
                 (string) $resolvedActor['actor']['uId'],
             );
 
-            if ($hasActivationCode instanceof DateTime) {
-                $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+            if ($hasActivationCode instanceof DateTimeInterface) {
+                $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
                 $activationKeyDueDate = $activationKeyDueDate
-                    ->add(new DateInterval('P10D'))
+                    ->add(new DateInterval(self::CODE_ARRIVAL_INTERVAL))
                     ->format('Y-m-d');
             }
         }
@@ -80,9 +83,10 @@ class AddAccessForAllLpa
         throw new BadRequestException(
             'Activation key already requested for LPA',
             [
-                'donor'                => $lpaAddedData['donor'],
-                'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                'activationKeyDueDate' => $activationKeyDueDate,
+                'donor'                      => $lpaAddedData['donor'],
+                'caseSubtype'                => $lpaAddedData['caseSubtype'],
+                'activationKeyDueDate'       => $activationKeyDueDate,
+                'activationKeyRequestedDate' => $lpaAddedData['activationKeyRequestedDate'],
             ],
         );
     }
@@ -112,10 +116,10 @@ class AddAccessForAllLpa
             (string) $resolvedActor['actor']['uId']
         );
 
-        if ($hasActivationCode instanceof DateTime) {
-            $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+        if ($hasActivationCode instanceof DateTimeInterface) {
+            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
             $activationKeyDueDate = $activationKeyDueDate
-                ->add(new DateInterval('P10D'))
+                ->add(new DateInterval(self::CODE_ARRIVAL_INTERVAL))
                 ->format('Y-m-d');
 
             throw new BadRequestException(

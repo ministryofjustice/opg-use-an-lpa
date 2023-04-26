@@ -10,7 +10,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 
 class AccessForAllLpaService
@@ -33,16 +34,16 @@ class AccessForAllLpaService
      *
      * @param string $lpaId
      * @param string $actorId
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
+    public function hasActivationCode(string $lpaId, string $actorId): ?DateTimeInterface
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
         if (is_null($response->getData()['Created'])) {
             return null;
         }
 
-        $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
+        $createdDate = DateTimeImmutable::createFromFormat('Y-m-d', $response->getData()['Created']);
 
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',

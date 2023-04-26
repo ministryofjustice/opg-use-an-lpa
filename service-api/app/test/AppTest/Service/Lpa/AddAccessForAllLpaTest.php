@@ -18,6 +18,7 @@ use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -178,25 +179,27 @@ class AddAccessForAllLpaTest extends TestCase
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
-        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
-        $activationKeyDueDate = $activationKeyDueDate
+        $activationKeyRequestedDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate       = $activationKeyRequestedDate
             ->add(new DateInterval('P10D'))
-            ->format('Y-m-d');
+            ->format(DateTimeInterface::ATOM);
 
         $this->featureEnabledProphecy
             ->__invoke('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')
             ->willReturn(false);
+
         $alreadyAddedData = [
-            'donor'                => [
+            'donor'                      => [
                 'uId'         => '12345',
                 'firstname'   => 'Example',
                 'middlenames' => 'Donor',
                 'surname'     => 'Person',
             ],
-            'caseSubtype'          => 'hw',
-            'lpaActorToken'        => 'qwerty-54321',
-            'activationKeyDueDate' => null,
-            'notActivated'         => true,
+            'caseSubtype'                => 'hw',
+            'lpaActorToken'              => 'qwerty-54321',
+            'activationKeyDueDate'       => $activationKeyDueDate,
+            'activationKeyRequestedDate' => $activationKeyRequestedDate,
+            'notActivated'               => true,
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -221,9 +224,10 @@ class AddAccessForAllLpaTest extends TestCase
         $expectedException = new BadRequestException(
             'Activation key already requested for LPA',
             [
-                'donor'                => $this->resolvedActor['donor'],
-                'caseSubtype'          => $this->resolvedActor['caseSubtype'],
-                'activationKeyDueDate' => $activationKeyDueDate,
+                'donor'                      => $this->resolvedActor['donor'],
+                'caseSubtype'                => $this->resolvedActor['caseSubtype'],
+                'activationKeyDueDate'       => $activationKeyDueDate,
+                'activationKeyRequestedDate' => $activationKeyRequestedDate,
             ]
         );
 

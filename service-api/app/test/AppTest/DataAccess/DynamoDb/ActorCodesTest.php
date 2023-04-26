@@ -6,7 +6,7 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ActorCodes;
 use Aws\DynamoDb\DynamoDbClient;
-use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -74,7 +74,7 @@ class ActorCodesTest extends TestCase
         $this->assertEquals($testCode, $result['ActorCode']);
         $this->assertEquals($testSiriusUid, $result['SiriusUid']);
         $this->assertEquals($testActive, $result['Active']);
-        $this->assertInstanceOf(DateTime::class, $result['Expires']);
+        $this->assertInstanceOf(DateTimeInterface::class, $result['Expires']);
         $this->assertEquals($testExpires, $result['Expires']->format('c'));
         $this->assertEquals($testActorId, $result['ActorLpaId']);
     }

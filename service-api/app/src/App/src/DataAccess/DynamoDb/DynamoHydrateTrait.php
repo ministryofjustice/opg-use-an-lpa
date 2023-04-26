@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\DataAccess\DynamoDb;
 
+use App\DataAccess\ValueObjects\DateTimeImmutable;
 use Aws\DynamoDb\Marshaler;
 use Aws\Result;
-use DateTime;
 use Exception;
 use UnexpectedValueException;
 
@@ -67,7 +67,7 @@ trait DynamoHydrateTrait
             $thisVal = $marshaler->unmarshalValue($value);
 
             if (in_array($key, $dateFields)) {
-                $thisVal = new DateTime($thisVal);
+                $thisVal = new DateTimeImmutable($thisVal);
             }
 
             $item[$key] = $thisVal;

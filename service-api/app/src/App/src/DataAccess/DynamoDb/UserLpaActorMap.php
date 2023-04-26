@@ -19,6 +19,8 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 {
     use DynamoHydrateTrait;
 
+    private const DATE_FIELDS = ['Added', 'ActivatedOn', 'DueBy', 'Updated'];
+
     public function __construct(
         private DynamoDbClient $client,
         private string $userLpaActorTable,
@@ -44,7 +46,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             ]
         );
 
-        $codeData = $this->getData($result, ['Added']);
+        $codeData = $this->getData($result, self::DATE_FIELDS);
 
         $codeData = !empty($codeData) ? $codeData : null;
         if ($codeData === null) {
@@ -79,6 +81,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'UserId'    => ['S' => $userId],
             'SiriusUid' => ['S' => $siriusUid],
             'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)],
+            'Updated'   => ['S' => $added->format(DateTimeInterface::ATOM)],
         ];
 
         if ($actorId !== null) {
@@ -146,7 +149,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             ]
         );
 
-        return $this->getData($response);
+        return $this->getData($response, self::DATE_FIELDS);
     }
 
     /**
@@ -156,18 +159,19 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
-        $current = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
+        $current       = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
         $activatedTime = $current->format(DateTimeInterface::ATOM);
 
         $response = $this->client->updateItem(
             [
-                'TableName'                 => $this->userLpaActorTable,
-                'Key'                       => [
+                'TableName' => $this->userLpaActorTable,
+                'Key'       => [
                     'Id' => [
                         'S' => $lpaActorToken,
                     ],
                 ],
-                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c remove ActivateBy, DueBy',
+                'UpdateExpression'
+                    => 'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c, Updated = :d remove ActivateBy, DueBy',
                 'ExpressionAttributeValues' => [
                     ':a' => [
                         'N' => $actorId,
@@ -178,12 +182,15 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                     ':c' => [
                         'S' => $activatedTime,
                     ],
+                    ':d' => [
+                        'S' => $activatedTime,
+                    ],
                 ],
                 'ReturnValues'              => 'ALL_NEW',
             ]
         );
 
-        return $this->getData($response);
+        return $this->getData($response, self::DATE_FIELDS);
     }
 
     /**
@@ -206,7 +213,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             ]
         );
 
-        return $this->getDataCollection($result, ['Added']);
+        return $this->getDataCollection($result, self::DATE_FIELDS);
     }
 
     /**
@@ -220,7 +227,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         DateInterval $intervalTillDue,
         ?string $actorId,
     ): array {
-        $now    = new DateTimeImmutable();
+        $now    = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
         $expiry = $now->add($expiryInterval);
         $dueBy  = $now->add($intervalTillDue);
 
@@ -231,20 +238,21 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                     'S' => $lpaActorToken,
                 ],
             ],
-            'UpdateExpression'          => 'set ActivateBy = :a, DueBy = :b',
+            'UpdateExpression'          => 'set ActivateBy = :a, DueBy = :b, Updated = :c',
             'ExpressionAttributeValues' => [
                 ':a' => ['N' => (string) $expiry->getTimestamp()],
                 ':b' => ['S' => $dueBy->format(DateTimeInterface::ATOM)],
+                ':c' => ['S' => $now->format(DateTimeInterface::ATOM)],
             ],
             'ReturnValues'              => 'ALL_NEW',
         ];
 
         if ($actorId !== null) {
-            $updateRequest['UpdateExpression']                = $updateRequest['UpdateExpression'] . ', ActorId = :c';
-            $updateRequest['ExpressionAttributeValues'][':c'] = ['N' => $actorId];
+            $updateRequest['UpdateExpression']                = $updateRequest['UpdateExpression'] . ', ActorId = :d';
+            $updateRequest['ExpressionAttributeValues'][':d'] = ['N' => $actorId];
         }
 
         $response = $this->client->updateItem($updateRequest);
-        return $this->getData($response);
+        return $this->getData($response, self::DATE_FIELDS);
     }
 }

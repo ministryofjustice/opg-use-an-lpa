@@ -53,22 +53,24 @@ class LpaAlreadyAdded
         }
 
         $response = [
-            'donor'                => [
+            'donor'                      => [
                 'uId'         => $lpa['lpa']['donor']['uId'],
                 'firstname'   => $lpa['lpa']['donor']['firstname'],
                 'middlenames' => $lpa['lpa']['donor']['middlenames'],
                 'surname'     => $lpa['lpa']['donor']['surname'],
             ],
-            'caseSubtype'          => $lpa['lpa']['caseSubtype'],
-            'lpaActorToken'        => $record['Id'],
-            'activationKeyDueDate' => $lpa['activationKeyDueDate'] ?? null,
+            'caseSubtype'                => $lpa['lpa']['caseSubtype'],
+            'lpaActorToken'              => $record['Id'],
+            'activationKeyDueDate'       => $lpa['activationKeyDueDate'] ?? null,
+            'activationKeyRequestedDate' => $lpa['activationKeyRequestedDate'] ?? null,
         ];
 
         if (array_key_exists('ActivateBy', $record)) {
             $response['notActivated'] = true;
         }
 
-        return $response;
+        // filtering removes all falsy values - including null.
+        return array_filter($response);
     }
 
     /**
