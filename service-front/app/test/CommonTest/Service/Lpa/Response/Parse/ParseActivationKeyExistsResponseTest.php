@@ -25,14 +25,15 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     public function setUp(): void
     {
         $this->response = [
-            'donor'                => [
+            'donor'                      => [
                 'uId'         => '12345',
                 'firstname'   => 'Example',
                 'middlenames' => 'Donor',
                 'surname'     => 'Person',
             ],
-            'caseSubtype'          => 'hw',
-            'activationKeyDueDate' => '2021-12-06',
+            'caseSubtype'                => 'hw',
+            'activationKeyDueDate'       => '2021-12-06T00:00:00+00:00',
+            'activationKeyRequestedDate' => '2021-12-06T00:00:00+00:00',
         ];
 
         $this->donor = new CaseActor();
@@ -57,7 +58,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertInstanceOf(ActivationKeyExists::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
-        $this->assertEquals('2021-12-06', $result->getDueDate());
+        $this->assertEquals('2021-12-06', $result->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2021-12-06', $result->getRequestedDate()->format('Y-m-d'));
     }
 
     /** @test */

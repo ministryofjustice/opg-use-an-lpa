@@ -17,14 +17,17 @@ use Common\Handler\{AbstractHandler,
     Traits\User,
     UserAware};
 use Common\Service\Features\FeatureEnabled;
+use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
+use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
 use Mezzio\Helper\UrlHelper;
@@ -62,6 +65,46 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         parent::__construct($renderer, $urlHelper, $logger);
 
         $this->setAuthenticator($authenticator);
+    }
+
+    public function keyRequestedToday(
+        ServerRequestInterface $request,
+        AccessForAllApiResult $result,
+    ): HtmlResponse {
+        /** @var ActivationKeyExists $resultData */
+        $resultData = $result->getData();
+
+        // The user has already requested a key today.
+        if ($resultData->getRequestedDate()?->diff(new DateTimeImmutable('today'))->days === 0) {
+            return new HtmlResponse(
+                $this->renderer->render(
+                    'actor::already-requested-activation-key-today',
+                    [
+                        'user'        => $this->user,
+                        'dueDate'     => $resultData->getDueDate(),
+                        'donor'       => $resultData->getDonor(),
+                        'caseSubtype' => $resultData->getCaseSubtype(),
+                    ]
+                )
+            );
+        }
+
+        $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
+        $form->setAttribute(
+            'action',
+            $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+        );
+
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::already-requested-activation-key',
+                [
+                    'user'    => $this->user,
+                    'dueDate' => $resultData->getDueDate(),
+                    'form'    => $form,
+                ]
+            )
+        );
     }
 
     /**
@@ -169,44 +212,19 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                         $this->urlHelper->generate('lpa.confirm-activation-key-generation')
                     );
 
-                    $activationKeyDueDate = date(
-                        'Y-m-d',
-                        strtotime(($result->getData()->getDueDate()))
-                    );
-
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
                                 'user'    => $this->user,
-                                'dueDate' => $activationKeyDueDate,
+                                'dueDate' => $result->getData()->getDueDate(),
                                 'form'    => $form,
                             ]
                         )
                     );
 
                 case AccessForAllResult::KEY_ALREADY_REQUESTED:
-                    $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                    $form->setAttribute(
-                        'action',
-                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
-                    );
-
-                    $activationKeyDueDate = date(
-                        'Y-m-d',
-                        strtotime(($result->getData()->getDueDate()))
-                    );
-
-                    return new HtmlResponse(
-                        $this->renderer->render(
-                            'actor::already-requested-activation-key',
-                            [
-                                'user'    => $this->user,
-                                'dueDate' => $activationKeyDueDate,
-                                'form'    => $form,
-                            ]
-                        )
-                    );
+                    return $this->keyRequestedToday($request, $result);
 
                 case AccessForAllResult::DOES_NOT_MATCH:
                     if (($this->featureEnabled)('allow_older_lpas')) {

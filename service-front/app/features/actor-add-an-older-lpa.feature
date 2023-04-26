@@ -74,6 +74,12 @@ Feature: Add an older LPA
     Then I am told a new activation key is posted to the provided postcode
 
   @ui @integration
+  Scenario: The user cannot request a new key on the same day as another attempt
+    Given I have already requested an activation key that day
+    When I request an activation key for my lpa
+    Then I am told that I cannot request another activation key on the same day
+
+  @ui @integration
   Scenario: The user is unable to request key for an LPA that they have already added
     Given I am on the add an older LPA page
     And I have added an LPA to my account
