@@ -12,5 +12,6 @@ return [
             getenv('DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
+        'instructions_and_preferences' => filter_var(getenv('INSTRUCTIONS_AND_PREFERENCES'), FILTER_VALIDATE_BOOLEAN) ?: false,
     ],
 ];
