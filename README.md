@@ -10,11 +10,15 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 ## Setup
 
-Clone the following two repositories into the same base directory:
+Clone the following repository into the same base directory:
 
 - [https://github.com/ministryofjustice/opg-use-an-lpa](https://github.com/ministryofjustice/opg-use-an-lpa)
+
+Additionally, work related to Use is done in:
 - [https://github.com/ministryofjustice/opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
 - [https://github.com/ministryofjustice/opg-data-lpa-codes](https://github.com/ministryofjustice/opg-data-lpa-codes)
+- [https://github.com/ministryofjustice/opg-opg-data-lpa-instructions-preferences](https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences)
+
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
@@ -25,33 +29,18 @@ A Makefile is maintained that aliases the most useful docker-compose commands.
 To build the service and it's dependencies
 
 ```shell
-make build # build ual and lpa-codes
-make build --directory=../opg-data-lpa/ # build lpas-collection endpoint
-
-# or
-
 make build_all
 ```
 
 To start the service and its dependencies
 
 ```shell
-make up # start ual and lpa-codes then run seeding
-make up-bridge-ual create_secrets --directory=../opg-data-lpa/ # start lpas-collection endpoint
-
-# alternatively
-
 make up_all # start ual and all dependencies then run seeding of local data
 ```
 
 To stop the service and its dependencies (ordering is important so that the networks are removed last)
 
 ```shell
-make down-bridge-ual --directory=../opg-data-lpa/ # bring down the lpas-collection endpoint
-make down # bring down ual and lpa-codes
-
-# alternatively
-
 make down_all # bring down everything including the lpa endpoint
 ```
 
@@ -61,43 +50,26 @@ There are other make file targets for common operations such as
 `seed` to rerun seeding scripts to put or reset fixture data
 `destroy` to stop the service and remove all images
 
-### Docker-Compose
-
-In all cases commands are run with a docker-compose command prefix
-
-```shell
-# This should replace all instances of <DOCKER_COMPOSE> in commands given below
-docker-compose -f docker-compose.yml -f docker-compose.dependencies.yml
-```
-
-Build docker-compose files with no cache option.
+Build images with no cache option.
 Run this regularly to keep base docker images up to date,
 as these include potential security fixes.
 
 ```shell
-<DOCKER_COMPOSE> build --no-cache
+make rebuild [container name]
 ```
-
-You can also use the `--no-cache` option on other docker-compose commands,
-to clear out previously cached images.
 
 ***Note:*** this can take several minutes to run.
 
 To bring up the local environment
 
 ```shell
-<DOCKER_COMPOSE> up
+make up_all
 ```
 
-If you plan on developing the application you should also enable development mode.
+If you plan on developing the application i:e in most cases, you should also enable development mode.
 
 ```shell
-<DOCKER_COMPOSE> run front-composer composer development-enable
-<DOCKER_COMPOSE> exec viewer-app rm -f /tmp/config-cache.php
-<DOCKER_COMPOSE> exec actor-app rm -f /tmp/config-cache.php
-
-<DOCKER_COMPOSE> run api-composer composer development-enable
-<DOCKER_COMPOSE> exec api-app rm -f /tmp/config-cache.php
+make development_mode
 ```
 
 The Viewer service will be available via [http://localhost:9001/home](http://localhost:9001/home)
@@ -108,12 +80,15 @@ The API service will be available via [http://localhost:9003](http://localhost:9
 
 ### Tests
 
-To run the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
+To run all the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
 
 ```shell
-<DOCKER_COMPOSE> run viewer-app /app/vendor/bin/phpunit
-<DOCKER_COMPOSE> run actor-app /app/vendor/bin/phpunit
-<DOCKER_COMPOSE> run api-app /app/vendor/bin/phpunit
+make unit_test_all
+
+# or, seperately
+make unit_test_viewer_app
+make unit_test_actor_app
+make unit_test_javascript
 ```
 
 ### Functional (Behat) test
@@ -121,8 +96,15 @@ To run the unit tests (the command for viewer-app and actor-app will run exactly
 To run the Behat smoke tests
 
 ```shell
-<DOCKER_COMPOSE> \
-  -f docker-compose.testing.yml run smoke-tests composer behat
+make smoke_tests
+```
+
+There other some other utility scripts in the composer.json
+for example
+
+```shell
+cd service-api/app
+composer run psalm
 ```
 
 ### Updating composer dependencies
@@ -132,25 +114,16 @@ Composer install is run when the app container is built, and on a standard `dock
 It can also be run independently with:
 
 ```shell
-<DOCKER_COMPOSE> run api-composer
+#Abritary commands such as "require author/package" or "remove author/package"
+make run_api_composer -- [composer command]
+make run_front_composer -- [composer command]
 
-<DOCKER_COMPOSE> run front-composer
-```
+# explicit install or update
+make run_api_composer_install
+make run_api_composer_update
 
-New packages can be added with:
-
-```shell
-<DOCKER_COMPOSE> run api-composer composer require author/package
-
-<DOCKER_COMPOSE> run front-composer composer require author/package
-```
-
-Packages can be removed with:
-
-```shell
-<DOCKER_COMPOSE> run api-composer composer remove author/package
-
-<DOCKER_COMPOSE> run front-composer composer remove author/package
+make run_front_composer_install
+make run_front_composer_update
 ```
 
 ## Troubleshooting
@@ -166,19 +139,26 @@ make sure all docker compose services are running and have settled first, then t
 run the following command:
 
 ```shell
-<DOCKER_COMPOSE> run api-seeding
+make seed
 ```
 
 then try again
 
 ### I cannot add LPA's locally, which are in the seeded data set
 
-This could be because the LPA Gateway (Sirius Gateway) has not been properly initialised.
-make sure all docker compose services are running and have settled first, then try again.
-If still not working, run the following command:
+Ensure that the api-gateway container is running
 
 ```shell
-<DOCKER_COMPOSE> run lpa-gateway-setup
+docker ps | grep opg-use-an-lpa-codes-gateway
 ```
 
-if that doesn't work try running the api-seeding step, mentioned with the login failure error.
+If this is not running, you should re-run
+
+```shell
+make up_all
+```
+
+if that doesn't work try running 
+```shell
+make update_mock
+```
