@@ -114,7 +114,7 @@ Composer install is run when the app container is built, and on a standard `dock
 It can also be run independently with:
 
 ```shell
-#Abritary commands such as "require author/package" or "remove author/package"
+# Arbitrary commands such as "require author/package" or "remove author/package"
 make run_api_composer -- [composer command]
 make run_front_composer -- [composer command]
 
