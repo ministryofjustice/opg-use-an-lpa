@@ -66,7 +66,7 @@ class ActorCodeService
 
             $lpa = $this->lpaService->getByUid($uid);
 
-            $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
+            $actor = ($this->resolveActor)($lpa->getData(), (int) $actorUid);
 
             $lpaData = $lpa->getData();
             unset($lpaData['original_attorneys']);

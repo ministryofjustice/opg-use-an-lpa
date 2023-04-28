@@ -27,5 +27,5 @@ interface CodeValidationStrategyInterface
      * @param string $code
      * @throws ActorCodeMarkAsUsedException Thrown when the act of marking a code as used fails
      */
-    public function flagCodeAsUsed(string $code);
+    public function flagCodeAsUsed(string $code): void;
 }

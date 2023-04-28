@@ -11,27 +11,16 @@ use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\LpaService;
 use Psr\Log\LoggerInterface;
+use Exception;
 
 class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
 {
-    private LoggerInterface $logger;
-
-    private ActorCodesInterface $actorCodesRepository;
-
-    private LpaService $lpaService;
-
-    private ResolveActor $resolveActor;
-
     public function __construct(
-        ActorCodesInterface $actorCodesRepository,
-        LpaService $lpaService,
-        LoggerInterface $logger,
-        ResolveActor $resolveActor
+        private ActorCodesInterface $actorCodesRepository,
+        private LpaService $lpaService,
+        private LoggerInterface $logger,
+        private ResolveActor $resolveActor,
     ) {
-        $this->actorCodesRepository = $actorCodesRepository;
-        $this->lpaService = $lpaService;
-        $this->logger = $logger;
-        $this->resolveActor = $resolveActor;
     }
 
     /**
@@ -56,7 +45,7 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
             $this->logger->info(
                 'Uid {uid} did not match {expected} when validating actor code',
                 [
-                    'uid' => $uid,
+                    'uid'      => $uid,
                     'expected' => $details['SiriusUid'],
                 ]
             );
@@ -69,20 +58,20 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
             $this->logger->error(
                 'Could not find LPA for SiriusUid {SiriusUid} when validating actor code',
                 [
-                    'SiriusUid' => $details['SiriusUid']
+                    'SiriusUid' => $details['SiriusUid'],
                 ]
             );
             throw new ActorCodeValidationException('LPA not found');
         }
 
-        $actor = ($this->resolveActor)($lpa->getData(), (string)$details['ActorLpaId']);
+        $actor = ($this->resolveActor)($lpa->getData(), (int) $details['ActorLpaId']);
 
         if (is_null($actor)) {
             $this->logger->error(
                 'Could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid} when validating actor code',
                 [
                     'ActorLpaId' => $details['ActorLpaId'],
-                    'SiriusUid' => $details['SiriusUid'],
+                    'SiriusUid'  => $details['SiriusUid'],
                 ]
             );
             throw new ActorCodeValidationException('Actor not in LPA');
@@ -92,25 +81,25 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
             $this->logger->info(
                 'Dob {dob} did not match {expected} when validating actor code',
                 [
-                    'dob' => $dob,
+                    'dob'      => $dob,
                     'expected' => $actor['details']['dob'],
                 ]
             );
             throw new ActorCodeValidationException('Bad date of birth');
         }
 
-        return $actor['details']['uId'];
+        return (string) $actor['details']['uId'];
     }
 
     /**
      * @inheritDoc
      */
-    public function flagCodeAsUsed(string $code)
+    public function flagCodeAsUsed(string $code): void
     {
         try {
             $this->actorCodesRepository->flagCodeAsUsed($code);
-        } catch (\Exception $e) {
-            throw new ActorCodeMarkAsUsedException("Failed to mark code as used", 500, $e);
+        } catch (Exception $e) {
+            throw new ActorCodeMarkAsUsedException('Failed to mark code as used', 500, $e);
         }
     }
 }
