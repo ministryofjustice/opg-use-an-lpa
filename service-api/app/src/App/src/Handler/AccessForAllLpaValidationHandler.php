@@ -35,8 +35,8 @@ class AccessForAllLpaValidationHandler implements RequestHandlerInterface
             empty($requestData['reference_number']) ||
             empty($requestData['dob']) ||
             empty($requestData['first_names']) ||
-            empty($requestData['last_name']) ||
-            empty($requestData['postcode'])
+            empty($requestData['last_name'])
+            // postcode is optional as this may be an overseas request
         ) {
             throw new BadRequestException('Required data missing to request an activation key');
         }
