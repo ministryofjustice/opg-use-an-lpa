@@ -97,7 +97,7 @@ update_mock:
 .PHONY: update_mock
 
 up_mock:
-	$(COMPOSE) up -d --remove-orphans api-gateway data-lpa
+	$(COMPOSE) up -d --remove-orphans api-gateway
 .PHONY: up_mock
 
 up_functions:

@@ -54,18 +54,22 @@ services:
     container_name: api-gateway
     image: nginx:stable-alpine
     depends_on:
-      - data-lpa
+      - mock-data-lpa
+      - mock-image-request-handler
     command: 'nginx -g "daemon off;"'
     volumes:
       - ./mock-integrations/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 7010:5000
 
-  data-lpa:
-    container_name: data-lpa
+  mock-data-lpa:
+    container_name: mock-data-lpa
     image: stoplight/prism:4
     command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
     volumes:
-      - ./mock-integrations/mock-openapi.yaml:/tmp/openapi.yaml:ro
-    ports:
-      - 7011:4010
+      - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
+
+  mock-image-request-handler:
+    container_name: mock-image-request-handler
+    image: stoplight/prism:4
+    command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
+    volumes:
+      - ./mock-integrations/image-request-handler/mock-openapi.yaml:/tmp/openapi.yaml:ro
