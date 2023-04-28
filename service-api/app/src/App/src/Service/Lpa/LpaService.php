@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
@@ -14,57 +16,30 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-/**
- * Class LpaService
- *
- * @package App\Service\Lpa
- */
 class LpaService
 {
-    private const ACTIVE_ATTORNEY = 0;
+    private const ACTIVE_ATTORNEY   = 0;
     private const INACTIVE_ATTORNEY = 2;
-    private const ACTIVE_TC = 0;
-
-    private ViewerCodesInterface $viewerCodesRepository;
-    private ViewerCodeActivityInterface $viewerCodeActivityRepository;
-    private LpasInterface $lpaRepository;
-    private UserLpaActorMapInterface $userLpaActorMapRepository;
-    private LoggerInterface $logger;
-    private ActorCodes $actorCodes;
-    private ResolveActor $resolveActor;
-    private GetAttorneyStatus $getAttorneyStatus;
-    private IsValidLpa $isValidLpa;
-    private GetTrustCorporationStatus $getTrustCorporationStatus;
+    private const ACTIVE_TC         = 0;
 
     public function __construct(
-        ViewerCodesInterface $viewerCodesRepository,
-        ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        LpasInterface $lpaRepository,
-        UserLpaActorMapInterface $userLpaActorMapRepository,
-        LoggerInterface $logger,
-        ActorCodes $actorCodes,
-        ResolveActor $resolveActor,
-        GetAttorneyStatus $getAttorneyStatus,
-        IsValidLpa $isValidLpa,
-        GetTrustCorporationStatus $getTrustCorporationStatus
+        private ViewerCodesInterface $viewerCodesRepository,
+        private ViewerCodeActivityInterface $viewerCodeActivityRepository,
+        private LpasInterface $lpaRepository,
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private LoggerInterface $logger,
+        private ActorCodes $actorCodes,
+        private ResolveActor $resolveActor,
+        private GetAttorneyStatus $getAttorneyStatus,
+        private IsValidLpa $isValidLpa,
+        private GetTrustCorporationStatus $getTrustCorporationStatus,
     ) {
-        $this->viewerCodesRepository = $viewerCodesRepository;
-        $this->viewerCodeActivityRepository = $viewerCodeActivityRepository;
-        $this->lpaRepository = $lpaRepository;
-        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->logger = $logger;
-        $this->actorCodes = $actorCodes;
-        $this->resolveActor = $resolveActor;
-        $this->getAttorneyStatus = $getAttorneyStatus;
-        $this->isValidLpa = $isValidLpa;
-        $this->getTrustCorporationStatus = $getTrustCorporationStatus;
     }
 
     /**
      * Get an LPA using the ID value
      *
      * @param string $uid Sirius uId of LPA to fetch
-     *
      * @return ?LpaInterface A processed LPA data transfer object
      */
     public function getByUid(string $uid): ?LpaInterface
@@ -110,7 +85,6 @@ class LpaService
      *
      * @param string $token  UserLpaActorToken that map an LPA to a user account
      * @param string $userId The user account ID that must correlate to the $token
-     *
      * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByUserLpaActorToken(string $token, string $userId): ?array
@@ -132,15 +106,15 @@ class LpaService
         unset($lpaData['original_attorneys']);
 
         $result = [
-            'user-lpa-actor-token'  => $map['Id'],
-            'date'                  => $lpa->getLookupTime()->format('c'),
-            'lpa'                   => $lpaData,
-            'activationKeyDueDate'  => $map['DueBy'] ?? null
+            'user-lpa-actor-token' => $map['Id'],
+            'date'                 => $lpa->getLookupTime()->format('c'),
+            'lpa'                  => $lpaData,
+            'activationKeyDueDate' => $map['DueBy'] ?? null,
         ];
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
         if (isset($map['ActorId'])) {
-            $actor = ($this->resolveActor)($lpaData, $map['ActorId']);
+            $actor = ($this->resolveActor)($lpaData, (int) $map['ActorId']);
 
             // If an active attorney is not found then we should not return an lpa
             $result['actor'] = $actor;
@@ -159,7 +133,6 @@ class LpaService
      * Return all LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPAs for
-     *
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
     public function getAllForUser(string $userId): array
@@ -178,7 +151,6 @@ class LpaService
      * Return all LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPA and Requests for
-     *
      * @return array An array of LPA data structures containing processed LPA data and metadata
      */
     public function getAllLpasAndRequestsForUser(string $userId): array
@@ -195,7 +167,6 @@ class LpaService
      * @param string  $viewerCode   A code that directly maps to an LPA
      * @param string  $donorSurname The surname of the donor that must correlate to the $viewerCode
      * @param ?string $organisation An organisation name that will be recorded as used against the $viewerCode
-     *
      * @return ?array A structure that contains processed LPA data and metadata
      */
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
@@ -255,26 +226,19 @@ class LpaService
         $lpaData = $lpa->getData();
         unset($lpaData['original_attorneys']);
 
-        $lpaData = [
-            'date' => $lpa->getLookupTime()->format('c'),
-            'expires' => $viewerCodeData['Expires']->format('c'),
+        return [
+            'date'         => $lpa->getLookupTime()->format('c'),
+            'expires'      => $viewerCodeData['Expires']->format('c'),
             'organisation' => $viewerCodeData['Organisation'],
-            'lpa' => $lpaData,
+            'lpa'          => $lpaData,
         ];
-
-        if (isset($viewerCodeData['Cancelled'])) {
-            $lpaData['cancelled'] = $viewerCodeData['Cancelled']->format('c');
-        }
-
-        return $lpaData;
     }
 
     /**
-     * @param $lpaActorMaps Map of LPAs from Dynamo
-     *
+     * @param $lpaActorMaps array Map of LPAs from Dynamo
      * @return array an array with formatted LPA results
      */
-    private function lookupAndFormatLpas($lpaActorMaps): array
+    private function lookupAndFormatLpas(array $lpaActorMaps): array
     {
         $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
 
@@ -296,7 +260,7 @@ class LpaService
             }
 
             $lpaData = $lpa->getData();
-            $actor = ($this->resolveActor)($lpaData, $item['ActorId']);
+            $actor   = ($this->resolveActor)($lpaData, (int) $item['ActorId']);
 
             $added = $item['Added']->format('Y-m-d H:i:s');
             unset($lpaData['original_attorneys']);
@@ -305,10 +269,10 @@ class LpaService
             if (($this->isValidLpa)($lpaData)) {
                 $result[$item['Id']] = [
                     'user-lpa-actor-token' => $item['Id'],
-                    'date' => $lpa->getLookupTime()->format('c'),
-                    'actor' => $actor,
-                    'lpa' => $lpaData,
-                    'added' => $added,
+                    'date'                 => $lpa->getLookupTime()->format('c'),
+                    'actor'                => $actor,
+                    'lpa'                  => $lpaData,
+                    'added'                => $added,
                 ];
             }
         }
