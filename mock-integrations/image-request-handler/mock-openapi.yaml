@@ -1,42 +1,23 @@
-openapi: '3.0.2'
-info:
-  title: opg-data-lpa-instructions-preferences
-  version: '1.0'
-  description: 'Rest API for LPA Data Instruction and Preference - ${environment}'
-servers:
-  - url: /v1
-    description: we use the path only so we can use in different contexts
-tags:
-  - name: lpa-instruction-preference
-    description: API operations relating to the lpa-instructions-preferences integration
-    externalDocs:
-      url: https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences
 paths:
-  /use-an-lpa/image-request-handler/{uid}:
-    description: Returns list of signed urls and adds message to SQS and file to S3 if required.
+  /image-request/{uid}:
     get:
-      security:
-        - sigv4: []
-      parameters:
-        - in: path
-          name: uid
-          schema:
-            $ref: '#/components/schemas/Uid'
-          required: true
-          description: Reference Number representing an LPA Uid
       responses:
         '200':
-          description: Signed urls returned for given LPA
           content:
             application/json:
               examples:
                 lpa0047:
                   value:
-                    uId: 7000-0000-0138
-                    signedUrls: ['https://my-bucket.s3.amazonaws.com/my_file_1.png4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvqfrfffffqB8ObHF9iK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVp29uq0r4r4r22r424r24rkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f6066ecf0','https://my-bucket.s3.amazonaws.com/my_file_2.png4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392']
+                    uId: 700000000047
+                    signedUrls: ['https://my-bucket.s3.amazonaws.com/my_file_1.png4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvqfrfffffqB8ObHF9iK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVp29uq0r4r4r22r424r24rkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f6066ecf0', 'https://my-bucket.s3.amazonaws.com/my_file_2.png4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392']
+                lpa0138:
+                  value:
+                    uId: 700000000138
+                    signedUrls: ['https://my-bucket.s3.amazonaws.com/my_file_2.png4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392']
               schema:
                 $ref: '#/components/schemas/InstructionsPreferences'
-        400:
+          description: Signed urls returned for given LPA
+        '400':
           description: Bad request (either in parameter or payload)
           content:
             application/json:
@@ -78,12 +59,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error504'
-  /use-an-lpa/healthcheck:
-    get:
-      summary: "Healthcheck endpoint"
-      description: "Checks health of lambda"
       security:
         - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+      parameters:
+        - in: path
+          name: uid
+          schema:
+            $ref: '#/components/schemas/Uid'
+          required: true
+          description: Reference Number representing an LPA Uid
+    description: Returns list of signed urls and adds message to SQS and file to S3 if required.
+  /healthcheck:
+    description: Checks health of the lambda, SQS queue and bucket
+    get:
+      security:
+        - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
       responses:
         200:
           description: opg-data-lpa-instructions-preferences healthcheck
@@ -96,30 +106,12 @@ paths:
                     $ref: '#/components/schemas/Healthcheck'
                   meta:
                     type: object
-        400:
-          description: Bad request (either in parameter or payload)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error400'
-        401:
-          description: Unauthorised (no current user and there should be)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error401'
         403:
           description: Forbidden - The current user is forbidden from accessing this data (in this way)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error403'
-        404:
-          description: That URL is not a valid route, or the item resource does not exist
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error404'
         500:
           description: Something unexpected happened and it is the API's fault
           content:
@@ -132,13 +124,97 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error503'
+openapi: '3.0.2'
+info:
+  title: opg-data-lpa-instructions-preferences
+  version: '1.0'
+  description: 'Rest API for LPA Data Instruction and Preference - ${environment}'
+servers:
+  - url: /v1
+    description: we use the path only so we can use in different contexts
+tags:
+  - name: lpa-instruction-preference
+    description: API operations relating to the lpa-instructions-preferences integration
+    externalDocs:
+      url: https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestParameters: true
+    validateRequestBody: true
+x-amazon-apigateway-gateway-responses:
+  ACCESS_DENIED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-FORBIDDEN", "title":$context.error.messageString, "detail":"Forbidden - The current user is forbidden from accessing this data (in this way)", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  API_CONFIGURATION_ERROR:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-API_CONFIGURATION_ERROR", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  AUTHORIZER_CONFIGURATION_ERROR:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-AUTHORIZER_CONFIGURATION_ERROR", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  AUTHORIZER_FAILURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-AUTHORIZER_FAILURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  BAD_REQUEST_BODY:
+    responseTemplates:
+      application/json: '{"errors": [{ "id": "$context.requestId", "code": "OPGDATA-API-INVALIDREQUEST", "title":$context.error.messageString, "detail":"$context.error.validationErrorString", "meta": {"x-ray": "$context.xrayTraceId"} }]}'
+  BAD_REQUEST_PARAMETERS:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-BAD_REQUEST_PARAMETERS", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALIDREQUEST", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-SERVERERROR", "title":$context.error.messageString, "detail":"Something unexpected happened internally", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  EXPIRED_TOKEN:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-EXPIRED_TOKEN", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INTEGRATION_FAILURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INTEGRATION_FAILURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INTEGRATION_TIMEOUT:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INTEGRATION_TIMEOUT", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INVALID_API_KEY:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALID_API_KEY", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INVALID_SIGNATURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALID_SIGNATURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  MISSING_AUTHENTICATION_TOKEN:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-MISSING_AUTHENTICATION_TOKEN", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  QUOTA_EXCEEDED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-QUOTA_EXCEEDED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  REQUEST_TOO_LARGE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-FILESIZELIMIT", "title":$context.error.messageString, "detail":"Payload too large, try and upload in smaller chunks", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  RESOURCE_NOT_FOUND:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-NOTFOUND", "title":$context.error.messageString, "detail":"That URL is not a valid route, or the item resource does not exist", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  THROTTLED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-THROTTLED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  UNAUTHORIZED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-UNAUTHORISED", "title":$context.error.messageString, "detail":"Unauthorised (no current user and there should be)", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  UNSUPPORTED_MEDIA_TYPE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-MEDIA", "title":$context.error.messageString, "detail":"Unsupported media type for this endpoint", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  WAF_FILTERED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-WAF_FILTERED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+"x-amazon-apigateway-policy":
+  "Version": "2012-10-17"
+  "Statement": [{"Effect": "Allow", "Principal": {"AWS": [""]}, "Action": "execute-api:Invoke", "Resource": ["arn:aws:execute-api:eu-west-1:${account_id}:*/*/*/*"]}]
 components:
   securitySchemes:
     sigv4:
-      type: apiKey
-      name: Authorization
-      in: header
-      x-amazon-apigateway-authtype: awsSigv4
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "awsSigv4"
   schemas:
     Healthcheck:
       type: object
@@ -167,7 +243,7 @@ components:
       type: string
       description: "Uid of LPA"
       pattern: '(^7\d{11}$)'
-      example: '7000-0000-0138'
+      example: '700000000054'
     SignedUrl:
       type: string
       pattern: '(^https:\/\/my-bucket\.s3\.amazonaws\.com\/[\w-]+\?(X-Amz-[\w-]+=[\S]+&?)+X-Amz-Signature=[\S]+$)'

@@ -13,9 +13,9 @@ do
     lpa_example_name=$example_name lpa_data=$lpa_yaml_data \
     yq 'with(.paths[].get.responses.[].content.[].examples; . | .[env(lpa_example_name)].value=env(lpa_data))' \
     temp.yaml >> temp.yaml
-    sed -i '' -e "5s/^//p; 6s/^.*/    \"~$n\" \"$example_name\";/" nginx.conf
+    sed -i '' -e "5s/^//p; 6s/^.*/    \"~$n\" \"$example_name\";/" ../nginx.conf
 done
 
-yq ea '. as $item ireduce ({}; . * $item )' temp.yaml > mock-openapi-examples.yaml
+yq ea '. as $item ireduce ({}; . * $item )' temp.yaml > ../opg-data-lpa/mock-openapi-examples.yaml
 
 rm -f temp.yaml
