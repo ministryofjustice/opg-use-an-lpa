@@ -70,7 +70,5 @@ services:
   mock-image-request-handler:
     container_name: mock-image-request-handler
     image: outofcoffee/imposter:3.17.3
-    ports:
-      - "4011:8080"
     volumes:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
