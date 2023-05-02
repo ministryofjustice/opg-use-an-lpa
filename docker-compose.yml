@@ -276,14 +276,3 @@ services:
     ports:
       - 9007:8080
     entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.upload-statistics.lambda_handler
-
-  # ---------------------------
-  # Lambda to request instructions and preferences images
-
-  mock-image-request-handler:
-    image: stoplight/prism:4
-    command: 'mock -h 0.0.0.0 /tmp/image-request-handler.yml'
-    volumes:
-      - ./docs/openapi/image-request-handler.yml:/tmp/image-request-handler.yml:ro
-    ports:
-      - 7011:4011
