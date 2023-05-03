@@ -1,0 +1,50 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}You've already asked for an activation key for this LPA today{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        {{ include('@partials/account-bar.html.twig') }}
+        {{ include('@partials/welsh-switch.html.twig') }}
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}You've already asked for an activation key for this LPA today{% endtrans %}</h1>
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Donor name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(donor) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Type of LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if caseSubtype|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <p class="govuk-body">{% trans %}We'll post you a letter with your activation key for this LPA. It will be sent to the address we have for you on our records. We send the key by post because it's more secure.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%dueDate%' : lpa_date(dueDate)} %}You should hear from us or get the activation key letter by %dueDate%. If not, please contact us.{% endtrans %}</p>
+
+                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button">
+                        {% trans %}Back to your LPAs{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </main>
+        {{ include('@actor/partials/new-use-service.html.twig') }}
+    </div>
+{% endblock %}

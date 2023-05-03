@@ -12,6 +12,7 @@ use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use DateTimeInterface;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -48,6 +49,16 @@ class AddAccessForAllLpa
     ) {
     }
 
+    /**
+     * @param string            $userToken
+     * @param int               $lpaUid
+     * @param string            $firstnames
+     * @param string            $lastname
+     * @param DateTimeInterface $dob
+     * @param string            $postcode
+     * @return AccessForAllApiResult
+     * @throws Exception
+     */
     public function validate(
         string $userToken,
         int $lpaUid,
@@ -160,6 +171,7 @@ class AddAccessForAllLpa
      * @param string $message
      * @param array  $additionalData
      * @return AccessForAllApiResult
+     * @throws Exception
      */
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {

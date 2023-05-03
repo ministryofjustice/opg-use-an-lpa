@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Common\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
+use DateTimeInterface;
 
 class ActivationKeyExists extends Response
 {
     protected CaseActor $donor;
     protected string $caseSubtype;
-    protected string $activationKeyDueDate;
+    protected ?DateTimeInterface $activationKeyDueDate;
+    protected ?DateTimeInterface $activationKeyRequestedDate;
 
     public function getDonor(): ?CaseActor
     {
@@ -22,9 +24,14 @@ class ActivationKeyExists extends Response
         return $this->caseSubtype;
     }
 
-    public function getDueDate(): ?string
+    public function getDueDate(): ?DateTimeInterface
     {
         return $this->activationKeyDueDate;
+    }
+
+    public function getRequestedDate(): ?DateTimeInterface
+    {
+        return $this->activationKeyRequestedDate;
     }
 
     public function setDonor(CaseActor $donor): void
@@ -37,8 +44,13 @@ class ActivationKeyExists extends Response
         $this->caseSubtype = $caseSubtype;
     }
 
-    public function setDueDate(string $activationKeyDueDate): void
+    public function setDueDate(DateTimeInterface $activationKeyDueDate): void
     {
         $this->activationKeyDueDate = $activationKeyDueDate;
+    }
+
+    public function setRequestedDate(DateTimeInterface $activationKeyRequestedDate): void
+    {
+        $this->activationKeyRequestedDate = $activationKeyRequestedDate;
     }
 }

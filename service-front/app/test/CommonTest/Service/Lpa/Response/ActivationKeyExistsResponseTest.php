@@ -6,6 +6,7 @@ namespace CommonTest\Service\Lpa\Response;
 
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\Response\ActivationKeyExists;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class ActivationKeyExistsResponseTest extends TestCase
@@ -30,10 +31,10 @@ class ActivationKeyExistsResponseTest extends TestCase
         $dto = new ActivationKeyExists();
         $dto->setDonor($donor);
         $dto->setCaseSubtype('pfa');
-        $dto->setDueDate('2021-12-06');
+        $dto->setDueDate(new DateTimeImmutable('2021-12-06'));
 
         $this->assertEquals($donor, $dto->getDonor());
         $this->assertEquals('pfa', $dto->getCaseSubtype());
-        $this->assertEquals('2021-12-06', $dto->getDueDate());
+        $this->assertEquals('2021-12-06', $dto->getDueDate()->format('Y-m-d'));
     }
 }

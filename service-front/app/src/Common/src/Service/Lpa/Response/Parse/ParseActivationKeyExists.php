@@ -6,6 +6,8 @@ namespace Common\Service\Lpa\Response\Parse;
 
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\ActivationKeyExists;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
 
@@ -22,7 +24,12 @@ class ParseActivationKeyExists
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string} $data
+     * @param array{
+     *     donor: array,
+     *     caseSubtype: string,
+     *     activationKeyDueDate: ?string,
+     *     activationKeyRequestedDate: ?string
+     * } $data
      * @return ActivationKeyExists
      * @throws Exception
      */
@@ -39,7 +46,21 @@ class ParseActivationKeyExists
         $response->setCaseSubtype($data['caseSubtype']);
 
         if (isset($data['activationKeyDueDate'])) {
-            $response->setDueDate($data['activationKeyDueDate']);
+            $response->setDueDate(
+                DateTimeImmutable::createFromFormat(
+                    DateTimeInterface::ATOM,
+                    $data['activationKeyDueDate']
+                )
+            );
+        }
+
+        if (isset($data['activationKeyRequestedDate'])) {
+            $response->setRequestedDate(
+                DateTimeImmutable::createFromFormat(
+                    DateTimeInterface::ATOM,
+                    $data['activationKeyRequestedDate']
+                )
+            );
         }
 
         return $response;

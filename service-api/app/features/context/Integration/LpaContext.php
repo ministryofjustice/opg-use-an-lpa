@@ -24,6 +24,7 @@ use BehatTest\Context\UsesPactContextTrait;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -2785,6 +2786,8 @@ class LpaContext extends BaseIntegrationContext
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorLpaId,
                                 'UserId'    => $this->userId,
+                                'Updated'   => (new DateTime('2020-01-01'))->format(DateTimeInterface::ATOM),
+                                'DueBy'     => (new DateTime('2020-01-01'))->format(DateTimeInterface::ATOM),
                             ]
                         ),
                     ]
@@ -2812,15 +2815,18 @@ class LpaContext extends BaseIntegrationContext
 
         if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
             $expectedResponse = [
-                'donor' => [
+                'donor'                      => [
                     'uId'         => $this->lpa->donor->uId,
                     'firstname'   => $this->lpa->donor->firstname,
                     'middlenames' => $this->lpa->donor->middlenames,
                     'surname'     => $this->lpa->donor->surname,
                 ],
-                'caseSubtype'          => $this->lpa->caseSubtype,
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'activationKeyDueDate' => null,
+                'caseSubtype'                => $this->lpa->caseSubtype,
+                'lpaActorToken'              => $this->userLpaActorToken,
+                // would normally expect for this to be a string but this integration test intercepts before it's
+                // rendered to an error response.
+                'activationKeyDueDate'       => new DateTime('2020-01-01'),
+                'activationKeyRequestedDate' => new DateTime('2020-01-01'),
             ];
         } else {
             $expectedResponse = [
@@ -2854,7 +2860,9 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
-        $createdDate = (new DateTime())->modify('-14 days');
+        $createdDate = new DateTimeImmutable('-14 days');
+        $dueByDate   = (new DateTimeImmutable('+9 days'))->format(DateTimeInterface::ATOM);
+        $updatedDate = (new DateTimeImmutable('-1 days'))->format(DateTimeInterface::ATOM);
 
         $data = [
             'reference_number'     => (int) $this->lpaUid,
@@ -2897,6 +2905,8 @@ class LpaContext extends BaseIntegrationContext
                             'ActorId'    => $this->actorLpaId,
                             'UserId'     => $this->userId,
                             'ActivateBy' => 123456789,
+                            'DueBy'      => $dueByDate,
+                            'Updated'    => $updatedDate,
                         ]
                     ),
                 ]
@@ -2911,14 +2921,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists  = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days');
-
-        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
-        $activationKeyDueDate = $activationKeyDueDate
-            ->add(new DateInterval('P10D'))
-            ->format('Y-m-d');
-
+        $codeExists = new stdClass();
         $codeExists->Created = $createdDate->format('Y-m-d');
 
         $this->pactPostInteraction(
@@ -2933,14 +2936,15 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $expectedResponse = [
-            'donor'                => [
+            'donor'                      => [
                 'uId'         => $this->lpa->donor->uId,
                 'firstname'   => $this->lpa->donor->firstname,
                 'middlenames' => $this->lpa->donor->middlenames,
                 'surname'     => $this->lpa->donor->surname,
             ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => $activationKeyDueDate,
+            'caseSubtype'                => $this->lpa->caseSubtype,
+            'activationKeyDueDate'       => new DateTimeImmutable($dueByDate),
+            'activationKeyRequestedDate' => new DateTimeImmutable($updatedDate),
         ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);

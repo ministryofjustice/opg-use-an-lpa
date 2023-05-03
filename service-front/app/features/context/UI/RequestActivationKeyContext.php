@@ -9,8 +9,9 @@ use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
@@ -35,8 +36,8 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
-    private const ADD_OLDER_LPA_CONFIRM  = 'AddOlderLpa::confirm';
+    private const ADD_ACCESS_FOR_ALL_LPA_VALIDATE = 'AddAccessForAllLpa::validate';
+    private const ADD_ACCESS_FOR_ALL_LPA_CONFIRM  = 'AddAccessForAllLpa::confirm';
     private const CLEANSE_LPA_CLEANSE    = 'CleanseLpa::cleanse';
 
     /**
@@ -51,6 +52,14 @@ class RequestActivationKeyContext implements Context
     public function iAmTakenToTheCheckAnswersPage()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+    }
+
+    /**
+     * @Then /^I am told that I cannot request another activation key on the same day$/
+     */
+    public function iAmToldThatICannotRequestAnotherActivationKeyOnTheSameDay()
+    {
+        $this->ui->assertPageContainsText("You've already asked for an activation key for this LPA today");
     }
 
     /**
@@ -109,6 +118,14 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add/attorney-details');
         $this->ui->assertPageContainsText('Attorney details');
+    }
+
+    /**
+     * @Given /^I have already requested an activation key that day$/
+     */
+    public function iHaveAlreadyRequestedAnActivationKeyThatDay()
+    {
+        $this->keyAlreadyRequestedToday = true;
     }
 
     /**
@@ -173,10 +190,51 @@ class RequestActivationKeyContext implements Context
                         'data'    => [],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE,
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE,
             )
         );
 
+        $this->iPressTheContinueButton();
+    }
+
+    /**
+     * @When /^I request an activation key for my lpa$/
+     */
+    public function iRequestAnActivationKeyForMyLpa()
+    {
+        // completes the request journey up until the check details page
+        $this->iHaveRequestedAnActivationKeyWithValidDetails();
+
+        $data = [
+            'donor'                => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
+            'caseSubtype'          => $this->lpa->caseSubtype,
+            'lpaActorToken'        => $this->userLpaActorToken,
+            'activationKeyDueDate' => (new DateTimeImmutable('+1 week'))->format(DateTimeInterface::ATOM),
+        ];
+
+        if (isset($this->keyAlreadyRequestedToday)) {
+            $date                               = new DateTimeImmutable('today');
+            $data['activationKeyRequestedDate'] = $date->format(DateTimeInterface::ATOM);
+        }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Bad request',
+                        'details' => 'Activation key already requested for LPA',
+                        'data'    => $data,
+                    ]
+                ),
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE,
+            )
+        );
         $this->iPressTheContinueButton();
     }
 
@@ -205,7 +263,7 @@ class RequestActivationKeyContext implements Context
                         ]
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE,
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE,
             )
         );
         $this->iPressTheContinueButton();
@@ -608,7 +666,7 @@ class RequestActivationKeyContext implements Context
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
-                self::ADD_OLDER_LPA_CONFIRM
+                self::ADD_ACCESS_FOR_ALL_LPA_CONFIRM
             )
         );
 
@@ -926,7 +984,7 @@ class RequestActivationKeyContext implements Context
                         'data'    => [],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
     }
@@ -949,7 +1007,7 @@ class RequestActivationKeyContext implements Context
                         'data'    => [],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
     }
@@ -972,7 +1030,7 @@ class RequestActivationKeyContext implements Context
                         'data'    => [],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
     }
@@ -1039,7 +1097,7 @@ class RequestActivationKeyContext implements Context
                             'role'        => 'donor',
                         ]
                     ),
-                    self::ADD_OLDER_LPA_VALIDATE
+                    self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
                 )
             );
         } else {
@@ -1064,7 +1122,7 @@ class RequestActivationKeyContext implements Context
                             ],
                         ]
                     ),
-                    self::ADD_OLDER_LPA_VALIDATE
+                    self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
                 )
             );
         }
@@ -1096,7 +1154,7 @@ class RequestActivationKeyContext implements Context
                         ],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
     }
@@ -1196,7 +1254,7 @@ class RequestActivationKeyContext implements Context
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NO_CONTENT,
                 json_encode([]),
-                self::ADD_OLDER_LPA_CONFIRM
+                self::ADD_ACCESS_FOR_ALL_LPA_CONFIRM
             )
         );
 
@@ -1494,18 +1552,21 @@ class RequestActivationKeyContext implements Context
                         'title'   => 'Bad request',
                         'details' => 'Activation key already requested for LPA',
                         'data'    => [
-                            'donor'                => [
+                            'donor'       => [
                                 'uId'         => $this->lpa->donor->uId,
                                 'firstname'   => $this->lpa->donor->firstname,
                                 'middlenames' => $this->lpa->donor->middlenames,
                                 'surname'     => $this->lpa->donor->surname,
                             ],
-                            'caseSubtype'          => $this->lpa->caseSubtype,
-                            'activationKeyDueDate' => '2022-01-30',
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                            'activationKeyDueDate'
+                                => (new DateTimeImmutable('+5 days'))->format(DateTimeInterface::ATOM),
+                            'activationKeyRequestedDate'
+                                => (new DateTimeImmutable('-9 days'))->format(DateTimeInterface::ATOM),
                         ],
                     ]
                 ),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
 
@@ -1526,7 +1587,7 @@ class RequestActivationKeyContext implements Context
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
                 json_encode([]),
-                self::ADD_OLDER_LPA_VALIDATE
+                self::ADD_ACCESS_FOR_ALL_LPA_VALIDATE
             )
         );
     }
@@ -1590,7 +1651,7 @@ class RequestActivationKeyContext implements Context
                             ],
                         ]
                     ),
-                    self::ADD_OLDER_LPA_CONFIRM
+                    self::ADD_ACCESS_FOR_ALL_LPA_CONFIRM
                 )
             );
 
@@ -1615,7 +1676,7 @@ class RequestActivationKeyContext implements Context
                             ],
                         ]
                     ),
-                    self::ADD_OLDER_LPA_CONFIRM
+                    self::ADD_ACCESS_FOR_ALL_LPA_CONFIRM
                 )
             );
 

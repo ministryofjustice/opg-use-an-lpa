@@ -9,8 +9,8 @@ use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -94,7 +94,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertEquals($testToken, $result['Id']);
         $this->assertEquals($testSiriusUid, $result['SiriusUid']);
         $this->assertEquals($testUserId, $result['UserId']);
-        $this->assertInstanceOf(DateTime::class, $result['Added']);
+        $this->assertInstanceOf(DateTimeInterface::class, $result['Added']);
         $this->assertEquals($testAdded, $result['Added']->format('c'));
         $this->assertEquals($testActorId, $result['ActorId']);
     }
@@ -421,29 +421,29 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertArrayHasKey('UpdateExpression', $data);
             $this->assertEquals(
-                'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c remove ActivateBy, DueBy',
+                'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c, Updated = :d remove ActivateBy, DueBy',
                 $data['UpdateExpression']
             );
 
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id'        => [
+                'Id'          => [
                     'S' => $testToken,
                 ],
-                'SiriusUid' => [
+                'SiriusUid'   => [
                     'S' => $testSiriusUid,
                 ],
-                'Added'     => [
+                'Added'       => [
                     'S' => $testAdded,
                 ],
-                'ActorId'   => [
+                'ActorId'     => [
                     'S' => $testActorId,
                 ],
-                'UserId'    => [
+                'UserId'      => [
                     'S' => $testUserId,
                 ],
-                'ActivatedOn'   => [
+                'ActivatedOn' => [
                     'S' => $testActivated,
                 ],
             ],
@@ -530,7 +530,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertEquals($testSiriusUid, $item['SiriusUid']);
         $this->assertEquals($testActorId, $item['ActorId']);
 
-        $this->assertInstanceOf(DateTime::class, $item['Added']);
+        $this->assertInstanceOf(DateTimeInterface::class, $item['Added']);
         $this->assertEquals($testAdded, $item['Added']->format('c'));
     }
 
@@ -557,7 +557,10 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a, DueBy = :b, ActorId = :c', $data['UpdateExpression']);
+            $this->assertEquals(
+                'set ActivateBy = :a, DueBy = :b, Updated = :c, ActorId = :d',
+                $data['UpdateExpression']
+            );
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
@@ -588,7 +591,7 @@ class UserLpaActorMapTest extends TestCase
                         'N' => $expiry,
                     ],
                     'DueBy'      => [
-                        'S' => 'P2W',
+                        'S' => (new DateTimeImmutable('+2 weeks'))->format(DateTimeInterface::ATOM),
                     ],
                 ],
             ]
@@ -629,7 +632,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
             $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a, DueBy = :b', $data['UpdateExpression']);
+            $this->assertEquals('set ActivateBy = :a, DueBy = :b, Updated = :c', $data['UpdateExpression']);
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
@@ -638,7 +641,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
 
-            $this->assertArrayNotHasKey(':c', $data['ExpressionAttributeValues']);
+            $this->assertArrayNotHasKey(':d', $data['ExpressionAttributeValues']);
 
             return true;
         }))->willReturn($this->createAWSResult(
@@ -663,7 +666,7 @@ class UserLpaActorMapTest extends TestCase
                         'N' => $expiry,
                     ],
                     'DueBy'      => [
-                        'S' => 'P2W',
+                        'S' => (new DateTimeImmutable('+2 weeks'))->format(DateTimeInterface::ATOM),
                     ],
                 ],
             ]
@@ -675,7 +678,12 @@ class UserLpaActorMapTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
-        $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), null);
+        $renew = $userLpaActorMapRepo->updateRecord(
+            $testToken,
+            new DateInterval('P1Y'),
+            new DateInterval('P2W'),
+            null
+        );
         $this->assertEquals($testToken, $renew['Id']);
     }
 }
