@@ -56,10 +56,8 @@ services:
     depends_on:
       - mock-data-lpa
       - mock-image-request-handler
-    command:
-      - "nginx"
-      - "-g"
-      - "\"daemon off;\""
+    ports:
+      - "4010:5000"
     volumes:
       - ./mock-integrations/nginx.conf:/etc/nginx/conf.d/default.conf
 
@@ -71,6 +69,8 @@ services:
       - "-h"
       - "0.0.0.0"
       - "/tmp/openapi.yaml"
+    ports:
+      - "4011:5000"
     volumes:
       - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
 
