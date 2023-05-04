@@ -1,8 +1,3 @@
-var availableLpas = [
-    "lpa0047",
-    "lpa0138",
-];
-
 var lpa = "lpa" + context.request.pathParams.uid.slice(-4);
 
 switch (lpa) {
