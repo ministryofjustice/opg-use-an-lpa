@@ -60,6 +60,7 @@ services:
       - "4010:5000"
     volumes:
       - ./mock-integrations/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./mock-integrations/image-request-handler/mocked-images:/var/www/html:ro
 
   mock-data-lpa:
     container_name: mock-data-lpa
