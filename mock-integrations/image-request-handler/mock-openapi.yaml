@@ -1,134 +1,4 @@
-paths:
-  /image-request/{uid}:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              examples:
-                lpa0047:
-                  value:
-                    uId: 700000000047
-                    status: 'COLLECTION_NOT_STARTED'
-                    signedUrls:
-                      'iap-700000000047-instructions': 'https://my-bucket.s3.amazonaws.com/iap-700000000047-instructions.jpg4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvqfrfffffqB8ObHF9iK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVp29uq0r4r4r22r424r24rkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f6066ecf0'
-                      'iap-700000000047-preferences': 'https://my-bucket.s3.amazonaws.com/iap-700000000047-preferences.jpg4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'
-                lpa0138:
-                  value:
-                    uId: 700000000138
-                    status: 'COLLECTION_NOT_STARTED'
-                    signedUrls:
-                      'iap-700000000138-instructions': 'https://my-bucket.s3.amazonaws.com/iap-700000000138-instructions.jpg4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'
-              schema:
-                $ref: '#/components/schemas/InstructionsPreferences'
-          description: Signed urls returned for given LPA
-        '400':
-          description: Bad request (either in parameter or payload)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error400'
-        '403':
-          description: User forbidden to access gateway
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error403'
-        '404':
-          description: Document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error404'
-        '429':
-          description: API Gateway throttling limit exceeded
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error429'
-        '500':
-          description: Unhandled internal exception within OPG Gateway
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error500'
-        '502':
-          description: Error pushing to upstream SQS queue or s3 bucket
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error502'
-        '504':
-          description: Timeout pushing to upstream SQS queue or s3 bucket
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error504'
-      security:
-        - sigv4: []
-      x-amazon-apigateway-request-validator: "all"
-      x-amazon-apigateway-integration:
-        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
-        responses:
-          default:
-            statusCode: "200"
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        contentHandling: "CONVERT_TO_TEXT"
-        type: "aws_proxy"
-      parameters:
-        - in: path
-          name: uid
-          schema:
-            $ref: '#/components/schemas/Uid'
-          required: true
-          description: Reference Number representing an LPA Uid
-    description: Returns list of signed urls and adds message to SQS and file to S3 if required.
-  /healthcheck:
-    description: Checks health of the lambda, SQS queue and bucket
-    get:
-      security:
-        - sigv4: []
-      x-amazon-apigateway-request-validator: "all"
-      x-amazon-apigateway-integration:
-        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
-        responses:
-          default:
-            statusCode: "200"
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        contentHandling: "CONVERT_TO_TEXT"
-        type: "aws_proxy"
-      responses:
-        200:
-          description: opg-data-lpa-instructions-preferences healthcheck
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Healthcheck'
-                  meta:
-                    type: object
-        403:
-          description: Forbidden - The current user is forbidden from accessing this data (in this way)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error403'
-        500:
-          description: Something unexpected happened and it is the API's fault
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error500'
-        503:
-          description: Service Unavailable - please try again later
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error503'
+---
 openapi: '3.0.2'
 info:
   title: opg-data-lpa-instructions-preferences
@@ -210,9 +80,135 @@ x-amazon-apigateway-gateway-responses:
   WAF_FILTERED:
     responseTemplates:
       application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-WAF_FILTERED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
-"x-amazon-apigateway-policy":
-  "Version": "2012-10-17"
-  "Statement": [{"Effect": "Allow", "Principal": {"AWS": [""]}, "Action": "execute-api:Invoke", "Resource": ["arn:aws:execute-api:eu-west-1:${account_id}:*/*/*/*"]}]
+"x-amazon-apigateway-policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": [""]}, "Action": "execute-api:Invoke", "Resource": ["arn:aws:execute-api:eu-west-1:${account_id}:*/*/*/*"]}]}
+paths:
+  /image-request/{uid}:
+    description: Returns list of signed urls and adds message to SQS and file to S3 if required.
+    get:
+      security:
+        - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+      parameters:
+        - in: path
+          name: uid
+          schema:
+            $ref: '#/components/schemas/Uid'
+          required: true
+          description: Reference Number representing an LPA Uid
+      responses:
+        '200':
+          description: Signed urls returned for given LPA
+          content:
+            application/json:
+              examples:
+                lpa0047:
+                  value:
+                    uId: 700000000047
+                    status: 'COLLECTION_COMPLETE'
+                    signedUrls: {'iap-700000000047-instructions': 'http://image-bucket/iap-700000000047-instructions.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvqfrfffffqB8ObHF9iK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVp29uq0r4r4r22r424r24rkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f6066ecf0', 'iap-700000000047-preferences': 'http://image-bucket/iap-700000000047-preferences.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'}
+                lpa0138:
+                  value:
+                    uId: 700000000138
+                    status: 'COLLECTION_COMPLETE'
+                    signedUrls: {'iap-700000000138-instructions': 'https://image-bucket/iap-700000000138-instructions.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'}
+              schema:
+                $ref: '#/components/schemas/InstructionsPreferences'
+        '400':
+          description: Bad request (either in parameter or payload)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '403':
+          description: User forbidden to access gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '429':
+          description: API Gateway throttling limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: Unhandled internal exception within OPG Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: Error pushing to upstream SQS queue or s3 bucket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: Timeout pushing to upstream SQS queue or s3 bucket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+  /healthcheck:
+    description: Checks health of the lambda, SQS queue and bucket
+    get:
+      security:
+        - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+      responses:
+        200:
+          description: opg-data-lpa-instructions-preferences healthcheck
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Healthcheck'
+                  meta:
+                    type: object
+        403:
+          description: Forbidden - The current user is forbidden from accessing this data (in this way)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Something unexpected happened and it is the API's fault
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        503:
+          description: Service Unavailable - please try again later
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error503'
 components:
   securitySchemes:
     sigv4:
