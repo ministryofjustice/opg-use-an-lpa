@@ -1,0 +1,8 @@
+paths:
+  /image-request/{uid}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:

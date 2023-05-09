@@ -45,7 +45,7 @@ function status(store, count)
         default:
             store.save("status", "COLLECTION_COMPLETE");
             var urls = JSON.stringify({
-                "lpa-700000000344-instructions": "http://image-bucket/lpa-700000000344-instructions.png"
+                "lpa-700000000344-instructions": "http://image-bucket/lpa-700000000344-instructions.jpg"
             });
             store.save("urls", urls)
     }
