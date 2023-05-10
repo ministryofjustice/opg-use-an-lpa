@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
@@ -18,16 +20,12 @@ class ResolveActorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
     }
 
     private function getActorResolver(): ResolveActor
     {
-        return new ResolveActor(
-            $this->loggerProphecy->reveal(),
-            $this->getAttorneyStatusProphecy->reveal()
-        );
+        return new ResolveActor();
     }
 
     /** @test */
@@ -36,27 +34,27 @@ class ResolveActorTest extends TestCase
         $lpa = [
             'donor' => [
                 'id'  => 1,
-                'uId' => '123456789012'
-            ]
+                'uId' => '123456789012',
+            ],
         ];
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '1');
+        $result = $resolver($lpa, 1);
 
         $this->assertEquals(
             [
-                'type' => 'donor',
+                'type'    => 'donor',
                 'details' => $lpa['donor'],
             ],
             $result
         );
 
-        $result = $resolver($lpa, '123456789012');
+        $result = $resolver($lpa, 123456789012);
 
         $this->assertEquals(
             [
-                'type' => 'donor',
+                'type'    => 'donor',
                 'details' => $lpa['donor'],
             ],
             $result
@@ -68,19 +66,19 @@ class ResolveActorTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id'  => 1,
-                'uId' => '123456789013',
+                'id'     => 1,
+                'uId'    => '123456789013',
                 'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
-            ]
+            ],
         ];
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '2');
+        $result = $resolver($lpa, 2);
 
         $this->assertEquals(
             [
-                'type' => 'donor',
+                'type'    => 'donor',
                 'details' => $lpa['donor'],
             ],
             $result
@@ -92,19 +90,19 @@ class ResolveActorTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id'  => 1,
-                'uId' => '123456789013',
+                'id'     => 1,
+                'uId'    => '123456789013',
                 'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
-            ]
+            ],
         ];
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '123456789012');
+        $result = $resolver($lpa, 123456789012);
 
         $this->assertEquals(
             [
-                'type' => 'donor',
+                'type'    => 'donor',
                 'details' => $lpa['donor'],
             ],
             $result
@@ -116,15 +114,15 @@ class ResolveActorTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id'  => 1,
-                'uId' => '123456789013',
+                'id'     => 1,
+                'uId'    => '123456789013',
                 'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
-            ]
+            ],
         ];
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '3');
+        $result = $resolver($lpa, 3);
 
         $this->assertNull($result);
     }
@@ -134,15 +132,15 @@ class ResolveActorTest extends TestCase
     {
         $lpa = [
             'donor' => [
-                'id'  => 1,
-                'uId' => '123456789013',
+                'id'     => 1,
+                'uId'    => '123456789013',
                 'linked' => [['id' => 1, 'uId' => '123456789013'], ['id' => 2, 'uId' => '123456789012']],
-            ]
+            ],
         ];
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '123456789999');
+        $result = $resolver($lpa, 123456789999);
 
         $this->assertNull($result);
     }
@@ -153,57 +151,57 @@ class ResolveActorTest extends TestCase
     public function can_find_actor_who_is_an_attorney()
     {
         $lpa = [
-            'donor' => [
+            'donor'     => [
                 'id' => 1,
             ],
-            'original_attorneys' => [
+            'attorneys' => [
                 ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
             ],
         ];
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'id' => 3,
-                    'uId' => '234567890123',
-                    'firstname' => 'A',
-                    'surname' => 'B',
-                    'systemStatus' => true
+                    'id'           => 3,
+                    'uId'          => '234567890123',
+                    'firstname'    => 'A',
+                    'surname'      => 'B',
+                    'systemStatus' => true,
                 ]
             )
             ->willReturn(0);
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '3');
+        $result = $resolver($lpa, 3);
 
         $this->assertEquals(
             [
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => 3,
-                    'uId' => '234567890123',
-                    'firstname' => 'A',
-                    'surname' => 'B',
-                    'systemStatus' => true
+                    'id'           => 3,
+                    'uId'          => '234567890123',
+                    'firstname'    => 'A',
+                    'surname'      => 'B',
+                    'systemStatus' => true,
                 ],
             ],
             $result
         );
 
-        $result = $resolver($lpa, '234567890123');
+        $result = $resolver($lpa, 234567890123);
 
         $this->assertEquals(
             [
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => 3,
-                    'uId' => '234567890123',
-                    'firstname' => 'A',
-                    'surname' => 'B',
-                    'systemStatus' => true
+                    'id'           => 3,
+                    'uId'          => '234567890123',
+                    'firstname'    => 'A',
+                    'surname'      => 'B',
+                    'systemStatus' => true,
                 ],
             ],
             $result
@@ -214,17 +212,17 @@ class ResolveActorTest extends TestCase
      * @test
      * @dataProvider ghostAttorneyDataProvider
      */
-    public function can_not_find_actor_who_is_a_ghost_attorney(string $actorId, array $attorneyData)
+    public function can_not_find_actor_who_is_a_ghost_attorney(int $actorId, array $attorneyData)
     {
         $lpa = [
-            'donor' => [
-                'id' => 1,
-                'uId' => '456789012345'
+            'donor'              => [
+                'id'  => 1,
+                'uId' => '456789012345',
             ],
             'original_attorneys' => [
                 ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
                 ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'systemStatus' => true],
-                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true],
             ],
         ];
 
@@ -242,28 +240,28 @@ class ResolveActorTest extends TestCase
     {
         return [
             [
-                '2',
-                ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true]
+                2,
+                ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
             ],
             [
-                '123456789012',
-                ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true]
+                123456789012,
+                ['id' => 2, 'uId' => '123456789012', 'systemStatus' => true],
             ],
             [
-                '3',
+                3,
                 ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'systemStatus' => true],
             ],
             [
-                '234567890123',
+                234567890123,
                 ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'systemStatus' => true],
             ],
             [
-                '7',
-                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true]
+                7,
+                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true],
             ],
             [
-                '345678901234',
-                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true]
+                345678901234,
+                ['id' => 7, 'uId' => '345678901234', 'surname' => 'B', 'systemStatus' => true],
             ],
         ];
     }
@@ -272,35 +270,35 @@ class ResolveActorTest extends TestCase
     public function can_not_find_actor_who_is_an_inactive_attorney(): void
     {
         $lpa = [
-            'donor' => [
+            'donor'              => [
                 'id'  => 1,
-                'uId' => '456789012345'
+                'uId' => '456789012345',
             ],
             'original_attorneys' => [
                 ['id' => 1, 'uId' => '123456789012', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 3, 'uId' => '234567890123', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]
+                ['id' => 7, 'uId' => '345678901234', 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
             ],
         ];
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
                 [
-                    'id' => 3,
-                    'uId' => '234567890123',
-                    'firstname' => 'A',
-                    'surname' => 'B',
-                    'systemStatus' => false
+                    'id'           => 3,
+                    'uId'          => '234567890123',
+                    'firstname'    => 'A',
+                    'surname'      => 'B',
+                    'systemStatus' => false,
                 ],
             )
             ->willReturn(2);
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '3');
+        $result = $resolver($lpa, 3);
         $this->assertNull($result);
 
-        $result = $resolver($lpa, '234567890123');
+        $result = $resolver($lpa, 234567890123);
         $this->assertNull($result);
     }
 
@@ -310,16 +308,16 @@ class ResolveActorTest extends TestCase
     public function can_find_actor_who_is_a_trust_corporation()
     {
         $lpa = [
-            'donor' => [
+            'donor'             => [
                 'id' => 1,
             ],
             'trustCorporations' => [
                 [
-                    'id' => 9,
-                    'uId' => '700000151998',
-                    'firstname' => 'trust',
-                    'surname' => 'corporation',
-                    'companyName' => 'trust corporation ltd',
+                    'id'           => 9,
+                    'uId'          => '700000151998',
+                    'firstname'    => 'trust',
+                    'surname'      => 'corporation',
+                    'companyName'  => 'trust corporation ltd',
                     'systemStatus' => true,
                 ],
             ],
@@ -327,35 +325,35 @@ class ResolveActorTest extends TestCase
 
         $resolver = $this->getActorResolver();
 
-        $result = $resolver($lpa, '700000151998');
+        $result = $resolver($lpa, 700000151998);
 
         $this->assertEquals(
             [
-                'type' => 'trust-corporation',
+                'type'    => 'trust-corporation',
                 'details' => [
-                    'id' => 9,
-                    'uId' => '700000151998',
-                    'firstname' => 'trust',
-                    'surname' => 'corporation',
-                    'companyName' => 'trust corporation ltd',
-                    'systemStatus' => true
+                    'id'           => 9,
+                    'uId'          => '700000151998',
+                    'firstname'    => 'trust',
+                    'surname'      => 'corporation',
+                    'companyName'  => 'trust corporation ltd',
+                    'systemStatus' => true,
                 ],
             ],
             $result
         );
 
-        $result = $resolver($lpa, '9');
+        $result = $resolver($lpa, 9);
 
         $this->assertEquals(
             [
-                'type' => 'trust-corporation',
+                'type'    => 'trust-corporation',
                 'details' => [
-                    'id' => 9,
-                    'uId' => '700000151998',
-                    'firstname' => 'trust',
-                    'surname' => 'corporation',
-                    'companyName' => 'trust corporation ltd',
-                    'systemStatus' => true
+                    'id'           => 9,
+                    'uId'          => '700000151998',
+                    'firstname'    => 'trust',
+                    'surname'      => 'corporation',
+                    'companyName'  => 'trust corporation ltd',
+                    'systemStatus' => true,
                 ],
             ],
             $result
