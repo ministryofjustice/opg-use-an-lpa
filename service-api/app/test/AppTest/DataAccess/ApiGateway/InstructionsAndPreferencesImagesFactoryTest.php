@@ -26,7 +26,7 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             ->get('config')
             ->willReturn(
                 [
-                    'codes_api' => [
+                    'iap_images_api_endpoint' => [
                         'endpoint' => 'test',
                     ],
                 ]
@@ -59,7 +59,7 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             ->get('config')
             ->willReturn(
                 [
-                    'codes_api' => [],
+                    'iap_images_api_endpoint' => [],
                 ]
             );
 
