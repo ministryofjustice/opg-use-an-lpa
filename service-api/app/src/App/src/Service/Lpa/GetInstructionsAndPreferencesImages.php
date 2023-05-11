@@ -13,7 +13,6 @@ class GetInstructionsAndPreferencesImages
     {
     }
 
-
     public function __invoke(int $lpaId): InstructionsAndPreferencesImages
     {
         return $this->apiGateway->getInstructionsAndPreferencesImages($lpaId);
