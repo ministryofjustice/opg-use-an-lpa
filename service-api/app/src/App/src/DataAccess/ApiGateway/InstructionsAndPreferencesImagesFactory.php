@@ -7,6 +7,7 @@ namespace App\DataAccess\ApiGateway;
 use App\Service\Log\RequestTracing;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class InstructionsAndPreferencesImagesFactory
 {
@@ -15,7 +16,7 @@ class InstructionsAndPreferencesImagesFactory
         $config = $container->get('config');
 
         if (!isset($config['codes_api']['endpoint'])) {
-            throw new \Exception('Instructions and Preferences API Gateway endpoint is not set');
+            throw new Exception('Instructions and Preferences API Gateway endpoint is not set');
         }
 
         return new InstructionsAndPreferencesImages(

@@ -27,11 +27,11 @@ class InstructionsAndPreferencesImagesTest extends TestCase
     public function it_gets_instructions_and_preferences_images(): void
     {
         $testData = [
-            'uId' => 700000000001,
-            'status' => 'COLLECTION_COMPLETE',
+            'uId'        => 700000000001,
+            'status'     => 'COLLECTION_COMPLETE',
             'signedUrls' => [
                 'iap-700000000001-instructions' => 'https://image-url',
-            ]
+            ],
         ];
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
@@ -40,7 +40,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
         $httpClientProphecy = $this->prophesize(HttpClient::class);
         $httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) use ($testData) {
+            Argument::that(function (RequestInterface $request) {
                 $this->assertEquals('POST', $request->getMethod());
                 $this->assertEquals('localhost/v1/image-request/700000000001', $request->getUri());
 
@@ -101,11 +101,11 @@ class InstructionsAndPreferencesImagesTest extends TestCase
     public function it_handles_a_not_ok_service_error_code_when_getting_instructions_and_preferences_images(): void
     {
         $testData = [
-            'uId' => 700000000001,
-            'status' => 'COLLECTION_COMPLETE',
+            'uId'        => 700000000001,
+            'status'     => 'COLLECTION_COMPLETE',
             'signedUrls' => [
                 'iap-700000000001-instructions' => 'https://image-url',
-            ]
+            ],
         ];
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);

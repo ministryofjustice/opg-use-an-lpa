@@ -12,6 +12,7 @@ use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class InstructionsAndPreferencesImagesFactoryTest extends TestCase
 {
@@ -26,8 +27,8 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             ->willReturn(
                 [
                     'codes_api' => [
-                        'endpoint' => 'test'
-                    ]
+                        'endpoint' => 'test',
+                    ],
                 ]
             );
 
@@ -58,14 +59,13 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             ->get('config')
             ->willReturn(
                 [
-                    'codes_api' => [
-                    ]
+                    'codes_api' => [],
                 ]
             );
 
         $factory = new InstructionsAndPreferencesImagesFactory();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $instructionsAndPreferencesImages = $factory($containerProphecy->reveal());
     }
 }

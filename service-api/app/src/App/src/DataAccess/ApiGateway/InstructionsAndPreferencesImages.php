@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages as InstructionsAndPreferencesImagesDTO;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
@@ -14,7 +15,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 
-class InstructionsAndPreferencesImages
+class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImagesInterface
 {
     private string $apiBaseUri;
 
@@ -35,16 +36,13 @@ class InstructionsAndPreferencesImages
 
     /**
      * @param string $url
-     * @param array $body
      * @return ResponseInterface
      * @throws ApiException
      */
-    private function makePostRequest(string $url, array $body = []): ResponseInterface
+    private function makeGetRequest(string $url): ResponseInterface
     {
-        $url  = sprintf('%s/%s', $this->apiBaseUri, $url);
-        $body = json_encode($body);
-
-        $request = new Request('POST', $url, $this->buildHeaders(), $body);
+        $url     = sprintf('%s/%s', $this->apiBaseUri, $url);
+        $request = new Request('GET', $url, $this->buildHeaders());
         $request = $this->awsSignature->sign($request);
 
         try {
@@ -53,14 +51,14 @@ class InstructionsAndPreferencesImages
             throw ApiException::create(
                 'Error whilst communicating with instructions and preferences images service',
                 null,
-                $ge
+                $ge,
             );
         }
 
         if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
             throw ApiException::create(
                 'Instructions and Preferences Images service returned non-ok response',
-                $response
+                $response,
             );
         }
 
@@ -69,7 +67,7 @@ class InstructionsAndPreferencesImages
 
     public function getInstructionsAndPreferencesImages(int $lpaId): InstructionsAndPreferencesImagesDTO
     {
-        $response = $this->makePostRequest(
+        $response = $this->makeGetRequest(
             'v1/image-request/' . $lpaId
         );
 
