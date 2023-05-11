@@ -41,7 +41,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $httpClientProphecy = $this->prophesize(HttpClient::class);
         $httpClientProphecy->send(
             Argument::that(function (RequestInterface $request) {
-                $this->assertEquals('POST', $request->getMethod());
+                $this->assertEquals('GET', $request->getMethod());
                 $this->assertEquals('localhost/v1/image-request/700000000001', $request->getUri());
 
                 return true;
