@@ -11,6 +11,7 @@ use App\DataAccess\{ApiGateway\ActorCodes,
 use App\DataAccess\Repository\Response\Lpa;
 use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
 use App\Service\ViewerCodes\ViewerCodeService;
+use DateInterval;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -37,20 +38,17 @@ class LpaServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->viewerCodesInterfaceProphecy = $this->prophesize(Repository\ViewerCodesInterface::class);
+        $this->viewerCodesInterfaceProphecy        = $this->prophesize(Repository\ViewerCodesInterface::class);
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
-        $this->lpasInterfaceProphecy = $this->prophesize(Repository\LpasInterface::class);
-        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(Repository\UserLpaActorMapInterface::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->actorCodesProphecy = $this->prophesize(ActorCodes::class);
-        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
-        $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
-        $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
-        $this->getTrustCorporationStatusProphecy = $this->prophesize(GetTrustCorporationStatus::class);
+        $this->lpasInterfaceProphecy               = $this->prophesize(Repository\LpasInterface::class);
+        $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(Repository\UserLpaActorMapInterface::class);
+        $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
+        $this->actorCodesProphecy                  = $this->prophesize(ActorCodes::class);
+        $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
+        $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
+        $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
+        $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
     }
-
-    //-------------------------------------------------------------------------
-    // Test getByUid()
 
     private function getLpaService(): LpaService
     {
@@ -70,9 +68,9 @@ class LpaServiceTest extends TestCase
 
     private function getViewerCodeService(): ViewerCodeService
     {
-        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy   = $this->prophesize(ViewerCodesInterface::class);
         $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $lpaServiceProphecy       = $this->prophesize(LpaService::class);
 
         return new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
@@ -87,7 +85,7 @@ class LpaServiceTest extends TestCase
         $testUid = '700012349874';
 
         $lpaResponse = new Lpa([
-            'attorneys' => [
+            'attorneys'         => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
@@ -95,12 +93,12 @@ class LpaServiceTest extends TestCase
                 ['id' => 5, 'systemStatus' => true],
             ],
             'trustCorporations' => [
-                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
-            ]
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
+            ],
         ], new DateTime());
 
         $expectedLpaResponse = new Lpa([
-            'attorneys' => [
+            'attorneys'         => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
@@ -115,16 +113,16 @@ class LpaServiceTest extends TestCase
                 ['id' => 5, 'systemStatus' => true],
             ],
             'trustCorporations' => [
-                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true]
+                ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
             ],
             'inactiveAttorneys' => [
                 ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
             ],
-            'activeAttorneys' => [
+            'activeAttorneys'   => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-            ]
+            ],
         ], $lpaResponse->getLookupTime());
 
         //---
@@ -173,30 +171,30 @@ class LpaServiceTest extends TestCase
     {
         $t = new stdClass();
 
-        $t->Token = 'test-token';
-        $t->UserId = 'test-user-id';
+        $t->Token     = 'test-token';
+        $t->UserId    = 'test-user-id';
         $t->SiriusUid = 'test-sirius-uid';
-        $t->ActorId = 1;
-        $t->Lpa = new Lpa(
+        $t->ActorId   = 1;
+        $t->Lpa       = new Lpa(
             [
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => $t->ActorId,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [
+                'activeAttorneys'   => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'inactiveAttorneys' => [],
             ],
@@ -204,10 +202,10 @@ class LpaServiceTest extends TestCase
         );
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
-            'Id' => $t->Token,
-            'UserId' => $t->UserId,
+            'Id'        => $t->Token,
+            'UserId'    => $t->UserId,
             'SiriusUid' => $t->SiriusUid,
-            'ActorId' => $t->ActorId,
+            'ActorId'   => $t->ActorId,
         ]);
 
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn($t->Lpa);
@@ -215,35 +213,35 @@ class LpaServiceTest extends TestCase
         // resolves LPA actor as primary attorney
         $this->resolveActorProphecy
             ->__invoke([
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => $t->ActorId,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [
+                'activeAttorneys'   => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'inactiveAttorneys' => [],
-            ], (string) $t->ActorId)
+            ], $t->ActorId)
             ->willReturn([
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => true
-                ]
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => true,
+                ],
             ]);
 
         // check valid lpa
@@ -253,10 +251,10 @@ class LpaServiceTest extends TestCase
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
-            'id' => $t->ActorId,
-            'firstname' => 'Test',
-            'surname' => 'Test',
-            'systemStatus' => true
+            'id'           => $t->ActorId,
+            'firstname'    => 'Test',
+            'surname'      => 'Test',
+            'systemStatus' => true,
         ])->willReturn(0);
 
         return $t;
@@ -269,44 +267,44 @@ class LpaServiceTest extends TestCase
     {
         $t = new stdClass();
 
-        $t->Token = 'test-token';
-        $t->UserId = 'test-user-id';
+        $t->Token     = 'test-token';
+        $t->UserId    = 'test-user-id';
         $t->SiriusUid = 'test-sirius-uid';
-        $t->ActorId = 1;
-        $t->Lpa = new Lpa(
+        $t->ActorId   = 1;
+        $t->Lpa       = new Lpa(
             [
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
+                        'id'           => $t->ActorId,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
                     ],
                     [
-                        'id' => 2,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 2,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [
+                'activeAttorneys'   => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'inactiveAttorneys' => [
                     [
-                        'id' => 2,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 2,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
             ],
             new DateTime()
@@ -314,10 +312,10 @@ class LpaServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)
             ->willReturn([
-                'Id' => $t->Token,
-                'UserId' => $t->UserId,
+                'Id'        => $t->Token,
+                'UserId'    => $t->UserId,
                 'SiriusUid' => $t->SiriusUid,
-                'ActorId' => $t->ActorId,
+                'ActorId'   => $t->ActorId,
             ]);
 
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn($t->Lpa);
@@ -325,48 +323,48 @@ class LpaServiceTest extends TestCase
         // resolves LPA actor as primary attorney
         $this->resolveActorProphecy
             ->__invoke([
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => $t->ActorId,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
+                        'id'           => $t->ActorId,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
                     ],
                     [
-                        'id' => 2,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 2,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [
+                'activeAttorneys'   => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => true
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'inactiveAttorneys' => [
                     [
-                        'id' => 2,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 2,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
-            ], (string) $t->ActorId)
+            ], $t->ActorId)
             ->willReturn([
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => true
-                ]
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => true,
+                ],
             ]);
 
         // check valid lpa
@@ -376,17 +374,17 @@ class LpaServiceTest extends TestCase
 
         // attorney status is active
         $this->getAttorneyStatusProphecy->__invoke([
-            'id' => $t->ActorId,
-            'firstname' => 'Test',
-            'surname' => 'Test',
-            'systemStatus' => true
-       ])->willReturn(0);
+            'id'           => $t->ActorId,
+            'firstname'    => 'Test',
+            'surname'      => 'Test',
+            'systemStatus' => true,
+        ])->willReturn(0);
 
         $this->getAttorneyStatusProphecy->__invoke([
-            'id' => 2,
-            'firstname' => 'Test',
-            'surname' => 'Test',
-            'systemStatus' => false
+            'id'           => 2,
+            'firstname'    => 'Test',
+            'surname'      => 'Test',
+            'systemStatus' => false,
         ])->willReturn(2);
 
         return $t;
@@ -399,42 +397,41 @@ class LpaServiceTest extends TestCase
     {
         $t = new stdClass();
 
-        $t->Token = 'test-token';
-        $t->UserId = 'test-user-id';
+        $t->Token     = 'test-token';
+        $t->UserId    = 'test-user-id';
         $t->SiriusUid = 'test-sirius-uid';
-        $t->ActorId = 1;
-        $t->Lpa = new Lpa(
+        $t->ActorId   = 1;
+        $t->Lpa       = new Lpa(
             [
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [
-                ],
+                'activeAttorneys'   => [],
                 'inactiveAttorneys' => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
             ],
             new DateTime()
         );
 
         $this->userLpaActorMapInterfaceProphecy->get($t->Token)->willReturn([
-            'Id' => $t->Token,
-            'UserId' => $t->UserId,
+            'Id'        => $t->Token,
+            'UserId'    => $t->UserId,
             'SiriusUid' => $t->SiriusUid,
-            'ActorId' => $t->ActorId,
+            'ActorId'   => $t->ActorId,
         ]);
 
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn($t->Lpa);
@@ -442,35 +439,35 @@ class LpaServiceTest extends TestCase
         // resolves LPA actor as primary attorney
         $this->resolveActorProphecy
             ->__invoke([
-                'uId' => $t->SiriusUid,
-                'status' => 'Registered',
-                'attorneys' => [
+                'uId'               => $t->SiriusUid,
+                'status'            => 'Registered',
+                'attorneys'         => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
                         'systemStatus' => false,
                     ],
                 ],
                 'trustCorporations' => [],
-                'activeAttorneys' => [],
+                'activeAttorneys'   => [],
                 'inactiveAttorneys' => [
                     [
-                        'id' => 1,
-                        'firstname' => 'Test',
-                        'surname' => 'Test',
-                        'systemStatus' => false
-                    ]
+                        'id'           => 1,
+                        'firstname'    => 'Test',
+                        'surname'      => 'Test',
+                        'systemStatus' => false,
+                    ],
                 ],
-            ], (string) $t->ActorId)
+            ], $t->ActorId)
             ->willReturn([
-                'type' => 'primary-attorney',
+                'type'    => 'primary-attorney',
                 'details' => [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => false
-                ]
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => false,
+                ],
             ]);
 
         // check valid lpa
@@ -479,10 +476,10 @@ class LpaServiceTest extends TestCase
         )->willReturn(true);
 
         $this->getAttorneyStatusProphecy->__invoke([
-            'id' => 1,
-            'firstname' => 'Test',
-            'surname' => 'Test',
-            'systemStatus' => false
+            'id'           => 1,
+            'firstname'    => 'Test',
+            'surname'      => 'Test',
+            'systemStatus' => false,
         ])->willReturn(2);
 
         return $t;
@@ -495,7 +492,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('user-lpa-actor-token', $result);
@@ -506,33 +503,33 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($t->Token, $result['user-lpa-actor-token']);
         $this->assertEquals($t->Lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
         $this->assertEquals([
-            'type' => 'primary-attorney',
+            'type'    => 'primary-attorney',
             'details' => [
-                'id' => $t->ActorId,
-                'firstname' => 'Test',
-                'surname' => 'Test',
-                'systemStatus' => true
-            ]
+                'id'           => $t->ActorId,
+                'firstname'    => 'Test',
+                'surname'      => 'Test',
+                'systemStatus' => true,
+            ],
         ], $result['actor']);
         $this->assertEquals([
-            'uId' => $t->SiriusUid,
-            'status' => 'Registered',
-            'attorneys' => [
+            'uId'               => $t->SiriusUid,
+            'status'            => 'Registered',
+            'attorneys'         => [
                 [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => true
-                ]
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => true,
+                ],
             ],
             'trustCorporations' => [],
-            'activeAttorneys' => [
+            'activeAttorneys'   => [
                 0 => [
-                    'id' => $t->ActorId,
-                    'firstname' => 'Test',
-                    'surname' => 'Test',
-                    'systemStatus' => true
-                ]
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => true,
+                ],
             ],
             'inactiveAttorneys' => [],
         ], $result['lpa']);
@@ -545,7 +542,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNotNull($result);
         $this->assertNotNull($result['actor']);
@@ -558,7 +555,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNotNull($result);
         $this->assertNotNull($result['actor']);
@@ -571,7 +568,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, 'different-user-id');
+        $result = $service->getByUserLpaActorToken($t->Token, (string) 123);
 
         $this->assertNull($result);
     }
@@ -586,7 +583,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNull($result);
     }
@@ -598,7 +595,7 @@ class LpaServiceTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->UserId);
+        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertEmpty($result);
     }
@@ -614,35 +611,35 @@ class LpaServiceTest extends TestCase
 
         $t->mapResults = [
             [
-                'Id' => 'token-1',
+                'Id'        => 'token-1',
                 'SiriusUid' => 'uid-1',
-                'ActorId' => 1,
-                'Added'   => new DateTime('now')
+                'ActorId'   => 1,
+                'Added'     => new DateTime('now'),
             ],
             [
-                'Id' => 'token-2',
+                'Id'        => 'token-2',
                 'SiriusUid' => 'uid-2',
-                'ActorId' => 2,
-                'Added'   => new DateTime('now')
+                'ActorId'   => 2,
+                'Added'     => new DateTime('now'),
             ],
             [
-                'Id' => 'token-3',
-                'SiriusUid' => 'uid-3',
-                'ActorId' => 3,
-                'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
-                'Added'   => new DateTime('now')
-            ]
+                'Id'         => 'token-3',
+                'SiriusUid'  => 'uid-3',
+                'ActorId'    => 3,
+                'ActivateBy' => (new DateTime('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+                'Added'      => new DateTime('now'),
+            ],
         ];
 
         $t->lpaResults = [
             'uid-1' => new Lpa([
-                'uId'       => 'uid-1',
-                'status'    => 'Registered',
+                'uId'    => 'uid-1',
+                'status' => 'Registered',
             ], new DateTime()),
             'uid-2' => new Lpa([
-                'uId'       => 'uid-2',
-                'status'    => 'Registered',
-            ], new DateTime())
+                'uId'    => 'uid-2',
+                'status' => 'Registered',
+            ], new DateTime()),
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn($t->mapResults);
@@ -660,10 +657,12 @@ class LpaServiceTest extends TestCase
         )->willReturn(true);
 
         if ($includeActivated) {
-            $t->lpaResults['uid-3'] = new Lpa([
-                                                  'uId' => 'uid-3',
-                                                  'status' => 'Registered'
-                                              ], new DateTime());
+            $t->lpaResults['uid-3'] = new Lpa(
+                [
+                   'status' => 'Registered',
+                    'uId'    => 'uid-3',
+                ], new DateTime()
+            );
             $this->lpasInterfaceProphecy->lookup(['uid-1', 'uid-2', 'uid-3'])->willReturn($t->lpaResults);
 
             // check valid lpa
@@ -761,38 +760,38 @@ class LpaServiceTest extends TestCase
 
         $t->mapResults = [
             [
-                'Id' => 'token-1',
+                'Id'        => 'token-1',
                 'SiriusUid' => 'uid-1',
-                'ActorId' => 1,
-                'Added'   => new DateTime('today')
+                'ActorId'   => 1,
+                'Added'     => new DateTime('today'),
             ],
             [
-                'Id' => 'token-2',
+                'Id'        => 'token-2',
                 'SiriusUid' => 'uid-2',
-                'ActorId' => 2,
-                'Added'   => new DateTime('today')
-            ]
+                'ActorId'   => 2,
+                'Added'     => new DateTime('today'),
+            ],
         ];
 
         $lpa1 = new Lpa([
-            'uId'       => 'uid-1',
-            'status'    => 'Registered',
-            'donor'     => [
-                'linked' => [['id' => 1, 'uId' => 'person-1']]
+            'uId'    => 'uid-1',
+            'status' => 'Registered',
+            'donor'  => [
+                'linked' => [['id' => 1, 'uId' => 'person-1']],
             ],
         ], new DateTime());
 
         $lpa2 = new Lpa([
-            'uId'       => 'uid-2',
-            'status'    => 'Registered',
-            'donor'     => [
-                'linked' => [['id' => 2, 'uId' => 'person-2']]
+            'uId'    => 'uid-2',
+            'status' => 'Registered',
+            'donor'  => [
+                'linked' => [['id' => 2, 'uId' => 'person-2']],
             ],
         ], new DateTime());
 
         $t->lpaResults = [
             'uid-1' => $lpa1,
-            'uid-2' => $lpa2
+            'uid-2' => $lpa2,
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn($t->mapResults);
@@ -802,22 +801,22 @@ class LpaServiceTest extends TestCase
         // resolves the donor as the actor for LPA 1
         $this->resolveActorProphecy->__invoke(
             $lpa1->getData(),
-            '1'
+            1
         )->willReturn([
-            'type' => 'donor',
+            'type'    => 'donor',
             'details' => [
-                'linked' => [['id' => 1, 'uId' => 'person-1']]
+                'linked' => [['id' => 1, 'uId' => 'person-1']],
             ],
         ]);
 
         // resolves the donor as the actor for LPA 2
         $this->resolveActorProphecy->__invoke(
             $lpa2->getData(),
-            '2'
+            2
         )->willReturn([
-            'type' => 'donor',
+            'type'    => 'donor',
             'details' => [
-                'linked' => [['id' => 2, 'uId' => 'person-2']]
+                'linked' => [['id' => 2, 'uId' => 'person-2']],
             ],
         ]);
 
@@ -875,28 +874,28 @@ class LpaServiceTest extends TestCase
     {
         $t = new stdClass();
 
-        $t->ViewerCode = 'test-viewer-code';
+        $t->ViewerCode   = 'test-viewer-code';
         $t->Organisation = 'test-organisation';
         $t->DonorSurname = 'test-donor-surename';
-        $t->SiriusUid = 'test-sirius-uid';
-        $t->Expires = new DateTime('+1 hour');
+        $t->SiriusUid    = 'test-sirius-uid';
+        $t->Expires      = new DateTime('+1 hour');
 
         $t->Lpa = new Lpa([
-            'uId' => $t->SiriusUid,
-            'donor' => [
+            'uId'               => $t->SiriusUid,
+            'donor'             => [
                 'surname' => $t->DonorSurname,
             ],
-            'attorneys' => [],
+            'attorneys'         => [],
             'trustCorporations' => [],
-            'activeAttorneys' => [],
-            'inactiveAttorneys' => []
+            'activeAttorneys'   => [],
+            'inactiveAttorneys' => [],
         ], new DateTime());
 
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
-            'ViewerCode' => $t->ViewerCode,
-            'SiriusUid' => $t->SiriusUid,
-            'Expires' => $t->Expires,
+            'ViewerCode'   => $t->ViewerCode,
+            'SiriusUid'    => $t->SiriusUid,
+            'Expires'      => $t->Expires,
             'Organisation' => $t->Organisation,
         ]);
 
@@ -1021,7 +1020,7 @@ class LpaServiceTest extends TestCase
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
             'ViewerCode' => $t->ViewerCode,
-            'SiriusUid' => $t->SiriusUid,
+            'SiriusUid'  => $t->SiriusUid,
             //'Expires' => $t->Expires,             <-- Expires is removed
             'Organisation' => $t->Organisation,
         ]);
@@ -1044,17 +1043,17 @@ class LpaServiceTest extends TestCase
         //---
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
-            'ViewerCode' => $t->ViewerCode,
-            'SiriusUid' => $t->SiriusUid,
-            'Expires' => new DateTime('1 hour'),
-            'Cancelled' => true,
+            'ViewerCode'   => $t->ViewerCode,
+            'SiriusUid'    => $t->SiriusUid,
+            'Expires'      => new DateTime('1 hour'),
+            'Cancelled'    => true,
             'Organisation' => $t->Organisation,
         ]);
 
         //---
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Share code cancelled");
+        $this->expectExceptionMessage('Share code cancelled');
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
@@ -1069,16 +1068,16 @@ class LpaServiceTest extends TestCase
         //---
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
-            'ViewerCode' => $t->ViewerCode,
-            'SiriusUid' => $t->SiriusUid,
-            'Expires' => new DateTime('-1 hour'),
+            'ViewerCode'   => $t->ViewerCode,
+            'SiriusUid'    => $t->SiriusUid,
+            'Expires'      => new DateTime('-1 hour'),
             'Organisation' => $t->Organisation,
         ]);
 
         //---
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Share code expired");
+        $this->expectExceptionMessage('Share code expired');
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }

@@ -4,23 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use Psr\Log\LoggerInterface;
-
 class ResolveActor
 {
-    private const ACTIVE_ATTORNEY = 0;
-
-    private LoggerInterface $logger;
-    private GetAttorneyStatus $getAttorneyStatus;
-
-    public function __construct(
-        LoggerInterface $logger,
-        GetAttorneyStatus $getAttorneyStatus
-    ) {
-        $this->logger = $logger;
-        $this->getAttorneyStatus = $getAttorneyStatus;
-    }
-
     /**
      * Given an LPA and an Actor ID, this returns the actor's details, and what type of actor they are.
      *
@@ -28,80 +13,114 @@ class ResolveActor
      * database id's (UserActorLpa lookup) so it checks both fields for the id. This is not ideal but we now have
      * many thousands of live data rows with database id's at this point.
      *
-     *
      * @param array $lpa An LPA data structure
-     * @param string $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
+     * @param int $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
      * @return ?array A data structure containing details of the discovered actor
      */
-    public function __invoke(array $lpa, string $actorId): ?array
+    public function __invoke(array $lpa, int $actorId): ?array
     {
-        $actor = null;
-        $actorType = null;
-
         // Determine if the actor is a primary attorney
-        if (isset($lpa['original_attorneys']) && is_array($lpa['original_attorneys'])) {
-            foreach ($lpa['original_attorneys'] as $attorney) {
-                if (
-                    ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) &&
-                    ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY
-                ) {
-                    $actor = $attorney;
-                    $actorType = 'primary-attorney';
-                }
-            }
-        } elseif (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
-            foreach ($lpa['attorneys'] as $attorney) {
-                if ((string)$attorney['id'] === $actorId || $attorney['uId'] === $actorId) {
-                    $actor = $attorney;
-                    $actorType = 'primary-attorney';
-                }
-            }
+        [$actor, $actorType] = $this->isAPrimaryAttorney($lpa, $actorId);
+
+        // Is the actor a trust corporation
+        if ($actor === null) {
+            [$actor, $actorType] = $this->isATrustCorporation($lpa, $actorId);
         }
 
-        // Determine if the actor is a trust corporation
-        if (is_null($actor) && isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
+        // If not an attorney or tc, check if they're the donor.
+        if ($actor === null) {
+            [$actor, $actorType] = $this->isADonor($lpa, $actorId);
+        }
+
+        return $actor !== null
+            ? [
+                'type'    => $actorType,
+                'details' => $actor,
+            ]
+            : null;
+    }
+
+    /**
+     * @psalm-pure
+     * @param array $lpa
+     * @param int   $actorId
+     * @return array{?array, ?string}
+     */
+    private function isATrustCorporation(
+        array $lpa,
+        int $actorId,
+    ): array {
+        $actor     = null;
+        $actorType = null;
+
+        if (isset($lpa['trustCorporations']) && is_array($lpa['trustCorporations'])) {
             foreach ($lpa['trustCorporations'] as $tc) {
-                if ((string)$tc['id'] === $actorId || $tc['uId'] === $actorId) {
-                    $actor = $tc;
+                if ((int) $tc['id'] === $actorId || (int) $tc['uId'] === $actorId) {
+                    $actor     = $tc;
                     $actorType = 'trust-corporation';
                 }
             }
         }
 
-        // If not an attorney or tc, check if they're the donor.
-        if (is_null($actor) && $this->isDonor($lpa, $actorId)) {
-            $actor = $lpa['donor'];
-            $actorType = 'donor';
-        }
-
-        if (is_null($actor)) {
-            return null;
-        }
-
-        return [
-            'type' => $actorType,
-            'details' => $actor,
-        ];
+        return [$actor, $actorType];
     }
 
-    private function isDonor(array $lpa, string $actorId): bool
-    {
-        if (!isset($lpa['donor']) || !is_array($lpa['donor'])) {
-            return false;
-        }
+    /**
+     * @psalm-pure
+     * @param array $lpa
+     * @param int   $actorId
+     * @return array{?array, ?string}
+     */
+    private function isAPrimaryAttorney(
+        array $lpa,
+        int $actorId,
+    ): array {
+        $actor     = null;
+        $actorType = null;
 
-        // TODO: When new Sirius API has been released this property will always
-        //       be present, then this `if` block can be removed.
-        if (!isset($lpa['donor']['linked'])) {
-            return ((string)$lpa['donor']['id'] === $actorId || $lpa['donor']['uId'] === $actorId);
-        }
-
-        foreach ($lpa['donor']['linked'] as $key => $value) {
-            if ((string)$value['id'] === $actorId || $value['uId'] === $actorId) {
-                return true;
+        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
+            foreach ($lpa['attorneys'] as $attorney) {
+                if ((int) $attorney['id'] === $actorId || (int) $attorney['uId'] === $actorId) {
+                    $actor     = $attorney;
+                    $actorType = 'primary-attorney';
+                }
             }
         }
 
-        return false;
+        return [$actor, $actorType];
+    }
+
+    /**
+     * @psalm-pure
+     * @param array $lpa
+     * @param int   $actorId
+     * @return array{?array, ?string}
+     */
+    private function isADonor(array $lpa, int $actorId): array
+    {
+        $actor     = null;
+        $actorType = null;
+
+        if (!isset($lpa['donor']) || !is_array($lpa['donor'])) {
+            return [$actor, $actorType];
+        }
+
+        // TODO: [UML-2850] When new Sirius API has been released this property will always
+        //       be present, then this `if` block can be removed.
+        if (!isset($lpa['donor']['linked'])) {
+            if ((int) $lpa['donor']['id'] === $actorId || (int) $lpa['donor']['uId'] === $actorId) {
+                $actor     = $lpa['donor'];
+                $actorType = 'donor';
+            }
+        } else {
+            foreach ($lpa['donor']['linked'] as $value) {
+                if ((int) $value['id'] === $actorId || (int) $value['uId'] === $actorId) {
+                    $actor     = $lpa['donor'];
+                    $actorType = 'donor';
+                }
+            }
+        }
+
+        return [$actor, $actorType];
     }
 }

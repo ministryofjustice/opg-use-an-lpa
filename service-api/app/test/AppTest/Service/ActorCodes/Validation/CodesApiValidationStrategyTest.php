@@ -12,6 +12,7 @@ use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
+use DateTime;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -30,8 +31,8 @@ class CodesApiValidationStrategyTest extends TestCase
     public function initDependencies(): void
     {
         $this->actorCodeApiProphecy = $this->prophesize(ActorCodes::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->lpaServiceProphecy   = $this->prophesize(LpaService::class);
+        $this->loggerProphecy       = $this->prophesize(LoggerInterface::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
     }
 
@@ -52,9 +53,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $actor = new ActorCode(
             [
-                'actor' => 'actor-uid',
+                'actor' => '123456789',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -63,9 +64,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -73,14 +74,14 @@ class CodesApiValidationStrategyTest extends TestCase
             ->willReturn($lpa);
 
         $this->resolveActorProphecy
-            ->__invoke($lpa->getData(), 'actor-uid')
+            ->__invoke($lpa->getData(), 123456789)
             ->willReturn(
                 [
-                    'type' => 'primary-attorney',
+                    'type'    => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
-                        'dob' => 'actor-dob'
-                    ]
+                        'dob' => 'actor-dob',
+                    ],
                 ]
             );
 
@@ -88,7 +89,7 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
 
-        $this->assertEquals('actor-uid', $actorUId);
+        $this->assertEquals('123456789', $actorUId);
     }
 
     /** @test */
@@ -100,7 +101,7 @@ class CodesApiValidationStrategyTest extends TestCase
             [
                 'actor' => null,
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -122,7 +123,7 @@ class CodesApiValidationStrategyTest extends TestCase
             [
                 'actor' => null,
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -144,7 +145,7 @@ class CodesApiValidationStrategyTest extends TestCase
             [
                 'actor' => 'actor-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -169,9 +170,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $actor = new ActorCode(
             [
-                'actor' => 'actor-uid',
+                'actor' => '123456789',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -180,9 +181,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -191,7 +192,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->willReturn($lpa);
 
         $this->resolveActorProphecy
-            ->__invoke($lpa->getData(), 'actor-uid')
+            ->__invoke($lpa->getData(), 123456789)
             ->willReturn(null);
 
         $strategy = $this->getCodesApiValidationStrategy();
@@ -207,9 +208,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $actor = new ActorCode(
             [
-                'actor' => 'actor-uid',
+                'actor' => '123456789',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -218,9 +219,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -229,15 +230,15 @@ class CodesApiValidationStrategyTest extends TestCase
             ->willReturn($lpa);
 
         $this->resolveActorProphecy
-            ->__invoke($lpa->getData(), 'actor-uid')
+            ->__invoke($lpa->getData(), 123456789)
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'type' => 'primary-attorney',
+                    'type'    => 'primary-attorney',
                     'details' => [
                         'uId' => 'actor-uid',
-                        'dob' => 'different-dob'
-                    ]
+                        'dob' => 'different-dob',
+                    ],
                 ]
             );
 
@@ -256,7 +257,7 @@ class CodesApiValidationStrategyTest extends TestCase
             [
                 'actor' => 'actor-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -290,7 +291,7 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $this->actorCodeApiProphecy
             ->flagCodeAsUsed('actor-code')
-            ->willThrow(new \Exception());
+            ->willThrow(new Exception());
 
         $strategy = $this->getCodesApiValidationStrategy();
 
@@ -305,9 +306,9 @@ class CodesApiValidationStrategyTest extends TestCase
 
         $actor = new ActorCode(
             [
-                'actor' => 'actor-uid',
+                'actor' => '123456789',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->actorCodeApiProphecy
@@ -317,20 +318,20 @@ class CodesApiValidationStrategyTest extends TestCase
         $lpa = new Lpa(
             [
                 'donor' => [
-                    'id' => 1,
-                    'uId' => 'donor-uid',
-                    'dob' => 'donor-dob',
-                    'salutation' => 'Mr',
-                    'firstname' => 'Test',
+                    'id'          => 1,
+                    'uId'         => 'donor-uid',
+                    'dob'         => 'donor-dob',
+                    'salutation'  => 'Mr',
+                    'firstname'   => 'Test',
                     'middlenames' => '',
-                    'surname' => 'User',
-                    'addresses' => [
+                    'surname'     => 'User',
+                    'addresses'   => [
                         0 => [],
                     ],
                 ],
-                'uId' => 'lpa-uid',
+                'uId'   => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -339,19 +340,19 @@ class CodesApiValidationStrategyTest extends TestCase
             ->willReturn($lpa);
 
         $this->resolveActorProphecy
-            ->__invoke($lpa->getData(), 'actor-uid')
+            ->__invoke($lpa->getData(), 123456789)
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'type' => 'trust-corporation',
+                    'type'    => 'trust-corporation',
                     'details' => [
-                        'id' => 9,
-                        'uId' => 'actor-uid',
-                        'firstname' => 'trust',
-                        'surname' => 'corporation',
-                        'companyName' => 'trust corporation ltd',
-                        'systemStatus' => true
-                    ]
+                        'id'           => 9,
+                        'uId'          => 123456789,
+                        'firstname'    => 'trust',
+                        'surname'      => 'corporation',
+                        'companyName'  => 'trust corporation ltd',
+                        'systemStatus' => true,
+                    ],
                 ]
             );
 

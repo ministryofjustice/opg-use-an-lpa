@@ -44,7 +44,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => 'actor-lpa-id'
+                    'ActorLpaId' => '123456789'
                 ]
             );
 
@@ -59,11 +59,11 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 123456789)
             ->willReturn(
                 [
                     'details' => [
-                        'uId' => 'actor-uid',
+                        'uId' => 123456789,
                         'dob' => 'actor-dob'
                     ]
                 ]
@@ -78,7 +78,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
 
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
 
-        $this->assertEquals('actor-uid', $actorUId);
+        $this->assertEquals('123456789', $actorUId);
     }
 
     /** @test */
@@ -188,7 +188,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => 'actor-lpa-id'
+                    'ActorLpaId' => '123456789'
                 ]
             );
 
@@ -203,7 +203,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 123456789)
             ->willReturn(null);
 
         $strategy = new DynamoCodeValidationStrategy(
@@ -228,7 +228,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => 'actor-lpa-id'
+                    'ActorLpaId' => '123456789'
                 ]
             );
 
@@ -243,7 +243,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
-        $this->resolveActorProphecy->__invoke($lpa->getData(), 'actor-lpa-id')
+        $this->resolveActorProphecy->__invoke($lpa->getData(), 123456789)
             ->willReturn(
                 [
                     'details' => [

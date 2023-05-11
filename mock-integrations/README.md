@@ -1,14 +1,14 @@
-# Gateway mock
+# API Gateway mock
 
-Mock servers which together mimic the data-lpa API.
+Mock servers which together mimic the data-lpa and "instructions and preferences" API.
 
 Runs using [Prism](https://stoplight.io/open-source/prism), delivering the API specified in the latest version of the
-[OPG Data LPA openapi doc](https://github.com/ministryofjustice/opg-data-lpa/blob/main/lambda_functions/v1/openapi/lpa-openapi.yml).
+[OPG Data LPA openapi doc](https://github.com/ministryofjustice/opg-data-lpa/blob/main/lambda_functions/v1/openapi/lpa-openapi.yml) and [OPG Data LPA Instructions and Preferences openapi doc](https://raw.githubusercontent.com/ministryofjustice/opg-data-lpa-instructions-preferences/main/docs/openapi/image-request-handler.yml)
 
-A Prism instance (data-lpa) and an nginx instance (api-gateway) are spun up as part of the docker-compose service to provide lightweight testing of the Use a Lasting Power of Attorney service without a full Sirius stack.
+Each has a Prism instance and there is an nginx instance (api-gateway) that is spun up as part of the docker-compose service to provide lightweight testing of the Use a Lasting Power of Attorney service without a full Sirius stack.
 
-In `nginx.conf`, the IDs of LPAs are mapped to named examples added in `mock-openapi-examples.yaml`.
-The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are forwarded to Prism. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct LPA for a given request.
+In `nginx.conf`, the IDs of LPAs are mapped to named examples added in `mock-openapi-examples.yaml` files.
+The example name is then used in the gateway nginx proxy to add a `Prefer: example=<name>` header to requests, which are forwarded to Prism. This `Prefer` header [instructs Prism to a return a particular Swagger example as a response](https://github.com/stoplightio/prism/blob/master/docs/guides/01-mocking.md#Response-Generation), allowing us to predictably return the correct LPA or set of images  for a given request.
 
 Any changes that are required to the opg-data-lpa openapi spec must be done in [opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa).
 
@@ -68,5 +68,4 @@ cd ./mock-integrations/generate_examples
 
 aws-vaul exec identity -- ./make_examples.sh
 ```
-
-Review the output in ./mock-integrations/generate_examples/mock-openapi-examples.yaml  and ./mock-integrations/generate_examples/nginx-generated and if happy copy to ./mock-integrations/mock-openapi-examples.yaml, replacing the old file.
+The output from this will written to the `nginx.conf` file and can be reload using the above commands, additionally LPAs from Sirius integration will be added to the LPA mock via the `opg-data-lpa/mock-openapi.yaml`. Image mocks will need manually adding at this time.

@@ -54,18 +54,36 @@ services:
     container_name: api-gateway
     image: nginx:stable-alpine
     depends_on:
-      - data-lpa
-    command: 'nginx -g "daemon off;"'
+      - mock-data-lpa
+      - mock-image-request-handler
+    ports:
+      - "4010:5000"
     volumes:
       - ./mock-integrations/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 7010:5000
+      - ./mock-integrations/image-request-handler/mocked-images:/var/www/html:ro
 
-  data-lpa:
-    container_name: data-lpa
+  mock-data-lpa:
+    container_name: mock-data-lpa
     image: stoplight/prism:4
-    command: 'mock -h 0.0.0.0 /tmp/openapi.yaml'
-    volumes:
-      - ./mock-integrations/mock-openapi.yaml:/tmp/openapi.yaml:ro
+    command:
+      - "mock"
+      - "-h"
+      - "0.0.0.0"
+      - "/tmp/openapi.yaml"
     ports:
-      - 7011:4010
+      - "4011:5000"
+    volumes:
+      - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
+
+  mock-image-request-handler:
+    container_name: mock-image-request-handler
+    image: outofcoffee/imposter:3.17.3
+    command:
+      - "-c"
+      - "/opt/imposter/config"
+      - "-l"
+      - "4012"
+    ports:
+      - "4012:4012"
+    volumes:
+      - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
