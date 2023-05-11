@@ -1,0 +1,5 @@
+{
+  "uId": 700000000344,
+  "status": "${stores.lpa0344.status}",
+  "signedUrls": ${stores.lpa0344.urls}
+}

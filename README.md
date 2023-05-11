@@ -105,6 +105,9 @@ for example
 ```shell
 cd service-api/app
 composer run psalm
+
+# to pass arguments to a composer script start with a double hyphen "--".
+composer run int-test -- --verbose
 ```
 
 ### Updating composer dependencies
@@ -158,7 +161,7 @@ If this is not running, you should re-run
 make up_all
 ```
 
-if that doesn't work try running 
+if that doesn't work try running
 ```shell
 make update_mock
 ```

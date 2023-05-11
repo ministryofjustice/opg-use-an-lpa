@@ -1,0 +1,516 @@
+---
+openapi: '3.0.2'
+info:
+  title: opg-data-lpa-instructions-preferences
+  version: '1.0'
+  description: 'Rest API for LPA Data Instruction and Preference - ${environment}'
+servers:
+  - url: /v1
+    description: we use the path only so we can use in different contexts
+tags:
+  - name: lpa-instruction-preference
+    description: API operations relating to the lpa-instructions-preferences integration
+    externalDocs:
+      url: https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestParameters: true
+    validateRequestBody: true
+x-amazon-apigateway-gateway-responses:
+  ACCESS_DENIED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-FORBIDDEN", "title":$context.error.messageString, "detail":"Forbidden - The current user is forbidden from accessing this data (in this way)", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  API_CONFIGURATION_ERROR:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-API_CONFIGURATION_ERROR", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  AUTHORIZER_CONFIGURATION_ERROR:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-AUTHORIZER_CONFIGURATION_ERROR", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  AUTHORIZER_FAILURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-AUTHORIZER_FAILURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  BAD_REQUEST_BODY:
+    responseTemplates:
+      application/json: '{"errors": [{ "id": "$context.requestId", "code": "OPGDATA-API-INVALIDREQUEST", "title":$context.error.messageString, "detail":"$context.error.validationErrorString", "meta": {"x-ray": "$context.xrayTraceId"} }]}'
+  BAD_REQUEST_PARAMETERS:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-BAD_REQUEST_PARAMETERS", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALIDREQUEST", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-SERVERERROR", "title":$context.error.messageString, "detail":"Something unexpected happened internally", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  EXPIRED_TOKEN:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-EXPIRED_TOKEN", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INTEGRATION_FAILURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INTEGRATION_FAILURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INTEGRATION_TIMEOUT:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INTEGRATION_TIMEOUT", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INVALID_API_KEY:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALID_API_KEY", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  INVALID_SIGNATURE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-INVALID_SIGNATURE", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  MISSING_AUTHENTICATION_TOKEN:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-MISSING_AUTHENTICATION_TOKEN", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  QUOTA_EXCEEDED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-QUOTA_EXCEEDED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  REQUEST_TOO_LARGE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-FILESIZELIMIT", "title":$context.error.messageString, "detail":"Payload too large, try and upload in smaller chunks", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  RESOURCE_NOT_FOUND:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-NOTFOUND", "title":$context.error.messageString, "detail":"That URL is not a valid route, or the item resource does not exist", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  THROTTLED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-THROTTLED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  UNAUTHORIZED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-UNAUTHORISED", "title":$context.error.messageString, "detail":"Unauthorised (no current user and there should be)", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  UNSUPPORTED_MEDIA_TYPE:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-MEDIA", "title":$context.error.messageString, "detail":"Unsupported media type for this endpoint", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+  WAF_FILTERED:
+    responseTemplates:
+      application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-WAF_FILTERED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
+"x-amazon-apigateway-policy": {"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": [""]}, "Action": "execute-api:Invoke", "Resource": ["arn:aws:execute-api:eu-west-1:${account_id}:*/*/*/*"]}]}
+paths:
+  /image-request/{uid}:
+    description: Returns list of signed urls and adds message to SQS and file to S3 if required.
+    get:
+      security:
+        - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+      parameters:
+        - in: path
+          name: uid
+          schema:
+            $ref: '#/components/schemas/Uid'
+          required: true
+          description: Reference Number representing an LPA Uid
+      responses:
+        '200':
+          description: Signed urls returned for given LPA
+          content:
+            application/json:
+              examples:
+                lpa0047:
+                  value:
+                    uId: 700000000047
+                    status: 'COLLECTION_COMPLETE'
+                    signedUrls: {'iap-700000000047-instructions': 'http://localhost:4010/iap-700000000047-instructions.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvqfrfffffqB8ObHF9iK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVp29uq0r4r4r22r424r24rkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f6066ecf0', 'iap-700000000047-preferences': 'http://localhost:4010/iap-700000000047-preferences.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'}
+                lpa0138:
+                  value:
+                    uId: 700000000138
+                    status: 'COLLECTION_COMPLETE'
+                    signedUrls: {'iap-700000000138-instructions': 'https://localhost:4010/iap-700000000138-instructions.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392'}
+              schema:
+                $ref: '#/components/schemas/InstructionsPreferences'
+        '400':
+          description: Bad request (either in parameter or payload)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '403':
+          description: User forbidden to access gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '429':
+          description: API Gateway throttling limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+        '500':
+          description: Unhandled internal exception within OPG Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        '502':
+          description: Error pushing to upstream SQS queue or s3 bucket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error502'
+        '504':
+          description: Timeout pushing to upstream SQS queue or s3 bucket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error504'
+  /healthcheck:
+    description: Checks health of the lambda, SQS queue and bucket
+    get:
+      security:
+        - sigv4: []
+      x-amazon-apigateway-request-validator: "all"
+      x-amazon-apigateway-integration:
+        uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.app_name}/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+      responses:
+        200:
+          description: opg-data-lpa-instructions-preferences healthcheck
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Healthcheck'
+                  meta:
+                    type: object
+        403:
+          description: Forbidden - The current user is forbidden from accessing this data (in this way)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Something unexpected happened and it is the API's fault
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+        503:
+          description: Service Unavailable - please try again later
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error503'
+components:
+  securitySchemes:
+    sigv4:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "awsSigv4"
+  schemas:
+    Healthcheck:
+      type: object
+      properties:
+        api-status:
+          type: string
+          example: "OK"
+        sqs-queue-status:
+          type: string
+          example: "OK"
+        s3-bucket-status:
+          type: string
+          example: "OK"
+    InstructionsPreferences:
+      type: object
+      required:
+        - uId
+        - status
+        - signedUrls
+      properties:
+        uId:
+          $ref: '#/components/schemas/Uid'
+        status:
+          $ref: '#/components/schemas/Status'
+        signedUrls:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SignedUrl'
+    Uid:
+      type: integer
+      description: "Uid of LPA"
+      minimum: 700000000000
+      maximum: 799999999999
+      example: 700000000054
+    Status:
+      type: string
+      description: "The status of the LPA collection"
+      enum:
+        - COLLECTION_NOT_STARTED
+        - COLLECTION_IN_PROGRESS
+        - COLLECTION_COMPLETE
+        - COLLECTION_ERROR
+      example: "COLLECTION_IN_PROGRESS"
+    SignedUrl:
+      type: string
+      pattern: '(^(https?:\/\/).*\/.*\/iap-7\d{11}-.*\?.*$)'
+    Error400:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-INVALIDREQUEST"
+              title:
+                type: string
+                example: "Invalid Request"
+              detail:
+                type: string
+                example: "Invalid request, the data is incorrect"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error401:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-UNAUTHORISED"
+              title:
+                type: string
+                example: "User is not authorised"
+              detail:
+                type: string
+                example: "Unauthorised (no current user and there should be)"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error403:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-FORBIDDEN"
+              title:
+                type: string
+                example: "Access Denied"
+              detail:
+                type: string
+                example: "Forbidden - The current user is forbidden from accessing this data (in this way)"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error404:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-NOTFOUND"
+              title:
+                type: string
+                example: "Page not found"
+              detail:
+                type: string
+                example: "That URL is not a valid route, or the item resource does not exist"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error429:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-THROTTLING-LIMIT"
+              title:
+                type: string
+                example: "Throttling limit has been exceeded on the API Gateway"
+              detail:
+                type: string
+                example: ""
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error500:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-SERVERERROR"
+              title:
+                type: string
+                example: "Internal server error"
+              detail:
+                type: string
+                example: "Something unexpected happened internally"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error502:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-INVALID-UPSTREAM-RESPONSE"
+              title:
+                type: string
+                example: "invalid response from upstream server"
+              detail:
+                type: string
+                example: "Service is currently unavailable. Please try again later"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error503:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-API-UNAVAILABLE"
+              title:
+                type: string
+                example: "Service Unavailable"
+              detail:
+                type: string
+                example: "Service is currently unavailable. Please try again later"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"
+    Error504:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - code
+              - title
+            properties:
+              code:
+                type: string
+                example: "OPGDATA-UPSTREAM-RESPONSE-TIMEOUT"
+              title:
+                type: string
+                example: "Service Unavailable"
+              detail:
+                type: string
+                example: "Service is currently unavailable. Please try again later"
+              meta:
+                type: object
+                properties:
+                  x-ray:
+                    type: string
+                    example: "93c330d4-7d84-4c1b-8fdb-54cec5bfe747"

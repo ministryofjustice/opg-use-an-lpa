@@ -91,13 +91,14 @@ up_services:
 
 update_mock:
 	@echo "Merging Swagger Documents..."
-	./mock-integrations/merge.sh
+	./mock-integrations/opg-lpa-data/merge.sh
+	./mock-integrations/image-request-handler/update.sh
 	@echo "Restarting data-lpa API..."
-	$(COMPOSE) restart api-gateway data-lpa
+	$(COMPOSE) restart api-gateway mock-data-lpa mock-image-request-handler
 .PHONY: update_mock
 
 up_mock:
-	$(COMPOSE) up -d --remove-orphans api-gateway data-lpa
+	$(COMPOSE) up -d --remove-orphans api-gateway
 .PHONY: up_mock
 
 up_functions:
@@ -180,10 +181,6 @@ smoke_tests:
 	$(TEST_COMPOSE) run smoke-tests vendor/bin/behat
 .PHONY: smoke_tests
 
-# empty target to stop additional arguments from calling
-%:
-	@true
-
 run-structurizr:
 	docker pull structurizr/lite
 	docker run -it --rm -p 8080:8080 -v $(PWD)/docs/diagrams/dsl:/usr/local/structurizr structurizr/lite
@@ -192,3 +189,7 @@ run-structurizr-export:
 	docker pull structurizr/cli:latest
 	docker run --rm -v $(PWD)/docs/diagrams/dsl:/usr/local/structurizr structurizr/cli \
 	export -workspace /usr/local/structurizr/workspace.dsl -format mermaid
+
+# empty target to stop additional arguments from calling
+%:
+	@true
