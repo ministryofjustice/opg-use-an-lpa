@@ -53,7 +53,9 @@ class ConfigProvider
                     => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class
+                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
+                DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
+                    => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
             ],
 
             'factories'  => [

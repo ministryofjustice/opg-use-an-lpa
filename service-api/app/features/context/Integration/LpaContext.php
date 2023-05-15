@@ -617,9 +617,9 @@ class LpaContext extends BaseIntegrationContext
                 [],
                 json_encode(
                     [
-                        'uId'    => (int) $this->lpaUid,
-                        'status' => 'COLLECTION_COMPLETE',
-                        [
+                        'uId'        => (int) $this->lpaUid,
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [
                             'iap-' . $this->lpaUid . '-instructions' => 'https://image_url',
                             'iap-' . $this->lpaUid . '-preferences'  => 'https://image_url',
                         ],
