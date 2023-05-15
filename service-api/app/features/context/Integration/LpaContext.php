@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
@@ -13,6 +15,7 @@ use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AccessForAllLpaService;
 use App\Service\Lpa\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa;
+use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -600,6 +603,45 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('actor', $validatedLpa);
         Assert::assertArrayHasKey('lpa', $validatedLpa);
         Assert::assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+    }
+
+    /**
+     * @When /^I request to view an LPA which has instructions and preferences$/
+     */
+    public function iRequestToViewAnLPAWhichHasInstructionsAndPreferences(): void
+    {
+        // InstructionsAndPreferencesImages::getInstructionsAndPreferencesImages
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(
+                    [
+                        'uId'        => (int) $this->lpaUid,
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [
+                            'iap-' . $this->lpaUid . '-instructions' => 'https://image_url',
+                            'iap-' . $this->lpaUid . '-preferences'  => 'https://image_url',
+                        ],
+                    ]
+                )
+            )
+        );
+    }
+
+    /**
+     * @Then /^my LPA is shown with instructions and preferences images$/
+     */
+    public function myLPAIsShownWithInstructionsAndPreferencesImages(): void
+    {
+        $iapImagesService = $this->container->get(GetInstructionsAndPreferencesImages::class);
+
+        $images = ($iapImagesService)((int) $this->lpaUid);
+
+        Assert::assertInstanceOf(InstructionsAndPreferencesImages::class, $images);
+        Assert::assertEquals((int) $this->lpaUid, $images->uId);
+        Assert::assertEquals(InstructionsAndPreferencesImagesResult::COLLECTION_COMPLETE, $images->status);
+        Assert::assertCount(2, $images->signedUrls);
     }
 
     /**

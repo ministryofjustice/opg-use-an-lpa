@@ -57,6 +57,7 @@ variable "environments" {
       log_retention_in_days                     = number
       logging_level                             = number
       lpa_codes_endpoint                        = string
+      iap_images_endpoint                       = string
       lpas_collection_endpoint                  = string
       pagerduty_service_name                    = string
       pagerduty_service_id                      = string

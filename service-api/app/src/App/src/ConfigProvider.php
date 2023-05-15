@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory;
 use Aws;
 use Http;
 use Laminas;
@@ -52,7 +53,9 @@ class ConfigProvider
                     => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class
+                DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
+                DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
+                    => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
             ],
 
             'factories'  => [
@@ -69,6 +72,8 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodes::class => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\Lpas::class => DataAccess\ApiGateway\LpasFactory::class,
+                DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
+                    => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
 
                 // Code Validation
                 Service\ActorCodes\CodeValidationStrategyInterface::class
