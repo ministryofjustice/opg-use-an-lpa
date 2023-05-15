@@ -67,5 +67,9 @@ return [
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
 
+    'iap_images_api' => [
+        'endpoint' => 'http://iap-images-mock',
+    ],
+
     'feature_flags' => [],
 ];
