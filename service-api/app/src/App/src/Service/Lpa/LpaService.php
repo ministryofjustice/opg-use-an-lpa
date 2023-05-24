@@ -122,10 +122,7 @@ class LpaService
             $result['actor'] = $actor;
         }
 
-        if (
-            (isset($lpaData['applicationHasGuidance']) && $lpaData['applicationHasGuidance'])
-            || (isset($lpaData['applicationHasRestrictions']) && $lpaData['applicationHasRestrictions'])
-        ) {
+        if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
             $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
         }
 
@@ -233,10 +230,7 @@ class LpaService
             'lpa'          => $lpaData,
         ];
 
-        if (
-            (isset($lpaData['applicationHasGuidance']) && $lpaData['applicationHasGuidance'])
-            || (isset($lpaData['applicationHasRestrictions']) && $lpaData['applicationHasRestrictions'])
-        ) {
+        if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
             $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
         }
 
