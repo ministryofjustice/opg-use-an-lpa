@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\{ApiGateway\ActorCodes,
     Repository,
+    Repository\InstructionsAndPreferencesImagesInterface,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\Lpa;
@@ -48,6 +49,8 @@ class LpaServiceTest extends TestCase
         $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
+        $this->iapRepositoryProphecy
+            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
     }
 
     private function getLpaService(): LpaService
@@ -56,6 +59,7 @@ class LpaServiceTest extends TestCase
             $this->viewerCodesInterfaceProphecy->reveal(),
             $this->viewerCodeActivityInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
+            $this->iapRepositoryProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->actorCodesProphecy->reveal(),

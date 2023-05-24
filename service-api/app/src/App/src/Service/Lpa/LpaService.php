@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\Repository\{LpasInterface,
+use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
+    LpasInterface,
     Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
@@ -26,6 +27,7 @@ class LpaService
         private ViewerCodesInterface $viewerCodesRepository,
         private ViewerCodeActivityInterface $viewerCodeActivityRepository,
         private LpasInterface $lpaRepository,
+        private InstructionsAndPreferencesImagesInterface $iapRepository,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
         private LoggerInterface $logger,
         private ActorCodes $actorCodes,
@@ -118,6 +120,13 @@ class LpaService
 
             // If an active attorney is not found then we should not return an lpa
             $result['actor'] = $actor;
+        }
+
+        if (
+            (isset($lpaData['applicationHasGuidance']) && $lpaData['applicationHasGuidance'])
+            || (isset($lpaData['applicationHasRestrictions']) && $lpaData['applicationHasRestrictions'])
+        ) {
+            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
@@ -214,6 +223,23 @@ class LpaService
             throw new GoneException('Share code cancelled');
         }
 
+        $lpaData = $lpa->getData();
+        unset($lpaData['original_attorneys']);
+
+        $result = [
+            'date'         => $lpa->getLookupTime()->format('c'),
+            'expires'      => $viewerCodeData['Expires']->format('c'),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa'          => $lpaData,
+        ];
+
+        if (
+            (isset($lpaData['applicationHasGuidance']) && $lpaData['applicationHasGuidance'])
+            || (isset($lpaData['applicationHasRestrictions']) && $lpaData['applicationHasRestrictions'])
+        ) {
+            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
+        }
+
         if (!is_null($organisation)) {
             // Record the lookup in the activity table
             // We only do this if the organisation is provided
@@ -223,15 +249,7 @@ class LpaService
             );
         }
 
-        $lpaData = $lpa->getData();
-        unset($lpaData['original_attorneys']);
-
-        return [
-            'date'         => $lpa->getLookupTime()->format('c'),
-            'expires'      => $viewerCodeData['Expires']->format('c'),
-            'organisation' => $viewerCodeData['Organisation'],
-            'lpa'          => $lpaData,
-        ];
+        return $result;
     }
 
     /**
