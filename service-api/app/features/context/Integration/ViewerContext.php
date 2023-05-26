@@ -31,6 +31,7 @@ class ViewerContext extends BaseIntegrationContext
     use UsesPactContextTrait;
 
     private string $apiGatewayPactProvider;
+    private string $iapImagesPactProvider;
     private AwsMockHandler $awsFixtures;
     private LpaService $lpaService;
 
@@ -40,6 +41,14 @@ class ViewerContext extends BaseIntegrationContext
     public function iAccessTheViewerService(): void
     {
         // Not used in this context
+    }
+
+    /**
+     * @Given /^I can see instructions images$/
+     */
+    public function iCanSeeInstructionsImages()
+    {
+        throw new PendingException();
     }
 
     /**
@@ -163,6 +172,13 @@ class ViewerContext extends BaseIntegrationContext
             $this->lpa
         );
 
+        $this->pactGetInteraction(
+            $this->iapImagesPactProvider,
+            '/v1/image-request/' . $this->lpa->uId,
+            StatusCodeInterface::STATUS_OK,
+            $this->lpa // json TODO
+        );
+
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
@@ -224,6 +240,21 @@ class ViewerContext extends BaseIntegrationContext
         // Not used in this context
     }
 
+    /**
+     * @Given /^the LPA has (.*)$/
+     */
+    public function theLPAHasDirective(string $directive): void
+    {
+        $this->lpa->applicationHasRestrictions = false;
+        $this->lpa->applicationHasGuidance     = false;
+        if (str_contains($directive, 'instructions')) {
+            $this->lpa->applicationHasRestrictions = true;
+        }
+        if (str_contains($directive, 'preferences')) {
+            $this->lpa->applicationHasGuidance = true;
+        }
+    }
+
     protected function prepareContext(): void
     {
         // This is populated into the container using a Middleware which these integration
@@ -235,5 +266,6 @@ class ViewerContext extends BaseIntegrationContext
 
         $config = $this->container->get('config');
         $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+        $this->iapImagesPactProvider = parse_url($config['iap_images_api']['endpoint'], PHP_URL_HOST);
     }
 }

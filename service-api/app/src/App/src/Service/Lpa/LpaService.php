@@ -123,7 +123,7 @@ class LpaService
         }
 
         if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
-            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
+            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
@@ -231,7 +231,7 @@ class LpaService
         ];
 
         if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
-            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages($lpaData['uId']);
+            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
         }
 
         if (!is_null($organisation)) {

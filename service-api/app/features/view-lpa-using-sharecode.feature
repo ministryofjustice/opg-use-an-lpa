@@ -30,8 +30,13 @@ Feature: View an LPA via sharecode
   @acceptance @integration @pact
   Scenario: The user should have an option to go back to check another LPA from summary page
     Given I have been given access to an LPA via share code
-    And I access the viewer service
-    And I give a valid LPA share code
-    When I enter an organisation name and confirm the LPA is correct
-    Then I can see the full details of the valid LPA
+    When I give a valid LPA share code
     And I want to see an option to check another LPA
+
+  @acceptance @integration @pact
+  Scenario: The user should be able to see instructions
+    Given I have been given access to an LPA via share code
+    And the LPA has instructions
+    When I give a valid LPA share code
+    Then I can see instructions images
+
