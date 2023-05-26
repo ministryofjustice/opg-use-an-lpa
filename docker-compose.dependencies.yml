@@ -71,7 +71,7 @@ services:
       - "0.0.0.0"
       - "/tmp/openapi.yaml"
     ports:
-      - "4011:5000"
+      - "4011:4010"
     volumes:
       - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
 
