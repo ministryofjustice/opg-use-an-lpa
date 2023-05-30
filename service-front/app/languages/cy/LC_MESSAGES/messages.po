@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-05-30T11:05:02+00:00\n"
+"POT-Creation-Date: 2023-05-30T13:42:15+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -94,7 +94,7 @@ msgstr ""
 "Pan fydd %organisation% wedi cael y cod mynediad, dylent fynd i <br> www.gov."
 "uk/gweld-atwrneiaeth-arhosol i weld crynodeb o’r LPA."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:125
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:135
 msgid "Give another organisation access"
 msgstr "Rhoi mynediad i sefydliad arall"
 
@@ -6147,7 +6147,7 @@ msgstr "Canslwyd eich cod mynediad ar %date%"
 msgid "Access code expired %date%"
 msgstr "Daeth eich cod mynediad i ben ar %date%"
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:102
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:112
 msgid ""
 "%organisation% may ask you for other information, such as your customer "
 "account details, your attorney's contact details and so on."
@@ -6155,7 +6155,7 @@ msgstr ""
 "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion eich "
 "cyfrif cwsmer, manylion cyswllt eich twrnai ac ati."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:117
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:127
 msgid ""
 "%organisation% may ask you for other information, such as your NHS number, "
 "your attorney's contact details and so on."
@@ -6184,7 +6184,7 @@ msgstr ""
 "siŵr eich bod wedi clicio ar y ddolen yn yr e-bost ailosod cyfrinair "
 "diweddaraf."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:95
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:105
 msgid ""
 "%organisation% may ask you for other information, such as %donorFirstName%'s "
 "account details, and your name and contact details. They may also ask you to "
@@ -6195,7 +6195,7 @@ msgstr ""
 "chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% ac atal "
 "twyll."
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:110
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:120
 msgid ""
 "%organisation% may ask you for other information, such as %donorFirstName%'s "
 "NHS number, your contact details and so on."
@@ -7934,3 +7934,13 @@ msgstr ""
 "yn gallu gwneud rhai penderfyniadau yn annibynnol ar ei gilydd (ar wahân) "
 "Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod "
 "pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:93
+msgid ""
+"Scanned copies of the donor’s preferences will be shown in the LPA summary. "
+"You should check the scanned image - if it’s not clear, organisations may ask "
+"to see the paper LPA."
+msgstr ""
+"wedi eu sganio o ddewisiadau rhoddwr yn y crynodeb o’r Atwrneiaeth Arhosol. "
+"Dylech wirio’r ddelwedd sydd wedi ei sganio - os nad yw hi’n glir, gallai "
+"sefydliadau ofyn am gael gweld y fersiwn papur o’r Atwrneiaeth Arhosol."
