@@ -94,6 +94,14 @@
                                     {% endtrans %}
                                 </p>
                             {% endif %}
+                        {% elseif lpa.applicationHasRestrictions%}
+                            {% if not is_donor_signature_date_too_old(lpa) %}
+                                <p class="govuk-body">
+                                    {% trans %}
+                                        Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                    {% endtrans %}
+                                </p>
+                            {% endif %}
                         {% endif %}
 {#                    {% endif %}#}
 
