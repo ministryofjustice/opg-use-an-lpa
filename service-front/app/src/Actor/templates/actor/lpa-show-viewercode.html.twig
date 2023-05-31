@@ -78,31 +78,31 @@
                     <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
 
 {#                    {% if feature_enabled('instructions_and_preferences') %}#}
-                        {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-                            {% if not is_donor_signature_date_too_old(lpa) %}
-                                <p class="govuk-body">
-                                    {% trans %}
-                                        Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                    {% endtrans %}
-                                </p>
+                    {% if not is_donor_signature_date_too_old(lpa) %}
+                        <p class="govuk-body">
+                            {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+                                {% trans %}
+                                    Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                {% endtrans %}
+                            {% elseif lpa.applicationHasGuidance %}
+                                {% trans %}
+                                    Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                {% endtrans %}
+                            {% elseif lpa.applicationHasRestrictions %}
+                                {% trans %}
+                                    Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                {% endtrans %}
                             {% endif %}
-                        {% elseif lpa.applicationHasGuidance %}
-                            {% if not is_donor_signature_date_too_old(lpa) %}
-                                <p class="govuk-body">
-                                    {% trans %}
-                                        Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                    {% endtrans %}
-                                </p>
-                            {% endif %}
-                        {% elseif lpa.applicationHasRestrictions%}
-                            {% if not is_donor_signature_date_too_old(lpa) %}
-                                <p class="govuk-body">
-                                    {% trans %}
-                                        Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                    {% endtrans %}
-                                </p>
-                            {% endif %}
+                        </p>
+                    {% elseif is_donor_signature_date_too_old(lpa) %}
+                        {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                            <p class="govuk-body">
+                                {% trans %}
+                                    Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                {% endtrans %}
+                            </p>
                         {% endif %}
+                    {% endif %}
 {#                    {% endif %}#}
 
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-05-30T14:13:17+00:00\n"
+"POT-Creation-Date: 2023-05-31T12:26:54+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -5437,10 +5437,14 @@ msgid ""
 "                    <abbr title=\"lasting power of attorney\">LPA</abbr> to find out what decisions must be made jointly."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:88
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:100
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
 msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:100
+msgid "Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
