@@ -367,6 +367,10 @@ locals {
           value = local.environment.lpa_codes_endpoint
         },
         {
+          name  = "IAP_IMAGES_API_ENDPOINT",
+          value = local.environment.iap_images_endpoint
+        },
+        {
           name  = "USE_LEGACY_CODES_SERVICE",
           value = tostring(local.environment.application_flags.use_legacy_codes_service)
         },

@@ -12,27 +12,16 @@ use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\LpaService;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
+use Exception;
 
 class CodesApiValidationStrategy implements CodeValidationStrategyInterface
 {
-    private ActorCodes $actorCodesApi;
-
-    private LoggerInterface $logger;
-
-    private LpaService $lpaService;
-
-    private ResolveActor $resolveActor;
-
     public function __construct(
-        ActorCodes $actorCodesApi,
-        LpaService $lpaService,
-        LoggerInterface $logger,
-        ResolveActor $resolveActor
+        private ActorCodes $actorCodesApi,
+        private LpaService $lpaService,
+        private LoggerInterface $logger,
+        private ResolveActor $resolveActor,
     ) {
-        $this->actorCodesApi = $actorCodesApi;
-        $this->lpaService = $lpaService;
-        $this->logger = $logger;
-        $this->resolveActor = $resolveActor;
     }
 
     /**
@@ -43,18 +32,20 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
 
-            $actorUid = !empty($actorCode->getData()['actor']) ? $actorCode->getData()['actor'] : null;
+            $actorUid = !empty($actorCode->getData()['actor'])
+                ? $actorCode->getData()['actor']
+                : null;
 
             if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
                 return $actorUid;
             }
         } catch (ActorCodeValidationException $acve) {
             throw $acve;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error(
                 'Failed to validate actor code when communicating with codes service',
                 [
-                    'uid' => $uid
+                    'uid' => $uid,
                 ]
             );
 
@@ -65,7 +56,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         $this->logger->notice(
             'Actor code validation failed for lpa {uid}',
             [
-                'uid' => $uid
+                'uid' => $uid,
             ]
         );
 
@@ -75,15 +66,15 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
     /**
      * @inheritDoc
      */
-    public function flagCodeAsUsed(string $code)
+    public function flagCodeAsUsed(string $code): void
     {
         try {
             $this->actorCodesApi->flagCodeAsUsed($code);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error(
                 'Failed to revoke actor code {code} when communicating with codes service',
                 [
-                    'code' => new HiddenString($code)
+                    'code' => new HiddenString($code),
                 ]
             );
 
@@ -114,20 +105,20 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             $this->logger->error(
                 'Could not find LPA for SiriusUid {SiriusUid} when validating actor code',
                 [
-                    'SiriusUid' => $uid
+                    'SiriusUid' => $uid,
                 ]
             );
             throw new ActorCodeValidationException('LPA not found');
         }
 
-        $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
+        $actor = ($this->resolveActor)($lpa->getData(), (int) $actorUid);
 
         if ($actor === null) {
             $this->logger->error(
                 'Could not find actor {ActorLpaId} in LPA for SiriusUid {SiriusUid} when validating actor code',
                 [
                     'ActorLpaId' => $actorUid,
-                    'SiriusUid' => $uid,
+                    'SiriusUid'  => $uid,
                 ]
             );
             throw new ActorCodeValidationException('Actor not in LPA');

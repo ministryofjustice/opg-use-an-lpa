@@ -15,6 +15,10 @@ return [
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
 
+    'iap_images_api' => [
+        'endpoint' => getenv('IAP_IMAGES_API_ENDPOINT') ?: null,
+    ],
+
     'aws' => [
         'region'  => 'eu-west-1',
         'version' => 'latest',

@@ -15,6 +15,9 @@ use Mezzio\Container;
 use Mezzio\Middleware\ErrorResponseGenerator;
 
 return [
+    'session'      => [
+        'cookie_name' => 'session', // The normally configured "__Host-session" name does not work for dev due to SSL
+    ],
     'dependencies' => [
         'invokables' => [
         ],

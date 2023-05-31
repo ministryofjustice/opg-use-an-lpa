@@ -1,0 +1,10 @@
+---
+plugin: "openapi"
+specFile: "mock-openapi.yaml"
+
+response:
+  scriptFile: "mock-responses.js"
+
+pickFirstIfNoneMatch: false
+validation:
+  request: true

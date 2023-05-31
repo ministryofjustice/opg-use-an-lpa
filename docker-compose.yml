@@ -203,6 +203,7 @@ services:
 
       SIRIUS_API_ENDPOINT: "http://api-gateway:5000"
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
+      IAP_IMAGES_API_ENDPOINT: "http://api-gateway:5000"
 
       # Feature flags
       ALLOW_OLDER_LPAS: "true"

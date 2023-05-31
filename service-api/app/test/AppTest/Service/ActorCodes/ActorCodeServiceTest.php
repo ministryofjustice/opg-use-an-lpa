@@ -59,7 +59,6 @@ class ActorCodeServiceTest extends TestCase
         $this->initValidParameterSet();
 
         $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
-            ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->create(
@@ -88,7 +87,6 @@ class ActorCodeServiceTest extends TestCase
         $this->initValidParameterSet();
 
         $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
-            ->willReturn('id-of-db-row')
             ->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->activateRecord(
@@ -228,7 +226,7 @@ class ActorCodeServiceTest extends TestCase
         )->shouldBeCalled();
 
         $this->resolveActorProphecy
-            ->__invoke(Argument::type('array'), Argument::type('string'))
+            ->__invoke(Argument::type('array'), Argument::type('int'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
 
