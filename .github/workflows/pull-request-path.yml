@@ -16,6 +16,7 @@ on:
       - '!main'          # reverse match main
       - '!dependabot/**' # reverse match dependabot PRs
       - 'dependabot/docker/**' # match dependabot PRs that update docker
+      - 'dependabot/pip/**' # match dependabot PRs that update pip
 
 permissions:
   contents: write
