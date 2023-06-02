@@ -8,7 +8,8 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -30,7 +31,8 @@
                         <div class="moj-banner__message govuk-panel govuk-!-padding-1">
                             <div class="js-accesscodecopy govuk-button__position govuk-!-display-inline-block">
                                 <label>
-                                    <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}" class="js-accesscodecopy-value offscreen" aria-hidden="true" tabindex="-1">
+                                    <input readonly type="text" value="{{ add_hyphen_to_viewer_code(code) }}"
+                                           class="js-accesscodecopy-value offscreen" aria-hidden="true" tabindex="-1">
                                 </label>
                                 <button class="js-accesscodecopy-button govuk-button govuk-button__copy">
                                     <span class="js-accesscodecopy-default govuk-!-margin-0">{% trans %}Copy code{% endtrans %}</span>
@@ -38,7 +40,8 @@
                                 </button>
                             </div>
                             <h2 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-2">
-                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation%{% endtrans %}<br>
+                                {% trans with {'%organisation%': organisation } %}Give this access code to %organisation%{% endtrans %}
+                                <br>
                                 {{ add_hyphen_to_viewer_code(code) }}
                             </h2>
                             <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-3">{% trans with {'%date%': lpa_date(expires)} %}This code expires in 30 days, on %date%.{% endtrans %}</p>
@@ -75,38 +78,38 @@
 
                     <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What to do next{% endtrans %}</h2>
 
-                    <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the
+                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
 
-{#                    {% if feature_enabled('instructions_and_preferences') %}#}
-                    {% if not is_donor_signature_date_too_old(lpa) %}
-                        <p class="govuk-body">
-                            {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-                                {% trans %}
-                                    Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                {% endtrans %}
-                            {% elseif lpa.applicationHasGuidance %}
-                                {% trans %}
-                                    Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                {% endtrans %}
-                            {% elseif lpa.applicationHasRestrictions %}
-                                {% trans %}
-                                    Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                {% endtrans %}
-                            {% endif %}
-                        </p>
-                    {% elseif is_donor_signature_date_too_old(lpa) %}
-                        {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                    {% if feature_enabled('instructions_and_preferences') %}
+                        {% if not is_donor_signature_date_too_old(lpa) %}
                             <p class="govuk-body">
-                                {% trans %}
-                                    Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
-                                {% endtrans %}
+                                {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+                                    {% trans %}
+                                        Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                    {% endtrans %}
+                                {% elseif lpa.applicationHasGuidance %}
+                                    {% trans %}
+                                        Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                    {% endtrans %}
+                                {% elseif lpa.applicationHasRestrictions %}
+                                    {% trans %}
+                                        Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                    {% endtrans %}
+                                {% endif %}
                             </p>
+                        {% elseif is_donor_signature_date_too_old(lpa) %}
+                            {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                                <p class="govuk-body">
+                                    {% trans %}
+                                        Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                    {% endtrans %}
+                                </p>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
-{#                    {% endif %}#}
 
-
-                        {% if lpa.caseSubtype == 'pfa' %}
+                    {% if lpa.caseSubtype == 'pfa' %}
                         {% if actorRole == 'Attorney' %}
                             <p class="govuk-body">
                                 {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
@@ -121,7 +124,7 @@
                                 {% endtrans %}
                             </p>
                         {% endif %}
-                    {% elseif lpa.caseSubtype == 'hw'  %}
+                    {% elseif lpa.caseSubtype == 'hw' %}
                         {% if actorRole == 'Attorney' %}
                             <p class="govuk-body">
                                 {% trans with {'%organisation%': organisation, '%donorFirstName%': lpa.donor.firstname} %}
@@ -138,8 +141,9 @@
                         {% endif %}
                     {% endif %}
 
-                    <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false" class="govuk-button govuk-button">
-                            {% trans %}Give another organisation access{% endtrans %}
+                    <a href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}" role="button" draggable="false"
+                       class="govuk-button govuk-button">
+                        {% trans %}Give another organisation access{% endtrans %}
                     </a>
                 </div>
             </div>
