@@ -4,7 +4,7 @@ Feature: View an LPA via sharecode
   I can enter that code and see the details of an LPA
   So that I can carry out business functions
 
-  @integration @acceptance @pact
+  @integration @acceptance @pact @ff:instructions_and_preferences:false
   Scenario: View an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
@@ -39,4 +39,3 @@ Feature: View an LPA via sharecode
     And the LPA has instructions
     When I give a valid LPA share code
     Then I can see instructions images
-

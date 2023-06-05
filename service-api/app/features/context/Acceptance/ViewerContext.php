@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\Service\Features\FeatureEnabled;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
@@ -134,11 +135,21 @@ class ViewerContext implements Context
         // Lpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($this->lpa)
+                )
+            );
+        }
+
         $this->apiPost(
             '/v1/viewer-codes/summary',
             [
                 'code' => $this->viewerCode,
-                'name' => $this->donorSurname
+                'name' => $this->donorSurname,
             ]
         );
     }

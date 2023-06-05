@@ -19,6 +19,7 @@ default:
       providers:
         - lpa-codes-pact-mock: lpa-codes-pact-mock:80
         - api-gateway-pact-mock: api-gateway-pact-mock:80
+        - iap-images-mock: iap-images-mock:80
 
 integration:
   extensions:

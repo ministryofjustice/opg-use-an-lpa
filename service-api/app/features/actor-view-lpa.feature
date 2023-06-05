@@ -26,7 +26,7 @@ Feature: View an LPA that I have added to my account
     When I request to view an LPA which status is "Revoked"
     Then I am taken back to the dashboard page
 
-  @integration #@acceptance
+  @integration @pact #@acceptance
   Scenario: The user can see the instructions and preferences on their LPA
     Given I am on the dashboard page
     When I request to view an LPA which has instructions and preferences
