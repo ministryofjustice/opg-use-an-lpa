@@ -45,7 +45,7 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I can see instructions images$/
+     * @Given /^I can see (.*) images$/
      */
     public function iCanSeeInstructionsImages()
     {

@@ -109,7 +109,7 @@
         ],
         "dc-run": "@dc run --rm api-app",
         "dc-php": "@dc-run php",
-        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so",
+        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",
         "cs-check": "@dc-php /app/vendor/bin/phpcs",
         "cs-fix": "@dc-php /app/vendor/bin/phpcbf",

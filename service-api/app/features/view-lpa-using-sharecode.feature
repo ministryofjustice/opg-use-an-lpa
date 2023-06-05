@@ -39,3 +39,17 @@ Feature: View an LPA via sharecode
     And the LPA has instructions
     When I give a valid LPA share code
     Then I can see instructions images
+
+  @acceptance @integration @pact @ff:instructions_and_preferences:true
+  Scenario: The user should be able to see preferences
+    Given I have been given access to an LPA via share code
+    And the LPA has preferences
+    When I give a valid LPA share code
+    Then I can see preferences images
+
+  @acceptance @integration @pact @ff:instructions_and_preferences:true
+  Scenario: The user should be able to see instructions and preferences
+    Given I have been given access to an LPA via share code
+    And the LPA has instructions and preferences
+    When I give a valid LPA share code
+    Then I can see instructions and preferences images
