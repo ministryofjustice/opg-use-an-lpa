@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\Exception\GoneException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
 use BehatTest\Context\UsesPactContextTrait;
+use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
+use stdClass;
 
 /**
- * Class ViewerContext
- *
- * @package BehatTest\Context\Integration
- *
  * @property string viewerCode   The share code given to an organisation
  * @property string donorSurname The surname of the donors LPA reference by the share code
  * @property array  lpa          LPA data as returned by the API gateway
@@ -48,7 +49,7 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iCanSeeInstructionsImages()
     {
-        throw new PendingException();
+        // Not used in this context
     }
 
     /**
@@ -66,7 +67,7 @@ class ViewerContext extends BaseIntegrationContext
     {
         $this->organisation = 'TestOrg';
 
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry = (new DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
         $this->awsFixtures->append(
@@ -76,9 +77,9 @@ class ViewerContext extends BaseIntegrationContext
                         [
                             'ViewerCode'   => $this->viewerCode,
                             'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Added'        => (new DateTime('now'))->format('c'),
                             'Expires'      => $lpaExpiry,
-                            'Organisation' => $this->organisation
+                            'Organisation' => $this->organisation,
                         ]
                     ),
                 ]
@@ -100,7 +101,7 @@ class ViewerContext extends BaseIntegrationContext
      */
     public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry         = (new DateTime('+20 days'))->format('c');
         $this->lpa->status = 'Cancelled';
 
         // ViewerCodes::get
@@ -110,10 +111,10 @@ class ViewerContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode' => $this->viewerCode,
-                            'SiriusUid' => $this->lpa->uId,
-                            'Added' => (new \DateTime('now'))->format('c'),
-                            'Expires' => $lpaExpiry,
-                            'Cancelled' => (new \DateTime('now'))->format('c'),
+                            'SiriusUid'  => $this->lpa->uId,
+                            'Added'      => (new DateTime('now'))->format('c'),
+                            'Expires'    => $lpaExpiry,
+                            'Cancelled'  => (new DateTime('now'))->format('c'),
                         ]
                     ),
                 ]
@@ -131,11 +132,11 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is null when doing a summary check
         try {
             $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
-        } catch (GoneException $gox) {
+        } catch (GoneException) {
             return;
         }
 
-        throw new \Exception('GoneException not thrown when it should be');
+        throw new Exception('GoneException not thrown when it should be');
     }
 
     /**
@@ -145,7 +146,7 @@ class ViewerContext extends BaseIntegrationContext
     {
         $this->organisation = 'TestOrg';
 
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry = (new DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
         $this->awsFixtures->append(
@@ -155,9 +156,9 @@ class ViewerContext extends BaseIntegrationContext
                         [
                             'ViewerCode'   => $this->viewerCode,
                             'SiriusUid'    => $this->lpa->uId,
-                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'Added'        => (new DateTime('now'))->format('c'),
                             'Expires'      => $lpaExpiry,
-                            'Organisation' => $this->organisation
+                            'Organisation' => $this->organisation,
                         ]
                     ),
                 ]
@@ -172,18 +173,34 @@ class ViewerContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $this->pactGetInteraction(
-            $this->iapImagesPactProvider,
-            '/v1/image-request/' . $this->lpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa // json TODO
-        );
+        if ($this->container->get(FeatureEnabled::class)('instructions_and_preferences')) {
+            $imageResponse             = new stdClass();
+            $imageResponse->uId        = (int) $this->lpa->uId;
+            $imageResponse->status     = 'COLLECTION_COMPLETE';
+            $imageResponse->signedUrls = [
+                'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
+                'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
+            ];
+
+            $this->pactGetInteraction(
+                $this->iapImagesPactProvider,
+                '/v1/image-request/' . $this->lpa->uId,
+                StatusCodeInterface::STATUS_OK,
+                $imageResponse
+            );
+        }
 
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         Assert::assertEquals($lpaExpiry, $lpaData['expires']);
+
+        if ($this->container->get(FeatureEnabled::class)('instructions_and_preferences')) {
+            Assert::assertArrayHasKey('iap', $lpaData);
+            Assert::assertInstanceOf(InstructionsAndPreferencesImages::class, $lpaData['iap']);
+            Assert::assertEquals('COLLECTION_COMPLETE', $lpaData['iap']->status->value);
+        }
     }
 
     /**
@@ -195,54 +212,54 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpa->status = 'Cancelled';
     }
 
-    /**
-     * @Given I have been given access to an LPA via share code
-     */
+        /**
+         * @Given I have been given access to an LPA via share code
+         */
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
-        $this->viewerCode = '1111-1111-1111';
+        $this->viewerCode   = '1111-1111-1111';
         $this->donorSurname = 'Deputy';
-        $this->lpaViewedBy = 'Santander';
-        $this->lpa = json_decode(
+        $this->lpaViewedBy  = 'Santander';
+        $this->lpa          = json_decode(
             file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json')
         );
     }
 
-    /**
-     * @When /^I realise the LPA is incorrect$/
-     */
+        /**
+         * @When /^I realise the LPA is incorrect$/
+         */
     public function iRealiseTheLPAIsCorrect(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then /^I can see a message the LPA has been cancelled$/
-     */
+        /**
+         * @Then /^I can see a message the LPA has been cancelled$/
+         */
     public function iSeeAMessageThatLPAHasBeenCancelled(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to check another LPA$/
-     */
+        /**
+         * @Then /^I want to see an option to check another LPA$/
+         */
     public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to re-enter code$/
-     */
+        /**
+         * @Then /^I want to see an option to re-enter code$/
+         */
     public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Given /^the LPA has (.*)$/
-     */
+        /**
+         * @Given /^the LPA has (.*)$/
+         */
     public function theLPAHasDirective(string $directive): void
     {
         $this->lpa->applicationHasRestrictions = false;
@@ -264,8 +281,8 @@ class ViewerContext extends BaseIntegrationContext
 
         $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
 
-        $config = $this->container->get('config');
+        $config                       = $this->container->get('config');
         $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
-        $this->iapImagesPactProvider = parse_url($config['iap_images_api']['endpoint'], PHP_URL_HOST);
+        $this->iapImagesPactProvider  = parse_url($config['iap_images_api']['endpoint'], PHP_URL_HOST);
     }
 }

@@ -33,7 +33,7 @@ Feature: View an LPA via sharecode
     When I give a valid LPA share code
     And I want to see an option to check another LPA
 
-  @acceptance @integration @pact
+  @acceptance @integration @pact @ff:instructions_and_preferences:true
   Scenario: The user should be able to see instructions
     Given I have been given access to an LPA via share code
     And the LPA has instructions
