@@ -210,7 +210,7 @@ services:
       ALLOW_MERIS_LPAS: "false"
       SAVE_OLDER_LPA_REQUESTS: "true"
       DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
-      INSTRUCTIONS_AND_PREFERENCES: "false"
+      INSTRUCTIONS_AND_PREFERENCES: "true"
 
       # Local only
       AWS_ACCESS_KEY_ID: "-"
@@ -223,7 +223,7 @@ services:
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
       XDEBUG_MODE: develop,debug,coverage
-      #XDEBUG_TRIGGER: "true"
+      XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
 
   api-composer:

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\{ApiGateway\ActorCodes,
-    Repository,
+use App\DataAccess\{Repository,
     Repository\InstructionsAndPreferencesImagesInterface,
+    Repository\Response\InstructionsAndPreferencesImages,
+    Repository\Response\InstructionsAndPreferencesImagesResult,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\Lpa;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateInterval;
@@ -26,47 +28,49 @@ class LpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
-    private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
-    private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private ActorCodes|ObjectProphecy $actorCodesProphecy;
+    private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+    private InstructionsAndPreferencesImagesInterface|ObjectProphecy $iapRepositoryProphecy;
+    private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
     {
+        $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(Repository\UserLpaActorMapInterface::class);
+        $this->lpasInterfaceProphecy               = $this->prophesize(Repository\LpasInterface::class);
         $this->viewerCodesInterfaceProphecy        = $this->prophesize(Repository\ViewerCodesInterface::class);
         $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
-        $this->lpasInterfaceProphecy               = $this->prophesize(Repository\LpasInterface::class);
-        $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(Repository\UserLpaActorMapInterface::class);
-        $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
-        $this->actorCodesProphecy                  = $this->prophesize(ActorCodes::class);
+        $this->iapRepositoryProphecy
+            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
-        $this->iapRepositoryProphecy
-            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
+        $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
+        $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 
     private function getLpaService(): LpaService
     {
         return new LpaService(
+            $this->userLpaActorMapInterfaceProphecy->reveal(),
+            $this->lpasInterfaceProphecy->reveal(),
             $this->viewerCodesInterfaceProphecy->reveal(),
             $this->viewerCodeActivityInterfaceProphecy->reveal(),
-            $this->lpasInterfaceProphecy->reveal(),
             $this->iapRepositoryProphecy->reveal(),
-            $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
-            $this->actorCodesProphecy->reveal(),
             $this->resolveActorProphecy->reveal(),
             $this->getAttorneyStatusProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
             $this->getTrustCorporationStatusProphecy->reveal(),
+            $this->featureEnabledProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
         );
     }
 
@@ -881,18 +885,20 @@ class LpaServiceTest extends TestCase
         $t->ViewerCode   = 'test-viewer-code';
         $t->Organisation = 'test-organisation';
         $t->DonorSurname = 'test-donor-surename';
-        $t->SiriusUid    = 'test-sirius-uid';
+        $t->SiriusUid    = '700000000001';
         $t->Expires      = new DateTime('+1 hour');
 
         $t->Lpa = new Lpa([
-            'uId'               => $t->SiriusUid,
-            'donor'             => [
+            'uId'                        => $t->SiriusUid,
+            'donor'                      => [
                 'surname' => $t->DonorSurname,
             ],
-            'attorneys'         => [],
-            'trustCorporations' => [],
-            'activeAttorneys'   => [],
-            'inactiveAttorneys' => [],
+            'attorneys'                  => [],
+            'trustCorporations'          => [],
+            'activeAttorneys'            => [],
+            'inactiveAttorneys'          => [],
+            'applicationHasGuidance'     => true,
+            'applicationHasRestrictions' => true,
         ], new DateTime());
 
 
@@ -905,6 +911,16 @@ class LpaServiceTest extends TestCase
 
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn($t->Lpa);
 
+        $this->iapRepositoryProphecy
+            ->getInstructionsAndPreferencesImages((int) $t->SiriusUid)
+            ->willReturn(
+                new InstructionsAndPreferencesImages(
+                    (int) $t->SiriusUid,
+                    InstructionsAndPreferencesImagesResult::COLLECTION_COMPLETE,
+                    [],
+                )
+            );
+
         return $t;
     }
 
@@ -913,13 +929,17 @@ class LpaServiceTest extends TestCase
     {
         $t = $this->init_valid_get_by_viewer_account();
 
+        $this->featureEnabledProphecy
+            ->__invoke('instructions_and_preferences')
+            ->willReturn(false);
+
         $service = $this->getLpaService();
 
         //---
 
         // This should NOT be called when logging = false.
         $this->viewerCodeActivityInterfaceProphecy->recordSuccessfulLookupActivity(
-            Argument::any()
+            Argument::any(),
         )->shouldNotBeCalled();
 
         //---
@@ -943,6 +963,10 @@ class LpaServiceTest extends TestCase
     public function can_get_lpa_by_viewer_code_with_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
+
+        $this->featureEnabledProphecy
+            ->__invoke('instructions_and_preferences')
+            ->willReturn(false);
 
         $service = $this->getLpaService();
 
@@ -1084,6 +1108,25 @@ class LpaServiceTest extends TestCase
         $this->expectExceptionMessage('Share code expired');
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
+    }
+
+    /** @test */
+    public function lpa_fetched_by_viewer_code_contains_instructions_and_preferences_data(): void
+    {
+        $t = $this->init_valid_get_by_viewer_account();
+
+        $this->featureEnabledProphecy
+            ->__invoke('instructions_and_preferences')
+            ->willReturn(true);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('iap', $result);
+
+        $this->assertEquals((int) $t->SiriusUid, $result['iap']->uId);
     }
 
     /** @test */

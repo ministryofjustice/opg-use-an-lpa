@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\DataAccess\ApiGateway\ActorCodes;
+use App\Service\Features\FeatureEnabled;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
+    Response\InstructionsAndPreferencesImages,
     Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
@@ -24,17 +25,17 @@ class LpaService
     private const ACTIVE_TC         = 0;
 
     public function __construct(
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private LpasInterface $lpaRepository,
         private ViewerCodesInterface $viewerCodesRepository,
         private ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        private LpasInterface $lpaRepository,
         private InstructionsAndPreferencesImagesInterface $iapRepository,
-        private UserLpaActorMapInterface $userLpaActorMapRepository,
-        private LoggerInterface $logger,
-        private ActorCodes $actorCodes,
         private ResolveActor $resolveActor,
         private GetAttorneyStatus $getAttorneyStatus,
         private IsValidLpa $isValidLpa,
         private GetTrustCorporationStatus $getTrustCorporationStatus,
+        private FeatureEnabled $featureEnabled,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -122,10 +123,6 @@ class LpaService
             $result['actor'] = $actor;
         }
 
-        if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
-            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
-        }
-
         // Extract and return only LPA's where status is Registered or Cancelled
         if (($this->isValidLpa)($lpaData)) {
             return $result;
@@ -173,7 +170,13 @@ class LpaService
      * @param string  $viewerCode   A code that directly maps to an LPA
      * @param string  $donorSurname The surname of the donor that must correlate to the $viewerCode
      * @param ?string $organisation An organisation name that will be recorded as used against the $viewerCode
-     * @return ?array A structure that contains processed LPA data and metadata
+     * @return ?array{
+     *     date: string,
+     *     expires: string,
+     *     organisation: string,
+     *     lpa: array,
+     *     iap: InstructionsAndPreferencesImages,
+     *     } A structure that contains processed LPA data and metadata
      */
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
     {
@@ -200,7 +203,7 @@ class LpaService
 
         //---
         // Whilst the checks in this section could be done before we lookup the LPA, they are done
-        // at this point as we only want to acknowledge if a code has expired iff donor surname matched.
+        // at this point as we only want to acknowledge if a code has expired if donor surname matched.
 
         if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
             $this->logger->info(
@@ -230,7 +233,10 @@ class LpaService
             'lpa'          => $lpaData,
         ];
 
-        if (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)) {
+        if (
+            ($this->featureEnabled)('instructions_and_preferences') &&
+            (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false))
+        ) {
             $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
         }
 
