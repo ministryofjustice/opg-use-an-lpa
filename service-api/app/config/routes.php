@@ -71,6 +71,15 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.cancel.code'
     );
 
+    // Instructions and preferences images
+    if (($container->get(App\Service\Features\FeatureEnabled::class))('instructions_and_preferences')) {
+        $app->get(
+            '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/images',
+            App\Handler\LpasResourceImagesCollectionHandler::class,
+            'lpa.get.images'
+        );
+    }
+
     $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
     $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmationHandler::class, 'lpa.add.confirm');
 
