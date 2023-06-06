@@ -212,9 +212,9 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpa->status = 'Cancelled';
     }
 
-        /**
-         * @Given I have been given access to an LPA via share code
-         */
+    /**
+     * @Given I have been given access to an LPA via share code
+     */
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
         $this->viewerCode   = '1111-1111-1111';
@@ -225,41 +225,41 @@ class ViewerContext extends BaseIntegrationContext
         );
     }
 
-        /**
-         * @When /^I realise the LPA is incorrect$/
-         */
+    /**
+     * @When /^I realise the LPA is incorrect$/
+     */
     public function iRealiseTheLPAIsCorrect(): void
     {
         // Not used in this context
     }
 
-        /**
-         * @Then /^I can see a message the LPA has been cancelled$/
-         */
+    /**
+     * @Then /^I can see a message the LPA has been cancelled$/
+     */
     public function iSeeAMessageThatLPAHasBeenCancelled(): void
     {
         // Not used in this context
     }
 
-        /**
-         * @Then /^I want to see an option to check another LPA$/
-         */
+    /**
+     * @Then /^I want to see an option to check another LPA$/
+     */
     public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
     }
 
-        /**
-         * @Then /^I want to see an option to re-enter code$/
-         */
+    /**
+     * @Then /^I want to see an option to re-enter code$/
+     */
     public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // Not used in this context
     }
 
-        /**
-         * @Given /^the LPA has (.*)$/
-         */
+    /**
+     * @Given /^the LPA has (.*)$/
+     */
     public function theLPAHasDirective(string $directive): void
     {
         $this->lpa->applicationHasRestrictions = false;
