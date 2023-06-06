@@ -71,12 +71,12 @@ class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImag
             'v1/image-request/' . $lpaId
         );
 
-        $responseData = json_decode((string) $response->getBody(), true);
+        $responseData = json_decode((string) $response->getBody());
 
         return new InstructionsAndPreferencesImagesDTO(
-            (int) $responseData['uId'],
-            InstructionsAndPreferencesImagesResult::from((string) $responseData['status']),
-            $responseData['signedUrls']
+            (int) $responseData->uId,
+            InstructionsAndPreferencesImagesResult::from((string) $responseData->status),
+            (array) $responseData->signedUrls,
         );
     }
 

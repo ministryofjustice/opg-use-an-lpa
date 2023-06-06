@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Service\Features\FeatureEnabled;
 use Aws\Result;
 use Behat\Behat\Context\Context;
@@ -16,6 +17,7 @@ use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
+use stdClass;
 
 /**
  * @property mixed lpa
@@ -1782,6 +1784,48 @@ class LpaContext implements Context
     public function iRequestToGoBackAndTryAgain(): void
     {
         // Not needed for this context
+    }
+
+    /**
+     * @When /^I request to view an LPA which has instructions and preferences$/
+     */
+    public function iRequestToViewAnLPAWhichHasInstructionsAndPreferences(): void
+    {
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->base->userAccountId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        $imageResponse             = new stdClass();
+        $imageResponse->uId        = (int) $this->lpaUid;
+        $imageResponse->status     = 'COLLECTION_COMPLETE';
+        $imageResponse->signedUrls = [
+            'iap-' . $this->lpaUid . '-instructions' => 'https://image_url',
+            'iap-' . $this->lpaUid . '-preferences'  => 'https://image_url',
+        ];
+
+        // InstructionsAndPreferencesImages::getInstructionsAndPreferencesImages
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($imageResponse)));
+
+        // API call to request an activation key
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken . '/images',
+            [
+                'user-token' => $this->base->userAccountId,
+            ]
+        );
     }
 
     /**
@@ -3747,5 +3791,18 @@ class LpaContext implements Context
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         }
+    }
+
+    /**
+     * @Then /^my LPA is shown with instructions and preferences images$/
+     */
+    public function myLPAIsShownWithInstructionsAndPreferencesImages(): void
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+        $response = $this->getResponseAsJson();
+
+        Assert::assertEquals((int) $this->lpaUid, $response['uId']);
+        Assert::assertEquals(InstructionsAndPreferencesImagesResult::COLLECTION_COMPLETE->value, $response['status']);
+        Assert::assertCount(2, $response['signedUrls']);
     }
 }

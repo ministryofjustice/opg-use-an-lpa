@@ -61,9 +61,10 @@ class LpaContext extends BaseIntegrationContext
     use UsesPactContextTrait;
 
     private MockHandler $apiFixtures;
-    private string $apiGatewayPactProvider;
     private AwsMockHandler $awsFixtures;
+    private string $apiGatewayPactProvider;
     private string $codesApiPactProvider;
+    private string $iapImagesApiPactProvider;
     private RemoveLpa $deleteLpa;
     private LpaService $lpaService;
 
@@ -610,22 +611,20 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestToViewAnLPAWhichHasInstructionsAndPreferences(): void
     {
+        $imageResponse             = new stdClass();
+        $imageResponse->uId        = (int) $this->lpaUid;
+        $imageResponse->status     = 'COLLECTION_COMPLETE';
+        $imageResponse->signedUrls = [
+            'iap-' . $this->lpaUid . '-instructions' => 'https://image_url',
+            'iap-' . $this->lpaUid . '-preferences'  => 'https://image_url',
+        ];
+
         // InstructionsAndPreferencesImages::getInstructionsAndPreferencesImages
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(
-                    [
-                        'uId'        => (int) $this->lpaUid,
-                        'status'     => 'COLLECTION_COMPLETE',
-                        'signedUrls' => [
-                            'iap-' . $this->lpaUid . '-instructions' => 'https://image_url',
-                            'iap-' . $this->lpaUid . '-preferences'  => 'https://image_url',
-                        ],
-                    ]
-                )
-            )
+        $this->pactGetInteraction(
+            $this->iapImagesApiPactProvider,
+            '/v1/image-request/' . $this->lpaUid,
+            StatusCodeInterface::STATUS_OK,
+            $imageResponse,
         );
     }
 
@@ -2519,9 +2518,10 @@ class LpaContext extends BaseIntegrationContext
         $this->lpaService  = $this->container->get(LpaService::class);
         $this->deleteLpa   = $this->container->get(RemoveLpa::class);
 
-        $config                       = $this->container->get('config');
-        $this->codesApiPactProvider   = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
-        $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+        $config                         = $this->container->get('config');
+        $this->codesApiPactProvider     = parse_url($config['codes_api']['endpoint'], PHP_URL_HOST);
+        $this->apiGatewayPactProvider   = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+        $this->iapImagesApiPactProvider = parse_url($config['iap_images_api']['endpoint'], PHP_URL_HOST);
     }
 
     /**
