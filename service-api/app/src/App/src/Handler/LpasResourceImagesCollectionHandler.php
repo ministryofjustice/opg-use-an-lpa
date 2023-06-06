@@ -41,6 +41,7 @@ class LpasResourceImagesCollectionHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
+        //TODO UML-2898 This code should potentially live in a permissions checking service.
         $map = $this->userLpaActorMapRepository->get($request->getAttribute('user-lpa-actor-token'));
 
         // Ensure the passed userId matches the passed token
