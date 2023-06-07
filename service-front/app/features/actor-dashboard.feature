@@ -29,7 +29,7 @@ Feature: The user is able to see correct information on their dashboard
   @ui
   Scenario: As a user I can see the message on instructions and preferences
     Given I am on the dashboard page
-    Then I can see the message Important: This LPA has instructions and preferences. You might need to show organisations the paper LPA.
+    Then I can see the message Important: This LPA has instructions and preferences.
 
   @ui
   Scenario: As a user I can see the read more link in the message on instructions and preferences
