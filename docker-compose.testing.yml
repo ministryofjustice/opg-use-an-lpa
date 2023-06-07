@@ -29,7 +29,7 @@ services:
   lpa-codes-pact-mock:
     profiles:
       - testing
-    image: pactfoundation/pact-cli:latest
+    image: pactfoundation/pact-cli:latest-multi
     ports:
         - 1234:80
     command:
@@ -48,7 +48,7 @@ services:
   api-gateway-pact-mock:
     profiles:
       - testing
-    image: pactfoundation/pact-cli:latest
+    image: pactfoundation/pact-cli:latest-multi
     command:
       - mock-service
       - -p
@@ -62,6 +62,23 @@ services:
       - --provider
       - api-gateway
 
+  iap-images-mock:
+    profiles:
+      - testing
+    image: pactfoundation/pact-cli:latest-multi
+    command:
+      - mock-service
+      - -p
+      - "80"
+      - --host
+      - "0.0.0.0"
+      - --pact-dir
+      - /tmp/pacts
+      - --consumer
+      - use_a_lasting_power_of_attorney
+      - --provider
+      - iap-api-gateway
+
   api-app:
     profiles:
       - testing
@@ -69,3 +86,4 @@ services:
     depends_on:
       - lpa-codes-pact-mock
       - api-gateway-pact-mock
+      - iap-images-mock

@@ -4,43 +4,40 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\Service\Features\FeatureEnabled;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
+use stdClass;
 
-/**
- * Class AccountContext
- *
- * @package BehatTest\Context\Acceptance
- *
- * @property string viewerCode
- * @property string donorSurname
- * @property array lpa
- * @property string viewerCodeOrganisation
- * @property string lpaViewedBy
- */
 class ViewerContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
+
+    private string $viewerCode;
+    private string $donorSurname;
+    private stdClass $lpa;
+    private string $viewerCodeOrganisation;
+    private string $lpaViewedBy;
 
     /**
      * @Given I have been given access to an LPA via share code
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
-        $this->viewerCode = '1111-1111-1111';
-        $this->donorSurname = 'Deputy';
+        $this->viewerCode             = '1111-1111-1111';
+        $this->donorSurname           = 'Deputy';
         $this->viewerCodeOrganisation = 'santander';
-        $this->lpaViewedBy = 'Santander';
+        $this->lpaViewedBy            = 'Santander';
 
         $this->lpa = json_decode(
             file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'),
-            true
         );
     }
 
@@ -50,7 +47,7 @@ class ViewerContext implements Context
     public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaShareCode();
-        $this->lpa['status'] = 'Cancelled';
+        $this->lpa->status = 'Cancelled';
     }
 
     /**
@@ -66,7 +63,7 @@ class ViewerContext implements Context
      */
     public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry = (new DateTime('+20 days'))->format('c');
         // ViewerCodes::get
         $this->awsFixtures->append(
             new Result(
@@ -74,12 +71,12 @@ class ViewerContext implements Context
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode' => $this->viewerCode,
-                            'SiriusUid'  => $this->lpa['uId'],
-                            'Added'      => (new \DateTime('now'))->format('c'),
+                            'SiriusUid'  => $this->lpa->uId,
+                            'Added'      => (new DateTime('now'))->format('c'),
                             'Expires'    => $lpaExpiry,
-                            'Cancelled'  => (new \DateTime('now'))->format('c'),
+                            'Cancelled'  => (new DateTime('now'))->format('c'),
                         ]
-                    )
+                    ),
                 ]
             )
         );
@@ -91,7 +88,7 @@ class ViewerContext implements Context
             '/v1/viewer-codes/summary',
             [
                 'code' => $this->viewerCode,
-                'name' => $this->donorSurname
+                'name' => $this->donorSurname,
             ]
         );
     }
@@ -108,11 +105,24 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I can see (.*) images$/
+     */
+    public function iCanSeeInstructionsImages(): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('iap', $lpaData);
+        Assert::assertEquals((int) $this->lpa->uId, $lpaData['iap']['uId']);
+        Assert::assertEquals('COLLECTION_COMPLETE', $lpaData['iap']['status']);
+    }
+
+    /**
      * @When I give a valid LPA share code
      */
     public function iGiveAValidLPAShareCode(): void
     {
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry = (new DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
         $this->awsFixtures->append(
@@ -121,12 +131,12 @@ class ViewerContext implements Context
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode'   => $this->viewerCode,
-                            'SiriusUid'    => $this->lpa['uId'],
-                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new DateTime('now'))->format('c'),
                             'Expires'      => $lpaExpiry,
                             'Organisation' => $this->viewerCodeOrganisation,
                         ]
-                    )
+                    ),
                 ]
             )
         );
@@ -134,11 +144,29 @@ class ViewerContext implements Context
         // Lpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $imageResponse             = new stdClass();
+            $imageResponse->uId        = (int) $this->lpa->uId;
+            $imageResponse->status     = 'COLLECTION_COMPLETE';
+            $imageResponse->signedUrls = [
+                'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
+                'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
+            ];
+
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode($imageResponse),
+                )
+            );
+        }
+
         $this->apiPost(
             '/v1/viewer-codes/summary',
             [
                 'code' => $this->viewerCode,
-                'name' => $this->donorSurname
+                'name' => $this->donorSurname,
             ]
         );
     }
@@ -158,7 +186,7 @@ class ViewerContext implements Context
 
         Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
 
-        $lpaExpiry = (new \DateTime('+20 days'))->format('c');
+        $lpaExpiry = (new DateTime('+20 days'))->format('c');
 
         // ViewerCodes::get
         $this->awsFixtures->append(
@@ -167,12 +195,12 @@ class ViewerContext implements Context
                     'Item' => $this->marshalAwsResultData(
                         [
                             'ViewerCode'   => $this->viewerCode,
-                            'SiriusUid'    => $this->lpa['uId'],
-                            'Added'        => (new \DateTime('now'))->format('c'),
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new DateTime('now'))->format('c'),
                             'Expires'      => $lpaExpiry,
                             'Organisation' => $this->viewerCodeOrganisation,
                         ]
-                    )
+                    ),
                 ]
             )
         );
@@ -186,9 +214,9 @@ class ViewerContext implements Context
         $this->apiPost(
             '/v1/viewer-codes/full',
             [
-                'code' => $this->viewerCode,
-                'name' => $this->donorSurname,
-                'organisation' => $this->lpaViewedBy
+                'code'         => $this->viewerCode,
+                'name'         => $this->donorSurname,
+                'organisation' => $this->lpaViewedBy,
             ]
         );
     }
@@ -248,5 +276,20 @@ class ViewerContext implements Context
     public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
+    }
+
+    /**
+     * @Given /^the LPA has (.*)$/
+     */
+    public function theLPAHasDirective(string $directive): void
+    {
+        $this->lpa->applicationHasRestrictions = false;
+        $this->lpa->applicationHasGuidance     = false;
+        if (str_contains($directive, 'instructions')) {
+            $this->lpa->applicationHasRestrictions = true;
+        }
+        if (str_contains($directive, 'preferences')) {
+            $this->lpa->applicationHasGuidance = true;
+        }
     }
 }
