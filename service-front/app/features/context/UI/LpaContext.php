@@ -292,6 +292,20 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am given a unique access code and told (.*) images available in the summary$/
+     */
+    public function iAmGivenAUniqueAccessCodeAndToldImagesAvailableInTheSummary($check): void
+    {
+        $this->ui->assertPageAddress('/lpa/code-make');
+        if ($check ==='instructions and preferences'){
+            $this->ui->assertPageContainsText('Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+        }
+        elseif ($check === 'instructions'){
+            $this->ui->assertPageContainsText('Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+        }
+    }
+
+    /**
      * @Given /^I am inactive against the LPA on my account$/
      */
     public function iAmInactiveAgainstTheLpaOnMyAccount(): void
@@ -2218,6 +2232,59 @@ class LpaContext implements Context
         );
 
         $this->ui->clickLink('Give an organisation access');
+    }
+
+    /**
+     * @When /^I request to give an organisation access to one of my LPAs which has \'([^\']*)\' and signed after 2016$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAsWhichHasIPSetting($check): void
+    {
+        $this->organisation = 'TestOrg';
+        $this->accessCode   = 'XYZ321ABC987';
+
+        if ($check === 'instructions and preferences') {
+            $this->lpa->applicationHasRestrictions = true;
+            $this->lpa->applicationHasGuidance = true;
+        } elseif ($check === 'instructions' ){
+            $this->lpa->applicationHasRestrictions = false;
+        };
+
+        // API call for get LpaById (when give organisation access is clicked)
+        $this->iRequestToGiveAnOrganisationAccess();
+
+        // API call to make code
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'code'         => $this->accessCode,
+                        'expires'      => '2021-03-07T23:59:59+00:00',
+                        'organisation' => $this->organisation,
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_CREATE_SHARE_CODE
+            )
+        );
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        $this->ui->fillField('org_name', $this->organisation);
+        $this->ui->pressButton('Continue');
     }
 
     /**
