@@ -8,8 +8,6 @@
     "build-scss": "npm rebuild sass --verbose && sass --verbose web/assets/main.scss:web/static/stylesheets/main.css --style compressed"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.10",
-    "@babel/preset-env": "^7.17.10",
     "@ministryofjustice/frontend": "0.2.6",
     "esbuild": "^0.17.19",
     "govuk-frontend": "^3.14.0",
