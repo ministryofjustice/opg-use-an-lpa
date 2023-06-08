@@ -32,7 +32,8 @@ class BaseContext implements Context
             'viewer' => getenv('BEHAT_VIEWER_URL') ?: 'http://viewer-web',
             'actor' => getenv('BEHAT_ACTOR_URL') ?: 'http://actor-web',
             default => throw new SuiteConfigurationException(
-                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
+                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName()),
+                $scope->getSuite()->getName(),
             ),
         };
 
@@ -56,7 +57,8 @@ class BaseContext implements Context
             'viewer' => getenv('BEHAT_OLD_VIEWER_URL') ?: 'http://viewer-web',
             'actor' => getenv('BEHAT_OLD_ACTOR_URL') ?: 'http://actor-web',
             default => throw new SuiteConfigurationException(
-                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
+                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName()),
+                $scope->getSuite()->getName(),
             ),
         };
 
