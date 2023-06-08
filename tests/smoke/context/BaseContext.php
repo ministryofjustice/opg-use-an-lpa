@@ -12,15 +12,12 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Suite\Exception\SuiteConfigurationException;
 use DMore\ChromeDriver\ChromeDriver;
 
-/**
- * Class BaseContext
- *
- * @package Test\Context
- */
 class BaseContext implements Context
 {
     /** @var string The domain/url of the service under test */
-    public string $baseUrl = "http://localhost";
+    public string $baseUrl = 'http://localhost';
+
+    public string $oldBaseUrl = 'http://localhost';
 
     /** @var MinkContext An accessible mink instance that drives UI interactions */
     public MinkContext $ui;
@@ -31,18 +28,13 @@ class BaseContext implements Context
      */
     public function setupBaseUrl(BeforeScenarioScope $scope): void
     {
-        switch ($scope->getSuite()->getName()) {
-            case 'viewer':
-                $this->baseUrl = getenv('BEHAT_VIEWER_URL') ?: 'http://viewer-web';
-                break;
-            case 'actor':
-                $this->baseUrl = getenv('BEHAT_ACTOR_URL') ?: 'http://actor-web';
-                break;
-            default:
-                throw new SuiteConfigurationException(
-                    sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
-                );
-        }
+        $this->baseUrl = match ($scope->getSuite()->getName()) {
+            'viewer' => getenv('BEHAT_VIEWER_URL') ?: 'http://viewer-web',
+            'actor' => getenv('BEHAT_ACTOR_URL') ?: 'http://actor-web',
+            default => throw new SuiteConfigurationException(
+                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
+            ),
+        };
 
         $environment = $scope->getEnvironment();
 
@@ -53,31 +45,27 @@ class BaseContext implements Context
             }
         }
     }
+
     /**
      * @BeforeScenario
      * @param BeforeScenarioScope $scope
      */
     public function setupOldBaseUrl(BeforeScenarioScope $scope): void
     {
-        switch ($scope->getSuite()->getName()) {
-            case 'viewer':
-                $this->OldBaseUrl = getenv('BEHAT_OLD_VIEWER_URL') ?: 'http://viewer-web';
-                break;
-            case 'actor':
-                $this->OldBaseUrl = getenv('BEHAT_OLD_ACTOR_URL') ?: 'http://actor-web';
-                break;
-            default:
-                throw new SuiteConfigurationException(
-                    sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
-                );
-        }
+        $this->oldBaseUrl = match ($scope->getSuite()->getName()) {
+            'viewer' => getenv('BEHAT_OLD_VIEWER_URL') ?: 'http://viewer-web',
+            'actor' => getenv('BEHAT_OLD_ACTOR_URL') ?: 'http://actor-web',
+            default => throw new SuiteConfigurationException(
+                sprintf('Suite "%s" does not have a valid url configured', $scope->getSuite()->getName())
+            ),
+        };
 
         $environment = $scope->getEnvironment();
 
         // we need to set this on *all* contexts
         foreach ($environment->getContexts() as $context) {
             if ($context instanceof RawMinkContext) {
-                $context->setMinkParameter('old_base_url', $this->OldBaseUrl);
+                $context->setMinkParameter('old_base_url', $this->oldBaseUrl);
             }
         }
     }
@@ -89,7 +77,7 @@ class BaseContext implements Context
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
-        $this->ui = $environment->getContext(MinkContext::class);
+        $this->ui    = $environment->getContext(MinkContext::class);
     }
 
     /**

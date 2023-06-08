@@ -43,7 +43,7 @@ restart_all: | down_all up_all
 .PHONY: restart_all
 
 build:
-	$(COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
+	$(TEST_COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: build
 
 build_all:
