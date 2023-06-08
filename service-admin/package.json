@@ -8,9 +8,9 @@
     "build-scss": "npm rebuild sass --verbose && sass --verbose web/assets/main.scss:web/static/stylesheets/main.css --style compressed"
   },
   "devDependencies": {
-    "@ministryofjustice/frontend": "^1.8.0",
+    "@ministryofjustice/frontend": "^0.2.6",
     "esbuild": "^0.17.19",
-    "govuk-frontend": "^4.6.0",
+    "govuk-frontend": "^3.14.0",
     "sass": "^1.63.2",
     "sass-loader": "^13.3.1"
   }
