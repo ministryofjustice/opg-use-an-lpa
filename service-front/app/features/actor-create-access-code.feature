@@ -45,3 +45,14 @@ Feature: The user is able to create access codes for organisations
     Given The LPA has been revoked
     When I request to give an organisation access to the LPA whose status changed to Revoked
     Then I am taken back to the dashboard page
+
+  @ui
+  Scenario: As a user I can generate an access code for an organisation and see relevant content when instructions and preferences present
+    When I request to give an organisation access to one of my LPAs which has 'instructions and preferences' and signed after 2016
+    Then I am given a unique access code and told 'instructions and preferences' images available in the summary
+
+
+  @ui
+  Scenario: As a user I can generate an access code for an organisation and see relevant content when instructions only present
+    When I request to give an organisation access to one of my LPAs which has 'instructions' and signed after 2016
+    Then I am given a unique access code and told 'instructions' images available in the summary
