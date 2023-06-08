@@ -117,7 +117,7 @@ data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v1.7.0"
+  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v2.3.0"
 }
 
 data "aws_secretsmanager_secret" "notify_api_key" {
