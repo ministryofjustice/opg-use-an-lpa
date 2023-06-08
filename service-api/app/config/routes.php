@@ -70,6 +70,11 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         App\Handler\LpasResourceCodesCollectionHandler::class,
         'lpa.cancel.code'
     );
+    $app->get(
+        '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/images',
+        App\Handler\LpasResourceImagesCollectionHandler::class,
+        'lpa.get.images'
+    );
 
     $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
     $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmationHandler::class, 'lpa.add.confirm');

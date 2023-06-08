@@ -71,7 +71,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
 
       - name: cache node modules
         id: cache-npm
@@ -94,7 +94,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@375a690dc0af3921541e5f427167f333d7e85f67 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -146,30 +146,40 @@ jobs:
           matrix.run_unit_tests == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
-      - name: docker integration tests
+      - name: docker integration and acceptance tests
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [[ "${SVC_PREFIX}" = "api" ]]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-            --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-            --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+            docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
+              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
+
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
-            docker run -d --name inttests --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP api-app:latest
-            docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-            docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-            docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 \
-            /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+            export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
+
+            docker run -d --name behattests \
+              --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP \
+              --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP \
+              --add-host iap-images-mock:$DOCKER_REMOTE_IAP_PACT_IP api-app:latest
+
+            docker exec behattests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+            docker exec behattests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+            docker exec behattests /usr/local/bin/php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
+            docker stop iap-images-mock
           elif [[ "${SVC_PREFIX}" = "front" ]]; then
-            docker run -d --name inttests front-app:latest
-            docker exec inttests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-            docker exec inttests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-            docker exec inttests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1\
-            /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+            docker run -d --name behattests front-app:latest
+
+            docker exec behattests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+            docker exec behattests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
+            docker exec behattests /usr/local/bin/php -dapc.enable_cli=1 -d memory_limit=-1 /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
           fi
         if: |
           matrix.run_integration_tests == 'true' &&
@@ -181,7 +191,7 @@ jobs:
         run: |
           mkdir -p build/service-${SVC_PREFIX}
           docker cp tests:/app/build/reports build/service-${SVC_PREFIX}/phpunit
-          docker cp inttests:/app/build/reports build/service-${SVC_PREFIX}/behat
+          docker cp behattests:/app/build/reports build/service-${SVC_PREFIX}/behat
         if: |
           (success() || failure()) && contains(fromJson('["front", "api"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
@@ -248,7 +258,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@b5f9031d829ac39b7fd26092019aeca3ee6b3ebd # pin@v1.5.1
         with:
           registries: 311462405659
         if: |

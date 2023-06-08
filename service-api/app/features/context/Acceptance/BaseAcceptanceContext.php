@@ -15,17 +15,6 @@ use GuzzleHttp\Handler\MockHandler;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 
-/**
- * Class BaseAcceptanceContext
- *
- * @package BehatTest\Context\Acceptance
- *
- * @property string userAccountId
- * @property string userAccountEmail
- * @property string userAccountPassword
- *
- * @property RequestInterface lastApiRequest
- */
 class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareContext
 {
     use RuntimeMinkContext;
@@ -34,6 +23,11 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
     public MinkContext $ui;
+
+    public string $userAccountId;
+    public string $userAccountEmail;
+    public string $userAccountPassword;
+    public RequestInterface $lastApiRequest;
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -49,7 +43,7 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
-        $this->ui = $environment->getContext(MinkContext::class);
+        $this->ui    = $environment->getContext(MinkContext::class);
     }
 
     /**
@@ -57,8 +51,8 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
      */
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userAccountId = '123456789';
-        $this->userAccountEmail = 'test@example.com';
+        $this->userAccountId       = '123456789';
+        $this->userAccountEmail    = 'test@example.com';
         $this->userAccountPassword = 'pa33w0rd';
     }
 }

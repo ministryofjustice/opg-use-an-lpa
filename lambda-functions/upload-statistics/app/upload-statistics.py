@@ -332,6 +332,7 @@ class StatisticsCollector:
         self.logger.info("=== Update completed successfully ===")
         return True
 
+
 def lambda_handler(event, context):
 
     work = StatisticsCollector()

@@ -16,6 +16,7 @@ on:
       - '!main'          # reverse match main
       - '!dependabot/**' # reverse match dependabot PRs
       - 'dependabot/docker/**' # match dependabot PRs that update docker
+      - 'dependabot/pip/**' # match dependabot PRs that update pip
 
 permissions:
   contents: write
@@ -38,18 +39,18 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # pin@v3
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
         with:
           fetch-depth: 2
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@123f9a4d0d8aa3bdb532030c4b53ef85d225fb44
+        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@123f9a4d0d8aa3bdb532030c4b53ef85d225fb44
+        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
         with:
           files: |
             terraform/**
