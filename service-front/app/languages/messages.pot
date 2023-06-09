@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-09T12:59:59+00:00\n"
+"POT-Creation-Date: 2023-06-09T13:38:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -5203,15 +5203,15 @@ msgstr ""
 msgid "On some LPAs made in or before 2015, instructions and preferences are called ‘restrictions and conditions’. You’ll find them on page 9 of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:44
+#: src/Actor/templates/actor/instructions-preferences.html.twig:42
 msgid "In some older LPAs, instructions and preferences are called 'restrictions and conditions'."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:50
+#: src/Actor/templates/actor/instructions-preferences.html.twig:48
 msgid "I do not have the paper LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:54
+#: src/Actor/templates/actor/instructions-preferences.html.twig:52
 msgid "When an LPA is registered, we post the LPA to either:"
 msgstr ""
 
@@ -5219,7 +5219,7 @@ msgstr ""
 msgid "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is for)"
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:58
+#: src/Actor/templates/actor/instructions-preferences.html.twig:56
 msgid "one of the attorneys"
 msgstr ""
 
@@ -5461,11 +5461,11 @@ msgid ""
 "                            title=\"lasting power of attorney\">LPA</abbr> has instructions or preferences we show a scanned image in the LPA summary."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:29
+#: src/Actor/templates/actor/instructions-preferences.html.twig:28
 msgid "This scanned image is also shown to anyone you give an access code to. Please check that the scanned image is readable before giving an access code to organisations."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:30
+#: src/Actor/templates/actor/instructions-preferences.html.twig:29
 msgid "Organisations may still ask to see the paper LPA if they would like to check anything."
 msgstr ""
 
@@ -5516,4 +5516,55 @@ msgid ""
 "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make\n"
 "                            <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified\n"
 "                                    copies</a></strong>."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:26
+msgid "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or preferences we show a scanned image in the LPA summary."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:32
+msgid ""
+"If an <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</abbr> has instructions or preferences we cannot show these online."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:35
+msgid ""
+"Organisations may ask to see the paper <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</abbr> so that they can find out what the instructions or preferences are."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:39
+msgid "On most LPAs, you’ll find the instructions and preferences in section 7."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:40
+msgid ""
+"On some LPAs made in or before 2015, instructions and preferences are called ‘restrictions and conditions’. You’ll find them on page 9 of the\n"
+"                            <abbr title=\"lasting power of attorney\">LPA</abbr>."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:54
+msgid ""
+"the donor (the person the <abbr\n"
+"                                            title=\"lasting power of attorney\">LPA</abbr> is for)"
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:57
+msgid ""
+"someone else, like a solicitor, who helped to fill in the <abbr\n"
+"                                            title=\"lasting power of attorney\">LPA</abbr> form"
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:62
+msgid ""
+"Check with these people to see who has the <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</abbr>."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:64
+msgid ""
+"If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make\n"
+"                                <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified\n"
+"                                        copies</a></strong>."
 msgstr ""
