@@ -3,10 +3,10 @@ FROM node:18-alpine as asset-env
 WORKDIR /app
 
 COPY web/assets web/assets
-COPY webpack.config.js .
+COPY build.js .
 COPY package.json package-lock.json ./
 
-RUN npm ci && node_modules/.bin/webpack -p
+RUN npm ci && npm run build
 
 # Build Go app
 FROM golang:1.20.3-alpine as build-env

@@ -6,7 +6,7 @@ services:
         image: node:14.18.2-alpine3.12
         working_dir: /app
         entrypoint: |
-            sh -c "npm i && npm run watch"
+            sh -c "npm i && npm run build"
         volumes:
             - .:/app:rw,delegated
 
