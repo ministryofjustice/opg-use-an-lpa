@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "npm run build-scss && node build.js",
-    "build-scss": "npm rebuild sass --verbose && sass --verbose --load-path . web/assets/main.scss:web/static/stylesheets/main.css --style compressed"
+    "build-scss": "npm rebuild sass --verbose && sass --verbose --load-path . web/assets/main.scss:web/static/stylesheets/all.css --style compressed"
   },
   "devDependencies": {
     "@ministryofjustice/frontend": "^1.8.0",
