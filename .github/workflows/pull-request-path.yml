@@ -60,7 +60,7 @@ jobs:
         run: |
           branch_name=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
           echo "branch_formatted=$branch_name" >> $GITHUB_OUTPUT
-          echo "workspace_name=(echo ${GITHUB_SHA:0:3}$branch_name)" >> $GITHUB_OUTPUT
+          echo "workspace_name=$(echo ${GITHUB_SHA:0:3}$branch_name)" >> $GITHUB_OUTPUT
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
           if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
           then
