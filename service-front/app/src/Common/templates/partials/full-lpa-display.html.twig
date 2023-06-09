@@ -3,7 +3,7 @@
         {{ include('@partials/welsh-switch.html.twig') }}
     {% endif %}
 
-    <main class="govuk-main-wrapper" id="main-content" role="main">
+    <main class="govuk-main-wrapper opg-print-pdf" id="main-content" role="main">
         <div class="govuk-grid-row">
 
             <div class="govuk-panel govuk-!-padding-bottom-2 govuk-!-margin-top-4 govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
@@ -64,7 +64,9 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="govuk-grid-column-two-thirds">
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
                     {% if lpa.caseSubtype|lower == "pfa" %}
                         {% set type = "Property and finance" %}
                     {% else %}
@@ -85,57 +87,58 @@
                         </form>
                     {% endif %}
                 </div>
-
-                {{ include('@partials/section-break.html.twig') }}
-
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        {% include '@partials/lpa-summary-details/lpa-donor-details.html.twig' %}
-                    </div>
-                </div>
-
-                {{ include('@partials/section-break.html.twig') }}
-
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        {% include '@partials/lpa-summary-details/lpa-attorney-details.html.twig' %}
-                    </div>
-                </div>
-
-                {{ include('@partials/section-break.html.twig') }}
-
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
-                        <dl class="govuk-summary-list govuk-summary-list--no-border">
-                            {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
-                                <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
-                            </div>
-                        </dl>
-                    </div>
-                </div>
-
-                {{ include('@partials/section-break.html.twig') }}
-
-                {% if not forDownload %}
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds">
-                            <form action={{ path('download-lpa') }}>
-                                <button class="govuk-button"
-                                        type="submit">{% trans %}Download this LPA summary{% endtrans %}
-                                </button>
-                            </form>
-                            <p class="govuk-body">
-                                <a class="govuk-link check-another"
-                                   href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                {% endif %}
             </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {% include '@partials/lpa-summary-details/lpa-donor-details.html.twig' %}
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {% include '@partials/lpa-summary-details/lpa-attorney-details.html.twig' %}
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            {% if not forDownload %}
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <form action={{ path('download-lpa') }}>
+                            <button class="govuk-button"
+                                    type="submit">{% trans %}Download this LPA summary{% endtrans %}
+                            </button>
+                        </form>
+                        <p class="govuk-body">
+                            <a class="govuk-link check-another"
+                               href="{{ path('home') }}">{% trans %}I want to check another LPA{% endtrans %}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </main>
 </div>
+
