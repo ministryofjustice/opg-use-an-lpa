@@ -9,91 +9,91 @@
     </div>
   </div>
 
-{{ if .Result }}
-<table class="govuk-table">
-  <thead class="govuk-table__head">
-  <tr>
-    <th scope="col" class="govuk-table__header"></th>
-    <th scope="col" class="govuk-table__header">2 months previous</th>
-    <th scope="col" class="govuk-table__header">Previous Month</th>  
-    <th scope="col" class="govuk-table__header">Current Month</th>
-    <th scope="col" class="govuk-table__header">Total</th>
-  </tr>
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of LPAs added</th>
-    {{ range .Result }}
-      <th scope="col" class="govuk-table__header">{{ .lpas_added }}</th>
-    {{ end }}
-  </tr>
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of LPAs removed</th>
-    {{ range .Result }}
-      <th scope="col" class="govuk-table__header">{{ .lpa_removed_event }}</th>
-    {{ end }}
-  </tr>
-  </thead>
+  {{ if .Result }}
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr>
+          <th scope="col" class="govuk-table__header"></th>
+          <th scope="col" class="govuk-table__header">2 months previous</th>
+          <th scope="col" class="govuk-table__header">Previous Month</th>
+          <th scope="col" class="govuk-table__header">Current Month</th>
+          <th scope="col" class="govuk-table__header">Total</th>
+        </tr>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of LPAs added</th>
+          {{ range .Result }}
+            <th scope="col" class="govuk-table__header">{{ .lpas_added }}</th>
+          {{ end }}
+        </tr>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of LPAs removed</th>
+          {{ range .Result }}
+            <th scope="col" class="govuk-table__header">{{ .lpa_removed_event }}</th>
+          {{ end }}
+        </tr>
+      </thead>
 
-  <thead class="govuk-table__head">
-  <tr>
-    <th scope="col" class="govuk-table__header"></th>
-    <th scope="col" class="govuk-table__header">2 months previous</th>
-    <th scope="col" class="govuk-table__header">Previous Month</th>  
-    <th scope="col" class="govuk-table__header">Current Month</th>
-    <th scope="col" class="govuk-table__header">Total</th>
-  </tr>
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of account created</th>
-    {{ range .Result }}
-    <th scope="col" class="govuk-table__header">{{ .account_created_event }}</th>
-    {{ end }}
-  </tr>
-  <tr>
-  <th scope="col" class="govuk-table__header">Number of account deleted</th>
-    {{ range .Result }}
-    <th scope="col" class="govuk-table__header">{{ .account_deleted_event }}</th>
-    {{ end }}
-  </tr>
-  </thead>
+      <thead class="govuk-table__head">
+        <tr>
+          <th scope="col" class="govuk-table__header"></th>
+          <th scope="col" class="govuk-table__header">2 months previous</th>
+          <th scope="col" class="govuk-table__header">Previous Month</th>
+          <th scope="col" class="govuk-table__header">Current Month</th>
+          <th scope="col" class="govuk-table__header">Total</th>
+        </tr>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of account created</th>
+          {{ range .Result }}
+          <th scope="col" class="govuk-table__cell">{{ .account_created_event }}</th>
+          {{ end }}
+        </tr>
+        <tr>
+        <th scope="col" class="govuk-table__header">Number of account deleted</th>
+          {{ range .Result }}
+          <th scope="col" class="govuk-table__cell">{{ .account_deleted_event }}</th>
+          {{ end }}
+        </tr>
+      </thead>
 
-  <thead class="govuk-table__head">
-  <tr>
-    <th scope="col" class="govuk-table__header"></th>
-    <th scope="col" class="govuk-table__header">2 months previous</th>
-    <th scope="col" class="govuk-table__header">Previous Month</th>  
-    <th scope="col" class="govuk-table__header">Current Month</th>
-    <th scope="col" class="govuk-table__header">Total</th>
-  </tr>
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of account activated</th>
-    {{ range .Result }}
-    <th scope="col" class="govuk-table__header">{{ .account_activated_event }}</th>
-    {{ end }}
-  </tr>
-  </thead>
+      <thead class="govuk-table__head">
+        <tr>
+          <th scope="col" class="govuk-table__header"></th>
+          <th scope="col" class="govuk-table__header">2 months previous</th>
+          <th scope="col" class="govuk-table__header">Previous Month</th>
+          <th scope="col" class="govuk-table__header">Current Month</th>
+          <th scope="col" class="govuk-table__header">Total</th>
+        </tr>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of account activated</th>
+          {{ range .Result }}
+          <th scope="col" class="govuk-table__cell">{{ .account_activated_event }}</th>
+          {{ end }}
+        </tr>
+      </thead>
 
-  <thead class="govuk-table__head">
-  <tr>
-    <th scope="col" class="govuk-table__header"></th>
-    <th scope="col" class="govuk-table__header">2 months previous</th>
-    <th scope="col" class="govuk-table__header">Previous Month</th>  
-    <th scope="col" class="govuk-table__header">Current Month</th>
-    <th scope="col" class="govuk-table__header">Total</th>
-  </tr>
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of access codes created</th>
-    {{ range .Result }}
-      <th scope="col" class="govuk-table__header">{{ .viewer_codes_created }}</th>
-    {{ end }}
-  </tr>
+      <thead class="govuk-table__head">
+        <tr>
+          <th scope="col" class="govuk-table__header"></th>
+          <th scope="col" class="govuk-table__header">2 months previous</th>
+          <th scope="col" class="govuk-table__header">Previous Month</th>
+          <th scope="col" class="govuk-table__header">Current Month</th>
+          <th scope="col" class="govuk-table__header">Total</th>
+        </tr>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of access codes created</th>
+          {{ range .Result }}
+            <th scope="col" class="govuk-table__cell">{{ .viewer_codes_created }}</th>
+          {{ end }}
+        </tr>
 
-  <tr>
-    <th scope="col" class="govuk-table__header">Number of access code Views</th>
-    {{ range .Result }}
-      <th scope="col" class="govuk-table__header">{{ .viewer_codes_viewed }}</th>
-    {{ end }}
-  </tr>
-  </thead>
-  </table>
+        <tr>
+          <th scope="col" class="govuk-table__header">Number of access code Views</th>
+          {{ range .Result }}
+            <th scope="col" class="govuk-table__cell">{{ .viewer_codes_viewed }}</th>
+          {{ end }}
+        </tr>
+      </thead>
+    </table>
 
-{{end}}
+  {{ end }}
 {{ end }}
