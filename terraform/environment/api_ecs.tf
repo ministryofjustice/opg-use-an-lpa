@@ -223,6 +223,18 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
     ]
   }
+
+  statement {
+    sid    = "instructionsandprefsaccess"
+    effect = "Allow"
+    actions = [
+      "execute-api:Invoke",
+    ]
+    resources = [
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/image-request/*",
+      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
+    ]
+  }
 }
 
 //-----------------------------------------------
