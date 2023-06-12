@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Factory;
 
-use Common\Service\Lpa\Factory\IAPImages;
+use Common\Service\Lpa\Factory\InstAndPrefImages;
 use PHPUnit\Framework\TestCase;
 use ValueError;
 
 /**
- * @coversDefaultClass \Common\Service\Lpa\Factory\IAPImages
+ * @coversDefaultClass \Common\Service\Lpa\Factory\InstAndPrefImages
  */
-class IAPImagesTest extends TestCase
+class InstAndPrefImagesTest extends TestCase
 {
     /**
      * @test
@@ -26,7 +26,7 @@ class IAPImagesTest extends TestCase
             'signedUrls' => [],
         ];
 
-        $factory = new IAPImages();
+        $factory = new InstAndPrefImages();
 
         $images = $factory->createFromData($data);
 
@@ -46,7 +46,7 @@ class IAPImagesTest extends TestCase
             'signedUrls' => [],
         ];
 
-        $factory = new IAPImages();
+        $factory = new InstAndPrefImages();
 
         $this->expectException(ValueError::class);
         $images = $factory->createFromData($data);
@@ -69,7 +69,7 @@ class IAPImagesTest extends TestCase
             ],
         ];
 
-        $factory = new IAPImages();
+        $factory = new InstAndPrefImages();
 
         $images = $factory->createFromData($data);
 
