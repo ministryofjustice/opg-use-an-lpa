@@ -113,6 +113,25 @@
                     <h2 class="govuk-heading-l">
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
+
+                    {% if
+                        feature_enabled("instructions_and_preferences")
+                        and (lpa.applicationHasGuidance or lpa.applicationHasInstructions)
+                    %}
+                        {# TODO - Waiting for "severance" data to be available from Sirius / API #}
+
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                                {% trans %}
+                                    Some words in the instructions and or preferences have been removed by the court of protection.
+                                    We cannot show this detail online. organisations may ask to see the paper <abbr title="lasting power of attorney">LPA</abbr> so that they can find out which words have been removed.
+                                {% endtrans %}
+                            </strong>
+                        </div>
+                    {% endif %}
+
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
                     </dl>
