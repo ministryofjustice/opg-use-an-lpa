@@ -7,9 +7,9 @@ namespace Common\Service\Lpa\Factory;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\InstructionsAndPreferences\SignedUrl;
-use Common\Service\Lpa\IAPImagesFactory;
+use Common\Service\Lpa\InstAndPrefImagesFactory;
 
-final class IAPImages implements IAPImagesFactory
+final class InstAndPrefImages implements InstAndPrefImagesFactory
 {
     /**
      * @inheritdoc

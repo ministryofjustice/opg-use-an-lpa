@@ -6,7 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Entity\InstructionsAndPreferences\Images;
 
-interface IAPImagesFactory
+interface InstAndPrefImagesFactory
 {
     /**
      * Takes an inbound array of data and returns a DTO representing a
