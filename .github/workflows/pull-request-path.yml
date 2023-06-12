@@ -38,6 +38,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
+      workspace_name: ${{ steps.variables.outputs.workspace_name }}
     steps:
       - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
         with:
@@ -57,7 +58,9 @@ jobs:
       - name: extract variables for workflow
         id: variables
         run: |
-          echo "branch_formatted=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)" >> $GITHUB_OUTPUT
+          branch_name=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
+          echo "branch_formatted=$branch_name" >> $GITHUB_OUTPUT
+          echo "workspace_name=$(echo ${GITHUB_SHA:0:3}$branch_name)" >> $GITHUB_OUTPUT
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
           if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
           then
@@ -80,7 +83,7 @@ jobs:
     needs:
       - workflow_variables
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets: inherit
     if: |
       always() &&
@@ -115,7 +118,7 @@ jobs:
       - node_build
     with:
       tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
-      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      branch_name: ${{ needs.workflow_variables.outputs.workspace_name }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets: inherit
@@ -147,7 +150,7 @@ jobs:
       - terraform_lint
       - workflow_variables
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
       terraform_path: environment
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       apply: true
@@ -179,7 +182,7 @@ jobs:
       - seed_dynamodb
       - workflow_variables
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets: inherit
     if: |
       always() &&
@@ -217,7 +220,7 @@ jobs:
     name: ecr scan results
     uses: ./.github/workflows/_ecr-scanning.yml
     with:
-      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.workflow_variables.outputs.workspace_name }}-${{ needs.workflow_variables.outputs.short_sha }}
     needs:
       - code_coverage
       - terraform_apply_environment
@@ -239,9 +242,9 @@ jobs:
     steps:
       - name: workflow has ended without issue
         run: |
-          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
+          echo "${{ needs.workflow_variables.outputs.workspace_name }} PR environment tested, built and deployed"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.workspace_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"
     if: |
       always() &&
       needs.ecr_scan_results.result == 'success' &&
