@@ -24,3 +24,10 @@
 .govuk-cookie-banner {
   display: none !important;
 }
+
+.opg-print-pdf {
+  .govuk-grid-column-full {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
