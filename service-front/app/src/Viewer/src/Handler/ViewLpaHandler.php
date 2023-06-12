@@ -7,6 +7,7 @@ namespace Viewer\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
@@ -21,7 +22,12 @@ class ViewLpaHandler extends AbstractHandler
 {
     use SessionTrait;
 
-    public function __construct(TemplateRendererInterface $renderer, UrlHelper $urlHelper, private LpaService $lpaService)
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        private LpaService $lpaService,
+        private FeatureEnabled $featureEnabled,
+    )
     {
         parent::__construct($renderer, $urlHelper);
     }
@@ -41,10 +47,16 @@ class ViewLpaHandler extends AbstractHandler
             throw new SessionTimeoutException();
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, $organisation);
+        $lpaData = $this->lpaService->getLpaByCode($code, $surname, $organisation);
 
-        return new HtmlResponse($this->renderer->render('viewer::view-lpa', [
-            'lpa' => $lpa->lpa,
-        ]));
+        $renderData = [
+            'lpa' => $lpaData->lpa,
+        ];
+
+        if (($this->featureEnabled)('instructions_and_preferences') && $lpaData->offsetExists('iap')) {
+            $renderData['iap_images'] = $lpaData->iap;
+        }
+
+        return new HtmlResponse($this->renderer->render('viewer::view-lpa', $renderData));
     }
 }
