@@ -2,8 +2,12 @@
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
             <strong>Important: </strong>This LPA has instructions.<br>
-            You might need to show organisations the paper LPA.
         {% endtrans %}
+        {% if not feature_enabled('instructions_and_preferences') %}
+            {% trans %}
+                You might need to show organisations the paper LPA.
+            {% endtrans %}
+        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -16,8 +20,12 @@
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
             <strong>Important: </strong>This LPA has preferences.<br>
-            You might need to show organisations the paper LPA.
         {% endtrans %}
+        {% if not feature_enabled('instructions_and_preferences') %}
+            {% trans %}
+                You might need to show organisations the paper LPA.
+            {% endtrans %}
+        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -30,8 +38,12 @@
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
             <strong>Important: </strong>This LPA has instructions and preferences.<br>
-            You might need to show organisations the paper LPA.
         {% endtrans %}
+        {% if not feature_enabled('instructions_and_preferences') %}
+            {% trans %}
+                You might need to show organisations the paper LPA.
+            {% endtrans %}
+        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -43,9 +55,13 @@
 {% if actorActive and is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            <strong>Important: </strong>This LPA has instructions or preferences.<br>
-            You might need to show organisations the paper LPA.
+            <strong>Important: </strong>This LPA has instructions and/or preferences.<br>
         {% endtrans %}
+        {% if not feature_enabled('instructions_and_preferences') %}
+            {% trans %}
+                You might need to show organisations the paper LPA.
+            {% endtrans %}
+        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
