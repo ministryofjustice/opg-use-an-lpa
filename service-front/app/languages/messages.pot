@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-08T07:27:34+00:00\n"
+"POT-Creation-Date: 2023-06-13T16:11:58+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -118,6 +118,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
+#: src/Common/templates/partials/full-lpa-display.html.twig:119
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
 msgid "Warning"
@@ -3827,23 +3828,23 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:78
+#: src/Common/templates/partials/full-lpa-display.html.twig:80
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:127
+#: src/Common/templates/partials/full-lpa-display.html.twig:145
 msgid "Download this LPA summary"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:109
+#: src/Common/templates/partials/full-lpa-display.html.twig:112
 msgid "LPA details"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:113
+#: src/Common/templates/partials/full-lpa-display.html.twig:131
 msgid "Date summary viewed"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:132
+#: src/Common/templates/partials/full-lpa-display.html.twig:150
 msgid "I want to check another LPA"
 msgstr ""
 
@@ -4615,4 +4616,10 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:120
+msgid ""
+"Some words in the instructions and or preferences have been removed by the court of protection.\n"
+"                                    To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""

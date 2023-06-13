@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-06-08T07:27:34+00:00\n"
+"POT-Creation-Date: 2023-06-13T16:11:58+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -146,6 +146,7 @@ msgstr "Daw’r cod hwn i ben ymhen 30 diwrnod, ar yr %date%."
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
+#: src/Common/templates/partials/full-lpa-display.html.twig:119
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
 msgid "Warning"
@@ -5284,7 +5285,7 @@ msgstr "Mae gan yr atwrneiaeth arhosol hon ddewisiadau"
 msgid "This LPA has instructions"
 msgstr "Mae gan yr atwrneiaeth arhosol hon gyfarwyddiadau"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:78
+#: src/Common/templates/partials/full-lpa-display.html.twig:80
 msgid ""
 "You should download and save this LPA summary. You can use it as evidence that "
 "you viewed the LPA summary before acting on it."
@@ -5292,19 +5293,19 @@ msgstr ""
 "Dylech lawrlwytho a chadw’r crynodeb LPA hwn. Gallwch ei ddefnyddio fel "
 "tystiolaeth eich bod wedi edrych ar y crynodeb LPA cyn gweithredu."
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:127
+#: src/Common/templates/partials/full-lpa-display.html.twig:145
 msgid "Download this LPA summary"
 msgstr "Llwytho crynodeb o’r LPA i lawr"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:109
+#: src/Common/templates/partials/full-lpa-display.html.twig:112
 msgid "LPA details"
 msgstr "Manylion yr LPA"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:113
+#: src/Common/templates/partials/full-lpa-display.html.twig:131
 msgid "Date summary viewed"
 msgstr "Dyddiad gweld y crynodeb"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:132
+#: src/Common/templates/partials/full-lpa-display.html.twig:150
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
@@ -6585,6 +6586,18 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:120
+msgid ""
+"Some words in the instructions and or preferences have been removed by the "
+"court of protection.\n"
+"                                    To check which words have been removed, "
+"please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</"
+"abbr> or the court order."
+msgstr ""
+"Mae rhai geiriau wedi eu tynnu o’r cyfarwyddiadau a’r dewisiadau gan y Llys "
+"Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch i gael gweld fersiwn papur o’r "
+"Atwrneiaeth Arhosol neu’r Gorchymyn Llys."
 
 #~ msgid "What happens next?"
 #~ msgstr "Beth fydd yn digwydd nesaf?"
