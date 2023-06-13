@@ -75,9 +75,11 @@
                                 {% endif %}
                             {% endif %}
                         </p>
-                        <p class="govuk-body body-alt-1">
-                            {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
-                        </p>
+                        {% if not feature_enabled("instructions_and_preferences") %}
+                            <p class="govuk-body body-alt-1">
+                                {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}

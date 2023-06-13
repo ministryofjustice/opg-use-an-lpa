@@ -49,7 +49,7 @@
                             }) }}
                     </div>
 
-                    {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
+                    {% if (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) and not feature_enabled('instructions_and_preferences')%}
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
