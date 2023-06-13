@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-05-31T12:26:54+00:00\n"
+"POT-Creation-Date: 2023-06-13T07:44:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -9,7 +9,7 @@ msgid "Your new access code"
 msgstr ""
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:36
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:11
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:12
 #: src/Actor/templates/actor/check-access-codes.html.twig:12
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:103
 #: src/Actor/templates/actor/instructions-preferences.html.twig:11
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Back to your LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:20
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:61
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/lpa-already-added.html.twig:36
@@ -35,7 +35,7 @@ msgstr ""
 msgid "Property and finance"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:19
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:20
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:63
 #: src/Actor/templates/actor/check-access-codes.html.twig:22
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
@@ -48,19 +48,19 @@ msgstr ""
 msgid "Health and welfare"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:41
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:43
 msgid "Give this access code to %organisation%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:44
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:47
 msgid "This code expires in 30 days, on %date%."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:36
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:38
 msgid "Copy code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:37
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:39
 msgid "Code copied"
 msgstr ""
 
@@ -76,7 +76,7 @@ msgstr ""
 msgid "When %organisation% have the access code, they should go to <br> www.gov.uk/view-lpa to see a summary of the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:142
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:146
 msgid "Give another organisation access"
 msgstr ""
 
@@ -223,11 +223,11 @@ msgstr ""
 msgid "Confirm your password"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:55
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
 #: src/Actor/templates/actor/check-access-codes.html.twig:65
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:131
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:148
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
@@ -2173,7 +2173,7 @@ msgid ""
 "            or head back to <a href=\"%link%\" class=\"govuk-link\">Home</a>."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:127
+#: src/Common/templates/partials/full-lpa-display.html.twig:130
 msgid "Download this LPA summary"
 msgstr ""
 
@@ -2217,7 +2217,7 @@ msgstr ""
 msgid "Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper LPA to find out what decisions must be made jointly."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:109
+#: src/Common/templates/partials/full-lpa-display.html.twig:112
 msgid "LPA details"
 msgstr ""
 
@@ -2255,7 +2255,7 @@ msgstr ""
 msgid "Date donor signed LPA"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:132
+#: src/Common/templates/partials/full-lpa-display.html.twig:135
 msgid "I want to check another LPA"
 msgstr ""
 
@@ -3294,7 +3294,7 @@ msgstr ""
 msgid "Use this service to:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:76
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
 msgid "What to do next"
 msgstr ""
 
@@ -3881,7 +3881,7 @@ msgid ""
 "                            Monday to Friday, 9:30am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:121
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:138
 msgid "Seen something incorrect in the LPA details?"
 msgstr ""
 
@@ -4329,11 +4329,11 @@ msgstr ""
 msgid "Access code expired %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:119
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:122
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:134
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:137
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
 msgstr ""
 
@@ -4349,11 +4349,11 @@ msgstr ""
 msgid "If you've asked for a password reset more than once, make sure you clicked on the link in the most recent password reset email."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:112
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:115
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:127
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:130
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
 msgstr ""
 
@@ -4365,15 +4365,15 @@ msgstr ""
 msgid "the donor or an attorney has changed their name"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:62
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:65
 msgid "As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:66
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:69
 msgid "As there are instructions on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:70
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:73
 msgid "As there are preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
@@ -4381,7 +4381,7 @@ msgstr ""
 msgid "If there are instructions and preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:58
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:61
 msgid "If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA."
 msgstr ""
 
@@ -4743,7 +4743,7 @@ msgstr ""
 msgid "A replacement attorney is appointed by the donor to step in for an attorney if they cannot act on the donor's behalf anymore."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:78
+#: src/Common/templates/partials/full-lpa-display.html.twig:80
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
 msgstr ""
 
@@ -4910,7 +4910,7 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:113
+#: src/Common/templates/partials/full-lpa-display.html.twig:116
 msgid "Date summary viewed"
 msgstr ""
 
@@ -5164,7 +5164,7 @@ msgstr ""
 msgid "LPA type:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:20
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:21
 msgid "Your access code"
 msgstr ""
 
@@ -5293,7 +5293,7 @@ msgstr ""
 msgid "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:84
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:88
 msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
 
@@ -5339,7 +5339,7 @@ msgid ""
 "                                            title=\"lasting power of attorney\">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise."
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:132
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:149
 msgid ""
 "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper\n"
 "                        <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
@@ -5437,14 +5437,32 @@ msgid ""
 "                    <abbr title=\"lasting power of attorney\">LPA</abbr> to find out what decisions must be made jointly."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:88
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:92
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
 msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:100
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:104
 msgid "Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:81
+msgid ""
+"Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the\n"
+"                            <abbr title=\"lasting power of attorney\">LPA</abbr>."
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:125
+msgid ""
+"Some words in the instructions and or preferences have been removed by the court of protection.\n"
+"                                    We cannot show this detail online. organisations may ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> so that they can find out which words have been removed."
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:125
+msgid ""
+"Some words in the instructions and or preferences have been removed by the court of protection.\n"
+"                                    We cannot show this detail online. Organisations may ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> so that they can find out which words have been removed."
 msgstr ""
