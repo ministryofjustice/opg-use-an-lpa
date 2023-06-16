@@ -187,6 +187,11 @@ class Lpa
         $this->applicationHasGuidance = $applicationHasGuidance;
     }
 
+    public function setApplicationHasSeveranceWarning(bool $hasSeveranceWarning): void
+    {
+        $this->hasSeveranceWarning = $hasSeveranceWarning;
+    }
+
     public function getLpaDonorSignatureDate(): ?DateTime
     {
         return $this->lpaDonorSignatureDate;

@@ -116,19 +116,20 @@
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
 
-                    {% if
-                        feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasInstructions)%}
-
-                        <div class="govuk-warning-text">
-                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                            <strong class="govuk-warning-text__text">
-                                <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                                {% trans %}
-                                    Some words in the instructions and or preferences have been removed by the court of protection.
-                                    We cannot show this detail online. Organisations may ask to see the paper <abbr title="lasting power of attorney">LPA</abbr> so that they can find out which words have been removed.
-                                {% endtrans %}
-                            </strong>
-                        </div>
+                    {% if feature_enabled('instructions_and_preferences') %}
+                        {% if (lpa.applicationHasGuidance or lpa.applicationHasInstructions) and lpa.hasSeveranceWarning %}
+                            <div class="govuk-warning-text">
+                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                <strong class="govuk-warning-text__text">
+                                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                                    {% trans %}
+                                        Some words in the instructions and or preferences have been removed by the court of protection.
+                                        We cannot show this detail online. Organisations may ask to see the paper <abbr
+                                            title="lasting power of attorney">LPA</abbr> so that they can find out which words have been removed.
+                                    {% endtrans %}
+                                </strong>
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
