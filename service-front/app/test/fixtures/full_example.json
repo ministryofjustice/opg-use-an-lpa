@@ -19,6 +19,7 @@
   "lifeSustainingTreatment": "yes",
   "onlineLpaId": "ABC123",
   "attorneyActDecisions": "Example decision",
+  "hasSeveranceWarning": true,
   "donor": {
     "id": 0,
     "uId": "700000000054",
