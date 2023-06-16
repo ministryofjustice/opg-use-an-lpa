@@ -65,7 +65,16 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('1234', $lpa->getUId());
     }
+    public function testLpaHasSeveranceWarningReturned()
+    {
+        $factory = new Sirius();
 
+        $lpa = $factory->createLpaFromData(['uId' => '1234','hasSeveranceWarning' => true]);
+
+        $this->assertInstanceOf(Lpa::class, $lpa);
+        $this->assertEquals('1234', $lpa->getUId());
+        $this->assertEquals(true, $lpa->getApplicationHasSeveranceWarning());
+    }
     public function testCanCreateLpaFromSwaggerExample()
     {
         $factory = new Sirius();
@@ -86,6 +95,7 @@ class SiriusLpaFactoryTest extends TestCase
 
         $this->assertInstanceOf(CaseActor::class, $lpa->getActiveAttorneys()[0]);
         $this->assertInstanceOf(CaseActor::class, $lpa->getInactiveAttorneys()[0]);
+        $this->assertEquals(true, $lpa->getApplicationHasSeveranceWarning());
     }
 
     public function testCanCreateLpaFromSimpleExample()
