@@ -198,7 +198,6 @@ class Lpa
         $this->hasSeveranceWarning = $hasSeveranceWarning;
     }
 
-
     public function getLpaDonorSignatureDate(): ?DateTime
     {
         return $this->lpaDonorSignatureDate;
