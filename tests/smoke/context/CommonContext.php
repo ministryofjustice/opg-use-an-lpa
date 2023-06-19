@@ -83,6 +83,14 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I can see that the lpa has instructions and preferences images in summary$/
+     */
+    public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary()
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
      * @Then /^I can see Welsh text$/
      */
     public function iCanSeeWelshText(): void
