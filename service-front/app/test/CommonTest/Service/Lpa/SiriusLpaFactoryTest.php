@@ -76,6 +76,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals('1234', $lpa->getUId());
         $this->assertEquals(true, $lpa->getApplicationHasSeveranceWarning());
     }
+    
     public function testCanCreateLpaFromSwaggerExample()
     {
         $factory = new Sirius();
