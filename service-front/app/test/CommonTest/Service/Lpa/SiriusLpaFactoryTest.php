@@ -65,7 +65,8 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('1234', $lpa->getUId());
     }
-    public function testLpaHasSeveranceWarningReturned()
+
+    public function testLpaHasSeveranceWarningReturned(): void
     {
         $factory = new Sirius();
 
