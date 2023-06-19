@@ -88,6 +88,10 @@ class CommonContext implements Context
     public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary()
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $instructionsElement = $this->ui->getMink()->getSession()->getPage()->findById('instructions_images');
+        Assert::assertNotNull($instructionsElement);
+        $preferencesElement = $this->ui->getMink()->getSession()->getPage()->findById('preferences_images');
+        Assert::assertNotNull($preferencesElement);
     }
 
     /**

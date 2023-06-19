@@ -1,4 +1,4 @@
-@viewer @viewanlpa
+@viewer @viewanlpa @ff:instructions_and_preferences:true
 Feature: Instructions and Preferences Images in the LPA summary
   As an organisation who has been given a share code
   I can see instructions and preferences images in the summary of a LPA
