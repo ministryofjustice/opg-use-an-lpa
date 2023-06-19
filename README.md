@@ -72,6 +72,8 @@ If you plan on developing the application i:e in most cases, you should also ena
 make development_mode
 ```
 
+If you fail to do the above, you will constantly get session timeout messages and will be unable to login when running locally, so development mode is essential
+
 The Viewer service will be available via [http://localhost:9001/home](http://localhost:9001/home)
 
 The Actor service will be available via [http://localhost:9002/home](http://localhost:9002/home)
