@@ -35,7 +35,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testBadDataThrowsExceptionInCreateLpa(): void
+    public function bad_data_throws_exception_in_create_lpa(): void
     {
         $factory = new Sirius();
 
@@ -46,7 +46,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testBadDataThrowsExceptionInCreateCaseActor(): void
+    public function bad_data_throws_exception_in_create_case_actor(): void
     {
         $factory = new Sirius();
 
@@ -57,7 +57,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testBadDataThrowsExceptionInCreateAddress(): void
+    public function bad_data_throws_exception_in_create_address(): void
     {
         $factory = new Sirius();
 
@@ -68,7 +68,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testCanCreateEmptyLpa(): void
+    public function can_create_empty_lpa(): void
     {
         $factory = new Sirius();
 
@@ -81,7 +81,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testCanCreateLpaFromSwaggerExample(): void
+    public function can_create_lpa_from_swagger_example(): void
     {
         $factory = new Sirius();
 
@@ -106,7 +106,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testCanCreateLpaFromSimpleExample(): void
+    public function can_create_lpa_from_simple_example(): void
     {
         $factory = new Sirius();
 
@@ -132,7 +132,7 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
-    public function testCanCreateLpaFromExampleWithLinkedDonors(): void
+    public function can_create_lpa_from_example_with_linked_donors(): void
     {
         $factory = new Sirius();
 
