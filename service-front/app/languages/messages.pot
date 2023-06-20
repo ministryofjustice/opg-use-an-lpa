@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-08T07:27:34+00:00\n"
+"POT-Creation-Date: 2023-06-20T13:55:56+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -113,7 +113,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:65
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:133
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:147
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
@@ -954,11 +954,11 @@ msgstr ""
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:123
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:137
 msgid "Seen something incorrect in the LPA details?"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:134
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:148
 msgid ""
 "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper\n"
 "                        <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
@@ -3827,23 +3827,23 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:78
+#: src/Common/templates/partials/full-lpa-display.html.twig:80
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:127
+#: src/Common/templates/partials/full-lpa-display.html.twig:130
 msgid "Download this LPA summary"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:109
+#: src/Common/templates/partials/full-lpa-display.html.twig:112
 msgid "LPA details"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:113
+#: src/Common/templates/partials/full-lpa-display.html.twig:116
 msgid "Date summary viewed"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:132
+#: src/Common/templates/partials/full-lpa-display.html.twig:135
 msgid "I want to check another LPA"
 msgstr ""
 
@@ -4615,4 +4615,10 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:124
+msgid ""
+"Some words in these instructions or preferences may have been removed by the court of protection. If you need to check this, please see the paper\n"
+"                                        <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
