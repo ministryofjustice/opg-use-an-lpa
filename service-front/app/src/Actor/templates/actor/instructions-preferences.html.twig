@@ -8,7 +8,8 @@
         {{ include('@partials/welsh-switch.html.twig') }}
 
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -21,30 +22,50 @@
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
-                        <p class="govuk-body">{% trans %}If an <abbr title="lasting power of attorney">LPA</abbr> has instructions or preferences we cannot show these online.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}Organisations may ask to see the paper <abbr title="lasting power of attorney">LPA</abbr> so that they can find out what the instructions or preferences are.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}On most LPAs, you’ll find the instructions and LPAs on sections 7.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}On some LPAs made in or before 2015, instructions and preferences are called ‘restrictions and conditions’. You’ll find them on page 9 of the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}In some older LPAs, instructions and preferences are called 'restrictions and conditions'.{% endtrans %}</p>
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        <p class="govuk-body">{% trans %}If an <abbr title="lasting power of attorney">LPA</abbr> has instructions or preferences we show a scanned image in the LPA summary.{% endtrans %}
+                        </p>
+                        <p class="govuk-body">{% trans %}This scanned image is also shown to anyone you give an access code to. Please check that the scanned image is readable before giving an access code to organisations.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}Organisations may still ask to see the paper LPA if they would like to check anything.{% endtrans %}</p>
+                    {% else %}
 
-                <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="I do not have the paper LPA">
-                    <summary class="govuk-details__summary" role="button" >
+                        <p class="govuk-body">{% trans %}If an <abbr
+                                    title="lasting power of attorney">LPA</abbr> has instructions or preferences we cannot show these online.{% endtrans %}
+                        </p>
+                        <p class="govuk-body">{% trans %}Organisations may ask to see the paper <abbr
+                                    title="lasting power of attorney">LPA</abbr> so that they can find out what the instructions or preferences are.{% endtrans %}
+                        </p>
+                    {% endif %}
+
+                    <p class="govuk-body">{% trans %}On most LPAs, you’ll find the instructions and preferences in section 7.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}On some LPAs made in or before 2015, instructions and preferences are called ‘restrictions and conditions’. You’ll find them on page 9 of the
+                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}In some older LPAs, instructions and preferences are called 'restrictions and conditions'.{% endtrans %}</p>
+                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick"
+                             data-gaAction="Details" data-gaCategory="Service Information"
+                             data-gaLabel="I do not have the paper LPA">
+                        <summary class="govuk-details__summary" role="button">
                         <span class="govuk-details__summary-text">
                             {% trans %}I do not have the paper LPA{% endtrans %}
                         </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p>{% trans %}When an LPA is registered, we post the LPA to either:{% endtrans %}</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>{% trans %}the donor (the person the <abbr title="lasting power of attorney">LPA</abbr> is for){% endtrans %}</li>
-                            <li>{% trans %}one of the attorneys{% endtrans %}</li>
-                            <li>{% trans %}someone else, like a solicitor, who helped to fill in the <abbr title="lasting power of attorney">LPA</abbr> form{% endtrans %}</li>
-                        </ul>
-                    </div>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>{% trans %}When an LPA is registered, we post the LPA to either:{% endtrans %}</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>{% trans %}the donor (the person the <abbr
+                                            title="lasting power of attorney">LPA</abbr> is for){% endtrans %}</li>
+                                <li>{% trans %}one of the attorneys{% endtrans %}</li>
+                                <li>{% trans %}someone else, like a solicitor, who helped to fill in the <abbr
+                                            title="lasting power of attorney">LPA</abbr> form{% endtrans %}</li>
+                            </ul>
+                        </div>
 
-                    <p>{% trans %}Check with these people to see who has the <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
-                    <p>{% trans %}If you need more than one copy of the paper <abbr title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified copies</a></strong>.{% endtrans %}</p>
-                </details>
+                        <p>{% trans %}Check with these people to see who has the <abbr
+                                    title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                        <p>{% trans %}If you need more than one copy of the paper <abbr title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make
+                                <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified
+                                        copies</a></strong>.{% endtrans %}</p>
+                    </details>
                 </div>
             </div>
         </main>
