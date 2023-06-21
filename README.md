@@ -72,7 +72,7 @@ If you plan on developing the application i:e in most cases, you should also ena
 make development_mode
 ```
 
-If you fail to do the above, you will constantly get session timeout messages and will be unable to login when running locally, so development mode is essential
+> Development mode is essential to run the stack locally (unless SSL is setup) as without it sessions do not function. You will be unable to login and all CSRF protected forms will be broken.
 
 The Viewer service will be available via [http://localhost:9001/home](http://localhost:9001/home)
 
