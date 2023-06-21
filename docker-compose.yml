@@ -65,6 +65,9 @@ services:
       GOOGLE_ANALYTICS_ID: "UA-170469426-2"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
+      # Feature flags
+      INSTRUCTIONS_AND_PREFERENCES: "true"
+
       # Local only
       API_SERVICE_URL: http://api-web
       PDF_SERVICE_URL: http://service-pdf
@@ -125,7 +128,7 @@ services:
       ALLOW_OLDER_LPAS: "true"
       ALLOW_MERIS_LPAS: "false"
       DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
-      INSTRUCTIONS_AND_PREFERENCES: "false"
+      INSTRUCTIONS_AND_PREFERENCES: "true"
 
       # Local only
       API_SERVICE_URL: http://api-web
