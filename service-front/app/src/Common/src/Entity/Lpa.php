@@ -23,6 +23,7 @@ class Lpa
     protected ?bool $caseAttorneyJointlyAndJointlyAndSeverally = null;
     protected ?bool $applicationHasRestrictions                = null;
     protected ?bool $applicationHasGuidance                    = null;
+    protected ?bool $hasSeveranceWarning                       = null;
     protected ?DateTime $lpaDonorSignatureDate                 = null;
     protected ?string $lifeSustainingTreatment                 = null;
     protected ?string $onlineLpaId                             = null;
@@ -185,6 +186,16 @@ class Lpa
     public function setApplicationHasGuidance(bool $applicationHasGuidance): void
     {
         $this->applicationHasGuidance = $applicationHasGuidance;
+    }
+
+    public function getApplicationHasSeveranceWarning(): ?bool
+    {
+        return $this->hasSeveranceWarning;
+    }
+
+    public function setApplicationHasSeveranceWarning(bool $hasSeveranceWarning): void
+    {
+        $this->hasSeveranceWarning = $hasSeveranceWarning;
     }
 
     public function getLpaDonorSignatureDate(): ?DateTime

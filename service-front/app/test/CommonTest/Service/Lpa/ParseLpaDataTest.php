@@ -72,7 +72,6 @@ class ParseLpaDataTest extends TestCase
                 $this->lpaId => $this->lpaData,
             ]
         );
-
         $this->assertObjectHasAttribute($this->lpaId, $result);
         $this->assertEquals($this->lpa, $result->{$this->lpaId}->lpa);
         $this->assertEquals($this->actor, $result->{$this->lpaId}->actor['details']);
