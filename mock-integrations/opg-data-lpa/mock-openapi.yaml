@@ -128,6 +128,7 @@ paths:
                     lifeSustainingTreatment: Option A
                     lpaDonorSignatureDate: "2018-12-12"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: A33718377316
                     receiptDate: "2014-09-26"
                     registrationDate: "2021-04-26"
@@ -359,6 +360,7 @@ paths:
                     lifeSustainingTreatment: Option B
                     lpaDonorSignatureDate: "2016-01-01"
                     lpaIsCleansed: true
+                    hasSeveranceWarning: false
                     onlineLpaId: A15527329531
                     receiptDate: "2014-09-26"
                     registrationDate: "2020-05-15"
@@ -470,6 +472,7 @@ paths:
                     lifeSustainingTreatment: Option B
                     lpaDonorSignatureDate: "2019-10-05"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: A48218451245
                     receiptDate: "2014-09-26"
                     registrationDate: null
@@ -587,6 +590,7 @@ paths:
                     lifeSustainingTreatment: null
                     lpaDonorSignatureDate: "2015-10-06"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: null
                     receiptDate: "2014-09-26"
                     registrationDate: "2020-06-10"
@@ -678,6 +682,7 @@ paths:
                     lifeSustainingTreatment: null
                     lpaDonorSignatureDate: "2019-10-02"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: A26997335988
                     receiptDate: "2014-09-26"
                     registrationDate: "2022-01-17"
@@ -769,6 +774,7 @@ paths:
                     lifeSustainingTreatment: Option A
                     lpaDonorSignatureDate: "2012-12-12"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: A13316443118
                     receiptDate: "2014-09-26"
                     registrationDate: null
@@ -866,6 +872,7 @@ paths:
                     lifeSustainingTreatment: null
                     lpaDonorSignatureDate: "2019-09-28"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: null
                     receiptDate: "2014-09-26"
                     registrationDate: null
@@ -958,6 +965,7 @@ paths:
                     lifeSustainingTreatment: null
                     lpaDonorSignatureDate: "2010-10-10"
                     lpaIsCleansed: false
+                    hasSeveranceWarning: false
                     onlineLpaId: null
                     receiptDate: null
                     registrationDate: "2019-08-01"
@@ -1453,6 +1461,7 @@ components:
         - applicationHasGuidance
         - lpaDonorSignatureDate
         - lpaIsCleansed
+        - hasSeveranceWarning
         - lifeSustainingTreatment
         - onlineLpaId
         - attorneyActDecisions
@@ -1540,6 +1549,8 @@ components:
           format: date
           example: '2018-06-30'
         lpaIsCleansed:
+          type: boolean
+        hasSeveranceWarning:
           type: boolean
         lifeSustainingTreatment:
           type: string
