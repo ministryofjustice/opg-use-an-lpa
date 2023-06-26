@@ -6,6 +6,7 @@ namespace CommonTest\Service\Lpa;
 
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
+use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\Factory\InstAndPrefImages;
 use Common\Service\Lpa\InstAndPrefImagesService;
@@ -35,13 +36,11 @@ class InstAndPrefImagesServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_gets_a_list_of_lpas_for_a_user()
+    public function it_gets_images_for_an_lpa()
     {
-        $userToken = 'i-am-a-user-token';
-
+        $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';
-
-        $uId = 123;
+        $uId           = 123;
 
         $imageDataFromApi = [
             'uId'        => $uId,
@@ -51,12 +50,11 @@ class InstAndPrefImagesServiceTest extends TestCase
                 'iap-' . $uId . '-preferences'  => 'http://www.example.com/image2.jpg',
             ],
         ];
-
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')->willReturn($imageDataFromApi);
+
         $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
 
         $images = $this->instAndPrefImagesService->getImagesById($userToken, $actorLpaToken);
-
         $this->assertInstanceOf(Images::class, $images);
         $this->assertEquals(ImagesStatus::COLLECTION_COMPLETE, $images->status);
 
@@ -67,5 +65,21 @@ class InstAndPrefImagesServiceTest extends TestCase
         $preferencesUrls = $images->getPreferencesImageUrls();
         $this->assertCount(1, $preferencesUrls);
         $this->assertEquals('http://www.example.com/image2.jpg', $preferencesUrls[0]->url);
+    }
+
+    /** @test */
+    public function it_handles_api_exceptions()
+    {
+        $userToken     = 'i-am-a-user-token';
+        $actorLpaToken = '01234567-01234-01234-01234-012345678901';
+
+        $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')
+            ->willThrow(new ApiException('Error whilst making http GET request', 404));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(404);
+
+        $this->instAndPrefImagesService->getImagesById($userToken, $actorLpaToken);
     }
 }
