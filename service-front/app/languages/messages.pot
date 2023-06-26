@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-12T10:05:41+00:00\n"
+"POT-Creation-Date: 2023-06-26T16:23:47+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -3225,19 +3225,19 @@ msgstr ""
 msgid "The Office of the Public Guardian is committed to making its online services accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:75
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:77
 msgid "This service is partially compliant with the <a class=\"govuk-link\" href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines version 2.1</a> AA standard, due to the non-compliances listed below."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:78
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:80
 msgid "Non-accessible content"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:81
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:83
 msgid "The content listed below is non-accessible for the following reasons."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:84
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:86
 msgid "Non compliance with the accessibility regulations"
 msgstr ""
 
@@ -3253,29 +3253,28 @@ msgstr ""
 msgid "We’ll fix all the accessibility issues we’ve found by %date%."
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:98
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:96
 msgid "Disproportionate burden"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:104
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:102
 msgid "Not applicable"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:102
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:100
 msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:104
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:86
 msgid "Preparation of this accessibility statement"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:107
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "This statement was prepared on %date%"
 msgstr ""
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:113
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:93
 msgid "This service was last tested on 4 June 2020. The test was carried out by Digital Accessibility Centre (DAC)."
 msgstr ""
@@ -4605,6 +4604,7 @@ msgstr ""
 msgid "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/lasting-power-of-attorney-valid-examples\">checking a paper LPA</a>"
 msgstr ""
 
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:74
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
 msgid "Compliance status"
 msgstr ""
@@ -4642,4 +4642,16 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:89
+msgid "Some images do not have a text alternative, so people using a screen reader cannot access the information. This fails WCAG 2.1 success criterion 1.1.1 (non-text content)."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:93
+msgid "Some of the images provided are extractions from original paper documents. We can not provide a text alternative either via a person or OCR technology as due to the legal nature of the content this needs to be 100% accurate to the intent of the original document."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:111
+msgid "This service was last tested on 22 April 2022. The test was carried out by Digital Accessibility Centre (DAC)."
 msgstr ""
