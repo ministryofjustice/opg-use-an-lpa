@@ -83,6 +83,18 @@ class CommonContext implements Context
     }
 
     /**
+     * @Then /^I can see that the lpa has instructions and preferences images in summary$/
+     */
+    public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary()
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $instructionsElement = $this->ui->getMink()->getSession()->getPage()->findById('instructions_images');
+        Assert::assertNotNull($instructionsElement);
+        $preferencesElement = $this->ui->getMink()->getSession()->getPage()->findById('preferences_images');
+        Assert::assertNotNull($preferencesElement);
+    }
+
+    /**
      * @Then /^I can see Welsh text$/
      */
     public function iCanSeeWelshText(): void
