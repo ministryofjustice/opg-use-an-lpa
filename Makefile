@@ -178,7 +178,7 @@ clear_config_cache:
 .PHONY: clear_config_cache
 
 smoke_tests:
-	$(TEST_COMPOSE) run smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
+	$(TEST_COMPOSE) run smoke-tests vendor/bin/behat
 .PHONY: smoke_tests
 
 run-structurizr:
