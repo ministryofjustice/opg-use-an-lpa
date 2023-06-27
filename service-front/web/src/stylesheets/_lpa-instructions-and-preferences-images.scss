@@ -1,7 +1,6 @@
 .opg-ip {
   .govuk-summary-list + & {
     margin-top: -0.5rem;
-    margin-bottom: govuk-spacing(2);
   }
 
   &__image {
@@ -9,6 +8,7 @@
     max-width: 990px;
     width: 100%;
     height: auto;
+    margin-bottom: govuk-spacing(2);
   }
 
   @include govuk-media-query($from: tablet) {
