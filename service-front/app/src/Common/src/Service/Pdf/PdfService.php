@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\Pdf;
 
+use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\Log\EventCodes;
@@ -30,20 +31,21 @@ class PdfService
     ) {
     }
 
-    public function getLpaAsPdf(Lpa $lpa): StreamInterface
+    public function getLpaAsPdf(Lpa $lpa, ?Images $images = null): StreamInterface
     {
-        $renderedLpa = $this->renderLpaAsHtml($lpa);
+        $renderedLpa = $this->renderLpaAsHtml($lpa, $images);
 
         return $this->requestPdfFromService($renderedLpa);
     }
 
-    private function renderLpaAsHtml(Lpa $lpa): string
+    private function renderLpaAsHtml(Lpa $lpa, Images $images): string
     {
         return $this->renderer->render(
             'viewer::download-lpa',
             [
-                'lpa'       => $lpa,
-                'pdfStyles' => ($this->styles)(),
+                'lpa'        => $lpa,
+                'iap_images' => $images,
+                'pdfStyles'  => ($this->styles)(),
             ]
         );
     }
