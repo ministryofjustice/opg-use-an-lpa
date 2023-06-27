@@ -9,42 +9,50 @@ Feature: View an LPA via sharecode
     And I access the viewer service
 
   @ui
-  Scenario:test
+  Scenario: The viewer can see instructions and preferences
     Given The LPA has instructions and preferences
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I can clearly see the lpa has instructions and preferences
 
   @ui
-  Scenario:test
+  Scenario: The viewer can see instructions
     Given The LPA has instructions
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I can clearly see the lpa has instructions
 
   @ui
-  Scenario:test
+  Scenario: The viewer can see preferences
     Given The LPA has preferences
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I can clearly see the lpa has preferences
 
+  @ui @wip
+  Scenario: Viewers looking at LPAs with no instructions or preferences clearly see that they don't have them
+    Given the LPA does not have instructions or preferences
+    When I enter an organisation name and confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    And preferences will show “no”
+    And instructions will show “no”
+
   @ui
-  Scenario:test
+  Scenario: Instructions and preferences information shows for older LPAs
     Given The LPA has instructions and preferences and is signed before 2016
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I can clearly see the lpa has instructions andor preferences
 
   @ui
-  Scenario:test
+  Scenario: Instructions and preferences summary information shows for older LPAs
     Given The LPA has instructions and preferences and is signed before 2016
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I can see the lpa has instructions and preferences set in summary
 
   @ui
-  Scenario:test
+  Scenario: Older LPAs with no instructions and preferences do not show anything in the summary
     Given The LPA has no instructions or preferences and is signed before 2016
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
