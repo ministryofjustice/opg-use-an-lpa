@@ -55,15 +55,16 @@ class ViewLpaHandler extends AbstractHandler
             'lpa' => $lpaData->lpa,
         ];
 
-        // necessary for development. Do not uncomment for live environments.
-        //$lpaData->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
-
         if (($this->featureEnabled)('instructions_and_preferences') && $lpaData->offsetExists('iap')) {
-            // TODO UML-xxxx This date logic needs removing 30 days after 4th July (or whenever we go live, whichever is later)
+            // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
+            //      is later)
+            // necessary for development. Do not uncomment for live environments.
+            //$lpaData->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
+
             $codeCreated = (new DateTimeImmutable($lpaData->expires))->sub(new DateInterval('P30D'));
 
             if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
-                $renderData['iap_images'] = $lpaData->iap; // TODO UML-xxxx this is the only bit that should be kept
+                $renderData['iap_images'] = $lpaData->iap; // TODO UML-2930 this is the only bit that should be kept
             }
         }
 
