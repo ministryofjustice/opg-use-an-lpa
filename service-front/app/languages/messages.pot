@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-26T16:23:47+00:00\n"
+"POT-Creation-Date: 2023-06-28T13:28:40+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -113,11 +113,12 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes.html.twig:65
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:133
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:147
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
+#: src/Common/templates/partials/full-lpa-display.html.twig:118
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
 msgid "Warning"
@@ -954,11 +955,11 @@ msgstr ""
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:123
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:137
 msgid "Seen something incorrect in the LPA details?"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:134
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:148
 msgid ""
 "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper\n"
 "                        <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
@@ -3857,7 +3858,7 @@ msgstr ""
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:130
+#: src/Common/templates/partials/full-lpa-display.html.twig:144
 msgid "Download this LPA summary"
 msgstr ""
 
@@ -3865,11 +3866,11 @@ msgstr ""
 msgid "LPA details"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:116
+#: src/Common/templates/partials/full-lpa-display.html.twig:130
 msgid "Date summary viewed"
 msgstr ""
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:135
+#: src/Common/templates/partials/full-lpa-display.html.twig:149
 msgid "I want to check another LPA"
 msgstr ""
 
@@ -4654,4 +4655,11 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:111
 msgid "This service was last tested on 22 April 2022. The test was carried out by Digital Accessibility Centre (DAC)."
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:124
+#: src/Common/templates/partials/full-lpa-display.html.twig:119
+msgid ""
+"Some words in these instructions or preferences may have been removed by the Court of Protection. If you need to check this, please see the paper\n"
+"                                        <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
