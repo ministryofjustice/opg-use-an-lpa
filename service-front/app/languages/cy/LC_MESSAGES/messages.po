@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-06-20T13:55:56+00:00\n"
+"POT-Creation-Date: 2023-06-28T07:04:45+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -77,7 +77,7 @@ msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:12
 #: src/Actor/templates/actor/check-access-codes.html.twig:12
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:103
-#: src/Actor/templates/actor/instructions-preferences.html.twig:11
+#: src/Actor/templates/actor/instructions-preferences.html.twig:12
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:26
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:69
@@ -141,11 +141,12 @@ msgstr "Daw’r cod hwn i ben ymhen 30 diwrnod, ar yr %date%."
 #: src/Actor/templates/actor/check-access-codes.html.twig:65
 #: src/Actor/templates/actor/create-account.html.twig:55
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:147
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:145
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
+#: src/Common/templates/partials/full-lpa-display.html.twig:117
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
 msgid "Warning"
@@ -1387,11 +1388,11 @@ msgstr "A oes angen newid manylion atwrnai?"
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:137
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:135
 msgid "Seen something incorrect in the LPA details?"
 msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:148
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:146
 #, fuzzy
 #| msgid ""
 #| "You cannot use a download or print out of this <abbr title=\"lasting power "
@@ -2022,7 +2023,7 @@ msgstr ""
 msgid "Last updated: 30 March 2020"
 msgstr "Diweddarwyd diwethaf: 30 Mawrth 2020"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:19
+#: src/Actor/templates/actor/instructions-preferences.html.twig:20
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:11
 msgid "Instructions and preferences"
 msgstr "Cyfarwyddiadau a dymuniadau"
@@ -2061,17 +2062,17 @@ msgstr ""
 "‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:28
+#: src/Actor/templates/actor/instructions-preferences.html.twig:43
 msgid ""
 "In some older LPAs, instructions and preferences are called 'restrictions and "
 "conditions'."
 msgstr ""
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:33
+#: src/Actor/templates/actor/instructions-preferences.html.twig:49
 msgid "I do not have the paper LPA"
 msgstr "Nid oes gen i’r copi papur o’r LPA"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:37
+#: src/Actor/templates/actor/instructions-preferences.html.twig:53
 msgid "When an LPA is registered, we post the LPA to either:"
 msgstr ""
 "Pan fydd LPA yn cael ei chofrestru, rydym yn postio’r LPA papur un ai at:"
@@ -2084,7 +2085,7 @@ msgstr ""
 "y rhoddwr (yr unigolyn y mae’r <abbr title=\"atwrneiaethau arhosol\">LPA</"
 "abbr> ar ei gyfer)"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:40
+#: src/Actor/templates/actor/instructions-preferences.html.twig:57
 msgid "one of the attorneys"
 msgstr "un o’r atwrneiod"
 
@@ -5292,7 +5293,7 @@ msgstr ""
 "Dylech lawrlwytho a chadw’r crynodeb LPA hwn. Gallwch ei ddefnyddio fel "
 "tystiolaeth eich bod wedi edrych ar y crynodeb LPA cyn gweithredu."
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:130
+#: src/Common/templates/partials/full-lpa-display.html.twig:142
 msgid "Download this LPA summary"
 msgstr "Llwytho crynodeb o’r LPA i lawr"
 
@@ -5300,11 +5301,11 @@ msgstr "Llwytho crynodeb o’r LPA i lawr"
 msgid "LPA details"
 msgstr "Manylion yr LPA"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:116
+#: src/Common/templates/partials/full-lpa-display.html.twig:128
 msgid "Date summary viewed"
 msgstr "Dyddiad gweld y crynodeb"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:135
+#: src/Common/templates/partials/full-lpa-display.html.twig:147
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
@@ -6596,6 +6597,151 @@ msgstr ""
 "Efallai y bydd rhai o geiriau yn y cyfarwyddiadau a’r dewisiadau hyn wedi eu "
 "dileu gan y llys gwarchod. Os ydych angen gwirio hyn, edrychwch ar yr LPA "
 "bapur."
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:123
+#: src/Common/templates/partials/full-lpa-display.html.twig:118
+msgid ""
+"Some words in these instructions or preferences may have been removed by the "
+"Court of Protection. If you need to check this, please see the paper\n"
+"                                        <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>."
+msgstr ""
+"Efallai y bydd rhai o geiriau yn y cyfarwyddiadau a’r dewisiadau hyn wedi eu "
+"dileu gan y Llys Gwarchod. Os ydych angen gwirio hyn, edrychwch ar yr LPA "
+"bapur."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:26
+#, fuzzy
+#| msgid ""
+#| "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions "
+#| "or preferences we cannot show these online."
+msgid ""
+"If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions or "
+"preferences we show a scanned image in the LPA summary."
+msgstr ""
+"Os oes gan <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> gyfarwyddiadau neu "
+"dymuniadau, ni allwn ddangos y rhain ar-lein."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:28
+msgid ""
+"This scanned image is also shown to anyone you give an access code to. Please "
+"check that the scanned image is readable before giving an access code to "
+"organisations."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:29
+msgid ""
+"Organisations may still ask to see the paper LPA if they would like to check "
+"anything."
+msgstr ""
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:32
+#, fuzzy
+#| msgid ""
+#| "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions "
+#| "or preferences we cannot show these online."
+msgid ""
+"If an <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</"
+"abbr> has instructions or preferences we cannot show these online."
+msgstr ""
+"Os oes gan <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> gyfarwyddiadau neu "
+"dymuniadau, ni allwn ddangos y rhain ar-lein."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:35
+#, fuzzy
+#| msgid ""
+#| "Organisations may ask to see the paper <abbr title=\"lasting power of "
+#| "attorney\">LPA</abbr> so that they can find out what the instructions or "
+#| "preferences are."
+msgid ""
+"Organisations may ask to see the paper <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</"
+"abbr> so that they can find out what the instructions or preferences are."
+msgstr ""
+"Gall sefydliadau ofyn am gael gweld yr <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> papur fel y gallant ganfod beth yw’r cyfarwyddiadau’r "
+"neu’r dymuniadau."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:40
+#, fuzzy
+#| msgid "On most LPAs, you’ll find the instructions and LPAs on sections 7."
+msgid "On most LPAs, you’ll find the instructions and preferences in section 7."
+msgstr ""
+"Ar y mwyafrif o LPAs, byddwch yn dod o hyd i’r cyfarwyddiadau a’r dymuniadau "
+"yn rhan 7."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:41
+#, fuzzy
+#| msgid ""
+#| "On some LPAs made in or before 2015, instructions and preferences are "
+#| "called ‘restrictions and conditions’. You’ll find them on page 9 of the "
+#| "<abbr title=\"lasting power of attorney\">LPA</abbr>."
+msgid ""
+"On some LPAs made in or before 2015, instructions and preferences are called "
+"‘restrictions and conditions’. You’ll find them on page 9 of the\n"
+"                            <abbr title=\"lasting power of attorney\">LPA</"
+"abbr>."
+msgstr ""
+"Ar rhai LPAs a wnaed yn, neu cyn 2015, gelwir cyfarwyddiadau a dymuniadau yn "
+"‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
+"title=\"lasting power of attorney\">LPA</abbr>."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:55
+#, fuzzy
+#| msgid ""
+#| "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
+msgid ""
+"the donor (the person the <abbr\n"
+"                                            title=\"lasting power of "
+"attorney\">LPA</abbr> is for)"
+msgstr ""
+"Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chofrestru"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:58
+#, fuzzy
+#| msgid ""
+#| "someone else, like a solicitor, who helped to fill in the <abbr "
+#| "title=\"lasting power of attorney\">LPA</abbr> form"
+msgid ""
+"someone else, like a solicitor, who helped to fill in the <abbr\n"
+"                                            title=\"lasting power of "
+"attorney\">LPA</abbr> form"
+msgstr ""
+"rhywun arall, fel cyfreithiwr, a wnaeth gynorthwyo i lenwi’r ffurflen <abbr "
+"title=\"lasting power of attorney\">LPA</abbr>"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:63
+#, fuzzy
+#| msgid ""
+#| "Check with these people to see who has the <abbr title=\"lasting power of "
+#| "attorney\">LPA</abbr>."
+msgid ""
+"Check with these people to see who has the <abbr\n"
+"                                    title=\"lasting power of attorney\">LPA</"
+"abbr>."
+msgstr ""
+"Gwiriwch â’r bobl hyn i weld pwy sydd â’r <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> papur."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:65
+#, fuzzy
+#| msgid ""
+#| "If you need more than one copy of the paper <abbr title=\"lasting power of "
+#| "attorney\">LPA</abbr>, the donor or solicitor can make <strong><a "
+#| "href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-"
+#| "link\">certified copies</a></strong>."
+msgid ""
+"If you need more than one copy of the paper <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>, the donor or solicitor can make\n"
+"                                <strong><a href=\"https://www.gov.uk/power-of-"
+"attorney/certify\" class=\"govuk-link\">certified\n"
+"                                        copies</a></strong>."
+msgstr ""
+"Os oes arnoch angen mwy nac un copi o’r <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> papur, gall y rhoddwr neu gyfreithiwr wneud <strong><a "
+"href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-"
+"link\">copïau wedi’u hardystio</a></strong>."
 
 #~ msgid "What happens next?"
 #~ msgstr "Beth fydd yn digwydd nesaf?"
