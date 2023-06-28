@@ -85,7 +85,7 @@
             {% endif %}
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-full">
                     {% include '@partials/lpa-summary-details/lpa-donor-details.html.twig' %}
                     <p class="govuk-body">
                         <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">
@@ -98,7 +98,7 @@
             {{ include('@partials/section-break.html.twig') }}
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-full">
                     {% include '@partials/lpa-summary-details/lpa-attorney-details.html.twig' %}
                     <p class="govuk-body">
                         <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">
@@ -111,7 +111,7 @@
             {{ include('@partials/section-break.html.twig') }}
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-grid-column-full">
                     <h2 class="govuk-heading-l">
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
@@ -132,6 +132,14 @@
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
                     </dl>
+
+                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                        <div class="govuk-inset-text">
+                            {% trans %}If the scanned image is not readable, organisations may ask to see the paper
+                                LPA so that they can find out what the instructions or preferences are.{% endtrans %}
+                        </div>
+                    {% endif %}
+
                     <p class="govuk-body">
                         <a class="govuk-link" href="{{ path('lpa.change-lpa-details', {}, {'lpa':  actorToken }) }}">
                             {% trans %}Seen something incorrect in the LPA details?{% endtrans %}
@@ -139,6 +147,20 @@
                     </p>
                 </div>
             </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
 
             <p>
             <div class="govuk-warning-text">
