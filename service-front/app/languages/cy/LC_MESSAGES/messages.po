@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-06-12T10:05:41+00:00\n"
+"POT-Creation-Date: 2023-06-26T16:23:47+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4435,7 +4435,7 @@ msgstr ""
 "lein yn hygyrch, yn unol â Rheoliadau Hygyrchedd Cyrff Sector Cyhoeddus "
 "(Gwefannau ac Apiau) (Rhif 2) 2018."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:75
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:77
 msgid ""
 "This service is partially compliant with the <a class=\"govuk-link\" "
 "href=\"https://www.w3.org/TR/WCAG21/\">Web Content Accessibility Guidelines "
@@ -4446,15 +4446,15 @@ msgstr ""
 "gyfer Hygyrchedd Cynnwys ar y We</a> o achos methu â chydymffurfio â’r pethau "
 "a restrir isod."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:78
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:80
 msgid "Non-accessible content"
 msgstr "Cynnwys nad yw’n hygyrch"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:81
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:83
 msgid "The content listed below is non-accessible for the following reasons."
 msgstr "Nid yw’r cynnwys a restrir isod yn hygyrch am y rhesymau canlynol."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:84
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:86
 msgid "Non compliance with the accessibility regulations"
 msgstr "Diffyg cydymffurfio â’r rheoliadau hygyrchedd"
 
@@ -4484,29 +4484,28 @@ msgstr ""
 "Byddwn yn trwsio’r holl faterion hygyrchedd rydyn ni wedi’u darganfod erbyn "
 "%date%."
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:98
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:96
 msgid "Disproportionate burden"
 msgstr "Baich anghymesur"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:104
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:102
 msgid "Not applicable"
 msgstr "Amherthnasol"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:102
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:100
 msgid "Content that’s not within the scope of the accessibility regulations"
 msgstr "Cynnwys nad yw o fewn cwmpas y rheoliadau hygyrchedd"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:106
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:104
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:86
 msgid "Preparation of this accessibility statement"
 msgstr "Paratoi’r datganiad hygyrchedd hwn"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:107
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:89
 msgid "This statement was prepared on %date%"
 msgstr "Paratowyd y datganiad hwn ar %date%"
 
-#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:113
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:93
 msgid ""
 "This service was last tested on 4 June 2020. The test was carried out by "
@@ -6524,6 +6523,7 @@ msgstr ""
 "publications/lasting-power-of-attorney-valid-examples.cy\">wirio atwrneiaeth "
 "arhosol ar bapur</a>"
 
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:74
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:80
 msgid "Compliance status"
 msgstr "Statws cydymffurfio"
@@ -6568,6 +6568,36 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:89
+msgid ""
+"Some images do not have a text alternative, so people using a screen reader "
+"cannot access the information. This fails WCAG 2.1 success criterion 1.1.1 "
+"(non-text content)."
+msgstr ""
+"Nid oes gan rai delweddau ddewis arall ar ffurf testun, felly ni all pobl sy’n "
+"defnyddio darllenydd sgrin gael mynediad at yr wybodaeth. Mae hyn yn fethiant "
+"mewn perthynas â maen prawf llwyddiant 1.1.1 (cynnwys nad yw’n destun) WCAG "
+"2.1."
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:93
+msgid ""
+"Some of the images provided are extractions from original paper documents. We "
+"can not provide a text alternative either via a person or OCR technology as "
+"due to the legal nature of the content this needs to be 100% accurate to the "
+"intent of the original document."
+msgstr ""
+"Mae rhai o’r delweddau a ddarperir wedi eu tynnu o ddogfennau papur "
+"gwreiddiol. Ni allwn ddarparu dewis amgen ar ffurf testun drwy weithred "
+"unigolyn na thechnoleg OCR oherwydd natur gyfreithiol y cynnwys."
+
+#: src/Actor/templates/actor/actor-accessibility-statement.html.twig:111
+msgid ""
+"This service was last tested on 22 April 2022. The test was carried out by "
+"Digital Accessibility Centre (DAC)."
+msgstr ""
+"Profwyd y gwasanaeth hwn ddiwethaf ar yr 22 ain o Ebrill 2022. Cynhaliwyd y "
+"prawf gan y Digital Accessibility Centre (DAC)."
 
 #~ msgid ""
 #~ "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions "
@@ -7658,15 +7688,6 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
 #~ msgid "Textphone"
 #~ msgstr "Ffôn testun"
-
-#~ msgid ""
-#~ "Some page titles do not have a unique and helpful title that indicates the "
-#~ "purpose of the page. This fails WCAG 2.1 success criteria 2.4.2 (Page "
-#~ "Titled)."
-#~ msgstr ""
-#~ "Nid oes gan rai teitlau tudalennau deitl unigryw a defnyddiol sy’n nodi "
-#~ "pwrpas y dudalen. Nid yw hyn yn cwrdd â maen prawf llwyddiant WCAG 2.1 "
-#~ "2.4.2 (Teitl Tudalen)."
 
 #~ msgid ""
 #~ "Some list elements are not correctly associated with parent elements.  This "
