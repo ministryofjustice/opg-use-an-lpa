@@ -38,15 +38,20 @@ class PdfService
         return $this->requestPdfFromService($renderedLpa);
     }
 
-    private function renderLpaAsHtml(Lpa $lpa, Images $images): string
+    private function renderLpaAsHtml(Lpa $lpa, ?Images $images): string
     {
+        $renderData = [
+            'lpa'       => $lpa,
+            'pdfStyles' => ($this->styles)(),
+        ];
+
+        if ($images !== null) {
+            $renderData['iap_images'] = $images;
+        }
+
         return $this->renderer->render(
             'viewer::download-lpa',
-            [
-                'lpa'        => $lpa,
-                'iap_images' => $images,
-                'pdfStyles'  => ($this->styles)(),
-            ]
+            $renderData,
         );
     }
 

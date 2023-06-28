@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
+use Common\Entity\InstructionsAndPreferences\Images;
+use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\Pdf\PdfService;
@@ -47,7 +49,7 @@ class PdfServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_a_stream_when_given_an_lpa()
+    public function it_returns_a_stream_when_given_an_lpa_without_images()
     {
         $lpa = new Lpa();
 
@@ -93,6 +95,45 @@ class PdfServiceTest extends TestCase
         );
 
         $pdfStream = $service->getLpaAsPdf($lpa);
+
+        $this->assertInstanceOf(StreamInterface::class, $pdfStream);
+    }
+
+    /** @test */
+    public function it_returns_a_stream_when_given_an_lpa_with_images()
+    {
+        $lpa    = new Lpa();
+        $images = new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []);
+
+        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
+        $rendererProphecy->render(
+            'viewer::download-lpa',
+            [
+                'lpa'        => $lpa,
+                'iap_images' => $images,
+                'pdfStyles'  => '',
+            ]
+        )->willReturn('<html></html>');
+
+        $clientProphecy = $this->prophesize(ClientInterface::class);
+        $clientProphecy->sendRequest(Argument::any())
+            ->willReturn($this->setupResponse('', 200));
+
+        $stylesProphecy = $this->prophesize(StylesService::class);
+        $stylesProphecy->__invoke()->willReturn('');
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new PdfService(
+            $rendererProphecy->reveal(),
+            $clientProphecy->reveal(),
+            $stylesProphecy->reveal(),
+            $loggerProphecy->reveal(),
+            'http://pdf-service:8080',
+            'Root=1-1-11'
+        );
+
+        $pdfStream = $service->getLpaAsPdf($lpa, $images);
 
         $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
