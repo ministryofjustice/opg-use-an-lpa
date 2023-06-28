@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-06-28T15:32:40+00:00\n"
+"POT-Creation-Date: 2023-06-28T16:28:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -4681,32 +4681,22 @@ msgid ""
 "                    title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:64
-msgid ""
-"Yes, the donor made instructions and/or preferences on their LPA.\n"
-"                    <br>To view these, ask to see the paper LPA"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:81
-msgid "Yes, the donor made preferences on their LPA."
-msgstr ""
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:83
-msgid ""
-"Yes, the donor made preferences on their LPA.\n"
-"                        <br>To view these, ask to see the paper LPA"
+msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:125
 msgid "A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:110
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:112
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:112
-msgid ""
-"Yes, the donor set instructions on their LPA.\n"
-"                        <br>To view these, ask to see the paper LPA"
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:113
+msgid "To view these, ask to see the paper LPA."
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:64
+msgid "Yes, the donor made instructions and/or preferences on their LPA."
 msgstr ""

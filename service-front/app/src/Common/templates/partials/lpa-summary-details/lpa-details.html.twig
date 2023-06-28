@@ -61,8 +61,8 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
-                {% trans %}Yes, the donor made instructions and/or preferences on their LPA.
-                    <br>To view these, ask to see the paper LPA{% endtrans %}
+                {% trans %}Yes, the donor made instructions and/or preferences on their LPA.{% endtrans %}
+                    <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
             </dd>
         </div>
     {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
@@ -80,8 +80,8 @@
                 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                     {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
                 {% else %}
-                    {% trans %}Yes, the donor made preferences on their LPA.
-                        <br>To view these, ask to see the paper LPA{% endtrans %}
+                    {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
                 {% endif %}
             {% else %}
                 {% trans %}No{% endtrans %}
@@ -109,8 +109,8 @@
                 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                     {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
                 {% else %}
-                    {% trans %}Yes, the donor set instructions on their LPA.
-                        <br>To view these, ask to see the paper LPA{% endtrans %}
+                    {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
                 {% endif %}
             {% else %}
                 {% trans %}No{% endtrans %}
