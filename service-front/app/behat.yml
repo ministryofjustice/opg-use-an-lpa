@@ -33,7 +33,6 @@ acceptance:
         - BehatTest\Context\UI\LpaContext
         - BehatTest\Context\UI\RequestActivationKeyContext
         - BehatTest\Context\UI\FeatureFlagContext
-
       filters:
         tags: "@actor&&@ui"
     viewer:
@@ -42,5 +41,6 @@ acceptance:
         - BehatTest\Context\UI\BaseUiContext
         - BehatTest\Context\UI\ViewerContext
         - BehatTest\Context\UI\CommonContext
+        - BehatTest\Context\UI\FeatureFlagContext
       filters:
         tags: "@viewer&&@ui"
