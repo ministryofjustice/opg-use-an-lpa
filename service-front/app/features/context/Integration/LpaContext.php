@@ -13,6 +13,7 @@ use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\CleanseLpa;
+use Common\Service\Lpa\InstAndPrefImagesService;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
@@ -55,22 +56,24 @@ class LpaContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    private const ADD_LPA_VALIDATE = 'AddLpa::validate';
-    private const ADD_LPA_CONFIRM = 'AddLpa::confirm';
-    private const LPA_SERVICE_GET_LPA_BY_ID = 'LpaService::getLpaById';
+    private const ADD_LPA_VALIDATE                      = 'AddLpa::validate';
+    private const ADD_LPA_CONFIRM                       = 'AddLpa::confirm';
+    private const LPA_SERVICE_GET_LPA_BY_ID             = 'LpaService::getLpaById';
     private const VIEWER_CODE_SERVICE_CREATE_SHARE_CODE = 'ViewerCodeService::createShareCode';
-    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES = 'ViewerCodeService::getShareCodes';
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES   = 'ViewerCodeService::getShareCodes';
     private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
-    private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
-    private const ADD_OLDER_LPA_CONFIRM = 'AddOlderLpa::confirm';
-    private const CLEANSE_LPA_CLEANSE = 'CleanseLpa::cleanse';
-    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
-    private const REMOVE_LPA_INVOKE = 'RemoveLpa::__invoke';
+    private const ADD_OLDER_LPA_VALIDATE                = 'AddOlderLpa::validate';
+    private const ADD_OLDER_LPA_CONFIRM                 = 'AddOlderLpa::confirm';
+    private const CLEANSE_LPA_CLEANSE                   = 'CleanseLpa::cleanse';
+    private const LPA_SERVICE_GET_LPAS                  = 'LpaService::getLpas';
+    private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
+    private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
 
     private LpaFactory $lpaFactory;
     private LpaService $lpaService;
     private ViewerCodeService $viewerCodeService;
     private NotifyService $notifyService;
+    private InstAndPrefImagesService $instAndPrefImagesService;
 
     /**
      * @Given /^I am told that I have already requested an activation key for this LPA$/
@@ -1195,6 +1198,23 @@ class LpaContext extends BaseIntegrationContext
                     self::LPA_SERVICE_GET_LPA_BY_ID
                 )
             );
+
+
+
+            // InstAndPrefImagesService::getImagesById
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'uId'        => (int) $this->lpa['uId'],
+                            'status'     => 'COLLECTION_COMPLETE',
+                            'signedUrls' => [],
+                        ]
+                    ),
+                    self::INPSERVICE_GET_BY_ID
+                )
+            );
         }
     }
 
@@ -1343,6 +1363,8 @@ class LpaContext extends BaseIntegrationContext
 
         Assert::assertNotNull($lpa->lpa);
         Assert::assertNotNull($lpa->actor);
+
+        $images = $this->instAndPrefImagesService->getImagesById($this->userIdentity, $this->actorLpaToken);
     }
 
     /**
@@ -1421,10 +1443,11 @@ class LpaContext extends BaseIntegrationContext
         // tests wouldn't normally touch but the container expects
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->lpaService = $this->container->get(LpaService::class);
-        $this->lpaFactory = $this->container->get(LpaFactory::class);
-        $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
+        $this->apiFixtures              = $this->container->get(MockHandler::class);
+        $this->lpaService               = $this->container->get(LpaService::class);
+        $this->lpaFactory               = $this->container->get(LpaFactory::class);
+        $this->viewerCodeService        = $this->container->get(ViewerCodeService::class);
+        $this->instAndPrefImagesService = $this->container->get(InstAndPrefImagesService::class);
 
         // The user is signed in for all actions of this context
         $this->userIdentity = '123';
