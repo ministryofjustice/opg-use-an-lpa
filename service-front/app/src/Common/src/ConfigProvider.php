@@ -83,7 +83,9 @@ class ConfigProvider
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
+
                 Service\Lpa\LpaFactory::class => Service\Lpa\Factory\Sirius::class,
+                Service\Lpa\InstAndPrefImagesFactory::class => Service\Lpa\Factory\InstAndPrefImages::class,
 
                 // Language extraction
                 LoaderInterface::class    => PoLoader::class,

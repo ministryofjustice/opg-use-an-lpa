@@ -8,16 +8,14 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
-use Common\Service\Features\FeatureEnabled;
 
-use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertStringContainsString;
-use function PHPUnit\Framework\assertStringContainsStringIgnoringCase;
 
 /**
  * @property mixed  $lpa
@@ -46,7 +44,7 @@ class LpaContext implements Context
     private const VIEWER_CODE_SERVICE_CREATE_SHARE_CODE = 'ViewerCodeService::createShareCode';
     private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
     private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
-
+    private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
     private $dashboardLPAs;
 
     /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
@@ -2375,6 +2373,7 @@ class LpaContext implements Context
     public function iRequestToViewAnLPAWhichHasADonorSignatureBefore2016(): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
+
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
@@ -2389,6 +2388,22 @@ class LpaContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_ID
             )
         );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'uId'        => (int) $this->lpa->uId,
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [],
+                    ]
+                ),
+                self::INPSERVICE_GET_BY_ID
+            )
+        );
+
         $this->ui->clickLink('View LPA summary');
     }
 
@@ -2431,6 +2446,22 @@ class LpaContext implements Context
                     self::LPA_SERVICE_GET_LPA_BY_ID
                 )
             );
+
+            // InstAndPrefImagesService::getImagesById
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'uId'        => (int) $this->lpa->uId,
+                            'status'     => 'COLLECTION_COMPLETE',
+                            'signedUrls' => [],
+                        ]
+                    ),
+                    self::INPSERVICE_GET_BY_ID
+                )
+            );
+
             $this->ui->clickLink('View LPA summary');
         }
     }
@@ -2453,6 +2484,21 @@ class LpaContext implements Context
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'uId'        => (int) $this->lpa->uId,
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [],
+                    ]
+                ),
+                self::INPSERVICE_GET_BY_ID
             )
         );
 
@@ -3011,6 +3057,7 @@ class LpaContext implements Context
     public function iRequestToViewAnLPAWhichHasAnInactiveAttorney($name): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
+
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
@@ -3023,6 +3070,21 @@ class LpaContext implements Context
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'uId'        => (int) $this->lpa->uId,
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [],
+                    ]
+                ),
+                self::INPSERVICE_GET_BY_ID
             )
         );
 
