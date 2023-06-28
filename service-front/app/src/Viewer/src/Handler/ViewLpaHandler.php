@@ -72,15 +72,15 @@ class ViewLpaHandler extends AbstractHandler
 
             $codeCreated = (new DateTimeImmutable($lpaData->expires))->sub(new DateInterval('P30D'));
 
-            if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
-                $this->logger->debug(
-                    'Code was created on {created}, calculated as 30 days before {expires}',
-                    [
-                        'created' => $codeCreated->format('jS F Y'),
-                        'expires' => $lpaData->expires->format('jS F Y'),
-                    ]
-                );
+            $this->logger->debug(
+                'Code was created on {created}, calculated as 30 days before {expires}',
+                [
+                    'created' => $codeCreated->format('jS F Y'),
+                    'expires' => $lpaData->expires->format('jS F Y'),
+                ]
+            );
 
+            if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
                 $renderData['iap_images'] = $lpaData->iap; // TODO UML-2930 this is the only bit that should be kept
             }
         }
