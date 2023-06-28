@@ -237,6 +237,7 @@ class LpaService
             ($this->featureEnabled)('instructions_and_preferences') &&
             (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false))
         ) {
+            $this->logger->info('The LPA has instructions and/or preferences. Fetching images');
             $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
         }
 
