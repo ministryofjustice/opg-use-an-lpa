@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace CommonTest\Service\Lpa;
 
 use Common\Entity\CaseActor;
+use Common\Entity\InstructionsAndPreferences\Images;
+use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\Lpa;
+use Common\Service\Lpa\InstAndPrefImagesFactory;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\ParseLpaData;
 use Exception;
@@ -21,12 +24,14 @@ use Prophecy\Prophecy\ObjectProphecy;
  * @property string    actorId
  * @property Lpa       lpa
  * @property CaseActor actor
+ * @property Images    iapImages
  */
 class ParseLpaDataTest extends TestCase
 {
     use ProphecyTrait;
 
     private ObjectProphecy|LpaFactory $lpaFactory;
+    private ObjectProphecy|InstAndPrefImagesFactory $instAndPrefImagesFactory;
 
     public function setUp(): void
     {
@@ -45,6 +50,11 @@ class ParseLpaDataTest extends TestCase
             'lpa'                  => [
                 'uId' => $this->lpaId,
             ],
+            'iap'                  => [
+                'uId'        => $this->lpaId,
+                'status'     => 'COLLECTION_COMPLETE',
+                'signedUrls' => []
+            ]
         ];
 
         $this->lpa = new Lpa();
@@ -53,7 +63,14 @@ class ParseLpaDataTest extends TestCase
         $this->actor = new CaseActor();
         $this->actor->setUId($this->actorId);
 
-        $this->lpaFactory = $this->prophesize(LpaFactory::class);
+        $this->iapImages = new Images(
+            (int) $this->lpaData['iap']['uId'],
+            ImagesStatus::from($this->lpaData['iap']['status']),
+            $this->lpaData['iap']['signedUrls'],
+        );
+
+        $this->lpaFactory               = $this->prophesize(LpaFactory::class);
+        $this->instAndPrefImagesFactory = $this->prophesize(InstAndPrefImagesFactory::class);
     }
 
     /**
@@ -66,7 +83,9 @@ class ParseLpaDataTest extends TestCase
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($this->lpa);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
 
-        $sut    = new ParseLpaData($this->lpaFactory->reveal());
+        $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
+
+        $sut    = new ParseLpaData($this->lpaFactory->reveal(), $this->instAndPrefImagesFactory->reveal());
         $result = $sut(
             [
                 $this->lpaId => $this->lpaData,
@@ -75,5 +94,6 @@ class ParseLpaDataTest extends TestCase
         $this->assertObjectHasAttribute($this->lpaId, $result);
         $this->assertEquals($this->lpa, $result->{$this->lpaId}->lpa);
         $this->assertEquals($this->actor, $result->{$this->lpaId}->actor['details']);
+        $this->assertEquals($this->iapImages, $result->{$this->lpaId}->iap);
     }
 }

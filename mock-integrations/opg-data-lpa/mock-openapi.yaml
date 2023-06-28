@@ -486,7 +486,7 @@ paths:
                   value:
                     uId: 7000-0000-0344
                     applicationHasGuidance: false
-                    applicationHasRestrictions: false
+                    applicationHasRestrictions: true
                     applicationType: Classic
                     attorneyActDecisions: null
                     attorneys:

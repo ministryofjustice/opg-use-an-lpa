@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Exception;
 
 /**
  * Single action invokeable class that transforms incoming LPA data arrays from the API into ones containing
@@ -13,10 +14,9 @@ use ArrayObject;
 class ParseLpaData
 {
     /**
-     * @param LpaFactory $lpaFactory
      * @codeCoverageIgnore
      */
-    public function __construct(private LpaFactory $lpaFactory)
+    public function __construct(private LpaFactory $lpaFactory, private InstAndPrefImagesFactory $imagesFactory)
     {
     }
 
@@ -24,12 +24,16 @@ class ParseLpaData
      * Attempts to convert the data arrays received via the various endpoints into an ArrayObject containing
      * scalar and object values.
      *
-     * Currently fairly naive in its assumption that the data types are stored under explicit keys, which
+     * Currently, fairly naive in its assumption that the data types are stored under explicit keys, which
      * may change.
      *
-     * @param array $data
+     * @param array{
+     *     lpa: array,
+     *     actor?: array,
+     *     iap?: array,
+     *     ...} $data
      * @return ArrayObject
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(array $data): ArrayObject
     {
@@ -40,6 +44,9 @@ class ParseLpaData
                     break;
                 case 'actor':
                     $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    break;
+                case 'iap':
+                    $data['iap'] = $this->imagesFactory->createFromData($dataItem);
                     break;
                 default:
                     if (is_array($dataItem)) {
