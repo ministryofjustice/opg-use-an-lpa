@@ -16,6 +16,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -29,9 +30,9 @@ class ViewLpaHandler extends AbstractHandler
         UrlHelper $urlHelper,
         private LpaService $lpaService,
         private FeatureEnabled $featureEnabled,
-    )
-    {
-        parent::__construct($renderer, $urlHelper);
+        LoggerInterface $logger,
+    ) {
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**
@@ -56,6 +57,14 @@ class ViewLpaHandler extends AbstractHandler
         ];
 
         if (($this->featureEnabled)('instructions_and_preferences') && $lpaData->offsetExists('iap')) {
+            $this->logger->info(
+                'Instructions and preferences images found for lpa {lpa_id} with state {state}',
+                [
+                    'lpa_id' => $lpaData->iap->uId,
+                    'state'  => $lpaData->iap->status,
+                ]
+            );
+
             // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
             //      is later)
             // necessary for development. Do not uncomment for live environments.
@@ -64,6 +73,14 @@ class ViewLpaHandler extends AbstractHandler
             $codeCreated = (new DateTimeImmutable($lpaData->expires))->sub(new DateInterval('P30D'));
 
             if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
+                $this->logger->debug(
+                    'Code was created on {created}, calculated as 30 days before {expires}',
+                    [
+                        'created' => $codeCreated->format('jS F Y'),
+                        'expires' => $lpaData->expires->format('jS F Y'),
+                    ]
+                );
+
                 $renderData['iap_images'] = $lpaData->iap; // TODO UML-2930 this is the only bit that should be kept
             }
         }
