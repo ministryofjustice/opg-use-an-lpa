@@ -15,3 +15,9 @@ Feature: PDF download
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
     Then a PDF is downloaded
+
+  @integration @ui @ff:instructions_and_preferences:false
+  Scenario: The user can download a document version of the LPA they're viewing without images
+    Given I am viewing a valid LPA
+    When I choose to download a document version of the LPA
+    Then a PDF is downloaded

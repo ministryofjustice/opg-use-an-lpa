@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
@@ -26,11 +27,10 @@ use Psr\Http\Message\RequestInterface;
  */
 class ViewerContext implements Context
 {
-    use ViewerContextTrait;
     use BaseUiContextTrait;
+    use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
-    private const INPSERVICE_GET_BY_ID        = 'InstAndPrefImagesService::getImagesById';
 
     /**
      * @Then /^a PDF is downloaded$/
@@ -280,32 +280,25 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/view-lpa');
 
+        $data = [
+            'lpa'     => $this->lpaData,
+            'expires' => (new DateTime('+30 days'))->format('c'),
+        ];
+
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $data['iap'] = [
+                'uId'        => (int) $this->lpaData['uId'],
+                'status'     => 'COLLECTION_COMPLETE',
+                'signedUrls' => [],
+            ];
+        }
+
         // API call for lpa full fetch
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'lpa'     => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
-                    ]
-                ),
+                json_encode($data),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
-            )
-        );
-
-        // InstAndPrefImagesService::getImagesById
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'uId'        => (int) $this->lpaData['uId'],
-                        'status'     => 'COLLECTION_COMPLETE',
-                        'signedUrls' => [],
-                    ]
-                ),
-                self::INPSERVICE_GET_BY_ID
             )
         );
 
@@ -316,7 +309,7 @@ class ViewerContext implements Context
 
         //Full lpa fetch assertions
         $request = $this->base->mockClientHistoryContainer[2]['request'];
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);

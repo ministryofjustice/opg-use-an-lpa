@@ -46,16 +46,15 @@ class DownloadLpaHandler implements RequestHandlerInterface
             throw new SessionTimeoutException();
         }
 
-        $lpa = $this->lpaService->getLpaByCode($code, $surname, null);
-        $image = null;
+        $lpa    = $this->lpaService->getLpaByCode($code, $surname, null);
+        $images = null;
 
         if (($this->featureEnabled)('instructions_and_preferences') && $lpa->offsetExists('iap')) {
             // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
             //      is later)
             // necessary for development. Do not uncomment for live environments.
             $lpa->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
-
-            $codeCreated = (new DateTimeImmutable($lpa->expires))->sub(new \DateInterval('P30D'));
+            $codeCreated  = (new DateTimeImmutable($lpa->expires))->sub(new \DateInterval('P30D'));
 
             if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
                 $images = $lpa->iap; // TODO UML-2930 this is the only bit that should be kept
