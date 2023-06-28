@@ -135,7 +135,6 @@ Feature: View an LPA via sharecode
     When I request to go back and try again
     Then I want to see page to enter another share code
 
-
   @ui
   Scenario: The user gets a session timeout if the cookie is not present.
     Given I have been given access to an LPA via share code
