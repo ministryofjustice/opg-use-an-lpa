@@ -59,7 +59,7 @@ class ViewLpaHandler extends AbstractHandler
             // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
             //      is later)
             // necessary for development. Do not uncomment for live environments.
-            //$lpaData->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
+            $lpaData->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
 
             $codeCreated = (new DateTimeImmutable($lpaData->expires))->sub(new DateInterval('P30D'));
 
