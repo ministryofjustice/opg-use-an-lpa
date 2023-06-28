@@ -10,7 +10,6 @@ use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
@@ -31,6 +30,7 @@ class ViewerContext implements Context
     use BaseUiContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
+    private const INPSERVICE_GET_BY_ID        = 'InstAndPrefImagesService::getImagesById';
 
     /**
      * @Then /^a PDF is downloaded$/
@@ -286,11 +286,26 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
+                        'lpa'     => $this->lpaData,
                         'expires' => (new DateTime('+30 days'))->format('c'),
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'uId'        => (int) $this->lpaData['uId'],
+                        'status'     => 'COLLECTION_COMPLETE',
+                        'signedUrls' => [],
+                    ]
+                ),
+                self::INPSERVICE_GET_BY_ID
             )
         );
 
