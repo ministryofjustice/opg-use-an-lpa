@@ -3,7 +3,7 @@
 {% block html_title %}{% trans %}LPA summary{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
-    {% include '@partials/full-lpa-display.html.twig' with {'forDownload': false} %}
+    {% include '@partials/full-lpa-display.html.twig' with {'forDownload': false, 'side': 'VIEW'} %}
 
     <div class="govuk-width-container">
         {{ include('@viewer/new-view-service.html.twig') }}
