@@ -6,6 +6,9 @@ namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
+use Common\Entity\InstructionsAndPreferences\Images;
+use Common\Entity\InstructionsAndPreferences\ImagesStatus;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
@@ -237,7 +240,14 @@ class ViewerContext extends BaseIntegrationContext
 
         $pdfService = $this->container->get(PdfService::class);
 
-        $pdfStream = $pdfService->getLpaAsPdf($this->viewedLpa);
+        if (($this->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $pdfService->getLpaAsPdf(
+                $this->viewedLpa,
+                new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []),
+            );
+        } else {
+            $pdfService->getLpaAsPdf($this->viewedLpa);
+        }
 
         $request = $this->apiFixtures->getLastRequest();
         Assert::assertStringContainsString('Mr Test Testable Testerson', $request->getBody()->getContents());

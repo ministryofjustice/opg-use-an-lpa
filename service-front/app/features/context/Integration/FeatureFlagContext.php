@@ -18,7 +18,7 @@ class FeatureFlagContext extends BaseIntegrationContext
     /**
      * @BeforeScenario
      */
-    public function setFeatureFlag(BeforeScenarioScope $scope)
+    public function setFeatureFlag(BeforeScenarioScope $scope): void
     {
         $tags = $scope->getScenario()->getTags();
         foreach ($tags as $tag) {
@@ -35,8 +35,10 @@ class FeatureFlagContext extends BaseIntegrationContext
                 }
 
                 $lpaContextContainer = $scope->getEnvironment()->getContext(LpaContext::class)->container;
-                $config = $lpaContextContainer->get('config');
+
+                $config                                = $lpaContextContainer->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
+
                 $lpaContextContainer->set('config', $config);
                 $lpaContextContainer->set(
                     FeatureEnabled::class,
