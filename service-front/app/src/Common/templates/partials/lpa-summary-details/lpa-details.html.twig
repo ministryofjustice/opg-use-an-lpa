@@ -74,8 +74,9 @@
         </div>
     {% else %}
 
-    {% if feature_enabled("instructions_and_preferences") %}
-        {% if (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and (lpa.registrationDate < date('2019-01-01')) %}
+{% if feature_enabled("instructions_and_preferences") %}
+    {% if (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and (lpa.registrationDate < date('2019-01-01')) %}
+        </dl>
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">
@@ -85,8 +86,9 @@
                         <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
                 </strong>
             </div>
-        {% endif %}
+        <dl>
     {% endif %}
+{% endif %}
 
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
