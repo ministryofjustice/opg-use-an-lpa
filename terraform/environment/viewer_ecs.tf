@@ -313,6 +313,10 @@ locals {
         name  = "BRUTE_FORCE_CACHE_TIMEOUT",
         value = "60"
       },
+      {
+        name  = "INSTRUCTIONS_AND_PREFERENCES",
+        value = tostring(local.environment.application_flags.instructions_and_preferences)
+      },
     ],
   )
 }
