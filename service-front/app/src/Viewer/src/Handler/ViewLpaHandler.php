@@ -76,7 +76,7 @@ class ViewLpaHandler extends AbstractHandler
                 'Code was created on {created}, calculated as 30 days before {expires}',
                 [
                     'created' => $codeCreated->format('jS F Y'),
-                    'expires' => $lpaData->expires->format('jS F Y'),
+                    'expires' => (new DateTimeImmutable($lpaData->expires))->format('jS F Y'),
                 ]
             );
 
