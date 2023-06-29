@@ -184,6 +184,22 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I am told that we cannot currently get the instructions and preferences images$/
+     */
+    public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^I am told to wait for instructions and preferences images$/
+     */
+    public function iAmToldToWaitForInstructionsAndPreferencesImages()
+    {
+        throw new PendingException();
+    }
+
+    /**
      * @Given /^I am viewing a cancelled LPA$/
      * @Then /^I can see the full details of the cancelled LPA$/
      */
@@ -564,6 +580,22 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences for which images aren't yet ready$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences for which images will fail to load$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad()
+    {
+        throw new PendingException();
     }
 
     /**
