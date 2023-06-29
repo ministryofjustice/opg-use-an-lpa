@@ -105,6 +105,7 @@
     </div>
 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
 </dl>
+    {% if (iap_images.getImagesStatus().value) == 'COLLECTION_COMPLETE' %}
     {# if in error show error
        if in progress show spinner/wait message
        if complete iterate images #}
@@ -115,7 +116,8 @@
     {% endfor %}
 </div>
 <dl class="govuk-summary-list govuk-summary-list--no-border">
-{% endif %}
+    {% endif %}
+    {% endif %}
 
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
@@ -134,6 +136,7 @@
     </div>
 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
 </dl>
+    {% if (iap_images.getImagesStatus().value) == 'COLLECTION_COMPLETE' %}
 <div id="instructions_images" class="opg-ip">
     {% for url in iap_images.getInstructionsImageUrls %}
         <img class="opg-ip__image" src="{{ url.url }}"
@@ -142,5 +145,6 @@
 </div>
 {% else %}
 </dl>
+    {% endif %}
 {% endif %}
     {% endif %}
