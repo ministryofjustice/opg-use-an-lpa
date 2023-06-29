@@ -115,9 +115,8 @@
                     <h2 class="govuk-heading-l">
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
-                    </dl>
+
+                    {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
 
                     {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                         <div class="govuk-inset-text">
