@@ -19,6 +19,7 @@ class ImagesTest extends TestCase
      * @covers ::getInstructionsImageUrls
      * @covers ::getPreferencesImageUrls
      * @covers ::getImageRegex
+     * @covers ::getImagesStatus
      * @covers ::getImageUrls
      */
     public function it_returns_requested_images(): void
@@ -35,6 +36,7 @@ class ImagesTest extends TestCase
         $images = new Images(...$data);
 
         $signedUrls = $images->getInstructionsImageUrls();
+        $imagesStatus = $images->getImagesStatus();
 
         $this->assertCount(1, $signedUrls);
         $this->assertEquals('http://instructions-image-url', $signedUrls[0]->url);
@@ -43,6 +45,8 @@ class ImagesTest extends TestCase
 
         $this->assertCount(1, $signedUrls);
         $this->assertEquals('http://preferences-image-url', $signedUrls[0]->url);
+
+        $this->assertEquals(ImagesStatus::COLLECTION_COMPLETE, $imagesStatus);
     }
 
     /**
