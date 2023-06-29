@@ -24,6 +24,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaData
  * @property $lpaStoredCode
  * @property $lpaViewedBy
+ * @property $imageCollectionStatus
  */
 class ViewerContext implements Context
 {
@@ -304,7 +305,7 @@ class ViewerContext implements Context
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
-                'status'     => 'COLLECTION_COMPLETE',
+                'status'     => $imageCollectionStatus,
                 'signedUrls' => [],
             ];
         }
@@ -575,6 +576,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = true;
         $this->lpaData['applicationHasRestrictions'] = true;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
     }
 
@@ -587,6 +590,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = false;
         $this->lpaData['applicationHasRestrictions'] = true;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
     }
 
@@ -595,7 +600,7 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()
     {
-        throw new PendingException();
+        $this->imageCollectionStatus = 'COLLECTION_IN_PROGRESS';
     }
 
     /**
@@ -603,7 +608,7 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad()
     {
-        throw new PendingException();
+        $this->imageCollectionStatus = 'COLLECTION_ERROR';
     }
 
     /**
@@ -614,6 +619,8 @@ class ViewerContext implements Context
         $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
         $this->lpaData['applicationHasGuidance'] = true;
         $this->lpaData['applicationHasRestrictions'] = false;
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
 
         $this->giveAValidLpaShareCode();
     }
@@ -627,6 +634,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = false;
         $this->lpaData['applicationHasRestrictions'] = false;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
     }
 
@@ -639,6 +648,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->lpaData['lpaDonorSignatureDate'] = '2015-01-01';
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
 
         $this->giveAValidLpaShareCode();
     }
