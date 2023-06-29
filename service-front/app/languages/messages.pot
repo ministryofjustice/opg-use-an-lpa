@@ -118,6 +118,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:70
 #: src/Actor/templates/actor/check-your-answers.html.twig:92
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
+#: src/Common/templates/partials/full-lpa-display.html.twig:118
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
 msgid "Warning"
@@ -4699,4 +4700,11 @@ msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:64
 msgid "Yes, the donor made instructions and/or preferences on their LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:124
+#: src/Common/templates/partials/full-lpa-display.html.twig:119
+msgid ""
+"Some words in these instructions or preferences may have been removed by the Court of Protection. If you need to check this, please see the paper\n"
+"                                        <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
