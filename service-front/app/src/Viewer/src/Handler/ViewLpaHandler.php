@@ -69,6 +69,7 @@ class ViewLpaHandler extends AbstractHandler
             //      is later)
             // necessary for development. Do not uncomment for live environments.
             $lpaData->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
+            $this->logger->alert('WARNING: code expiry time currently forward dated by 60 days. DO NOT GO LIVE');
 
             $codeCreated = (new DateTimeImmutable($lpaData->expires))->sub(new DateInterval('P30D'));
 
