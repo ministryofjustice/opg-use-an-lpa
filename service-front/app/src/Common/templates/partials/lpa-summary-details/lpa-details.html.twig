@@ -105,18 +105,18 @@
     </div>
 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
 </dl>
-    {% if (iap_images.getImagesStatus().value) == 'COLLECTION_COMPLETE' %}
-    {# if in error show error
-       if in progress show spinner/wait message
-       if complete iterate images #}
-<div id="preferences_images" class="opg-ip">
-    {% for url in iap_images.getPreferencesImageUrls %}
-        <img class="opg-ip__image" src="{{ url.url }}"
-             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-    {% endfor %}
-</div>
-<dl class="govuk-summary-list govuk-summary-list--no-border">
-    {% endif %}
+    {# if in error show error TODO }
+    {#   if in progress show spinner/wait message TODO #}
+     {# if complete iterate images #}
+ {% if (iap_images.getImagesStatus().value) == 'COLLECTION_COMPLETE' %}
+    <div id="preferences_images" class="opg-ip">
+        {% for url in iap_images.getPreferencesImageUrls %}
+            <img class="opg-ip__image" src="{{ url.url }}"
+                alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+        {% endfor %}
+    </div>
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        {% endif %}
     {% endif %}
 
     <div class="govuk-summary-list__row">
@@ -136,15 +136,18 @@
     </div>
 {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
 </dl>
+{# if in error show error TODO }
+    {#   if in progress show spinner/wait message TODO #}
+     {# if complete iterate images #}
     {% if (iap_images.getImagesStatus().value) == 'COLLECTION_COMPLETE' %}
-<div id="instructions_images" class="opg-ip">
-    {% for url in iap_images.getInstructionsImageUrls %}
-        <img class="opg-ip__image" src="{{ url.url }}"
-             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-    {% endfor %}
-</div>
-{% else %}
-</dl>
+        <div id="instructions_images" class="opg-ip">
+        {% for url in iap_images.getInstructionsImageUrls %}
+            <img class="opg-ip__image" src="{{ url.url }}"
+                 alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+        {% endfor %}
+        </div>
+    {% else %}
+    </dl>
+    {% endif %}
     {% endif %}
 {% endif %}
-    {% endif %}
