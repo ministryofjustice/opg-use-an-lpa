@@ -452,16 +452,24 @@ class ViewerContext implements Context
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
 
+        $data = [
+            'lpa'     => $this->lpaData,
+            'expires' => (new DateTime('+30 days'))->format('c'),
+        ];
+
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $data['iap'] = [
+                'uId'        => (int) $this->lpaData['uId'],
+                'status'     => 'COLLECTION_COMPLETE',
+                'signedUrls' => [],
+            ];
+        }
+
         // API call for lpa full fetch
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'lpa' => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
-                    ]
-                ),
+                json_encode($data),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
@@ -641,6 +649,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('#instructions_images');
+            $this->ui->assertElementOnPage('#preferences_images');
+        }
     }
 
     /**
@@ -649,6 +661,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementNotOnPage('#instructions_images');
+            $this->ui->assertElementOnPage('#preferences_images');
+        }
     }
 
 
@@ -658,6 +674,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructions()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('#instructions_images');
+            $this->ui->assertElementNotOnPage('#preferences_images');
+        }
     }
 
     /**
