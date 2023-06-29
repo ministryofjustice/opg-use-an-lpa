@@ -1282,7 +1282,6 @@ msgstr ""
 "gallwch nawr ei defnyddio"
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:48
-#, fuzzy
 msgid ""
 "This <abbr\n"
 "                                        title=\"lasting power of "
