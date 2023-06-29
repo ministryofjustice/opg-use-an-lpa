@@ -189,7 +189,8 @@ class ViewerContext implements Context
      */
     public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
     {
-        throw new PendingException();
+        $this->ui->assertPageContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
+        $this->ui->assertNotPageContainsText('A scanned image of the donor’s preferences will appear here soon');
     }
 
     /**
@@ -197,7 +198,8 @@ class ViewerContext implements Context
      */
     public function iAmToldToWaitForInstructionsAndPreferencesImages()
     {
-        throw new PendingException();
+        $this->ui->assertPageContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
     }
 
     /**
@@ -747,6 +749,8 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
     }
 
     /**
