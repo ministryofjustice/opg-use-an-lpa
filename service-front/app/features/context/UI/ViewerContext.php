@@ -190,7 +190,7 @@ class ViewerContext implements Context
     public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
     {
         $this->ui->assertPageContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
-        $this->ui->assertNotPageContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
     }
 
     /**
