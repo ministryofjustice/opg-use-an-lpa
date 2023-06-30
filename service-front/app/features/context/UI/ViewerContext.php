@@ -615,6 +615,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()
     {
+        $this->theLPAHasInstructionsAndPreferences();
+
         $this->imageCollectionStatus = 'COLLECTION_IN_PROGRESS';
     }
 
@@ -623,6 +625,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad()
     {
+        $this->theLPAHasInstructionsAndPreferences();
+
         $this->imageCollectionStatus = 'COLLECTION_ERROR';
     }
 
