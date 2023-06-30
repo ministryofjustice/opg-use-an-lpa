@@ -37,7 +37,7 @@ Feature: View an LPA via sharecode
     And preferences will show “no”
     And instructions will show “no”
 
-  @ui
+  @ui @ff:instructions_and_preferences:false
   Scenario: Instructions and preferences information shows for older LPAs
     Given The LPA has instructions and preferences and is signed before 2016
     When I enter an organisation name and confirm the LPA is correct
