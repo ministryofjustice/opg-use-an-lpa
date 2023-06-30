@@ -60,7 +60,7 @@
     {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences") %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value" data-field-name="instructions_and_preferences">
                 {% trans %}Yes, the donor made instructions and/or preferences on their LPA.{% endtrans %}
                     <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
             </dd>
@@ -68,7 +68,7 @@
     {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences")  %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__value" data-field-name="instructions_and_preferences">
                 {% trans %}No{% endtrans %}
             </dd>
         </div>
