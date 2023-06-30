@@ -106,7 +106,7 @@
             </dd>
         </div>
 
-        {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+        {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasGuidance and iap_images is defined %}
             </dl>
                 {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                     <div class="govuk-warning-text">
@@ -171,7 +171,7 @@
             </dd>
         </div>
 
-        {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+        {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasRestrictions and iap_images is defined %}
             </dl>
             {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                 <div class="govuk-warning-text">
