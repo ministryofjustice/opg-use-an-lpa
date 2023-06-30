@@ -846,6 +846,8 @@ class ViewerContext implements Context
             'status' => 'Registered',
             'caseSubtype' => 'hw',
         ];
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
     }
 
     /**
