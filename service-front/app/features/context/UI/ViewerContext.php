@@ -482,6 +482,16 @@ class ViewerContext implements Context
                 'status'     => $this->imageCollectionStatus,
                 'signedUrls' => [],
             ];
+
+            if ($data['lpa']['applicationHasGuidance']) {
+                $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-preferences']
+                    = 'https://images/image.jpg';
+            }
+
+            if ($data['lpa']['applicationHasRestrictions']) {
+                $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-instructions']
+                    = 'https://images/image.jpg';
+            }
         }
 
         // API call for lpa full fetch
@@ -731,7 +741,10 @@ class ViewerContext implements Context
     public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
     {
         $this->ui->assertPageContainsText('Instructions and preferences');
-        $this->ui->assertPageContainsText( 'Yes, the donor made instructions and/or preferences on their LPA.');
+        $this->ui->assertElementContainsText(
+            'dd[data-field-name="instructions_and_preferences"]',
+            'Yes, the donor made instructions and/or preferences on their LPA.'
+        );
     }
 
     /**
@@ -740,7 +753,11 @@ class ViewerContext implements Context
     public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
     {
         $this->ui->assertPageContainsText('Instructions and preferences');
-        $this->ui->assertPageContainsText( 'No');
+        $this->ui->assertElementNotContainsText(
+            'dd.govuk-summary-list__value',
+            'Yes, the donor made instructions and/or preferences on their LPA.'
+        );
+        $this->ui->assertElementContainsText('dd[data-field-name="instructions_and_preferences"]', 'No');
     }
 
     /**
@@ -817,13 +834,13 @@ class ViewerContext implements Context
         $this->lpaViewedBy = 'Santander';
         $this->lpaData = [
             'id' => 1,
-            'uId' => '7000-0000-0000',
+            'uId' => '700000000000',
             'receiptDate' => '2014-09-26',
             'registrationDate' => '2014-10-26',
             'lpaDonorSignatureDate' => '2015-06-30',
             'donor' => [
                 'id' => 1,
-                'uId' => '7000-0000-0288',
+                'uId' => '700000000288',
                 'dob' => '1948-11-01',
                 'salutation' => 'Mr',
                 'firstname' => 'Test',
