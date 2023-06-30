@@ -192,7 +192,7 @@ class Lpa
     {
         return $this->hasSeveranceWarning;
     }
-    
+
     public function setHasSeveranceWarning(bool $hasSeveranceWarning): void
     {
         $this->hasSeveranceWarning = $hasSeveranceWarning;
