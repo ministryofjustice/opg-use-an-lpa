@@ -24,6 +24,14 @@ class Images
     /**
      * @return array<SignedUrl>
      */
+    public function getImagesStatus(): ImagesStatus
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return array<SignedUrl>
+     */
     public function getInstructionsImageUrls(): array
     {
         return $this->getImageUrls($this->getImageRegex(self::INSTRUCTIONS));
