@@ -476,19 +476,22 @@ class ViewerContext implements Context
             'expires' => (new DateTime('+30 days'))->format('c'),
         ];
 
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+        if (
+            (($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false))
+            && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
+        ) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
                 'status'     => $this->imageCollectionStatus,
                 'signedUrls' => [],
             ];
 
-            if ($data['lpa']['applicationHasGuidance']) {
+            if ($data['lpa']['applicationHasGuidance'] ?? false) {
                 $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-preferences']
                     = 'https://images/image.jpg';
             }
 
-            if ($data['lpa']['applicationHasRestrictions']) {
+            if ($data['lpa']['applicationHasRestrictions'] ?? false) {
                 $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-instructions']
                     = 'https://images/image.jpg';
             }
