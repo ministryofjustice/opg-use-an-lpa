@@ -611,6 +611,16 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^The LPA has instructions and preferences for which image collection is not yet started$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImageCollectionIsNotYetStarted()
+    {
+        $this->theLPAHasInstructionsAndPreferences();
+
+        $this->imageCollectionStatus = 'COLLECTION_NOT_STARTED';
+    }
+
+    /**
      * @Given /^The LPA has instructions and preferences for which images aren't yet ready$/
      */
     public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()

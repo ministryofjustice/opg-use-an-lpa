@@ -66,6 +66,13 @@ Feature: View an LPA via sharecode
     And I am told to wait for instructions and preferences images
 
   @ui
+  Scenario: The viewer can see waiting message and image for instructions and preferences images where collection not yet started
+    Given The LPA has instructions and preferences for which image collection is not yet started
+    When I enter an organisation name and confirm the LPA is correct
+    Then I can see the full details of the valid LPA
+    And I am told to wait for instructions and preferences images
+
+  @ui
   Scenario: The viewer can see message for instructions and preferences images that failed to load
     Given The LPA has instructions and preferences for which images will fail to load
     When I enter an organisation name and confirm the LPA is correct
