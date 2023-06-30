@@ -72,21 +72,35 @@
                 {% trans %}No{% endtrans %}
             </dd>
         </div>
-    {% else %}
+    {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
 
-        {% if feature_enabled('instructions_and_preferences') %}
-            {% if (lpa.applicationHasGuidance or lpa.applicationHasInstructions) and lpa.hasSeveranceWarning %}
+        {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasInstructions) %}
+            {% if lpa.hasSeveranceWarning %}
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
                         {% trans %}
-                            Some words in the instructions and or preferences have been removed by the court of protection.
-                            To check which words have been removed, please ask to see the paper <abbr
-                                title="lasting power of attorney">LPA</abbr> or the court order.
+                            Some words in these instructions or preferences have been removed by the court of
+                            protection. To check which words have been removed, please ask to see the paper
+                            <abbr title="lasting power of attorney">LPA</abbr> or the court order.
                         {% endtrans %}
                     </strong>
                 </div>
+            {% elseif (lpa.registrationDate < date('2019-01-01') %}
+                </dl>
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                        {% trans %}
+                            Some words in these instructions or preferences may have been removed by the Court of
+                            Protection. If you need to check this, please see the paper
+                            <abbr title="lasting power of attorney">LPA</abbr>.
+                        {% endtrans %}
+                    </strong>
+                </div>
+                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
         {% endif %}
 
