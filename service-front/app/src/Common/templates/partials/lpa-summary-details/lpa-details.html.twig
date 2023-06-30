@@ -1,43 +1,43 @@
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     {% if lpa.caseSubtype == "pfa" %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
-                    title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">
-            {% if lpa.attorneyActDecisions|lower == 'when registered' %}
-                {% if actor.type == 'donor' %}
-                    {% trans %}You have said that this <abbr
-                            title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
-                        <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
-                {% else %}
-                    {% trans %}The donor has said that this <abbr
-                            title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
-                        <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
+                        title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">
+                {% if lpa.attorneyActDecisions|lower == 'when registered' %}
+                    {% if actor.type == 'donor' %}
+                        {% trans %}You have said that this <abbr
+                                title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
+                            <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
+                    {% else %}
+                        {% trans %}The donor has said that this <abbr
+                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
+                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                    {% endif %}
+                {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                    {% trans %}This <abbr
+                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+                {% elseif lpa.attorneyActDecisions == null %}
+                    {% trans %}This <abbr
+                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
                 {% endif %}
-            {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                {% trans %}This <abbr
-                        title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
-            {% elseif lpa.attorneyActDecisions == null %}
-                {% trans %}This <abbr
-                        title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
-            {% endif %}
-        </dd>
-    </div>
+            </dd>
+        </div>
     {% else %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}Life-sustaining
-                <br>treatment{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">
-            {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
-                {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-            {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
-            {% else %}
-                {% trans %}To view this, ask to see the paper <abbr
-                        title="lasting power of attorney">LPA</abbr>{% endtrans %}
-            {% endif %}
-        </dd>
-    </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Life-sustaining
+                    <br>treatment{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">
+                {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
+                    {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
+                    {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                {% else %}
+                    {% trans %}To view this, ask to see the paper <abbr
+                            title="lasting power of attorney">LPA</abbr>{% endtrans %}
+                {% endif %}
+            </dd>
+        </div>
     {% endif %}
 
     <div class="govuk-summary-list__row">
@@ -57,7 +57,7 @@
         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
     </div>
 
-    {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+    {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences") %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
@@ -65,7 +65,7 @@
                     <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
             </dd>
         </div>
-    {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+    {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences")  %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
@@ -74,75 +74,151 @@
         </div>
     {% else %}
 
-{% if feature_enabled("instructions_and_preferences") %}
-    {% if (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and (lpa.registrationDate < date('2019-01-01')) %}
-        </dl>
-            <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                    {% trans %}Some words in these instructions or preferences may have been removed by the Court of
-                        Protection. If you need to check this, please see the paper
-                        <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
-                </strong>
-            </div>
-        <dl>
-    {% endif %}
-{% endif %}
-
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">
-            {% if lpa.applicationHasGuidance %}
-                {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-                    {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                {% else %}
-                    {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
-                {% endif %}
-            {% else %}
-                {% trans %}No{% endtrans %}
+        {% if feature_enabled("instructions_and_preferences") %}
+            {% if (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and (lpa.registrationDate < date('2019-01-01')) %}
+                </dl>
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}Some words in these instructions or preferences may have been removed by the Court of
+                                Protection. If you need to check this, please see the paper
+                                <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                        </strong>
+                    </div>
+                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
-        </dd>
-    </div>
-{% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-</dl>
-    {# if in error show error
-       if in progress show spinner/wait message
-       if complete iterate images #}
-<div id="preferences_images" class="opg-ip">
-    {% for url in iap_images.getPreferencesImageUrls %}
-        <img class="opg-ip__image" src="{{ url.url }}"
-             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-    {% endfor %}
-</div>
-<dl class="govuk-summary-list govuk-summary-list--no-border">
-{% endif %}
+        {% endif %}
 
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">
-            {% if lpa.applicationHasRestrictions %}
-                {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-                    {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">
+                {% if lpa.applicationHasGuidance %}
+                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                        {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                    {% else %}
+                        {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                    {% endif %}
                 {% else %}
-                    {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                    {% trans %}No{% endtrans %}
                 {% endif %}
-            {% else %}
-                {% trans %}No{% endtrans %}
+            </dd>
+        </div>
+
+        {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+            </dl>
+                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% if application is same as('actor') %}
+                                {% trans %}
+                                    We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
+                                    Until we can fix this problem, you’ll need to show the paper
+                                    <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them.
+                                {% endtrans %}
+                            {% elseif application is same as('viewer') %}
+                                {% trans %}
+                                    We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
+                                    Until we can fix this problem, if you need to see these you’ll need to ask the person who
+                                    gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>.
+                                {% endtrans %}
+                            {% endif %}
+                        </strong>
+                    </div>
+                {#   if in progress show spinner/wait message TODO #}
+                {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS') %}
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}
+                                A scanned image of the donor’s preferences will appear here soon
+                                The first time may take up to 10 minutes.
+                                You do not need to stay on the page or refresh it whilst you wait,
+                            {% endtrans %}
+                        </strong>
+                    </div>
+                {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                    {% set prefs_images = iap_images.getPreferencesImageUrls %}
+                    {% if (prefs_images | length) > 0 %}
+                        <div id="preferences_images" class="opg-ip">
+                            {% for url in prefs_images %}
+                                <img class="opg-ip__image" src="{{ url.url }}"
+                                     alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+        {% endif %}
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value">
+                {% if lpa.applicationHasRestrictions %}
+                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                        {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                    {% else %}
+                        {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                    {% endif %}
+                {% else %}
+                    {% trans %}No{% endtrans %}
+                {% endif %}
+            </dd>
+        </div>
+
+        {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+            </dl>
+            {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                        {% if application is same as('actor') %}
+                            {% trans %}
+                                We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
+                                Until we can fix this problem, you’ll need to show the paper
+                                <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them.
+                            {% endtrans %}
+                        {% elseif application is same as('viewer') %}
+                            {% trans %}
+                                We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
+                                Until we can fix this problem, if you need to see these you’ll need to ask the person who
+                                gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>.
+                            {% endtrans %}
+                        {% endif %}
+                    </strong>
+                </div>
+            {#   if in progress show spinner/wait message TODO #}
+            {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS') %}
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                        {% trans %}
+                            A scanned image of the donor’s instructions will appear here soon
+                            The first time may take up to 10 minutes.
+                            You do not need to stay on the page or refresh it whilst you wait,
+                        {% endtrans %}
+                    </strong>
+                </div>
+            {# if complete iterate images #}
+            {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                {% set insts_images = iap_images.getInstructionsImageUrls %}
+                {% if (insts_images | length) > 0 %}
+                    <div id="instructions_images" class="opg-ip">
+                        {% for url in insts_images %}
+                            <img class="opg-ip__image" src="{{ url.url }}"
+                                 alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% endif %}
-        </dd>
-    </div>
-{% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-</dl>
-<div id="instructions_images" class="opg-ip">
-    {% for url in iap_images.getInstructionsImageUrls %}
-        <img class="opg-ip__image" src="{{ url.url }}"
-             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-    {% endfor %}
-</div>
-{% else %}
-</dl>
-{% endif %}
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+        {% endif %}
     {% endif %}
+</dl>
