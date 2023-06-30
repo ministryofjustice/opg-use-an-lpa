@@ -307,7 +307,7 @@ class ViewerContext implements Context
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
-                'status'     => $imageCollectionStatus,
+                'status'     => $this->imageCollectionStatus,
                 'signedUrls' => [],
             ];
         }
@@ -479,7 +479,7 @@ class ViewerContext implements Context
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
-                'status'     => 'COLLECTION_COMPLETE',
+                'status'     => $this->imageCollectionStatus,
                 'signedUrls' => [],
             ];
         }
