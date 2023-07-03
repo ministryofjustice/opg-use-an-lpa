@@ -78,3 +78,4 @@ Feature: View an LPA via sharecode
     When I enter an organisation name and confirm the LPA is correct
     Then I can see the full details of the valid LPA
     And I am told that we cannot currently get the instructions and preferences images
+    And I can see the viewer-specific text for the error message

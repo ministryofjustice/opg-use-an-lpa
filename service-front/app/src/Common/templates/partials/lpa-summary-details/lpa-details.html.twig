@@ -74,7 +74,7 @@
         </div>
     {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
 
-        {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasInstructions) %}
+        {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -87,7 +87,7 @@
                         {% endtrans %}
                     </strong>
                 </div>
-            {% elseif (lpa.registrationDate < date('2019-01-01') %}
+            {% elseif lpa.registrationDate < date('2019-01-01') %}
                 </dl>
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
