@@ -275,6 +275,14 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I can see the viewer\-specific text for the error message$/
+     */
+    public function iCanSeeTheViewerSpecificTextForTheErrorMessage()
+    {
+        $this->ui->assertPageContainsText('you’ll need to ask the person who gave you the access code');
+    }
+
+    /**
      * @Then /^I can see the viewer terms of use$/
      */
     public function iCanSeeTheViewerTermsOfUse()
