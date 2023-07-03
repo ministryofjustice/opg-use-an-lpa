@@ -8,6 +8,7 @@ class Images
 {
     private const INSTRUCTIONS = '/iap-%s-(?:continuation_)?instructions/';
     private const PREFERENCES  = '/iap-%s-(?:continuation_)?preferences/';
+    private const UNKNOWN      = '/iap-%s-continuation_unknown/';
 
     /**
         * @param int              $uId
@@ -35,6 +36,14 @@ class Images
     public function getPreferencesImageUrls(): array
     {
         return $this->getImageUrls($this->getImageRegex(self::PREFERENCES));
+    }
+
+    /**
+     * @return array<SignedUrl>
+     */
+    public function getUnknownImageUrls(): array
+    {
+        return $this->getImageUrls($this->getImageRegex(self::UNKNOWN));
     }
 
     protected function getImageRegex(string $format): string

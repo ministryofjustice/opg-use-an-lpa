@@ -48,6 +48,7 @@ class InstAndPrefImagesServiceTest extends TestCase
             'signedUrls' => [
                 'iap-' . $uId . '-instructions' => 'http://www.example.com/image1.jpg',
                 'iap-' . $uId . '-preferences'  => 'http://www.example.com/image2.jpg',
+                'iap-' . $uId . '-continuation_unknown_1'  => 'http://www.example.com/image3.jpg',
             ],
         ];
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')->willReturn($imageDataFromApi);
@@ -65,6 +66,10 @@ class InstAndPrefImagesServiceTest extends TestCase
         $preferencesUrls = $images->getPreferencesImageUrls();
         $this->assertCount(1, $preferencesUrls);
         $this->assertEquals('http://www.example.com/image2.jpg', $preferencesUrls[0]->url);
+
+        $preferencesUrls = $images->getUnknownImageUrls();
+        $this->assertCount(1, $preferencesUrls);
+        $this->assertEquals('http://www.example.com/image3.jpg', $preferencesUrls[0]->url);
     }
 
     /** @test */
