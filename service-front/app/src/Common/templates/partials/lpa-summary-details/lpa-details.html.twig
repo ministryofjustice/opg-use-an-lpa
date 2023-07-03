@@ -146,14 +146,12 @@
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                 or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
                     <div class="govuk-warning-text">
-                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
                             <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
                             <div class="iap-loader"></div>
                             {% trans %}
                                 A scanned image of the donor’s preferences will appear here soon
                                 The first time may take up to 10 minutes.
-                                You do not need to stay on the page or refresh it whilst you wait,
                             {% endtrans %}
                         </strong>
                     </div>
@@ -213,13 +211,12 @@
             {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                 or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
                 <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
+                        <div class="iap-loader"></div>
                         <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
                         {% trans %}
                             A scanned image of the donor’s instructions will appear here soon
                             The first time may take up to 10 minutes.
-                            You do not need to stay on the page or refresh it whilst you wait,
                         {% endtrans %}
                     </strong>
                 </div>
