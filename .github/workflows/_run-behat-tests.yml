@@ -90,6 +90,7 @@ jobs:
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
+        if: always()
 
       - name: remove gh actions ingress to environment
         env:
