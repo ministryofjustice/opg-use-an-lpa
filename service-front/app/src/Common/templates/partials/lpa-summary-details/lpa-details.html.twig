@@ -62,7 +62,7 @@
             <dt class="govuk-summary-list__key">{% trans %}Instructions and preferences{% endtrans %}</dt>
             <dd class="govuk-summary-list__value" data-field-name="instructions_and_preferences">
                 {% trans %}Yes, the donor made instructions and/or preferences on their LPA.{% endtrans %}
-                    <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
             </dd>
         </div>
     {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences")  %}
@@ -76,6 +76,7 @@
 
         {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
+                </dl>
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
@@ -112,7 +113,7 @@
                         {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
                     {% else %}
                         {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
                     {% endif %}
                 {% else %}
                     {% trans %}No{% endtrans %}
@@ -176,7 +177,7 @@
                         {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
                     {% else %}
                         {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
                     {% endif %}
                 {% else %}
                     {% trans %}No{% endtrans %}
@@ -227,6 +228,18 @@
                             <img class="opg-ip__image" src="{{ url.url }}"
                                  alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
                         {% endfor %}
+                    </div>
+                {% endif %}
+                {% set unknown_images = iap_images.getUnknownImageUrls %}
+                {% if (unknown_images | length) > 0 %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">{% trans %}Additional Information{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">
+                        <div id="unknown_images" class="opg-ip">
+                          {% for url in unknown_images %}
+                              <img class="opg-ip__image" src="{{ url.url }}"
+                                 alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+                          {% endfor %}
                     </div>
                 {% endif %}
             {% endif %}

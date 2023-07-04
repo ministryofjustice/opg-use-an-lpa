@@ -189,6 +189,7 @@ class ViewerContext implements Context
      */
     public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
     {
+        $this->ui->assertElementNotOnPage('.iap-loader');
         $this->ui->assertPageContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
         $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
     }
@@ -198,6 +199,7 @@ class ViewerContext implements Context
      */
     public function iAmToldToWaitForInstructionsAndPreferencesImages()
     {
+        $this->ui->assertElementOnPage('.iap-loader');
         $this->ui->assertPageContainsText('A scanned image of the donor’s preferences will appear here soon');
         $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
     }
@@ -791,6 +793,7 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+        $this->ui->assertElementNotOnPage('.iap-loader');
         $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
         $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
     }
