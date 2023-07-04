@@ -76,6 +76,7 @@
 
         {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
+                </dl>
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
