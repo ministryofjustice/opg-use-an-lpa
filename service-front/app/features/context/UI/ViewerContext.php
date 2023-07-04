@@ -8,9 +8,9 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
@@ -24,11 +24,12 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaData
  * @property $lpaStoredCode
  * @property $lpaViewedBy
+ * @property $imageCollectionStatus
  */
 class ViewerContext implements Context
 {
-    use ViewerContextTrait;
     use BaseUiContextTrait;
+    use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
 
@@ -184,6 +185,26 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I am told that we cannot currently get the instructions and preferences images$/
+     */
+    public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
+    {
+        $this->ui->assertElementNotOnPage('.iap-loader');
+        $this->ui->assertPageContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
+        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
+    }
+
+    /**
+     * @Given /^I am told to wait for instructions and preferences images$/
+     */
+    public function iAmToldToWaitForInstructionsAndPreferencesImages()
+    {
+        $this->ui->assertElementOnPage('.iap-loader');
+        $this->ui->assertPageContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
+    }
+
+    /**
      * @Given /^I am viewing a cancelled LPA$/
      * @Then /^I can see the full details of the cancelled LPA$/
      */
@@ -256,6 +277,14 @@ class ViewerContext implements Context
     }
 
     /**
+     * @Given /^I can see the viewer\-specific text for the error message$/
+     */
+    public function iCanSeeTheViewerSpecificTextForTheErrorMessage()
+    {
+        $this->ui->assertPageContainsText('you’ll need to ask the person who gave you the access code');
+    }
+
+    /**
      * @Then /^I can see the viewer terms of use$/
      */
     public function iCanSeeTheViewerTermsOfUse()
@@ -280,16 +309,24 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/view-lpa');
 
+        $data = [
+            'lpa'     => $this->lpaData,
+            'expires' => (new DateTime('+30 days'))->format('c'),
+        ];
+
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $data['iap'] = [
+                'uId'        => (int) $this->lpaData['uId'],
+                'status'     => $this->imageCollectionStatus,
+                'signedUrls' => [],
+            ];
+        }
+
         // API call for lpa full fetch
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'lpa' => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
-                    ]
-                ),
+                json_encode($data),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
@@ -301,7 +338,7 @@ class ViewerContext implements Context
 
         //Full lpa fetch assertions
         $request = $this->base->mockClientHistoryContainer[2]['request'];
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
@@ -444,16 +481,37 @@ class ViewerContext implements Context
             $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
         );
 
+        $data = [
+            'lpa'     => $this->lpaData,
+            'expires' => (new DateTime('+30 days'))->format('c'),
+        ];
+
+        if (
+            (($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false))
+            && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
+        ) {
+            $data['iap'] = [
+                'uId'        => (int) $this->lpaData['uId'],
+                'status'     => $this->imageCollectionStatus,
+                'signedUrls' => [],
+            ];
+
+            if ($data['lpa']['applicationHasGuidance'] ?? false) {
+                $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-preferences']
+                    = 'https://images/image.jpg';
+            }
+
+            if ($data['lpa']['applicationHasRestrictions'] ?? false) {
+                $data['iap']['signedUrls']['iap-' . $this->lpaData['uId'] . '-instructions']
+                    = 'https://images/image.jpg';
+            }
+        }
+
         // API call for lpa full fetch
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'lpa' => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
-                    ]
-                ),
+                json_encode($data),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
@@ -543,6 +601,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = true;
         $this->lpaData['applicationHasRestrictions'] = true;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
     }
 
@@ -555,7 +615,39 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = false;
         $this->lpaData['applicationHasRestrictions'] = true;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences for which image collection is not yet started$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImageCollectionIsNotYetStarted()
+    {
+        $this->theLPAHasInstructionsAndPreferences();
+
+        $this->imageCollectionStatus = 'COLLECTION_NOT_STARTED';
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences for which images aren't yet ready$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()
+    {
+        $this->theLPAHasInstructionsAndPreferences();
+
+        $this->imageCollectionStatus = 'COLLECTION_IN_PROGRESS';
+    }
+
+    /**
+     * @Given /^The LPA has instructions and preferences for which images will fail to load$/
+     */
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad()
+    {
+        $this->theLPAHasInstructionsAndPreferences();
+
+        $this->imageCollectionStatus = 'COLLECTION_ERROR';
     }
 
     /**
@@ -566,6 +658,8 @@ class ViewerContext implements Context
         $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
         $this->lpaData['applicationHasGuidance'] = true;
         $this->lpaData['applicationHasRestrictions'] = false;
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
 
         $this->giveAValidLpaShareCode();
     }
@@ -579,6 +673,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasGuidance'] = false;
         $this->lpaData['applicationHasRestrictions'] = false;
 
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+
         $this->giveAValidLpaShareCode();
     }
 
@@ -591,6 +687,8 @@ class ViewerContext implements Context
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->lpaData['lpaDonorSignatureDate'] = '2015-01-01';
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
 
         $this->giveAValidLpaShareCode();
     }
@@ -633,6 +731,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('#instructions_images');
+            $this->ui->assertElementOnPage('#preferences_images');
+        }
     }
 
     /**
@@ -641,6 +743,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementNotOnPage('#instructions_images');
+            $this->ui->assertElementOnPage('#preferences_images');
+        }
     }
 
 
@@ -650,6 +756,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructions()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('#instructions_images');
+            $this->ui->assertElementNotOnPage('#preferences_images');
+        }
     }
 
     /**
@@ -658,7 +768,10 @@ class ViewerContext implements Context
     public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
     {
         $this->ui->assertPageContainsText('Instructions and preferences');
-        $this->ui->assertPageContainsText( 'Yes, the donor made instructions and/or preferences on their LPA.');
+        $this->ui->assertElementContainsText(
+            'dd[data-field-name="instructions_and_preferences"]',
+            'Yes, the donor made instructions and/or preferences on their LPA.'
+        );
     }
 
     /**
@@ -667,7 +780,11 @@ class ViewerContext implements Context
     public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
     {
         $this->ui->assertPageContainsText('Instructions and preferences');
-        $this->ui->assertPageContainsText( 'No');
+        $this->ui->assertElementNotContainsText(
+            'dd.govuk-summary-list__value',
+            'Yes, the donor made instructions and/or preferences on their LPA.'
+        );
+        $this->ui->assertElementContainsText('dd[data-field-name="instructions_and_preferences"]', 'No');
     }
 
     /**
@@ -676,6 +793,9 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+        $this->ui->assertElementNotOnPage('.iap-loader');
+        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
     }
 
     /**
@@ -742,13 +862,13 @@ class ViewerContext implements Context
         $this->lpaViewedBy = 'Santander';
         $this->lpaData = [
             'id' => 1,
-            'uId' => '7000-0000-0000',
+            'uId' => '700000000000',
             'receiptDate' => '2014-09-26',
             'registrationDate' => '2014-10-26',
             'lpaDonorSignatureDate' => '2015-06-30',
             'donor' => [
                 'id' => 1,
-                'uId' => '7000-0000-0288',
+                'uId' => '700000000288',
                 'dob' => '1948-11-01',
                 'salutation' => 'Mr',
                 'firstname' => 'Test',
@@ -771,6 +891,8 @@ class ViewerContext implements Context
             'status' => 'Registered',
             'caseSubtype' => 'hw',
         ];
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
     }
 
     /**

@@ -188,12 +188,12 @@ class Lpa
         $this->applicationHasGuidance = $applicationHasGuidance;
     }
 
-    public function getApplicationHasSeveranceWarning(): ?bool
+    public function getHasSeveranceWarning(): ?bool
     {
         return $this->hasSeveranceWarning;
     }
 
-    public function setApplicationHasSeveranceWarning(bool $hasSeveranceWarning): void
+    public function setHasSeveranceWarning(bool $hasSeveranceWarning): void
     {
         $this->hasSeveranceWarning = $hasSeveranceWarning;
     }

@@ -6,8 +6,9 @@ namespace Common\Entity\InstructionsAndPreferences;
 
 class Images
 {
-    private const INSTRUCTIONS = 'iap-%s-instructions';
-    private const PREFERENCES  = 'iap-%s-preferences';
+    private const INSTRUCTIONS = '/iap-%s-(?:continuation_)?instructions/';
+    private const PREFERENCES  = '/iap-%s-(?:continuation_)?preferences/';
+    private const UNKNOWN      = '/iap-%s-continuation_unknown/';
 
     /**
         * @param int              $uId
@@ -26,7 +27,7 @@ class Images
      */
     public function getInstructionsImageUrls(): array
     {
-        return $this->getImageUrls($this->getImageName(self::INSTRUCTIONS));
+        return $this->getImageUrls($this->getImageRegex(self::INSTRUCTIONS));
     }
 
     /**
@@ -34,19 +35,27 @@ class Images
      */
     public function getPreferencesImageUrls(): array
     {
-        return $this->getImageUrls($this->getImageName(self::PREFERENCES));
+        return $this->getImageUrls($this->getImageRegex(self::PREFERENCES));
     }
 
-    protected function getImageName(string $format): string
+    /**
+     * @return array<SignedUrl>
+     */
+    public function getUnknownImageUrls(): array
+    {
+        return $this->getImageUrls($this->getImageRegex(self::UNKNOWN));
+    }
+
+    protected function getImageRegex(string $format): string
     {
         return sprintf($format, $this->uId);
     }
 
-    protected function getImageUrls(string $imageName): array
+    protected function getImageUrls(string $pattern): array
     {
         return array_values(
-            array_filter($this->signedUrls, function ($signedUrl) use ($imageName) {
-                return $signedUrl->imageName === $imageName;
+            array_filter($this->signedUrls, function ($signedUrl) use ($pattern) {
+                return preg_match($pattern, $signedUrl->imageName);
             })
         );
     }

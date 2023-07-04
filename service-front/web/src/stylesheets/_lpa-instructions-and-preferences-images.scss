@@ -1,0 +1,39 @@
+.opg-ip {
+  .govuk-summary-list + & {
+    margin-top: -0.5rem;
+  }
+
+  &__image {
+    border: 2px dashed govuk-colour('black');
+    max-width: 990px;
+    width: 100%;
+    height: auto;
+    margin-bottom: govuk-spacing(2);
+  }
+
+  @include govuk-media-query($from: tablet) {
+    .govuk-summary-list + & {
+      margin-top: -1.5rem;
+    }
+  }
+}
+
+.iap-loader {
+  border: 12px solid #DEE0E2;
+  border-radius: 50%;
+  border-top-color: #005EA5;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

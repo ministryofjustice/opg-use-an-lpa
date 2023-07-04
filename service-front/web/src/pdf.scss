@@ -31,3 +31,17 @@
     margin-right: 15px;
   }
 }
+
+.opg-ip {
+  .govuk-summary-list + & {
+    margin-top: -0.5rem;
+  }
+
+  &__image {
+    border: 2px dashed #0b0c0c;
+    max-width: 990px;
+    width: calc(100% - 30px);
+    height: auto;
+    margin-bottom: 10px;
+  }
+}

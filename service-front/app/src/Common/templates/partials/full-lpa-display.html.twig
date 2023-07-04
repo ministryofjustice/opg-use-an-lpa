@@ -109,23 +109,22 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <h2 class="govuk-heading-l">{% trans %}LPA details{% endtrans %}</h2>
-                    {% if feature_enabled("instructions_and_preferences") %}
-                        {% if (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and (lpa.registrationDate < date('2019-01-01')) %}
-                            <div class="govuk-warning-text">
-                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                                <strong class="govuk-warning-text__text">
-                                    <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                                    {% trans %}
-                                        Some words in these instructions or preferences may have been removed by the Court of Protection. If you need to check this, please see the paper
-                                        <abbr title="lasting power of attorney">LPA</abbr>.
-                                    {% endtrans %}
-                                </strong>
+                    <h2 class="govuk-heading-l">
+                        {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
+                    </h2>
+
+                    {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
+
+                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                        {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                            <div class="govuk-inset-text">
+                                {% trans %}If any scanned images are not readable, ask the person who gave you the access
+                                    code to show you the paper LPA{% endtrans %}
                             </div>
                         {% endif %}
                     {% endif %}
+
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
                             <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
@@ -155,4 +154,3 @@
         </div>
     </main>
 </div>
-

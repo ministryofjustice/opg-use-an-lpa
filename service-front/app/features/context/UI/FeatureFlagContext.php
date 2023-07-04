@@ -6,7 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
@@ -22,7 +21,6 @@ use Twig\Environment;
 
 class FeatureFlagContext implements Context
 {
-    use ActorContext;
     use BaseUiContextTrait;
 
     /**

@@ -79,7 +79,7 @@ final class Sirius implements LpaFactory
             $lpa->setApplicationHasGuidance($data['applicationHasGuidance']);
         }
         if (isset($data['hasSeveranceWarning'])) {
-            $lpa->setApplicationHasSeveranceWarning($data['hasSeveranceWarning']);
+            $lpa->setHasSeveranceWarning($data['hasSeveranceWarning']);
         }
         if (isset($data['lpaDonorSignatureDate'])) {
             $lpa->setLpaDonorSignatureDate(new DateTime($data['lpaDonorSignatureDate']));

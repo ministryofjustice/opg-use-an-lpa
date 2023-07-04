@@ -18,7 +18,7 @@ class ImagesTest extends TestCase
      * @test
      * @covers ::getInstructionsImageUrls
      * @covers ::getPreferencesImageUrls
-     * @covers ::getImageName
+     * @covers ::getImageRegex
      * @covers ::getImageUrls
      */
     public function it_returns_requested_images(): void
@@ -48,7 +48,7 @@ class ImagesTest extends TestCase
     /**
      * @test
      * @covers ::getInstructionsImageUrls
-     * @covers ::getImageName
+     * @covers ::getImageRegex
      * @covers ::getImageUrls
      */
     public function it_ignores_types_it_does_not_recognise(): void
@@ -59,7 +59,11 @@ class ImagesTest extends TestCase
             'signedUrls' => [
                 new SignedUrl('iap-700000000001-instructions', 'http://instructions-image-url'),
                 new SignedUrl(
-                    'iap-700000000001-instructions-continuation1',
+                    'iap-700000000001-continuation_instructions_1',
+                    'http://instructions-cont1-image-url'
+                ),
+                new SignedUrl(
+                    'iap-700000000001-unknown_1',
                     'http://instructions-cont1-image-url'
                 ),
             ],
@@ -69,7 +73,7 @@ class ImagesTest extends TestCase
 
         $signedUrls = $images->getInstructionsImageUrls();
 
-        $this->assertCount(1, $signedUrls);
+        $this->assertCount(2, $signedUrls);
         $this->assertEquals('http://instructions-image-url', $signedUrls[0]->url);
     }
 }
