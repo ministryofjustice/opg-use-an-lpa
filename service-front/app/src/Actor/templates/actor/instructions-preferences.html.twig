@@ -23,9 +23,10 @@
 
                 <div class="govuk-grid-column-two-thirds">
                     {% if feature_enabled("instructions_and_preferences") %}
-                        <p class="govuk-body">{% trans %}If an <abbr title="lasting power of attorney">LPA</abbr> has instructions or preferences we show a scanned image in the LPA summary.{% endtrans %}
+                        <p class="govuk-body">{% trans %}If an <abbr
+                                    title="lasting power of attorney">LPA</abbr> has instructions or preferences we show a scanned image in the LPA summary.{% endtrans %}
                         </p>
-                        <p class="govuk-body">{% trans %}This scanned image is also shown to anyone you give an access code to. Please check that the scanned image is readable before giving an access code to organisations.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}This scanned image is also shown to anyone you give an access code to. Please check that the scanned image is readable before giving an access code to organisations. This will work for all access codes made after 4 July 2023.{% endtrans %}</p>
                         <p class="govuk-body">{% trans %}Organisations may still ask to see the paper LPA if they would like to check anything.{% endtrans %}</p>
                     {% else %}
 
@@ -62,7 +63,8 @@
 
                         <p>{% trans %}Check with these people to see who has the <abbr
                                     title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
-                        <p>{% trans %}If you need more than one copy of the paper <abbr title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make
+                        <p>{% trans %}If you need more than one copy of the paper <abbr
+                                    title="lasting power of attorney">LPA</abbr>, the donor or solicitor can make
                                 <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified
                                         copies</a></strong>.{% endtrans %}</p>
                     </details>
