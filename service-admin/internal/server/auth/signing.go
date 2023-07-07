@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"sync"
 	"time"
@@ -91,7 +90,7 @@ func fetchPEM(ctx context.Context, url string) (*[]byte, error) {
 		return nil, errors.Wrapf(ErrUnableToFetchKey, "status code %d when fetching %s", res.StatusCode, url)
 	}
 
-	pem, err := ioutil.ReadAll(res.Body)
+	pem, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, errors.Wrapf(err, "not able to read key from response")
 	}
