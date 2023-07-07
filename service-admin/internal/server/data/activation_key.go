@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -94,7 +94,7 @@ func (aks *OnlineActivationKeyService) GetActivationKeyFromCodes(ctx context.Con
 	}
 
 	if resp.StatusCode == 200 && resp.Body != nil {
-		data, err := ioutil.ReadAll(resp.Body)
+		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			log.Error().AnErr("Error parsing 200 response from codes service", err)
 
