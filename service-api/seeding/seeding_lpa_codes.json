@@ -202,29 +202,5 @@
     "generated_date": "2020-06-22",
     "status_details": "Imported",
     "Comment": "Seeded Data:"
-  },
-  {
-    "code": "PEYBDGT6AJGT",
-    "active": true,
-    "actor": "700000136908",
-    "last_updated_date": "2020-06-22",
-    "lpa": "700000136361",
-    "dob": "1975-10-05",
-    "expiry_date": "valid",
-    "generated_date": "2020-06-22",
-    "status_details": "Imported",
-    "Comment": "Seeded Data:"
-  },
-  {
-    "code": "LKYBDGT6AJGT",
-    "active": true,
-    "actor": "700000137112",
-    "last_updated_date": "2020-06-22",
-    "lpa": "700000137237",
-    "dob": "1975-10-05",
-    "expiry_date": "valid",
-    "generated_date": "2020-06-22",
-    "status_details": "Imported",
-    "Comment": "Seeded Data:"
   }
 ]
