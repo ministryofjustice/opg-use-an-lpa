@@ -121,8 +121,7 @@
                     {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                         {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                             <div class="govuk-inset-text">
-                                {% trans %}If the scanned image is not readable, organisations may ask to see the paper
-                                    LPA so that they can find out what the instructions or preferences are.{% endtrans %}
+                                {% trans %}If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the instructions or preferences are.{% endtrans %}
                             </div>
                         {% endif %}
                     {% endif %}
