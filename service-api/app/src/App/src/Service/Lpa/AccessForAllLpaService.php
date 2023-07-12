@@ -15,8 +15,8 @@ use Psr\Log\LoggerInterface;
 
 class AccessForAllLpaService
 {
-    private const CLEANSE_INTERVAL     = 'P6W';
-    private const EXPIRY_INTERVAL      = 'P1Y';
+    private const CLEANSE_INTERVAL = 'P6W';
+    private const EXPIRY_INTERVAL = 'P1Y';
     private const SEND_LETTER_INTERVAL = 'P2W';
 
     public function __construct(
@@ -33,6 +33,7 @@ class AccessForAllLpaService
      *
      * @param string $lpaId
      * @param string $actorId
+     *
      * @return DateTime|null
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
@@ -48,7 +49,7 @@ class AccessForAllLpaService
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
                 'actorId' => $lpaId,
-                'lpaId'   => $actorId,
+                'lpaId' => $actorId,
             ]
         );
 
@@ -88,27 +89,25 @@ class AccessForAllLpaService
         ?string $existingRecordId = null,
     ): void {
         $recordId = null;
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create(
-                    $userId,
-                    $uid,
-                    $actorUid,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::SEND_LETTER_INTERVAL)
-                );
-            }
+        if ($existingRecordId === null) {
+            $recordId = $this->userLpaActorMap->create(
+                $userId,
+                $uid,
+                $actorUid,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::SEND_LETTER_INTERVAL)
+            );
         }
 
-        $uidInt      = (int)$uid;
+        $uidInt = (int)$uid;
         $actorUidInt = (int)$actorUid;
 
         $this->logger->info(
             'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
-                'user_id'  => $userId,
+                'user_id' => $userId,
                 'attorney' => $actorUidInt,
-                'lpa'      => $uidInt,
+                'lpa' => $uidInt,
             ]
         );
 
@@ -118,9 +117,9 @@ class AccessForAllLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
-                    'user_id'  => $userId,
+                    'user_id' => $userId,
                     'attorney' => $actorUidInt,
-                    'lpa'      => $uidInt,
+                    'lpa' => $uidInt,
                 ]
             );
             if ($recordId !== null) {
@@ -135,15 +134,13 @@ class AccessForAllLpaService
          * the API request worked. That being the case the users record will not have
          * an up to date ActivateBy column. This isn't the end of the world.
          */
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId !== null) {
-                $this->userLpaActorMap->updateRecord(
-                    $existingRecordId,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::SEND_LETTER_INTERVAL),
-                    $actorUid
-                );
-            }
+        if ($existingRecordId !== null) {
+            $this->userLpaActorMap->updateRecord(
+                $existingRecordId,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::SEND_LETTER_INTERVAL),
+                $actorUid
+            );
         }
     }
 
@@ -152,10 +149,10 @@ class AccessForAllLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string $uid Sirius uId for an LPA
-     * @param string $userId
-     * @param string $additionalInfo
-     * @param ?int $actorId
+     * @param string  $uid Sirius uId for an LPA
+     * @param string  $userId
+     * @param string  $additionalInfo
+     * @param ?int    $actorId
      * @param ?string $existingRecordId
      */
     public function requestAccessAndCleanseByLetter(
@@ -165,18 +162,15 @@ class AccessForAllLpaService
         ?int $actorId = null,
         ?string $existingRecordId = null,
     ): void {
-
         $recordId = null;
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create(
-                    $userId,
-                    $uid,
-                    $actorId ? (string)$actorId : null,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::CLEANSE_INTERVAL)
-                );
-            }
+        if ($existingRecordId === null) {
+            $recordId = $this->userLpaActorMap->create(
+                $userId,
+                $uid,
+                $actorId ? (string)$actorId : null,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::CLEANSE_INTERVAL)
+            );
         }
 
         $uidInt = (int)$uid;
@@ -184,7 +178,7 @@ class AccessForAllLpaService
             'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
                 'user_id' => $userId,
-                'lpa'     => $uidInt,
+                'lpa' => $uidInt,
             ]
         );
 
@@ -195,7 +189,7 @@ class AccessForAllLpaService
                 'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
                 [
                     'user_id' => $userId,
-                    'lpa'     => $uidInt,
+                    'lpa' => $uidInt,
                 ]
             );
 
@@ -212,15 +206,13 @@ class AccessForAllLpaService
          * the API request worked. That being the case the users record will not have
          * an up to date ActivateBy column. This isn't the end of the world.
          */
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId !== null) {
-                $this->userLpaActorMap->updateRecord(
-                    $existingRecordId,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::CLEANSE_INTERVAL),
-                    $actorId ? (string)$actorId : null
-                );
-            }
+        if ($existingRecordId !== null) {
+            $this->userLpaActorMap->updateRecord(
+                $existingRecordId,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::CLEANSE_INTERVAL),
+                $actorId ? (string)$actorId : null
+            );
         }
     }
 }
