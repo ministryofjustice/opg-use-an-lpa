@@ -5,6 +5,9 @@ switch (lpa) {
     case 'lpa0252':
         respond().withExampleName(lpa);
         break;
+    case 'lpa0237':
+        respond().withExampleName(lpa);
+        break;
     case 'lpa0344':
         var lpaStore = stores.open('lpa0344');
 
@@ -20,6 +23,9 @@ switch (lpa) {
             .withStatusCode(200)
             .withFile("responses/lpa0344.json").template()
             .usingDefaultBehaviour();
+        break;
+    case 'lpa0361':
+        respond().withExampleName(lpa);
         break;
 
     default:
