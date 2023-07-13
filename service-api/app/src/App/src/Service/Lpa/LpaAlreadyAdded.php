@@ -32,11 +32,7 @@ class LpaAlreadyAdded
      */
     public function __invoke(string $userId, string $lpaUid): ?array
     {
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            return $this->saveOfRequestFeature($userId, $lpaUid);
-        } else {
-            return $this->preSaveOfRequestFeature($userId, $lpaUid);
-        }
+        return $this->saveOfRequestFeature($userId, $lpaUid);
     }
 
     /**
