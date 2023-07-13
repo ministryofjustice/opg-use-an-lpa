@@ -55,39 +55,11 @@ class LpaAlreadyAddedTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
-     * @covers ::preSaveOfRequestFeature
-     */
-    public function returns_null_if_lpa_not_already_added_pre_feature(): void
-    {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
-
-        $this->lpaServiceProphecy
-            ->getAllLpasAndRequestsForUser('12345')
-            ->willReturn(
-                [
-                    $this->userLpaActorToken => [
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'lpa'                  => [
-                            'uId' => $this->lpaUid,
-                        ],
-                    ],
-                ]
-            );
-
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '700000000321');
-        $this->assertNull($lpaAddedData);
-    }
-
-    /**
-     * @test
-     * @covers ::__invoke
      * @covers ::saveOfRequestFeature
      * @covers ::populateLpaRecord
      */
     public function returns_null_if_lpa_not_already_added(): void
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn([]);
@@ -104,8 +76,6 @@ class LpaAlreadyAddedTest extends TestCase
      */
     public function returns_not_activated_flag_if_lpa_requested_but_not_active(): void
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -163,8 +133,6 @@ class LpaAlreadyAddedTest extends TestCase
      */
     public function returns_null_if_lpa_added_but_not_usable_found_in_api(): void
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -187,68 +155,11 @@ class LpaAlreadyAddedTest extends TestCase
     /**
      * @test
      * @covers ::__invoke
-     * @covers ::preSaveOfRequestFeature
-     */
-    public function returns_lpa_data_if_lpa_is_already_added_pre_feature(): void
-    {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
-
-        $this->lpaServiceProphecy
-            ->getAllLpasAndRequestsForUser($this->userId)
-            ->willReturn(
-                [
-                    'xyz321-987ltc'          => [
-                        'user-lpa-actor-token' => 'xyz321-987ltc',
-                        'lpa'                  => [
-                            'uId'         => '700000000111',
-                            'caseSubtype' => 'pfa',
-                            'donor'       => [
-                                'uId'         => '700000000222',
-                                'firstname'   => 'Some',
-                                'middlenames' => '',
-                                'surname'     => 'Person',
-                            ],
-                        ],
-                    ],
-                    $this->userLpaActorToken => [
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'lpa'                  => [
-                            'uId'         => $this->lpaUid,
-                            'caseSubtype' => 'hw',
-                            'donor'       => [
-                                'uId'         => '700000000444',
-                                'firstname'   => 'Another',
-                                'middlenames' => '',
-                                'surname'     => 'Person',
-                            ],
-                        ],
-                    ],
-                ]
-            );
-
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
-        $this->assertEquals([
-            'donor'         => [
-                'uId'         => '700000000444',
-                'firstname'   => 'Another',
-                'middlenames' => '',
-                'surname'     => 'Person',
-            ],
-            'caseSubtype'   => 'hw',
-            'lpaActorToken' => $this->userLpaActorToken,
-        ], $lpaAddedData);
-    }
-
-    /**
-     * @test
-     * @covers ::__invoke
      * @covers ::saveOfRequestFeature
      * @covers ::populateLpaRecord
      */
     public function returns_lpa_data_if_lpa_is_already_added(): void
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
