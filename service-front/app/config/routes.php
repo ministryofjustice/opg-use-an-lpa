@@ -62,7 +62,6 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $ALLOW_OLDER_LPAS = 'allow_older_lpas';
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
 
@@ -215,72 +214,37 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     // Access for All Journey
     $app->route('/lpa/add/contact-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            Actor\Handler\RequestActivationKey\ContactDetailsHandler::class,
-            $defaultNotFoundPage
-        )
+            Actor\Handler\RequestActivationKey\ContactDetailsHandler::class
     ], ['GET', 'POST'], 'lpa.add.contact-details');
 
     $app->route('/lpa/add/actor-role', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\ActorRoleHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\ActorRoleHandler::class
     ], ['GET', 'POST'], 'lpa.add.actor-role');
 
     $app->route('/lpa/add/donor-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
     ], ['GET', 'POST'], 'lpa.add.donor-details');
 
     $app->route('/lpa/add/actor-address', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\ActorAddressHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\ActorAddressHandler::class
     ], ['GET', 'POST'], 'lpa.add.actor-address');
 
     $app->route('/lpa/add/attorney-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class
     ], ['GET', 'POST'], 'lpa.add.attorney-details');
 
     $app->route('/lpa/add/check-details-and-consent', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
     ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
 
     $app->route('/lpa/add/address-on-paper', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_OLDER_LPAS,
-            \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class,
-            $defaultNotFoundPage
-        )
+            \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class
     ], ['GET', 'POST'], 'lpa.add.address-on-paper');
 
     // Older LPA journey
