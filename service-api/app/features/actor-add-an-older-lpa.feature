@@ -8,13 +8,6 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact @ff:allow_older_lpas:false
-  Scenario: The user cannot add an old LPA which does not have a registered status
-    Given I am on the add an older LPA page
-    When I provide details of an LPA that is not registered
-    And I confirm the details I provided are correct
-    Then I am informed that an LPA could not be found with these details
-
   @integration @acceptance @pact @ff:save_older_lpa_requests:false
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
@@ -35,7 +28,7 @@ Feature: Add an older LPA
     And a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true @ff:allow_older_lpas:true
+  @integration @acceptance @pact @ff:save_older_lpa_requests:true
   Scenario: The user can re-request an older LPA be added to their account and we update the record in our DB
     Given I have previously requested the addition of a paper LPA to my account
     When I repeat my request for an activation key
@@ -48,40 +41,6 @@ Feature: Add an older LPA
     When I provide details of an LPA that does not exist
     And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
-
-  @integration @acceptance @pact @ff:allow_older_lpas:false
-    @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
-  Scenario Outline: The user cannot add an older LPA to their account as the data does not match
-    Given I am on the add an older LPA page
-    When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that do not match the paper document
-    And I confirm the details I provided are correct
-    Then I am informed that an LPA could not be found with these details
-
-    Examples:
-      | firstnames  | lastname  | postcode |    dob      |
-      | Ian Deputy  | Deputy    |  string  | 03/12/1975  |
-      | Ian Deputy  | Deputy    |  WR0NG1  | 10/10/1980  |
-      | Wrong name  | Deputy    |  string  | 10/10/1980  |
-      | Ian Deputy  | Incorrect |  string  | 10/10/1980  |
-
-  @integration @acceptance @pact @ff:allow_older_lpas:false
-  Scenario: The user cannot add an older LPA to their account as their LPA is registered before Sept 2019
-    Given I am on the add an older LPA page
-    When I provide details from an LPA registered before Sept 2019
-    And I confirm the details I provided are correct
-    Then I am told that I cannot request an activation key
-
-  @integration @acceptance @pact @ff:allow_older_lpas:false
-  Scenario Outline: The user can add an old LPA to their account using iphone and apostrophe in name is not a problem
-    Given I am on the add an older LPA page
-    When I provide details "<firstnames>" "<lastname>" "<postcode>" "<dob>" that match a valid paper document
-    And I confirm the details I provided are correct
-    Then I am shown the details of an LPA
-
-    Examples:
-      | firstnames  | lastname   | postcode   |    dob      |
-      | Rachel      | S’anderson |  DN37 5SH  | 1948-11-01  |
-      | Rachel      | S'anderson |  DN37 5SH  | 1948-11-01  |
 
   @integration @acceptance @pact
   Scenario: The user is informed if they have an activation key
@@ -157,35 +116,35 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I being the attorney on the LPA I am shown the donor details
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance
   Scenario: The user cannot add an older LPA to their account that is not cleansed and reg date before Sep 2019
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I am on the Check we've found the right LPA page
     When I confirm details of the found LPA are correct
     Then I am asked for my contact details
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance
   Scenario: The user can add an older LPA to their account that is cleansed and reg date before Sep 2019
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     And I am on the Check we've found the right LPA page
     When I confirm details of the found LPA are correct
     Then I am told an activation key is being sent
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance
   Scenario: The user can add an older LPA to their account that is not cleansed but reg date on or after Sep 2019
     Given My LPA was registered 'on or after' 1st September 2019 and LPA is 'not marked' as clean
     And I am on the Check we've found the right LPA page
     When I confirm details of the found LPA are correct
     Then I am told an activation key is being sent
 
-  @acceptance @ff:allow_older_lpas:true
+  @acceptance
   Scenario: The user can add an older LPA to their account that is cleansed and reg date on or after Sep 2019
     Given My LPA was registered 'on or after' 1st September 2019 and LPA is 'marked' as clean
     And I am on the Check we've found the right LPA page
     When I confirm details of the found LPA are correct
     Then I am told an activation key is being sent
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
+  @acceptance @integration @pact
   Scenario: User receives a confirmation that key will be sent in 4 weeks, when lpa trying to be added is not cleansed but is a full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I provide the details from a valid paper LPA document
@@ -196,7 +155,7 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @ff:allow_older_lpas:true @ff:save_older_lpa_requests:true
+  @acceptance @ff:save_older_lpa_requests:true
   Scenario: User is able to request a key for a second time as a partial match
     Given I have previously requested the addition of a paper LPA to my account
     And The details I provided resulted in a partial match
@@ -205,7 +164,7 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
+  @acceptance @integration @pact
   Scenario: User receives a confirmation that key will be sent in 2 weeks, when lpa trying to be added is cleansed and full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     And I provide the details from a valid paper LPA document
@@ -214,29 +173,25 @@ Feature: Add an older LPA
     And I should expect it within 2 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
+  @acceptance @integration @pact @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an newer LPA to their account when request for cleansing streamlining flag tuned on
     Given My LPA was registered 'after' 1st September 2019 and LPA is 'not marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "ON"
     Then I am informed that an LPA could not be found with these details
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
+  @acceptance @integration @pact @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "ON"
     Then I am informed that an LPA could not be found with these details
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
+  @acceptance @integration @pact @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned off
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "OFF"
     Then I am asked for my role on the LPA
 
-  @acceptance @integration @pact @ff:allow_older_lpas:true
-  @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
+  @acceptance @integration @pact @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
   Scenario: The user is asked for their role on the LPA when request for cleansing streamlining flag tuned off
     Given My LPA was registered 'after' 1st September 2019 and LPA is 'not marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "OFF"
