@@ -328,7 +328,7 @@ class LpaContext implements Context
         $this->ui->visit('/lpa/add-by-paper-information');
         $this->ui->assertPageContainsText('Ask for an activation key');
     }
-    
+
     /**
      * @Given /^I am on the add an LPA page$/
      */
