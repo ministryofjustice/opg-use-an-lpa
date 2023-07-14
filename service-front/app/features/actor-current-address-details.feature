@@ -12,29 +12,29 @@ Feature: Say if the given address is on paper LPA
     And I provide details that do not match a valid paper document
     And I confirm the details I provided are correct
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: An attorney user is asked for their address if they have a partial match
     Then I am asked for my full address
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: A user is taken to selecting their role page when address on paper provided
     Given I am asked for my full address
     And I have provided my current address
     Then I am asked for my role on the LPA
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: A user is taken to selecting their role page when they are not sure of address on paper provided
     Given I am asked for my full address
     When  I select I am not sure the address is same as on paper LPA
     Then I am asked for my role on the LPA
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: A user is asked for their address on paper LPA if they have not provided the same address as in paper
     Given I am asked for my full address
     And I fill in my UK address and I select the address is not same as on paper LPA
     And I am asked for my address from the paper LPA
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: An attorney user is taken back to address page  provided
     Given I am asked for my full address
     And I have provided my current address
@@ -42,7 +42,7 @@ Feature: Say if the given address is on paper LPA
     When I click the Back link on the page
     Then I will be navigated back to more details page
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: A user is asked for their paper address on paper LPA if they have not provided the same address as in paper
     Given I am asked for my full address
     And I fill in my UK address and I select the address is not same as on paper LPA
@@ -50,7 +50,7 @@ Feature: Say if the given address is on paper LPA
     When I click the Back link on the page
     Then I will be navigated back to address on paper page
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario Outline: The user is shown an error message when user does not make entries on full address page
     Given I am asked for my full address
     When I do not provide required entries for <address_line_1> <town> <address_as_on_lpa> on the LPA
@@ -62,7 +62,7 @@ Feature: Say if the given address is on paper LPA
       |   abc  house      |             |    Yes             | Enter your town or city  |
       |                   |             |    Yes             | Enter your address       |
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is shown an error message when user does not tell us if it's their current address
     Given I am asked for my full address
     And I do not provide any selections for current address on the LPA

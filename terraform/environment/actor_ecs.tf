@@ -320,10 +320,6 @@ locals {
           value = tostring(local.environment.application_flags.delete_lpa_feature)
         },
         {
-          name  = "ALLOW_OLDER_LPAS",
-          value = tostring(local.environment.application_flags.allow_older_lpas)
-        },
-        {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(local.environment.application_flags.allow_meris_lpas)
         },
