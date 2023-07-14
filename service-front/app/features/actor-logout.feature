@@ -14,7 +14,7 @@ Feature: A user of the system is able to logout
     Then I am taken to complete a satisfaction survey
 
   # UML-1758 Session is not cleared when user signs out
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: A user logging out does not have their information shared to the next user
     Given I am currently signed in
     And I reach the Check answers part of the Add an Older LPA journey
