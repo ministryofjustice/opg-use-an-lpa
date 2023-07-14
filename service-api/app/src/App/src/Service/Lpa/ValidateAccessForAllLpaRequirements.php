@@ -51,7 +51,6 @@ class ValidateAccessForAllLpaRequirements
     public function lpaHasAcceptableRegistrationDate(array $lpa): void
     {
         if (
-            !($this->featureEnabled)('allow_older_lpas') &&
             (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
         ) {
             $this->logger->notice(
