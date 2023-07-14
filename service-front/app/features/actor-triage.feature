@@ -36,7 +36,7 @@ Feature: Triage
     When I do not provide any options and continue
     Then I am not allowed to progress
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user sees a banner about the fact that only LPAs issued after a certain date can be used on this service
     Given I am on the triage page
     Then I can see banner about existing LPAs after 2016
