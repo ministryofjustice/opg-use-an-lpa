@@ -11,39 +11,39 @@ Feature: Provide role details when adding an older LPA
     And My LPA has been found but my details did not match
     And I have provided my current address
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is showed they cannot request an activation key if they are a replacement attorney on the LPA
     Given I am asked for my role on the LPA
     When I confirm that I am the ReplacementAttorney
     Then I am told I cannot request an activation key
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is asked for the donor's details if they are the attorney on the LPA
     Given I am asked for my role on the LPA
     When I confirm that I am the Attorney
     Then I am asked to provide the donor's details to verify that I am the attorney
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is asked for their attorney details if they are the donor on the LPA
     Given I am asked for my role on the LPA
     When I confirm that I am the Donor
     Then I am asked for the attorney details
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is asked contact details after providing donor's details
     Given I am asked for my role on the LPA
     When I confirm that I am the Attorney
     And I provide the donor's details
     Then I am asked for my contact details
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is asked contact details after providing attorney's details
     Given I am asked for my role on the LPA
     When I confirm that I am the Donor
     And I provide the attorney details
     Then I am asked for my contact details
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario Outline: The user is shown an error message when entering invalid donor details
     Given I am asked for my role on the LPA
     And I confirm that I am the Attorney
@@ -57,7 +57,7 @@ Feature: Provide role details when adding an older LPA
       | Donor      |         | 01-01-1980 | Enter the donor's last name       |
       | Donor      | Person  | 41-01-1980 | Date of birth must be a real date |
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario Outline: The user is shown an error message when entering invalid attorney details
     Given I am asked for my role on the LPA
     And I confirm that I am the Donor
