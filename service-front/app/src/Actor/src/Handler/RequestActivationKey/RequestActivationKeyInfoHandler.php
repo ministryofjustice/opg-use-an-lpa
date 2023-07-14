@@ -34,21 +34,11 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
-
-        if (($this->featureEnabled)('allow_older_lpas')) {
             return new HtmlResponse($this->renderer->render(
                 'actor::request-activation-key/before-requesting-activation-key-info',
                 [
                     'user' => $user,
                 ]
             ));
-        } else {
-            return new HtmlResponse($this->renderer->render(
-                'actor::request-activation-key/info',
-                [
-                    'user' => $user,
-                ]
-            ));
-        }
     }
 }
