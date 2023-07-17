@@ -35,9 +35,9 @@
                         <p class="govuk-!-font-size-24">
                             {% if lpa.caseSubtype|lower == "pfa" %}
                                 {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                                    {% trans %}This LPA can only be used when the donor has lost capacity{% endtrans %}
+                                    {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
                                 {% elseif lpa.attorneyActDecisions == null %}
-                                    {% trans %}This LPA can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
+                                    {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
                                 {% endif %}
                             {% else %}
                                 {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
