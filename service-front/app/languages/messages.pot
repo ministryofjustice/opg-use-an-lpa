@@ -3708,7 +3708,7 @@ msgid "Download this LPA summary"
 msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:121
-msgid "If any scanned images are not readable, ask the person who gave you the access code to show you the paper LPA"
+msgid "If any scanned images are not readable, ask the person who gave you the access code to show you the paper LPA."
 msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:148
