@@ -3835,7 +3835,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:27
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
-msgstr ""
+msgstr "Cyfeirnod <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>:"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:28
 msgid ""
@@ -6461,6 +6461,8 @@ msgid ""
 "If any scanned images are not readable, organisations may ask to see the paper "
 "LPA so that they can find out what the instructions or preferences are."
 msgstr ""
+"Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
+"roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:31
 msgid ""
@@ -6468,6 +6470,10 @@ msgid ""
 "check that the scanned image is readable before giving an access code to "
 "organisations. This will work for all access codes made after 4 July 2023."
 msgstr ""
+"Dangosir hefyd y ddelwedd hon sydd wedi ei sganio i unrhyw un y rhoddwch gôd "
+"mynediad iddo. Gwiriwch fod modd darllen y ddelwedd sydd wedi ei sganio cyn "
+"rhoi côd mynediad i sefydliadau. Bydd hwn yn gweithio ar gyfer pob cod "
+"mynediad a grëwyd ar ôl 4 Gorffennaf 2023."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:60
 msgid ""
@@ -6475,6 +6481,9 @@ msgid ""
 "'restrictions and conditions'. You’ll find them on page 9 of the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
+"Ar rhai LPAs a wnaed yn, neu cyn 2015, gelwir cyfarwyddiadau a dymuniadau yn "
+"‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
+"title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:40
 msgid ""
