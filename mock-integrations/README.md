@@ -1,4 +1,4 @@
-# API Gateway mock
+# API Gateway and Image Server mocks
 
 Mock servers which together mimic the data-lpa and "instructions and preferences" API.
 
@@ -14,11 +14,13 @@ Any changes that are required to the opg-data-lpa openapi spec must be done in [
 
 ## Prerequisites
 
-You will need yq and wget to work with this mock!
+You will need yq and wget to work with the mocks!
 
 ```shell
 brew install yq wget
 ```
+
+## Sirius API Gateway mock
 
 ## Using the mock
 
@@ -48,10 +50,10 @@ It's possible to invoke the mock endpoints using curl or similar as follows:
 
 ```shell
 # Valid LPA Uid
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/700000000047
+curl -i -H "Authorization: sigv4 x" -k http://localhost:4010/use-an-lpa/lpas/700000000047
 
 # LPA not found
-curl -i -H "Authorization: sigv4 x" -k http://localhost:7010/use-an-lpa/lpas/700000000000
+curl -i -H "Authorization: sigv4 x" -k http://localhost:4010/use-an-lpa/lpas/700000000000
 ```
 
 The URLs above cause Prism to return examples with specific statuses, as shown.
@@ -66,6 +68,13 @@ Add LPAs from the Sirius Integration environment to list.txt (each Uid as a new 
 ```shell
 cd ./mock-integrations/generate_examples
 
-aws-vaul exec identity -- ./make_examples.sh
+aws-vault exec identity -- ./make_examples.sh
 ```
-The output from this will written to the `nginx.conf` file and can be reload using the above commands, additionally LPAs from Sirius integration will be added to the LPA mock via the `opg-data-lpa/mock-openapi.yaml`. Image mocks will need manually adding at this time.
+The output from this will written to the `nginx.conf` file and can be reload using the above commands, additionally LPAs from Sirius integration will be added to the LPA mock via the `opg-data-lpa/mock-openapi.yaml`. Image mocks will need manually adding at this time (See below).
+
+## Image Server (Instructions and Preferences Images) mock
+To add new images to the images mock:
+Edit by hand mock-response.js to add a key allowing the image server to serve images for the new LPA(s)
+Edit by hand  mock-openapi-examples.yml  to add section(s) for the new LPA(s)
+Run update.sh 
+restart the image mock
