@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0097ed6f77056799ce7cb3bd6f25a662",
+    "content-hash": "4970e76a676de361f02f175dd94cea11",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -266,16 +266,16 @@
         },
         {
             "name": "cooperaj/better-twig-i18n",
-            "version": "v1.1.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cooperaj/better-twig-i18n.git",
-                "reference": "3ffc3b0377d5b66004a275a71fe06b0881ef9cbd"
+                "reference": "1db25d33c913a5f2c48b2a374e1bd4009bd9483f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/3ffc3b0377d5b66004a275a71fe06b0881ef9cbd",
-                "reference": "3ffc3b0377d5b66004a275a71fe06b0881ef9cbd",
+                "url": "https://api.github.com/repos/cooperaj/better-twig-i18n/zipball/1db25d33c913a5f2c48b2a374e1bd4009bd9483f",
+                "reference": "1db25d33c913a5f2c48b2a374e1bd4009bd9483f",
                 "shasum": ""
             },
             "require": {
@@ -283,6 +283,7 @@
                 "gettext/gettext": "^5.5",
                 "gettext/translator": "^1.0",
                 "nikic/php-parser": "^4.9",
+                "php": "^8.1.0",
                 "symfony/finder": "^4.0 || ^5.0",
                 "twig/twig": "^v3.0"
             },
@@ -290,7 +291,7 @@
                 "mikey179/vfsstream": "^v1.6",
                 "phpunit/phpunit": "^9.3",
                 "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^3.0"
+                "vimeo/psalm": "^4.0"
             },
             "type": "library",
             "autoload": {
@@ -311,9 +312,9 @@
             "description": "Provides i18n functionality based on gettext language files.",
             "support": {
                 "issues": "https://github.com/cooperaj/better-twig-i18n/issues",
-                "source": "https://github.com/cooperaj/better-twig-i18n/tree/v1.1.0"
+                "source": "https://github.com/cooperaj/better-twig-i18n/tree/v3.0.0"
             },
-            "time": "2020-10-14T17:41:01+00:00"
+            "time": "2023-07-07T13:46:17+00:00"
         },
         {
             "name": "dflydev/fig-cookies",
