@@ -41,7 +41,7 @@
         "ext-redis": "*",
         "aws/aws-sdk-php": "^3.208.9",
         "blazon/psr11-monolog": "^4.0",
-        "cooperaj/better-twig-i18n": "^1.1",
+        "cooperaj/better-twig-i18n": "^3.0",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
         "laminas/laminas-cache": "^3.6",
