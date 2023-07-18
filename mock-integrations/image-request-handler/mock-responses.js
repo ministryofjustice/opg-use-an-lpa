@@ -2,10 +2,9 @@ var lpa = "lpa" + context.request.pathParams.uid.slice(-4);
 
 switch (lpa) {
     case 'lpa0138':
+    case 'lpa6361':
+    case 'lpa7237':
     case 'lpa0252':
-        respond().withExampleName(lpa);
-        break;
-    case 'lpa0237':
         respond().withExampleName(lpa);
         break;
     case 'lpa0344':
@@ -23,9 +22,6 @@ switch (lpa) {
             .withStatusCode(200)
             .withFile("responses/lpa0344.json").template()
             .usingDefaultBehaviour();
-        break;
-    case 'lpa0361':
-        respond().withExampleName(lpa);
         break;
 
     default:
