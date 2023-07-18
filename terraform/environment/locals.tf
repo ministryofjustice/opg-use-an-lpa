@@ -74,7 +74,6 @@ variable "environments" {
       deploy_opentelemetry_sidecar              = bool
       fargate_spot                              = bool
       application_flags = object({
-        use_legacy_codes_service                                   = bool
         use_older_lpa_journey                                      = bool
         delete_lpa_feature                                         = bool
         allow_older_lpas                                           = bool

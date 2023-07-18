@@ -383,10 +383,6 @@ locals {
           value = local.environment.iap_images_endpoint
         },
         {
-          name  = "USE_LEGACY_CODES_SERVICE",
-          value = tostring(local.environment.application_flags.use_legacy_codes_service)
-        },
-        {
           name  = "LOGGING_LEVEL",
           value = tostring(local.environment.logging_level)
         },
