@@ -4663,3 +4663,11 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:15
 msgid "The donor has said that this <abbr title=\"lasting power of attorney\">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf"
 msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:39
+msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:41
+msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
+msgstr ""
