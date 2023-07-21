@@ -8,7 +8,6 @@ paths:
               examples:
                 lpa0047:
                   value:
-                    uId: 7000-0000-0047
                     applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
@@ -74,6 +73,66 @@ paths:
                         surname: Doe
                         systemStatus: true
                         uId: 7000-0015-0610
+                      - addresses:
+                          - addressLine1: ""
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3203
+                            postcode: ""
+                            town: ""
+                            type: Primary
+                        companyName: null
+                        dob: null
+                        email: null
+                        firstname: ""
+                        id: 3481
+                        middlenames: null
+                        salutation: null
+                        surname: ""
+                        systemStatus: true
+                        uId: 7000-0015-1816
+                      - addresses:
+                          - addressLine1: ""
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3204
+                            postcode: ""
+                            town: ""
+                            type: Primary
+                        companyName: null
+                        dob: null
+                        email: null
+                        firstname: ""
+                        id: 3482
+                        middlenames: null
+                        salutation: null
+                        surname: ""
+                        systemStatus: true
+                        uId: 7000-0015-1840
+                      - addresses:
+                          - addressLine1: Embankment House
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3287
+                            postcode: NG3 4QG
+                            town: Nottingham
+                            type: Primary
+                        companyName: null
+                        dob: "1941-01-03"
+                        email: null
+                        firstname: Ọlá-Bándélé
+                        id: 3568
+                        middlenames: Ṣhókọ̀yà
+                        salutation: Mr
+                        surname: Ọ̀kẹ́
+                        systemStatus: true
+                        uId: 7000-0015-5924
                     cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: true
@@ -97,7 +156,7 @@ paths:
                         id: 11
                         middlenames: null
                         salutation: Miss
-                        surname: Hart
+                        surname: 'Hart '
                         uId: 7000-0000-0831
                     dispatchDate: "2021-04-26"
                     donor:
@@ -123,10 +182,11 @@ paths:
                       salutation: Mr
                       surname: Sanderson
                       uId: 7000-0000-0799
+                    hasSeveranceWarning: false
                     id: 2
                     invalidDate: null
                     lifeSustainingTreatment: Option A
-                    lpaDonorSignatureDate: "2018-12-12"
+                    lpaDonorSignatureDate: "2018-01-01"
                     lpaIsCleansed: false
                     onlineLpaId: A33718377316
                     receiptDate: "2014-09-26"
@@ -136,10 +196,10 @@ paths:
                     status: Registered
                     statusDate: null
                     trustCorporations: []
+                    uId: 7000-0000-0047
                     withdrawnDate: null
                 lpa0138:
                   value:
-                    uId: 7000-0000-0138
                     applicationHasGuidance: true
                     applicationHasRestrictions: true
                     applicationType: Classic
@@ -189,7 +249,7 @@ paths:
                           - addressLine1: Home
                             addressLine2: ""
                             addressLine3: ""
-                            country: ""
+                            country: country
                             county: ""
                             id: 3072
                             postcode: B90 1GD
@@ -306,9 +366,9 @@ paths:
                         systemStatus: true
                         uId: 7000-0015-0974
                     cancellationDate: "2020-03-17"
-                    caseAttorneyJointly: false
+                    caseAttorneyJointly: true
                     caseAttorneyJointlyAndJointlyAndSeverally: false
-                    caseAttorneyJointlyAndSeverally: true
+                    caseAttorneyJointlyAndSeverally: false
                     caseAttorneySingular: false
                     caseSubtype: hw
                     certificateProviders:
@@ -336,7 +396,7 @@ paths:
                         - addressLine1: 24 Gloucester Road
                           addressLine2: CILLE BHRIGHDE
                           addressLine3: ""
-                          country: ""
+                          country: country
                           county: ""
                           id: 23
                           postcode: HS8 2YB
@@ -354,43 +414,24 @@ paths:
                       salutation: Mrs
                       surname: Gilson
                       uId: 7000-0000-0971
+                    hasSeveranceWarning: false
                     id: 5
                     invalidDate: null
                     lifeSustainingTreatment: Option B
                     lpaDonorSignatureDate: "2016-01-01"
-                    lpaIsCleansed: true
+                    lpaIsCleansed: false
                     onlineLpaId: A15527329531
                     receiptDate: "2014-09-26"
-                    registrationDate: "2020-05-15"
+                    registrationDate: "2018-05-15"
                     rejectedDate: null
                     replacementAttorneys: []
                     status: Registered
                     statusDate: null
-                    trustCorporations:
-                      - addresses:
-                          - addressLine1: "address line 1"
-                            addressLine2: "address line 2"
-                            addressLine3: "address line 3"
-                            country: ""
-                            county: ""
-                            id: 3207
-                            postcode: "T EST4"
-                            town: ""
-                            type: Primary
-                        companyName: trust corporation
-                        dob: null
-                        email: null
-                        firstname: trust
-                        id: 3485
-                        middlenames: null
-                        salutation: null
-                        surname: test
-                        systemStatus: true
-                        uId: 7000-0015-1998
+                    trustCorporations: []
+                    uId: 7000-0000-0138
                     withdrawnDate: null
                 lpa0252:
                   value:
-                    uId: 7000-0000-0252
                     applicationHasGuidance: true
                     applicationHasRestrictions: false
                     applicationType: Classic
@@ -465,6 +506,7 @@ paths:
                       salutation: ""
                       surname: Gilson
                       uId: 7000-0000-1219
+                    hasSeveranceWarning: false
                     id: 9
                     invalidDate: null
                     lifeSustainingTreatment: Option B
@@ -478,10 +520,10 @@ paths:
                     status: Cancelled
                     statusDate: null
                     trustCorporations: []
+                    uId: 7000-0000-0252
                     withdrawnDate: null
                 lpa0344:
                   value:
-                    uId: 7000-0000-0344
                     applicationHasGuidance: false
                     applicationHasRestrictions: true
                     applicationType: Classic
@@ -582,6 +624,7 @@ paths:
                       salutation: Mr
                       surname: One
                       uId: 7000-0000-1334
+                    hasSeveranceWarning: false
                     id: 12
                     invalidDate: null
                     lifeSustainingTreatment: null
@@ -595,10 +638,10 @@ paths:
                     status: Registered
                     statusDate: null
                     trustCorporations: []
+                    uId: 7000-0000-0344
                     withdrawnDate: null
                 lpa0435:
                   value:
-                    uId: 7000-0000-0435
                     applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
@@ -673,6 +716,7 @@ paths:
                       salutation: Mrs
                       surname: Flood
                       uId: 7000-0000-1573
+                    hasSeveranceWarning: false
                     id: 15
                     invalidDate: null
                     lifeSustainingTreatment: null
@@ -686,10 +730,10 @@ paths:
                     status: Registered
                     statusDate: "2022-01-17"
                     trustCorporations: []
+                    uId: 7000-0000-0435
                     withdrawnDate: null
                 lpa0526:
                   value:
-                    uId: 7000-0000-0526
                     applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
@@ -764,6 +808,7 @@ paths:
                       salutation: Ms
                       surname: Schindler
                       uId: 7000-0000-1755
+                    hasSeveranceWarning: false
                     id: 18
                     invalidDate: null
                     lifeSustainingTreatment: Option A
@@ -777,10 +822,10 @@ paths:
                     status: Pending
                     statusDate: null
                     trustCorporations: []
+                    uId: 7000-0000-0526
                     withdrawnDate: null
                 lpa0617:
                   value:
-                    uId: 7000-0000-0617
                     applicationHasGuidance: false
                     applicationHasRestrictions: false
                     applicationType: Classic
@@ -861,6 +906,7 @@ paths:
                       salutation: Mr
                       surname: One
                       uId: 7000-0000-1334
+                    hasSeveranceWarning: false
                     id: 21
                     invalidDate: null
                     lifeSustainingTreatment: null
@@ -874,11 +920,12 @@ paths:
                     status: Pending
                     statusDate: null
                     trustCorporations: []
+                    uId: 7000-0000-0617
                     withdrawnDate: null
                 lpa1451:
                   value:
                     applicationHasGuidance: false
-                    applicationHasRestrictions: false
+                    applicationHasRestrictions: true
                     applicationType: Classic
                     attorneyActDecisions: When Registered
                     attorneys:
@@ -922,13 +969,33 @@ paths:
                         surname: smith
                         systemStatus: true
                         uId: 7000-0015-1519
+                      - addresses:
+                          - addressLine1: 1 test road
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3222
+                            postcode: b1 1tf
+                            town: birmingham
+                            type: Primary
+                        companyName: null
+                        dob: "1911-01-01"
+                        email: null
+                        firstname: phoebe
+                        id: 3500
+                        middlenames: null
+                        salutation: null
+                        surname: mills
+                        systemStatus: true
+                        uId: 7000-0015-2475
                     cancellationDate: null
                     caseAttorneyJointly: false
                     caseAttorneyJointlyAndJointlyAndSeverally: false
                     caseAttorneyJointlyAndSeverally: true
                     caseAttorneySingular: false
                     caseSubtype: pfa
-                    certificateProviders: [ ]
+                    certificateProviders: []
                     dispatchDate: null
                     donor:
                       addresses:
@@ -953,6 +1020,7 @@ paths:
                       salutation: Mr
                       surname: Smith
                       uId: 7000-0000-2266
+                    hasSeveranceWarning: false
                     id: 1863
                     invalidDate: null
                     lifeSustainingTreatment: null
@@ -960,9 +1028,9 @@ paths:
                     lpaIsCleansed: false
                     onlineLpaId: null
                     receiptDate: null
-                    registrationDate: "2019-08-01"
+                    registrationDate: "2020-08-01"
                     rejectedDate: null
-                    replacementAttorneys: [ ]
+                    replacementAttorneys: []
                     status: Registered
                     statusDate: "2022-02-04"
                     trustCorporations:
@@ -987,4 +1055,252 @@ paths:
                         systemStatus: true
                         uId: 7000-0015-1998
                     uId: 7000-0015-1451
+                    withdrawnDate: null
+                lpa6361:
+                  value:
+                    applicationHasGuidance: true
+                    applicationHasRestrictions: true
+                    applicationType: Classic
+                    attorneyActDecisions: null
+                    attorneys:
+                      - addresses:
+                          - addressLine1: 1 Usebury Street
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 2824
+                            postcode: B92 1SS
+                            town: Birmingham
+                            type: Primary
+                        companyName: ""
+                        dob: "2000-06-09"
+                        email: ""
+                        firstname: Jessica
+                        id: 3037
+                        middlenames: ""
+                        salutation: Mrs
+                        surname: Test
+                        systemStatus: true
+                        uId: 7000-0013-6908
+                      - addresses:
+                          - addressLine1: 7 The Low Street
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3063
+                            postcode: WR1 1EK
+                            town: Worcester
+                            type: Primary
+                        companyName: null
+                        dob: "1981-06-14"
+                        email: null
+                        firstname: John
+                        id: 3318
+                        middlenames: null
+                        salutation: Mr
+                        surname: Doe
+                        systemStatus: true
+                        uId: 7000-0014-5909
+                    cancellationDate: null
+                    caseAttorneyJointly: false
+                    caseAttorneyJointlyAndJointlyAndSeverally: false
+                    caseAttorneyJointlyAndSeverally: true
+                    caseAttorneySingular: false
+                    caseSubtype: hw
+                    certificateProviders: []
+                    dispatchDate: null
+                    donor:
+                      addresses:
+                        - addressLine1: 1 Usebury Street
+                          addressLine2: ""
+                          addressLine3: ""
+                          country: ""
+                          county: ""
+                          id: 2810
+                          postcode: B92 1SS
+                          town: Birmingham
+                          type: Primary
+                      companyName: null
+                      dob: "1990-01-01"
+                      email: ""
+                      firstname: Donor
+                      id: 3024
+                      linked:
+                        - id: 3024
+                          uId: 7000-0013-6270
+                      middlenames: ""
+                      salutation: Mr
+                      surname: Two
+                      uId: 7000-0013-6270
+                    hasSeveranceWarning: false
+                    id: 1732
+                    invalidDate: null
+                    lifeSustainingTreatment: Option A
+                    lpaDonorSignatureDate: null
+                    lpaIsCleansed: false
+                    onlineLpaId: null
+                    receiptDate: null
+                    registrationDate: "2020-06-28"
+                    rejectedDate: null
+                    replacementAttorneys:
+                      - addresses:
+                          - addressLine1: "1"
+                            addressLine2: "1"
+                            addressLine3: "1"
+                            country: "1"
+                            county: "1"
+                            id: 2825
+                            postcode: "1"
+                            town: ""
+                            type: Primary
+                        companyName: null
+                        dob: "1990-01-01"
+                        email: null
+                        firstname: Replacement
+                        id: 3039
+                        middlenames: null
+                        salutation: Mr
+                        surname: Attorney
+                        systemStatus: true
+                        uId: 7000-0013-6965
+                    status: Registered
+                    statusDate: null
+                    trustCorporations: []
+                    uId: 7000-0013-6361
+                    withdrawnDate: null
+                lpa7237:
+                  value:
+                    applicationHasGuidance: true
+                    applicationHasRestrictions: true
+                    applicationType: Online
+                    attorneyActDecisions: null
+                    attorneys:
+                      - addresses:
+                          - addressLine1: 1 test road
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3214
+                            postcode: b1 1tf
+                            town: birmingham
+                            type: Primary
+                        companyName: null
+                        dob: "1986-09-01"
+                        email: null
+                        firstname: bill
+                        id: 3492
+                        middlenames: null
+                        salutation: null
+                        surname: horton
+                        systemStatus: true
+                        uId: 7000-0015-2236
+                      - addresses:
+                          - addressLine1: 1 test street
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3215
+                            postcode: b1 1tf
+                            town: birmingham
+                            type: Primary
+                        companyName: null
+                        dob: "1982-07-05"
+                        email: null
+                        firstname: Julie
+                        id: 3493
+                        middlenames: null
+                        salutation: null
+                        surname: Doe
+                        systemStatus: true
+                        uId: 7000-0015-2269
+                      - addresses:
+                          - addressLine1: 1 test road
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3216
+                            postcode: b25 8dx
+                            town: birmingham
+                            type: Primary
+                        companyName: null
+                        dob: "1985-09-01"
+                        email: null
+                        firstname: sarah
+                        id: 3494
+                        middlenames: null
+                        salutation: null
+                        surname: lewis
+                        systemStatus: true
+                        uId: 7000-0015-2293
+                      - addresses:
+                          - addressLine1: White Gates
+                            addressLine2: The Street
+                            addressLine3: East Preston
+                            country: ""
+                            county: West Sussex
+                            id: 3340
+                            postcode: BN16 1HZ
+                            town: Littlehampton
+                            type: Primary
+                        companyName: null
+                        dob: "2000-12-12"
+                        email: cris@crisreynolds.com
+                        firstname: jane
+                        id: 3620
+                        middlenames: null
+                        salutation: null
+                        surname: doe
+                        systemStatus: true
+                        uId: 7000-0015-8084
+                    cancellationDate: "2020-07-02"
+                    caseAttorneyJointly: false
+                    caseAttorneyJointlyAndJointlyAndSeverally: false
+                    caseAttorneyJointlyAndSeverally: true
+                    caseAttorneySingular: false
+                    caseSubtype: pfa
+                    certificateProviders: []
+                    dispatchDate: "2021-03-18"
+                    donor:
+                      addresses:
+                        - addressLine1: ""
+                          addressLine2: ""
+                          addressLine3: ""
+                          country: ""
+                          county: ""
+                          id: 2829
+                          postcode: ""
+                          town: ""
+                          type: Primary
+                      companyName: null
+                      dob: "1990-07-01"
+                      email: ""
+                      firstname: Status
+                      id: 3044
+                      linked:
+                        - id: 3044
+                          uId: 7000-0013-7112
+                      middlenames: ""
+                      salutation: Mr
+                      surname: Test
+                      uId: 7000-0013-7112
+                    hasSeveranceWarning: false
+                    id: 1740
+                    invalidDate: null
+                    lifeSustainingTreatment: null
+                    lpaDonorSignatureDate: null
+                    lpaIsCleansed: false
+                    onlineLpaId: null
+                    receiptDate: null
+                    registrationDate: "2020-07-02"
+                    rejectedDate: null
+                    replacementAttorneys: []
+                    status: Registered
+                    statusDate: null
+                    trustCorporations: []
+                    uId: 7000-0013-7237
                     withdrawnDate: null

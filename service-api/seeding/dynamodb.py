@@ -189,6 +189,24 @@ userLpaActorMap = [
         'ActivatedOn': '2021-04-24T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Comment': 'Seeded data'
+    },
+    {
+        'Id': 'ea3f1c45-b15d-4927-a83e-2e2687bce5bd',
+        'SiriusUid': '700000136361',
+        'ActorId': 700000136908,
+        'Added': '2021-04-23T11:44:11.324804Z',
+        'ActivatedOn': '2021-04-24T11:44:11.324804Z',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': '4dc93ef3-b76f-4bef-ad0b-89852a21b823',
+        'SiriusUid': '700000137237',
+        'ActorId': 700000137112,
+        'Added': '2021-04-23T11:44:11.324804Z',
+        'ActivatedOn': '2021-04-24T11:44:11.324804Z',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'Comment': 'Seeded data'
     }
 ]
 
