@@ -89,20 +89,6 @@
                     </strong>
                 </div>
                 <dl class="govuk-summary-list govuk-summary-list--no-border">
-            {% elseif lpa.registrationDate < date('2019-01-01') %}
-                </dl>
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                        {% trans %}
-                            Some words in these instructions or preferences may have been removed by the Court of
-                            Protection. If you need to check this, please see the paper
-                            <abbr title="lasting power of attorney">LPA</abbr>.
-                        {% endtrans %}
-                    </strong>
-                </div>
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
         {% endif %}
 

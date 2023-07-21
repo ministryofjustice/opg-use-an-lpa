@@ -72,8 +72,8 @@ services:
       API_SERVICE_URL: http://api-web
       PDF_SERVICE_URL: http://service-pdf
       AWS_ENDPOINT_KMS: http://kms:8080
-      AWS_ACCESS_KEY_ID: "-"
-      AWS_SECRET_ACCESS_KEY: "-"
+      AWS_ACCESS_KEY_ID: "devkey"
+      AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=viewer-app
@@ -132,8 +132,8 @@ services:
       # Local only
       API_SERVICE_URL: http://api-web
       AWS_ENDPOINT_KMS: http://kms:8080
-      AWS_ACCESS_KEY_ID: "-"
-      AWS_SECRET_ACCESS_KEY: "-"
+      AWS_ACCESS_KEY_ID: "devkey"
+      AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       ENABLE_XDEBUG: "true"
       PHP_IDE_CONFIG: serverName=actor-app
@@ -214,9 +214,9 @@ services:
       INSTRUCTIONS_AND_PREFERENCES: "true"
 
       # Local only
-      AWS_ACCESS_KEY_ID: "-"
+      AWS_ACCESS_KEY_ID: "devkey"
       AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
-      AWS_SECRET_ACCESS_KEY: "-"
+      AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
       PACT_BROKER_PUBLISH: "false"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
@@ -248,8 +248,8 @@ services:
     depends_on:
       - dynamodb-local
     environment:
-      AWS_ACCESS_KEY_ID: "-"
-      AWS_SECRET_ACCESS_KEY: "-"
+      AWS_ACCESS_KEY_ID: "devkey"
+      AWS_SECRET_ACCESS_KEY: "secretdevkey"
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_VIEWER_CODES: "ViewerCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
@@ -270,8 +270,8 @@ services:
     environment:
       ENVIRONMENT: local
       REGION: eu-west-1
-      AWS_ACCESS_KEY_ID: '-'
-      AWS_SECRET_ACCESS_KEY: '-'
+      AWS_ACCESS_KEY_ID: 'devkey'
+      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
     volumes:
       - ./lambda-functions/upload-statistics/app:/function/app
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
