@@ -29,16 +29,18 @@ final class HealthcheckHandler implements RequestHandlerInterface
         private RequestSigner $awsSignature,
         private string $siriusApiUrl,
         private string $codesApiUrl,
+        private string $iapImagesApiUrl,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $data = [
-            'version'       => $this->version,
-            'lpa_api'       => $this->stopwatch($this->checkApiEndpoint(...)),
-            'dynamo'        => $this->stopwatch($this->checkDynamoEndpoint(...)),
-            'lpa_codes_api' => $this->stopwatch($this->checkCodesApiEndpoint(...)),
+            'version'        => $this->version,
+            'lpa_api'        => $this->stopwatch($this->checkApiEndpoint(...)),
+            'dynamo'         => $this->stopwatch($this->checkDynamoEndpoint(...)),
+            'lpa_codes_api'  => $this->stopwatch($this->checkCodesApiEndpoint(...)),
+            'iap_images_api' => $this->stopwatch($this->checkIapImagesApi(...)),
         ];
 
         $data['healthy'] = $this->isHealthy($data);
@@ -50,7 +52,15 @@ final class HealthcheckHandler implements RequestHandlerInterface
     {
         return $data['lpa_api']['healthy']
             && $data['dynamo']['healthy']
-            && $data['lpa_codes_api']['healthy'];
+            && $data['lpa_codes_api']['healthy']
+            && $data['iap_images_api']['healthy'];
+    }
+
+    private function checkIapImagesApi(): array
+    {
+        $url = sprintf('%s/v1/healthcheck', $this->iapImagesApiUrl);
+
+        return $this->apiCall(new Request('GET', $url));
     }
 
     private function checkApiEndpoint(): array
