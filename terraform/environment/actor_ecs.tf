@@ -312,10 +312,6 @@ locals {
           value = "60"
         },
         {
-          name  = "USE_OLDER_LPA_JOURNEY",
-          value = tostring(local.environment.application_flags.use_older_lpa_journey)
-        },
-        {
           name  = "DELETE_LPA_FEATURE",
           value = tostring(local.environment.application_flags.delete_lpa_feature)
         },
