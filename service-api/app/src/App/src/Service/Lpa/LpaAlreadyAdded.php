@@ -32,7 +32,15 @@ class LpaAlreadyAdded
      */
     public function __invoke(string $userId, string $lpaUid): ?array
     {
-        return $this->saveOfRequestFeature($userId, $lpaUid);
+        $savedLpaRecords = $this->userLpaActorMapRepository->getByUserId($userId);
+
+        foreach ($savedLpaRecords as $record) {
+            if ($record['SiriusUid'] === $lpaUid) {
+                return $this->populateLpaRecord($record, $userId);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -67,55 +75,4 @@ class LpaAlreadyAdded
         return $response;
     }
 
-    /**
-     * @param string $userId
-     * @param string $lpaUid
-     * @return array|null
-     */
-    private function preSaveOfRequestFeature(string $userId, string $lpaUid): ?array
-    {
-        $lpasAdded = $this->lpaService->getAllLpasAndRequestsForUser($userId);
-
-        foreach ($lpasAdded as $userLpaActorToken => $lpaData) {
-            if ($lpaData['lpa']['uId'] === $lpaUid) {
-                $this->logger->info(
-                    'Account with Id {id} has attempted to add LPA {uId} which already exists in their account',
-                    [
-                        'id'  => $userId,
-                        'uId' => $lpaUid,
-                    ]
-                );
-                return [
-                    'donor'         => [
-                        'uId'         => $lpaData['lpa']['donor']['uId'],
-                        'firstname'   => $lpaData['lpa']['donor']['firstname'],
-                        'middlenames' => $lpaData['lpa']['donor']['middlenames'],
-                        'surname'     => $lpaData['lpa']['donor']['surname'],
-                    ],
-                    'caseSubtype'   => $lpaData['lpa']['caseSubtype'],
-                    'lpaActorToken' => $userLpaActorToken,
-                ];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $userId
-     * @param string $lpaUid
-     * @return array|null
-     */
-    private function saveOfRequestFeature(string $userId, string $lpaUid): ?array
-    {
-        $savedLpaRecords = $this->userLpaActorMapRepository->getByUserId($userId);
-
-        foreach ($savedLpaRecords as $record) {
-            if ($record['SiriusUid'] === $lpaUid) {
-                return $this->populateLpaRecord($record, $userId);
-            }
-        }
-
-        return null;
-    }
 }

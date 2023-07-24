@@ -15,8 +15,8 @@ use Psr\Log\LoggerInterface;
 
 class AccessForAllLpaService
 {
-    private const CLEANSE_INTERVAL = 'P6W';
-    private const EXPIRY_INTERVAL = 'P1Y';
+    private const CLEANSE_INTERVAL     = 'P6W';
+    private const EXPIRY_INTERVAL      = 'P1Y';
     private const SEND_LETTER_INTERVAL = 'P2W';
 
     public function __construct(
@@ -49,7 +49,7 @@ class AccessForAllLpaService
             'Activation key exists for actor {actorId} on LPA {lpaId}',
             [
                 'actorId' => $lpaId,
-                'lpaId' => $actorId,
+                'lpaId'   => $actorId,
             ]
         );
 
@@ -99,15 +99,15 @@ class AccessForAllLpaService
             );
         }
 
-        $uidInt = (int)$uid;
+        $uidInt      = (int)$uid;
         $actorUidInt = (int)$actorUid;
 
         $this->logger->info(
             'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
-                'user_id' => $userId,
+                'user_id'  => $userId,
                 'attorney' => $actorUidInt,
-                'lpa' => $uidInt,
+                'lpa'      => $uidInt,
             ]
         );
 
@@ -117,9 +117,9 @@ class AccessForAllLpaService
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
-                    'user_id' => $userId,
+                    'user_id'  => $userId,
                     'attorney' => $actorUidInt,
-                    'lpa' => $uidInt,
+                    'lpa'      => $uidInt,
                 ]
             );
             if ($recordId !== null) {
@@ -178,7 +178,7 @@ class AccessForAllLpaService
             'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
                 'user_id' => $userId,
-                'lpa' => $uidInt,
+                'lpa'     => $uidInt,
             ]
         );
 
@@ -189,7 +189,7 @@ class AccessForAllLpaService
                 'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
                 [
                     'user_id' => $userId,
-                    'lpa' => $uidInt,
+                    'lpa'     => $uidInt,
                 ]
             );
 
