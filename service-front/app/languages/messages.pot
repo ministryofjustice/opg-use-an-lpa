@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-07-24T10:00:41+00:00\n"
+"POT-Creation-Date: 2023-07-25T16:09:00+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -4458,8 +4458,4 @@ msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:40
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise"
-msgstr ""
-
-#: src/Actor/templates/actor/instructions-preferences.html.twig:31
-msgid "This scanned image is also shown to anyone you give an access code to. Please check that the scanned image is readable before giving an access code to organisations. This will work for all access codes made after 4 July 2023. This will work for all access codes made after 4 July 2023."
 msgstr ""
