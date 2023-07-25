@@ -413,24 +413,21 @@ class LpaContext implements Context
             )
         );
 
-        if ($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            // LpaService::getByUserLpaActorToken
-            $this->awsFixtures->append(
-                new Result(
-                    [
-                        'Item' => $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
-                            ]
-                        ),
-                    ]
-                )
-            );
-        }
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // LpaRepository::get
         $this->apiFixtures->append(
@@ -440,17 +437,6 @@ class LpaContext implements Context
                 json_encode($this->lpa)
             )
         );
-
-        if (!($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
-            // LpaRepository::get
-            $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($differentLpa)
-                )
-            );
-        }
 
         // API call to request an activation key
         $this->apiPost(
@@ -468,30 +454,18 @@ class LpaContext implements Context
             ]
         );
 
-        if ($this->base->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            $expectedResponse = [
-                'donor'                => [
-                    'uId'         => $this->lpa->donor->uId,
-                    'firstname'   => $this->lpa->donor->firstname,
-                    'middlenames' => $this->lpa->donor->middlenames,
-                    'surname'     => $this->lpa->donor->surname,
-                ],
-                'caseSubtype'          => $this->lpa->caseSubtype,
-                'lpaActorToken'        => (int)$this->userLpaActorToken,
-                'activationKeyDueDate' => null,
-            ];
-        } else {
-            $expectedResponse = [
-                'donor'         => [
-                    'uId'         => $this->lpa->donor->uId,
-                    'firstname'   => $this->lpa->donor->firstname,
-                    'middlenames' => $this->lpa->donor->middlenames,
-                    'surname'     => $this->lpa->donor->surname,
-                ],
-                'caseSubtype'   => $this->lpa->caseSubtype,
-                'lpaActorToken' => (int)$this->userLpaActorToken,
-            ];
-        }
+        $expectedResponse = [
+            'donor'                => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
+            'caseSubtype'          => $this->lpa->caseSubtype,
+            'lpaActorToken'        => (int)$this->userLpaActorToken,
+            'activationKeyDueDate' => null,
+        ];
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA already added');
 
