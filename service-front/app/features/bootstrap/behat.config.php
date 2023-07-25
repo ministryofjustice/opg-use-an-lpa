@@ -35,7 +35,6 @@ return [
     'feature_flags'                => [
         'delete_lpa_feature'                                         => true,
         'allow_older_lpas'                                           => true,
-        'save_older_lpa_requests'                                    => true,
         'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => true,
         'instructions_and_preferences'                               => true,
     ],

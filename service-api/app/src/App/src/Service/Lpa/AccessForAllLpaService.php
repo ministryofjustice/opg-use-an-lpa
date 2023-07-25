@@ -33,6 +33,7 @@ class AccessForAllLpaService
      *
      * @param string $lpaId
      * @param string $actorId
+     *
      * @return DateTime|null
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
@@ -88,16 +89,14 @@ class AccessForAllLpaService
         ?string $existingRecordId = null,
     ): void {
         $recordId = null;
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create(
-                    $userId,
-                    $uid,
-                    $actorUid,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::SEND_LETTER_INTERVAL)
-                );
-            }
+        if ($existingRecordId === null) {
+            $recordId = $this->userLpaActorMap->create(
+                $userId,
+                $uid,
+                $actorUid,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::SEND_LETTER_INTERVAL)
+            );
         }
 
         $uidInt      = (int)$uid;
@@ -135,15 +134,13 @@ class AccessForAllLpaService
          * the API request worked. That being the case the users record will not have
          * an up to date ActivateBy column. This isn't the end of the world.
          */
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId !== null) {
-                $this->userLpaActorMap->updateRecord(
-                    $existingRecordId,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::SEND_LETTER_INTERVAL),
-                    $actorUid
-                );
-            }
+        if ($existingRecordId !== null) {
+            $this->userLpaActorMap->updateRecord(
+                $existingRecordId,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::SEND_LETTER_INTERVAL),
+                $actorUid
+            );
         }
     }
 
@@ -152,10 +149,10 @@ class AccessForAllLpaService
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
      *
-     * @param string $uid Sirius uId for an LPA
-     * @param string $userId
-     * @param string $additionalInfo
-     * @param ?int $actorId
+     * @param string  $uid Sirius uId for an LPA
+     * @param string  $userId
+     * @param string  $additionalInfo
+     * @param ?int    $actorId
      * @param ?string $existingRecordId
      */
     public function requestAccessAndCleanseByLetter(
@@ -165,18 +162,15 @@ class AccessForAllLpaService
         ?int $actorId = null,
         ?string $existingRecordId = null,
     ): void {
-
         $recordId = null;
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId === null) {
-                $recordId = $this->userLpaActorMap->create(
-                    $userId,
-                    $uid,
-                    $actorId ? (string)$actorId : null,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::CLEANSE_INTERVAL)
-                );
-            }
+        if ($existingRecordId === null) {
+            $recordId = $this->userLpaActorMap->create(
+                $userId,
+                $uid,
+                $actorId ? (string)$actorId : null,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::CLEANSE_INTERVAL)
+            );
         }
 
         $uidInt = (int)$uid;
@@ -212,15 +206,13 @@ class AccessForAllLpaService
          * the API request worked. That being the case the users record will not have
          * an up to date ActivateBy column. This isn't the end of the world.
          */
-        if (($this->featureEnabled)('save_older_lpa_requests')) {
-            if ($existingRecordId !== null) {
-                $this->userLpaActorMap->updateRecord(
-                    $existingRecordId,
-                    new DateInterval(self::EXPIRY_INTERVAL),
-                    new DateInterval(self::CLEANSE_INTERVAL),
-                    $actorId ? (string)$actorId : null
-                );
-            }
+        if ($existingRecordId !== null) {
+            $this->userLpaActorMap->updateRecord(
+                $existingRecordId,
+                new DateInterval(self::EXPIRY_INTERVAL),
+                new DateInterval(self::CLEANSE_INTERVAL),
+                $actorId ? (string)$actorId : null
+            );
         }
     }
 }
