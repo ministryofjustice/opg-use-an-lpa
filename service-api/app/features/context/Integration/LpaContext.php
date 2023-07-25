@@ -93,10 +93,8 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            // Save activation key request in the DB
-            $this->awsFixtures->append(new Result([]));
-        }
+        // Save activation key request in the DB
+        $this->awsFixtures->append(new Result([]));
 
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
@@ -123,10 +121,8 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_NO_CONTENT
         );
 
-        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            // Update activation key request in the DB
-            $this->awsFixtures->append(new Result([]));
-        }
+        // Update activation key request in the DB
+        $this->awsFixtures->append(new Result([]));
 
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
@@ -2815,24 +2811,21 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            // LpaService::getByUserLpaActorToken
-            $this->awsFixtures->append(
-                new Result(
-                    [
-                        'Item' => $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
-                            ]
-                        ),
-                    ]
-                )
-            );
-        }
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
 
         // LpaRepository::get
         $this->pactGetInteraction(
@@ -2842,40 +2835,17 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        if (!($this->container->get(FeatureEnabled::class)('save_older_lpa_requests'))) {
-            // LpaRepository::get
-            $this->pactGetInteraction(
-                $this->apiGatewayPactProvider,
-                '/v1/use-an-lpa/lpas/' . $differentLpa->uId,
-                StatusCodeInterface::STATUS_OK,
-                $differentLpa
-            );
-        }
-
-        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            $expectedResponse = [
-                'donor' => [
-                    'uId'         => $this->lpa->donor->uId,
-                    'firstname'   => $this->lpa->donor->firstname,
-                    'middlenames' => $this->lpa->donor->middlenames,
-                    'surname'     => $this->lpa->donor->surname,
-                ],
-                'caseSubtype'          => $this->lpa->caseSubtype,
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'activationKeyDueDate' => null,
-            ];
-        } else {
-            $expectedResponse = [
-                'donor'         => [
-                    'uId'         => $this->lpa->donor->uId,
-                    'firstname'   => $this->lpa->donor->firstname,
-                    'middlenames' => $this->lpa->donor->middlenames,
-                    'surname'     => $this->lpa->donor->surname,
-                ],
-                'caseSubtype'   => $this->lpa->caseSubtype,
-                'lpaActorToken' => (int)$this->userLpaActorToken,
-            ];
-        }
+        $expectedResponse = [
+            'donor' => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
+            'caseSubtype'          => $this->lpa->caseSubtype,
+            'lpaActorToken'        => $this->userLpaActorToken,
+            'activationKeyDueDate' => null,
+        ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
@@ -3078,10 +3048,8 @@ class LpaContext extends BaseIntegrationContext
             $data
         );
 
-        if ($this->container->get(FeatureEnabled::class)('save_older_lpa_requests')) {
-            // Save activation key request in the DB
-            $this->awsFixtures->append(new Result([]));
-        }
+        // Save activation key request in the DB
+        $this->awsFixtures->append(new Result([]));
 
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 

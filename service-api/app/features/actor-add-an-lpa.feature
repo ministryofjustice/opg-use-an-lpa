@@ -29,12 +29,6 @@ Feature: Add an LPA
     Then I am taken back to the dashboard page
     And The LPA has not been added
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:false
-  Scenario: The user is told when attempting to add the same LPA twice
-    Given I have added an LPA to my account
-    When I attempt to add the same LPA again
-    Then I should be told that I have already added this LPA
-
   @integration @acceptance @pact
   Scenario: The user is told the LPA couldn't be found if its status is not registered
     Given I am on the add an LPA page
@@ -80,7 +74,7 @@ Feature: Add an LPA
     When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  @integration @acceptance @pact
   Scenario: The user can complete adding an LPA to their account that they have requested an activation key for
     Given I am on the add an LPA page
     When I request to add an LPA that I have requested an activation key for
