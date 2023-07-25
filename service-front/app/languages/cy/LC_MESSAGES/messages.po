@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-07-17T11:22:05+00:00\n"
+"POT-Creation-Date: 2023-07-19T08:45:39+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6493,6 +6493,18 @@ msgstr ""
 "Gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon cyn "
 "gynted ag y bydd wedi’i chofrestru heblaw bod y cyfarwyddiadau yn dweud fel "
 "arall"
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:39
+msgid ""
+"The organisation could be a hospital, care home, or other health care "
+"provider. This is for your reference only"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:41
+msgid ""
+"The organisation could be a bank, energy provider, or another business. This "
+"is for your reference only"
+msgstr ""
 
 #~ msgid ""
 #~ "Some semantic elements were implemented in a way that did not convey the "
