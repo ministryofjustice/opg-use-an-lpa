@@ -91,8 +91,6 @@ class AccessForAllLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->shouldBeCalled();
 
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
@@ -108,7 +106,6 @@ class AccessForAllLpaServiceTest extends TestCase
     /** @test */
     public function request_cleanse_and_access_code_letter(): void
     {
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
@@ -139,8 +136,6 @@ class AccessForAllLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->shouldBeCalled();
 
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
         $this->userLpaActorMapProphecy->updateRecord(
@@ -160,8 +155,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
-
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
@@ -188,8 +181,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null);
 
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
 
         $this->userLpaActorMapProphecy->updateRecord(
@@ -209,8 +200,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->lpasInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->willThrow(ApiException::create('bad api call'));
-
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
 
         $this->userLpaActorMapProphecy->create(
             $this->userId,
@@ -239,8 +228,6 @@ class AccessForAllLpaServiceTest extends TestCase
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->willThrow(ApiException::create('bad api call'));
 
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(true);
-
         $this->userLpaActorMapProphecy->create(
             $this->userId,
             $this->lpaUid,
@@ -259,26 +246,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
 
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
-    }
-
-    /** @test */
-    public function request_access_code_letter_api_call_fails_without_flag(): void
-    {
-        $this->lpasInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
-            ->willThrow(ApiException::create('bad api call'));
-
-        $service = $this->getOlderLpaService();
-
-        $this->expectException(ApiException::class);
-
-        $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
-
-        $this->userLpaActorMapProphecy->delete(Argument::type('string'))->willReturn([])->shouldNotBeCalled();
-
-        $this->featureEnabledProphecy->__invoke('save_older_lpa_requests')->willReturn(false);
-
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
 
     /** @test */

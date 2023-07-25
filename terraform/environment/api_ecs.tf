@@ -383,20 +383,12 @@ locals {
           value = local.environment.iap_images_endpoint
         },
         {
-          name  = "USE_LEGACY_CODES_SERVICE",
-          value = tostring(local.environment.application_flags.use_legacy_codes_service)
-        },
-        {
           name  = "LOGGING_LEVEL",
           value = tostring(local.environment.logging_level)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(local.environment.application_flags.allow_meris_lpas)
-        },
-        {
-          name  = "SAVE_OLDER_LPA_REQUESTS",
-          value = tostring(local.environment.application_flags.save_older_lpa_requests)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
