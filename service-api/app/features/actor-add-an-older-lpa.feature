@@ -8,17 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:false
-  Scenario: The user can add an older LPA to their account
-    Given I am on the add an older LPA page
-    When I provide the details from a valid paper LPA document
-    And I confirm the details I provided are correct
-    Then I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
-    And A record of my activation key request is not saved
-
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  @integration @acceptance @pact
   Scenario: The user can add an older LPA to their account and we store the record in our DB
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
@@ -28,7 +18,7 @@ Feature: Add an older LPA
     And a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @integration @acceptance @pact @ff:save_older_lpa_requests:true
+  @integration @acceptance @pact
   Scenario: The user can re-request an older LPA be added to their account and we update the record in our DB
     Given I have previously requested the addition of a paper LPA to my account
     When I repeat my request for an activation key
@@ -56,7 +46,6 @@ Feature: Add an older LPA
     When I request for a new activation key again
     Then a letter is requested containing a one time use code
     And A record of my activation key request is saved
-
 
   @acceptance @integration @pact
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests enabled)
@@ -133,7 +122,7 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @ff:save_older_lpa_requests:true
+  @acceptance
   Scenario: User is able to request a key for a second time as a partial match
     Given I have previously requested the addition of a paper LPA to my account
     And The details I provided resulted in a partial match

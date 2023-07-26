@@ -37,8 +37,12 @@ class HealthcheckHandlerFactoryTest extends TestCase
                 'codes_api' => [
                     'endpoint' => 'localhost'
                 ],
+                'iap_images_api' => [
+                    'endpoint' => 'localhost'
+                ],
             ]
         );
+        
         $container->get(ActorUsersInterface::class)->willReturn($actorUsers->reveal());
         $container->get(LpasInterface::class)->willReturn($lpaInterface->reveal());
         $container->get(HttpClient::class)->willReturn($httpClientProphecy->reveal());
