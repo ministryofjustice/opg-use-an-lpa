@@ -28,6 +28,7 @@ class HealthcheckHandlerFactory
             $container->get(RequestSigner::class),
             $config['sirius_api']['endpoint'],
             $config['codes_api']['endpoint'],
+            $config['iap_images_api']['endpoint']
         );
     }
 }
