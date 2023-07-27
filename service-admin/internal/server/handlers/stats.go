@@ -71,8 +71,8 @@ func getPeriodsToBeChecked(timeProvider TimeProvider) []string {
 	currentMonth := currentTime.Format(timeLayout)
 	lastMonth := firstDay.Format(timeLayout)
 	monthBeforeLast := lastDay.Format(timeLayout)
-  threeMonthsAgo := last3Month.Format(timeLayout)
-  
+	threeMonthsAgo := last3Month.Format(timeLayout)
+
 	checkList := []string{currentMonth, lastMonth, monthBeforeLast, threeMonthsAgo, "Total"}
 
 	return checkList

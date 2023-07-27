@@ -66,7 +66,7 @@ func TestGetAllMetrics(t *testing.T) {
 								"lpa_removed_evet":      &types.AttributeValueMemberN{Value: "1"},
 								"account_created_event": &types.AttributeValueMemberN{Value: "4"},
 							},
-              {
+							{
 								"TimePeriod":            &types.AttributeValueMemberS{Value: "2022-08"},
 								"lpas_added":            &types.AttributeValueMemberN{Value: "1"},
 								"lpa_removed_evet":      &types.AttributeValueMemberN{Value: "1"},
@@ -98,7 +98,7 @@ func TestGetAllMetrics(t *testing.T) {
 					"lpa_removed_evet":      1,
 					"account_created_event": 4,
 				},
-        "2022-08": {
+				"2022-08": {
 					"lpas_added":            1,
 					"lpa_removed_evet":      1,
 					"account_created_event": 1,
