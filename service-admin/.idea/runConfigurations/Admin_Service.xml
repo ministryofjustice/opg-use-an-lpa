@@ -2,10 +2,11 @@
   <configuration default="false" name="Admin Service" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="service-admin" />
     <working_directory value="$PROJECT_DIR$" />
-    <go_parameters value="-i" />
     <envs>
-      <env name="AWS_DYNAMODB_ENDPOINT" value="http://localhost:8000" />
       <env name="ADMIN_JWT_SIGNING_KEY_URL" value="http://localhost:5000" />
+      <env name="AWS_ACCESS_KEY_ID" value="-" />
+      <env name="AWS_DYNAMODB_ENDPOINT" value="http://localhost:8000" />
+      <env name="AWS_SECRET_ACCESS_KEY" value="-" />
     </envs>
     <kind value="FILE" />
     <directory value="$PROJECT_DIR$" />
