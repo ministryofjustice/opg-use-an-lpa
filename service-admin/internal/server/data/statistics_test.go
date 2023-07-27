@@ -43,7 +43,7 @@ func TestGetAllMetrics(t *testing.T) {
 	}{
 		{
 			name: "find metric values for last 3 months",
-			list: []string{"2022-11", "2022-10", "2022-09", "Total"},
+			list: []string{"2022-11", "2022-10", "2022-09", "2022-08", "Total"},
 			batchGetItemFunc: func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
 				return &dynamodb.BatchGetItemOutput{
 					Responses: map[string][]map[string]types.AttributeValue{
@@ -65,6 +65,12 @@ func TestGetAllMetrics(t *testing.T) {
 								"lpas_added":            &types.AttributeValueMemberN{Value: "3"},
 								"lpa_removed_evet":      &types.AttributeValueMemberN{Value: "1"},
 								"account_created_event": &types.AttributeValueMemberN{Value: "4"},
+							},
+              {
+								"TimePeriod":            &types.AttributeValueMemberS{Value: "2022-08"},
+								"lpas_added":            &types.AttributeValueMemberN{Value: "1"},
+								"lpa_removed_evet":      &types.AttributeValueMemberN{Value: "1"},
+								"account_created_event": &types.AttributeValueMemberN{Value: "1"},
 							},
 							{
 								"TimePeriod":            &types.AttributeValueMemberS{Value: "Total"},
@@ -92,6 +98,11 @@ func TestGetAllMetrics(t *testing.T) {
 					"lpa_removed_evet":      1,
 					"account_created_event": 4,
 				},
+        "2022-08": {
+					"lpas_added":            1,
+					"lpa_removed_evet":      1,
+					"account_created_event": 1,
+				},
 				"Total": {
 					"lpas_added":            12,
 					"lpa_removed_evet":      12,
@@ -102,7 +113,7 @@ func TestGetAllMetrics(t *testing.T) {
 		},
 		{
 			name: "doesn't find a metric for time period",
-			list: []string{"2022-11", "2022-10", "2022-09", "Total"},
+			list: []string{"2022-11", "2022-10", "2022-09", "2022-08", "Total"},
 			batchGetItemFunc: func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
 				return &dynamodb.BatchGetItemOutput{}, nil
 			},
@@ -111,7 +122,7 @@ func TestGetAllMetrics(t *testing.T) {
 		},
 		{
 			name: "error whilst searching for metrics",
-			list: []string{"2022-11", "2022-10", "2022-09", "Total"},
+			list: []string{"2022-11", "2022-10", "2022-09", "2022-08", "Total"},
 			batchGetItemFunc: func(ctx context.Context, params *dynamodb.BatchGetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchGetItemOutput, error) {
 				return &dynamodb.BatchGetItemOutput{}, errors.New("some error")
 			},
