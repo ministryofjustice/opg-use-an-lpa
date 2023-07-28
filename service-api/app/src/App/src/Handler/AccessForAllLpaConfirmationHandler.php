@@ -52,10 +52,7 @@ class AccessForAllLpaConfirmationHandler implements RequestHandlerInterface
         }
 
         $lpaMatchResponse = $this->addAccessForAllLpa->validateRequest($userId, $requestData);
-
-        if (($this->featureEnabled)('allow_older_lpas')) {
             ($this->checkLpaCleansed)($userId, $lpaMatchResponse);
-        }
 
         $this->accessForAllLpaService->requestAccessByLetter(
             (string) $requestData['reference_number'],

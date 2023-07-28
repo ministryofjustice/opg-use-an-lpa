@@ -326,11 +326,7 @@ class LpaContext implements Context
     public function iAmOnTheActivationKeyInformationPage(): void
     {
         $this->ui->visit('/lpa/add-by-paper-information');
-        if (($this->base->container->get(FeatureEnabled::class))('allow_older_lpas')) {
-            $this->ui->assertPageContainsText('Ask for an activation key');
-        } else {
-            $this->ui->assertPageContainsText('Check if you can ask for an activation key');
-        }
+        $this->ui->assertPageContainsText('Ask for an activation key');
     }
 
     /**

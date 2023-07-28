@@ -22,12 +22,13 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     public function setUp(): void
     {
         $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
-        $this->loggerProphecy         = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
     public function validateLpaRequirements(): ValidateAccessForAllLpaRequirements
@@ -38,62 +39,19 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         );
     }
 
-     /**
+    /**
      * @test
      * @throws Exception
      */
     public function throws_not_found_exception_when_lpa_status_is_not_registered()
     {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
-
         $lpa = [
-            'uId'    => '123456789012',
+            'uId' => '123456789012',
             'status' => 'Pending',
         ];
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA status invalid');
-
-        $this->validateLpaRequirements()($lpa);
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function throws_bad_request_exception_when_lpa_registration_date_before_Sep_2019()
-    {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
-
-        $lpa = [
-            'uId'              => '123456789012',
-            'status'           => 'Registered',
-            'registrationDate' => '2019-08-31',
-        ];
-
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('PA not eligible due to registration date');
-
-        $this->validateLpaRequirements()($lpa);
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function throws_bad_request_exception_when_lpa_status_is_pending_and_registration_date_after_Sep_2019()
-    {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(false);
-
-        $lpa = [
-            'uId'              => '123456789012',
-            'status'           => 'Pending',
-            'registrationDate' => '2019-09-31',
-        ];
-
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('LPA status invalid');
-
         $this->validateLpaRequirements()($lpa);
     }
 
@@ -103,17 +61,14 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
      */
     public function when_allow_older_lpa_flag_on_throws_exception_when_status_is_not_registered()
     {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
-
         $lpa = [
-            'uId'              => '123456789012',
-            'status'           => 'Pending',
+            'uId' => '123456789012',
+            'status' => 'Pending',
             'registrationDate' => '2019-08-31',
         ];
 
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA status invalid');
-
         $this->validateLpaRequirements()($lpa);
     }
 
@@ -123,11 +78,9 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
      */
     public function when_allow_older_lpa_flag_on_throws_no_exception_when_status_is_registered()
     {
-        $this->featureEnabledProphecy->__invoke('allow_older_lpas')->willReturn(true);
-
         $lpa = [
-            'uId'              => '123456789012',
-            'status'           => 'Registered',
+            'uId' => '123456789012',
+            'status' => 'Registered',
             'registrationDate' => '2019-08-31',
         ];
 

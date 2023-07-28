@@ -40,29 +40,6 @@ class ValidateAccessForAllLpaRequirements
     public function __invoke(array $lpa): void
     {
         $this->lpaHasNecessaryStatus($lpa);
-        $this->lpaHasAcceptableRegistrationDate($lpa);
-    }
-
-    /**
-     * @param array $lpa
-     * @return void
-     * @throws Exception
-     */
-    public function lpaHasAcceptableRegistrationDate(array $lpa): void
-    {
-        if (
-            !($this->featureEnabled)('allow_older_lpas') &&
-            (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
-        ) {
-            $this->logger->notice(
-                'User entered LPA {uId} has a registration date before 1 September 2019',
-                [
-                    'event_code' => EventCodes::OLDER_LPA_TOO_OLD,
-                    'uId'        => $lpa['uId'],
-                ]
-            );
-            throw new BadRequestException('LPA not eligible due to registration date');
-        }
     }
 
     /**

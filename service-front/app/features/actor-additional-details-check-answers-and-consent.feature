@@ -10,7 +10,7 @@ Feature: Additional details check answers and consent
     And I am currently signed in
     And My LPA has been found but my details did not match
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is shown the correct information on the check and consent page as an attorney without a phone number
     Given I have provided my current address
     And I confirm that I am the Attorney
@@ -19,7 +19,7 @@ Feature: Additional details check answers and consent
     Then I am asked to consent and confirm my details
     And I can see my address, attorney role, donor details and that I have not provided a telephone number
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user can is shown the correct information on the check and consent page as an attorney with a phone number
     And I have provided my current address
     And I confirm that I am the Attorney
@@ -28,7 +28,7 @@ Feature: Additional details check answers and consent
     Then I am asked to consent and confirm my details
     And I can see my address, attorney role, donor details and telephone number
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user can is shown the correct information on the check and consent page as a donor with a phone number
     Given I have provided my current address
     And I confirm that I am the Donor
@@ -37,7 +37,7 @@ Feature: Additional details check answers and consent
     Then I am asked to consent and confirm my details
     And I can see my address, donor role, attorney details and telephone number
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user can is shown the correct information on the check and consent page as a donor without a phone number
     And I have provided my current address
     And I confirm that I am the Donor
@@ -46,7 +46,7 @@ Feature: Additional details check answers and consent
     Then I am asked to consent and confirm my details
     And I can see my address, donor role, attorney details and that I have not provided a telephone number
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is shown the correct information on the check and consent page when they have added an address that is on the paper lpa
     Given I fill in my UK address and I select the address is not the same as on paper LPA
     And I am asked for my address from the paper LPA
@@ -58,7 +58,7 @@ Feature: Additional details check answers and consent
     And I can see my address, attorney role, donor details and that I have not provided a telephone number
     And I can see the paper address I have input
 
-  @ui @ff:allow_older_lpas:true
+  @ui
   Scenario: The user is shown the correct information on the check and consent page when they are not sure of the address on the paper lpa
     Given I select I am not sure the address is same as on paper LPA
     And I am asked for my role on the LPA

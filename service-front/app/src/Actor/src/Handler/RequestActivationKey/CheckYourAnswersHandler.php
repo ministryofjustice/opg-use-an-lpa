@@ -209,21 +209,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                 case AccessForAllResult::DOES_NOT_MATCH:
-                    if (($this->featureEnabled)('allow_older_lpas')) {
                         return $this->redirectToRoute('lpa.add.actor-address');
-                    } else {
-                        return new HtmlResponse($this->renderer->render(
-                            'actor::cannot-find-lpa',
-                            [
-                                'user'                 => $this->user,
-                                'lpa_reference_number' => $state->referenceNumber,
-                                'first_name'           => $state->firstNames,
-                                'last_name'            => $state->lastName,
-                                'dob'                  => $state->dob,
-                                'postcode'             => $state->postcode,
-                            ],
-                        ));
-                    }
 
                 case AccessForAllResult::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render(
