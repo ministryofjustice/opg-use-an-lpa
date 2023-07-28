@@ -42,6 +42,9 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 					{
 						"TimePeriod": &types.AttributeValueMemberS{Value: list[3]},
 					},
+					{
+						"TimePeriod": &types.AttributeValueMemberS{Value: list[4]},
+					},
 				},
 			},
 		},
