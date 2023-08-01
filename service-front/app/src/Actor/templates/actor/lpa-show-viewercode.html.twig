@@ -4,8 +4,6 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ include('@partials/account-bar.html.twig') }}
-
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
                id="back-link-navigation">{% trans %}Back to your LPAs{% endtrans %}</a>
@@ -147,6 +145,5 @@
                 </div>
             </div>
         </main>
-        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

@@ -5,8 +5,6 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@partials/account-bar.html.twig') }}
-
         {% if actorToken != 'null' %}
             {% set backLink = path('lpa.change-details', {}, {'lpa': actorToken}) %}
         {% else %}
@@ -71,6 +69,5 @@
                 </div>
             </div>
         </main>
-        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}
