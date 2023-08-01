@@ -4,8 +4,6 @@
 
 {% block content %}
     <div class="govuk-width-container">
-        {{ macros.partials() }}
-
         <main class="govuk-main-wrapper" id="main-content" role="main">
             {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\CheckLpaHandler::ADD_LPA_FLASH_MSG'}) }}
             {{ include('@actor/partials/flash-message.html.twig', {flash_obj: flash, flash_key:'Actor\\Handler\\RemoveLpaHandler::REMOVE_LPA_FLASH_MSG'}) }}
