@@ -1,11 +1,6 @@
 <div class="govuk-width-container">
-    {% if not forDownload %}
-        {{ include('@partials/welsh-switch.html.twig') }}
-    {% endif %}
-
     <main class="govuk-main-wrapper opg-print-pdf" id="main-content" role="main">
         <div class="govuk-grid-row">
-
             <div class="govuk-panel govuk-!-padding-bottom-2 govuk-!-margin-top-4 govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
                 {% if is_lpa_cancelled(lpa) %}
                 <h1 class="govuk-panel__title">
