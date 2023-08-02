@@ -1,10 +1,12 @@
 {% block headers_common %}
-    <div class="govuk-width-container">
-        {% if application == "actor" and user is defined %}
-            {{ include('@partials/account-bar.html.twig') }}
-        {% endif %}
-        <div class="govuk-clearfix">
-            {{ include('@partials/welsh-switch.html.twig') }}
+    {% if not forDownload|default(false) %}
+        <div class="govuk-width-container">
+            {% if application == "actor" and user is defined %}
+                {{ include('@partials/account-bar.html.twig') }}
+            {% endif %}
+            <div class="govuk-clearfix">
+                {{ include('@partials/welsh-switch.html.twig') }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
