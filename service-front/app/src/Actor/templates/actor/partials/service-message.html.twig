@@ -1,0 +1,39 @@
+{#
+    Uncomment parts below as needed for a system message. Ensure Welsh counterparts are also set, even if
+    you have to use english to do it.
+#}
+
+{# {% set en_message = 'Add your English message here' %} #}
+{# {% set en_additional = 'Add your English additional text here' %} #}
+
+{# {% set cy_message = 'Add your Welsh message here' %} #}
+{# {% set cy_additional = 'Add your Welsh additional text here' %} #}
+
+{% if en_message is defined %}
+    <div class="govuk-notification-banner govuk-notification-banner--pagetop" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                {% trans %}Important{% endtrans %}
+            </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+            <p class="govuk-notification-banner__heading">
+                {% if '/cy' not in path() %}
+                    {{ en_message }}
+                {% else %}
+                    {{ cy_message }}
+                {% endif %}
+            </p>
+
+            {% if en_additional is defined %}
+                <p class="govuk-body">
+                    {% if '/cy' not in path() %}
+                        {{ en_additional }}
+                    {% else %}
+                        {{ cy_additional }}
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
