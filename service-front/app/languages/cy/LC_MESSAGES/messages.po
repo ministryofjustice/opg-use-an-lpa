@@ -3559,13 +3559,12 @@ msgstr ""
 "title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-#, fuzzy
 msgid ""
 "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, "
 "including a scanned image of the instructions and preferences if there are any"
 msgstr ""
-"view an <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> summary, gan gynnwys "
-"delwedd wedi’i sganio o’r cyfarwyddiadau a’r dewisiadau, os oes rhai"
+"gweld crynodeb o <abbr title=“lasting power of attorney”>LPA</abbr>, gan "
+"gynnwys delwedd wedi’i sganio o’r cyfarwyddiadau a’r dewisiadau os oes rhai"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:41
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
