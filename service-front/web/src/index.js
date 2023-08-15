@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 require('es6-promise/auto');
-import { Accordion, initAll } from 'govuk-frontend';
+import {Accordion, initAll} from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
@@ -8,6 +8,7 @@ import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from './javascript/showHidePassword';
 import addPolyFill from './javascript/polyfill.js';
+import registerIapImagesComponents from './javascript/iapImages.js';
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
   var newButtonText = expanded
@@ -28,6 +29,7 @@ new cookieConsent(
 );
 copyAccessCode();
 showHidePassword();
+registerIapImagesComponents();
 
 if (
   document.getElementsByClassName('js-signed-in').length > 0 &&
