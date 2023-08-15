@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-08-07T10:26:46+00:00\n"
+"POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -145,6 +145,7 @@ msgstr "Daw’r cod hwn i ben ymhen 30 diwrnod, ar yr %date%."
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:71
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:203
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
@@ -6511,6 +6512,12 @@ msgid ""
 "The organisation could be a bank, energy provider, or another business. This "
 "is for your reference only"
 msgstr ""
+"Gallai’r sefydliad fod yn fanc, darparwr ynni, neu’n fusnes arall. I chi "
+"gyfeirio ato yn unig mae hyn"
+
+#: src/Actor/templates/actor/change-details.html.twig:36
+msgid "an attorneys date of birth is wrong"
+msgstr "mae dyddiad geni atwrnai yn anghywir"
 
 #~ msgid ""
 #~ "Some semantic elements were implemented in a way that did not convey the "
