@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import iapImages from "./components/iapImages.js"
 import iapInstructions from "./components/iapInstructions.js"
 import iapPreferences from "./components/iapPreferences.js"
