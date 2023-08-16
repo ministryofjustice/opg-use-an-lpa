@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 	"errors"
-
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
@@ -56,7 +56,6 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 
 	if len(result.Responses) > 0 {
 		metricValues := make(map[string]map[string]float64)
-
 		for _, table := range result.Responses {
 			for _, item := range table {
 				currentMonthValues := make(map[string]float64)
@@ -81,6 +80,8 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 					log.Error().Err(err).Msg("unable to convert dynamo result TimePeriod")
 				}
 
+				fmt.Println(currentMonthValues)
+
 				metricValues[unMarshalledValue] = currentMonthValues
 			}
 		}
@@ -93,4 +94,5 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 	}
 
 	return nil, ErrMetricsNotFound
+
 }

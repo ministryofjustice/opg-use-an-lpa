@@ -55,6 +55,55 @@
             <td class="govuk-table__cell">{{ .account_deleted_event }}</td>
           {{ end }}
         </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Property and Finance LPA added</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{ .added_lpa_type_hw_event }}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Health and Welfare LPA added</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{ .added_lpa_type_pfa_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Number of Access Codes Viewed Expired</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.view_lpa_share_code_expired_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">LPAs Submitted for Cleansing</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.older_lpa_needs_cleansing_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Key Requested for Overseas</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.user_abroad_address_request_success_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Key requested for Health and Welfare</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.full_match_key_request_success_lpa_type_hw_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Key requested for Property and Finance</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.full_match_key_request_success_lpa_type_pfa_event}}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Number of Access Codes Cancelled</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.view_lpa_share_code_cancelled_event}}</td>
+          {{ end }}
+        </tr>
+
       </thead>
 
       <thead class="govuk-table__head">
@@ -94,6 +143,12 @@
           <th scope="row" class="govuk-table__header">Number of access code Views</th>
           {{ range .Result }}
             <td class="govuk-table__cell">{{ .viewer_codes_viewed }}</td>
+          {{ end }}
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Download Summary</th>
+          {{ range .Result }}
+            <td class="govuk-table__cell">{{.download_summary_event}}</td>
           {{ end }}
         </tr>
       </thead>
