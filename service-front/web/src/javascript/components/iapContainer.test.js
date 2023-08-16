@@ -45,6 +45,11 @@ describe('it provides shared methods for inheriting classes', () => {
     })
 
     test('it wont show errors if there is no spinner', () => {
+        document.querySelector('iap-test .iap-wait').remove()
 
+        let sut = document.body.querySelector('iap-test')
+        sut.displayError()
+
+        expect(sut.innerHTML).not.toContain('<div>This is an error message</div>')
     })
 })
