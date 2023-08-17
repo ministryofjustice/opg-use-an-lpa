@@ -94,5 +94,4 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 	}
 
 	return nil, ErrMetricsNotFound
-
 }
