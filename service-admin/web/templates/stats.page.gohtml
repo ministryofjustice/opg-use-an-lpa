@@ -1,15 +1,15 @@
-{{ template "default" . }}
+{{template "default" .}}
 
-{{ define "title" }}Measuring Impact{{ end }}
+{{define "title"}}Measuring Impact{{end}}
 
-{{ define "main" }}
+{{define "main"}}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">USE LPA Statistics</h1>
         </div>
     </div>
 
-    {{ if .Result }}
+    {{if .Result}}
         <table class="govuk-table">
             <thead class="govuk-table__header">
             <tr class="govuk-table__row">
@@ -24,39 +24,39 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Accounts created</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .account_created_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Accounts deleted</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .account_deleted_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs added</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .lpas_added }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Property and Finance LPA added</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .added_lpa_type_pfa_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Health and Welfare LPA added</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .added_lpa_type_hw_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs deleted</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .lpa_removed_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             </tbody>
         </table>
@@ -75,33 +75,33 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Activation key requested</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .account_activated_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for Property and Finance</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .full_match_key_request_success_lpa_type_pfa_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for Health and Welfare</th>
-                {{ range .Result }}
+                {{range .Result }}
                     <td class="govuk-table__cell">{{ .full_match_key_request_success_lpa_type_hw_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for overseas</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .user_abroad_address_request_success_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs submitted for cleansing</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .older_lpa_needs_cleansing_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             </tbody>
         </table>
@@ -120,27 +120,27 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of Access codes created</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .viewer_codes_created }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of access code views</th>
                 {{ range .Result }}
                     <td class="govuk-table__cell">{{ .viewer_codes_viewed }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of access codes viewed expired</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .view_lpa_share_code_expired_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of Access codes cancelled</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .view_lpa_share_code_cancelled_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             </tbody>
         </table>
@@ -159,11 +159,11 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Download Summary</th>
-                {{ range .Result }}
+                {{range .Result}}
                     <td class="govuk-table__cell">{{ .download_summary_event }}</td>
-                {{ end }}
+                {{end}}
             </tr>
             </tbody>
         </table>
-    {{ end }}
-{{ end }}
+    {{end}}
+{{end}}
