@@ -56,6 +56,7 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 
 	if len(result.Responses) > 0 {
 		metricValues := make(map[string]map[string]float64)
+
 		for _, table := range result.Responses {
 			for _, item := range table {
 				currentMonthValues := make(map[string]float64)
