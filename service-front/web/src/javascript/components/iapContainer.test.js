@@ -5,6 +5,12 @@ const stubElement = class extends IapContainer {
 }
 
 const html = `
+    <template id="iap-img">
+        <img class="opg-ip__image" src="" alt="A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present">
+    </template>
+    <template id="iap-images-container">
+        <div class="opg-ip"></div>
+    </template>
     <template id="iap-stub-error">
         <div>This is an error message</div>
     </template>
@@ -51,5 +57,20 @@ describe('it provides shared methods for inheriting classes', () => {
         sut.displayError()
 
         expect(sut.innerHTML).not.toContain('<div>This is an error message</div>')
+    })
+
+    test('it will update with images when provided', () => {
+        let sut = document.body.querySelector('iap-test')
+
+        sut.displayImages(
+            [
+                {name: 'image-name', url: 'image-url'},
+                {name: 'image-name-continuation', url: 'image-url-continuation'}
+            ]
+        )
+
+        expect(sut.innerHTML).not.toContain('<div class="govuk-warning-text iap-wait">')
+        expect(sut.innerHTML).toContain('<div class="opg-ip">')
+        expect(sut.innerHTML).toContain('<img class="opg-ip__image"')
     })
 })
