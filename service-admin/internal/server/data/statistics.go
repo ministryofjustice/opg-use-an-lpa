@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
@@ -80,8 +79,6 @@ func (s *StatisticsService) GetAllMetrics(ctx context.Context, list []string) (m
 				if err != nil {
 					log.Error().Err(err).Msg("unable to convert dynamo result TimePeriod")
 				}
-
-				fmt.Println(currentMonthValues)
 
 				metricValues[unMarshalledValue] = currentMonthValues
 			}
