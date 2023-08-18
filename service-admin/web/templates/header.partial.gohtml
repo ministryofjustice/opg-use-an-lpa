@@ -31,11 +31,19 @@
 
           <ul class="moj-primary-navigation__list">
             <li class="moj-primary-navigation__item">
-              <a class="moj-primary-navigation__link" aria-current="page" href="/">Find a key or email address</a>
+              {{ if .Result }}
+                <a class="moj-primary-navigation__link" href="/">Find a key or email address</a>
+              {{ else }}
+                <a class="moj-primary-navigation__link" aria-current="page" href="/">Find a key or email address</a>
+              {{ end }}
             </li>
 
             <li class="moj-primary-navigation__item">
-              <a class="moj-primary-navigation__link" href="/stats">Measuring impact</a>
+              {{ if .Result }}
+                <a class="moj-primary-navigation__link" aria-current="page" href="/stats">Measuring impact</a>
+              {{ else }}
+                <a class="moj-primary-navigation__link" href="/stats">Measuring impact</a>
+              {{ end }}
             </li>
           </ul>
 
