@@ -125,7 +125,7 @@ data "aws_secretsmanager_secret" "notify_api_key" {
 }
 
 data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-private-key" {
-  name = "gov_uk_onelogin_identity_private_key"
+  name = "gov-uk-onelogin-identity-private-key"
 }
 
 data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-public-key" {
