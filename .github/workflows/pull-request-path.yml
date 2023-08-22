@@ -125,8 +125,8 @@ jobs:
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
 
-  terraform_plan_shared_development:
-    name: terraform plan shared development
+  terraform_apply_shared_development:
+    name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
