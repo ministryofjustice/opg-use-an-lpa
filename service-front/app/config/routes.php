@@ -158,6 +158,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
     ], 'lpa.view');
+    $app->get('/lpa/view-lpa/images', [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\ViewLpaSummaryImagesHandler::class
+    ], 'lpa.view-images');
     $app->route('/lpa/code-make', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
@@ -289,7 +293,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
         ], 'lpa.confirm-activation-key-generation');
 
-        
+
         $app->route('/lpa/remove-lpa', [
             Common\Middleware\Authentication\AuthenticationMiddleware::class,
             new ConditionalRoutingMiddleware(
