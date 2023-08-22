@@ -134,6 +134,7 @@ jobs:
       workspace: development
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      apply: true
     secrets: inherit
     if: |
       always() &&
