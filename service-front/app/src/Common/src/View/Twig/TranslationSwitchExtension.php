@@ -27,8 +27,12 @@ class TranslationSwitchExtension extends AbstractExtension
         ];
     }
 
-    public function getRouteName(): string
+    public function getRouteName(): ?string
     {
-        return $this->urlHelper->getRouteResult()->getMatchedRouteName();
+        $routeName = $this->urlHelper->getRouteResult()?->getMatchedRouteName();
+        if (is_string($routeName)) {
+            return $routeName;
+        }
+        return null;
     }
 }
