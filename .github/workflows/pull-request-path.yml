@@ -165,12 +165,12 @@ jobs:
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_environment
-      - terraform_plan_shared_development
+      - terraform_apply_shared_development
     secrets: inherit
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success' &&
-      needs.terraform_plan_shared_development.result == 'success'
+      needs.terraform_apply_shared_development.result == 'success'
 
   run_behat_suite:
     name: run behat tests against environment
