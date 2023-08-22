@@ -69,6 +69,7 @@ variable "environments" {
       sirius_account_id                         = string
       load_balancer_deletion_protection_enabled = bool
       notify_key_secret_name                    = string
+      onelogin_keypair_secret_name              = string
       associate_alb_with_waf_web_acl_enabled    = bool
       pdf_container_version                     = string
       deploy_opentelemetry_sidecar              = bool

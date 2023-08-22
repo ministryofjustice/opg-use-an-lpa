@@ -124,6 +124,14 @@ data "aws_secretsmanager_secret" "notify_api_key" {
   name = local.environment.notify_key_secret_name
 }
 
+data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-private-key" {
+  name = "gov_uk_onelogin_identity_private_key"
+}
+
+data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-public-key" {
+  name = "gov-uk-onelogin-identity-public-key"
+}
+
 data "aws_ip_ranges" "route53_healthchecks" {
   services = ["route53_healthchecks"]
   regions  = ["GLOBAL"]

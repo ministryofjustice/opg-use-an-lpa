@@ -1,3 +1,23 @@
+resource "aws_secretsmanager_secret" "gov_uk_onelogin_identity_private_key" {
+  name       = "gov-uk-onelogin-identity-private-key"
+  kms_key_id = aws_kms_key.secrets_manager.key_id
+}
+
+resource "aws_secretsmanager_secret" "gov_uk_onelogin_identity_public_key" {
+  name       = "gov-uk-onelogin-identity-public-key"
+  kms_key_id = aws_kms_key.secrets_manager.key_id
+}
+
+resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_identity_private_key" {
+  secret_id     = aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.id
+  secret_string = tls_private_key.onelogin_identity.private_key_pem
+}
+
+resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_identity_public_key" {
+  secret_id     = aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.id
+  secret_string = trimspace(tls_private_key.onelogin_identity.public_key_pem)
+}
+
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"
   kms_key_id = aws_kms_key.secrets_manager.key_id
