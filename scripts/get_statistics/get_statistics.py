@@ -156,6 +156,7 @@ class StatisticsCollector:
         # Get statistics from Cloudwatch metric statistics
         for metric in self.list_metrics_for_environment():
             statistics['statistics'][metric] = self.sum_metrics(metric)
+
         # Get statistics from Dynamodb counts
         statistics['statistics']['lpas_added'] = self.sum_dynamodb_counts(
             table_name='{}-UserLpaActorMap'.format(self.environment),
