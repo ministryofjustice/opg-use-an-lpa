@@ -16,7 +16,7 @@ class TranslationSwitchExtensionTest extends TestCase
     use ProphecyTrait;
 
     /** @test */
-    public function it_returns_an_array_of_exported_twig_functions()
+    public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $urlHelper = $this->prophesize(UrlHelper::class);
         $extension = new TranslationSwitchExtension($urlHelper->reveal());
@@ -43,7 +43,7 @@ class TranslationSwitchExtensionTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_the_current_route_name()
+    public function it_returns_the_current_route_name(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);
         $routeResult = $this->prophesize(RouteResult::class);
@@ -64,7 +64,7 @@ class TranslationSwitchExtensionTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_null_when_route_not_found()
+    public function it_returns_null_when_route_not_found(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);
         $routeResult = $this->prophesize(RouteResult::class);
