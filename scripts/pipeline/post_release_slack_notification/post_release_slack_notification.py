@@ -44,7 +44,7 @@ class MessageGenerator:
         mapping = {
             'use_url': 'https://{}/home'.format(use_url) if use_url is not None else 'Use URL not provided',
             'view_url': 'https://{}/home'.format(view_url) if view_url is not None else 'View URL not provided',
-            'admin_url': 'https://{}/home'.format(admin_url) if admin_url is not None else 'Admin URL not provided',
+            'admin_url': 'https://{}'.format(admin_url) if admin_url is not None else 'Admin URL not provided',
             'gh_actions_build_url': f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
             'gh_actor': str(os.getenv('GITHUB_ACTOR', 'actor not included')),
             'commit_message': commit_message or 'Commit message not provided'

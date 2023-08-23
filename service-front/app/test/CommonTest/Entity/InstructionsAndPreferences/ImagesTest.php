@@ -76,4 +76,38 @@ class ImagesTest extends TestCase
         $this->assertCount(2, $signedUrls);
         $this->assertEquals('http://instructions-image-url', $signedUrls[0]->url);
     }
+
+    /**
+     * @test
+     * @covers ::jsonSerialize
+     */
+    public function it_implements_jsonserializable_correctly(): void{
+        $data = [
+            'uId'        => 700000000001,
+            'status'     => ImagesStatus::COLLECTION_COMPLETE,
+            'signedUrls' => [
+                new SignedUrl('iap-700000000001-instructions', 'http://instructions-image-url'),
+                new SignedUrl(
+                    'iap-700000000001-continuation_instructions_1',
+                    'http://instructions-cont1-image-url'
+                ),
+                new SignedUrl(
+                    'iap-700000000001-unknown_1',
+                    'http://unknown-cont1-image-url'
+                ),
+            ],
+        ];
+
+        $images = new Images(...$data);
+
+        $json = json_encode($images);
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"uId":700000000001,"status":"COLLECTION_COMPLETE","signedUrls":{"instructions":[{' .
+            '"imageName":"iap-700000000001-instructions","url":"http:\/\/instructions-image-url"},{' .
+            '"imageName":"iap-700000000001-continuation_instructions_1","url":"http:\/\/instructions-cont1-' .
+            'image-url"}],"preferences":[],"unknown":[]}}',
+            $json,
+        );
+    }
 }
