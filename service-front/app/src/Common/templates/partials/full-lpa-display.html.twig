@@ -108,6 +108,11 @@
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
 
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        {% include '@partials/lpa-summary-details/iap-images-components.html.twig' %}
+                        <iap-images>
+                    {% endif %}
+
                     {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
 
                     {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
@@ -117,6 +122,10 @@
                                     code to show you the paper LPA.{% endtrans %}
                             </div>
                         {% endif %}
+                    {% endif %}
+
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        </iap-images>
                     {% endif %}
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">

@@ -1,103 +1,169 @@
-{{ template "default" . }}
+{{template "default" .}}
 
-{{ define "title" }}Measuring Impact{{ end }}
+{{define "title"}}Measuring Impact{{end}}
 
-{{ define "main" }}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">USE LPA Statistics</h1>
+{{define "main"}}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">USE LPA Statistics</h1>
+        </div>
     </div>
-  </div>
 
-  {{ if .Result }}
-    <table class="govuk-table">
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header"></th>
-          <th scope="col" class="govuk-table__header">3 months previous</th>
-          <th scope="col" class="govuk-table__header">2 months previous</th>
-          <th scope="col" class="govuk-table__header">Previous Month</th>
-          <th scope="col" class="govuk-table__header">Current Month</th>
-          <th scope="col" class="govuk-table__header">Total</th>
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of LPAs added</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .lpas_added }}</td>
-          {{ end }}
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of LPAs removed</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .lpa_removed_event }}</td>
-          {{ end }}
-        </tr>
-      </thead>
+    {{if .Result}}
+        <table class="govuk-table">
+            <thead class="govuk-table__header">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Category: Account</th>
+                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
+                <th scope="col" class="govuk-table__header">Current month - Current year</th>
+                <th scope="col" class="govuk-table__header">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Accounts created</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .account_created_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Accounts deleted</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .account_deleted_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">LPAs added</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .lpas_added }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Property and Finance LPA added</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .added_lpa_type_pfa_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Health and Welfare LPA added</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .added_lpa_type_hw_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">LPAs deleted</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .lpa_removed_event }}</td>
+                {{end}}
+            </tr>
+            </tbody>
+        </table>
 
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header"></th>
-          <th scope="col" class="govuk-table__header">3 months previous</th>
-          <th scope="col" class="govuk-table__header">2 months previous</th>
-          <th scope="col" class="govuk-table__header">Previous Month</th>
-          <th scope="col" class="govuk-table__header">Current Month</th>
-          <th scope="col" class="govuk-table__header">Total</th>
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of account created</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .account_created_event }}</td>
-          {{ end }}
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of account deleted</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .account_deleted_event }}</td>
-          {{ end }}
-        </tr>
-      </thead>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Category: Activation keys</th>
+                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
+                <th scope="col" class="govuk-table__header">Current month - Current year</th>
+                <th scope="col" class="govuk-table__header">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Activation key requested</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .account_activated_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Key requested for Property and Finance</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .full_match_key_request_success_lpa_type_pfa_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Key requested for Health and Welfare</th>
+                {{range .Result }}
+                    <td class="govuk-table__cell">{{ .full_match_key_request_success_lpa_type_hw_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Key requested for overseas</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .user_abroad_address_request_success_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">LPAs submitted for cleansing</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .older_lpa_needs_cleansing_event }}</td>
+                {{end}}
+            </tr>
+            </tbody>
+        </table>
 
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header"></th>
-          <th scope="col" class="govuk-table__header">3 months previous</th>
-          <th scope="col" class="govuk-table__header">2 months previous</th>
-          <th scope="col" class="govuk-table__header">Previous Month</th>
-          <th scope="col" class="govuk-table__header">Current Month</th>
-          <th scope="col" class="govuk-table__header">Total</th>
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of account activated</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .account_activated_event }}</td>
-          {{ end }}
-        </tr>
-      </thead>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Category: Access codes</th>
+                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
+                <th scope="col" class="govuk-table__header">Current month - Current year</th>
+                <th scope="col" class="govuk-table__header">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Number of Access codes created</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .viewer_codes_created }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Number of access code views</th>
+                {{ range .Result }}
+                    <td class="govuk-table__cell">{{ .viewer_codes_viewed }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Number of access codes viewed expired</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .view_lpa_share_code_expired_event }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Number of Access codes cancelled</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .view_lpa_share_code_cancelled_event }}</td>
+                {{end}}
+            </tr>
+            </tbody>
+        </table>
 
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header"></th>
-          <th scope="col" class="govuk-table__header">3 months previous</th>
-          <th scope="col" class="govuk-table__header">2 months previous</th>
-          <th scope="col" class="govuk-table__header">Previous Month</th>
-          <th scope="col" class="govuk-table__header">Current Month</th>
-          <th scope="col" class="govuk-table__header">Total</th>
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of access codes created</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .viewer_codes_created }}</td>
-          {{ end }}
-        </tr>
-
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">Number of access code Views</th>
-          {{ range .Result }}
-            <td class="govuk-table__cell">{{ .viewer_codes_viewed }}</td>
-          {{ end }}
-        </tr>
-      </thead>
-    </table>
-
-  {{ end }}
-{{ end }}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header"> </th>
+                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
+                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
+                <th scope="col" class="govuk-table__header">Current month - Current year</th>
+                <th scope="col" class="govuk-table__header">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Download Summary</th>
+                {{range .Result}}
+                    <td class="govuk-table__cell">{{ .download_summary_event }}</td>
+                {{end}}
+            </tr>
+            </tbody>
+        </table>
+    {{end}}
+{{end}}

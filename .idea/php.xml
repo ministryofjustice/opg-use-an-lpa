@@ -219,7 +219,7 @@
   </component>
   <component name="PhpInterpreters">
     <interpreters>
-      <interpreter id="d0145a1b-f903-43c7-8428-a985293fe8b9" name="api-app" home="docker-compose://DATA" false="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
+      <interpreter id="d0145a1b-f903-43c7-8428-a985293fe8b9" name="api-app" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
         <remote_data INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="api-app" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
@@ -230,7 +230,7 @@
           <envs />
         </remote_data>
       </interpreter>
-      <interpreter id="f727a88f-8a28-4df0-87a2-12a139ed8d31" name="front-app" home="docker-compose://DATA" false="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
+      <interpreter id="f727a88f-8a28-4df0-87a2-12a139ed8d31" name="front-app" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
         <remote_data INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="actor-app" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
@@ -241,7 +241,7 @@
           <envs />
         </remote_data>
       </interpreter>
-      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" false="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
+      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
         <remote_data INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="smoke-tests" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
@@ -255,7 +255,7 @@
           </envs>
         </remote_data>
       </interpreter>
-      <interpreter id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" name="test-api-app" home="docker-compose://DATA" false="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
+      <interpreter id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" name="test-api-app" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
         <configuration_options>
           <configuration_option name="xdebug.client_host" value="host.docker.internal" />
         </configuration_options>
@@ -603,8 +603,9 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" custom_loader_path="$PROJECT_DIR$/service-api/app/vendor/autoload.php" use_configuration_file="true" />
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/service-front/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
