@@ -119,17 +119,12 @@ resource "aws_ecs_task_definition" "pdf" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.pdf_app}]"
-  task_role_arn            = aws_iam_role.pdf_task_role.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  task_role_arn            = module.iam.ecs_task_roles.pdf_task_role.arn
+  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
 }
 
 //----------------
 // Permissions
-
-resource "aws_iam_role" "pdf_task_role" {
-  name               = "${local.environment_name}-pdf-task-role"
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-}
 
 //-----------------------------------------------
 // pdf ECS Service Task Container level config

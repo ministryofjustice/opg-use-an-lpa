@@ -106,22 +106,17 @@ resource "aws_ecs_task_definition" "viewer" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
-  task_role_arn            = aws_iam_role.viewer_task_role.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  task_role_arn            = module.iam.ecs_task_roles.viewer_task_role.arn
+  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
 }
 
 //----------------
 // Permissions
 
-resource "aws_iam_role" "viewer_task_role" {
-  name               = "${local.environment_name}-viewer-task-role"
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-}
-
 resource "aws_iam_role_policy" "viewer_permissions_role" {
-  name   = "${local.environment_name}-ViewerApplicationPermissions"
+  name   = "${local.environment_name}-${local.policy_region_prefix}-ViewerApplicationPermissions"
   policy = data.aws_iam_policy_document.viewer_permissions_role.json
-  role   = aws_iam_role.viewer_task_role.id
+  role   = module.iam.ecs_task_roles.viewer_task_role.id
 }
 
 /*
@@ -129,7 +124,7 @@ resource "aws_iam_role_policy" "viewer_permissions_role" {
 */
 data "aws_iam_policy_document" "viewer_permissions_role" {
   statement {
-    sid    = "xrayaccess"
+    sid    = "${local.policy_region_prefix}XRayPermissions"
     effect = "Allow"
 
     actions = [
@@ -144,6 +139,7 @@ data "aws_iam_policy_document" "viewer_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}KMSPermissions"
     effect = "Allow"
 
     actions = [

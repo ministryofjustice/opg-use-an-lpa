@@ -98,24 +98,15 @@ resource "aws_ecs_task_definition" "admin" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.admin_app}]"
-  task_role_arn            = aws_iam_role.admin_task_role[0].arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
-}
-
-//----------------
-// Permissions
-
-resource "aws_iam_role" "admin_task_role" {
-  count              = local.environment.build_admin ? 1 : 0
-  name               = "${local.environment_name}-admin-task-role"
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
+  task_role_arn            = module.iam.ecs_task_roles.admin_task_role.arn
+  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
   count  = local.environment.build_admin ? 1 : 0
-  name   = "${local.environment_name}-adminApplicationPermissions"
+  name   = "${local.environment_name}-${local.policy_region_prefix}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
-  role   = aws_iam_role.admin_task_role[0].id
+  role   = module.iam.ecs_task_roles.admin_task_role.id
 }
 
 /*
@@ -123,7 +114,7 @@ resource "aws_iam_role_policy" "admin_permissions_role" {
 */
 data "aws_iam_policy_document" "admin_permissions_role" {
   statement {
-    sid    = "dynamodbaccess"
+    sid    = "${local.policy_region_prefix}DynamoDbAccess"
     effect = "Allow"
 
     actions = [
@@ -153,7 +144,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
   }
 
   statement {
-    sid    = "lpacollectionsaccess"
+    sid    = "${local.policy_region_prefix}LpaCollectionsAccess"
     effect = "Allow"
 
     actions = [
@@ -166,7 +157,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
   }
 
   statement {
-    sid    = "lpacodesaccess"
+    sid    = "${local.policy_region_prefix}LpaCodesAccess"
     effect = "Allow"
     actions = [
       "execute-api:Invoke",

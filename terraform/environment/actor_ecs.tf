@@ -106,22 +106,17 @@ resource "aws_ecs_task_definition" "actor" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.actor_web}, ${local.actor_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
-  task_role_arn            = aws_iam_role.actor_task_role.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  task_role_arn            = module.iam.ecs_task_roles.actor_task_role.arn
+  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
 }
 
 //----------------
 // Permissions
 
-resource "aws_iam_role" "actor_task_role" {
-  name               = "${local.environment_name}-actor-task-role"
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-}
-
 resource "aws_iam_role_policy" "actor_permissions_role" {
-  name   = "${local.environment_name}-ActorApplicationPermissions"
+  name   = "${local.environment_name}-${local.policy_region_prefix}-ActorApplicationPermissions"
   policy = data.aws_iam_policy_document.actor_permissions_role.json
-  role   = aws_iam_role.actor_task_role.id
+  role   = module.iam.ecs_task_roles.actor_task_role.id
 }
 
 /*
@@ -129,7 +124,7 @@ resource "aws_iam_role_policy" "actor_permissions_role" {
 */
 data "aws_iam_policy_document" "actor_permissions_role" {
   statement {
-    sid    = "xrayaccess"
+    sid    = "${local.policy_region_prefix}XRayAccess"
     effect = "Allow"
 
     actions = [
@@ -143,6 +138,7 @@ data "aws_iam_policy_document" "actor_permissions_role" {
     resources = ["*"]
   }
   statement {
+    sid    = "${local.policy_region_prefix}KMSAccess"
     effect = "Allow"
 
     actions = [
