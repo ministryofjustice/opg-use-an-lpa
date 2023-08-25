@@ -120,7 +120,7 @@ resource "aws_ecs_task_definition" "pdf" {
   memory                   = 1024
   container_definitions    = "[${local.pdf_app}]"
   task_role_arn            = module.iam.ecs_task_roles.pdf_task_role.arn
-  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
+  execution_role_arn       = module.iam.execution_role.arn
 }
 
 //----------------

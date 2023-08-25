@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "admin" {
   memory                   = 1024
   container_definitions    = "[${local.admin_app}]"
   task_role_arn            = module.iam.ecs_task_roles.admin_task_role.arn
-  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
+  execution_role_arn       = module.iam.execution_role.arn
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {

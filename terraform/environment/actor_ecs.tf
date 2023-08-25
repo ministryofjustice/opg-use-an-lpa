@@ -107,7 +107,7 @@ resource "aws_ecs_task_definition" "actor" {
   memory                   = 1024
   container_definitions    = "[${local.actor_web}, ${local.actor_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
   task_role_arn            = module.iam.ecs_task_roles.actor_task_role.arn
-  execution_role_arn       = module.iam.ecs_task_roles.execution_role.arn
+  execution_role_arn       = module.iam.execution_role.arn
 }
 
 //----------------
