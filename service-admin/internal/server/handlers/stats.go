@@ -42,6 +42,7 @@ func (s *StatsServer) StatsHandler(w http.ResponseWriter, r *http.Request) {
 	search := &Search{}
 
 	search.Result = s.GetMetricsInTheLastThreeMonths(r.Context())
+	search.IsStatsPage = true
 
 	if err := s.templateService.RenderTemplate(w, r.Context(), "stats.page.gohtml", search); err != nil {
 		log.Panic().Err(err).Msg(err.Error())

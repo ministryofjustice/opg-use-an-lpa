@@ -60,10 +60,11 @@ var (
 type QueryType int
 
 type Search struct {
-	Query  string
-	Type   QueryType
-	Result interface{}
-	Errors validation.Errors
+	Query       string
+	Type        QueryType
+	Result      interface{}
+	IsStatsPage bool
+	Errors      validation.Errors
 }
 
 type AddedBy struct {
