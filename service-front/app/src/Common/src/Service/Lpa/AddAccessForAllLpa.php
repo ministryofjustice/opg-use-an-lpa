@@ -23,13 +23,14 @@ use RuntimeException;
 class AddAccessForAllLpa
 {
     // Exception messages returned from the API layer
-    private const OLDER_LPA_NOT_ELIGIBLE          = 'LPA not eligible due to registration date';
-    private const OLDER_LPA_DOES_NOT_MATCH        = 'LPA details do not match';
-    private const OLDER_LPA_HAS_ACTIVATION_KEY    = 'LPA has an activation key already';
-    private const OLDER_LPA_ALREADY_ADDED         = 'LPA already added';
-    private const OLDER_LPA_NEEDS_CLEANSING       = 'LPA needs cleansing';
-    private const OLDER_LPA_KEY_ALREADY_REQUESTED = 'Activation key already requested for LPA';
-    private const OLDER_LPA_POSTCODE_NOT_SUPPLIED = 'Postcode not supplied';
+    private const LPA_NOT_ELIGIBLE          = 'LPA not eligible due to registration date';
+    private const LPA_DOES_NOT_MATCH        = 'LPA details do not match';
+    private const LPA_HAS_ACTIVATION_KEY    = 'LPA has an activation key already';
+    private const LPA_ALREADY_ADDED         = 'LPA already added';
+    private const LPA_NEEDS_CLEANSING       = 'LPA needs cleansing';
+    private const LPA_KEY_ALREADY_REQUESTED = 'Activation key already requested for LPA';
+    private const LPA_POSTCODE_NOT_SUPPLIED = 'Postcode not supplied';
+    private const LPA_STATE_INVALID         = 'LPA status invalid';
 
     /**
      * @param ApiClient                $apiClient
@@ -122,7 +123,7 @@ class AddAccessForAllLpa
         try {
             $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
         } catch (ApiException $apiEx) {
-            if ($apiEx->getMessage() === self::OLDER_LPA_NEEDS_CLEANSING) {
+            if ($apiEx->getMessage() === self::LPA_NEEDS_CLEANSING) {
                 $this->logger->notice(
                     'Older LPA with id {uId} requires cleansing',
                     [
@@ -164,7 +165,7 @@ class AddAccessForAllLpa
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {
         switch ($message) {
-            case self::OLDER_LPA_ALREADY_ADDED:
+            case self::LPA_ALREADY_ADDED:
                 $code     = EventCodes::OLDER_LPA_ALREADY_ADDED;
                 $response = new AccessForAllApiResult(
                     AccessForAllResult::LPA_ALREADY_ADDED,
@@ -172,17 +173,17 @@ class AddAccessForAllLpa
                 );
                 break;
 
-            case self::OLDER_LPA_NOT_ELIGIBLE:
+            case self::LPA_NOT_ELIGIBLE:
                 $code     = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
                 $response = new AccessForAllApiResult(AccessForAllResult::NOT_ELIGIBLE, $additionalData);
                 break;
 
-            case self::OLDER_LPA_DOES_NOT_MATCH:
+            case self::LPA_DOES_NOT_MATCH:
                 $code     = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
                 $response = new AccessForAllApiResult(AccessForAllResult::DOES_NOT_MATCH, $additionalData);
                 break;
 
-            case self::OLDER_LPA_HAS_ACTIVATION_KEY:
+            case self::LPA_HAS_ACTIVATION_KEY:
                 $code     = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
                 $response = new AccessForAllApiResult(
                     AccessForAllResult::HAS_ACTIVATION_KEY,
@@ -190,16 +191,22 @@ class AddAccessForAllLpa
                 );
                 break;
 
-            case self::OLDER_LPA_KEY_ALREADY_REQUESTED:
+            case self::LPA_KEY_ALREADY_REQUESTED:
                 $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
                 $response = new AccessForAllApiResult(
                     AccessForAllResult::KEY_ALREADY_REQUESTED,
                     ($this->parseActivationKeyExistsResponse)($additionalData)
                 );
                 break;
-            case self::OLDER_LPA_POSTCODE_NOT_SUPPLIED:
+
+            case self::LPA_POSTCODE_NOT_SUPPLIED:
                 $code     = null;
                 $response = new AccessForAllApiResult(AccessForAllResult::POSTCODE_NOT_SUPPLIED, $additionalData);
+                break;
+
+            case self::LPA_STATE_INVALID:
+                $code     = null;
+                $response = new AccessForAllApiResult(AccessForAllResult::STATUS_NOT_VALID, $additionalData);
                 break;
 
             default:
