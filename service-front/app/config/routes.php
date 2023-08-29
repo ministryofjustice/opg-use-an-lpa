@@ -64,7 +64,6 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
-    $ALLOW_GOV_ONE_LOGIN = 'allow_gov_one_login';
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
