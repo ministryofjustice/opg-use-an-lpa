@@ -1,5 +1,7 @@
 {% extends '@viewer/layout.html.twig' %}
 
+{% set forDownload = true %}
+
 {% block html_title %}{% trans %}Download LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block stylesheets %}
@@ -9,5 +11,5 @@
 {% endblock %}
 
 {% block content %}
-    {% include '@partials/full-lpa-display.html.twig' with {'forDownload': true} %}
+    {% include '@partials/full-lpa-display.html.twig' %}
 {% endblock %}

@@ -1,0 +1,11 @@
+{% block footers_common %}
+    {% if not forDownload|default(false) %}
+        <div class="govuk-width-container">
+            {% if application == "actor" %}
+              {{ include('@actor/partials/new-use-service.html.twig') }}
+            {% else %}
+                {{ include('@viewer/new-view-service.html.twig') }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

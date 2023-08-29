@@ -125,8 +125,8 @@ jobs:
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
 
-  terraform_plan_shared_development:
-    name: terraform plan shared development
+  terraform_apply_shared_development:
+    name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
@@ -134,6 +134,7 @@ jobs:
       workspace: development
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      apply: true
     secrets: inherit
     if: |
       always() &&
@@ -165,12 +166,12 @@ jobs:
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_environment
-      - terraform_plan_shared_development
+      - terraform_apply_shared_development
     secrets: inherit
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success' &&
-      needs.terraform_plan_shared_development.result == 'success'
+      needs.terraform_apply_shared_development.result == 'success'
 
   run_behat_suite:
     name: run behat tests against environment
