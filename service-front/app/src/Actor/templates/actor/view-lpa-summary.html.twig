@@ -5,9 +5,6 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@partials/account-bar.html.twig') }}
-        {{ include('@partials/welsh-switch.html.twig') }}
-
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">
                 {% trans %}Back to your <abbr title="lasting power of attorney">LPAs</abbr>{% endtrans %}
@@ -116,14 +113,31 @@
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
 
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        {% include '@partials/lpa-summary-details/iap-images-components.html.twig' %}
+
+                        <iap-images
+                        {%- if (iap_images is defined
+                                and ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                                or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED')))) %}
+                            data-wait="{{ actorToken }}"
+                        {%- endif -%}
+                        >
+                    {% endif %}
+
                     {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
 
                     {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                         {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
-                            <div class="govuk-inset-text">
-                                {% trans %}If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the instructions or preferences are.{% endtrans %}
+                            <div id="images-guidance" class="govuk-inset-text">
+                                {% trans %}If any scanned images are not readable, organisations may ask to see the paper LPA so that
+                                they can find out what the instructions or preferences are.{% endtrans %}
                             </div>
                         {% endif %}
+                    {% endif %}
+
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        </iap-images>
                     {% endif %}
 
                     <p class="govuk-body">
@@ -160,6 +174,5 @@
             </p>
 
         </main>
-        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}
