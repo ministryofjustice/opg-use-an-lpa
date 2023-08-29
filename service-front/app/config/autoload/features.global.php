@@ -28,5 +28,11 @@ return [
             getenv('INSTRUCTIONS_AND_PREFERENCES'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
+
+        'allow_gov_one_login' => filter_var(
+            getenv('ALLOW_GOV_ONE_LOGIN'),
+            FILTER_VALIDATE_BOOLEAN
+        ) ?: false,
+
     ],
 ];
