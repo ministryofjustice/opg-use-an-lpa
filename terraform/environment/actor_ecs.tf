@@ -328,9 +328,9 @@ locals {
           value = tostring(local.environment.application_flags.instructions_and_preferences)
         },
         {
-           name  = "ALLOW_GOV_ONE_LOGIN",
-           value = tostring(local.environment.application_flags.allow_gov_one_login)
-                }
+          name  = "ALLOW_GOV_ONE_LOGIN",
+          value = tostring(local.environment.application_flags.allow_gov_one_login)
+        }
       ]
   })
 }
