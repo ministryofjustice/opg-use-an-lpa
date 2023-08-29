@@ -330,7 +330,7 @@ locals {
         {
            name  = "ALLOW_GOV_ONE_LOGIN",
            value = tostring(local.environment.application_flags.allow_gov_one_login)
-                },
+                }
       ]
   })
 
