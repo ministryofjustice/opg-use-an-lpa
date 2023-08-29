@@ -189,9 +189,13 @@ class ViewerContext implements Context
      */
     public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
     {
-        $this->ui->assertElementNotOnPage('.iap-loader');
-        $this->ui->assertPageContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
-        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertElementNotOnPage('iap-preferences .iap-loader');
+        $this->ui->assertElementNotContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertElementContainsText('iap-preferences','We cannot show the preferences for this');
+
+        $this->ui->assertElementNotOnPage('iap-instructions .iap-loader');
+        $this->ui->assertElementNotContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
+        $this->ui->assertElementContainsText('iap-instructions','We cannot show the instructions for this');
     }
 
     /**
@@ -199,9 +203,13 @@ class ViewerContext implements Context
      */
     public function iAmToldToWaitForInstructionsAndPreferencesImages()
     {
-        $this->ui->assertElementOnPage('.iap-loader');
-        $this->ui->assertPageContainsText('A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
+        $this->ui->assertElementOnPage('iap-preferences .iap-loader');
+        $this->ui->assertElementContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertElementNotContainsText('iap-preferences','We cannot show the preferences for this');
+
+        $this->ui->assertElementOnPage('iap-instructions .iap-loader');
+        $this->ui->assertElementContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
+        $this->ui->assertElementNotContainsText('iap-instructions','We cannot show the instructions for this');
     }
 
     /**
@@ -732,8 +740,8 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementOnPage('#instructions_images');
-            $this->ui->assertElementOnPage('#preferences_images');
+            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
         }
     }
 
@@ -744,8 +752,8 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementNotOnPage('#instructions_images');
-            $this->ui->assertElementOnPage('#preferences_images');
+            $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
         }
     }
 
@@ -757,8 +765,8 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementOnPage('#instructions_images');
-            $this->ui->assertElementNotOnPage('#preferences_images');
+            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
         }
     }
 
