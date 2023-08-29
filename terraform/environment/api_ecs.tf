@@ -136,22 +136,17 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.api_web}, ${local.api_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
-  task_role_arn            = aws_iam_role.api_task_role.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  task_role_arn            = module.iam.ecs_task_roles.api_task_role.arn
+  execution_role_arn       = module.iam.ecs_execution_role.arn
 }
 
 //----------------
 // Permissions
 
-resource "aws_iam_role" "api_task_role" {
-  name               = "${local.environment_name}-api-task-role"
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-}
-
 resource "aws_iam_role_policy" "api_permissions_role" {
-  name   = "${local.environment_name}-apiApplicationPermissions"
+  name   = "${local.environment_name}-${local.policy_region_prefix}-apiApplicationPermissions"
   policy = data.aws_iam_policy_document.api_permissions_role.json
-  role   = aws_iam_role.api_task_role.id
+  role   = module.iam.ecs_task_roles.api_task_role.id
 }
 
 /*
@@ -159,7 +154,7 @@ resource "aws_iam_role_policy" "api_permissions_role" {
 */
 data "aws_iam_policy_document" "api_permissions_role" {
   statement {
-    sid    = "xrayaccess"
+    sid    = "${local.policy_region_prefix}XrayAccess"
     effect = "Allow"
 
     actions = [
@@ -174,6 +169,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}DynamoDbAccess"
     effect = "Allow"
 
     actions = [
@@ -197,7 +193,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "lpacollectionsaccess"
+    sid    = "${local.policy_region_prefix}LpaCollectionAccess"
     effect = "Allow"
 
     actions = [
@@ -211,7 +207,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "lpacodesaccess"
+    sid    = "${local.policy_region_prefix}LpaCodesAccess"
     effect = "Allow"
     actions = [
       "execute-api:Invoke",
@@ -225,7 +221,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "instructionsandprefsaccess"
+    sid    = "${local.policy_region_prefix}IapImagesAccess"
     effect = "Allow"
     actions = [
       "execute-api:Invoke",

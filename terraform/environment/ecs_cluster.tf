@@ -5,40 +5,10 @@ resource "aws_ecs_cluster" "use-an-lpa" {
     value = "enabled"
   }
 }
-
-data "aws_iam_policy_document" "task_role_assume_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      identifiers = ["ecs-tasks.amazonaws.com"]
-      type        = "Service"
-    }
-  }
-}
-
-resource "aws_iam_role" "execution_role" {
-  name               = "${local.environment_name}-execution-role-ecs-cluster"
-  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
-}
-
-data "aws_iam_policy_document" "execution_role_assume_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      identifiers = ["ecs-tasks.amazonaws.com"]
-      type        = "Service"
-    }
-  }
-}
-
 resource "aws_iam_role_policy" "execution_role" {
   name   = "${local.environment_name}_execution_role"
   policy = data.aws_iam_policy_document.execution_role.json
-  role   = aws_iam_role.execution_role.id
+  role   = module.iam.ecs_execution_role.id
 }
 
 data "aws_iam_policy_document" "execution_role" {
