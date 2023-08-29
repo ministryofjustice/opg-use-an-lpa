@@ -137,7 +137,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $state->postcode
             );
 
-            if ($state->liveInUK === 'No' && $result->getResponse() !== AccessForAllResult::LPA_ALREADY_ADDED) {
+            if ($state->liveInUK === 'No'
+                && $result->getResponse() !== AccessForAllResult::LPA_ALREADY_ADDED
+                && $result->getResponse() !== AccessForAllResult::STATUS_NOT_VALID) {
                 return $this->redirectToRoute('lpa.add.actor-address');
             }
 
@@ -211,19 +213,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 case AccessForAllResult::DOES_NOT_MATCH:
                         return $this->redirectToRoute('lpa.add.actor-address');
 
-                case AccessForAllResult::NOT_FOUND:
-                    return new HtmlResponse($this->renderer->render(
-                        'actor::cannot-find-lpa',
-                        [
-                            'user'                 => $this->user,
-                            'lpa_reference_number' => $state->referenceNumber,
-                            'first_name'           => $state->firstNames,
-                            'last_name'            => $state->lastName,
-                            'dob'                  => $state->dob,
-                            'postcode'             => $state->postcode,
-                        ],
-                    ));
-
                 case AccessForAllResult::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));
                     $form->setAttribute(
@@ -247,12 +236,20 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             ]
                         )
                     );
-            }
 
-            $this->getLogger()->alert(
-                'No valid older LPA addition response was returned from our API in ' . __METHOD__
-            );
-            throw new RuntimeException('No valid response was returned from our API');
+                default:
+                    return new HtmlResponse($this->renderer->render(
+                        'actor::cannot-find-lpa',
+                        [
+                            'user'                 => $this->user,
+                            'lpa_reference_number' => $state->referenceNumber,
+                            'first_name'           => $state->firstNames,
+                            'last_name'            => $state->lastName,
+                            'dob'                  => $state->dob,
+                            'postcode'             => $state->postcode,
+                        ],
+                    ));
+            }
         }
 
         $this->getLogger()->alert('Invalid CSRF when submitting to ' . __METHOD__);

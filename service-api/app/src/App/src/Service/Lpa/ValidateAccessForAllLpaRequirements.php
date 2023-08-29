@@ -5,37 +5,27 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
 use App\Service\Log\EventCodes;
-use DateTimeImmutable;
-use Exception;
 use Psr\Log\LoggerInterface;
-use App\Service\Features\FeatureEnabled;
 
 /**
  * Single action invokable class that validates an LPA data structure as being able to be added to a users account
  */
 class ValidateAccessForAllLpaRequirements
 {
-    public const EARLIEST_REG_DATE = '2019-09-01';
     public const NECESSARY_STATUS  = 'Registered';
-
-    private DateTimeImmutable $earliestDate;
 
     /**
      * @param LoggerInterface $logger
-     * @param FeatureEnabled  $featureEnabled
      * @codeCoverageIgnore
      */
-    public function __construct(private LoggerInterface $logger, private FeatureEnabled $featureEnabled)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
     }
 
     /**
      * @param array $lpa An LPA data structure
-     * @throws NotFoundException|BadRequestException|Exception Thrown when unable to parse LPA registration date
-     *                                                         as a date
+     * @throws BadRequestException Thrown when unable to parse LPA registration data as a date
      */
     public function __invoke(array $lpa): void
     {
@@ -56,7 +46,7 @@ class ValidateAccessForAllLpaRequirements
                     'uId'        => $lpa['uId'],
                 ]
             );
-            throw new NotFoundException('LPA status invalid');
+            throw new BadRequestException('LPA status invalid');
         }
     }
 }
