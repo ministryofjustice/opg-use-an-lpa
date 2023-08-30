@@ -83,6 +83,8 @@ class AccessForAllApiResultTest extends TestCase
             [AccessForAllResult::NOT_FOUND, []],
             [AccessForAllResult::SUCCESS,[]],
             [AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING,[]],
+            [AccessForAllResult::POSTCODE_NOT_SUPPLIED,[]],
+            [AccessForAllResult::STATUS_NOT_VALID,[]],
         ];
     }
 
