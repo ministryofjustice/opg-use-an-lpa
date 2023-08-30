@@ -8,7 +8,6 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
-use App\Service\Features\FeatureEnabled;
 use DateInterval;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -23,7 +22,6 @@ class AccessForAllLpaService
         private ActorCodes $actorCodes,
         private LpasInterface $lpaRepository,
         private UserLpaActorMapInterface $userLpaActorMap,
-        private FeatureEnabled $featureEnabled,
         private LoggerInterface $logger,
     ) {
     }
