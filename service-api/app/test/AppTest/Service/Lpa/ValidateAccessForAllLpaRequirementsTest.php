@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Exception\BadRequestException;
-use App\Exception\NotFoundException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,23 +16,18 @@ use Psr\Log\LoggerInterface;
  */
 class ValidateAccessForAllLpaRequirementsTest extends TestCase
 {
-    use ProphecyTrait;
+    private LoggerInterface|MockObject $mockLogger;
 
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
-
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     public function setUp(): void
     {
-        $this->featureEnabledProphecy = $this->prophesize(FeatureEnabled::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
     }
 
     public function validateLpaRequirements(): ValidateAccessForAllLpaRequirements
     {
         return new ValidateAccessForAllLpaRequirements(
-            $this->loggerProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
+            $this->mockLogger,
         );
     }
 
@@ -43,14 +35,14 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function throws_not_found_exception_when_lpa_status_is_not_registered()
+    public function throws_bad_request_exception_when_lpa_status_is_not_registered()
     {
         $lpa = [
             'uId' => '123456789012',
             'status' => 'Pending',
         ];
 
-        $this->expectException(NotFoundException::class);
+        $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('LPA status invalid');
         $this->validateLpaRequirements()($lpa);
     }
@@ -67,7 +59,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
             'registrationDate' => '2019-08-31',
         ];
 
-        $this->expectException(NotFoundException::class);
+        $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('LPA status invalid');
         $this->validateLpaRequirements()($lpa);
     }
