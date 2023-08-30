@@ -656,4 +656,41 @@ class AddAccessForAllLpaTest extends TestCase
             true
         );
     }
+
+    /**
+     * @test
+     * @covers ::validate
+     * @covers ::badRequestReturned
+     */
+    public function it_will_fail_to_validate_an_lpa_with_invalid_status(): void
+    {
+        $this->apiClientProphecy
+            ->httpPost(
+                '/v1/older-lpa/validate',
+                [
+                    'reference_number'     => (string) $this->olderLpa['reference_number'],
+                    'first_names'          => $this->olderLpa['first_names'],
+                    'last_name'            => $this->olderLpa['last_name'],
+                    'dob'                  => $this->olderLpa['dob']->format('Y-m-d'),
+                    'postcode'             => $this->olderLpa['postcode'],
+                    'force_activation_key' => false,
+                ]
+            )->willThrow(
+                new ApiException(
+                    'LPA status invalid',
+                    StatusCodeInterface::STATUS_BAD_REQUEST
+                )
+            );
+
+        $result = $this->sut->validate(
+            '12-1-1-1-1234',
+            $this->olderLpa['reference_number'],
+            $this->olderLpa['first_names'],
+            $this->olderLpa['last_name'],
+            $this->olderLpa['dob'],
+            $this->olderLpa['postcode']
+        );
+
+        $this->assertEquals(AccessForAllResult::STATUS_NOT_VALID, $result->getResponse());
+    }
 }
