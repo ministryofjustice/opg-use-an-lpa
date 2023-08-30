@@ -118,7 +118,7 @@
                     {{ iap.preferences_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                         or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.preferences_wait() }}
+                    {{ iap.preferences_static_wait() }}
                 {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                     {% set prefs_images = iap_images.getPreferencesImageUrls %}
                     {% if (prefs_images | length) > 0 %}
@@ -152,7 +152,7 @@
                     {{ iap.instructions_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                     or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.instructions_wait(actorToken ?? null) }}
+                    {{ iap.instructions_static_wait() }}
                 {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                     {% set insts_images = iap_images.getInstructionsImageUrls %}
                     {% if (insts_images | length) > 0 %}

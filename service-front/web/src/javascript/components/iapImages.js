@@ -10,6 +10,7 @@ export default class IapImages extends HTMLElement {
 
         if (isWait !== null) {
             this.token = isWait
+            this._displayWait()
             this._runInterval()
         }
     }
@@ -75,6 +76,19 @@ export default class IapImages extends HTMLElement {
         const guidance = this.querySelector('#images-guidance')
         if (guidance !== null) {
             guidance.remove()
+        }
+    }
+
+    _displayWait()
+    {
+        const insts = this.querySelector('iap-instructions')
+        if (insts !== null) {
+            insts.displayWait()
+        }
+
+        const prefs = this.querySelector('iap-preferences')
+        if (prefs !== null) {
+            prefs.displayWait()
         }
     }
 

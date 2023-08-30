@@ -1,5 +1,6 @@
 export default class IapContainer extends HTMLElement {
-    displayError() {
+    displayError()
+    {
         const errTmpl = document.getElementById(this.ERROR_TEMPLATE).content
 
         const spinner = this.querySelector('.iap-wait')
@@ -7,6 +8,18 @@ export default class IapContainer extends HTMLElement {
         if (spinner !== null) {
             spinner?.remove()
             this.appendChild(errTmpl.firstElementChild.cloneNode(true))
+        }
+    }
+
+    displayWait()
+    {
+        const waitTmpl = document.getElementById(this.WAIT_TEMPLATE).content
+
+        const spinner = this.querySelector('.iap-wait')
+
+        if (spinner !== null) {
+            spinner?.remove()
+            this.appendChild(waitTmpl.firstElementChild.cloneNode(true))
         }
     }
 
