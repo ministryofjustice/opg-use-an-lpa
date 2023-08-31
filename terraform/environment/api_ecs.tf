@@ -221,6 +221,20 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}AllowSSMParameterAccess"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter",
+    ]
+    resources = [
+      aws_ssm_parameter.system_message_view_en.arn,
+      aws_ssm_parameter.system_message_view_cy.arn,
+      aws_ssm_parameter.system_message_use_en.arn,
+      aws_ssm_parameter.system_message_use_cy.arn,
+    ]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}IapImagesAccess"
     effect = "Allow"
     actions = [
