@@ -1538,14 +1538,37 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @When I provide details of an LPA that is not registered
-     * @When I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
      */
-    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered(): void
     {
         $this->fillAndSubmitOlderLpaForm();
         $this->lpa->status = 'Pending';
 
-        // Setup fixture for success response
+        // Setup fixture for mocking response of an unregistered LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'Bad Request',
+                        'details' => 'LPA status invalid',
+                        'data'    => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
+    }
+
+
+    /**
+     * @When I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
+     */
+    public function iProvideDetailOfAnLpaRegisteredAfterSep2019WhereDoNotMatchAValidPaperDocument(): void
+    {
+        $this->fillAndSubmitOlderLpaForm();
+
+        // Setup fixture for status not found
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_NOT_FOUND,
