@@ -29,3 +29,9 @@ Feature: User does not live in the UK so cannot supply a UK postcode
     Given I am on the check your answers page
     When I request an activation key for an LPA that already exists in my account
     Then I should be told that I have already added this LPA
+
+  @ui
+  Scenario: The user who lives outside the UK cannot add an LPA with an unregistered status
+    Given I am on the check your answers page
+    When I request an activation key for an unregistered LPA
+    Then I am informed that an LPA could not be found with these details

@@ -210,6 +210,31 @@ class RequestActivationKeyContext implements Context
         );
         $this->iPressTheContinueButton();
     }
+
+    /**
+     * @Given /^I request an activation key for an unregistered LPA$/
+     */
+    public function iRequestAnActivationKeyForAnUnregisteredLPA(): void
+    {
+        $this->lpa->status = 'Pending';
+        // API call for getLpaById call happens inside of the check access codes handler
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title' => 'Bad Request',
+                        'details' => 'LPA status invalid',
+                        'data'    => [],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE
+            )
+        );
+
+        $this->iPressTheContinueButton();
+    }
+
     /**
      * @When /^I press the continue button$/
      */
