@@ -216,7 +216,6 @@ class RequestActivationKeyContext implements Context
      */
     public function iRequestAnActivationKeyForAnUnregisteredLPA(): void
     {
-        $this->lpa->status = 'Pending';
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1197,16 +1196,16 @@ class RequestActivationKeyContext implements Context
     /**
      * @When /^I request an activation key with valid details and I do not live in the UK$/
      */
-    public function iRequestAnActivationKeyWithValidDetailsAndDoNotLiveInTheUK()
+    public function iRequestAnActivationKeyWithValidDetailsAndDoNotLiveInTheUK(): void
     {
         $formData = [
-            'opg_reference_number' => '700018506654',
-            'first_names'          => 'The Attorney',
-            'last_name'            => 'Person',
+            'opg_reference_number' => '700000000054',
+            'first_names'          => 'Ian',
+            'last_name'            => 'Deputy',
             'live_in_uk'           => 'No',
-            'dob[day]'             => '09',
-            'dob[month]'           => '02',
-            'dob[year]'            => '1998',
+            'dob[day]'             => '05',
+            'dob[month]'           => '10',
+            'dob[year]'            => '1975',
         ];
 
         $this->fillForm($formData);

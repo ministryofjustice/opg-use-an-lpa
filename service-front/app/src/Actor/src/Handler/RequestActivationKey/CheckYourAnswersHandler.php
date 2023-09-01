@@ -247,6 +247,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                             'last_name'            => $state->lastName,
                             'dob'                  => $state->dob,
                             'postcode'             => $state->postcode,
+                            'live_in_uk'           => $state->liveInUK,
                         ],
                     ));
             }
