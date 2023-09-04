@@ -168,6 +168,21 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/code",
     ]
   }
+
+  statement {
+    sid    = "${local.policy_region_prefix}AllowSSMParameterAccess"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter",
+      "ssm:PutParameter",
+    ]
+    resources = [
+      aws_ssm_parameter.system_message_view_en.arn,
+      aws_ssm_parameter.system_message_view_cy.arn,
+      aws_ssm_parameter.system_message_use_en.arn,
+      aws_ssm_parameter.system_message_use_cy.arn,
+    ]
+  }
 }
 
 //-----------------------------------------------
