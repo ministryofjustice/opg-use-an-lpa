@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-08-02T14:08:52+00:00\n"
+"POT-Creation-Date: 2023-08-07T10:26:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:16
@@ -116,6 +116,7 @@ msgstr ""
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:155
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:157
 #: src/Actor/templates/actor/check-lpa.html.twig:71
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:65
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:203
 #: src/Viewer/templates/viewer/check-code-found.html.twig:39
@@ -286,7 +287,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:97
 #: src/Actor/templates/actor/check-your-answers.html.twig:93
 #: src/Actor/templates/actor/home-page.html.twig:52
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:75
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:74
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
 msgstr ""
@@ -3139,11 +3140,11 @@ msgstr ""
 msgid "Which organisation do you want to give access to?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:46
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:45
 msgid "Organisation name"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:67
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:66
 msgid "Check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
 msgstr ""
 
@@ -4457,6 +4458,14 @@ msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:40
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:39
+msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:41
+msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
 msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:36
