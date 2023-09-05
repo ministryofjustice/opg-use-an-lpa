@@ -111,7 +111,9 @@
     </div>
 </header>
 
+{{ include("@partials/headers-common.html.twig") }}
 {% block content %}{% endblock %}
+{{ include("@partials/footers-common.html.twig") }}
 
 <footer class="govuk-footer " role="contentinfo">
     <div class="govuk-width-container ">

@@ -74,6 +74,7 @@ variable "environments" {
       deploy_opentelemetry_sidecar              = bool
       fargate_spot                              = bool
       application_flags = object({
+        allow_gov_one_login                                        = bool
         use_older_lpa_journey                                      = bool
         delete_lpa_feature                                         = bool
         allow_meris_lpas                                           = bool
@@ -105,12 +106,13 @@ variable "environments" {
 }
 
 locals {
-  environment_name  = lower(replace(terraform.workspace, "_", "-"))
-  environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
-  dns_namespace_acc = local.environment_name == "production" ? "" : "${local.environment.account_name}."
-  dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
-  dev_wildcard      = local.environment.account_name == "production" ? "" : "*."
-  capacity_provider = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  environment_name     = lower(replace(terraform.workspace, "_", "-"))
+  environment          = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
+  dns_namespace_acc    = local.environment_name == "production" ? "" : "${local.environment.account_name}."
+  dns_namespace_env    = local.environment.account_name == "production" ? "" : "${local.environment_name}."
+  dev_wildcard         = local.environment.account_name == "production" ? "" : "*."
+  capacity_provider    = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  policy_region_prefix = lower(replace(data.aws_region.current.name, "-", ""))
 
   mandatory_moj_tags = {
     business-unit    = "OPG"
