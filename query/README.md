@@ -103,6 +103,7 @@ Creating the viewer activity Table
 ```SQL
 CREATE EXTERNAL TABLE IF NOT EXISTS viewer_activity (
     Item struct <ViewerCode:struct<S:string>,
+                 ViewedBy:struct<S:string>,
                  Viewed:struct<S:date>>
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
