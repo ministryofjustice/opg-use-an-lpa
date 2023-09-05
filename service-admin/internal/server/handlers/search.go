@@ -60,11 +60,11 @@ var (
 type QueryType int
 
 type Search struct {
-	Query       string
-	Type        QueryType
-	Result      interface{}
-	IsStatsPage bool
-	Errors      validation.Errors
+	Query  string
+	Type   QueryType
+	Result interface{}
+	Errors validation.Errors
+	Path   string
 }
 
 type AddedBy struct {
@@ -128,7 +128,9 @@ func stripUnnecessaryCharacters(code string) string {
 }
 
 func (s *SearchServer) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	search := &Search{}
+	search := &Search{
+		Path: r.URL.Path,
+	}
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
