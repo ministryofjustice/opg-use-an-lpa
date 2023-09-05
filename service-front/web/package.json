@@ -24,7 +24,7 @@
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.20.2",
     "@babel/runtime-corejs3": "^7.20.1",
-    "@testing-library/dom": "^8.19.0",
+    "@testing-library/dom": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "babel-jest": "^29.2.2",
     "core-js": "^3.26.0",
