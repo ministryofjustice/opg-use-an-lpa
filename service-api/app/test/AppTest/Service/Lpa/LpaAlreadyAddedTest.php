@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \App\Service\Lpa\LpaAlreadyAdded
@@ -23,8 +21,6 @@ class LpaAlreadyAddedTest extends TestCase
 
     private LpaService|ObjectProphecy $lpaServiceProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     private string $userId;
     private string $lpaUid;
@@ -34,8 +30,6 @@ class LpaAlreadyAddedTest extends TestCase
     {
         $this->lpaServiceProphecy      = $this->prophesize(LpaService::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->featureEnabledProphecy  = $this->prophesize(FeatureEnabled::class);
-        $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
 
         $this->userId            = '12345';
         $this->lpaUid            = '700000000543';
@@ -47,8 +41,6 @@ class LpaAlreadyAddedTest extends TestCase
         return new LpaAlreadyAdded(
             $this->lpaServiceProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
         );
     }
 

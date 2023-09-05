@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Service\Features\FeatureEnabled;
-use Psr\Log\LoggerInterface;
 
 class LpaAlreadyAdded
 {
@@ -14,14 +12,10 @@ class LpaAlreadyAdded
      * @codeCoverageIgnore
      * @param LpaService               $lpaService
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
-     * @param FeatureEnabled           $featureEnabled
-     * @param LoggerInterface          $logger
      */
     public function __construct(
         private LpaService $lpaService,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
-        private FeatureEnabled $featureEnabled,
-        private LoggerInterface $logger,
     ) {
     }
 

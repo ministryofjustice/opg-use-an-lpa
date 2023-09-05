@@ -27,7 +27,6 @@
                         {{ include('@partials/contact-details/telephone.html.twig') }}
 
                     {% else %}
-
                         <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA to send you an activation key{% endtrans %}</h1>
                         <p class="govuk-body">{% trans %}This could be because the information you entered does not match the information we hold about the LPA.{% endtrans %}</p>
 
@@ -57,14 +56,25 @@
                                     {{ code_date(dob) }}
                                 </dd>
                             </div>
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    {% trans %}Postcode{% endtrans %}
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    {{ postcode }}
-                                </dd>
-                            </div>
+                            {% if live_in_uk == 'Yes' %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Postcode{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{ postcode }}
+                                    </dd>
+                                </div>
+                            {% else %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {% trans %}Do you live in the UK?{% endtrans %}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {% trans %}No{% endtrans %}
+                                    </dd>
+                                </div>
+                            {% endif %}
                         </dl>
 
                         <h2 class="govuk-heading-l">{% trans %}Did you give us the right LPA reference number?{% endtrans %}</h2>
