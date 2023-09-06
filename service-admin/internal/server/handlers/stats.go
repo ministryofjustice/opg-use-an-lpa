@@ -26,6 +26,11 @@ type StatsServer struct {
 	timeProvider      TimeProvider
 }
 
+type StatsPageData struct {
+	Result interface{}
+	Path   string
+}
+
 func NewStatsServer(
 	statisticsService StatisticsService,
 	templateService TemplateService,
@@ -39,11 +44,12 @@ func NewStatsServer(
 }
 
 func (s *StatsServer) StatsHandler(w http.ResponseWriter, r *http.Request) {
-	search := &Search{}
+	pageData := &StatsPageData{
+		Result: s.GetMetricsInTheLastThreeMonths(r.Context()),
+		Path:   r.URL.Path,
+	}
 
-	search.Result = s.GetMetricsInTheLastThreeMonths(r.Context())
-
-	if err := s.templateService.RenderTemplate(w, r.Context(), "stats.page.gohtml", search); err != nil {
+	if err := s.templateService.RenderTemplate(w, r.Context(), "stats.page.gohtml", pageData); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
 }
