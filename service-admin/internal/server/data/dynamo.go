@@ -26,7 +26,8 @@ func NewDynamoConnection(conf aws.Config, endpoint string, tablePrefix string) *
 
 	svc := dynamodb.NewFromConfig(conf, func(o *dynamodb.Options) {
 		if endpoint != "" {
-			o.EndpointResolver = dynamodb.EndpointResolverFromURL(endpoint)
+			//o.EndpointResolver = dynamodb.EndpointResolverFromURL(endpoint)
+      o.BaseEndpoint = &endpoint
 		}
 	})
 
