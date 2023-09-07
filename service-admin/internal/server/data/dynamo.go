@@ -35,3 +35,4 @@ func NewDynamoConnection(conf aws.Config, endpoint string, tablePrefix string) *
 func (dc *DynamoConnection) prefixedTableName(name string) string {
 	return dc.Prefix + name
 }
+
