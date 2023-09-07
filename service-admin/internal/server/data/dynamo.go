@@ -24,13 +24,11 @@ func NewDynamoConnection(conf aws.Config, endpoint string, tablePrefix string) *
 		prefix = tablePrefix + "-"
 	}
 
-	svc := dynamodb.NewFromConfig(conf, func(o *dynamodb.Options) {
+	var svc = dynamodb.NewFromConfig(conf, func(o *dynamodb.Options) {
 		if endpoint != "" {
-			//o.EndpointResolver = dynamodb.EndpointResolverFromURL(endpoint)
-      o.BaseEndpoint = &endpoint
+			o.BaseEndpoint = &endpoint
 		}
 	})
-
 	return &DynamoConnection{Prefix: prefix, Client: svc}
 }
 
