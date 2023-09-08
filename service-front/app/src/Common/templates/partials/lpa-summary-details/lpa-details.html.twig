@@ -75,7 +75,7 @@
             </dd>
         </div>
     {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
-        </dl>
+</dl>
 
         {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
@@ -90,7 +90,6 @@
                         {% endtrans %}
                     </strong>
                 </div>
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
         {% endif %}
 
@@ -174,4 +173,3 @@
             {% endif %}
         </iap-unknown>
     {% endif %}
-</dl>

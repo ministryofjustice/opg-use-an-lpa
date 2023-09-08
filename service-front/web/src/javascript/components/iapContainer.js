@@ -1,6 +1,5 @@
 export default class IapContainer extends HTMLElement {
-    displayError()
-    {
+    displayError() {
         const errTmpl = document.getElementById(this.ERROR_TEMPLATE).content
 
         const spinner = this.querySelector('.iap-wait')
@@ -11,8 +10,7 @@ export default class IapContainer extends HTMLElement {
         }
     }
 
-    displayWait()
-    {
+    displayWait() {
         const waitTmpl = document.getElementById(this.WAIT_TEMPLATE).content
 
         const spinner = this.querySelector('.iap-wait')
@@ -23,8 +21,7 @@ export default class IapContainer extends HTMLElement {
         }
     }
 
-    displayImages(signedUrls)
-    {
+    displayImages(signedUrls) {
         const imgsTmpl = document.getElementById('iap-images-container').content
         const imgsDiv = imgsTmpl.firstElementChild.cloneNode(true)
         const linkTmpl = document.getElementById('iap-img').content

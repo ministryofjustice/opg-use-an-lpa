@@ -1,22 +1,35 @@
+import IapInstructions from "./iapInstructions.js";
+import IapPreferences from "./iapPreferences.js";
+
 export default class IapImages extends HTMLElement {
-    constructor()
-    {
+    constructor() {
         super()
+
+        const shadowRoot = this.attachShadow({mode: 'open'});
+        shadowRoot.innerHTML = `<slot></slot>`
+
+        const slot = shadowRoot.querySelector('slot');
+        slot.addEventListener('slotchange', (event) => {
+            const childElements = event.target.assignedElements();
+
+            childElements.forEach(child => {
+                if (child instanceof IapInstructions || child instanceof IapPreferences) {
+                    child.displayWait()
+                }
+            });
+        });
     }
 
-    connectedCallback()
-    {
+    connectedCallback() {
         const isWait = this.getAttribute('data-wait')
 
         if (isWait !== null) {
             this.token = isWait
-            this._displayWait()
             this._runInterval()
         }
     }
 
-    _runInterval()
-    {
+    _runInterval() {
         const _this = this
         /* istanbul ignore next */
         this.interval = setInterval(async () => {
@@ -33,8 +46,7 @@ export default class IapImages extends HTMLElement {
         }, 5000)
     }
 
-    async _getImagesData()
-    {
+    async _getImagesData() {
         const response = await fetch(
             "/lpa/view-lpa/images?" + new URLSearchParams({
                 lpa: this.token
@@ -54,15 +66,13 @@ export default class IapImages extends HTMLElement {
         return response.json()
     }
 
-    _updateComponents(hasError, signedUrls)
-    {
+    _updateComponents(hasError, signedUrls) {
         hasError
             ? this._displayError()
             : this._displayImages(signedUrls)
     }
 
-    _displayError()
-    {
+    _displayError() {
         const insts = this.querySelector('iap-instructions')
         if (insts !== null) {
             insts.displayError()
@@ -79,22 +89,8 @@ export default class IapImages extends HTMLElement {
         }
     }
 
-    _displayWait()
-    {
-        const insts = this.querySelector('iap-instructions')
-        if (insts !== null) {
-            insts.displayWait()
-        }
-
-        const prefs = this.querySelector('iap-preferences')
-        if (prefs !== null) {
-            prefs.displayWait()
-        }
-    }
-
-    _displayImages(signedUrls)
-    {
-        const insts = this.querySelector('iap-instructions')
+    _displayImages(signedUrls) {
+       const insts = this.querySelector('iap-instructions')
         if (signedUrls.instructions.length > 0 && insts !== null) {
             insts.displayImages(signedUrls.instructions)
         }
@@ -106,8 +102,6 @@ export default class IapImages extends HTMLElement {
 
         const unknown = this.querySelector('iap-unknown')
         if (signedUrls.unknown.length > 0 && unknown !== null) {
-            const imgsTmpl = document.getElementById('iap-unknown-section').content
-            unknown.replaceChildren(imgsTmpl.firstElementChild.cloneNode(true))
             unknown.displayImages(signedUrls.unknown)
         }
     }
