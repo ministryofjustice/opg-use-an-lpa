@@ -1,25 +1,4 @@
-import IapInstructions from "./iapInstructions.js";
-import IapPreferences from "./iapPreferences.js";
-
 export default class IapImages extends HTMLElement {
-    constructor() {
-        super()
-
-        const shadowRoot = this.attachShadow({mode: 'open'});
-        shadowRoot.innerHTML = `<slot></slot>`
-
-        const slot = shadowRoot.querySelector('slot');
-        slot.addEventListener('slotchange', (event) => {
-            const childElements = event.target.assignedElements();
-
-            childElements.forEach(child => {
-                if (child instanceof IapInstructions || child instanceof IapPreferences) {
-                    child.displayWait()
-                }
-            });
-        });
-    }
-
     connectedCallback() {
         const isWait = this.getAttribute('data-wait')
 
@@ -75,12 +54,12 @@ export default class IapImages extends HTMLElement {
     _displayError() {
         const insts = this.querySelector('iap-instructions')
         if (insts !== null) {
-            insts.displayError()
+            insts.inError = true
         }
 
         const prefs = this.querySelector('iap-preferences')
         if (prefs !== null) {
-            prefs.displayError()
+            prefs.inError = true
         }
 
         const guidance = this.querySelector('#images-guidance')
@@ -92,17 +71,17 @@ export default class IapImages extends HTMLElement {
     _displayImages(signedUrls) {
        const insts = this.querySelector('iap-instructions')
         if (signedUrls.instructions.length > 0 && insts !== null) {
-            insts.displayImages(signedUrls.instructions)
+            insts.images = signedUrls.instructions
         }
 
         const prefs = this.querySelector('iap-preferences')
         if (signedUrls.preferences.length > 0 && prefs !== null) {
-            prefs.displayImages(signedUrls.preferences)
+            prefs.images = signedUrls.preferences
         }
 
         const unknown = this.querySelector('iap-unknown')
         if (signedUrls.unknown.length > 0 && unknown !== null) {
-            unknown.displayImages(signedUrls.unknown)
+            unknown.images = signedUrls.unknown
         }
     }
 }
