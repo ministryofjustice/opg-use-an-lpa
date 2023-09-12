@@ -1,0 +1,42 @@
+sequenceDiagram
+  participant One Login
+  participant User
+  participant service-front
+  participant service-api
+  autonumber
+    Note over User: User clicks login button
+    User ->>+ service-front: Login request
+    service-front -->> service-front: Create nonce, state
+    service-front ->>+ service-api: nonce, state, ui_locale
+    Note right of service-api: See AuthRedirectHandler middleware
+    service-api -->>- service-front: redirect_uri
+    service-front -->> service-front: Store AuthSessionInterface in session
+    service-front -->>- User: Redirect redirect_uri
+    User -->>+ One Login:
+    alt Create
+        One Login -->> One Login: Account creation
+        One Login -->> One Login: Login to account
+    else Login
+        One Login -->> One Login: Login to account
+    end
+    One Login -->>- User: Redirect to callback_uri
+    User -->>+ service-front:
+    service-front -->> service-front: Fetch AuthSessionInterface
+    service-front -->> service-front: Process parameters
+    service-front ->>+ service-api: process login information
+    Note right of service-api: See AuthorisationService::callback
+    service-api -->> service-api: Fetch idToken
+    service-api -->> service-api: Fetch tokenSet
+    service-api -->> service-api: Fetch user info
+    alt Success
+        service-api -->> service-front: email of logged in user
+        alt Merge
+            service-front -->> service-front: Workflow pages for merge
+        else Create
+            service-front -->> service-front: Create new local user record
+        end
+        service-front -->> User: Dashboard
+    else Failure
+        service-api -->>- service-front: authentication failure exception
+        service-front -->>- User: Login failure page
+    end
