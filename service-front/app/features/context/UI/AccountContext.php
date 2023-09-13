@@ -344,7 +344,10 @@ class AccountContext implements Context
      */
     public function iAmTakenToCompleteASatisfactionSurvey(): void
     {
-        $this->ui->assertPageAddress('/done/use-lasting-power-of-attorney');
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        assert::assertTrue(isset($locationHeader));
+        assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
+        $this->ui->assertResponseStatusIsNot(404);
     }
 
     /**
@@ -1381,13 +1384,23 @@ class AccountContext implements Context
         // Not needed for this context
     }
 
+    public function iDoNotFollowRedirects():void {
+        $this->ui->getSession()->getDriver()->getClient()->followRedirects(false);
+    }
+
+    public function iDoFollowRedirects(): void {
+        $this->ui->getSession()->getDriver()->getClient()->followRedirects(true);
+    }
+
     /**
      * @When /^I logout of the application$/
      */
     public function iLogoutOfTheApplication(): void
     {
+        $this->iDoNotFollowRedirects();
         $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
         $link->click();
+        $this->iDoFollowRedirects();
     }
 
     /**
