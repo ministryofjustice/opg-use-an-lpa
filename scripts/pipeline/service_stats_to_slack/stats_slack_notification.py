@@ -42,7 +42,6 @@ def main():
         description='Service Stats Slack notification.')
 
     parser.add_argument('--slack_webhook', type=str,
-                        default=os.getenv('SLACK_WEBHOOK'),
                         help='Webhook to use, determines what channel to post to')
     parser.add_argument('--stats_path', type=str,
                         default='',
@@ -50,7 +49,7 @@ def main():
     parser.add_argument('--template_path', type=str,
                         help='Path to the template file to use for a slack notification')
     parser.add_argument('--test', dest='test_mode', action='store_const',
-                        const=True, default=True,
+                        const=True, default=False,
                         help='Generate message bot do not post to slack')
 
     args = parser.parse_args()
