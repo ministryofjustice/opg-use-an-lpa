@@ -40,5 +40,5 @@ jobs:
         run: |
           python ./pipeline/service_stats_to_slack/stats_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path ../pipeline/service_stats_to_slack/service_stats.txt \
+          --template_path ./pipeline/service_stats_to_slack/service_stats.txt \
           --stats_path ./stats.txt
