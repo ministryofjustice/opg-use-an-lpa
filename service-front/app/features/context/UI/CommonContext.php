@@ -25,6 +25,7 @@ use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
 use PHPUnit\Framework\Assert;
+use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
  * Class CommonContext
@@ -91,7 +92,6 @@ class CommonContext implements Context
     {
         $link = $this->ui->getSession()->getPage()->findLink('Find out about call charges');
         assert::assertEquals('https://www.gov.uk/call-charges', $link->getAttribute('href'));
-        $this->ui->assertResponseStatusIsNot(404);
     }
 
     /**

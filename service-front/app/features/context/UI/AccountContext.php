@@ -347,7 +347,7 @@ class AccountContext implements Context
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
         assert::assertTrue(isset($locationHeader));
         assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
-        $this->ui->assertResponseStatusIsNot(404);
+        $this->ui->assertResponseStatus(302);
     }
 
     /**
@@ -1397,6 +1397,7 @@ class AccountContext implements Context
      */
     public function iLogoutOfTheApplication(): void
     {
+        //We cannot follow redirects to external links, returns page not found
         $this->iDoNotFollowRedirects();
         $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
         $link->click();
