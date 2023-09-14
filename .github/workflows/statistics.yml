@@ -46,8 +46,10 @@ jobs:
         run: |
           python ./scripts/get_statistics/get_statistics.py --text > ./stats.txt
       - name: Post to slack
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
         run: |
           python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
-          --slack_webhook ${{ secrets.webhook }} \
+          --slack_webhook ${{ env.SLACK_WEB_HOOK }} \
           --template_path ./scripts/pipeline/service_stats_to_slack/service_stats.txt \
           --stats_path ./stats.txt
