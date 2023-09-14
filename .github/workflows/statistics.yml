@@ -38,7 +38,12 @@ jobs:
       - name: Get stats
         run: |
           python ./scripts/get_statistics/get_statistics.py --text > ./stats.md
-      - name: Post to slack
+      - name: Show stats in summary (debug only)
+        if: runner.debug == '1'
+        run: |
+          stat_content=$(cat ./stats.md)
+          echo "${stat_content}" >> $GITHUB_STEP_SUMMARY
+      - name: Post to Slack
         env:
           SLACK_WEB_HOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
         run: |
