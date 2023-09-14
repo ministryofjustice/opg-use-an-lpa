@@ -57,7 +57,6 @@ def main():
     work = MessageGenerator()
 
     message = work.generate_text_message(args.stats_path, args.template_path)
-    print(message)
 
     if not args.test_mode:
         post_to_slack(args.slack_webhook, message)
