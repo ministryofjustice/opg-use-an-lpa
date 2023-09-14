@@ -7,6 +7,6 @@ export default class IapUnknown extends IapContainer {
         const imgsTmpl = document.getElementById('iap-unknown-section').content
         this.replaceChildren(imgsTmpl.firstElementChild.cloneNode(true))
 
-        super.displayImagees(signedUrls)
+        super.displayImages(signedUrls)
     }
 }
