@@ -1,0 +1,44 @@
+
+name: "[Workflow] Post Statistics to Slack"
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # 9am every Monday
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./scripts/
+
+jobs:
+  stats_to_slack:
+    name: "Post service stats to Slack"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3.0.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGGetServiceStats
+      - name: Set up Python
+        uses: actions/setup-python@v4.2.0
+        with:
+          python-version: 3.11.5
+      - name: Install requirements
+        run: |
+          pip install -r ./pipeline/requirements.txt
+      - name: Get stats
+        run: |
+          python ./get_statistics/get_statistics.py --text > ./stats.txt
+      - name: Post to slack
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+        run: |
+          python ./pipeline/service_stats_to_slack/stats_slack_notification.py \
+          --slack_webhook ${SLACK_WEB_HOOK} \
+          --template_path ../pipeline/service_stats_to_slack/service_stats.txt \
+          --stats_path ./stats.txt
