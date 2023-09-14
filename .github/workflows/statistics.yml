@@ -2,6 +2,11 @@
 name: "[Workflow] Post Statistics to Slack"
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/statistics.yml'
+    branches:
+      - main
   schedule:
     - cron: "0 9 * * 1" # 9am every Monday
   workflow_dispatch:
