@@ -9,8 +9,6 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./scripts/
-
 jobs:
   stats_to_slack:
     name: "Post service stats to Slack"
@@ -28,17 +26,24 @@ jobs:
         uses: actions/setup-python@v4.2.0
         with:
           python-version: 3.11.5
+      - name: Debug
+        run: |
+          pwd
+          ls -la
+          ls -l ./scripts/
+          ls -l ./scripts/pipeline/
+          ls -l ./scripts/get_statistics/
       - name: Install requirements
         run: |
-          pip install -r ./pipeline/requirements.txt
+          pip install -r ./scripts/pipeline/requirements.txt
       - name: Get stats
         run: |
-          python ./get_statistics/get_statistics.py --text > ./stats.txt
+          python ./scripts/get_statistics/get_statistics.py --text > ./stats.txt
       - name: Post to slack
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
         run: |
-          python ./pipeline/service_stats_to_slack/stats_slack_notification.py \
+          python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path ./pipeline/service_stats_to_slack/service_stats.txt \
+          --template_path ./scripts/pipeline/service_stats_to_slack/service_stats.txt \
           --stats_path ./stats.txt
