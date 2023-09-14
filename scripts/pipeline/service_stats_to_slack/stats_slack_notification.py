@@ -20,6 +20,8 @@ def post_to_slack(slack_webhook, message):
 class MessageGenerator:
   
     def generate_text_message(self, stats_path, template_path):
+        title = 'Use a Lasting Power of Attorney Production - Service Statistics'
+        colour = '#9933ff'
         with open(template_path, 'r') as file:
             template_str = file.read()
 
@@ -31,7 +33,12 @@ class MessageGenerator:
         }
         message = Template(template_str)
         text_message = {
-            'text': message.render(**mapping)
+            'attachments': [{
+                'title': title,
+                'text': message.render(**mapping),
+                'color': colour,
+                'footer': '',
+            }]
         }
         content = json.dumps(text_message)
         return content
