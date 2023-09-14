@@ -25,7 +25,6 @@ use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
 use PHPUnit\Framework\Assert;
-use Symfony\Component\BrowserKit\HttpBrowser;
 
 /**
  * Class CommonContext
