@@ -2,4 +2,3 @@ botocore
 boto3
 requests
 jinja2
-pprint
