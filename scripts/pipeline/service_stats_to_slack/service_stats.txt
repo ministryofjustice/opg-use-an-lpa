@@ -1,6 +1,6 @@
-**{{ event | upper }}**
-**Total for this reporting period: {{ total }}**
-**Monthly Breakdown**
+*{{ event | upper }}*
+*Total for this reporting period: {{ total }}*
+*Monthly Breakdown*
 ```
 {%- for month, value in monthly.items() %}
 {{- month[:-3] }} {{ value }}
