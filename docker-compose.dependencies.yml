@@ -87,3 +87,15 @@ services:
       - "4012:4012"
     volumes:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
+
+  mock-one-login:
+    container_name: mock-one-login
+    image: mock-one-login
+    build:
+      context: mock-integrations/one-login
+    ports:
+      - "4013:8080"
+    environment:
+      PUBLIC_URL: http://localhost:4013
+      INTERNAL_URL: http://mock-one-login:8080
+      REDIRECT_URL: http://localhost:9002/
