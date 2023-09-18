@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-09-07T07:03:10+00:00\n"
+"POT-Creation-Date: 2023-09-11T09:37:13+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3158,7 +3158,7 @@ msgstr "Oes"
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
 #: src/Actor/templates/actor/check-your-answers.html.twig:74
 #: src/Common/templates/common/cookies.html.twig:136
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:144
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
 msgstr "Nac oes"
 
@@ -5335,7 +5335,7 @@ msgstr ""
 "Oes, mae’r rhoddwr wedi nodi gyfarwyddiadau a/neu ddewisiadau yn ei <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:141
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 "Weld y rhain, gofynnwch am gael gweld y <abbr title=\"atwrneiaeth "
@@ -5361,11 +5361,11 @@ msgstr ""
 "dileu gan y llys gwarchod. Os ydych angen gwirio hyn, edrychwch ar yr LPA "
 "bapur <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:100
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
 msgid "Preferences"
 msgstr "Dymuniadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:106
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
@@ -5415,11 +5415,11 @@ msgstr ""
 "Copi wedi ei sganio o’r hyn fyddai orau gan y rhoddwr a/neu ei gyfarwyddiadau- "
 "ni ellir digideiddio’r testun ar hyn o bryd"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:134
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi nodi dymuniadau yn ei <abbr title=\"atwrneiaeth "
@@ -6527,13 +6527,6 @@ msgid "(Trust corporation)"
 msgstr "(Corfforaeth Ymddiriedolaeth)"
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:49
-#, fuzzy
-#| msgid ""
-#| "We cannot show the preferences for this <abbr title=\"lasting power of "
-#| "attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show "
-#| "the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone "
-#| "who needs to see them. You do not need to contact us. We are aware of this "
-#| "issue."
 msgid ""
 "We cannot show the preferences for this <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.\n"
@@ -6549,13 +6542,6 @@ msgstr ""
 "o’r mater hwn."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:56
-#, fuzzy
-#| msgid ""
-#| "We cannot show the preferences for this <abbr title=\"lasting power of "
-#| "attorney\">LPA</abbr>. Until we can fix this problem, if you need to see "
-#| "these you’ll need to ask the person who gave you the access code to show "
-#| "you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do "
-#| "not need to contact us. We are aware of this issue."
 msgid ""
 "We cannot show the preferences for this <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.\n"
@@ -6571,11 +6557,7 @@ msgstr ""
 "i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
 "Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:64
-#, fuzzy
-#| msgid ""
-#| "A scanned image of the donor’s preferences will appear here soon. The first "
-#| "time may take up to 10 minutes. Please refresh this page."
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:72
 msgid ""
 "A scanned image of the donor’s preferences will appear here soon. The first "
 "time may\n"
@@ -6585,14 +6567,7 @@ msgstr ""
 "Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y dudalen "
 "hon os gwelwch yn dda."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:74
-#, fuzzy
-#| msgid ""
-#| "We cannot show the instructions for this <abbr title=\"lasting power of "
-#| "attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show "
-#| "the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone "
-#| "who needs to see them. You do not need to contact us. We are aware of this "
-#| "issue."
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:82
 msgid ""
 "We cannot show the instructions for this <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.\n"
@@ -6607,14 +6582,7 @@ msgstr ""
 "un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
 "o’r mater hwn."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:81
-#, fuzzy
-#| msgid ""
-#| "We cannot show the instructions for this <abbr title=\"lasting power of "
-#| "attorney\">LPA</abbr>. Until we can fix this problem, if you need to see "
-#| "these you’ll need to ask the person who gave you the access code to show "
-#| "you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do "
-#| "not need to contact us. We are aware of this issue."
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
 msgid ""
 "We cannot show the instructions for this <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>.\n"
@@ -6630,11 +6598,7 @@ msgstr ""
 "i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
 "Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
-#, fuzzy
-#| msgid ""
-#| "A scanned image of the donor’s instructions will appear here soon. The "
-#| "first time may take up to 10 minutes. Please refresh this page."
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:97
 msgid ""
 "A scanned image of the donor’s instructions will appear here soon. The first "
 "time may\n"
@@ -6647,6 +6611,27 @@ msgstr ""
 #: src/Common/templates/partials/flash-message.html.twig:5
 msgid "Success"
 msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:65
+msgid ""
+"A scanned image of the donor’s preferences will appear here soon.\n"
+"        The first time may take up to 10 minutes.\n"
+"        You do not need to stay on the page or refresh it whilst you wait."
+msgstr ""
+"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan.\n"
+"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
+"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:105
+msgid ""
+"A scanned image of the donor’s instructions will appear here soon.\n"
+"        The first time may take up to 10 minutes.\n"
+"        You do not need to stay on the page or refresh it whilst you wait."
+msgstr ""
+"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
+"fuan\n"
+"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
+"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
 
 #~ msgid ""
 #~ "Some semantic elements were implemented in a way that did not convey the "
