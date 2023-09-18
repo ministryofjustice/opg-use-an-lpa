@@ -3,6 +3,7 @@ import json
 import os
 from jinja2 import Template
 import requests
+import pprint
 
 
 def post_to_slack(slack_webhook, message):
@@ -10,6 +11,8 @@ def post_to_slack(slack_webhook, message):
         slack_webhook, data=message,
         headers={'Content-Type': 'application/json'}
     )
+    pprint.pprint(response)
+
     if response.status_code != 200:
         raise ValueError(
             'Request to slack returned an error %s, the response is:\n%s'
@@ -20,27 +23,41 @@ def post_to_slack(slack_webhook, message):
 class MessageGenerator:
   
     def generate_text_message(self, stats_path, template_path):
-        title = 'Use a Lasting Power of Attorney Production - Service Statistics'
+        content = ""
+        # title = 'Use a Lasting Power of Attorney Production - Service Statistics'
+        title = 'TEST STATS'
         colour = '#9933ff'
         with open(template_path, 'r') as file:
             template_str = file.read()
+        
+        template = Template(template_str)
 
         with open(stats_path, 'r') as file:
-            stats = file.read()
+            stats_content = file.read()
+        stats = json.loads(stats_content)["statistics"]
 
-        mapping = {
-            'stats': stats or 'Stats not provided'
-        }
-        message = Template(template_str)
-        text_message = {
+        message = {
             'attachments': [{
                 'title': title,
-                'text': message.render(**mapping),
                 'color': colour,
                 'footer': '',
             }]
         }
-        content = json.dumps(text_message)
+        for event, details in stats.items():
+            mapping = {
+                'event': event,
+                'total': details['total'],
+                'monthly': details['monthly'],
+            }
+            block = {
+                'color': colour,
+                'footer': '',
+                'text': template.render(**mapping),
+            }
+            message['attachments'].append(block)
+        
+        content = json.dumps(message)
+        
         return content
 
 
@@ -64,7 +81,7 @@ def main():
     work = MessageGenerator()
 
     message = work.generate_text_message(args.stats_path, args.template_path)
-
+    print(message)
     if not args.test_mode:
         post_to_slack(args.slack_webhook, message)
 
