@@ -28,6 +28,7 @@ var (
 	returnIdentity = false
 	signingKid     = "my-kid"
 	signingKey, _  = ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	sub            = "urn:fdc:mock-one-login:2023:T25lIExvZ2luICsgUEhQIG1ha2VzIGZvciBzYWQgdGltZQ=="
 )
 
 type OpenIdConfig struct {
@@ -78,7 +79,7 @@ func createSignedToken(clientId, issuer string) (string, error) {
 	t.Header["kid"] = signingKid
 
 	t.Claims = jwt.MapClaims{
-		"sub":   fmt.Sprintf("%s-sub", randomString(10)),
+		"sub":   sub,
 		"iss":   issuer,
 		"nonce": nonce,
 		"aud":   clientId,
@@ -173,8 +174,8 @@ func authorize() http.HandlerFunc {
 func userInfo(privateKey *ecdsa.PrivateKey) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userInfo := UserInfoResponse{
-			Sub:           randomString(12),
-			Email:         "simulate-delivered@notifications.service.gov.uk",
+			Sub:           sub,
+			Email:         "opg-use-an-lpa+test-user@digital.justice.gov.uk",
 			EmailVerified: true,
 			Phone:         "01406946277",
 			PhoneVerified: true,
