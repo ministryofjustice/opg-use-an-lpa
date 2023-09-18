@@ -39,21 +39,11 @@ class MessageGenerator:
         stats = json.loads(stats_content)["statistics"]
 
         message = {
-            'blocks': [
+            'attachments': [
                 {
-                    "type": "header",
-                    'text': {
-                        "type": "plain_text",
-                        "text": title
-                    }
+                    'title': title,
+                    'footer': '',
                 },
-                {
-                    "type": "section", 
-                    "text": { 
-                        "type": "mrkdwn", 
-                        "text": ""
-                    }
-                }
             ]
         }
         
@@ -63,25 +53,13 @@ class MessageGenerator:
         l = len(stats) + 1 
         per = math.ceil(l/max_blocks)
         
-        counter = 0
         for event, details in stats.items():
-            m = counter % per
-            i = math.ceil(counter / per) + 1
             mapping = {
                 'event': event,
                 'total': details['total'],
                 'monthly': details['monthly'],
             }
-            if m == 0:
-                message["blocks"].append({ "type": "section", "text": { "type": "mrkdwn", "text": ""}})
-            message["blocks"][i]["text"]["text"] += "\n" + template.render(**mapping)
-
-            # theres a character length limit too
-            if len(message["blocks"][i]["text"]["text"]) > max_chars:
-                sys.exit("Error - too many characters")
-                
-
-            counter = counter +1
+            message["attachments"].append( {'text': template.render(**mapping), 'footer': "", 'title':'', "color": colour})
         
         content = json.dumps(message)
         
@@ -102,17 +80,21 @@ def main():
     parser.add_argument('--test', dest='test_mode', action='store_const',
                         const=True, default=False,
                         help='Generate message bot do not post to slack')
+    parser.add_argument('--message_path', type=str, default="",
+                        help='Path to a pre-done message file to use for a slack notification')
 
     args = parser.parse_args()
 
-    work = MessageGenerator()
-
-    message = work.generate_text_message(args.stats_path, args.template_path)
+    if len(args.message_path) > 0:
+        with open(args.message_path, 'r') as file:
+            message = file.read()
+    else:
+        work = MessageGenerator()
+        message = work.generate_text_message(args.stats_path, args.template_path)
     
     if args.test_mode:
         print(message)
     else:
-        print(message)
         post_to_slack(args.slack_webhook, message)
 
 
