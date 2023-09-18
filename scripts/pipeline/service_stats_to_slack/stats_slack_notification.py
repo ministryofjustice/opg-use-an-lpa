@@ -26,8 +26,8 @@ class MessageGenerator:
         max_blocks = 50
         max_chars = 3000
         content = ""
-        # title = 'Service Statistics - Use a Lasting Power of Attorney Production'
-        title = 'TEST STATS'
+        title = 'Service Statistics - Use a Lasting Power of Attorney Production'
+        #title = 'TEST STATS'
         colour = '#9933ff'
         with open(template_path, 'r') as file:
             template_str = file.read()
