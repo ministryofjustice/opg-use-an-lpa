@@ -37,7 +37,7 @@ jobs:
           pip install -r ./scripts/pipeline/requirements.txt
       - name: Get stats
         run: |
-          python ./scripts/get_statistics/get_statistics.py --text > ./stats.md
+          python ./scripts/get_statistics/get_statistics.py > ./stats.json
       - name: Show stats in summary (debug only)
         if: runner.debug == '1'
         run: |
@@ -50,4 +50,4 @@ jobs:
           python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
           --slack_webhook ${{ env.SLACK_WEB_HOOK }} \
           --template_path ./scripts/pipeline/service_stats_to_slack/service_stats.txt \
-          --stats_path ./stats.md
+          --stats_path ./stats.json
