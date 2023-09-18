@@ -24,7 +24,7 @@ class MessageGenerator:
   
     def generate_text_message(self, stats_path, template_path):
         content = ""
-        # title = 'Use a Lasting Power of Attorney Production - Service Statistics'
+        # title = 'Service Statistics - Use a Lasting Power of Attorney Production'
         title = 'TEST STATS'
         colour = '#9933ff'
         with open(template_path, 'r') as file:
@@ -50,6 +50,7 @@ class MessageGenerator:
                 'monthly': details['monthly'],
             }
             block = {
+                "mrkdwn_in": ["text"],
                 'color': colour,
                 'footer': '',
                 'text': template.render(**mapping),
@@ -81,8 +82,10 @@ def main():
     work = MessageGenerator()
 
     message = work.generate_text_message(args.stats_path, args.template_path)
-    print(message)
-    if not args.test_mode:
+
+    if args.test_mode:
+        print(message)
+    else:
         post_to_slack(args.slack_webhook, message)
 
 
