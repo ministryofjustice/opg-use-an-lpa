@@ -108,10 +108,11 @@ def main():
     work = MessageGenerator()
 
     message = work.generate_text_message(args.stats_path, args.template_path)
-
+    
     if args.test_mode:
         print(message)
     else:
+        print(message)
         post_to_slack(args.slack_webhook, message)
 
 
