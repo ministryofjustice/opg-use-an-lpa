@@ -3,15 +3,14 @@ import json
 import os
 from jinja2 import Template
 import requests
-import pprint
-
+import math
+import sys
 
 def post_to_slack(slack_webhook, message):
     response = requests.post(
         slack_webhook, data=message,
         headers={'Content-Type': 'application/json'}
     )
-    pprint.pprint(response)
 
     if response.status_code != 200:
         raise ValueError(
@@ -23,6 +22,9 @@ def post_to_slack(slack_webhook, message):
 class MessageGenerator:
   
     def generate_text_message(self, stats_path, template_path):
+        # can only use 50 blocks
+        max_blocks = 50
+        max_chars = 3000
         content = ""
         # title = 'Service Statistics - Use a Lasting Power of Attorney Production'
         title = 'TEST STATS'
@@ -37,25 +39,49 @@ class MessageGenerator:
         stats = json.loads(stats_content)["statistics"]
 
         message = {
-            'attachments': [{
-                'title': title,
-                'color': colour,
-                'footer': '',
-            }]
+            'blocks': [
+                {
+                    "type": "header",
+                    'text': {
+                        "type": "plain_text",
+                        "text": title
+                    }
+                },
+                {
+                    "type": "section", 
+                    "text": { 
+                        "type": "mrkdwn", 
+                        "text": ""
+                    }
+                }
+            ]
         }
+        
+
+        # need ot push more info into one block
+        # due to the cap
+        l = len(stats) + 1 
+        per = math.ceil(l/max_blocks)
+        
+        counter = 0
         for event, details in stats.items():
+            m = counter % per
+            i = math.ceil(counter / per) + 1
             mapping = {
                 'event': event,
                 'total': details['total'],
                 'monthly': details['monthly'],
             }
-            block = {
-                "mrkdwn_in": ["text"],
-                'color': colour,
-                'footer': '',
-                'text': template.render(**mapping),
-            }
-            message['attachments'].append(block)
+            if m == 0:
+                message["blocks"].append({ "type": "section", "text": { "type": "mrkdwn", "text": ""}})
+            message["blocks"][i]["text"]["text"] += "\n" + template.render(**mapping)
+
+            # theres a character length limit too
+            if len(message["blocks"][i]["text"]["text"]) > max_chars:
+                sys.exit("Error - too many characters")
+                
+
+            counter = counter +1
         
         content = json.dumps(message)
         
