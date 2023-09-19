@@ -24,7 +24,54 @@ problem space and a set of optionally usable middleware (that we can adapt or ot
 We shall use [`facile-it/php-openid-client`](https://github.com/facile-it/php-openid-client) as our OIDC library of choice. Below is a sequence diagram of the roughly
 intended flow this library allows.
 
-![](../diagrams/OIDC%20login%20flow.svg)
+```mermaid
+sequenceDiagram
+  participant One Login
+  autonumber
+    Note over User: User clicks login button
+    User ->>+ service-front: Login request
+    service-front ->>+ service-api: ui_locale
+    service-api -->> service-api: Create OIDC redirect url
+    Note right of service-api: See \Facile\OpenIDClient\Middleware\AuthRedirectMiddleware<br/>for guidance on usage of<br/>\Facile\OpenIDClient\Service\AuthorisationService
+    service-api -->>- service-front: {redirect_uri, AuthSessionInterface}
+    service-front -->> service-front: Store AuthSessionInterface in session
+    service-front -->>- User: Redirect redirect_uri
+    User -->>+ One Login:
+    alt Create
+        One Login -->> One Login: Account creation
+        One Login -->> One Login: Login to account
+    else Login
+        One Login -->> One Login: Login to account
+    end
+    One Login -->>- User: Redirect to callback_uri
+    User -->>+ service-front:
+    service-front -->> service-front: Fetch AuthSessionInterface
+    service-front -->> service-front: Process query parameters
+    break Error
+        service-front -->> User: Login failure page (see One Login docs)
+    end
+    service-front ->>+ service-api: {code, state, AuthSessionInterface}
+    service-api -->> service-api: Process OIDC authorisation
+    Note right of service-api: See \Facile\OpenIDClient\Middleware\CallbackMiddleware<br/>for guidance on usage of<br/>\Facile\OpenIDClient\Service\AuthorisationService
+    service-api -->> service-api: Load User by email from database
+    alt User not found
+        service-api -->> service-api: Create new user with 'sub'
+    end
+    alt New One login user or merged previously
+        Note right of service-api: User record from DB contains 'sub'
+        service-api -->> service-front: UserInterface
+        service-front -->> service-front: Store UserInterface in session
+        service-front -->> User: Dashboard
+    else Merge
+        Note right of service-api: User record from DB does not contain 'sub'
+        service-api -->> service-front: {UserInterface, 'sub'}
+        service-front -->> service-front: Store unmerged UserInterface in session
+        service-front -->> User: Merge Workflow start
+    else Failure
+        service-api -->>- service-front: authentication failure exception
+        service-front -->>- User: Login failure page
+    end
+```
 
 ## Consequences
 
