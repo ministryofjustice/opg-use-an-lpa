@@ -29,9 +29,8 @@ sequenceDiagram
   participant One Login
   actor User
   autonumber
-    Note over User: User clicks login button
-    User ->>+ service-front: Login request
-    service-front ->>+ service-api: ui_locale
+    User ->>+ service-front: Clicks login button
+    service-front ->>+ service-api: Pass users locale
     service-api -->> service-api: Create OIDC redirect url
     Note right of service-api: See \Facile\OpenIDClient\Middleware\AuthRedirectMiddleware<br/>for guidance on usage of<br/>\Facile\OpenIDClient\Service\AuthorisationService
     service-api -->>- service-front: {redirect_uri, AuthSessionInterface}
@@ -45,7 +44,7 @@ sequenceDiagram
         One Login -->> One Login: Login to account
     end
     One Login -->>- User: Redirect to callback_uri
-    User -->>+ service-front: Follow redirect
+    User -->>+ service-front: Follow callback_uri
     service-front -->> service-front: Fetch AuthSessionInterface
     service-front -->> service-front: Process query parameters
     break Error
@@ -53,6 +52,10 @@ sequenceDiagram
     end
     service-front ->>+ service-api: {code, state, AuthSessionInterface}
     service-api -->> service-api: Process OIDC authorisation
+    break Error
+        service-api -->> service-front: authentication failure exception
+        service-front -->> User: Login failure page
+    end
     Note right of service-api: See \Facile\OpenIDClient\Middleware\CallbackMiddleware<br/>for guidance on usage of<br/>\Facile\OpenIDClient\Service\AuthorisationService
     service-api -->> service-api: Load User by email from database
     alt User not found
@@ -65,12 +68,9 @@ sequenceDiagram
         service-front -->> User: Dashboard
     else Merge
         Note right of service-api: User record from DB does not contain 'sub'
-        service-api -->> service-front: {UserInterface, 'sub'}
+        service-api -->>- service-front: {UserInterface, 'sub'}
         service-front -->> service-front: Store unmerged UserInterface in session
-        service-front -->> User: Merge Workflow start
-    else Failure
-        service-api -->>- service-front: authentication failure exception
-        service-front -->>- User: Login failure page
+        service-front -->>- User: Merge Workflow start
     end
 ```
 
