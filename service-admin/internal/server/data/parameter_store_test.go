@@ -18,6 +18,7 @@ func (m MockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParamete
 	if *params.Name == "error" {
 		return nil, errors.New("mock error")
 	}
+
 	return &ssm.PutParameterOutput{}, nil
 }
 
@@ -25,6 +26,7 @@ func (m MockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamete
 	if *params.Name == "error" {
 		return nil, errors.New("mock error")
 	}
+
 	return &ssm.GetParameterOutput{
 		Parameter: &types.Parameter{
 			Value: aws.String("mockValue"),
