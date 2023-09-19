@@ -85,11 +85,12 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I am taken to the call charges page$/
+     * @Then /^the link takes me to the call charges page$/
      */
-    public function iAmTakenToTheCallChargesPage()
+    public function theLinkTakesMeToTheCallChargesPage(): void
     {
-        $this->ui->assertPageAddress('https://www.gov.uk/call-charges');
+        $link = $this->ui->getSession()->getPage()->findLink('Find out about call charges');
+        assert::assertEquals('https://www.gov.uk/call-charges', $link->getAttribute('href'));
     }
 
     /**
@@ -266,11 +267,12 @@ class CommonContext implements Context
     }
 
     /**
-     * @When /^I navigate to the call charges page$/
+     * @When /^I can see the link to the call charges page$/
      */
-    public function iNavigateToTheFeedbackPage()
+    public function iCanSeeTheLinkToTheCallChargesPage()
     {
-        $this->ui->clickLink('Find out about call charges');
+        $link = $this->ui->getSession()->getPage()->findLink('Find out about call charges');
+        assert::assertNotNull($link);
     }
 
     /**
