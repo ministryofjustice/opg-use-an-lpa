@@ -27,6 +27,7 @@ intended flow this library allows.
 ```mermaid
 sequenceDiagram
   participant One Login
+  actor User
   autonumber
     Note over User: User clicks login button
     User ->>+ service-front: Login request
@@ -36,7 +37,7 @@ sequenceDiagram
     service-api -->>- service-front: {redirect_uri, AuthSessionInterface}
     service-front -->> service-front: Store AuthSessionInterface in session
     service-front -->>- User: Redirect redirect_uri
-    User -->>+ One Login:
+    User -->>+ One Login: Follow redirect
     alt Create
         One Login -->> One Login: Account creation
         One Login -->> One Login: Login to account
@@ -44,7 +45,7 @@ sequenceDiagram
         One Login -->> One Login: Login to account
     end
     One Login -->>- User: Redirect to callback_uri
-    User -->>+ service-front:
+    User -->>+ service-front: Follow redirect
     service-front -->> service-front: Fetch AuthSessionInterface
     service-front -->> service-front: Process query parameters
     break Error
