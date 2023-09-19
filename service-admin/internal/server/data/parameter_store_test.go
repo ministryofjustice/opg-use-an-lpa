@@ -2,6 +2,7 @@ package data_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -14,15 +15,41 @@ import (
 type MockSSMClient struct{}
 
 func (m MockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
+	if *params.Name == "error" {
+		return nil, errors.New("mock error")
+	}
 	return &ssm.PutParameterOutput{}, nil
 }
 
 func (m MockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error) {
+	if *params.Name == "error" {
+		return nil, errors.New("mock error")
+	}
 	return &ssm.GetParameterOutput{
 		Parameter: &types.Parameter{
 			Value: aws.String("mockValue"),
 		},
 	}, nil
+}
+
+func TestReadParameterError(t *testing.T) {
+	t.Parallel()
+
+	conn := data.SSMConnection{Client: MockSSMClient{}}
+	_, err := conn.ReadParameter("error")
+
+	assert.Error(t, err)
+	assert.Equal(t, "error reading parameter: mock error", err.Error())
+}
+
+func TestWriteParameterError(t *testing.T) {
+	t.Parallel()
+
+	conn := data.SSMConnection{Client: MockSSMClient{}}
+	err := conn.WriteParameter("error", "mockValue")
+
+	assert.Error(t, err)
+	assert.Equal(t, "error writing parameter: mock error", err.Error())
 }
 
 func TestReadParameter(t *testing.T) {
