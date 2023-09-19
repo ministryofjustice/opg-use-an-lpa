@@ -1,11 +1,5 @@
 export default class IapImages extends HTMLElement {
-    constructor()
-    {
-        super()
-    }
-
-    connectedCallback()
-    {
+    connectedCallback() {
         const isWait = this.getAttribute('data-wait')
 
         if (isWait !== null) {
@@ -14,8 +8,7 @@ export default class IapImages extends HTMLElement {
         }
     }
 
-    _runInterval()
-    {
+    _runInterval() {
         const _this = this
         /* istanbul ignore next */
         this.interval = setInterval(async () => {
@@ -32,8 +25,7 @@ export default class IapImages extends HTMLElement {
         }, 5000)
     }
 
-    async _getImagesData()
-    {
+    async _getImagesData() {
         const response = await fetch(
             "/lpa/view-lpa/images?" + new URLSearchParams({
                 lpa: this.token
@@ -53,23 +45,21 @@ export default class IapImages extends HTMLElement {
         return response.json()
     }
 
-    _updateComponents(hasError, signedUrls)
-    {
+    _updateComponents(hasError, signedUrls) {
         hasError
             ? this._displayError()
             : this._displayImages(signedUrls)
     }
 
-    _displayError()
-    {
+    _displayError() {
         const insts = this.querySelector('iap-instructions')
         if (insts !== null) {
-            insts.displayError()
+            insts.inError = true
         }
 
         const prefs = this.querySelector('iap-preferences')
         if (prefs !== null) {
-            prefs.displayError()
+            prefs.inError = true
         }
 
         const guidance = this.querySelector('#images-guidance')
@@ -78,23 +68,20 @@ export default class IapImages extends HTMLElement {
         }
     }
 
-    _displayImages(signedUrls)
-    {
-        const insts = this.querySelector('iap-instructions')
+    _displayImages(signedUrls) {
+       const insts = this.querySelector('iap-instructions')
         if (signedUrls.instructions.length > 0 && insts !== null) {
-            insts.displayImages(signedUrls.instructions)
+            insts.images = signedUrls.instructions
         }
 
         const prefs = this.querySelector('iap-preferences')
         if (signedUrls.preferences.length > 0 && prefs !== null) {
-            prefs.displayImages(signedUrls.preferences)
+            prefs.images = signedUrls.preferences
         }
 
         const unknown = this.querySelector('iap-unknown')
         if (signedUrls.unknown.length > 0 && unknown !== null) {
-            const imgsTmpl = document.getElementById('iap-unknown-section').content
-            unknown.replaceChildren(imgsTmpl.firstElementChild.cloneNode(true))
-            unknown.displayImages(signedUrls.unknown)
+            unknown.images = signedUrls.unknown
         }
     }
 }
