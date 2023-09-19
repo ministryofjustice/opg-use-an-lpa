@@ -18,9 +18,8 @@ type SSMConnection struct {
 	Client SSMClient
 }
 
-func NewSSMConnection(conf aws.Config) *SSMConnection {
-	svc := ssm.NewFromConfig(conf)
-	return &SSMConnection{Client: svc}
+func NewSSMConnection(client SSMClient) *SSMConnection {
+	return &SSMConnection{Client: client}
 }
 
 func (s *SSMConnection) WriteParameter(name string, value string) error {

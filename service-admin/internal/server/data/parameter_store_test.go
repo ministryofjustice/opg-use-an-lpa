@@ -35,7 +35,7 @@ func (m MockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamete
 func TestReadParameterError(t *testing.T) {
 	t.Parallel()
 
-	conn := data.SSMConnection{Client: MockSSMClient{}}
+	conn := data.NewSSMConnection(MockSSMClient{})
 	_, err := conn.ReadParameter("error")
 
 	assert.Error(t, err)
@@ -45,7 +45,7 @@ func TestReadParameterError(t *testing.T) {
 func TestWriteParameterError(t *testing.T) {
 	t.Parallel()
 
-	conn := data.SSMConnection{Client: MockSSMClient{}}
+	conn := data.NewSSMConnection(MockSSMClient{})
 	err := conn.WriteParameter("error", "mockValue")
 
 	assert.Error(t, err)
@@ -55,7 +55,7 @@ func TestWriteParameterError(t *testing.T) {
 func TestReadParameter(t *testing.T) {
 	t.Parallel()
 
-	conn := data.SSMConnection{Client: MockSSMClient{}}
+	conn := data.NewSSMConnection(MockSSMClient{})
 	value, err := conn.ReadParameter("mockKey")
 
 	assert.NoError(t, err)
@@ -65,7 +65,7 @@ func TestReadParameter(t *testing.T) {
 func TestWriteParameter(t *testing.T) {
 	t.Parallel()
 
-	conn := data.SSMConnection{Client: MockSSMClient{}}
+	conn := data.NewSSMConnection(MockSSMClient{})
 	err := conn.WriteParameter("mockKey", "mockValue")
 
 	assert.NoError(t, err)
