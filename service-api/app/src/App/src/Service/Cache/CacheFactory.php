@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\Service\Cache;
 
 use Psr\Container\ContainerInterface;
