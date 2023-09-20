@@ -1,7 +1,9 @@
+import {expect} from '@jest/globals';
 import IapContainer from "./iapContainer.js"
 
 const stubElement = class extends IapContainer {
     ERROR_TEMPLATE='iap-stub-error'
+    WAIT_TEMPLATE='iap-stub-wait'
 }
 
 const html = `
@@ -12,7 +14,23 @@ const html = `
         <div class="opg-ip"></div>
     </template>
     <template id="iap-stub-error">
-        <div>This is an error message</div>
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                This is an error message
+            </strong>
+        </div>
+    </template>
+    <template id="iap-stub-wait">
+        <div class="govuk-warning-text iap-wait">
+            <strong class="govuk-warning-text__text">
+                <div class="iap-loader"></div>
+                <span class="govuk-warning-text__assistive">Warning</span>
+                A scanned image of the donor’s instructions will appear here soon. The first time may take up to 10 minutes.
+                You do not need to stay on the page or refresh it whilst you wait.
+            </strong>
+        </div>
     </template>
     <iap-test>
         <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -44,33 +62,38 @@ describe('it provides shared methods for inheriting classes', () => {
     test('it can be told to display errors', () => {
         let sut = document.body.querySelector('iap-test')
 
-        sut.displayError()
+        sut.inError = true
 
-        expect(sut.innerHTML).toContain('<div>This is an error message</div>')
-        expect(sut.innerHTML).not.toContain('<div class="govuk-warning-text iap-wait">')
+        expect(sut.innerHTML).toEqual(expect.stringContaining('This is an error message'))
+        expect(sut.innerHTML).not.toEqual(expect.stringContaining('/<div class="govuk-warning-text iap-wait">/'))
     })
 
     test('it wont show errors if there is no spinner', () => {
         document.querySelector('iap-test .iap-wait').remove()
 
         let sut = document.body.querySelector('iap-test')
-        sut.displayError()
+        sut.inError = true
 
-        expect(sut.innerHTML).not.toContain('<div>This is an error message</div>')
+        expect(sut.innerHTML).not.toEqual(expect.stringContaining('This is an error message'))
     })
 
     test('it will update with images when provided', () => {
         let sut = document.body.querySelector('iap-test')
 
-        sut.displayImages(
-            [
-                {name: 'image-name', url: 'image-url'},
-                {name: 'image-name-continuation', url: 'image-url-continuation'}
-            ]
-        )
+        sut.images = [
+            {name: 'image-name', url: 'image-url'},
+            {name: 'image-name-continuation', url: 'image-url-continuation'}
+        ]
 
-        expect(sut.innerHTML).not.toContain('<div class="govuk-warning-text iap-wait">')
-        expect(sut.innerHTML).toContain('<div class="opg-ip">')
-        expect(sut.innerHTML).toContain('<img class="opg-ip__image"')
+        expect(sut.innerHTML).not.toEqual(expect.stringContaining('/<div class="govuk-warning-text iap-wait">/'))
+        expect(sut.innerHTML).toEqual(expect.stringContaining('<div class="opg-ip">'))
+        expect(sut.innerHTML).toEqual(expect.stringContaining('<img class="opg-ip__image"'))
+    })
+
+    test('it will update the static wait message', () => {
+        let sut = document.body.querySelector('iap-test')
+
+        expect(sut.innerHTML).toEqual(expect.stringContaining('You do not need to stay on the page or refresh it whilst you wait'))
+        expect(sut.innerHTML).not.toEqual(expect.stringContaining('Please refresh this page'))
     })
 })

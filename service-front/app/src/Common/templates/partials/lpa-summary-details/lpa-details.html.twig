@@ -75,7 +75,7 @@
             </dd>
         </div>
     {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
-        </dl>
+</dl>
 
         {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
@@ -90,7 +90,6 @@
                         {% endtrans %}
                     </strong>
                 </div>
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
         {% endif %}
 
@@ -118,7 +117,7 @@
                     {{ iap.preferences_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                         or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.preferences_wait() }}
+                    {{ iap.preferences_static_wait() }}
                 {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                     {% set prefs_images = iap_images.getPreferencesImageUrls %}
                     {% if (prefs_images | length) > 0 %}
@@ -152,7 +151,7 @@
                     {{ iap.instructions_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                     or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.instructions_wait(actorToken ?? null) }}
+                    {{ iap.instructions_static_wait() }}
                 {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                     {% set insts_images = iap_images.getInstructionsImageUrls %}
                     {% if (insts_images | length) > 0 %}
@@ -174,4 +173,3 @@
             {% endif %}
         </iap-unknown>
     {% endif %}
-</dl>
