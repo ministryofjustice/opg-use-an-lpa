@@ -239,7 +239,18 @@ stats = [
         'account_deleted_event': 30,
         'account_activated_event': 20,
         'viewer_codes_created': 10,
-        'viewer_codes_viewed' : 5
+        'viewer_codes_viewed' : 5,
+        'added_lpa_type_hw_event' :29,
+        'added_lpa_type_pfa_event' : 30,
+        'download_summary_event' : 20,
+        'older_lpa_needs_cleansing_event' : 34,
+        'view_lpa_share_code_expired_event' : 35,
+        'user_abroad_address_request_success_event' : 27,
+        'full_match_key_request_success_lpa_type_hw_event' : 45,
+        'full_match_key_request_success_lpa_type_pfa_event' : 37,
+        'view_lpa_share_code_cancelled_event' : 28
+
+
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=4)).strftime('%Y-%m'),
@@ -249,7 +260,16 @@ stats = [
         'account_deleted_event': 2,
         'account_activated_event': 2,
         'viewer_codes_created': 2,
-        'viewer_codes_viewed' : 1
+        'viewer_codes_viewed' : 1,
+        'added_lpa_type_hw_event' : 5,
+        'added_lpa_type_pfa_event' : 7,
+        'download_summary_event' : 4,
+        'older_lpa_needs_cleansing_event' : 6,
+        'view_lpa_share_code_expired_event' : 6,
+        'user_abroad_address_request_success_event' : 6,
+        'full_match_key_request_success_lpa_type_hw_event' : 4,
+        'full_match_key_request_success_lpa_type_pfa_event' : 6,
+        'view_lpa_share_code_cancelled_event' : 5
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=3)).strftime('%Y-%m'),
@@ -259,7 +279,16 @@ stats = [
         'account_deleted_event': 1,
         'account_activated_event': 15,
         'viewer_codes_created': 4,
-        'viewer_codes_viewed' : 3
+        'viewer_codes_viewed' : 3,
+        'added_lpa_type_hw_event' : 7,
+        'added_lpa_type_pfa_event' : 6,
+        'download_summary_event' : 7,
+        'older_lpa_needs_cleansing_event' : 6,
+        'view_lpa_share_code_expired_event' : 6,
+        'user_abroad_address_request_success_event' : 5,
+        'full_match_key_request_success_lpa_type_hw_event' : 4,
+        'full_match_key_request_success_lpa_type_pfa_event' : 6,
+        'view_lpa_share_code_cancelled_event' : 5
     },
     {
         'TimePeriod': (datetime.date.today() - relativedelta(months=2)).strftime('%Y-%m'),
@@ -269,7 +298,16 @@ stats = [
         'account_deleted_event': 3,
         'account_activated_event': 12,
         'viewer_codes_created': 2,
-        'viewer_codes_viewed' : 0
+        'viewer_codes_viewed' : 0,
+        'added_lpa_type_hw_event' : 8,
+        'added_lpa_type_pfa_event' : 6,
+        'download_summary_event' : 7,
+        'older_lpa_needs_cleansing_event' : 6,
+        'view_lpa_share_code_expired_event' : 6,
+        'user_abroad_address_request_success_event' : 5,
+        'full_match_key_request_success_lpa_type_hw_event' : 4,
+        'full_match_key_request_success_lpa_type_pfa_event' : 6,
+        'view_lpa_share_code_cancelled_event' : 5
 
     },
     {
@@ -280,7 +318,18 @@ stats = [
         'account_deleted_event': 1,
         'account_activated_event': 9,
         'viewer_codes_created': 1,
-        'viewer_codes_viewed' : 0
+        'viewer_codes_viewed' : 0,
+        'added_lpa_type_hw_event' : 8,
+        'added_lpa_type_pfa_event' : 8,
+        'download_summary_event' : 7,
+        'older_lpa_needs_cleansing_event' : 6,
+        'view_lpa_share_code_expired_event' : 6,
+        'user_abroad_address_request_success_event' : 6,
+        'full_match_key_request_success_lpa_type_hw_event' : 4,
+        'full_match_key_request_success_lpa_type_pfa_event' : 6,
+        'view_lpa_share_code_cancelled_event' : 5
+
+
     },
     {
         'TimePeriod': datetime.date.today().strftime('%Y-%m'),
@@ -290,7 +339,16 @@ stats = [
         'account_deleted_event': 4,
         'account_activated_event': 12,
         'viewer_codes_created': 1,
-        'viewer_codes_viewed' : 1
+        'viewer_codes_viewed' : 1,
+        'added_lpa_type_hw_event' : 8,
+        'added_lpa_type_pfa_event' : 8,
+        'download_summary_event' : 7,
+        'older_lpa_needs_cleansing_event' : 6,
+        'view_lpa_share_code_expired_event' : 6,
+        'user_abroad_address_request_success_event' : 6,
+        'full_match_key_request_success_lpa_type_hw_event' : 4,
+        'full_match_key_request_success_lpa_type_pfa_event' : 6,
+        'view_lpa_share_code_cancelled_event' : 5
     }
 ]
 

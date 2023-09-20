@@ -4,10 +4,6 @@
 
 {% block content %}
 <div class="govuk-width-container">
-    <div class="govuk-clearfix">
-        {{ include('@partials/welsh-switch.html.twig') }}
-    </div>
-
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         {{ include('@viewer/partials/service-message.html.twig') }}
@@ -72,6 +68,5 @@
             </div>
         </div>
     </main>
-    {{ include('@viewer/new-view-service.html.twig') }}
 </div>
 {% endblock %}

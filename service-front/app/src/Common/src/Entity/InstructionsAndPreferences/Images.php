@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Common\Entity\InstructionsAndPreferences;
 
-class Images
+use JsonSerializable;
+
+class Images implements JsonSerializable
 {
     private const INSTRUCTIONS = '/iap-%s-(?:continuation_)?instructions/';
     private const PREFERENCES  = '/iap-%s-(?:continuation_)?preferences/';
@@ -58,5 +60,18 @@ class Images
                 return preg_match($pattern, $signedUrl->imageName);
             })
         );
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'uId'        => $this->uId,
+            'status'     => $this->status->value,
+            'signedUrls' => [
+                'instructions' => $this->getInstructionsImageUrls(),
+                'preferences'  => $this->getPreferencesImageUrls(),
+                'unknown'      => $this->getUnknownImageUrls(),
+            ],
+        ];
     }
 }

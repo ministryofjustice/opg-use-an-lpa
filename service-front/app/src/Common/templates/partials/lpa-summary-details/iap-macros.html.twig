@@ -1,0 +1,107 @@
+{% macro img(url) %}
+    <img class="opg-ip__image" src="{{ url }}"
+         alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+{% endmacro %}
+
+{% macro images(type, images) %}
+    <div class="opg-ip">
+        {% for url in images %}
+            {{ _self.img(url.url) }}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro images_error(text) %}
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+            {{ text|raw }}
+        </strong>
+    </div>
+{% endmacro %}
+
+{% macro images_wait(text) %}
+    <div class="govuk-warning-text iap-wait">
+        <strong class="govuk-warning-text__text">
+            <div class="iap-loader"></div>
+            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+            {{ text|raw }}
+        </strong>
+    </div>
+{% endmacro %}
+
+{% macro unknown_section() %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{% trans %}Additional Information{% endtrans %}</dt>
+            <dd class="govuk-summary-list__value"></dd>
+        </div>
+    </dl>
+{% endmacro %}
+
+{% macro preferences_error() %}
+    {% if application is same as('actor') %}
+        {{ _self.images_error(
+            'We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
+            Until we can fix this problem, you’ll need to show the paper
+            <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them.
+            You do not need to contact us. We are aware of this issue.' | trans
+        ) }}
+    {% elseif application is same as('viewer') %}
+        {{ _self.images_error(
+            'We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
+            Until we can fix this problem, if you need to see these you’ll need to ask the person who
+            gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>.
+            You do not need to contact us. We are aware of this issue.' | trans
+        ) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro preferences_dynamic_wait() %}
+    {{ _self.images_wait(
+        'A scanned image of the donor’s preferences will appear here soon.
+        The first time may take up to 10 minutes.
+        You do not need to stay on the page or refresh it whilst you wait.' | trans
+    ) }}
+{% endmacro %}
+
+{% macro preferences_static_wait() %}
+    {{ _self.images_wait(
+        'A scanned image of the donor’s preferences will appear here soon. The first time may
+        take up to 10 minutes. Please refresh this page.' | trans
+    ) }}
+{% endmacro %}
+
+{% macro instructions_error() %}
+    {% if application is same as('actor') %}
+        {{ _self.images_error(
+            'We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
+            Until we can fix this problem, you’ll need to show the paper
+            <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them.
+            You do not need to contact us. We are aware of this issue.' | trans
+        ) }}
+    {% elseif application is same as('viewer') %}
+        {{ _self.images_error(
+            'We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
+            Until we can fix this problem, if you need to see these you’ll need to ask the person who
+            gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>.
+            You do not need to contact us. We are aware of this issue.' | trans
+        ) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro instructions_static_wait() %}
+    {{ _self.images_wait(
+        'A scanned image of the donor’s instructions will appear here soon. The first time may
+        take up to 10 minutes. Please refresh this page.' | trans
+    ) }}
+{% endmacro %}
+
+{% macro instructions_dynamic_wait() %}
+    {{ _self.images_wait(
+        'A scanned image of the donor’s instructions will appear here soon.
+        The first time may take up to 10 minutes.
+        You do not need to stay on the page or refresh it whilst you wait.' | trans
+    ) }}
+{% endmacro %}

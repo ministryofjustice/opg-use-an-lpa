@@ -1,3 +1,5 @@
+{% import "@partials/lpa-summary-details/iap-macros.html.twig" as iap %}
+
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     {% if lpa.caseSubtype == "pfa" %}
         <div class="govuk-summary-list__row">
@@ -73,10 +75,10 @@
             </dd>
         </div>
     {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
+</dl>
 
         {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
             {% if lpa.hasSeveranceWarning %}
-                </dl>
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
@@ -88,159 +90,86 @@
                         {% endtrans %}
                     </strong>
                 </div>
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
             {% endif %}
         {% endif %}
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value">
-                {% if lpa.applicationHasGuidance %}
-                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-                        {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                    {% else %}
-                        {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
-                    {% endif %}
-                {% else %}
-                    {% trans %}No{% endtrans %}
-                {% endif %}
-            </dd>
-        </div>
-
-        {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasGuidance and iap_images is defined %}
-            </dl>
-                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
-                    <div class="govuk-warning-text">
-                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                        <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                            {% if application is same as('actor') %}
-                                {% trans %}
-                                    We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
-                                    Until we can fix this problem, you’ll need to show the paper
-                                    <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them. You do not need to contact us. We are aware of this issue.
-                                {% endtrans %}
-                            {% elseif application is same as('viewer') %}
-                                {% trans %}
-                                    We cannot show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
-                                    Until we can fix this problem, if you need to see these you’ll need to ask the person who
-                                    gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>. You do not need to contact us. We are aware of this issue.
-                                {% endtrans %}
+        <iap-preferences>
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">
+                        {% if lpa.applicationHasGuidance %}
+                            {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                                {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                            {% else %}
+                                {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
                             {% endif %}
-                        </strong>
-                    </div>
-                {#   if in progress show spinner/wait message TODO #}
+                        {% else %}
+                            {% trans %}No{% endtrans %}
+                        {% endif %}
+                    </dd>
+                </div>
+            </dl>
+
+            {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasGuidance and iap_images is defined %}
+                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                    {{ iap.preferences_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
-                or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    <div class="govuk-warning-text">
-                        <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                            <div class="iap-loader"></div>
-                            {% trans %}
-                                A scanned image of the donor’s preferences will appear here soon. The first time may take up to 10 minutes. Please refresh this page.
-                            {% endtrans %}
-                        </strong>
-                    </div>
+                        or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
+                    {{ iap.preferences_static_wait() }}
                 {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                     {% set prefs_images = iap_images.getPreferencesImageUrls %}
                     {% if (prefs_images | length) > 0 %}
-                        <div id="preferences_images" class="opg-ip">
-                            {% for url in prefs_images %}
-                                <img class="opg-ip__image" src="{{ url.url }}"
-                                     alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-                            {% endfor %}
-                        </div>
+                        {{ iap.images("preferences", prefs_images) }}
                     {% endif %}
-                {% endif %}
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-        {% endif %}
-
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value">
-                {% if lpa.applicationHasRestrictions %}
-                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
-                        {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                    {% else %}
-                        {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                        <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
-                    {% endif %}
-                {% else %}
-                    {% trans %}No{% endtrans %}
-                {% endif %}
-            </dd>
-        </div>
-
-        {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasRestrictions and iap_images is defined %}
-            </dl>
-            {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                        {% if application is same as('actor') %}
-                            {% trans %}
-                                We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
-                                Until we can fix this problem, you’ll need to show the paper
-                                <abbr title="lasting power of attorney">LPA</abbr> to anyone who needs to see them. You do not need to contact us. We are aware of this issue.
-                            {% endtrans %}
-                        {% elseif application is same as('viewer') %}
-                            {% trans %}
-                                We cannot show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
-                                Until we can fix this problem, if you need to see these you’ll need to ask the person who
-                                gave you the access code to show you the paper <abbr title="lasting power of attorney">LPA</abbr>. You do not need to contact us. We are aware of this issue.
-                            {% endtrans %}
-                        {% endif %}
-                    </strong>
-                </div>
-            {#   if in progress show spinner/wait message TODO #}
-            {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
-                or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                <div class="govuk-warning-text">
-                    <strong class="govuk-warning-text__text">
-                        <div class="iap-loader"></div>
-                        <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
-                        {% trans %}
-                            A scanned image of the donor’s instructions will appear here soon. The first time may take up to 10 minutes. Please refresh this page.
-                        {% endtrans %}
-                    </strong>
-                </div>
-            {# if complete iterate images #}
-            {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
-                {% set insts_images = iap_images.getInstructionsImageUrls %}
-                {% if (insts_images | length) > 0 %}
-                    <div id="instructions_images" class="opg-ip">
-                        {% for url in insts_images %}
-                            <img class="opg-ip__image" src="{{ url.url }}"
-                                 alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-                        {% endfor %}
-                    </div>
                 {% endif %}
             {% endif %}
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-        {% endif %}
+        </iap-preferences>
 
-        {% if feature_enabled("instructions_and_preferences") and iap_images is defined
-                and iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
-            {% set unknown_images = iap_images.getUnknownImageUrls %}
-            {% if (unknown_images | length) > 0 %}
+        <iap-instructions>
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{% trans %}Additional Information{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value"></dd>
+                    <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">
+                        {% if lpa.applicationHasRestrictions %}
+                            {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                                {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                            {% else %}
+                                {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                            {% endif %}
+                        {% else %}
+                            {% trans %}No{% endtrans %}
+                        {% endif %}
+                    </dd>
                 </div>
+            </dl>
 
-                </dl>
-
-                <div id="unknown_images" class="opg-ip">
-                    {% for url in unknown_images %}
-                        <img class="opg-ip__image" src="{{ url.url }}"
-                             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
-                    {% endfor %}
-                </div>
-
-                <dl class="govuk-summary-list govuk-summary-list--no-border">
+            {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasRestrictions and iap_images is defined %}
+                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                    {{ iap.instructions_error() }}
+                {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                    or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
+                    {{ iap.instructions_static_wait() }}
+                {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                    {% set insts_images = iap_images.getInstructionsImageUrls %}
+                    {% if (insts_images | length) > 0 %}
+                        {{ iap.images("instructions", insts_images) }}
+                    {% endif %}
+                {% endif %}
             {% endif %}
-        {% endif %}
+        </iap-instructions>
+
+        <iap-unknown>
+            {% if feature_enabled("instructions_and_preferences") and iap_images is defined and
+                    iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                {% set unknown_images = iap_images.getUnknownImageUrls %}
+                {% if (unknown_images | length) > 0 %}
+                    {{ iap.unknown_section() }}
+
+                    {{ iap.images("unknown", unknown_images) }}
+                {% endif %}
+            {% endif %}
+        </iap-unknown>
     {% endif %}
-</dl>

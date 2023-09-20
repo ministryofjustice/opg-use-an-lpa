@@ -11,7 +11,7 @@ Feature: The user is able to see correct information on their dashboard
     And I am inactive against the LPA on my account
 
   @ui
-  Scenario:
+  Scenario: The user cannot perform actions against an LPA they've been removed from
     Given an attorney can be removed from acting on a particular LPA
     When I am on the dashboard page
     Then I can see authority to use the LPA is revoked
@@ -22,19 +22,19 @@ Feature: The user is able to see correct information on their dashboard
     And I can go back to the dashboard page
 
   @ui
-  Scenario:
+  Scenario: The user cannot give an organisation access to an LPA they've been removed from
     Given I am on the dashboard page
     When I navigate to give an organisation access
     Then I am shown a not found error
 
   @ui
-  Scenario:
+  Scenario: The user cannot check an access code for an LPA they've been removed from
     Given I am on the dashboard page
     When I navigate to check an access code
     Then I am shown a not found error
 
   @ui
-  Scenario:
+  Scenario: The user cannot view the LPA summary for an LPA they've been removed from
     Given I am on the dashboard page
     When I navigate to view the LPA summary
     Then I am shown a not found error

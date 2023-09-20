@@ -5,9 +5,6 @@
 {% block content %}
 
     <div class="govuk-width-container">
-        {{ include('@partials/account-bar.html.twig') }}
-        {{ include('@partials/welsh-switch.html.twig') }}
-
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div class="govuk-grid-row">
@@ -74,7 +71,7 @@
                                     {% trans %}Do you live in the UK?{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{ data.live_in_uk }}
+                                    {% trans %}No{% endtrans %}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
                                     <a class="govuk-link" id="change-postcode" href="{{ path('lpa.postcode') }}">
@@ -97,6 +94,5 @@
                 </div>
             </div>
         </main>
-        {{ include('@actor/partials/new-use-service.html.twig') }}
     </div>
 {% endblock %}

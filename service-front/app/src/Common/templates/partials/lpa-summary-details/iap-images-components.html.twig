@@ -1,0 +1,29 @@
+{% import "@partials/lpa-summary-details/iap-macros.html.twig" as iap %}
+
+<template id="iap-img">
+    {{ iap.img() }}
+</template>
+
+<template id="iap-images-container">
+    {{ iap.images("TYPE", []) }}
+</template>
+
+<template id="iap-preferences-error">
+    {{ iap.preferences_error() }}
+</template>
+
+<template id="iap-preferences-wait">
+    {{ iap.preferences_dynamic_wait() }}
+</template>
+
+<template id="iap-instructions-error">
+    {{ iap.instructions_error() }}
+</template>
+
+<template id="iap-instructions-wait">
+    {{ iap.instructions_dynamic_wait() }}
+</template>
+
+<template id="iap-unknown-section">
+    {{ iap.unknown_section() }}
+</template>

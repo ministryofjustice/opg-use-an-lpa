@@ -125,8 +125,9 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
+      DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "true"
       INSTRUCTIONS_AND_PREFERENCES: "true"
+      ALLOW_GOV_ONE_LOGIN: "true"
 
       # Local only
       API_SERVICE_URL: http://api-web
@@ -208,8 +209,9 @@ services:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
-      DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "false"
+      DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "true"
       INSTRUCTIONS_AND_PREFERENCES: "true"
+      ALLOW_GOV_ONE_LOGIN: "false"
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"

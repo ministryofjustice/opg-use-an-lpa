@@ -1,7 +1,19 @@
-.opg-ip {
-  .govuk-summary-list + & {
-    margin-top: -0.5rem;
+iap-images {
+  .govuk-summary-list {
+    margin-bottom: 0;
   }
+}
+
+iap-preferences,
+iap-instructions,
+iap-unknown
+{
+  display: block;
+}
+
+.opg-ip
+{
+  margin-top: govuk-spacing(2);
 
   &__image {
     border: 2px dashed govuk-colour('black');
@@ -10,22 +22,20 @@
     height: auto;
     margin-bottom: govuk-spacing(2);
   }
-
-  @include govuk-media-query($from: tablet) {
-    .govuk-summary-list + & {
-      margin-top: -1.5rem;
-    }
-  }
 }
 
 .iap-loader {
-  border: 12px solid #DEE0E2;
+  border: 8px solid #DEE0E2;
   border-radius: 50%;
   border-top-color: #005EA5;
-  width: 80px;
-  height: 80px;
+  width: 35px;
+  height: 35px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
+  margin-top: -5px;
+  position: absolute;
+  left: 0;
+  box-sizing: border-box;
 }
 
 @-webkit-keyframes spin {

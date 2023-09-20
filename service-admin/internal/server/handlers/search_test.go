@@ -257,7 +257,6 @@ func Test_SearchByLPANumber(t *testing.T) {
 			want: map[string]interface{}{
 				"LPANumber": "7000-0000-0000",
 				"AddedBy":   []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "Test@email.com", ActivatedOn: "2020-08-20T15:22:32.838097Z"}},
-
 			},
 		},
 		{
@@ -626,6 +625,7 @@ func Test_SearchHandler(t *testing.T) {
 					LPA:           testLPA.SiriusUID,
 				},
 				Errors: nil,
+				Path:   "/my_url",
 			},
 		},
 		{
@@ -642,7 +642,17 @@ func Test_SearchHandler(t *testing.T) {
 				lpaService: &mockLPAService{},
 				q:          "query=test@email.com",
 			},
-			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
+			expected: &Search{
+				Query: "test@email.com",
+				Type:  0,
+				Result: &data.ActorUser{
+					ID:              "700000000123",
+					Email:           "test@email.com",
+					ActivationToken: "WWFCCH41R123",
+					LPAs:            []*data.LPA{}},
+				Errors: nil,
+				Path:   "/my_url",
+			},
 		},
 		{
 			name: "Email query is case insensitive",
@@ -658,7 +668,18 @@ func Test_SearchHandler(t *testing.T) {
 				lpaService: &mockLPAService{},
 				q:          "query=TEST@email.com",
 			},
-			expected: &Search{Query: "test@email.com", Type: 0, Result: &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, Errors: nil},
+			expected: &Search{
+				Query: "test@email.com",
+				Type:  0,
+				Result: &data.ActorUser{
+					ID:              "700000000123",
+					Email:           "test@email.com",
+					ActivationToken: "WWFCCH41R123",
+					LPAs:            []*data.LPA{},
+				},
+				Errors: nil,
+				Path:   "/my_url",
+			},
 		},
 		{
 			name: "Normal LPA number query",
@@ -672,7 +693,22 @@ func Test_SearchHandler(t *testing.T) {
 				},
 				q: "query=7000-0000-0000",
 			},
-			expected: &Search{Query: "7000-0000-0000", Type: 2, Result: map[string]interface{}{"LPANumber": "700000000000", "AddedBy": []AddedBy{{DateAdded: "2020-08-19T15:22:32.838097Z", Email: "test@email.com", ActivatedOn: "2020-08-20T15:22:32.838097Z"}}}, Errors: nil},
+			expected: &Search{
+				Query: "7000-0000-0000",
+				Type:  2,
+				Result: map[string]interface{}{
+					"LPANumber": "700000000000",
+					"AddedBy": []AddedBy{
+						{
+							DateAdded:   "2020-08-19T15:22:32.838097Z",
+							Email:       "test@email.com",
+							ActivatedOn: "2020-08-20T15:22:32.838097Z",
+						},
+					},
+				},
+				Errors: nil,
+				Path:   "/my_url",
+			},
 		},
 		{
 			name: "Test validation failure",
@@ -681,7 +717,13 @@ func Test_SearchHandler(t *testing.T) {
 				lpaService:     &mockLPAService{GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) { return testLPA, nil }},
 				q:              "query=C-A",
 			},
-			expected: &Search{Query: "C-A", Type: 0, Result: nil, Errors: validation.Errors{"Query": errors.New("Enter an email address or activation code")}},
+			expected: &Search{
+				Query:  "C-A",
+				Type:   0,
+				Result: nil,
+				Errors: validation.Errors{"Query": errors.New("Enter an email address or activation code")},
+				Path:   "/my_url",
+			},
 		},
 		{
 			name: "Test search with no query",
@@ -690,7 +732,13 @@ func Test_SearchHandler(t *testing.T) {
 				lpaService:     &mockLPAService{GetLPAByActivationCodeFunc: func(ctx context.Context, s string) (*data.LPA, error) { return testLPA, nil }},
 				q:              "",
 			},
-			expected: &Search{Query: "", Type: 0, Result: nil, Errors: validation.Errors{"Query": errors.New("Enter a search query")}},
+			expected: &Search{
+				Query:  "",
+				Type:   0,
+				Result: nil,
+				Errors: validation.Errors{"Query": errors.New("Enter a search query")},
+				Path:   "/my_url",
+			},
 		},
 		{
 			name: "Test correct characters are removed",
@@ -710,6 +758,7 @@ func Test_SearchHandler(t *testing.T) {
 					LPA:           testLPA.SiriusUID,
 				},
 				Errors: nil,
+				Path:   "/my_url",
 			},
 		},
 	}

@@ -10,7 +10,6 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AccessForAllLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
@@ -25,7 +24,6 @@ class AccessForAllLpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
     public ActorCodes|ObjectProphecy $actorCodesProphecy;
@@ -50,7 +48,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy      = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
-        $this->featureEnabledProphecy  = $this->prophesize(FeatureEnabled::class);
         $this->resolveActorProphecy    = $this->prophesize(ResolveActor::class);
 
         $this->userId         = 'user-zxywq-54321';
@@ -79,7 +76,6 @@ class AccessForAllLpaServiceTest extends TestCase
             $this->actorCodesProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
             $this->loggerProphecy->reveal()
         );
     }

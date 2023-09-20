@@ -123,48 +123,25 @@ class AddAccessForAllLpaTest extends TestCase
     }
 
     /**
-     * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
+     * Provides expected valid response codes that we know our methods should handle.
+     * @return array
      */
-    public function it_will_fail_to_validate_an_ineligible_lpa(): void
+    public function exceptionThrown(): array
     {
-        $this->apiClientProphecy
-            ->httpPost(
-                '/v1/older-lpa/validate',
-                [
-                    'reference_number'     => (string) $this->olderLpa['reference_number'],
-                    'first_names'          => $this->olderLpa['first_names'],
-                    'last_name'            => $this->olderLpa['last_name'],
-                    'dob'                  => $this->olderLpa['dob']->format('Y-m-d'),
-                    'postcode'             => $this->olderLpa['postcode'],
-                    'force_activation_key' => false,
-                ]
-            )->willThrow(
-                new ApiException(
-                    'LPA not eligible due to registration date',
-                    StatusCodeInterface::STATUS_BAD_REQUEST
-                )
-            );
-
-        $result = $this->sut->validate(
-            '12-1-1-1-1234',
-            $this->olderLpa['reference_number'],
-            $this->olderLpa['first_names'],
-            $this->olderLpa['last_name'],
-            $this->olderLpa['dob'],
-            $this->olderLpa['postcode']
-        );
-
-        $this->assertEquals(AccessForAllResult::NOT_ELIGIBLE, $result->getResponse());
+        return [
+            [ 'LPA not eligible due to registration date', AccessForAllResult::NOT_ELIGIBLE ],
+            [ 'LPA details do not match', AccessForAllResult::DOES_NOT_MATCH ],
+            [ 'LPA status invalid', AccessForAllResult::STATUS_NOT_VALID ],
+        ];
     }
 
     /**
      * @test
+     * @dataProvider exceptionThrown
      * @covers ::validate
      * @covers ::badRequestReturned
      */
-    public function it_will_fail_to_validate_due_to_a_bad_data_match(): void
+    public function it_will_fail_to_validate_due_to_bad_request_exception($message, $accessForAllResult): void
     {
         $this->apiClientProphecy
             ->httpPost(
@@ -179,7 +156,7 @@ class AddAccessForAllLpaTest extends TestCase
                 ]
             )->willThrow(
                 new ApiException(
-                    'LPA details do not match',
+                    $message,
                     StatusCodeInterface::STATUS_BAD_REQUEST
                 )
             );
@@ -193,7 +170,7 @@ class AddAccessForAllLpaTest extends TestCase
             $this->olderLpa['postcode']
         );
 
-        $this->assertEquals(AccessForAllResult::DOES_NOT_MATCH, $result->getResponse());
+        $this->assertEquals($accessForAllResult, $result->getResponse());
     }
 
     /**
