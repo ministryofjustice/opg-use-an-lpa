@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Form;
 
 use Common\Form\AbstractForm;
+use Common\Validator\CommonPasswordValidator;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
@@ -87,6 +88,9 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
                                 StringLength::TOO_SHORT => 'Password must be 12 characters or more',
                             ],
                         ],
+                    ],
+                    [
+                        'name'    => CommonPasswordValidator::class,
                     ],
                 ],
             ],

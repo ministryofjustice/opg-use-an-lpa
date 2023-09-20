@@ -6,6 +6,7 @@ namespace Actor\Form;
 
 use Common\Form\AbstractForm;
 use Common\Form\Element\Email;
+use Common\Validator\CommonPasswordValidator;
 use Common\Validator\EmailAddressValidator;
 use Laminas\Filter\StringToLower;
 use Laminas\Filter\StringTrim;
@@ -92,6 +93,9 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                                 NotEmpty::IS_EMPTY => 'Enter your password',
                             ],
                         ],
+                    ],
+                    [
+                        'name'    => CommonPasswordValidator::class,
                     ],
                     [
                         'name'    => StringLength::class,

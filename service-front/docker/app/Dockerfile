@@ -37,6 +37,10 @@ FROM php-base AS app
 COPY service-front/app /app
 COPY --from=dependency /app/vendor /app/vendor
 
+# Add common passwords file
+RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    && chown www-data /tmp/commonpasswords.txt
+
 #
 # Install development dependencies and tools into production image
 #
