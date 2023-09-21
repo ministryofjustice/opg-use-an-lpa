@@ -79,7 +79,7 @@ logs:
 .PHONY: logs
 
 up_dependencies:
-	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms
+	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms localstack
 .PHONY: up_dependencies
 
 up_services:

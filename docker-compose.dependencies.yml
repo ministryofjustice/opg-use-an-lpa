@@ -87,3 +87,15 @@ services:
       - "4012:4012"
     volumes:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
+
+  localstack:
+    container_name: localstack
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - DEBUG=1
+    volumes:
+      - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
+      - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
+      - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
