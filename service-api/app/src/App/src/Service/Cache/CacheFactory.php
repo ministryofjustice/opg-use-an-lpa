@@ -9,6 +9,7 @@ use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\Cache\Storage\Adapter\Apcu;
 use Psr\SimpleCache\CacheInterface;
+use RuntimeException;
 
 class CacheFactory
 {
@@ -21,10 +22,11 @@ class CacheFactory
         $config = $this->container->get('config');
 
         if (!isset($config['cache'])) {
-            throw new \RuntimeException('Missing cache configuration');
+            throw new RuntimeException('Missing cache configuration');
         }
         if (!isset($config['cache'][$cacheName])) {
-            throw new \RuntimeException('Missing cache configuration for ' . $cacheName);
+            throw new RuntimeException('Missing cache configuration for ' . $cacheName);
+
         }
         $factory = $this->container->get(StorageAdapterFactoryInterface::class);
         /** @var Apcu $cacheAdaptor */
