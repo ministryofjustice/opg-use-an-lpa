@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class KeyPairManagerTest extends TestCase
 {
@@ -26,7 +27,6 @@ class KeyPairManagerTest extends TestCase
 
     public function setUp(): void
     {
-        // Constructor arguments
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
         $this->logger               = $this->prophesize(LoggerInterface::class);
     }
@@ -89,6 +89,53 @@ class KeyPairManagerTest extends TestCase
 
         $keyPairManager = new KeyPairManager($this->secretsManagerClient->reveal(), $this->logger->reveal());
         $this->expectException(SecretsManagerException::class);
+        $keyPairManager->getKeyPair();
+    }
+
+    /**
+     * Provides public key and private key combinations to test null handling
+     *
+     * @return array
+     */
+    public function secretProvider(): array
+    {
+        return [
+            [null, 'privateKey'],
+            ['publicKey', null],
+            [null, null],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider secretProvider
+     */
+    public function get_key_pair_fails_when_null_values_returned(?string $publicKey, ?string $privateKey): void
+    {
+        $publicKeyResult = $this->prophesize(Result::class);
+        $publicKeyResult->get('SecretString')->willReturn($publicKey)->shouldBeCalled();
+
+        $privateKeyResult = $this->prophesize(Result::class);
+        $privateKeyResult->get('SecretString')->willReturn($privateKey)->shouldBeCalled();
+
+
+        $this->secretsManagerClient->getSecretValue(
+            [
+                'SecretId' => self::PUBLIC_KEY,
+            ]
+        )
+            ->willReturn($publicKeyResult->reveal())
+            ->shouldBeCalled();
+        $this->secretsManagerClient->getSecretValue(
+            [
+                'SecretId' => self::PRIVATE_KEY,
+            ]
+        )
+            ->willReturn($privateKeyResult->reveal())
+            ->shouldBeCalled();
+
+        $keyPairManager = new KeyPairManager($this->secretsManagerClient->reveal(), $this->logger->reveal());
+        $this->expectException(RuntimeException::class);
         $keyPairManager->getKeyPair();
     }
 }
