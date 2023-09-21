@@ -27,7 +27,7 @@ class CacheFactoryTest extends TestCase
         $factory = new CacheFactory($containerProphecy->reveal());
 
         $this->expectException(RuntimeException::class);
-        $cache = $factory->__invoke('a-cache');
+        $factory->__invoke('a-cache');
     }
 
     /** @test */
@@ -36,31 +36,32 @@ class CacheFactoryTest extends TestCase
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
             ->get('config')
-            ->shouldBeCalled()
-            ->willReturn(['cache' => []]);
+            ->willReturn(['cache' => []])
+            ->shouldBeCalled();
 
         $factory = new CacheFactory($containerProphecy->reveal());
 
         $this->expectException(RuntimeException::class);
-        $cache = $factory->__invoke('a-cache');
+        $factory->__invoke('a-cache');
     }
 
     /** @test */
     public function itCreatesAConfiguredCache()
     {
-        $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
+        $cacheAdapterProphecy    = $this->prophesize(StorageAdapterFactoryInterface::class);
         $storageInterfacePropecy = $this->prophesize(StorageInterface::class);
-        $capabilitiesPropecy = $this->prophesize(Capabilities::class);
+        $capabilitiesPropecy     = $this->prophesize(Capabilities::class);
 
         // Mocking the scenario where all required types are supported with allowed values
         $capabilitiesPropecy->getSupportedDatatypes()->willReturn([
-              'string' => true,
-              'integer' => true,
-              'double' => true,
-              'boolean' => true,
-              'NULL' => true,
-              'array' => true,
-              'object' => true]);
+                                                                      'string'  => true,
+                                                                      'integer' => true,
+                                                                      'double'  => true,
+                                                                      'boolean' => true,
+                                                                      'NULL'    => true,
+                                                                      'array'   => true,
+                                                                      'object'  => true,
+                                                                  ]);
 
         $capabilitiesPropecy->getMaxKeyLength()->willReturn(128);
         $capabilitiesPropecy->getStaticTtl()->willReturn(true);
