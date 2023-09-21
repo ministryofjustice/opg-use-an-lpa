@@ -8,7 +8,7 @@ use ParagonIE\HiddenString\HiddenString;
 
 class KeyPair
 {
-    public function __construct(readonly public string $public,readonly public HiddenString $private)
+    public function __construct(readonly public string $public, readonly public HiddenString $private)
     {
     }
 }

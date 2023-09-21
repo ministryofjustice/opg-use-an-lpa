@@ -1,5 +1,6 @@
 NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
 ECR_LOGIN ?= @aws-vault exec management -- aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+SM_PATH := mock-integrations/secrets-manager/
 
 COMPOSE_V2 = $(shell docker compose &> /dev/null; echo $$?)
 ifeq ($(COMPOSE_V2),0)
@@ -78,7 +79,7 @@ logs:
 	$(COMPOSE) logs -t -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
 
-up_dependencies:
+up_dependencies: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
 	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms localstack
 .PHONY: up_dependencies
 
@@ -189,6 +190,10 @@ run-structurizr-export:
 	docker pull structurizr/cli:latest
 	docker run --rm -v $(PWD)/docs/diagrams/dsl:/usr/local/structurizr structurizr/cli \
 	export -workspace /usr/local/structurizr/workspace.dsl -format mermaid
+
+$(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
+	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048
+	@openssl rsa -pubout -in $(SM_PATH)private_key.pem -out $(SM_PATH)public_key.pem
 
 # empty target to stop additional arguments from calling
 %:

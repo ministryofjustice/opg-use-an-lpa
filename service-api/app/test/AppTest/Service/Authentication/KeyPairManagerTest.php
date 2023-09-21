@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Authentication;
 
 use App\Service\Authentication\KeyPair;
 use App\Service\Authentication\KeyPairManager;
 use Aws\Result;
+use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
-use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -18,46 +20,75 @@ class KeyPairManagerTest extends TestCase
 
     private ObjectProphecy|SecretsManagerClient $secretsManagerClient;
     private ObjectProphecy|LoggerInterface $logger;
-    const PUBLIC_KEY = 'gov_uk_onelogin_identity_public_key';
-    const PRIVATE_KEY = 'gov_uk_onelogin_identity_private_key';
+
+    public const PUBLIC_KEY  = 'gov_uk_onelogin_identity_public_key';
+    public const PRIVATE_KEY = 'gov_uk_onelogin_identity_private_key';
 
     public function setUp(): void
     {
         // Constructor arguments
-        $this->smClient     = $this->prophesize(SecretsManagerClient::class);
-        $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
+        $this->logger               = $this->prophesize(LoggerInterface::class);
     }
 
     /** @test */
-    public function can_initiate(){
-        $keyPairManager = new KeyPairManager($this->smClient->reveal(), $this->logger->reveal());
+    public function can_initiate(): void
+    {
+        $keyPairManager = new KeyPairManager($this->secretsManagerClient->reveal(), $this->logger->reveal());
         $this->assertInstanceOf(KeyPairManager::class, $keyPairManager);
+        $this->assertEquals(self::PUBLIC_KEY, $keyPairManager::PUBLIC_KEY);
+        $this->assertEquals(self::PRIVATE_KEY, $keyPairManager::PRIVATE_KEY);
     }
 
-
     /** @test */
-    public function get_key_pair(){
-        $testPublicKey = bin2hex(random_bytes(30));
+    public function get_key_pair(): void
+    {
+        $testPublicKey  = bin2hex(random_bytes(30));
         $testPrivateKey = bin2hex(random_bytes(30));
 
         $publicKeyResult = $this->prophesize(Result::class);
         $publicKeyResult->get('SecretString')->willReturn($testPublicKey)->shouldBeCalled();
-        $publicKeyResult->reveal();
 
         $privateKeyResult = $this->prophesize(Result::class);
         $privateKeyResult->get('SecretString')->willReturn($testPrivateKey)->shouldBeCalled();
-        $privateKeyResult->reveal();
 
-        $this->smClient->getSecretValue(['SecretId' => self::PUBLIC_KEY])->willReturn($publicKeyResult)->shouldBeCalled();
-        $this->smClient->getSecretValue(['SecretId' => self::PRIVATE_KEY])->willReturn($privateKeyResult)->shouldBeCalled();
 
-        $keyPairManager = new KeyPairManager($this->smClient->reveal(), $this->logger->reveal());
-        $keyPair = $keyPairManager->getKeyPair();
+        $this->secretsManagerClient->getSecretValue(
+            [
+                'SecretId' => self::PUBLIC_KEY,
+            ]
+        )
+            ->willReturn($publicKeyResult->reveal())
+            ->shouldBeCalled();
+        $this->secretsManagerClient->getSecretValue(
+            [
+                'SecretId' => self::PRIVATE_KEY,
+            ]
+        )
+            ->willReturn($privateKeyResult->reveal())
+            ->shouldBeCalled();
 
-        $testPrivateKey = new HiddenString($testPrivateKey, true, false);
+        $keyPairManager = new KeyPairManager($this->secretsManagerClient->reveal(), $this->logger->reveal());
+        $keyPair        = $keyPairManager->getKeyPair();
 
         $this->assertInstanceOf(KeyPair::class, $keyPair);
         $this->assertEquals($testPublicKey, $keyPair->public);
-        $this->assertEquals($testPrivateKey, $keyPair->private);
+        $this->assertEquals($testPrivateKey, $keyPair->private->getString());
+    }
+
+    /** @test */
+    public function get_key_pair_fails_when_incorrect_secret(): void
+    {
+        $this->secretsManagerClient->getSecretValue(
+            [
+                'SecretId' => self::PUBLIC_KEY,
+            ]
+        )
+            ->willThrow($this->prophesize(SecretsManagerException::class)->reveal());
+
+
+        $keyPairManager = new KeyPairManager($this->secretsManagerClient->reveal(), $this->logger->reveal());
+        $this->expectException(SecretsManagerException::class);
+        $keyPairManager->getKeyPair();
     }
 }
