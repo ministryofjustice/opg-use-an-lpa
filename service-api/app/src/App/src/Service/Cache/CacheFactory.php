@@ -26,7 +26,6 @@ class CacheFactory
         }
         if (!isset($config['cache'][$cacheName])) {
             throw new RuntimeException('Missing cache configuration for ' . $cacheName);
-
         }
         $factory = $this->container->get(StorageAdapterFactoryInterface::class);
         /** @var Apcu $cacheAdaptor */
