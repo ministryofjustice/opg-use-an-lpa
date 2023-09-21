@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Cache;
+namespace AppTest\Service\Cache;
 
+use App\Service\Cache\CacheFactory;
 use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
+use Laminas\Cache\Storage\Capabilities;
 use Laminas\Cache\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -47,9 +49,28 @@ class CacheFactoryTest extends TestCase
     public function itCreatesAConfiguredCache()
     {
         $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
+        $storageInterfacePropecy = $this->prophesize(StorageInterface::class);
+        $capabilitiesPropecy = $this->prophesize(Capabilities::class);
+
+        // Mocking the scenario where all required types are supported with allowed values
+        $capabilitiesPropecy->getSupportedDatatypes()->willReturn([
+              'string' => true,
+              'integer' => true,
+              'double' => true,
+              'boolean' => true,
+              'NULL' => true,
+              'array' => true,
+              'object' => true]);
+
+        $capabilitiesPropecy->getMaxKeyLength()->willReturn(128);
+        $capabilitiesPropecy->getStaticTtl()->willReturn(true);
+        $capabilitiesPropecy->getMinTtl()->willReturn(0);
+
+        $storageInterfacePropecy->getCapabilities()->willReturn($capabilitiesPropecy->reveal());
+
         $cacheAdapterProphecy
             ->createFromArrayConfiguration(['adapter' => 'memory'])
-            ->willReturn($this->prophesize(StorageInterface::class)->reveal());
+            ->willReturn($storageInterfacePropecy->reveal());
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -64,6 +85,7 @@ class CacheFactoryTest extends TestCase
                     ],
                 ]
             );
+
         $containerProphecy
             ->get(StorageAdapterFactoryInterface::class)
             ->shouldBeCalled()
