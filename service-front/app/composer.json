@@ -8,7 +8,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "laminas/laminas-component-installer": false,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": false
         },
         "platform": {
             "php": "8.1.18"
@@ -44,6 +45,7 @@
         "cooperaj/better-twig-i18n": "^3.0",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
+        "facile-it/php-openid-client": "^0.3.4",
         "laminas/laminas-cache": "^3.6",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
         "laminas/laminas-cache-storage-adapter-memory": "^2.1",
