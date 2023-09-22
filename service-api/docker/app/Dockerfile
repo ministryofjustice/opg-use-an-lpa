@@ -7,7 +7,6 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN set -xe \
   && apk add --update --no-cache fcgi \
-  && apk upgrade --update --no-cache curl libxml2 \
   && install-php-extensions apcu \
   && rm /usr/bin/install-php-extensions
 
