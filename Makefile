@@ -80,7 +80,7 @@ logs:
 .PHONY: logs
 
 up_dependencies: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
-	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms localstack
+	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms mock-one-login localstack
 .PHONY: up_dependencies
 
 up_services:
