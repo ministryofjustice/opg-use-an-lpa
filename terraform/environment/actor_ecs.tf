@@ -194,8 +194,8 @@ locals {
           name  = "TIMEOUT",
           value = "60"
         },
-        { 
-          name = "OPG_PHP_POOL_CHILDREN_MAX", 
+        {
+          name  = "OPG_PHP_POOL_CHILDREN_MAX",
           value = "25"
         },
         {
