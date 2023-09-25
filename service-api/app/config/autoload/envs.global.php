@@ -26,6 +26,9 @@ return [
         'DynamoDb' => [
             'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],
+        'SecretsManager' => [
+            'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
+        ],
     ],
 
     'repositories' => [
