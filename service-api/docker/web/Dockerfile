@@ -6,7 +6,6 @@ RUN apk upgrade && \
 
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
-ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
 RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
   && chmod +x /usr/local/bin/confd
