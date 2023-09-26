@@ -195,6 +195,10 @@ locals {
           value = "60"
         },
         {
+          name  = "OPG_PHP_POOL_CHILDREN_MAX",
+          value = "25"
+        },
+        {
           name  = "CONTAINER_VERSION",
           value = var.container_version
       }]
