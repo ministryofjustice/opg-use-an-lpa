@@ -1,13 +1,12 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM php:8.1.18-fpm-alpine3.16 AS php-base
+FROM php:8.1.23-fpm-alpine3.18 AS php-base
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu gettext fcgi \
-  && apk upgrade --update --no-cache curl libxml2 \
   && install-php-extensions apcu redis-^5 intl gettext \
   && rm /usr/bin/install-php-extensions
 
