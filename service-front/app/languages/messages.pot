@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-09-11T09:37:13+00:00\n"
+"POT-Creation-Date: 2023-09-20T07:41:51+00:00\n"
+
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -282,7 +283,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:56
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:113
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
@@ -525,7 +526,7 @@ msgid "Check your answers"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr ""
