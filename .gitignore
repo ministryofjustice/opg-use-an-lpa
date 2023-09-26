@@ -20,3 +20,5 @@ terraform/**/modules/**.terraform.lock.hcl
 
 .structurizr
 docs/diagrams/dsl/**/workspace.json
+
+*.pem
