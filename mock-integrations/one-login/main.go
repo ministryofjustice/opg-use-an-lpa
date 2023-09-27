@@ -212,7 +212,7 @@ func userInfo(privateKey *ecdsa.PrivateKey) http.HandlerFunc {
 }
 
 func logout() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+    return func(w http.ResponseWriter, r *http.Request) {
 		log.Println("/logout was called")
 		postLogoutRedirectUri := r.FormValue("post_logout_redirect_uri")
 
