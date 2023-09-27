@@ -46,4 +46,14 @@ return [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
         ],
     ],
+
+    'cache' => [
+        'one-login' => [
+            'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
+            'options' => [
+                'ttl'       => 60,
+                'namespace' => 'oneLogin',
+            ],
+        ],
+    ],
 ];
