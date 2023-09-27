@@ -211,6 +211,25 @@ func userInfo(privateKey *ecdsa.PrivateKey) http.HandlerFunc {
 	}
 }
 
+func logout() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("/logout was called")
+		postLogoutRedirectUri := r.FormValue("post_logout_redirect_uri")
+
+		if postLogoutRedirectUri == "" {
+			log.Fatal("Required query param 'post_logout_redirect_uri' missing from request")
+		}
+
+		u, parseErr := url.Parse(postLogoutRedirectUri)
+		if parseErr != nil {
+			log.Fatalf("Error parsing redirect_uri: %s", parseErr)
+		}
+
+		log.Printf("Redirecting to %s", u.String())
+		http.Redirect(w, r, u.String(), 302)
+    }
+}
+
 func main() {
 	flag.Parse()
 
@@ -230,6 +249,7 @@ func main() {
 	http.HandleFunc("/authorize", authorize())
 	http.HandleFunc("/token", token(clientId, c.Issuer))
 	http.HandleFunc("/userinfo", userInfo(privateKey))
+	http.HandleFunc("/logout", logout())
 
 	log.Println("GOV UK Sign in mock initialized")
 
