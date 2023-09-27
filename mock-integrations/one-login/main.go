@@ -211,6 +211,12 @@ func userInfo(privateKey *ecdsa.PrivateKey) http.HandlerFunc {
 	}
 }
 
+func logout() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("/logout was called")
+    }
+}
+
 func main() {
 	flag.Parse()
 
@@ -230,6 +236,7 @@ func main() {
 	http.HandleFunc("/authorize", authorize())
 	http.HandleFunc("/token", token(clientId, c.Issuer))
 	http.HandleFunc("/userinfo", userInfo(privateKey))
+	http.HandleFunc("/logout", logout())
 
 	log.Println("GOV UK Sign in mock initialized")
 
