@@ -227,8 +227,8 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_public_access" {
 }
 
 moved {
-  from  = aws_security_group_rule.viewer_loadbalancer_ingress_production[0]
-  to    = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
+  from = aws_security_group_rule.viewer_loadbalancer_ingress_production[0]
+  to   = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
