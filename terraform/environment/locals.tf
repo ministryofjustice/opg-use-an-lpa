@@ -12,6 +12,11 @@ variable "admin_container_version" {
   default = "latest"
 }
 
+variable "public_access_enabled" {
+  type    = bool
+  default = false
+}
+
 output "container_version" {
   value = var.container_version
 }
