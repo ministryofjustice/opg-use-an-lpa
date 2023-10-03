@@ -8,9 +8,7 @@ The User Research environment is used to test the application with users. When d
 
 Select Run Workflow on the  [Deploy Branch to User Research Environment](https://github.com/ministryofjustice/opg-use-an-lpa/actions/workflows/workflow-deploy-ref-to-env.yml). Enter the branch name that you want to deploy and select Enable public access to the environment if you want to make the environment publicly accessible. Leave the Terraform workspace as default (ur). Click Run Workflow.
 
-## Enabling or disabling public access to the User Research environment
-
-Follow the steps in [Deploying to the User Research environment](#deploying-to-the-user-research-environment) and select Enable public access to the environment or deselect it to disable public access to the environment. Ensure that the Terraform workspace is set to ur and that the branch name is set to whatever is currently deployed. Click Run Workflow.
+To enable or disable public access to the User Research environment after the initial deployment, re-run the above workflow and change the Enable public access to the environment option.
 
 ## Accessing the User Research environment
 
