@@ -7,7 +7,7 @@ on:
       git_ref:
         description: 'Branch name to deploy (e.g. uml1234)'
         required: true
-      pubic_access_enabled:
+      public_access_enabled:
         description: 'Enable public access to the environment'
         type: boolean
         required: true
@@ -45,7 +45,6 @@ jobs:
             echo "Don't deploy to production using this workflow"
             exit 1
           fi
-
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
@@ -172,7 +171,7 @@ jobs:
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
-      extra_vars: "-var pubic_access_enabled=${{ inputs.pubic_access_enabled }}"
+      extra_vars: "-var public_access_enabled=${{ inputs.public_access_enabled }}"
     secrets: inherit
     if: |
       always() &&
