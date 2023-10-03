@@ -215,15 +215,20 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
   security_group_id = aws_security_group.viewer_loadbalancer.id
 }
 
-resource "aws_security_group_rule" "viewer_loadbalancer_ingress_production" {
+resource "aws_security_group_rule" "viewer_loadbalancer_ingress_public_access" {
+  count             = var.public_access_enabled ? 1 : 0
   description       = "Port 443 ingress for production from the internet to the application load balancer"
-  count             = local.environment_name == "production" ? 1 : 0
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS006 - open ingress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr - open ingress for production
   security_group_id = aws_security_group.viewer_loadbalancer.id
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_ingress_production[0]
+  to   = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {

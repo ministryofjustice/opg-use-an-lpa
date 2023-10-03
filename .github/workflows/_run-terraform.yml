@@ -29,6 +29,11 @@ on:
         required: false
         default: 'false'
         type: string
+      extra_vars:
+        description: "Extra vars to pass to terraform (-var foo=bar)"
+        required: false
+        default: ''
+        type: string
 
 jobs:
   terraform_workflow:
@@ -118,7 +123,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           terraform workspace show
-          terraform plan -input=false -parallelism=30 -lock-timeout=5m
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: add TTL to dynamodb for environment
@@ -135,7 +140,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: upload environment cluster config file
