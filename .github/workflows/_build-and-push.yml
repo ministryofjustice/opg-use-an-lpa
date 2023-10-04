@@ -146,6 +146,15 @@ jobs:
           matrix.run_unit_tests == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@b5f9031d829ac39b7fd26092019aeca3ee6b3ebd # pin@v1.5.1
+        with:
+          registries: 311462405659
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
       - name: docker integration and acceptance tests
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
@@ -257,15 +266,6 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         with:
           sarif_file: 'trivy-results.sarif'
-
-      - name: ecr login
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@b5f9031d829ac39b7fd26092019aeca3ee6b3ebd # pin@v1.5.1
-        with:
-          registries: 311462405659
-        if: |
-          inputs.push_to_ecr == 'true' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: tag and push container
         env:
