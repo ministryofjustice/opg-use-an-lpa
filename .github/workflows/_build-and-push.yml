@@ -169,6 +169,7 @@ jobs:
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
             docker run -d --rm --name mock-one-login -p "4013:8080" $ECR_REGISTRY/use_an_lpa/mock_onelogin_app
             curl -XGET http://localhost:4013/token
+            docker logs mock-one-login
 
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
