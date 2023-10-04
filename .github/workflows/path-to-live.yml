@@ -178,6 +178,7 @@ jobs:
       container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
       apply: true
       specific_path: all
+      extra_vars: "-var public_access_enabled=true"
     secrets: inherit
 
   production_health_check:
