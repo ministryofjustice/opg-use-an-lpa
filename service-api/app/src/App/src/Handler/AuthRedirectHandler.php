@@ -13,9 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class AuthRedirectHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class AuthRedirectHandler implements RequestHandlerInterface
@@ -31,7 +28,6 @@ class AuthRedirectHandler implements RequestHandlerInterface
      * May call other collaborating code to generate the response.
      *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws Exception
      */

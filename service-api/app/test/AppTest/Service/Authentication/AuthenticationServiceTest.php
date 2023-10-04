@@ -22,8 +22,8 @@ class AuthenticationServiceTest extends TestCase
     public function setup(): void
     {
         $this->keyPairManager = $this->prophesize(KeyPairManager::class);
-        $this->JWKFactory = new JWKFactory($this->keyPairManager->reveal());
-        $this->logger     = $this->prophesize(LoggerInterface::class);
+        $this->JWKFactory     = new JWKFactory($this->keyPairManager->reveal());
+        $this->logger         = $this->prophesize(LoggerInterface::class);
     }
 
     /**

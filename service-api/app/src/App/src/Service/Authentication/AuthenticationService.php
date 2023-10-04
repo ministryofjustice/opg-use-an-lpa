@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
-use function Facile\OpenIDClient\base64url_encode;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\IssuerBuilder;
 use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+
+use function Facile\OpenIDClient\base64url_encode;
 
 class AuthenticationService
 {
