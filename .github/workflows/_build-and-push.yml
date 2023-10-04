@@ -174,7 +174,7 @@ jobs:
             export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
             export DOCKER_REMOTE_MOCK_ONELOGIN_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mock-one-login)"
 
-            curl -XGET $DOCKER_REMOTE_MOCK_ONELOGIN_IP/token
+            curl -XGET $DOCKER_REMOTE_MOCK_ONELOGIN_IP:8080/token
             docker logs mock-one-login
 
             docker run -d --name behattests \
