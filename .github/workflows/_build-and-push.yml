@@ -157,7 +157,7 @@ jobs:
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
             docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
-              docker run -d --rm --name mock-one-login mock-service -p "4013:8080" --host "0.0.0.0" 
+            docker run -d --rm --name mock-one-login -p "4013:8080" 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/mock_onelogin_app
             curl -XGET http://localhost:4013/token
 
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
