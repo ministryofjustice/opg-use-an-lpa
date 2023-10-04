@@ -32,7 +32,7 @@ class AuthenticationServiceTest extends TestCase
     public function getRedirectUri(): void
     {
         $authenticationService = new AuthenticationService($this->JWKFactory, $this->logger->reveal());
-        // TODO test needs to become an integration test
+        // TODO this needs to become an integration test
     /*    $redirectUri           = $authenticationService->redirect('en');
         $this->assertStringContainsString('client_id=client-id', $redirectUri);
         $this->assertStringContainsString('scope=openid+email', $redirectUri);
