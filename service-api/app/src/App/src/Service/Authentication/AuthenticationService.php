@@ -27,18 +27,16 @@ class AuthenticationService
             ->build('http://mock-one-login:8080/.well-known/openid-configuration');
 
 
-//        $key = $this->JWKFactory->invoke();
-
         $clientMetadata = ClientMetadata::fromArray([
             'client_id'                  => 'client-id',
             'client_secret'              => 'my-client-secret',
             'token_endpoint_auth_method' => 'private_key_jwt',
             'redirect_uri'               => '/lpa/dashboard',
-//            'jwks'                       => [
-//                'keys' => [
-////                    $key,
-//                ],
-//            ],
+            'jwks'                       => [
+                'keys' => [
+                    ($this->JWKFactory)(),
+                ],
+            ],
                                                     ]);
 
         $client = (new ClientBuilder())

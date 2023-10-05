@@ -39,6 +39,11 @@ class AuthRedirectHandler implements RequestHandlerInterface
             throw new BadRequestException('Ui locale must be provided');
         }
 
+        $ui_locale = strtolower($params['ui_locale']);
+        if ($ui_locale !== 'en' and $ui_locale !== 'cy') {
+            throw new BadRequestException('ui_locale is not set to en or cy');
+        }
+
         $authorisationUri = $this->authenticationService->redirect($params['ui_locale']);
 
         return new JsonResponse($authorisationUri);
