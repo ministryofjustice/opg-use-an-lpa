@@ -37,6 +37,6 @@ class AuthenticationServiceTest extends TestCase
         $this->assertStringContainsString('client_id=client-id', $redirectUri);
         $this->assertStringContainsString('scope=openid+email', $redirectUri);
         $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $redirectUri);
-        $this->assertStringContainsString('ui_locales=en', $redirectUri);
+        $this->assertStringContainsString('ui_locales=cy', $redirectUri);
     }
 }
