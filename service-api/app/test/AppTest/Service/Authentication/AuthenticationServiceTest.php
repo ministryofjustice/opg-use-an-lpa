@@ -28,7 +28,7 @@ class AuthenticationServiceTest extends TestCase
     }
 
     /**
-     * @acceptance
+     * @integration
      */
     public function get_redirect_uri_en(): void
     {
