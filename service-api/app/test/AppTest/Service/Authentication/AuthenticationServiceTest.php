@@ -33,7 +33,7 @@ class AuthenticationServiceTest extends TestCase
     public function get_redirect_uri_en(): void
     {
         $authenticationService = new AuthenticationService($this->JWKFactory->reveal(), $this->logger->reveal());
-        $redirectUri = $authenticationService->redirect('en');
+        $redirectUri           = $authenticationService->redirect('en');
         $this->assertStringContainsString('client_id=client-id', $redirectUri);
         $this->assertStringContainsString('scope=openid+email', $redirectUri);
         $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $redirectUri);
