@@ -7,6 +7,7 @@ namespace App\Service\Authentication;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\IssuerBuilder;
+use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
 use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -15,15 +16,18 @@ use function Facile\OpenIDClient\base64url_encode;
 
 class AuthenticationService
 {
-    public function __construct(private JWKFactory $JWKFactory, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private JWKFactory $JWKFactory,
+        private LoggerInterface $logger,
+        private IssuerBuilderInterface $issuerBuilder,
+    ) {
     }
 
     public function redirect(string $uiLocale): string
     {
         //TODO UML-3080 Configure cache
 
-        $issuer = (new IssuerBuilder())
+        $issuer = $this->issuerBuilder
             ->build('http://mock-one-login:8080/.well-known/openid-configuration');
 
 

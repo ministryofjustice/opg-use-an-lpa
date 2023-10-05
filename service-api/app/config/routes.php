@@ -2,9 +2,34 @@
 
 declare(strict_types=1);
 
+use App\Handler\AccessForAllLpaConfirmationHandler;
+use App\Handler\AccessForAllLpaValidationHandler;
+use App\Handler\AddLpaConfirmationHandler;
+use App\Handler\AddLpaValidationHandler;
+use App\Handler\AuthHandler;
+use App\Handler\CanPasswordResetHandler;
+use App\Handler\CanResetEmailHandler;
+use App\Handler\ChangePasswordHandler;
+use App\Handler\CompleteChangeEmailHandler;
+use App\Handler\CompleteDeleteAccountHandler;
+use App\Handler\CompletePasswordResetHandler;
+use App\Handler\HealthcheckHandler;
+use App\Handler\LpasCollectionHandler;
+use App\Handler\LpasResourceCodesCollectionHandler;
+use App\Handler\LpasResourceHandler;
+use App\Handler\LpasResourceImagesCollectionHandler;
+use App\Handler\NotifyHandler;
+use App\Handler\RequestChangeEmailHandler;
+use App\Handler\RequestCleanseHandler;
+use App\Handler\RequestPasswordResetHandler;
+use App\Handler\UserActivateHandler;
+use App\Handler\UserHandler;
+use App\Handler\ViewerCodeFullHandler;
+use App\Handler\ViewerCodeSummaryHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use App\Handler\AuthRedirectHandler;
 
 /**
  * Setup routes with a single request method:
@@ -33,82 +58,84 @@ use Psr\Container\ContainerInterface;
  * );
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
-    $app->get('/healthcheck', App\Handler\HealthcheckHandler::class, 'healthcheck');
+    $app->get('/healthcheck', HealthcheckHandler::class, 'healthcheck');
 
-    $app->get('/v1/lpas', App\Handler\LpasCollectionHandler::class, 'lpa.collection');
+    $app->get('/v1/lpas', LpasCollectionHandler::class, 'lpa.collection');
     $app->post(
         '/v1/older-lpa/validate',
-        App\Handler\AccessForAllLpaValidationHandler::class,
+        AccessForAllLpaValidationHandler::class,
         'lpa.older.validate'
     );
     $app->patch(
         '/v1/older-lpa/confirm',
-        App\Handler\AccessForAllLpaConfirmationHandler::class,
+        AccessForAllLpaConfirmationHandler::class,
         'lpa.older.confirm'
     );
 
     $app->post(
         '/v1/older-lpa/cleanse',
-        App\Handler\RequestCleanseHandler::class,
+        RequestCleanseHandler::class,
         'lpa.older.cleanse'
     );
 
-    $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.resource');
-    $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', App\Handler\LpasResourceHandler::class, 'lpa.remove');
+    $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.resource');
+    $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.remove');
     $app->post(
         '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
-        App\Handler\LpasResourceCodesCollectionHandler::class,
+        LpasResourceCodesCollectionHandler::class,
         'lpa.create.code'
     );
     $app->get(
         '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
-        App\Handler\LpasResourceCodesCollectionHandler::class,
+        LpasResourceCodesCollectionHandler::class,
         'lpa.get.codes'
     );
     $app->put(
         '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/codes',
-        App\Handler\LpasResourceCodesCollectionHandler::class,
+        LpasResourceCodesCollectionHandler::class,
         'lpa.cancel.code'
     );
     $app->get(
         '/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}/images',
-        App\Handler\LpasResourceImagesCollectionHandler::class,
+        LpasResourceImagesCollectionHandler::class,
         'lpa.get.images'
     );
 
-    $app->post('/v1/add-lpa/validate', App\Handler\AddLpaValidationHandler::class, 'lpa.add.validate');
-    $app->post('/v1/add-lpa/confirm', App\Handler\AddLpaConfirmationHandler::class, 'lpa.add.confirm');
+    $app->post('/v1/add-lpa/validate', AddLpaValidationHandler::class, 'lpa.add.validate');
+    $app->post('/v1/add-lpa/confirm', AddLpaConfirmationHandler::class, 'lpa.add.confirm');
 
-    $app->post('/v1/viewer-codes/summary', App\Handler\ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
-    $app->post('/v1/viewer-codes/full', App\Handler\ViewerCodeFullHandler::class, 'lpa.viewer-code.full');
+    $app->post('/v1/viewer-codes/summary', ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
+    $app->post('/v1/viewer-codes/full', ViewerCodeFullHandler::class, 'lpa.viewer-code.full');
 
-    $app->get('/v1/user', App\Handler\UserHandler::class, 'user.get');
-    $app->post('/v1/user', App\Handler\UserHandler::class, 'user.create');
-    $app->patch('/v1/user-activation', App\Handler\UserActivateHandler::class, 'user.activate');
+    $app->get('/v1/user', UserHandler::class, 'user.get');
+    $app->post('/v1/user', UserHandler::class, 'user.create');
+    $app->patch('/v1/user-activation', UserActivateHandler::class, 'user.activate');
 
-    $app->patch('/v1/request-password-reset', App\Handler\RequestPasswordResetHandler::class, 'user.password-reset');
-    $app->get('/v1/can-password-reset', App\Handler\CanPasswordResetHandler::class, 'user.can-password-reset');
+    $app->patch('/v1/request-password-reset', RequestPasswordResetHandler::class, 'user.password-reset');
+    $app->get('/v1/can-password-reset', CanPasswordResetHandler::class, 'user.can-password-reset');
     $app->patch(
         '/v1/complete-password-reset',
-        App\Handler\CompletePasswordResetHandler::class,
+        CompletePasswordResetHandler::class,
         'user.complete-password-reset'
     );
 
-    $app->patch('/v1/request-change-email', App\Handler\RequestChangeEmailHandler::class, 'user.request-change-email');
-    $app->get('/v1/can-reset-email', App\Handler\CanResetEmailHandler::class, 'user.can-reset-email');
+    $app->patch('/v1/request-change-email', RequestChangeEmailHandler::class, 'user.request-change-email');
+    $app->get('/v1/can-reset-email', CanResetEmailHandler::class, 'user.can-reset-email');
     $app->patch(
         '/v1/complete-change-email',
-        App\Handler\CompleteChangeEmailHandler::class,
+        CompleteChangeEmailHandler::class,
         'user.complete-change-email'
     );
-    $app->patch('/v1/change-password', App\Handler\ChangePasswordHandler::class, 'user.change-password');
+    $app->patch('/v1/change-password', ChangePasswordHandler::class, 'user.change-password');
     $app->delete(
         '/v1/delete-account/{account-id:[0-9a-f\-]+}',
-        App\Handler\CompleteDeleteAccountHandler::class,
+        CompleteDeleteAccountHandler::class,
         'user.delete-account'
     );
 
-    $app->patch('/v1/auth', App\Handler\AuthHandler::class, 'user.auth');
+    $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
 
-    $app->post('/v1/email-user/{emailTemplate}', App\Handler\NotifyHandler::class, 'lpa.user.notify');
+    $app->get('/v1/auth-one-login', AuthRedirectHandler::class, 'user.auth-one-login');
+
+    $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

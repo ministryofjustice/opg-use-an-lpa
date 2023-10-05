@@ -6,6 +6,10 @@ namespace AppTest\Service\Authentication;
 
 use App\Service\Authentication\AuthenticationService;
 use App\Service\Authentication\JWKFactory;
+use Facile\OpenIDClient\Issuer\IssuerBuilder;
+use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
+use Facile\OpenIDClient\Issuer\IssuerInterface;
+use Facile\OpenIDClient\Issuer\Metadata\IssuerMetadataInterface;
 use Jose\Component\Core\JWK;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -18,21 +22,33 @@ class AuthenticationServiceTest extends TestCase
 
     private ObjectProphecy|JWKFactory $JWKFactory;
     private ObjectProphecy|LoggerInterface $logger;
+    private ObjectProphecy|IssuerBuilder $issuerBuilder;
 
     public function setup(): void
     {
-        $jwk              = $this->prophesize(JWK::class);
-        $this->JWKFactory = $this->prophesize(JWKFactory::class);
+        $jwk                 = $this->prophesize(JWK::class);
+        $this->JWKFactory    = $this->prophesize(JWKFactory::class);
+        $this->logger        = $this->prophesize(LoggerInterface::class);
+        $this->issuerBuilder = $this->prophesize(IssuerBuilderInterface::class);
+        $issuer              = $this->prophesize(IssuerInterface::class);
+        $issuerMetaData      = $this->prophesize(IssuerMetadataInterface::class);
+
         $this->JWKFactory->__invoke()->willReturn($jwk);
-        $this->logger = $this->prophesize(LoggerInterface::class);
+        $issuer->getMetadata()->willReturn($issuerMetaData);
+        $issuerMetaData->getAuthorizationEndpoint()->willReturn('fake endpoint');
+        $this->issuerBuilder->build('http://mock-one-login:8080/.well-known/openid-configuration')->willReturn($issuer);
     }
 
     /**
      * @test
      */
-    public function get_redirect_uri_en(): void
+    public function get_redirect_uri(): void
     {
-        $authenticationService = new AuthenticationService($this->JWKFactory->reveal(), $this->logger->reveal());
+        $authenticationService = new AuthenticationService(
+            $this->JWKFactory->reveal(),
+            $this->logger->reveal(),
+            $this->issuerBuilder->reveal()
+        );
         $redirectUri           = $authenticationService->redirect('en');
         $this->assertStringContainsString('client_id=client-id', $redirectUri);
         $this->assertStringContainsString('scope=openid+email', $redirectUri);
