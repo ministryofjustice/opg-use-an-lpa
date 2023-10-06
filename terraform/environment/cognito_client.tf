@@ -14,7 +14,6 @@ locals {
 }
 
 resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" {
-  count                                = local.environment.build_admin ? 1 : 0
   provider                             = aws.identity
   name                                 = "${local.environment_name}-admin-auth"
   user_pool_id                         = local.admin_cognito_user_pool_id
@@ -42,6 +41,11 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
   read_attributes        = []
   write_attributes       = []
 
-  callback_urls = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/oauth2/idpresponse"]
-  logout_urls   = ["https://${aws_route53_record.admin_use_my_lpa[0].fqdn}/"]
+  callback_urls = ["https://${aws_route53_record.admin_use_my_lpa.fqdn}/oauth2/idpresponse"]
+  logout_urls   = ["https://${aws_route53_record.admin_use_my_lpa.fqdn}/"]
+}
+
+moved {
+  from = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0]
+  to   = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin
 }
