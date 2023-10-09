@@ -52,7 +52,6 @@ variable "environments" {
           maximum = number
         })
       })
-      build_admin                               = bool
       cookie_expires_use                        = number
       cookie_expires_view                       = number
       google_analytics_id_use                   = string
