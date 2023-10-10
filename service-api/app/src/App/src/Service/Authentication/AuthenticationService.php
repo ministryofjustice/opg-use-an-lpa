@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
+use Exception;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
-use Facile\OpenIDClient\Issuer\IssuerBuilder;
 use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
 use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
-use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+
+use RuntimeException;
 
 use function Facile\OpenIDClient\base64url_encode;
 
@@ -63,9 +64,9 @@ class AuthenticationService
                     'claims'     => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
                 ]
             );
-        } catch (InvalidArgumentException $e) {
+        } catch (Exception $e) {
             $this->logger->error('Unable to get authorisation uri: ' . $e->getMessage());
-            throw $e;
+            throw new RuntimeException('Could not create authorisation uri');
         }
 
         return $redirectAuthorisationUri;
