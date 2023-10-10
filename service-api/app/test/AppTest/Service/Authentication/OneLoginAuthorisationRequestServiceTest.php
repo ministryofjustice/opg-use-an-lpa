@@ -14,21 +14,18 @@ use Jose\Component\Core\JWK;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 
 class OneLoginAuthorisationRequestServiceTest extends TestCase
 {
     use ProphecyTrait;
 
     private ObjectProphecy|JWKFactory $JWKFactory;
-    private ObjectProphecy|LoggerInterface $logger;
     private ObjectProphecy|IssuerBuilder $issuerBuilder;
 
     public function setup(): void
     {
         $jwk                 = $this->prophesize(JWK::class);
         $this->JWKFactory    = $this->prophesize(JWKFactory::class);
-        $this->logger        = $this->prophesize(LoggerInterface::class);
         $this->issuerBuilder = $this->prophesize(IssuerBuilderInterface::class);
         $issuer              = $this->prophesize(IssuerInterface::class);
         $issuerMetaData      = $this->prophesize(IssuerMetadataInterface::class);
@@ -46,7 +43,6 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
     {
         $authorisationRequestService = new OneLoginAuthorisationRequestService(
             $this->JWKFactory->reveal(),
-            $this->logger->reveal(),
             $this->issuerBuilder->reveal()
         );
         $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
