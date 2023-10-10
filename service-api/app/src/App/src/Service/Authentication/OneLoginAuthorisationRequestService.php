@@ -15,7 +15,7 @@ use RuntimeException;
 
 use function Facile\OpenIDClient\base64url_encode;
 
-class AuthenticationService
+class OneLoginAuthorisationRequestService
 {
     public function __construct(
         private JWKFactory $JWKFactory,
@@ -24,7 +24,7 @@ class AuthenticationService
     ) {
     }
 
-    public function redirect(string $uiLocale): string
+    public function createAuthorisationRequest(string $uiLocale): string
     {
         //TODO UML-3080 Configure cache
 
@@ -51,9 +51,9 @@ class AuthenticationService
 
         $authorisationService = (new AuthorizationServiceBuilder())->build();
 
-        $redirectAuthorisationUri = '';
+        $authorisationRequest = '';
         try {
-            $redirectAuthorisationUri = $authorisationService->getAuthorizationUri(
+            $authorisationRequest = $authorisationService->getAuthorizationUri(
                 $client,
                 [
                     'scope'      => 'openid email',
@@ -69,6 +69,6 @@ class AuthenticationService
             throw new RuntimeException('Could not create authorisation uri');
         }
 
-        return $redirectAuthorisationUri;
+        return $authorisationRequest;
     }
 }

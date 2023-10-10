@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Authentication;
 
-use App\Service\Authentication\AuthenticationService;
+use App\Service\Authentication\OneLoginAuthorisationRequestService;
 use App\Service\Authentication\JWKFactory;
 use Facile\OpenIDClient\Issuer\IssuerBuilder;
 use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
@@ -16,7 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class AuthenticationServiceTest extends TestCase
+class OneLoginAuthorisationRequestServiceTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -42,17 +42,17 @@ class AuthenticationServiceTest extends TestCase
     /**
      * @test
      */
-    public function get_redirect_uri(): void
+    public function create_authorisation_request(): void
     {
-        $authenticationService = new AuthenticationService(
+        $authorisationRequestService = new OneLoginAuthorisationRequestService(
             $this->JWKFactory->reveal(),
             $this->logger->reveal(),
             $this->issuerBuilder->reveal()
         );
-        $redirectUri           = $authenticationService->redirect('en');
-        $this->assertStringContainsString('client_id=client-id', $redirectUri);
-        $this->assertStringContainsString('scope=openid+email', $redirectUri);
-        $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $redirectUri);
-        $this->assertStringContainsString('ui_locales=en', $redirectUri);
+        $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
+        $this->assertStringContainsString('client_id=client-id', $authorisationRequest);
+        $this->assertStringContainsString('scope=openid+email', $authorisationRequest);
+        $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $authorisationRequest);
+        $this->assertStringContainsString('ui_locales=en', $authorisationRequest);
     }
 }
