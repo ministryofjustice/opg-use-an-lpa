@@ -5,7 +5,7 @@ resource "aws_ecs_service" "pdf" {
   name             = "pdf-service"
   cluster          = aws_ecs_cluster.use-an-lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
-  desired_count    = local.environment.autoscaling.pdf.minimum
+  desired_count    = var.autoscaling.pdf.minimum
   platform_version = "1.4.0"
 
   network_configuration {
@@ -19,7 +19,7 @@ resource "aws_ecs_service" "pdf" {
   }
 
   capacity_provider_strategy {
-    capacity_provider = local.capacity_provider
+    capacity_provider = var.capacity_provider
     weight            = 100
   }
 
@@ -37,6 +37,8 @@ resource "aws_ecs_service" "pdf" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -46,7 +48,7 @@ resource "aws_service_discovery_service" "pdf_ecs" {
   name = "pdf"
 
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
+    namespace_id = var.aws_service_discovery_service.id
 
     dns_records {
       ttl  = 10
@@ -59,23 +61,27 @@ resource "aws_service_discovery_service" "pdf_ecs" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  provider = aws.region
 }
 
 //
 locals {
-  pdf_service_fqdn = "${aws_service_discovery_service.pdf_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+  pdf_service_fqdn = "${aws_service_discovery_service.pdf_ecs.name}.${var.aws_service_discovery_service.name}"
 }
 
 //----------------------------------
 // The pdf service's Security Groups
 
 resource "aws_security_group" "pdf_ecs_service" {
-  name_prefix = "${local.environment_name}-pdf-ecs-service"
+  name_prefix = "${var.environment_name}-pdf-ecs-service"
   description = "PDF generator service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //----------------------------------
@@ -107,20 +113,24 @@ resource "aws_security_group_rule" "pdf_ecs_service_egress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //--------------------------------------
 // pdf ECS Service Task level config
 
 resource "aws_ecs_task_definition" "pdf" {
-  family                   = "${local.environment_name}-pdf"
+  family                   = "${var.environment_name}-pdf"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.pdf_app}]"
-  task_role_arn            = module.iam.ecs_task_roles.pdf_task_role.arn
-  execution_role_arn       = module.iam.ecs_execution_role.arn
+  task_role_arn            = var.ecs_task_roles.pdf_task_role.arn
+  execution_role_arn       = var.ecs_execution_role.arn
+
+  provider = aws.region
 }
 
 //----------------
@@ -132,7 +142,7 @@ locals {
   pdf_app = jsonencode({
     cpu         = 1,
     essential   = true,
-    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}@${data.aws_ecr_image.pdf_service.image_digest}",
+    image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}:${var.container_version}",
     mountPoints = [],
     name        = "pdf",
     portMappings = [
@@ -145,9 +155,9 @@ locals {
     logConfiguration = {
       logDriver = "awslogs",
       options = {
-        awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+        awslogs-group         = var.application_logs_name,
         awslogs-region        = "eu-west-1",
-        awslogs-stream-prefix = "${local.environment_name}.pdf-app.use-an-lpa"
+        awslogs-stream-prefix = "${var.environment_name}.pdf-app.use-an-lpa"
       }
     },
     environment = [

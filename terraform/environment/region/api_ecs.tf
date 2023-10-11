@@ -5,7 +5,7 @@ resource "aws_ecs_service" "api" {
   name                              = "api-service"
   cluster                           = aws_ecs_cluster.use-an-lpa.id
   task_definition                   = aws_ecs_task_definition.api.arn
-  desired_count                     = local.environment.autoscaling.api.minimum
+  desired_count                     = var.autoscaling.api.minimum
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
@@ -20,7 +20,7 @@ resource "aws_ecs_service" "api" {
   }
 
   capacity_provider_strategy {
-    capacity_provider = local.capacity_provider
+    capacity_provider = var.capacity_provider
     weight            = 100
   }
 
@@ -38,6 +38,8 @@ resource "aws_ecs_service" "api" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -47,7 +49,7 @@ resource "aws_service_discovery_service" "api_ecs" {
   name = "api"
 
   dns_config {
-    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
+    namespace_id = var.aws_service_discovery_service.id
 
     dns_records {
       ttl  = 10
@@ -60,18 +62,20 @@ resource "aws_service_discovery_service" "api_ecs" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  provider = aws.region
 }
 
 //
 locals {
-  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${var.aws_service_discovery_service.name}"
 }
 
 //----------------------------------
 // The Api service's Security Groups
 
 resource "aws_security_group" "api_ecs_service" {
-  name_prefix = "${local.environment_name}-api-ecs-service"
+  name_prefix = "${var.environment_name}-api-ecs-service"
   description = "API service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
@@ -93,6 +97,8 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //----------------------------------
@@ -109,6 +115,8 @@ resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //----------------------------------
@@ -130,23 +138,27 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
 // Api ECS Service Task level config
 
 resource "aws_ecs_task_definition" "api" {
-  family                   = "${local.environment_name}-api"
+  family                   = "${var.environment_name}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
-  task_role_arn            = module.iam.ecs_task_roles.api_task_role.arn
-  execution_role_arn       = module.iam.ecs_execution_role.arn
+  container_definitions    = "[${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
+  task_role_arn            = var.ecs_task_roles.api_task_role.arn
+  execution_role_arn       = var.ecs_execution_role.arn
+
+  provider = aws.region
 }
 
 //----------------
 // Permissions
 
 resource "aws_iam_role_policy" "api_permissions_role" {
-  name   = "${local.environment_name}-${local.policy_region_prefix}-apiApplicationPermissions"
+  name   = "${var.environment_name}-${local.policy_region_prefix}-apiApplicationPermissions"
   policy = data.aws_iam_policy_document.api_permissions_role.json
-  role   = module.iam.ecs_task_roles.api_task_role.id
+  role   = var.ecs_task_roles.api_task_role.id
+
+  provider = aws.region
 }
 
 /*
@@ -177,18 +189,18 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      aws_dynamodb_table.actor_codes_table.arn,
-      "${aws_dynamodb_table.actor_codes_table.arn}/index/*",
-      aws_dynamodb_table.actor_users_table.arn,
-      "${aws_dynamodb_table.actor_users_table.arn}/index/*",
-      aws_dynamodb_table.viewer_codes_table.arn,
-      "${aws_dynamodb_table.viewer_codes_table.arn}/index/*",
-      aws_dynamodb_table.viewer_activity_table.arn,
-      "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
-      aws_dynamodb_table.user_lpa_actor_map.arn,
-      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
-      aws_dynamodb_table.stats_table.arn,
-      "${aws_dynamodb_table.stats_table.arn}/index/*",
+      var.dynamodb_tables.actor_codes_table.arn,
+      "${var.dynamodb_tables.actor_codes_table.arn}/index/*",
+      var.dynamodb_tables.actor_users_table.arn,
+      "${var.dynamodb_tables.actor_users_table.arn}/index/*",
+      var.dynamodb_tables.viewer_codes_table.arn,
+      "${var.dynamodb_tables.viewer_codes_table.arn}/index/*",
+      var.dynamodb_tables.viewer_activity_table.arn,
+      "${var.dynamodb_tables.viewer_activity_table.arn}/index/*",
+      var.dynamodb_tables.user_lpa_actor_map.arn,
+      "${var.dynamodb_tables.user_lpa_actor_map.arn}/index/*",
+      var.dynamodb_tables.stats_table.arn,
+      "${var.dynamodb_tables.stats_table.arn}/index/*",
     ]
   }
 
@@ -201,8 +213,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/use-an-lpa/*",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
     ]
   }
 
@@ -213,10 +225,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/revoke",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/validate",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/validate",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/exists",
     ]
   }
 
@@ -226,12 +238,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
     actions = [
       "ssm:GetParameter",
     ]
-    resources = [
-      aws_ssm_parameter.system_message_view_en.arn,
-      aws_ssm_parameter.system_message_view_cy.arn,
-      aws_ssm_parameter.system_message_use_en.arn,
-      aws_ssm_parameter.system_message_use_cy.arn,
-    ]
+    resources = var.parameter_store_arns
   }
 
   statement {
@@ -241,10 +248,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/image-request/*",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/image-request/*",
+      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/healthcheck",
     ]
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -269,9 +278,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-group         = var.application_logs_name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.api-web.use-an-lpa"
+          awslogs-stream-prefix = "${var.environment_name}.api-web.use-an-lpa"
         }
       },
       environment = [
@@ -312,9 +321,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-group         = var.application_logs_name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.actor-otel.use-an-lpa"
+          awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
       },
       environment = []
@@ -345,9 +354,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-group         = var.application_logs_name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.api-app.use-an-lpa"
+          awslogs-stream-prefix = "${var.environment_name}.api-app.use-an-lpa"
         }
       },
       secrets = [
@@ -358,27 +367,27 @@ locals {
       environment = [
         {
           name  = "DYNAMODB_TABLE_ACTOR_CODES",
-          value = aws_dynamodb_table.actor_codes_table.name
+          value = var.dynamodb_tables.actor_codes_table.name
         },
         {
           name  = "DYNAMODB_TABLE_ACTOR_USERS",
-          value = aws_dynamodb_table.actor_users_table.name
+          value = var.dynamodb_tables.actor_users_table.name
         },
         {
           name  = "DYNAMODB_TABLE_VIEWER_CODES",
-          value = aws_dynamodb_table.viewer_codes_table.name
+          value = var.dynamodb_tables.viewer_codes_table.name
         },
         {
           name  = "DYNAMODB_TABLE_VIEWER_ACTIVITY",
-          value = aws_dynamodb_table.viewer_activity_table.name
+          value = var.dynamodb_tables.viewer_activity_table.name
         },
         {
           name  = "DYNAMODB_TABLE_USER_LPA_ACTOR_MAP",
-          value = aws_dynamodb_table.user_lpa_actor_map.name
+          value = var.dynamodb_tables.user_lpa_actor_map.name
         },
         {
           name  = "DYNAMODB_TABLE_STATS",
-          value = aws_dynamodb_table.stats_table.name
+          value = var.dynamodb_tables.stats_table.name
         },
         {
           name  = "CONTAINER_VERSION",
@@ -386,35 +395,35 @@ locals {
         },
         {
           name  = "SIRIUS_API_ENDPOINT",
-          value = local.environment.lpas_collection_endpoint
+          value = var.lpas_collection_endpoint
         },
         {
           name  = "LPA_CODES_API_ENDPOINT",
-          value = local.environment.lpa_codes_endpoint
+          value = var.lpa_codes_endpoint
         },
         {
           name  = "IAP_IMAGES_API_ENDPOINT",
-          value = local.environment.iap_images_endpoint
+          value = var.iap_images_endpoint
         },
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.environment.logging_level)
+          value = tostring(var.logging_level)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.application_flags.allow_meris_lpas)
+          value = tostring(var.feature_flags.allow_meris_lpas)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(var.feature_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
         {
           name  = "INSTRUCTIONS_AND_PREFERENCES",
-          value = tostring(local.environment.application_flags.instructions_and_preferences)
+          value = tostring(var.feature_flags.instructions_and_preferences)
         },
         {
           name  = "ALLOW_GOV_ONE_LOGIN",
-          value = tostring(local.environment.application_flags.allow_gov_one_login)
+          value = tostring(var.feature_flags.allow_gov_one_login)
         }
       ]
   })

@@ -6,7 +6,7 @@ resource "local_file" "cluster_config" {
 locals {
   cluster_config = {
     actor_users_table                        = aws_dynamodb_table.actor_users_table.name
-    cluster_name                             = aws_ecs_cluster.use-an-lpa.name
+    cluster_name                             = module.eu_west_1.ecs_cluster.name
     account_id                               = local.environment.account_id
     actor_lpa_codes_table                    = aws_dynamodb_table.actor_codes_table.name
     viewer_codes_table                       = aws_dynamodb_table.viewer_codes_table.name

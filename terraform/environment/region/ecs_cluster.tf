@@ -1,14 +1,19 @@
 resource "aws_ecs_cluster" "use-an-lpa" {
-  name = "${local.environment_name}-use-an-lpa"
+  name = "${var.environment_name}-use-an-lpa"
   setting {
     name  = "containerInsights"
     value = "enabled"
   }
+
+  provider = aws.region
 }
+
 resource "aws_iam_role_policy" "execution_role" {
-  name   = "${local.environment_name}_execution_role"
+  name   = "${var.environment_name}_execution_role"
   policy = data.aws_iam_policy_document.execution_role.json
-  role   = module.iam.ecs_execution_role.id
+  role   = var.ecs_execution_role.id
+
+  provider = aws.region
 }
 
 data "aws_iam_policy_document" "execution_role" {
@@ -48,4 +53,6 @@ data "aws_iam_policy_document" "execution_role" {
       "kms:DescribeKey",
     ]
   }
+
+  provider = aws.region
 }
