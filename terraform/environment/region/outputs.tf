@@ -1,9 +1,10 @@
 output "ecs_cluster" {
-  value = aws_ecs_cluster.use-an-lpa
+  description = "The ECS cluster object"
+  value       = aws_ecs_cluster.use_an_lpa
 }
 
 output "ecs_services" {
-  # Produce a map of service names to service objects
+  description = "Objects containing the ECS services"
   value = {
     actor  = aws_ecs_service.actor
     admin  = aws_ecs_service.admin
@@ -14,5 +15,6 @@ output "ecs_services" {
 }
 
 output "admin_domain" {
-  value = "https://${var.route_53_fqdns.admin}"
+  description = "The URL for the admin interface"
+  value       = "https://${var.route_53_fqdns.admin}"
 }

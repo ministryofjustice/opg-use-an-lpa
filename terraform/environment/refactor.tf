@@ -1,6 +1,6 @@
 moved {
   from = aws_ecs_cluster.use-an-lpa
-  to   = module.eu_west_1.aws_ecs_cluster.use-an-lpa
+  to   = module.eu_west_1.aws_ecs_cluster.use_an_lpa
 }
 
 moved {

@@ -1,4 +1,4 @@
-resource "aws_ecs_cluster" "use-an-lpa" {
+resource "aws_ecs_cluster" "use_an_lpa" {
   name = "${var.environment_name}-use-an-lpa"
   setting {
     name  = "containerInsights"

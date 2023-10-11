@@ -3,7 +3,7 @@
 
 resource "aws_ecs_service" "pdf" {
   name             = "pdf-service"
-  cluster          = aws_ecs_cluster.use-an-lpa.id
+  cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.pdf.arn
   desired_count    = var.autoscaling.pdf.minimum
   platform_version = "1.4.0"
