@@ -23,10 +23,6 @@ class OneLoginAuthorisationRequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * Handles a request and produces a response.
-     *
-     * May call other collaborating code to generate the response.
-     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      * @throws Exception

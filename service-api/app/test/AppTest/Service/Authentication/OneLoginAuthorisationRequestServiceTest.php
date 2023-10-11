@@ -50,5 +50,6 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
         $this->assertStringContainsString('scope=openid+email', $authorisationRequest);
         $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $authorisationRequest);
         $this->assertStringContainsString('ui_locales=en', $authorisationRequest);
+        $this->assertStringContainsString('redirect_uri=%2Flpa%2Fdashboard', $authorisationRequest);
     }
 }

@@ -31,7 +31,6 @@ class OneLoginAuthorisationRequestService
             'client_id'                  => 'client-id',
             'client_secret'              => 'my-client-secret',
             'token_endpoint_auth_method' => 'private_key_jwt',
-            'redirect_uri'               => '/lpa/dashboard',
             'jwks'                       => [
                 'keys' => [
                     ($this->JWKFactory)(),
@@ -49,12 +48,13 @@ class OneLoginAuthorisationRequestService
         return $authorisationService->getAuthorizationUri(
             $client,
             [
-                'scope'      => 'openid email',
-                'state'      => base64url_encode(random_bytes(12)),
-                'nonce'      => openssl_digest(base64url_encode(random_bytes(12)), 'sha256'),
-                'vtr'        => '["Cl.Cm.P2"]',
-                'ui_locales' => $uiLocale,
-                'claims'     => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
+                'scope'        => 'openid email',
+                'state'        => base64url_encode(random_bytes(12)),
+                'redirect_uri' => '/lpa/dashboard',
+                'nonce'        => openssl_digest(base64url_encode(random_bytes(12)), 'sha256'),
+                'vtr'          => '["Cl.Cm.P2"]',
+                'ui_locales'   => $uiLocale,
+                'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
             ]
         );
     }
