@@ -3,7 +3,7 @@
 
 variable "actor_loadbalancer_security_group_id" {
   description = "The ID of the ALB security group for actor service."
-  type = string
+  type        = string
 }
 
 variable "admin_cognito_user_pool_domain_name" {
@@ -18,7 +18,7 @@ variable "admin_container_version" {
 
 variable "admin_loadbalancer_security_group_id" {
   description = "The ID of the ALB security group for admin service."
-  type = string
+  type        = string
 }
 
 variable "alb_tg_arns" {
@@ -31,7 +31,7 @@ variable "alb_tg_arns" {
 
 variable "application_logs_name" {
   description = "The name of the CloudWatch Logs group to send application logs to."
-  type = string
+  type        = string
 }
 
 variable "autoscaling" {
@@ -58,7 +58,7 @@ variable "capacity_provider" {
 
 variable "cognito_user_pool_id" {
   description = "The Cognito User Pool ID to use for authentication to the admin interface."
-  type = string
+  type        = string
 }
 
 variable "container_version" {
@@ -104,7 +104,7 @@ variable "ecs_task_roles" {
 
 variable "environment_name" {
   description = "The name of the environment"
-  type = string
+  type        = string
 }
 
 variable "feature_flags" {
@@ -185,5 +185,5 @@ variable "sirius_account_id" {
 
 variable "viewer_loadbalancer_security_group_id" {
   description = "The ID of the ALB security group for viewer service."
-  type = string
+  type        = string
 }
