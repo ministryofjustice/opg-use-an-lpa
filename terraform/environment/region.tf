@@ -54,6 +54,7 @@ module "eu_west_1" {
 
   container_version       = var.container_version
   admin_container_version = var.admin_container_version
+  pdf_container_version   = local.environment.pdf_container_version
 
   sirius_account_id = local.environment.sirius_account_id
 

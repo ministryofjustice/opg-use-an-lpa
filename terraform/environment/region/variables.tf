@@ -193,3 +193,8 @@ variable "session_expires_use" {
   description = "The number of seconds before the session expires for the use service."
   type        = string
 }
+
+variable "pdf_container_version" {
+  description = "The image tag to use for the PDF container."
+  type        = string
+}
