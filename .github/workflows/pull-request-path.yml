@@ -130,6 +130,7 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_lint
+      - workflow_variables
     with:
       workspace: development
       terraform_path: account
@@ -161,6 +162,27 @@ jobs:
       needs.docker_build_scan_push.result == 'success' &&
       needs.workflow_variables.result == 'success'
 
+  terraform_preproduction_plan_environment:
+    name: terraform apply environment
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+      - workflow_variables
+    with:
+      workspace: preproduction
+      terraform_path: environment
+      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: false
+      specific_path: all
+      add_ttl: false
+    secrets: inherit
+    if: |
+      always() &&
+      needs.terraform_lint.result == 'success' &&
+      needs.docker_build_scan_push.result == 'success' &&
+      needs.workflow_variables.result == 'success'
+    
   seed_dynamodb:
     name: seed dynamodb
     uses: ./.github/workflows/_seed-database.yml
@@ -228,7 +250,7 @@ jobs:
       always() &&
       needs.code_coverage.result == 'success' &&
       needs.terraform_apply_environment.result == 'success'
-
+    
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
