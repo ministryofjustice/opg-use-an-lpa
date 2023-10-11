@@ -213,8 +213,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
     ]
   }
 
@@ -225,10 +225,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/revoke",
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/validate",
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/validate",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/exists",
     ]
   }
 
@@ -248,8 +248,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/image-request/*",
-      "arn:aws:execute-api:eu-west-1:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/image-request/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
     ]
   }
 
@@ -279,7 +279,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = var.application_logs_name,
-          awslogs-region        = "eu-west-1",
+          awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.api-web.use-an-lpa"
         }
       },
@@ -322,7 +322,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = var.application_logs_name,
-          awslogs-region        = "eu-west-1",
+          awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
       },
@@ -355,7 +355,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = var.application_logs_name,
-          awslogs-region        = "eu-west-1",
+          awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.api-app.use-an-lpa"
         }
       },
