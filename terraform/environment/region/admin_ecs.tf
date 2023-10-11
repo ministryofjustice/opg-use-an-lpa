@@ -165,16 +165,16 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      var.dynamodb_tables.actor_users_table.arn,
-      "${var.dynamodb_tables.actor_users_table.arn}/index/*",
-      var.dynamodb_tables.viewer_codes_table.arn,
-      "${var.dynamodb_tables.viewer_codes_table.arn}/index/*",
-      var.dynamodb_tables.viewer_activity_table.arn,
-      "${var.dynamodb_tables.viewer_activity_table.arn}/index/*",
-      var.dynamodb_tables.user_lpa_actor_map.arn,
-      "${var.dynamodb_tables.user_lpa_actor_map.arn}/index/*",
-      var.dynamodb_tables.stats_table.arn,
-      "${var.dynamodb_tables.stats_table.arn}/index/*",
+      local.dynamodb_tables_arns.actor_users_table_arn,
+      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_codes_table_arn,
+      "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_activity_table_arn,
+      "${local.dynamodb_tables_arns.viewer_activity_table_arn}/index/*",
+      local.dynamodb_tables_arns.user_lpa_actor_map_arn,
+      "${local.dynamodb_tables_arns.user_lpa_actor_map_arn}/index/*",
+      local.dynamodb_tables_arns.stats_table_arn,
+      "${local.dynamodb_tables_arns.stats_table_arn}/index/*",
     ]
   }
 

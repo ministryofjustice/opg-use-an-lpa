@@ -15,9 +15,16 @@ resource "aws_dynamodb_table" "actor_codes_table" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
+
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "stats_table" {
@@ -38,9 +45,16 @@ resource "aws_dynamodb_table" "stats_table" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
+
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "actor_users_table" {
@@ -111,10 +125,16 @@ resource "aws_dynamodb_table" "actor_users_table" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
 
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "viewer_codes_table" {
@@ -151,10 +171,16 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
 
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "viewer_activity_table" {
@@ -179,10 +205,16 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
 
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "user_lpa_actor_map" {
@@ -240,8 +272,14 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     enabled = true
   }
 
+  replica {
+    region_name    = "eu-west-2"
+    propagate_tags = true
+  }
 
   lifecycle {
     prevent_destroy = false
   }
+
+  provider = aws.eu_west_1
 }

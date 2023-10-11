@@ -174,6 +174,12 @@ variable "public_access_enabled" {
   default     = false
 }
 
+variable "primary_region" {
+  description = "The region that is used for the primary DynamoDB table. This is the region that is normally active."
+  type        = string
+  default     = "eu-west-1"
+}
+
 variable "route_53_fqdns" {
   description = "The FQDNs to use for the Route 53 records."
 
