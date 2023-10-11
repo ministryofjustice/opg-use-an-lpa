@@ -149,6 +149,7 @@ github.com/jmespath/go-jmespath v0.4.0/go.mod h1:T8mJZnbsbmF+m6zOOFylbeCJqk5+pHW
 github.com/jmespath/go-jmespath/internal/testify v1.5.1/go.mod h1:L3OGu8Wl2/fWfCI6z80xFu9LTZmf1ZRjMHUOPmWr69U=
 github.com/ministryofjustice/opg-go-common v0.0.0-20220816144329-763497f29f90 h1:mxTHIeCYV7LDZPN7C44wwLlBTUsgQ0G8FQprsrsKXaA=
 github.com/ministryofjustice/opg-go-common v0.0.0-20220816144329-763497f29f90/go.mod h1:1RmCNi6dkAv8umAgNHp8RkuBoSKLlxp1UtfsGYH7ufc=
+github.com/ministryofjustice/opg-go-common v0.0.0-20231009133357-1f236d604316/go.mod h1:1RmCNi6dkAv8umAgNHp8RkuBoSKLlxp1UtfsGYH7ufc=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
