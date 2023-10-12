@@ -3,9 +3,9 @@
 
 resource "aws_ecs_service" "actor" {
   name             = "actor-service"
-  cluster          = aws_ecs_cluster.use-an-lpa.id
+  cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
-  desired_count    = local.environment.autoscaling.use.minimum
+  desired_count    = var.autoscaling.use.minimum
   platform_version = "1.4.0"
 
   network_configuration {
@@ -15,13 +15,13 @@ resource "aws_ecs_service" "actor" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.actor.arn
+    target_group_arn = var.alb_tg_arns.actor.arn
     container_name   = "web"
     container_port   = 80
   }
 
   capacity_provider_strategy {
-    capacity_provider = local.capacity_provider
+    capacity_provider = var.capacity_provider
     weight            = 100
   }
 
@@ -40,19 +40,21 @@ resource "aws_ecs_service" "actor" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_lb.actor]
+  provider = aws.region
 }
 
 //----------------------------------
 // The service's Security Groups
 
 resource "aws_security_group" "actor_ecs_service" {
-  name_prefix = "${local.environment_name}-actor-ecs-service"
+  name_prefix = "${var.environment_name}-actor-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 // 80 in from the ELB
@@ -63,10 +65,12 @@ resource "aws_security_group_rule" "actor_ecs_service_ingress" {
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.actor_ecs_service.id
-  source_security_group_id = aws_security_group.actor_loadbalancer.id
+  source_security_group_id = var.actor_loadbalancer_security_group_id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 // Anything out
@@ -81,6 +85,8 @@ resource "aws_security_group_rule" "actor_ecs_service_egress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
@@ -94,29 +100,35 @@ resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //--------------------------------------
 // Actor ECS Service Task level config
 
 resource "aws_ecs_task_definition" "actor" {
-  family                   = "${local.environment_name}-actor"
+  family                   = "${var.environment_name}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.actor_web}, ${local.actor_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
-  task_role_arn            = module.iam.ecs_task_roles.actor_task_role.arn
-  execution_role_arn       = module.iam.ecs_execution_role.arn
+  container_definitions    = "[${local.actor_web}, ${local.actor_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
+  task_role_arn            = var.ecs_task_roles.actor_task_role.arn
+  execution_role_arn       = var.ecs_execution_role.arn
+
+  provider = aws.region
 }
 
 //----------------
 // Permissions
 
 resource "aws_iam_role_policy" "actor_permissions_role" {
-  name   = "${local.environment_name}-${local.policy_region_prefix}-ActorApplicationPermissions"
+  name   = "${var.environment_name}-${local.policy_region_prefix}-ActorApplicationPermissions"
   policy = data.aws_iam_policy_document.actor_permissions_role.json
-  role   = module.iam.ecs_task_roles.actor_task_role.id
+  role   = var.ecs_task_roles.actor_task_role.id
+
+  provider = aws.region
 }
 
 /*
@@ -148,6 +160,8 @@ data "aws_iam_policy_document" "actor_permissions_role" {
 
     resources = [data.aws_kms_alias.sessions_actor.target_key_arn]
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -172,15 +186,15 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.actor-web.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.actor-web.use-an-lpa"
         }
       },
       environment = [
         {
           name  = "WEB_DOMAIN",
-          value = "https://${aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn}"
+          value = "https://${var.route_53_fqdns.public_use}"
         },
         {
           name  = "APP_HOST",
@@ -219,9 +233,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.actor-otel.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
       },
       environment = []
@@ -252,9 +266,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.actor-app.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.actor-app.use-an-lpa"
         }
       },
       secrets = [
@@ -281,23 +295,23 @@ locals {
         },
         {
           name  = "SESSION_EXPIRES",
-          value = tostring(local.environment.session_expires_use)
+          value = tostring(var.session_expires_use)
         },
         {
           name  = "SESSION_EXPIRY_WARNING",
-          value = tostring(local.environment.session_expiry_warning)
+          value = tostring(var.session_expiry_warning)
         },
         {
           name  = "COOKIE_EXPIRES",
-          value = tostring(local.environment.cookie_expires_use)
+          value = tostring(var.cookie_expires_use)
         },
         {
           name  = "GOOGLE_ANALYTICS_ID",
-          value = local.environment.google_analytics_id_use
+          value = var.google_analytics_id_use
         },
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.environment.logging_level)
+          value = tostring(var.logging_level)
         },
         {
           name  = "BRUTE_FORCE_CACHE_URL",
@@ -313,23 +327,23 @@ locals {
         },
         {
           name  = "DELETE_LPA_FEATURE",
-          value = tostring(local.environment.application_flags.delete_lpa_feature)
+          value = tostring(var.feature_flags.delete_lpa_feature)
         },
         {
           name  = "ALLOW_MERIS_LPAS",
-          value = tostring(local.environment.application_flags.allow_meris_lpas)
+          value = tostring(var.feature_flags.allow_meris_lpas)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(local.environment.application_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
+          value = tostring(var.feature_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
         },
         {
           name  = "INSTRUCTIONS_AND_PREFERENCES",
-          value = tostring(local.environment.application_flags.instructions_and_preferences)
+          value = tostring(var.feature_flags.instructions_and_preferences)
         },
         {
           name  = "ALLOW_GOV_ONE_LOGIN",
-          value = tostring(local.environment.application_flags.allow_gov_one_login)
+          value = tostring(var.feature_flags.allow_gov_one_login)
         }
       ]
   })
