@@ -5,7 +5,7 @@ resource "aws_ecs_service" "admin" {
   name             = "admin-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.admin.arn
-  desired_count    = 1
+  desired_count    = local.admin_desired_count
   platform_version = "1.4.0"
 
   network_configuration {

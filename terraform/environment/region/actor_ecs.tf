@@ -5,7 +5,7 @@ resource "aws_ecs_service" "actor" {
   name             = "actor-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
-  desired_count    = var.autoscaling.use.minimum
+  desired_count    = local.use_desired_count
   platform_version = "1.4.0"
 
   network_configuration {

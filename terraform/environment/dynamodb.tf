@@ -15,9 +15,18 @@ resource "aws_dynamodb_table" "actor_codes_table" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  # For each region in the environment that is not the primary_region, create a DynamoDB replica.
+
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
 
   lifecycle {
@@ -45,9 +54,16 @@ resource "aws_dynamodb_table" "stats_table" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
 
   lifecycle {
@@ -125,9 +141,16 @@ resource "aws_dynamodb_table" "actor_users_table" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
 
   lifecycle {
@@ -171,10 +194,18 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
+
 
   lifecycle {
     prevent_destroy = false
@@ -205,10 +236,18 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
+
 
   lifecycle {
     prevent_destroy = false
@@ -272,9 +311,16 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     enabled = true
   }
 
-  replica {
-    region_name    = "eu-west-2"
-    propagate_tags = true
+  dynamic "replica" {
+    for_each = [
+      for region in local.environment.regions : region
+      if region.is_primary != true
+    ]
+
+    content {
+      region_name    = replica.value.name
+      propagate_tags = true
+    }
   }
 
   lifecycle {

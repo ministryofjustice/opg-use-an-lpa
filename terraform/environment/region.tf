@@ -25,6 +25,7 @@ module "eu_west_1" {
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
   pdf_container_version                     = local.environment.pdf_container_version
   public_access_enabled                     = var.public_access_enabled
+  regions                                   = local.environment.regions
   session_expires_use                       = local.environment.session_expires_use
   session_expires_view                      = local.environment.session_expires_view
   session_expiry_warning                    = local.environment.session_expiry_warning
@@ -72,7 +73,6 @@ module "eu_west_1" {
     "actor"       = aws_route53_record.actor_use_my_lpa.fqdn
     "viewer"      = aws_route53_record.viewer_use_my_lpa.fqdn
   }
-
 
   providers = {
     aws.region     = aws.eu_west_1

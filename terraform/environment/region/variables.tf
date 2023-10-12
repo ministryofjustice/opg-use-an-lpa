@@ -174,10 +174,17 @@ variable "public_access_enabled" {
   default     = false
 }
 
-variable "primary_region" {
-  description = "The region that is used for the primary DynamoDB table. This is the region that is normally active."
-  type        = string
-  default     = "eu-west-1"
+variable "regions" {
+  description = "Information about which regions are being used"
+  type = map(object({
+    is_primary = bool
+    is_active  = bool
+  }))
+
+  validation {
+    condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
+    error_message = "One (and only one) region must be marked as primary"
+  }
 }
 
 variable "route_53_fqdns" {

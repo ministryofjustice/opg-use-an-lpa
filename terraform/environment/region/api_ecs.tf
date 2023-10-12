@@ -5,7 +5,7 @@ resource "aws_ecs_service" "api" {
   name                              = "api-service"
   cluster                           = aws_ecs_cluster.use_an_lpa.id
   task_definition                   = aws_ecs_task_definition.api.arn
-  desired_count                     = var.autoscaling.api.minimum
+  desired_count                     = local.api_desired_count
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
