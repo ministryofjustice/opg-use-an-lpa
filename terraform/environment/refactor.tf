@@ -177,3 +177,207 @@ moved {
   from = aws_service_discovery_service.pdf_ecs
   to   = module.eu_west_1.aws_service_discovery_service.pdf_ecs
 }
+
+moved {
+  from = aws_lb.actor
+  to   = module.eu_west_1.aws_lb.actor
+}
+
+moved {
+  from = aws_lb.admin
+  to   = module.eu_west_1.aws_lb.admin
+}
+
+moved {
+  from = aws_lb.viewer
+  to   = module.eu_west_1.aws_lb.viewer
+}
+
+moved {
+  from = aws_lb_listener.actor_loadbalancer
+  to   = module.eu_west_1.aws_lb_listener.actor_loadbalancer
+}
+
+moved {
+  from = aws_lb_listener.actor_loadbalancer_http_redirect
+  to   = module.eu_west_1.aws_lb_listener.actor_loadbalancer_http_redirect
+}
+
+moved {
+  from = aws_lb_listener.admin_loadbalancer
+  to   = module.eu_west_1.aws_lb_listener.admin_loadbalancer
+}
+moved {
+  from = aws_lb_listener.admin_loadbalancer_http_redirect
+  to   = module.eu_west_1.aws_lb_listener.admin_loadbalancer_http_redirect
+}
+
+moved {
+  from = aws_lb_listener.viewer_loadbalancer
+  to   = module.eu_west_1.aws_lb_listener.viewer_loadbalancer
+}
+
+moved {
+  from = aws_lb_listener.viewer_loadbalancer_http_redirect
+  to   = module.eu_west_1.aws_lb_listener.viewer_loadbalancer_http_redirect
+}
+
+moved {
+  from = aws_lb_listener_certificate.actor_loadbalancer_live_service_certificate
+  to   = module.eu_west_1.aws_lb_listener_certificate.actor_loadbalancer_live_service_certificate
+}
+
+moved {
+  from = aws_lb_listener_certificate.admin_loadbalancer_live_service_certificate
+  to   = module.eu_west_1.aws_lb_listener_certificate.admin_loadbalancer_live_service_certificate
+}
+
+moved {
+  from = aws_lb_listener_certificate.viewer_loadbalancer_live_service_certificate
+  to   = module.eu_west_1.aws_lb_listener_certificate.viewer_loadbalancer_live_service_certificate
+}
+
+moved {
+  from = aws_lb_listener_rule.actor_maintenance
+  to   = module.eu_west_1.aws_lb_listener_rule.actor_maintenance
+}
+
+moved {
+  from = aws_lb_listener_rule.actor_maintenance_welsh
+  to   = module.eu_west_1.aws_lb_listener_rule.actor_maintenance_welsh
+}
+
+moved {
+  from = aws_lb_listener_rule.redirect_use_root_to_gov
+  to   = module.eu_west_1.aws_lb_listener_rule.redirect_use_root_to_gov
+}
+
+moved {
+  from = aws_lb_listener_rule.redirect_view_root_to_gov
+  to   = module.eu_west_1.aws_lb_listener_rule.redirect_view_root_to_gov
+}
+
+moved {
+  from = aws_lb_listener_rule.rewrite_use_to_live_service_url
+  to   = module.eu_west_1.aws_lb_listener_rule.rewrite_use_to_live_service_url
+}
+
+moved {
+  from = aws_lb_listener_rule.rewrite_view_to_live_service_url
+  to   = module.eu_west_1.aws_lb_listener_rule.rewrite_view_to_live_service_url
+}
+
+moved {
+  from = aws_lb_listener_rule.viewer_maintenance
+  to   = module.eu_west_1.aws_lb_listener_rule.viewer_maintenance
+}
+
+moved {
+  from = aws_lb_listener_rule.viewer_maintenance_welsh
+  to   = module.eu_west_1.aws_lb_listener_rule.viewer_maintenance_welsh
+}
+
+moved {
+  from = aws_lb_target_group.actor
+  to   = module.eu_west_1.aws_lb_target_group.actor
+}
+
+moved {
+  from = aws_lb_target_group.admin
+  to   = module.eu_west_1.aws_lb_target_group.admin
+}
+
+moved {
+  from = aws_lb_target_group.viewer
+  to   = module.eu_west_1.aws_lb_target_group.viewer
+}
+
+moved {
+  from = aws_security_group.actor_loadbalancer
+  to   = module.eu_west_1.aws_security_group.actor_loadbalancer
+}
+
+moved {
+  from = aws_security_group.actor_loadbalancer_route53
+  to   = module.eu_west_1.aws_security_group.actor_loadbalancer_route53
+}
+
+moved {
+  from = aws_security_group.admin_loadbalancer
+  to   = module.eu_west_1.aws_security_group.admin_loadbalancer
+}
+
+moved {
+  from = aws_security_group.viewer_loadbalancer
+  to   = module.eu_west_1.aws_security_group.viewer_loadbalancer
+}
+
+moved {
+  from = aws_security_group.viewer_loadbalancer_route53
+  to   = module.eu_west_1.aws_security_group.viewer_loadbalancer_route53
+}
+
+moved {
+  from = aws_security_group_rule.actor_loadbalancer_egress
+  to   = module.eu_west_1.aws_security_group_rule.actor_loadbalancer_egress
+}
+
+moved {
+  from = aws_security_group_rule.actor_loadbalancer_ingress
+  to   = module.eu_west_1.aws_security_group_rule.actor_loadbalancer_ingress
+}
+
+moved {
+  from = aws_security_group_rule.actor_loadbalancer_ingress_http
+  to   = module.eu_west_1.aws_security_group_rule.actor_loadbalancer_ingress_http
+}
+
+moved {
+  from = aws_security_group_rule.actor_loadbalancer_ingress_route53_healthchecks
+  to   = module.eu_west_1.aws_security_group_rule.actor_loadbalancer_ingress_route53_healthchecks
+}
+
+moved {
+  from = aws_security_group_rule.admin_loadbalancer_egress
+  to   = module.eu_west_1.aws_security_group_rule.admin_loadbalancer_egress
+}
+
+moved {
+  from = aws_security_group_rule.admin_loadbalancer_ingress
+  to   = module.eu_west_1.aws_security_group_rule.admin_loadbalancer_ingress
+}
+
+moved {
+  from = aws_security_group_rule.admin_loadbalancer_port_80_redirect_ingress
+  to   = module.eu_west_1.aws_security_group_rule.admin_loadbalancer_port_80_redirect_ingress
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_egress
+  to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_egress
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_ingress
+  to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_ingress
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_ingress_http
+  to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_ingress_http
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_ingress_route53_healthchecks
+  to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_ingress_route53_healthchecks
+}
+
+moved {
+  from = aws_ssm_parameter.actor_maintenance_switch
+  to   = module.eu_west_1.aws_ssm_parameter.actor_maintenance_switch
+}
+
+moved {
+  from = aws_ssm_parameter.viewer_maintenance_switch
+  to   = module.eu_west_1.aws_ssm_parameter.viewer_maintenance_switch
+}

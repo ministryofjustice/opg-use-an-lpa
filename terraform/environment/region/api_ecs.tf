@@ -81,6 +81,8 @@ resource "aws_security_group" "api_ecs_service" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //----------------------------------
@@ -127,11 +129,13 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
   security_group_id = aws_security_group.api_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //--------------------------------------

@@ -30,8 +30,8 @@ resource "aws_route53_record" "public_facing_view_lasting_power_of_attorney" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.viewer.dns_name
-    zone_id                = aws_lb.viewer.zone_id
+    name                   = module.eu_west_1.albs.viewer.dns_name
+    zone_id                = module.eu_west_1.albs.viewer.zone_id
   }
 
   lifecycle {
@@ -43,7 +43,7 @@ output "public_facing_view_domain" {
   value = "https://${aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn}"
 }
 
-resource "aws_route53_record" "viewer-use-my-lpa" {
+resource "aws_route53_record" "viewer_use_my_lpa" {
   # view.lastingpowerofattorney.opg.service.justice.gov.uk
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
@@ -52,8 +52,8 @@ resource "aws_route53_record" "viewer-use-my-lpa" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.viewer.dns_name
-    zone_id                = aws_lb.viewer.zone_id
+    name                   = module.eu_west_1.albs.viewer.dns_name
+    zone_id                = module.eu_west_1.albs.viewer.zone_id
   }
 
   lifecycle {
@@ -61,6 +61,10 @@ resource "aws_route53_record" "viewer-use-my-lpa" {
   }
 }
 
+moved {
+  from = aws_route53_record.viewer-use-my-lpa
+  to   = aws_route53_record.viewer_use_my_lpa
+}
 
 //-------------------------------------------------------------
 // Use
@@ -74,8 +78,8 @@ resource "aws_route53_record" "public_facing_use_lasting_power_of_attorney" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.actor.dns_name
-    zone_id                = aws_lb.actor.zone_id
+    name                   = module.eu_west_1.albs.actor.dns_name
+    zone_id                = module.eu_west_1.albs.actor.zone_id
   }
   lifecycle {
     create_before_destroy = true
@@ -86,7 +90,7 @@ output "public_facing_use_domain" {
   value = "https://${aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn}"
 }
 
-resource "aws_route53_record" "actor-use-my-lpa" {
+resource "aws_route53_record" "actor_use_my_lpa" {
   # use.lastingpowerofattorney.opg.service.justice.gov.uk
   provider = aws.management
   zone_id  = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
@@ -95,8 +99,8 @@ resource "aws_route53_record" "actor-use-my-lpa" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.actor.dns_name
-    zone_id                = aws_lb.actor.zone_id
+    name                   = module.eu_west_1.albs.actor.dns_name
+    zone_id                = module.eu_west_1.albs.actor.zone_id
   }
 
   lifecycle {
@@ -104,6 +108,10 @@ resource "aws_route53_record" "actor-use-my-lpa" {
   }
 }
 
+moved {
+  from = aws_route53_record.actor-use-my-lpa
+  to   = aws_route53_record.actor_use_my_lpa
+}
 
 resource "aws_route53_record" "admin_use_my_lpa" {
   # admin.lastingpowerofattorney.opg.service.justice.gov.uk
@@ -114,8 +122,8 @@ resource "aws_route53_record" "admin_use_my_lpa" {
 
   alias {
     evaluate_target_health = false
-    name                   = aws_lb.admin.dns_name
-    zone_id                = aws_lb.admin.zone_id
+    name                   = module.eu_west_1.albs.admin.dns_name
+    zone_id                = module.eu_west_1.albs.admin.zone_id
   }
 
   lifecycle {
