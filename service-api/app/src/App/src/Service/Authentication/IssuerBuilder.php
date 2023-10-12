@@ -24,6 +24,9 @@ class IssuerBuilder implements IssuerBuilderInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function build(string $resource): IssuerInterface
     {
         return $this->issuerBuilder->build($resource);

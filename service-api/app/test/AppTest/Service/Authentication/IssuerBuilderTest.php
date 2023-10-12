@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 class IssuerBuilderTest extends TestCase
 {
     private IssuerBuilder $issuerBuilder;
+
     public function setUp(): void
     {
         $this->issuerBuilder = new IssuerBuilder();
