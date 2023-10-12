@@ -2,10 +2,6 @@ data "aws_vpc" "default" {
   default = "true"
 }
 
-data "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${local.environment.account_name}-lb-access-logs"
-}
-
 data "aws_subnets" "private" {
   filter {
     name   = "vpc-id"
@@ -152,4 +148,3 @@ data "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
 data "aws_iam_role" "ecs_autoscaling_service_role" {
   name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
-

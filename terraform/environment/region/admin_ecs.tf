@@ -15,7 +15,7 @@ resource "aws_ecs_service" "admin" {
   }
 
   load_balancer {
-    target_group_arn = var.alb_tg_arns.admin.arn
+    target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "app"
     container_port   = 80
   }
@@ -76,7 +76,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.admin_ecs_service.id
-  source_security_group_id = var.admin_loadbalancer_security_group_id
+  source_security_group_id = aws_security_group.admin_loadbalancer.id
   lifecycle {
     create_before_destroy = true
   }
@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "admin_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
   security_group_id = aws_security_group.admin_ecs_service.id
   lifecycle {
     create_before_destroy = true
@@ -259,7 +259,7 @@ locals {
         },
         {
           name  = "ADMIN_LOGOUT_URL",
-          value = "${var.admin_cognito_user_pool_domain_name}/logout"
+          value = "${var.admin_cognito.user_pool_domain_name}/logout"
         },
         {
           name  = "ADMIN_JWT_SIGNING_KEY_URL",
@@ -267,7 +267,7 @@ locals {
         },
         {
           name  = "ADMIN_CLIENT_ID",
-          value = var.cognito_user_pool_id
+          value = var.admin_cognito.user_pool_id
         },
         {
           name  = "LPA_CODES_API_ENDPOINT",

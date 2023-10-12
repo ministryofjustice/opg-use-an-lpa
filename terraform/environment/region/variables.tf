@@ -1,32 +1,37 @@
 # Many of these variables are temporary and will be removed once the relevant region specific resources are moved to the region module.
 # E.g. dynamodb_tables will no longer be needed once the DynamoDB tables are moved to the region module.
 
-variable "actor_loadbalancer_security_group_id" {
-  description = "The ID of the ALB security group for actor service."
+variable "account_name" {
+  description = "The name of the AWS account."
   type        = string
 }
 
-variable "admin_cognito_user_pool_domain_name" {
-  description = "The domain name of the Cognito User Pool to use for the admin interface."
-  type        = string
+variable "acm_certificate_arns" {
+  description = "The ARNs of the ACM certificates to use."
+  type = object({
+    use                = string
+    view               = string
+    admin              = string
+    public_facing_use  = string
+    public_facing_view = string
+  })
+}
+
+variable "admin_cognito" {
+  description = "Settings for the AWS Cognito to use for the admin interface."
+  type = object({
+    id                          = string
+    user_pool_id                = string
+    user_pool_domain_name       = string
+    user_pool_client_secret     = string
+    user_pool_id_token_validity = string
+  })
+  sensitive = true
 }
 
 variable "admin_container_version" {
   description = "The image tag to use for the admin container."
   type        = string
-}
-
-variable "admin_loadbalancer_security_group_id" {
-  description = "The ID of the ALB security group for admin service."
-  type        = string
-}
-
-variable "alb_tg_arns" {
-  description = "Map of ALB ARNs to be used by the ECS services."
-  type = map(object({
-    arn  = string
-    name = string
-  }))
 }
 
 variable "application_logs_name" {
@@ -53,11 +58,6 @@ variable "aws_service_discovery_service" {
 
 variable "capacity_provider" {
   description = "The capacity provider to use for the ECS services."
-  type        = string
-}
-
-variable "cognito_user_pool_id" {
-  description = "The Cognito User Pool ID to use for authentication to the admin interface."
   type        = string
 }
 
@@ -142,6 +142,17 @@ variable "lpas_collection_endpoint" {
   type        = string
 }
 
+variable "load_balancer_deletion_protection_enabled" {
+  description = "Whether or not deletion protection should be enabled for the load balancers."
+  type        = bool
+  default     = false
+}
+
+variable "moj_sites" {
+  description = "A list of MOJ IP addresses used by security groups to allow access to the admin interface and non-production environments."
+  type        = list(string)
+}
+
 variable "notify_key_secret_name" {
   description = "The name of the secret containing the Notify API key."
   type        = string
@@ -155,6 +166,12 @@ variable "parameter_store_arns" {
 variable "pdf_container_version" {
   description = "The image tag to use for the PDF container."
   type        = string
+}
+
+variable "public_access_enabled" {
+  description = "Whether or not the front ECS services should be publicly accessible via the ALBs."
+  type        = bool
+  default     = false
 }
 
 variable "route_53_fqdns" {
@@ -180,10 +197,5 @@ variable "session_expiry_warning" {
 
 variable "sirius_account_id" {
   description = "The AWS ID of the Sirius account."
-  type        = string
-}
-
-variable "viewer_loadbalancer_security_group_id" {
-  description = "The ID of the ALB security group for viewer service."
   type        = string
 }
