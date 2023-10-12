@@ -254,11 +254,6 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_public_access" {
   provider = aws.region
 }
 
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_ingress_production[0]
-  to   = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
-}
-
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
   description       = "Allow any egress from View service load balancer"
   type              = "egress"

@@ -237,7 +237,7 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_ingress_production" {
+resource "aws_security_group_rule" "actor_loadbalancer_ingress_public_access" {
   count             = var.public_access_enabled ? 1 : 0
   description       = "Port 443 ingress for production from the internet to the application load balancer"
   type              = "ingress"

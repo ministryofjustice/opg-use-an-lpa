@@ -381,3 +381,13 @@ moved {
   from = aws_ssm_parameter.viewer_maintenance_switch
   to   = module.eu_west_1.aws_ssm_parameter.viewer_maintenance_switch
 }
+
+moved {
+  from = aws_security_group_rule.actor_loadbalancer_ingress_production[0]
+  to   = module.eu_west_1.aws_security_group_rule.actor_loadbalancer_ingress_public_access[0]
+}
+
+moved {
+  from = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
+  to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
+}
