@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
+use App\Service\Cache\CacheFactory;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
+use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
 use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 
 use function Facile\OpenIDClient\base64url_encode;
@@ -14,16 +16,21 @@ use function Facile\OpenIDClient\base64url_encode;
 class OneLoginAuthorisationRequestService
 {
     public function __construct(
-        private JWKFactory $JWKFactory,
+        private JWKFactory $jwkFactory,
         private IssuerBuilderInterface $issuerBuilder,
+        private CacheFactory $cacheFactory
     ) {
     }
 
     public function createAuthorisationRequest(string $uiLocale): string
     {
-        //TODO UML-3080 Configure cache
+
+        $cachedBuilder = new MetadataProviderBuilder();
+        $cachedBuilder->setCache(($this->cacheFactory)('cache'))
+        ->setCacheTtl(3600);
 
         $issuer = $this->issuerBuilder
+            ->setMetadataProviderBuilder($cachedBuilder)
             ->build('http://mock-one-login:8080/.well-known/openid-configuration');
 
 
@@ -33,7 +40,7 @@ class OneLoginAuthorisationRequestService
             'token_endpoint_auth_method' => 'private_key_jwt',
             'jwks'                       => [
                 'keys' => [
-                    ($this->JWKFactory)(),
+                    ($this->jwkFactory)(),
                 ],
             ],
                                                     ]);
