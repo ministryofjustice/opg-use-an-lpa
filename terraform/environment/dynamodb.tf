@@ -1,7 +1,9 @@
 resource "aws_dynamodb_table" "actor_codes_table" {
-  name         = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "ActorCode"
+  name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
+  billing_mode     = "PAY_PER_REQUEST"
+  hash_key         = "ActorCode"
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
   server_side_encryption {
     enabled = true
   }
@@ -37,9 +39,11 @@ resource "aws_dynamodb_table" "actor_codes_table" {
 }
 
 resource "aws_dynamodb_table" "stats_table" {
-  name         = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "TimePeriod"
+  name             = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
+  billing_mode     = "PAY_PER_REQUEST"
+  hash_key         = "TimePeriod"
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
   #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled = true
@@ -74,9 +78,11 @@ resource "aws_dynamodb_table" "stats_table" {
 }
 
 resource "aws_dynamodb_table" "actor_users_table" {
-  name         = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Id"
+  name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
+  billing_mode     = "PAY_PER_REQUEST"
+  hash_key         = "Id"
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
   server_side_encryption {
     enabled = true
   }
@@ -161,9 +167,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
 }
 
 resource "aws_dynamodb_table" "viewer_codes_table" {
-  name         = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "ViewerCode"
+  name             = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}"
+  billing_mode     = "PAY_PER_REQUEST"
+  hash_key         = "ViewerCode"
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
   server_side_encryption {
     enabled = true
   }
@@ -257,9 +265,11 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
 }
 
 resource "aws_dynamodb_table" "user_lpa_actor_map" {
-  name         = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "Id"
+  name             = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}"
+  billing_mode     = "PAY_PER_REQUEST"
+  hash_key         = "Id"
+  stream_enabled   = true
+  stream_view_type = "NEW_IMAGE"
   server_side_encryption {
     enabled = true
   }
