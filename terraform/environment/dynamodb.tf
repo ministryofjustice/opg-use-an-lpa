@@ -3,7 +3,7 @@ resource "aws_dynamodb_table" "actor_codes_table" {
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "ActorCode"
   stream_enabled   = true
-  stream_view_type = "NEW_IMAGE"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
   server_side_encryption {
     enabled = true
   }
@@ -28,6 +28,7 @@ resource "aws_dynamodb_table" "actor_codes_table" {
     content {
       region_name    = replica.value.name
       propagate_tags = true
+
     }
   }
 
@@ -43,7 +44,7 @@ resource "aws_dynamodb_table" "stats_table" {
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "TimePeriod"
   stream_enabled   = true
-  stream_view_type = "NEW_IMAGE"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
   #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled = true
@@ -82,7 +83,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "Id"
   stream_enabled   = true
-  stream_view_type = "NEW_IMAGE"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
   server_side_encryption {
     enabled = true
   }
@@ -171,7 +172,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "ViewerCode"
   stream_enabled   = true
-  stream_view_type = "NEW_IMAGE"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
   server_side_encryption {
     enabled = true
   }
@@ -269,7 +270,7 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "Id"
   stream_enabled   = true
-  stream_view_type = "NEW_IMAGE"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
   server_side_encryption {
     enabled = true
   }
