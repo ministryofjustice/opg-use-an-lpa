@@ -151,3 +151,9 @@ data "aws_iam_role" "ecs_autoscaling_service_role" {
 
   provider = aws.region
 }
+
+data "aws_s3_bucket" "access_log" {
+  bucket = "opg-ual-${var.account_name}-lb-access-logs"
+
+  provider = aws.region
+}

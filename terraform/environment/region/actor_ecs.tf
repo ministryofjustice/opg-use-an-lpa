@@ -15,7 +15,7 @@ resource "aws_ecs_service" "actor" {
   }
 
   load_balancer {
-    target_group_arn = var.alb_tg_arns.actor.arn
+    target_group_arn = aws_lb_target_group.actor.arn
     container_name   = "web"
     container_port   = 80
   }
@@ -65,7 +65,7 @@ resource "aws_security_group_rule" "actor_ecs_service_ingress" {
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.actor_ecs_service.id
-  source_security_group_id = var.actor_loadbalancer_security_group_id
+  source_security_group_id = aws_security_group.actor_loadbalancer.id
   lifecycle {
     create_before_destroy = true
   }
@@ -80,7 +80,7 @@ resource "aws_security_group_rule" "actor_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
   security_group_id = aws_security_group.actor_ecs_service.id
   lifecycle {
     create_before_destroy = true
