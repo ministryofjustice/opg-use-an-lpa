@@ -5,9 +5,10 @@ FROM php:8.1.23-fpm-alpine3.18 AS php-base
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
+ENV OPG_PHP_POOL_CHILDREN_MAX="25"
+
 RUN set -xe \
   && apk add --update --no-cache fcgi \
-  && apk upgrade --update --no-cache curl libxml2 \
   && install-php-extensions apcu \
   && rm /usr/bin/install-php-extensions
 

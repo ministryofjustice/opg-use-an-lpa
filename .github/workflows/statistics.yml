@@ -2,6 +2,11 @@
 name: "[Workflow] Post Statistics to Slack"
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/statistics.yml'
+    branches:
+      - main
   schedule:
     - cron: "0 9 * * 1" # 9am every Monday
   workflow_dispatch:
@@ -9,13 +14,12 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./scripts/
-
 jobs:
   stats_to_slack:
     name: "Post service stats to Slack"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v3.0.2
         with:
@@ -30,15 +34,20 @@ jobs:
           python-version: 3.11.5
       - name: Install requirements
         run: |
-          pip install -r ./pipeline/requirements.txt
+          pip install -r ./scripts/pipeline/requirements.txt
       - name: Get stats
         run: |
-          python ./get_statistics/get_statistics.py --text > ./stats.txt
-      - name: Post to slack
-        env:
-          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+          python ./scripts/get_statistics/get_statistics.py > ./stats.json
+      - name: Show stats in summary (debug only)
+        if: runner.debug == '1'
         run: |
-          python ./pipeline/service_stats_to_slack/stats_slack_notification.py \
-          --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path ./pipeline/service_stats_to_slack/service_stats.txt \
-          --stats_path ./stats.txt
+          stat_content=$(cat ./stats.md)
+          echo "${stat_content}" >> $GITHUB_STEP_SUMMARY
+      - name: Post to Slack
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+        run: |
+          python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
+          --slack_webhook ${{ env.SLACK_WEB_HOOK }} \
+          --template_path ./scripts/pipeline/service_stats_to_slack/service_stats.txt \
+          --stats_path ./stats.json

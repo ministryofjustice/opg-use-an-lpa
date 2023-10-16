@@ -3,11 +3,12 @@
 #
 FROM php:8.1.23-fpm-alpine3.18 AS php-base
 
+ENV OPG_PHP_POOL_CHILDREN_MAX="25"
+
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu gettext fcgi \
-  && apk upgrade --update --no-cache curl libxml2 \
   && install-php-extensions apcu redis-^5 intl gettext \
   && rm /usr/bin/install-php-extensions
 

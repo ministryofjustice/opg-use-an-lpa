@@ -26,6 +26,9 @@ return [
         'DynamoDb' => [
             'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],
+        'SecretsManager' => [
+            'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
+        ],
     ],
 
     'repositories' => [
@@ -41,6 +44,16 @@ return [
     'notify' => [
         'api' => [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
+        ],
+    ],
+
+    'cache' => [
+        'one-login' => [
+            'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
+            'options' => [
+                'ttl'       => 60,
+                'namespace' => 'oneLogin',
+            ],
         ],
     ],
 ];

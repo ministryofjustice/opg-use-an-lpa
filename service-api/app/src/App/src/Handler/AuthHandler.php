@@ -14,9 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class AuthHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class AuthHandler implements RequestHandlerInterface
@@ -32,7 +29,6 @@ class AuthHandler implements RequestHandlerInterface
      * May call other collaborating code to generate the response.
      *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws Exception
      */

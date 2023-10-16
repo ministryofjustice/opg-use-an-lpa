@@ -2,27 +2,26 @@
 // admin ECS Service level config
 
 resource "aws_ecs_service" "admin" {
-  count            = local.environment.build_admin ? 1 : 0
   name             = "admin-service"
-  cluster          = aws_ecs_cluster.use-an-lpa.id
-  task_definition  = aws_ecs_task_definition.admin[0].arn
-  desired_count    = 1
+  cluster          = aws_ecs_cluster.use_an_lpa.id
+  task_definition  = aws_ecs_task_definition.admin.arn
+  desired_count    = local.admin_desired_count
   platform_version = "1.4.0"
 
   network_configuration {
-    security_groups  = [aws_security_group.admin_ecs_service[0].id]
+    security_groups  = [aws_security_group.admin_ecs_service.id]
     subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.admin[0].arn
+    target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "app"
     container_port   = 80
   }
 
   capacity_provider_strategy {
-    capacity_provider = local.capacity_provider
+    capacity_provider = var.capacity_provider
     weight            = 100
   }
 
@@ -41,72 +40,108 @@ resource "aws_ecs_service" "admin" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_lb.admin]
+  provider = aws.region
+}
+
+
+moved {
+  from = aws_ecs_service.admin[0]
+  to   = aws_ecs_service.admin
 }
 
 //----------------------------------
 // The service's Security Groups
 
 resource "aws_security_group" "admin_ecs_service" {
-  count       = local.environment.build_admin ? 1 : 0
-  name_prefix = "${local.environment_name}-admin-ecs-service"
+  name_prefix = "${var.environment_name}-admin-ecs-service"
   description = "Admin service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
+}
+
+moved {
+  from = aws_security_group.admin_ecs_service[0]
+  to   = aws_security_group.admin_ecs_service
 }
 
 // 80 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
-  count                    = local.environment.build_admin ? 1 : 0
   description              = "Allow Port 80 ingress from the applciation load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.admin_ecs_service[0].id
-  source_security_group_id = aws_security_group.admin_loadbalancer[0].id
+  security_group_id        = aws_security_group.admin_ecs_service.id
+  source_security_group_id = aws_security_group.admin_loadbalancer.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
+}
+
+moved {
+  from = aws_security_group_rule.admin_ecs_service_ingress[0]
+  to   = aws_security_group_rule.admin_ecs_service_ingress
 }
 
 // Anything out
 resource "aws_security_group_rule" "admin_ecs_service_egress" {
-  count             = local.environment.build_admin ? 1 : 0
   description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
-  security_group_id = aws_security_group.admin_ecs_service[0].id
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
+  security_group_id = aws_security_group.admin_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
+}
+
+moved {
+  from = aws_security_group_rule.admin_ecs_service_egress[0]
+  to   = aws_security_group_rule.admin_ecs_service_egress
 }
 
 //--------------------------------------
 // admin ECS Service Task level config
 
 resource "aws_ecs_task_definition" "admin" {
-  count                    = local.environment.build_admin ? 1 : 0
-  family                   = "${local.environment_name}-admin"
+  family                   = "${var.environment_name}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.admin_app}]"
-  task_role_arn            = module.iam.ecs_task_roles.admin_task_role.arn
-  execution_role_arn       = module.iam.ecs_execution_role.arn
+  task_role_arn            = var.ecs_task_roles.admin_task_role.arn
+  execution_role_arn       = var.ecs_execution_role.arn
+
+  provider = aws.region
+}
+
+moved {
+  from = aws_ecs_task_definition.admin[0]
+  to   = aws_ecs_task_definition.admin
 }
 
 resource "aws_iam_role_policy" "admin_permissions_role" {
-  count  = local.environment.build_admin ? 1 : 0
-  name   = "${local.environment_name}-${local.policy_region_prefix}-adminApplicationPermissions"
+  name   = "${var.environment_name}-${local.policy_region_prefix}-adminApplicationPermissions"
   policy = data.aws_iam_policy_document.admin_permissions_role.json
-  role   = module.iam.ecs_task_roles.admin_task_role.id
+  role   = var.ecs_task_roles.admin_task_role.id
+
+  provider = aws.region
+}
+
+moved {
+  from = aws_iam_role_policy.admin_permissions_role[0]
+  to   = aws_iam_role_policy.admin_permissions_role
 }
 
 /*
@@ -130,16 +165,16 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      aws_dynamodb_table.actor_users_table.arn,
-      "${aws_dynamodb_table.actor_users_table.arn}/index/*",
-      aws_dynamodb_table.viewer_codes_table.arn,
-      "${aws_dynamodb_table.viewer_codes_table.arn}/index/*",
-      aws_dynamodb_table.viewer_activity_table.arn,
-      "${aws_dynamodb_table.viewer_activity_table.arn}/index/*",
-      aws_dynamodb_table.user_lpa_actor_map.arn,
-      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
-      aws_dynamodb_table.stats_table.arn,
-      "${aws_dynamodb_table.stats_table.arn}/index/*",
+      local.dynamodb_tables_arns.actor_users_table_arn,
+      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_codes_table_arn,
+      "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_activity_table_arn,
+      "${local.dynamodb_tables_arns.viewer_activity_table_arn}/index/*",
+      local.dynamodb_tables_arns.user_lpa_actor_map_arn,
+      "${local.dynamodb_tables_arns.user_lpa_actor_map_arn}/index/*",
+      local.dynamodb_tables_arns.stats_table_arn,
+      "${local.dynamodb_tables_arns.stats_table_arn}/index/*",
     ]
   }
 
@@ -152,7 +187,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
     ]
   }
 
@@ -163,9 +198,9 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/exists",
-      "arn:aws:execute-api:eu-west-1:${local.environment.sirius_account_id}:*/*/POST/code",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/code",
     ]
   }
 
@@ -176,13 +211,10 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "ssm:GetParameter",
       "ssm:PutParameter",
     ]
-    resources = [
-      aws_ssm_parameter.system_message_view_en.arn,
-      aws_ssm_parameter.system_message_view_cy.arn,
-      aws_ssm_parameter.system_message_use_en.arn,
-      aws_ssm_parameter.system_message_use_cy.arn,
-    ]
+    resources = var.parameter_store_arns
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -207,15 +239,15 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.admin-app.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.admin-app.use-an-lpa"
         }
       },
       environment = [
         {
           name  = "LOGGING_LEVEL",
-          value = tostring(local.environment.logging_level)
+          value = tostring(var.logging_level)
         },
         {
           name  = "ADMIN_PORT",
@@ -223,34 +255,26 @@ locals {
         },
         {
           name  = "ADMIN_DYNAMODB_TABLE_PREFIX",
-          value = tostring(local.environment_name)
+          value = tostring(var.environment_name)
         },
         {
           name  = "ADMIN_LOGOUT_URL",
-          value = "${local.admin_cognito_user_pool_domain_name}/logout"
+          value = "${var.admin_cognito.user_pool_domain_name}/logout"
         },
         {
           name  = "ADMIN_JWT_SIGNING_KEY_URL",
-          value = "https://public-keys.auth.elb.eu-west-1.amazonaws.com"
+          value = "https://public-keys.auth.elb.${data.aws_region.current.name}.amazonaws.com"
         },
         {
           name  = "ADMIN_CLIENT_ID",
-          value = "${aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin[0].id}"
+          value = var.admin_cognito.user_pool_id
         },
         {
           name  = "LPA_CODES_API_ENDPOINT",
-          value = local.environment.lpa_codes_endpoint
+          value = var.lpa_codes_endpoint
         },
       ]
     }
   )
 
-}
-
-locals {
-  admin_domain = local.environment.build_admin ? "https://${aws_route53_record.admin_use_my_lpa[0].fqdn}" : "Not deployed"
-}
-
-output "admin_domain" {
-  value = local.admin_domain
 }

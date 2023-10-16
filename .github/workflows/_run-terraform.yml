@@ -29,6 +29,11 @@ on:
         required: false
         default: 'false'
         type: string
+      extra_vars:
+        description: "Extra vars to pass to terraform (-var foo=bar)"
+        required: false
+        default: ''
+        type: string
 
 jobs:
   terraform_workflow:
@@ -59,9 +64,9 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@4a142dabfba6f0c9b246187c3a3736c19548ec72 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@e192cfcbae6c6ed207c277ed7624131996c9bf13 # pin@v2.0.0
         with:
-          terraform_version: 1.2.4
+          terraform_version: 1.5.6
 
       - name: configure AWS credentials for getting pagerduty token
         uses: aws-actions/configure-aws-credentials@375a690dc0af3921541e5f427167f333d7e85f67 # pin@v1.7.0
@@ -118,7 +123,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           terraform workspace show
-          terraform plan -input=false -parallelism=30 -lock-timeout=5m
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: add TTL to dynamodb for environment
@@ -135,7 +140,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: upload environment cluster config file

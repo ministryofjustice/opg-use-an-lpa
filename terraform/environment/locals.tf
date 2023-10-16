@@ -12,6 +12,11 @@ variable "admin_container_version" {
   default = "latest"
 }
 
+variable "public_access_enabled" {
+  type    = bool
+  default = false
+}
+
 output "container_version" {
   value = var.container_version
 }
@@ -47,7 +52,6 @@ variable "environments" {
           maximum = number
         })
       })
-      build_admin                               = bool
       cookie_expires_use                        = number
       cookie_expires_view                       = number
       google_analytics_id_use                   = string
@@ -100,7 +104,14 @@ variable "environments" {
         stats = object({
           name = string
         })
-      })
+      }),
+      regions = map(
+        object({
+          name       = string
+          is_active  = bool
+          is_primary = bool
+        })
+      )
     })
   )
 }

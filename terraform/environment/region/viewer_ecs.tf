@@ -3,9 +3,9 @@
 
 resource "aws_ecs_service" "viewer" {
   name             = "viewer-service"
-  cluster          = aws_ecs_cluster.use-an-lpa.id
+  cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
-  desired_count    = local.environment.autoscaling.view.minimum
+  desired_count    = local.view_desired_count
   platform_version = "1.4.0"
 
   network_configuration {
@@ -21,7 +21,7 @@ resource "aws_ecs_service" "viewer" {
   }
 
   capacity_provider_strategy {
-    capacity_provider = local.capacity_provider
+    capacity_provider = var.capacity_provider
     weight            = 100
   }
 
@@ -40,19 +40,21 @@ resource "aws_ecs_service" "viewer" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_lb.viewer]
+  provider = aws.region
 }
 
 //----------------------------------
 // The service's Security Groups
 
 resource "aws_security_group" "viewer_ecs_service" {
-  name_prefix = "${local.environment_name}-viewer-ecs-service"
+  name_prefix = "${var.environment_name}-viewer-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 // 80 in from the ELB
@@ -67,6 +69,8 @@ resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 // Anything out
@@ -76,11 +80,13 @@ resource "aws_security_group_rule" "viewer_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:AWS007 - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
   security_group_id = aws_security_group.viewer_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
@@ -94,29 +100,35 @@ resource "aws_security_group_rule" "viewer_ecs_service_elasticache_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //--------------------------------------
 // Viewer ECS Service Task level config
 
 resource "aws_ecs_task_definition" "viewer" {
-  family                   = "${local.environment_name}-viewer"
+  family                   = "${var.environment_name}-viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${local.environment.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
-  task_role_arn            = module.iam.ecs_task_roles.viewer_task_role.arn
-  execution_role_arn       = module.iam.ecs_execution_role.arn
+  container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
+  task_role_arn            = var.ecs_task_roles.viewer_task_role.arn
+  execution_role_arn       = var.ecs_execution_role.arn
+
+  provider = aws.region
 }
 
 //----------------
 // Permissions
 
 resource "aws_iam_role_policy" "viewer_permissions_role" {
-  name   = "${local.environment_name}-${local.policy_region_prefix}-ViewerApplicationPermissions"
+  name   = "${var.environment_name}-${local.policy_region_prefix}-ViewerApplicationPermissions"
   policy = data.aws_iam_policy_document.viewer_permissions_role.json
-  role   = module.iam.ecs_task_roles.viewer_task_role.id
+  role   = var.ecs_task_roles.viewer_task_role.id
+
+  provider = aws.region
 }
 
 /*
@@ -149,6 +161,8 @@ data "aws_iam_policy_document" "viewer_permissions_role" {
 
     resources = [data.aws_kms_alias.sessions_viewer.target_key_arn]
   }
+
+  provider = aws.region
 }
 
 //-----------------------------------------------
@@ -173,15 +187,15 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.viewer-web.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.viewer-web.use-an-lpa"
         }
       },
       environment = [
         {
           name  = "WEB_DOMAIN",
-          value = "https://${aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn}"
+          value = "https://${var.route_53_fqdns.public_view}"
         },
         {
           name  = "APP_HOST",
@@ -216,9 +230,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.viewer-otel.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.viewer-otel.use-an-lpa"
         }
       },
       environment = []
@@ -249,9 +263,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${local.environment_name}.viewer-app.use-an-lpa"
+          awslogs-group         = var.application_logs_name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.viewer-app.use-an-lpa"
         }
       },
       environment = local.viewer_app_environment_variables
@@ -283,19 +297,19 @@ locals {
       },
       {
         name  = "SESSION_EXPIRES",
-        value = tostring(local.environment.session_expires_view)
+        value = tostring(var.session_expires_view)
       },
       {
         name  = "COOKIE_EXPIRES",
-        value = tostring(local.environment.cookie_expires_view)
+        value = tostring(var.cookie_expires_view)
       },
       {
         name  = "GOOGLE_ANALYTICS_ID",
-        value = local.environment.google_analytics_id_view
+        value = var.google_analytics_id_view
       },
       {
         name  = "LOGGING_LEVEL",
-        value = tostring(local.environment.logging_level)
+        value = tostring(var.logging_level)
       },
       {
         name  = "BRUTE_FORCE_CACHE_URL",
@@ -311,11 +325,11 @@ locals {
       },
       {
         name  = "INSTRUCTIONS_AND_PREFERENCES",
-        value = tostring(local.environment.application_flags.instructions_and_preferences)
+        value = tostring(var.feature_flags.instructions_and_preferences)
       },
       {
         name  = "ALLOW_GOV_ONE_LOGIN",
-        value = tostring(local.environment.application_flags.allow_gov_one_login)
+        value = tostring(var.feature_flags.allow_gov_one_login)
       }
     ],
   )

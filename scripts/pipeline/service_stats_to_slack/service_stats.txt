@@ -1,2 +1,7 @@
-*Use a Lasting Power of Attorney Production - Service Statistics*
->{{ stats }}
+*{{ event | upper }}*
+*Total for this reporting period: {{ total }}*
+```
+{%- for month, value in monthly.items() %}
+{{- month[:-3] }} {{ value }}
+{% endfor -%}
+```

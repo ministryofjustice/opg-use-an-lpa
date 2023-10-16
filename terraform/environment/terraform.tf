@@ -1,5 +1,5 @@
 terraform {
-  required_version = "<= 1.5.6"
+  required_version = "<= 1.5.7"
 
   backend "s3" {
     bucket         = "opg.terraform.state"
@@ -21,7 +21,7 @@ terraform {
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
-      version = "~> 2.16.0"
+      version = "~> 3.0.0"
     }
   }
 }
@@ -38,6 +38,18 @@ variable "management_role" {
 
 provider "aws" {
   region = "eu-west-1"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.environment.account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "eu_west_1"
   default_tags {
     tags = local.default_tags
   }

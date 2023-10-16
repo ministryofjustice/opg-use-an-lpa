@@ -1,0 +1,268 @@
+
+name: "[Workflow] Deploy branch to specified environment"
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: 'Branch name to deploy (e.g. uml1234)'
+        required: true
+      public_access_enabled:
+        description: 'Enable public access to the environment'
+        type: boolean
+        required: true
+        default: false
+      terraform_workspace:
+        description: 'Terraform workspace to deploy to'
+        required: true
+        default: 'ur'
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: write
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+    
+jobs:
+  validate_input:
+    name: check environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: prohibit production deployments from this workflow
+        run: |
+          if [[ ${{ inputs.terraform_workspace }} == "production" ]]
+          then
+            echo "Don't deploy to production using this workflow"
+            exit 1
+          fi
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    outputs:
+      parsed_branch: ${{ inputs.git_ref }}
+      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      specific_path: ${{ steps.variables.outputs.path }}
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # pin@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ inputs.git_ref }}
+    
+      - name: get changed files in the admin folder
+        id: changed-files-admin
+        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
+        with:
+          files: |
+            service-admin/**
+      - name: get changed files in the terraform folder
+        id: changed-files-terraform
+        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
+        with:
+          files: |
+            terraform/**
+
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          long_sha=$(git rev-parse ${{ inputs.git_ref }})
+          echo "short_sha=$(echo ${long_sha:0:7})" >> $GITHUB_OUTPUT
+          if [[ ${{ steps.changed-files-terraform.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo terraform)" >> $GITHUB_OUTPUT
+          elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo admin)" >> $GITHUB_OUTPUT
+          else
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
+          fi
+      - name: show specific path
+        env:
+          SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
+        run: |
+          echo "path chosen - $SPECIFIC_PATH"
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: ${{ inputs.terraform_workspace }}
+    secrets: inherit
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success'
+
+  node_test:
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  node_build:
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+      - node_test
+      - node_build
+    with:
+      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      push_to_ecr: true
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    secrets: inherit
+    if: |
+      always() &&
+      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
+      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
+      needs.workflow_variables.result == 'success'
+
+  terraform_apply_shared_development:
+    name: terraform apply shared development
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_lint
+    with:
+      workspace: development
+      terraform_path: account
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      apply: true
+    secrets: inherit
+    if: |
+      always() &&
+      needs.terraform_lint.result == 'success'
+
+  terraform_apply_environment:
+    name: terraform apply environment
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - docker_build_scan_push
+      - terraform_lint
+      - workflow_variables
+    with:
+      workspace: ${{ inputs.terraform_workspace }}
+      terraform_path: environment
+      container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      apply: true
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      add_ttl: true
+      extra_vars: "-var public_access_enabled=${{ inputs.public_access_enabled }}"
+    secrets: inherit
+    if: |
+      always() &&
+      needs.terraform_lint.result == 'success' &&
+      needs.docker_build_scan_push.result == 'success' &&
+      needs.workflow_variables.result == 'success'
+
+  seed_dynamodb:
+    name: seed dynamodb
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_environment
+      - terraform_apply_shared_development
+    secrets: inherit
+    if: |
+      always() &&
+      needs.terraform_apply_environment.result == 'success' &&
+      needs.terraform_apply_shared_development.result == 'success'
+
+  run_behat_suite:
+    name: run behat tests against environment
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb
+      - workflow_variables
+    with:
+      workspace: ${{ inputs.terraform_workspace }}
+    secrets: inherit
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.seed_dynamodb.result == 'success'
+
+  slack_notify:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - run_behat_suite
+    with:
+      template: successful_dev_build.txt
+      workflow_status: ${{ needs.run_behat_suite.result }}
+    secrets:
+      webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success'
+
+  code_coverage:
+    name: upload to code coverage
+    uses: ./.github/workflows/_codecov.yml
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    secrets: inherit
+    if: |
+      always() &&
+      needs.docker_build_scan_push.result == 'success'
+
+  ecr_scan_results:
+    name: ecr scan results
+    uses: ./.github/workflows/_ecr-scanning.yml
+    with:
+      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+    needs:
+      - code_coverage
+      - terraform_apply_environment
+      - workflow_variables
+    secrets: inherit
+    if: |
+      always() &&
+      needs.code_coverage.result == 'success' &&
+      needs.terraform_apply_environment.result == 'success'
+
+  # Required end of workflow job
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - ecr_scan_results
+      - slack_notify
+      - workflow_variables
+    steps:
+      - name: workflow has ended without issue
+        run: |
+          echo "${{ needs.workflow_variables.outputs.parsed_branch }} deployed to ${{ inputs.terraform_workspace }} environment"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "URL: https://${{ inputs.terraform_workspace }}.use-lasting-power-of-attorney.service.gov.uk"
+    if: |
+      always() &&
+      needs.ecr_scan_results.result == 'success' &&
+      needs.slack_notify.result == 'success' &&
+      needs.workflow_variables.result == 'success'
