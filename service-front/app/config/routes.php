@@ -30,6 +30,7 @@
 declare(strict_types=1);
 
 use Common\Middleware\Routing\ConditionalRoutingMiddleware;
+use Actor\Handler\AuthoriseOneLoginHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -64,6 +65,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
+    $ALLOW_GOV_ONE_LOGIN = getenv('ALLOW_GOV_ONE_LOGIN');
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
@@ -89,7 +91,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
-    $app->route('/one-login', Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'one-login');
+    if ($ALLOW_GOV_ONE_LOGIN == 'true') {
+        $app->route('/one-login', Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'one-login');
+    }
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
