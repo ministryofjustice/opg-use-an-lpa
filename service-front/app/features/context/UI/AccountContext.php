@@ -2029,4 +2029,14 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/reset-password');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ');
     }
+
+    /**
+     * @Given /^I am on the temporary one login page$/
+     */
+    public function iAmOnTheTemporaryOneLoginPage(): void
+    {
+        $this->ui->visit('/one-login');
+        $this->ui->assertPageAddress('/one-login');
+        $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
+    }
 }
