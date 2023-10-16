@@ -5,7 +5,7 @@ resource "aws_ecs_service" "viewer" {
   name             = "viewer-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
-  desired_count    = var.autoscaling.view.minimum
+  desired_count    = local.view_desired_count
   platform_version = "1.4.0"
 
   network_configuration {

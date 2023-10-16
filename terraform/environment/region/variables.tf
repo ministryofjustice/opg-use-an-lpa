@@ -174,6 +174,19 @@ variable "public_access_enabled" {
   default     = false
 }
 
+variable "regions" {
+  description = "Information about which regions are being used"
+  type = map(object({
+    is_primary = bool
+    is_active  = bool
+  }))
+
+  validation {
+    condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
+    error_message = "One (and only one) region must be marked as primary"
+  }
+}
+
 variable "route_53_fqdns" {
   description = "The FQDNs to use for the Route 53 records."
 

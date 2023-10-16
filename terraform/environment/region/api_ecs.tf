@@ -5,7 +5,7 @@ resource "aws_ecs_service" "api" {
   name                              = "api-service"
   cluster                           = aws_ecs_cluster.use_an_lpa.id
   task_definition                   = aws_ecs_task_definition.api.arn
-  desired_count                     = var.autoscaling.api.minimum
+  desired_count                     = local.api_desired_count
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
@@ -193,18 +193,18 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      var.dynamodb_tables.actor_codes_table.arn,
-      "${var.dynamodb_tables.actor_codes_table.arn}/index/*",
-      var.dynamodb_tables.actor_users_table.arn,
-      "${var.dynamodb_tables.actor_users_table.arn}/index/*",
-      var.dynamodb_tables.viewer_codes_table.arn,
-      "${var.dynamodb_tables.viewer_codes_table.arn}/index/*",
-      var.dynamodb_tables.viewer_activity_table.arn,
-      "${var.dynamodb_tables.viewer_activity_table.arn}/index/*",
-      var.dynamodb_tables.user_lpa_actor_map.arn,
-      "${var.dynamodb_tables.user_lpa_actor_map.arn}/index/*",
-      var.dynamodb_tables.stats_table.arn,
-      "${var.dynamodb_tables.stats_table.arn}/index/*",
+      local.dynamodb_tables_arns.actor_codes_table_arn,
+      "${local.dynamodb_tables_arns.actor_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.actor_users_table_arn,
+      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_codes_table_arn,
+      "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.viewer_activity_table_arn,
+      "${local.dynamodb_tables_arns.viewer_activity_table_arn}/index/*",
+      local.dynamodb_tables_arns.user_lpa_actor_map_arn,
+      "${local.dynamodb_tables_arns.user_lpa_actor_map_arn}/index/*",
+      local.dynamodb_tables_arns.stats_table_arn,
+      "${local.dynamodb_tables_arns.stats_table_arn}/index/*",
     ]
   }
 
