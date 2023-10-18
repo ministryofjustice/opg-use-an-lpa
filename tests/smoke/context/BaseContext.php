@@ -14,17 +14,21 @@ use DMore\ChromeDriver\ChromeDriver;
 
 class BaseContext implements Context
 {
-    /** @var string The domain/url of the service under test */
+    /**
+     * @var string The domain/url of the service under test 
+     */
     public string $baseUrl = 'http://localhost';
 
     public string $oldBaseUrl = 'http://localhost';
 
-    /** @var MinkContext An accessible mink instance that drives UI interactions */
+    /**
+     * @var MinkContext An accessible mink instance that drives UI interactions 
+     */
     public MinkContext $ui;
 
     /**
      * @BeforeScenario
-     * @param BeforeScenarioScope $scope
+     * @param          BeforeScenarioScope $scope
      */
     public function setupBaseUrl(BeforeScenarioScope $scope): void
     {
@@ -49,7 +53,7 @@ class BaseContext implements Context
 
     /**
      * @BeforeScenario
-     * @param BeforeScenarioScope $scope
+     * @param          BeforeScenarioScope $scope
      */
     public function setupOldBaseUrl(BeforeScenarioScope $scope): void
     {
@@ -74,7 +78,7 @@ class BaseContext implements Context
 
     /**
      * @BeforeScenario
-     * @param BeforeScenarioScope $scope
+     * @param          BeforeScenarioScope $scope
      */
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
@@ -86,7 +90,7 @@ class BaseContext implements Context
      * Take screenshot when step fails.
      *
      * @AfterStep
-     * @param AfterStepScope $scope
+     * @param     AfterStepScope $scope
      */
     public function takeScreenshotAfterFailedStep(AfterStepScope $scope): void
     {

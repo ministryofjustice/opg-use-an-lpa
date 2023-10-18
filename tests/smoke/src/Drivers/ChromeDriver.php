@@ -51,22 +51,26 @@ class ChromeDriver implements Driver
         );
         $this->process->start();
 
-        $this->process->waitUntil(function ($type, $output) {
-            if (! ($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
-                echo $output;
+        $this->process->waitUntil(
+            function (string $type, $output) {
+                if (! ($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
+                    echo $output;
+                }
+                return $running;
             }
-            return $running;
-        });
+        );
     }
 
     public function stop(): void
     {
-        $this->process->stop();
+        if ($this->process !== null) {
+            $this->process->stop();
+        }
     }
-
+    
     public function isRunning(): bool
     {
-        if ($this->process !== null) {
+        if ($this->process === null) {
             return false;
         }
 
