@@ -239,7 +239,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.admin-app.use-an-lpa"
         }

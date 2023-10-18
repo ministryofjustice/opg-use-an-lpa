@@ -52,17 +52,19 @@ locals {
 
 resource "aws_cloudwatch_log_metric_filter" "log_event_code_metrics" {
   for_each       = toset(local.event_codes)
-  name           = "${local.environment_name}_${lower(split(".", each.value)[1])}"
+  name           = "${var.environment_name}_${lower(split(".", each.value)[1])}"
   pattern        = "{ $.context.${split(".", each.value)[0]} = \"${split(".", each.value)[1]}\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
     name          = "${lower(split(".", each.value)[1])}_event"
-    namespace     = "${local.environment_name}_events"
+    namespace     = "${var.environment_name}_events"
     value         = "1"
     default_value = "0"
     unit          = "Count"
   }
+
+  provider = aws.region
 }
 
 locals {
@@ -75,13 +77,13 @@ locals {
 
 resource "aws_cloudwatch_log_metric_filter" "rate_limiting_metrics" {
   for_each       = toset(local.rate_limit_events)
-  name           = "${local.environment_name}_${lower(each.value)}"
+  name           = "${var.environment_name}_${lower(each.value)}"
   pattern        = "{ $.context.code = \"429\" && $.context.message = \"${each.value}*\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
     name          = "${lower(each.value)}_rate_limit_event"
-    namespace     = "${local.environment_name}_events"
+    namespace     = "${var.environment_name}_events"
     value         = "1"
     default_value = "0"
     unit          = "Count"
@@ -98,28 +100,32 @@ locals {
 
 resource "aws_cloudwatch_log_metric_filter" "login_attempt_failures" {
   for_each       = toset(local.login_attempt_status)
-  name           = "${local.environment_name}_${lower(each.value)}"
+  name           = "${var.environment_name}_${lower(each.value)}"
   pattern        = "{  $.message = \"Authentication failed for*\" && $.message = \"*with code ${each.value}\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
     name          = "${lower(each.value)}_login_attempt_failures"
-    namespace     = "${local.environment_name}_events"
+    namespace     = "${var.environment_name}_events"
     value         = "1"
     default_value = "0"
     unit          = "Count"
   }
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
-  name           = "${local.environment_name}_api_5xx_errors"
+  name           = "${var.environment_name}_api_5xx_errors"
   pattern        = "{($.service_name = \"api\") && ($.status = 5*)}"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
     name          = "api_5xx_errors"
-    namespace     = "${local.environment_name}_events"
+    namespace     = "${var.environment_name}_events"
     value         = "1"
     default_value = "0"
   }
+
+  provider = aws.region
 }

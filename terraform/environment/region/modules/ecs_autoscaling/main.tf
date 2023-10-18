@@ -5,6 +5,8 @@ resource "aws_appautoscaling_target" "ecs_service" {
   role_arn           = var.ecs_autoscaling_service_role_arn
   max_capacity       = var.ecs_task_autoscaling_maximum
   min_capacity       = var.ecs_task_autoscaling_minimum
+
+  provider = aws.region
 }
 
 # Automatically scale capacity up by one
@@ -26,6 +28,8 @@ resource "aws_appautoscaling_policy" "up" {
   }
 
   depends_on = [aws_appautoscaling_target.ecs_service]
+
+  provider = aws.region
 }
 
 # Automatically scale capacity down by one
@@ -47,6 +51,8 @@ resource "aws_appautoscaling_policy" "down" {
   }
 
   depends_on = [aws_appautoscaling_target.ecs_service]
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "scale_up" {
@@ -113,6 +119,8 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
     }
   }
   alarm_actions = [aws_appautoscaling_policy.up.arn]
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "scale_down" {
@@ -179,6 +187,8 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
     }
   }
   alarm_actions = [aws_appautoscaling_policy.down.arn]
+
+  provider = aws.region
 }
 
 
@@ -198,4 +208,6 @@ resource "aws_cloudwatch_metric_alarm" "max_scaling_reached" {
     ServiceName = var.aws_ecs_service_name
     ClusterName = var.aws_ecs_cluster_name
   }
+
+  provider = aws.region
 }
