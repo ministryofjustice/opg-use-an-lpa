@@ -20,6 +20,8 @@ resource "aws_cloudwatch_log_subscription_filter" "events" {
   filter_pattern  = "{ $.context.event_code = * }"
   destination_arn = data.aws_lambda_function.clsf_to_sqs[0].arn
   depends_on      = [aws_lambda_permission.allow_cloudwatch]
+
+  provider = aws.region
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch" {
@@ -29,4 +31,6 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   function_name = data.aws_lambda_function.clsf_to_sqs[0].function_name
   principal     = "logs.${data.aws_region.current.name}.amazonaws.com"
   source_arn    = "${aws_cloudwatch_log_group.application_logs.arn}:*"
+
+  provider = aws.region
 }
