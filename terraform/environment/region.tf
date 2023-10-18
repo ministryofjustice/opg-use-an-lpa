@@ -1,9 +1,8 @@
 module "eu_west_1" {
   source = "./region"
 
-  account_name            = local.environment.account_name
-  admin_container_version = var.admin_container_version
-  # application_logs_name                     = aws_cloudwatch_log_group.application_logs.name
+  account_name                              = local.environment.account_name
+  admin_container_version                   = var.admin_container_version
   autoscaling                               = local.environment.autoscaling
   aws_service_discovery_service             = aws_service_discovery_private_dns_namespace.internal_ecs
   capacity_provider                         = local.capacity_provider
