@@ -67,7 +67,7 @@ class ChromeDriver implements Driver
             $this->process->stop();
         }
     }
-
+    
     public function isRunning(): bool
     {
         if ($this->process === null) {
