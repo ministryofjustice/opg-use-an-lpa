@@ -8,11 +8,13 @@ use Common\Service\ApiClient\Client as ApiClient;
 
 class OneLoginService
 {
-    public function __construct(private ApiClient $apiClient) {}
+    public function __construct(private ApiClient $apiClient)
+    {
+    }
 
     public function authorise(string $uiLocale): ?array
     {
-        return $this->apiClient->httpPost('/v1/auth-one-login', [
+        return $this->apiClient->httpGet('/v1/auth-one-login', [
             'ui_locale' => $uiLocale,
         ]);
     }
