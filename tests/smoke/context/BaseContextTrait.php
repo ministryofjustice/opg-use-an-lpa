@@ -33,8 +33,8 @@ trait BaseContextTrait
     /**
      * Checks the response for a particular header being set with a specified value
      *
-     * @param  $name
-     * @param  $value
+     * @param $name
+     * @param $value
      * @throws ExpectationException
      */
     public function assertResponseHeader(string $name, string $value): void
@@ -45,7 +45,7 @@ trait BaseContextTrait
     /**
      * Checks for an exact url match (including scheme, domain, path, fragments and queries)
      *
-     * @param  string $expected
+     * @param string $expected
      * @throws ExpectationException
      */
     public function assertExactUrl(string $expected): void
@@ -63,7 +63,7 @@ trait BaseContextTrait
     /**
      * Asserts that the response is JSON.
      *
-     * @param  string $mimeType An optional Mime type for the json.
+     * @param string $mimeType An optional Mime type for the json.
      * @return array The parsed JSON response as an associative array.
      * @throws ExpectationException
      */

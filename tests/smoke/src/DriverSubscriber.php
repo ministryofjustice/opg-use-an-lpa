@@ -11,9 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DriverSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Driver[] 
-     */
+    /** @var Driver[] */
     private array $drivers;
 
     public function __construct()
@@ -26,7 +24,7 @@ class DriverSubscriber implements EventSubscriberInterface
      *
      * @param Driver $driver
      */
-    public function addDriver(Driver $driver):void
+    public function addDriver(Driver $driver)
     {
         $this->drivers[] = $driver;
     }

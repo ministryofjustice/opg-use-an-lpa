@@ -216,29 +216,25 @@ class CommonContext implements Context
         $this->ui->assertSession()->cookieExists('__Host-session');
 
         // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
-        /**
- * @var ChromeDriver $driver 
-*/
+        /** @var ChromeDriver $driver */
         $driver  = $this->ui->getSession()->getDriver();
         $cookies = $driver->getCookies();
 
-        array_walk(
-            $cookies, function (array $cookie) {
-                if ($cookie['name'] === '__Host-session' && !$cookie['httpOnly']) {
-                    throw new ExpectationException(
-                        'Unable to verify that the session cookie is "httpOnly"',
-                        $this->ui->getSession()
-                    );
-                }
-
-                if ($cookie['name'] === '__Host-session' && !$cookie['secure']) {
-                    throw new ExpectationException(
-                        'Unable to verify that the session cookie is "secure"',
-                        $this->ui->getSession()
-                    );
-                }
+        array_walk($cookies, function (array $cookie) {
+            if ($cookie['name'] === '__Host-session' && !$cookie['httpOnly']) {
+                throw new ExpectationException(
+                    'Unable to verify that the session cookie is "httpOnly"',
+                    $this->ui->getSession()
+                );
             }
-        );
+
+            if ($cookie['name'] === '__Host-session' && !$cookie['secure']) {
+                throw new ExpectationException(
+                    'Unable to verify that the session cookie is "secure"',
+                    $this->ui->getSession()
+                );
+            }
+        });
     }
 
     /**
