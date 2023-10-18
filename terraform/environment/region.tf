@@ -1,9 +1,9 @@
 module "eu_west_1" {
   source = "./region"
 
-  account_name                              = local.environment.account_name
-  admin_container_version                   = var.admin_container_version
-  application_logs_name                     = aws_cloudwatch_log_group.application_logs.name
+  account_name            = local.environment.account_name
+  admin_container_version = var.admin_container_version
+  # application_logs_name                     = aws_cloudwatch_log_group.application_logs.name
   autoscaling                               = local.environment.autoscaling
   aws_service_discovery_service             = aws_service_discovery_private_dns_namespace.internal_ecs
   capacity_provider                         = local.capacity_provider
@@ -18,17 +18,20 @@ module "eu_west_1" {
   iap_images_endpoint                       = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled = local.environment.load_balancer_deletion_protection_enabled
   logging_level                             = local.environment.logging_level
+  log_retention_days                        = local.environment.log_retention_in_days
   lpa_codes_endpoint                        = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                  = local.environment.lpas_collection_endpoint
   moj_sites                                 = module.allow_list.moj_sites
   notify_key_secret_name                    = local.environment.notify_key_secret_name
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
+  pagerduty_service_id                      = local.environment.pagerduty_service_id
   pdf_container_version                     = local.environment.pdf_container_version
   public_access_enabled                     = var.public_access_enabled
   regions                                   = local.environment.regions
   session_expires_use                       = local.environment.session_expires_use
   session_expires_view                      = local.environment.session_expires_view
   session_expiry_warning                    = local.environment.session_expiry_warning
+  ship_metrics_queue_enabled                = local.environment.ship_metrics_queue_enabled
   sirius_account_id                         = local.environment.sirius_account_id
 
 
