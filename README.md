@@ -151,7 +151,7 @@ then try again
 
 ### I cannot add LPA's locally, which are in the seeded data set
 
-Ensure that the api-gateway container is running
+Ensure that the api-gateway container is running:
 
 ```shell
 docker ps | grep opg-use-an-lpa-codes-gateway
