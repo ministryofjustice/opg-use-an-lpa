@@ -871,3 +871,53 @@ moved {
   from = aws_wafv2_web_acl_association.viewer[0]
   to   = module.eu_west_1.aws_wafv2_web_acl_association.viewer[0]
 }
+
+moved {
+  from = aws_cloudwatch_metric_alarm.actor_health_check_alarm
+  to   = module.eu_west_1.module.actor_use_my_lpa[0].aws_cloudwatch_metric_alarm.this[0]
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.viewer_health_check_alarm
+  to   = module.eu_west_1.module.viewer_use_my_lpa[0].aws_cloudwatch_metric_alarm.this[0]
+}
+
+moved {
+  from = aws_route53_health_check.actor_health_check
+  to   = module.eu_west_1.module.actor_use_my_lpa[0].aws_route53_health_check.this[0]
+}
+
+moved {
+  from = aws_route53_health_check.viewer_health_check
+  to   = module.eu_west_1.module.viewer_use_my_lpa[0].aws_route53_health_check.this[0]
+}
+
+moved {
+  from = aws_route53_record.actor_use_my_lpa
+  to   = module.eu_west_1.module.actor_use_my_lpa[0].aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.admin_use_my_lpa
+  to   = module.eu_west_1.module.admin_use_my_lpa[0].aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.public_facing_use_lasting_power_of_attorney
+  to   = module.eu_west_1.module.public_facing_use_lasting_power_of_attorney[0].aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.public_facing_view_lasting_power_of_attorney
+  to   = module.eu_west_1.module.public_facing_view_lasting_power_of_attorney[0].aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.viewer_use_my_lpa
+  to   = module.eu_west_1.module.viewer_use_my_lpa[0].aws_route53_record.this
+}
+
+moved {
+  from = aws_service_discovery_private_dns_namespace.internal_ecs
+  to   = module.eu_west_1.aws_service_discovery_private_dns_namespace.internal_ecs
+}
