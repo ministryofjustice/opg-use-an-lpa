@@ -12,11 +12,11 @@ locals {
     viewer_codes_table                       = aws_dynamodb_table.viewer_codes_table.name
     user_lpa_actor_map                       = aws_dynamodb_table.user_lpa_actor_map.name
     stats_table                              = aws_dynamodb_table.stats_table.name
-    actor_fqdn                               = aws_route53_record.actor_use_my_lpa.fqdn
-    viewer_fqdn                              = aws_route53_record.viewer_use_my_lpa.fqdn
-    admin_fqdn                               = aws_route53_record.admin_use_my_lpa.fqdn
-    public_facing_use_fqdn                   = aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn
-    public_facing_view_fqdn                  = aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn
+    actor_fqdn                               = module.eu_west_1.route53_fqdns.actor
+    viewer_fqdn                              = module.eu_west_1.route53_fqdns.viewer
+    admin_fqdn                               = module.eu_west_1.route53_fqdns.admin
+    public_facing_use_fqdn                   = module.eu_west_1.route53_fqdns.public_facing_use
+    public_facing_view_fqdn                  = module.eu_west_1.route53_fqdns.public_facing_view
     viewer_load_balancer_security_group_name = module.eu_west_1.security_group_names.viewer_loadbalancer
     actor_load_balancer_security_group_name  = module.eu_west_1.security_group_names.actor_loadbalancer
 
