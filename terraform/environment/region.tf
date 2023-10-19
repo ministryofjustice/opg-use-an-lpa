@@ -70,14 +70,6 @@ module "eu_west_1" {
     "delete_lpa_feature"                                         = local.environment.application_flags.delete_lpa_feature
   }
 
-  # route_53_fqdns = {
-  #   "public_view" = aws_route53_record.public_facing_view_lasting_power_of_attorney.fqdn
-  #   "public_use"  = aws_route53_record.public_facing_use_lasting_power_of_attorney.fqdn
-  #   "admin"       = aws_route53_record.admin_use_my_lpa.fqdn
-  #   "actor"       = aws_route53_record.actor_use_my_lpa.fqdn
-  #   "viewer"      = aws_route53_record.viewer_use_my_lpa.fqdn
-  # }
-
   providers = {
     aws.region     = aws.eu_west_1
     aws.management = aws.management
