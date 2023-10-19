@@ -1,5 +1,6 @@
 locals {
-  create_alarm = var.create_alarm && var.create_health_check
+  create_alarm = var.create_alarm && var.create_health_check && var.is_active_region
+  route_weight = var.is_active_region ? 100 : 0
 }
 
 resource "aws_route53_record" "this" {
@@ -13,11 +14,16 @@ resource "aws_route53_record" "this" {
     zone_id                = var.loadbalancer.zone_id
   }
 
+  weighted_routing_policy {
+    weight = local.route_weight
+  }
+
   lifecycle {
     create_before_destroy = true
   }
 
-  provider = aws.management
+  set_identifier = "${var.current_region}-${var.environment_name}-${var.service_name}"
+  provider       = aws.management
 }
 
 resource "aws_route53_health_check" "this" {

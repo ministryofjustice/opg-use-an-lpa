@@ -39,3 +39,15 @@ variable "service_name" {
   type        = string
   default     = ""
 }
+
+variable "is_active_region" {
+  description = "Should traffic be routed to this region. Used to create a weighted record set"
+  type        = bool
+  default     = false
+}
+
+variable "current_region" {
+  description = "The current region"
+  type        = string
+  default     = "eu-west-1"
+}
