@@ -21,10 +21,11 @@ resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
 }
 
 module "public_facing_view_lasting_power_of_attorney" {
-  count  = local.is_active_region ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env = var.dns_namespace_env
+  is_active_region  = local.is_active_region
+  current_region    = data.aws_region.current.name
   zone_id           = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.zone_id
   loadbalancer      = aws_lb.viewer
   dns_name          = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.name
@@ -37,10 +38,11 @@ module "public_facing_view_lasting_power_of_attorney" {
 }
 
 module "viewer_use_my_lpa" {
-  count  = local.is_active_region ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env   = var.dns_namespace_env
+  is_active_region    = local.is_active_region
+  current_region      = data.aws_region.current.name
   zone_id             = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer        = aws_lb.viewer
   dns_name            = "view.lastingpowerofattorney"
@@ -56,10 +58,11 @@ module "viewer_use_my_lpa" {
 }
 
 module "public_facing_use_lasting_power_of_attorney" {
-  count  = local.is_active_region ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env = var.dns_namespace_env
+  is_active_region  = local.is_active_region
+  current_region    = data.aws_region.current.name
   zone_id           = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
   dns_name          = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name
   loadbalancer      = aws_lb.actor
@@ -72,10 +75,11 @@ module "public_facing_use_lasting_power_of_attorney" {
 }
 
 module "actor_use_my_lpa" {
-  count  = local.is_active_region ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env   = var.dns_namespace_env
+  is_active_region    = local.is_active_region
+  current_region      = data.aws_region.current.name
   zone_id             = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer        = aws_lb.actor
   dns_name            = "use.lastingpowerofattorney"
@@ -91,12 +95,14 @@ module "actor_use_my_lpa" {
 }
 
 module "admin_use_my_lpa" {
-  count  = local.is_active_region ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env = var.dns_namespace_env
+  is_active_region  = local.is_active_region
+  current_region    = data.aws_region.current.name
   zone_id           = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer      = aws_lb.admin
+  service_name      = "admin"
   dns_name          = "admin.lastingpowerofattorney"
   environment_name  = var.environment_name
 

@@ -26,10 +26,10 @@ locals {
   }
 
   route53_fqdns = {
-    public_facing_view = local.is_active_region ? module.public_facing_view_lasting_power_of_attorney[0].fqdn : ""
-    public_facing_use  = local.is_active_region ? module.public_facing_use_lasting_power_of_attorney[0].fqdn : ""
-    admin              = local.is_active_region ? module.admin_use_my_lpa[0].fqdn : ""
-    actor              = local.is_active_region ? module.actor_use_my_lpa[0].fqdn : ""
-    viewer             = local.is_active_region ? module.viewer_use_my_lpa[0].fqdn : ""
+    public_facing_view = local.is_active_region ? module.public_facing_view_lasting_power_of_attorney.fqdn : ""
+    public_facing_use  = local.is_active_region ? module.public_facing_use_lasting_power_of_attorney.fqdn : ""
+    admin              = local.is_active_region ? module.admin_use_my_lpa.fqdn : ""
+    actor              = local.is_active_region ? module.actor_use_my_lpa.fqdn : ""
+    viewer             = local.is_active_region ? module.viewer_use_my_lpa.fqdn : ""
   }
 }
