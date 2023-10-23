@@ -91,7 +91,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     // User auth
     $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
-    if ($ALLOW_GOV_ONE_LOGIN == 'true') {
+    if ($ALLOW_GOV_ONE_LOGIN === 'true') {
         $app->route('/one-login', Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'one-login');
     }
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
