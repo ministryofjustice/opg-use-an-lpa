@@ -43,7 +43,7 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
         $issuerMetaData->getAuthorizationEndpoint()->willReturn('fake endpoint');
         $this->issuerBuilder->setMetadataProviderBuilder(Argument::any())->willReturn($this->issuerBuilder);
         $this->issuerBuilder->build('http://mock-one-login:8080/.well-known/openid-configuration')->willReturn($issuer);
-        $this->cacheFactory->__invoke('cache')->willReturn($cacheInterface);
+        $this->cacheFactory->__invoke('one-login')->willReturn($cacheInterface);
     }
 
     /**
@@ -57,10 +57,11 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
             $this->cacheFactory->reveal(),
         );
         $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
-        $this->assertStringContainsString('client_id=client-id', $authorisationRequest);
-        $this->assertStringContainsString('scope=openid+email', $authorisationRequest);
-        $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $authorisationRequest);
-        $this->assertStringContainsString('ui_locales=en', $authorisationRequest);
-        $this->assertStringContainsString('redirect_uri=%2Flpa%2Fdashboard', $authorisationRequest);
+        $authorisationRequestUrl     = $authorisationRequest['url'];
+        $this->assertStringContainsString('client_id=client-id', $authorisationRequestUrl);
+        $this->assertStringContainsString('scope=openid+email', $authorisationRequestUrl);
+        $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $authorisationRequestUrl);
+        $this->assertStringContainsString('ui_locales=en', $authorisationRequestUrl);
+        $this->assertStringContainsString('redirect_uri=%2Flpa%2Fdashboard', $authorisationRequestUrl);
     }
 }

@@ -8,9 +8,12 @@ use Actor\Form\OneLoginForm;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
+use Common\Handler\Traits\Session;
 use Common\Service\OneLogin\OneLoginService;
+use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -18,10 +21,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware
+class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
 {
     use CsrfGuard;
     use Logger;
+    use Session;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -38,11 +42,11 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
 
         if ($request->getMethod() === 'POST') {
             $this->getLogger()->info('SUBMIT PRESSED');
+            $result = $this->authoriseOneLoginService->authorise('en');
+            $authSessionInterface = AuthSession::fromArray($result);
         }
-        //TODO: PLUG IN EN / CY from uri?
-//        $result = $this->authoriseOneLoginService->authorise('en');
 
-        //TODO Store nonce and state values in session
+        //TODO: PLUG IN EN / CY from uri?
 
         return new HtmlResponse($this->renderer->render('actor::one-login', [
             'form' => $form,
