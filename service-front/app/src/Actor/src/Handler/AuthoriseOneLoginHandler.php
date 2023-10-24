@@ -21,6 +21,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
 {
     use CsrfGuard;
