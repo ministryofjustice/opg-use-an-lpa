@@ -20,5 +20,10 @@
             "Smoke\\": "src/",
             "Test\\Context\\": "context/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
