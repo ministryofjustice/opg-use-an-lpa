@@ -22,3 +22,4 @@ terraform/**/modules/**.terraform.lock.hcl
 docs/diagrams/dsl/**/workspace.json
 
 *.pem
+tests/vendor
