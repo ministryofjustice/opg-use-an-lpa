@@ -7,10 +7,6 @@ namespace Test\Context;
 use Behat\Behat\Context\Context;
 
 /**
- * Class ViewerContext
- *
- * @package BehatTest\Context
- *
  * @property string $shareCode
  * @property string $donorSurname
  * @property string $organisation
@@ -24,7 +20,7 @@ class ViewerContext implements Context
      */
     public function iHaveBeenGivenAccessToAnLpaViaShareCode(): void
     {
-        $this->shareCode = 'P9H8A6MLD3AM';
+        $this->shareCode    = 'P9H8A6MLD3AM';
         $this->donorSurname = 'Gilson';
         $this->organisation = 'Test organisation';
     }

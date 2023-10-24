@@ -35,8 +35,8 @@ class DriverSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SuiteTested::BEFORE => 'startDrivers',
-            ExerciseCompleted::AFTER => 'stopDrivers'
+            SuiteTested::BEFORE      => 'startDrivers',
+            ExerciseCompleted::AFTER => 'stopDrivers',
         ];
     }
 

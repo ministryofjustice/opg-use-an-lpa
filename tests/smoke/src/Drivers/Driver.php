@@ -6,9 +6,11 @@ namespace Smoke\Drivers;
 
 interface Driver
 {
-    public const DRIVER_TAG = "smokedriver.driver";
+    public const DRIVER_TAG = 'smokedriver.driver';
 
     public function start(): void;
+
     public function stop(): void;
+
     public function isRunning(): bool;
 }

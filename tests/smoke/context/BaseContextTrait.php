@@ -12,8 +12,6 @@ use Behat\MinkExtension\Context\MinkContext;
  * Trait BaseContextTrait
  *
  * A trait that allows a utilising context to access the ui and mink functionality loaded in the BaseContext
- *
- * @package Test\Context
  */
 trait BaseContextTrait
 {
@@ -26,7 +24,7 @@ trait BaseContextTrait
     {
         $environment = $scope->getEnvironment();
 
-        $base = $environment->getContext(BaseContext::class);
+        $base     = $environment->getContext(BaseContext::class);
         $this->ui = $base->ui; // MinkContext gathered in BaseContext
     }
 
