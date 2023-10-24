@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Suite\Exception\SuiteConfigurationException;
 use DMore\ChromeDriver\ChromeDriver;
+use Twig\Environment;
 
 class BaseContext implements Context
 {
@@ -36,7 +38,7 @@ class BaseContext implements Context
                 $scope->getSuite()->getName(),
             ),
         };
-
+        /** @psalm-var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
 
         // we need to set this on *all* contexts
