@@ -9,7 +9,7 @@ use Behat\Behat\Context\Context;
 /**
  * @property string $shareCode
  * @property string $donorSurname
- * @property string $organisation
+ * @psalm-property string $organisation
  */
 class ViewerContext implements Context
 {
@@ -41,7 +41,7 @@ class ViewerContext implements Context
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
-    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('We’ve found Babara Gilson\'s LPA');

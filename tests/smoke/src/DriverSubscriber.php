@@ -24,7 +24,7 @@ class DriverSubscriber implements EventSubscriberInterface
      *
      * @param Driver $driver
      */
-    public function addDriver(Driver $driver)
+    public function addDriver(Driver $driver): void
     {
         $this->drivers[] = $driver;
     }

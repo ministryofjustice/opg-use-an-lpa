@@ -21,7 +21,10 @@ class BaseContext implements Context
 
     public string $oldBaseUrl = 'http://localhost';
 
-    /** @var MinkContext An accessible mink instance that drives UI interactions */
+    /**
+     * @var MinkContext An accessible mink instance that drives UI interactions
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     public MinkContext $ui;
 
     /**
@@ -64,6 +67,7 @@ class BaseContext implements Context
             ),
         };
 
+        /** @psalm-var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
 
         // we need to set this on *all* contexts
@@ -80,6 +84,7 @@ class BaseContext implements Context
      */
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
+        /** @psalm-var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
         $this->ui    = $environment->getContext(MinkContext::class);
     }

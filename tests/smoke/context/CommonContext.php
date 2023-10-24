@@ -85,7 +85,7 @@ class CommonContext implements Context
     /**
      * @Then /^I can see that the lpa has instructions and preferences images in summary$/
      */
-    public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary()
+    public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $instructionsElement = $this->ui->getMink()->getSession()->getPage()->findById('instructions_images');
@@ -138,6 +138,12 @@ class CommonContext implements Context
     public function theDocumentsLanguageIsSetToEnglish(): void
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
+        if ($htmlElement === null) {
+            throw new ExpectationException(
+                'Html tag not found',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
 
         if ($htmlElement->getAttribute('lang') !== 'en-gb') {
             throw new ExpectationException(
@@ -153,6 +159,12 @@ class CommonContext implements Context
     public function theDocumentsLanguageIsSetToWelsh(): void
     {
         $htmlElement = $this->ui->getMink()->getSession()->getPage()->find('css', 'html');
+        if ($htmlElement === null) {
+            throw new ExpectationException(
+                'Html tag not found',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
 
         if ($htmlElement->getAttribute('lang') !== 'cy-gb') {
             throw new ExpectationException(
