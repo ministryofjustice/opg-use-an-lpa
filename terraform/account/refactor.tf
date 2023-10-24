@@ -394,36 +394,6 @@ moved {
 }
 
 moved {
-  from = aws_kms_key.sessions_viewer
-  to   = module.sessions_viewer_mrk.aws_kms_key.this
-}
-
-moved {
-  from = aws_kms_key.sessions_actor
-  to   = module.sessions_actor_mrk.aws_kms_key.this
-}
-
-moved {
-  from = aws_kms_alias.sessions_viewer
-  to   = module.sessions_viewer_mrk.aws_kms_alias.primary_alias
-}
-
-moved {
-  from = aws_kms_alias.sessions_actor
-  to   = module.sessions_actor_mrk.aws_kms_alias.primary_alias
-}
-
-moved {
-  from = aws_kms_key.secrets_manager
-  to   = module.secrets_manager_mrk.aws_kms_key.this
-}
-
-moved {
-  from = aws_kms_alias.secrets_manager_alias
-  to   = module.secrets_manager_mrk.aws_kms_alias.primary_alias
-}
-
-moved {
   from = aws_cloudwatch_log_group.workspace_cleanup_log
   to   = module.workspace_cleanup_mrk.aws_cloudwatch_log_group.workspace_cleanup_log
 }

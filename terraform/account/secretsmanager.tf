@@ -54,13 +54,25 @@ module "secrets_manager_mrk" {
 
   key_description         = "Secrets Manager encryption ${local.environment}"
   key_policy              = data.aws_iam_policy_document.secrets_manager_kms.json
-  key_alias               = "secrets_manager_encryption"
+  key_alias               = "secrets_manager_encryption-mrk"
   deletion_window_in_days = 10
 
   providers = {
     aws.primary   = aws.eu_west_1
     aws.secondary = aws.eu_west_2
   }
+}
+
+resource "aws_kms_key" "secrets_manager" {
+  description             = "Secrets Manager encryption ${local.environment}"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.secrets_manager_kms.json
+}
+
+resource "aws_kms_alias" "secrets_manager_alias" {
+  name          = "alias/secrets_manager_encryption"
+  target_key_id = aws_kms_key.secrets_manager.key_id
 }
 
 data "aws_iam_policy_document" "secrets_manager_kms" {
