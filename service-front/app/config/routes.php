@@ -65,7 +65,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
-    $ALLOW_GOV_ONE_LOGIN = getenv('ALLOW_GOV_ONE_LOGIN');
+    $ALLOW_GOV_ONE_LOGIN = 'allow_gov_one_login';
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
@@ -90,10 +90,15 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
-    if ($ALLOW_GOV_ONE_LOGIN === 'true') {
-        $app->route('/one-login', Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'one-login');
-    }
+    $app->route('/login', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_GOV_ONE_LOGIN,
+            Actor\Handler\AuthoriseOneLoginHandler::class,
+            Actor\Handler\LoginPageHandler::class
+        )
+    ], ['GET', 'POST'], 'login');
+
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');

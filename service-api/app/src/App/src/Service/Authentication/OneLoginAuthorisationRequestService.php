@@ -59,7 +59,7 @@ class OneLoginAuthorisationRequestService
             [
                 'scope'        => 'openid email',
                 'state'        => $state,
-                'redirect_uri' => '/lpa/dashboard',
+                'redirect_uri' => 'http://localhost:9002/auth/redirect', //TODO: use dynamic domain UML-3121
                 'nonce'        => $nonce,
                 'vtr'          => '["Cl.Cm.P2"]',
                 'ui_locales'   => $uiLocale,
