@@ -2039,4 +2039,12 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/one-login');
         $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
     }
+
+    /**
+     * @When /^I click the one login button$/
+     */
+    public function iClickTheOneLoginButton(): void
+    {
+        $this->ui->pressButton('Sign in via One Login');
+    }
 }
