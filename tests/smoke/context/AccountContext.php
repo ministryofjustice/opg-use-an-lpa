@@ -7,10 +7,6 @@ namespace Test\Context;
 use Behat\Behat\Context\Context;
 
 /**
- * Class AccountContext
- *
- * @package Test\Context
- *
  * @property string userEmail
  * @property string userPassword
  * @property string lpaReference
@@ -26,7 +22,7 @@ class AccountContext implements Context
      */
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userEmail = 'opg-use-an-lpa+test-user@digital.justice.gov.uk';
+        $this->userEmail    = 'opg-use-an-lpa+test-user@digital.justice.gov.uk';
         $this->userPassword = 'umlTest1';
     }
 
@@ -35,12 +31,12 @@ class AccountContext implements Context
      */
     public function iHaveBeenGivenAccessToUseAnLpaViaCredentials(): void
     {
-        $this->lpaReference = '700000000047';
+        $this->lpaReference     = '700000000047';
         $this->lpaActivationKey = 'RY4KKKVMRVAK';
-        $this->userDob = [
-            'day' => 5,
+        $this->userDob          = [
+            'day'   => 5,
             'month' => 10,
-            'year' => 1975
+            'year'  => 1975,
         ];
     }
 

@@ -12,13 +12,12 @@ use Smoke\Drivers\Driver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Smoke\Drivers\ChromeDriver;
+use Smoke\DriverSubscriber;
 
 class SmokeExtension implements Extension
 {
-    /**
-     * @var ServiceProcessor
-     */
-    protected $processor;
+    protected ServiceProcessor $processor;
 
     /**
      * Initializes extension.
@@ -84,11 +83,11 @@ class SmokeExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config): void
     {
-        $definition = new Definition('Smoke\Drivers\ChromeDriver');
+        $definition = new Definition(ChromeDriver::class);
         $definition->addTag(Driver::DRIVER_TAG);
         $container->setDefinition('smokedriver.driver.chrome', $definition);
 
-        $definition = new Definition('Smoke\DriverSubscriber');
+        $definition = new Definition(DriverSubscriber::class);
         $definition->addTag(EventDispatcherExtension::SUBSCRIBER_TAG);
         $container->setDefinition('smokedriver.suite_listener', $definition);
     }

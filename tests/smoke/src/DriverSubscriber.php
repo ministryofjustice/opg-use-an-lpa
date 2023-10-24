@@ -24,7 +24,7 @@ class DriverSubscriber implements EventSubscriberInterface
      *
      * @param Driver $driver
      */
-    public function addDriver(Driver $driver)
+    public function addDriver(Driver $driver): void
     {
         $this->drivers[] = $driver;
     }
@@ -35,8 +35,8 @@ class DriverSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SuiteTested::BEFORE => 'startDrivers',
-            ExerciseCompleted::AFTER => 'stopDrivers'
+            SuiteTested::BEFORE      => 'startDrivers',
+            ExerciseCompleted::AFTER => 'stopDrivers',
         ];
     }
 
