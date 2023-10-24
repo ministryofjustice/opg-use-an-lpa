@@ -51,7 +51,6 @@ RUN set -xe \
 
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
-ENV ALLOW_GOV_ONE_LOGIN="true"
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
 

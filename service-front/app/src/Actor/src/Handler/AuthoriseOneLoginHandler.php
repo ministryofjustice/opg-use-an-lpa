@@ -15,7 +15,9 @@ use Common\Handler\Traits\Session;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,6 +31,8 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
     use CsrfGuard;
     use Logger;
     use Session;
+
+    public const OIDC_AUTH_INTERFACE = 'oidcauthinterface';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -45,10 +49,13 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
 
         if ($request->getMethod() === 'POST') {
             $this->getLogger()->info('SUBMIT PRESSED');
-            $url                  = $this->urlHelper->generate();
-            $uiLocale             = (str_contains($url, '/cy/') ? 'cy' : 'en');
-            $result               = $this->authoriseOneLoginService->authorise($uiLocale);
-            $authSessionInterface = AuthSession::fromArray($result);
+            $url      = $this->urlHelper->generate();
+            $uiLocale = (str_contains($url, '/cy/') ? 'cy' : 'en');
+            $result   = $this->authoriseOneLoginService->authorise($uiLocale);
+            $this
+                ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
+                ?->set(self::OIDC_AUTH_INTERFACE, AuthSession::fromArray($result));
+            return new RedirectResponse($result['url']);
         }
 
         return new HtmlResponse($this->renderer->render('actor::one-login', [
