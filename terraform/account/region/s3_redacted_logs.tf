@@ -1,13 +1,13 @@
 module "redacted-logs" {
   source = "./modules/s3_bucket"
 
-  account_name    = local.environment
-  bucket_name     = "opg-use-an-lpa-redacted-logs-${local.environment}-${data.aws_region.current.name}"
+  account_name    = var.environment_name
+  bucket_name     = "opg-use-an-lpa-redacted-logs-${var.environment_name}-${data.aws_region.current.name}"
   expiration_days = 400 # Log Retention is 13 Months/400 Days as Policy
   force_destroy   = false
   kms_key         = aws_kms_key.redacted_s3
   providers = {
-    aws = aws
+    aws.region = aws.region
   }
 }
 
@@ -16,11 +16,15 @@ resource "aws_kms_key" "redacted_s3" {
   deletion_window_in_days = 7
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.redacted_s3_logs_key_policy.json
+
+  provider = aws.region
 }
 
 resource "aws_kms_alias" "redacted_s3" {
-  name          = "alias/redacted_logs_s3_${local.environment}"
+  name          = "alias/redacted_logs_s3_${var.environment_name}"
   target_key_id = aws_kms_key.redacted_s3.key_id
+
+  provider = aws.region
 }
 
 data "aws_iam_policy_document" "redacted_s3_logs_key_policy" {
@@ -34,6 +38,8 @@ data "aws_iam_policy_document" "redacted_s3_logs_key_policy" {
       type        = "AWS"
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
+
+
   }
 
   statement {

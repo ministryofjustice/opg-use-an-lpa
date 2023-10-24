@@ -1,24 +1,28 @@
-data "aws_caller_identity" "current" {}
-
 resource "aws_cloudwatch_log_group" "use-an-lpa" {
   name              = "use-an-lpa"
-  retention_in_days = local.account.retention_in_days
+  retention_in_days = var.account.retention_in_days
   kms_key_id        = aws_kms_key.cloudwatch.arn
   tags = {
     "Name" = "use-an-lpa"
   }
+
+  provider = aws.region
 }
 
 resource "aws_kms_key" "cloudwatch" {
-  description             = "Cloudwatch encryption ${local.environment}"
+  description             = "Cloudwatch encryption ${var.environment_name}"
   deletion_window_in_days = 10
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.cloudwatch_kms.json
+
+  provider = aws.region
 }
 
 resource "aws_kms_alias" "cloudwatch_alias" {
   name          = "alias/cloudwatch_encryption"
   target_key_id = aws_kms_key.cloudwatch.key_id
+
+  provider = aws.region
 }
 
 # See the following link for further information

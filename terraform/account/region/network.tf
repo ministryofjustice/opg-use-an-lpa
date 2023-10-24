@@ -1,8 +1,11 @@
 resource "aws_default_vpc" "default" {
   tags = { "Name" = "default" }
+
+  provider = aws.region
 }
 
 data "aws_availability_zones" "default" {
+  provider = aws.region
 }
 
 resource "aws_default_subnet" "public" {
@@ -10,6 +13,8 @@ resource "aws_default_subnet" "public" {
   availability_zone       = element(data.aws_availability_zones.default.names, count.index)
   map_public_ip_on_launch = false
   tags                    = { "Name" = "public" }
+
+  provider = aws.region
 }
 
 resource "aws_subnet" "private" {
@@ -19,11 +24,15 @@ resource "aws_subnet" "private" {
   availability_zone       = element(data.aws_availability_zones.default.names, count.index)
   map_public_ip_on_launch = false
   tags                    = { "Name" = "private" }
+
+  provider = aws.region
 }
 
 resource "aws_eip" "nat" {
   count = 3
   tags  = { "Name" = "nat" }
+
+  provider = aws.region
 }
 
 data "aws_internet_gateway" "default" {
@@ -31,12 +40,16 @@ data "aws_internet_gateway" "default" {
     name   = "attachment.vpc-id"
     values = [aws_default_vpc.default.id]
   }
+
+  provider = aws.region
 }
 
 resource "aws_route_table_association" "private" {
   count          = 3
   route_table_id = element(aws_route_table.private.*.id, count.index)
   subnet_id      = element(aws_subnet.private.*.id, count.index)
+
+  provider = aws.region
 }
 
 resource "aws_nat_gateway" "nat" {
@@ -45,12 +58,16 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = element(aws_default_subnet.public.*.id, count.index)
 
   tags = { "Name" = "nat" }
+
+  provider = aws.region
 }
 
 resource "aws_default_route_table" "default" {
   default_route_table_id = aws_default_vpc.default.default_route_table_id
 
   tags = { "Name" = "default" }
+
+  provider = aws.region
 }
 
 resource "aws_route_table" "private" {
@@ -58,12 +75,16 @@ resource "aws_route_table" "private" {
   vpc_id = aws_default_vpc.default.id
 
   tags = { "Name" = "private" }
+
+  provider = aws.region
 }
 
 resource "aws_route" "default" {
   route_table_id         = aws_default_route_table.default.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = data.aws_internet_gateway.default.id
+
+  provider = aws.region
 }
 
 resource "aws_route" "private" {
@@ -71,9 +92,13 @@ resource "aws_route" "private" {
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.nat.*.id, count.index)
+
+  provider = aws.region
 }
 
 
 resource "aws_default_security_group" "default" {
   vpc_id = aws_default_vpc.default.id
+
+  provider = aws.region
 }
