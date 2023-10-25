@@ -14,6 +14,8 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
+use function PHPUnit\Framework\assertArrayHasKey;
+
 /**
  * @property string userEmail
  * @property string userPassword
@@ -2035,8 +2037,8 @@ class AccountContext implements Context
      */
     public function iAmOnTheTemporaryOneLoginPage(): void
     {
-        $this->ui->visit('/one-login');
-        $this->ui->assertPageAddress('/one-login');
+        $this->ui->visit('/home');
+        $this->ui->assertPageAddress('/home');
         $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
     }
 
@@ -2045,6 +2047,36 @@ class AccountContext implements Context
      */
     public function iClickTheOneLoginButton(): void
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'state' => 'fakestate',
+                        'nonce' => 'fakenonce',
+                        'url'   => 'http://fake.url/authorize',
+                    ]
+                ),
+                self::USER_SERVICE_REQUEST_PASSWORD_RESET
+            )
+        );
+
+        $this->iDoNotFollowRedirects();
         $this->ui->pressButton('Sign in via One Login');
+        $this->iDoFollowRedirects();
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params  = $request->getUri()->getQuery();
+        Assert::assertStringContainsString('ui_locale=en', $params);
+    }
+
+    /**
+     * @Then /^I am redirected to the redirect page$/
+     */
+    public function iAmRedirectedToTheRedirectPage(): void
+    {
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        assert::assertTrue(isset($locationHeader));
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
     }
 }
