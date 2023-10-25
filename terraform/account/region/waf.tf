@@ -1,5 +1,5 @@
 resource "aws_wafv2_web_acl" "main" {
-  name        = "${local.account_name}-web-acl"
+  name        = "${var.account_name}-web-acl"
   description = "Managed rules"
   scope       = "REGIONAL"
 
@@ -77,35 +77,45 @@ resource "aws_wafv2_web_acl" "main" {
   }
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${local.account_name}-web-acl"
+    metric_name                = "${var.account_name}-web-acl"
     sampled_requests_enabled   = true
   }
+
+  provider = aws.region
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "main" {
   log_destination_configs = [aws_cloudwatch_log_group.waf_web_acl.arn]
   resource_arn            = aws_wafv2_web_acl.main.arn
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_log_group" "waf_web_acl" {
-  name              = "aws-waf-logs-${local.account_name}"
+  name              = "aws-waf-logs-${var.account_name}"
   retention_in_days = 120
   kms_key_id        = aws_kms_key.waf_cloudwatch_log_encryption.arn
   tags = {
-    "Name" = "${local.account_name}-web-acl"
+    "Name" = "${var.account_name}-web-acl"
   }
+
+  provider = aws.region
 }
 
 resource "aws_kms_key" "waf_cloudwatch_log_encryption" {
-  description             = "AWS WAF Cloudwatch encryption ${local.account_name}"
+  description             = "AWS WAF Cloudwatch encryption ${var.account_name}"
   deletion_window_in_days = 10
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.waf_cloudwatch_log_encryption_kms.json
+
+  provider = aws.region
 }
 
 resource "aws_kms_alias" "waf_cloudwatch_log_encryption" {
   name          = "alias/waf_cloudwatch_log_encryption"
   target_key_id = aws_kms_key.waf_cloudwatch_log_encryption.key_id
+
+  provider = aws.region
 }
 
 # See the following link for further information

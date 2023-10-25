@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "workspace_cleanup_table" {
-  count        = local.account_name == "development" ? 1 : 0
+  count        = var.account_name == "development" ? 1 : 0
   name         = "WorkspaceCleanup"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "WorkspaceName"
@@ -14,4 +14,6 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
   lifecycle {
     prevent_destroy = true
   }
+
+  provider = aws.region
 }
