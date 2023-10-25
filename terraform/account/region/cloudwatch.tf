@@ -1,13 +1,20 @@
 resource "aws_cloudwatch_log_group" "use-an-lpa" {
   name              = "use-an-lpa"
   retention_in_days = var.account.retention_in_days
-  kms_key_id        = aws_kms_key.cloudwatch.arn
+  kms_key_id        = data.aws_kms_alias.cloudwatch_mrk.arn
   tags = {
     "Name" = "use-an-lpa"
   }
 
   provider = aws.region
 }
+
+data "aws_kms_alias" "cloudwatch_mrk" {
+  name = "alias/cloudwatch-encryption-mrk"
+
+  provider = aws.region
+}
+
 
 resource "aws_kms_key" "cloudwatch" {
   description             = "Cloudwatch encryption ${var.environment_name}"
