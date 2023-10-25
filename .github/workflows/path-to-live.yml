@@ -108,9 +108,7 @@ jobs:
     with:
       workspace: development
       terraform_path: account
-      # TODO: Remove this line when ready to apply - temporarily disabled to prevent accidental changes
-      apply: false
-      # apply: true
+      apply: true
       specific_path: all
     secrets: inherit
 
@@ -122,9 +120,7 @@ jobs:
     with:
       workspace: preproduction
       terraform_path: account
-      # TODO: Remove this line when ready to apply - temporarily disabled to prevent accidental changes
-      apply: false
-      # apply: true
+      apply: true
       specific_path: all
     secrets: inherit
 
@@ -166,9 +162,7 @@ jobs:
     with:
       workspace: production
       terraform_path: account
-      # TODO: Remove this line when ready to apply. Temporarily disabled to prevent accidental changes
-      apply: false
-      # apply: true
+      apply: true
       specific_path: all
     secrets: inherit
 
