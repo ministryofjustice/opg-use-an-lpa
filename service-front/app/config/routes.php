@@ -30,7 +30,6 @@
 declare(strict_types=1);
 
 use Common\Middleware\Routing\ConditionalRoutingMiddleware;
-use Actor\Handler\AuthoriseOneLoginHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -69,7 +68,14 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
-    $app->route('/home', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/home', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_GOV_ONE_LOGIN,
+            Actor\Handler\AuthoriseOneLoginHandler::class,
+            Actor\Handler\ActorTriagePageHandler::class
+        )
+    ], ['GET', 'POST'], 'home');
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
@@ -90,14 +96,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login', [
-        new ConditionalRoutingMiddleware(
-            $container,
-            $ALLOW_GOV_ONE_LOGIN,
-            Actor\Handler\AuthoriseOneLoginHandler::class,
-            Actor\Handler\LoginPageHandler::class
-        )
-    ], ['GET', 'POST'], 'login');
+    $app->route('/login',Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'login');
 
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
