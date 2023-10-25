@@ -9,6 +9,7 @@ use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\LaminasFormTests;
 use CommonTest\Form\TestsLaminasForm;
+use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -34,5 +35,11 @@ class OneLoginFormTest extends TestCase implements TestsLaminasForm
         return [
             '__csrf'                => Csrf::class,
         ];
+    }
+
+    public function setUp(): void
+    {
+        $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
+        $this->form    = new OneLoginForm($guardProphecy->reveal());
     }
 }
