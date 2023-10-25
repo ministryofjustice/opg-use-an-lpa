@@ -25,6 +25,10 @@ resource "aws_subnet" "private" {
   map_public_ip_on_launch = false
   tags                    = { "Name" = "private" }
 
+  # Ignore changes to the availability zone - this is a temporary workaround to prevent recreation of the subnets
+  lifecycle {
+    ignore_changes = [availability_zone]
+  }
   provider = aws.region
 }
 

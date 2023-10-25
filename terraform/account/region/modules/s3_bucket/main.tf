@@ -1,6 +1,12 @@
 resource "aws_s3_bucket" "bucket" {
   bucket        = var.bucket_name
   force_destroy = var.force_destroy
+
+  # Temporary workaround to prevent the bucket being destroyed
+  lifecycle {
+    ignore_changes = [bucket]
+  }
+
 }
 
 resource "aws_s3_bucket_acl" "bucket_acl" {

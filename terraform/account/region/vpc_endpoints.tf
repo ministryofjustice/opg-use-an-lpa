@@ -5,6 +5,7 @@ resource "aws_security_group" "vpc_endpoints_private" {
   tags        = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}" }
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [name_prefix]
   }
 
   provider = aws.region

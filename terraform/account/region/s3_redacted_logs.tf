@@ -6,6 +6,7 @@ module "redacted-logs" {
   expiration_days = 400 # Log Retention is 13 Months/400 Days as Policy
   force_destroy   = false
   kms_key         = aws_kms_key.redacted_s3
+
   providers = {
     aws.region = aws.region
   }
