@@ -6,6 +6,10 @@ module "eu_west_1" {
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
 
+  depends_on = [
+    module.cloudwatch_mrk,
+  ]
+
   providers = {
     aws.region     = aws.eu_west_1
     aws.management = aws.management
