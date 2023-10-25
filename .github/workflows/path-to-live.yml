@@ -166,7 +166,7 @@ jobs:
     with:
       workspace: production
       terraform_path: account
-      # TODO: Remove this line when ready to apply - temporarily disabled to prevent accidental changes
+      # TODO: Remove this line when ready to apply. Temporarily disabled to prevent accidental changes
       apply: false
       # apply: true
       specific_path: all
