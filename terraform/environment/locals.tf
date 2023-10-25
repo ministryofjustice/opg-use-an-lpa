@@ -104,7 +104,14 @@ variable "environments" {
         stats = object({
           name = string
         })
-      })
+      }),
+      regions = map(
+        object({
+          name       = string
+          is_active  = bool
+          is_primary = bool
+        })
+      )
     })
   )
 }

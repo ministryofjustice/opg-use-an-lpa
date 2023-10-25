@@ -1,6 +1,3 @@
-# Many of these variables are temporary and will be removed once the relevant region specific resources are moved to the region module.
-# E.g. dynamodb_tables will no longer be needed once the DynamoDB tables are moved to the region module.
-
 variable "account_name" {
   description = "The name of the AWS account."
   type        = string
@@ -31,11 +28,6 @@ variable "admin_cognito" {
 
 variable "admin_container_version" {
   description = "The image tag to use for the admin container."
-  type        = string
-}
-
-variable "application_logs_name" {
-  description = "The name of the CloudWatch Logs group to send application logs to."
   type        = string
 }
 
@@ -132,6 +124,11 @@ variable "logging_level" {
   type        = string
 }
 
+variable "log_retention_days" {
+  description = "The number of days to retain logs for."
+  type        = number
+}
+
 variable "lpa_codes_endpoint" {
   description = "The endpoint to use for LPA codes."
   type        = string
@@ -158,6 +155,11 @@ variable "notify_key_secret_name" {
   type        = string
 }
 
+variable "pagerduty_service_id" {
+  description = "The ID of the PagerDuty service to use."
+  type        = string
+}
+
 variable "parameter_store_arns" {
   description = "The ARNs of the Parameter Store parameters to use."
   type        = list(string)
@@ -172,6 +174,19 @@ variable "public_access_enabled" {
   description = "Whether or not the front ECS services should be publicly accessible via the ALBs."
   type        = bool
   default     = false
+}
+
+variable "regions" {
+  description = "Information about which regions are being used"
+  type = map(object({
+    is_primary = bool
+    is_active  = bool
+  }))
+
+  validation {
+    condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
+    error_message = "One (and only one) region must be marked as primary"
+  }
 }
 
 variable "route_53_fqdns" {
@@ -193,6 +208,12 @@ variable "session_expires_view" {
 variable "session_expiry_warning" {
   description = "The number of seconds before the session expires to show the warning for the viewer service."
   type        = string
+}
+
+variable "ship_metrics_queue_enabled" {
+  description = "Whether or not to forward metrics to opg-metrics"
+  type        = bool
+  default     = false
 }
 
 variable "sirius_account_id" {

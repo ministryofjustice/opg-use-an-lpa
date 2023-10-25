@@ -1,12 +1,12 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  alarm_description   = "5XX Errors returned to viewer users for ${local.environment_name}"
-  alarm_name          = "${local.environment_name} viewer 5XX errors"
+  alarm_description   = "5XX Errors returned to viewer users for ${var.environment_name}"
+  alarm_name          = "${var.environment_name} viewer 5XX errors"
   comparison_operator = "GreaterThanThreshold"
   datapoints_to_alarm = 2
   dimensions = {
-    "LoadBalancer" = trimprefix(split(":", module.eu_west_1.albs.viewer.arn)[5], "loadbalancer/")
+    "LoadBalancer" = trimprefix(split(":", aws_lb.viewer.arn)[5], "loadbalancer/")
   }
   evaluation_periods        = 2
   insufficient_data_actions = []
@@ -18,17 +18,19 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
   tags                      = {}
   threshold                 = 2
   treat_missing_data        = "notBreaching"
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  alarm_description   = "5XX Errors returned to actor users for ${local.environment_name}"
-  alarm_name          = "${local.environment_name} actor 5XX errors"
+  alarm_description   = "5XX Errors returned to actor users for ${var.environment_name}"
+  alarm_name          = "${var.environment_name} actor 5XX errors"
   comparison_operator = "GreaterThanThreshold"
   datapoints_to_alarm = 2
   dimensions = {
-    "LoadBalancer" = trimprefix(split(":", module.eu_west_1.albs.actor.arn)[5], "loadbalancer/")
+    "LoadBalancer" = trimprefix(split(":", aws_lb.actor.arn)[5], "loadbalancer/")
   }
   evaluation_periods        = 2
   insufficient_data_actions = []
@@ -40,15 +42,17 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   tags                      = {}
   threshold                 = 2
   treat_missing_data        = "notBreaching"
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   actions_enabled     = true
-  alarm_name          = "${local.environment_name}_unexpected_data_lpa_api_resposnes"
+  alarm_name          = "${var.environment_name}_unexpected_data_lpa_api_resposnes"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "increase in unexpected data lpa api resposnes"
-  namespace           = "${local.environment_name}_events"
-  metric_name         = "${local.environment_name}_unexpected_data_lpa_api_responses"
+  namespace           = "${var.environment_name}_events"
+  metric_name         = "${var.environment_name}_unexpected_data_lpa_api_responses"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = 180
   evaluation_periods  = 1
@@ -56,11 +60,13 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   statistic           = "Sum"
   threshold           = 5
   treat_missing_data  = "notBreaching"
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   actions_enabled     = true
-  alarm_name          = "${local.environment_name}_api_5xx_errors"
+  alarm_name          = "${var.environment_name}_api_5xx_errors"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -74,7 +80,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
-  alarm_name          = "${local.environment_name}_ActorDDoSDetected"
+  alarm_name          = "${var.environment_name}_ActorDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -86,12 +92,14 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = module.eu_west_1.albs.actor.arn
+    ResourceArn = aws_lb.actor.arn
   }
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
-  alarm_name          = "${local.environment_name}_ViewerDDoSDetected"
+  alarm_name          = "${var.environment_name}_ViewerDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -103,12 +111,12 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = module.eu_west_1.albs.viewer.arn
+    ResourceArn = aws_lb.viewer.arn
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  alarm_name          = "${local.environment_name}_AdminDDoSDetected"
+  alarm_name          = "${var.environment_name}_AdminDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
   metric_name         = "DDoSDetected"
@@ -120,8 +128,10 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = module.eu_west_1.albs.admin.arn
+    ResourceArn = aws_lb.admin.arn
   }
+
+  provider = aws.region
 }
 
 moved {

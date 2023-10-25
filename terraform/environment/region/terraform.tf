@@ -9,6 +9,10 @@ terraform {
         aws.management,
       ]
     }
+    pagerduty = {
+      source  = "PagerDuty/pagerduty"
+      version = ">= 3.0.0"
+    }
   }
 }
 

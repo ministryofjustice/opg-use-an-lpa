@@ -1,14 +1,16 @@
 resource "aws_cloudwatch_log_group" "application_logs" {
-  name              = "${local.environment_name}_application_logs"
-  retention_in_days = local.environment.log_retention_in_days
+  name              = "${var.environment_name}_application_logs"
+  retention_in_days = var.log_retention_days
   kms_key_id        = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   tags = {
-    "Name" = "${local.environment_name}_application_logs"
+    "Name" = "${var.environment_name}_application_logs"
   }
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_query_definition" "app_container_messages" {
-  name            = "Application Logs/${local.environment_name} app container messages"
+  name            = "Application Logs/${var.environment_name} app container messages"
   log_group_names = [aws_cloudwatch_log_group.application_logs.name]
 
   query_string = <<EOF
@@ -19,4 +21,6 @@ fields @timestamp, coalesce(message, request) as logged
 | filter @logStream like /-app\./
 | sort @timestamp desc
 EOF
+
+  provider = aws.region
 }

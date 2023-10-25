@@ -5,7 +5,7 @@ resource "aws_ecs_service" "actor" {
   name             = "actor-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.actor.arn
-  desired_count    = var.autoscaling.use.minimum
+  desired_count    = local.use_desired_count
   platform_version = "1.4.0"
 
   network_configuration {
@@ -186,7 +186,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.actor-web.use-an-lpa"
         }
@@ -233,7 +233,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
@@ -266,7 +266,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.actor-app.use-an-lpa"
         }

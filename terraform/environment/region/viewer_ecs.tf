@@ -5,7 +5,7 @@ resource "aws_ecs_service" "viewer" {
   name             = "viewer-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
   task_definition  = aws_ecs_task_definition.viewer.arn
-  desired_count    = var.autoscaling.view.minimum
+  desired_count    = local.view_desired_count
   platform_version = "1.4.0"
 
   network_configuration {
@@ -187,7 +187,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-web.use-an-lpa"
         }
@@ -230,7 +230,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-otel.use-an-lpa"
         }
@@ -263,7 +263,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-app.use-an-lpa"
         }

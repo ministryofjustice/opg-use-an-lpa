@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-09-11T09:37:13+00:00\n"
+"POT-Creation-Date: 2023-10-12T09:26:27+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
 msgid "We've got your activation key request"
@@ -96,7 +96,7 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:66
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
@@ -109,7 +109,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:66
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
@@ -378,13 +378,13 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:56
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:113
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
-#: src/Viewer/templates/viewer/enter-code.html.twig:60
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
 msgid "Continue"
 msgstr "Parhau"
 
@@ -694,7 +694,7 @@ msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
@@ -718,6 +718,20 @@ msgstr "Dyddiad geni"
 #: src/Actor/templates/actor/check-your-answers.html.twig:57
 msgid "Postcode"
 msgstr "Cod post"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+#: src/Actor/templates/actor/check-your-answers.html.twig:71
+msgid "Do you live in the UK?"
+msgstr "Ydych chi’n byw yn y DU?"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:74
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
+#: src/Actor/templates/actor/check-your-answers.html.twig:74
+#: src/Common/templates/common/cookies.html.twig:136
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
+msgid "No"
+msgstr "Nac oes"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
 msgid "Did you give us the right LPA reference number?"
@@ -1324,14 +1338,13 @@ msgstr "A oes angen newid manylion atwrnai?"
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:124
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:133
 msgid ""
-"If the scanned image is not readable, organisations may ask to see the paper "
+"If any scanned images are not readable, organisations may ask to see the paper "
 "LPA so that they can find out what the instructions or preferences are."
 msgstr ""
-"Os nad yw’r ddelwedd, sydd wedi ei sganio, yn glir, gallai sefydliadau ofyn am "
-"gael gweld y fersiwn papur o’r Atwrneiaeth Arhosol, fel y gallant weld beth "
-"yw’r cyfarwyddiadau neu’r dewisiadau."
+"Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
+"roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:145
 msgid "Seen something incorrect in the LPA details?"
@@ -1664,6 +1677,11 @@ msgstr ""
 "y ceir mynediad ato gan drydydd parti drwy ddefnyddio cod a grëwyd gan roddwr "
 "neu atwrnai."
 
+#: src/Actor/templates/actor/actor-privacy-notice.html.twig:117
+#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:96
+msgid "How we store data"
+msgstr "Sut yr ydym yn storio data"
+
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:119
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:100
 msgid ""
@@ -1964,11 +1982,12 @@ msgstr ""
 msgid ""
 "This scanned image is also shown to anyone you give an access code to. Please "
 "check that the scanned image is readable before giving an access code to "
-"organisations."
+"organisations. This will work for all access codes made after 4 July 2023."
 msgstr ""
 "Dangosir hefyd y ddelwedd hon sydd wedi ei sganio i unrhyw un y rhoddwch gôd "
 "mynediad iddo. Gwiriwch fod modd darllen y ddelwedd sydd wedi ei sganio cyn "
-"rhoi côd mynediad i sefydliadau."
+"rhoi côd mynediad i sefydliadau. Bydd hwn yn gweithio ar gyfer pob cod "
+"mynediad a grëwyd ar ôl 4 Gorffennaf 2023."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:35
 msgid ""
@@ -2002,23 +2021,15 @@ msgstr ""
 "Ar y mwyafrif o LPAs, byddwch yn dod o hyd i’r cyfarwyddiadau a’r dymuniadau "
 "yn rhan 7."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:41
+#: src/Actor/templates/actor/instructions-preferences.html.twig:60
 msgid ""
 "On some LPAs made in or before 2015, instructions and preferences are called "
-"‘restrictions and conditions’. You’ll find them on page 9 of the <abbr "
+"'restrictions and conditions'. You’ll find them on page 9 of the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 "Ar rhai LPAs a wnaed yn, neu cyn 2015, gelwir cyfarwyddiadau a dymuniadau yn "
 "‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
-"title=\"lasting power of attorney\">LPA</abbr>."
-
-#: src/Actor/templates/actor/instructions-preferences.html.twig:67
-msgid ""
-"In some older LPAs, instructions and preferences are called 'restrictions and "
-"conditions'."
-msgstr ""
-"Mewn rhai LPAs hŷn, gelwir cyfarwyddiadau a dewisiadau yn ‘gyfyngiadau ac "
-"amodau’."
+"title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:70
 msgid "I do not have the paper LPA"
@@ -3143,24 +3154,10 @@ msgstr "Cadarnhau a chyflwyno’r cais"
 msgid "What is your UK postcode?"
 msgstr "Beth yw eich cod post yn y DU?"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
-#: src/Actor/templates/actor/check-your-answers.html.twig:71
-msgid "Do you live in the UK?"
-msgstr "Ydych chi’n byw yn y DU?"
-
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:30
 #: src/Common/templates/common/cookies.html.twig:131
 msgid "Yes"
 msgstr "Oes"
-
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:74
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:35
-#: src/Actor/templates/actor/check-your-answers.html.twig:74
-#: src/Common/templates/common/cookies.html.twig:136
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
-msgid "No"
-msgstr "Nac oes"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
@@ -3500,20 +3497,12 @@ msgstr ""
 "Os nad yw cyfeirnod yr atwrneiaeth arhosol yn 12 rhif, ni allwch ei ychwanegu "
 "at y gwasanaeth ar hyn o bryd."
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:39
-msgid ""
-"We are working to open up the service to more LPAs. Please try again in a few "
-"weeks time."
-msgstr ""
-"Rydym wrthi’n ceisio agor y gwasanaeth i fwy o atwrneiaethau arhosol. Rhowch "
-"gynnig arall arni mewn wythnos neu ddwy."
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:13
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:15
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:13
 msgid "Your lasting powers of attorney"
 msgstr "Eich atwrneiaethau arhosol"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:19
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:21
 msgid ""
 "Any lasting power of attorney (LPA) you add to your account will appear on "
 "this page."
@@ -3522,7 +3511,7 @@ msgstr ""
 "cyfrif yn ymddangos ar y dudalen hon."
 
 # Some translated content missing
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:21
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:23
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:21
 msgid ""
 "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" "
@@ -3533,17 +3522,17 @@ msgstr ""
 "Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
 "link\">rôl atwrnai</a>."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:26
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:28
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
 msgid "What can I do with this service?"
 msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:30
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
 msgid "Use this service to:"
 msgstr "Defnyddiwch y gwasanaeth hwn i:"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
 msgid ""
 "give organisations access to an online summary of an <abbr title=\"lasting "
@@ -3552,7 +3541,7 @@ msgstr ""
 "roi mynediad i sefydliadau at grynodeb ar-lein o <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> drwy greu cod diogel"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:33
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
 msgid ""
 "keep track of the organisations that have online access to an <abbr "
@@ -3561,7 +3550,7 @@ msgstr ""
 "cadw golwg ar y sefydliadau sydd â mynediad ar-lein at <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
 msgid ""
 "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, "
 "including a scanned image of the instructions and preferences if there are any"
@@ -3569,7 +3558,7 @@ msgstr ""
 "gweld crynodeb o <abbr title=“lasting power of attorney”>LPA</abbr>, gan "
 "gynnwys delwedd wedi’i sganio o’r cyfarwyddiadau a’r dewisiadau os oes rhai"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:35
 msgid ""
 "ask for an activation key if you have not been given one - or it has expired"
@@ -3577,11 +3566,11 @@ msgstr ""
 "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi "
 "dod i ben"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:53
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:55
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
@@ -3841,9 +3830,10 @@ msgstr ""
 "Rhaid i chi gysylltu â ni wedyn er mwyn i ni allu cywiro’r dyddiad yn ein "
 "cofnodion."
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:27
-msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
-msgstr "Cyfeirnod <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>:"
+#: src/Actor/templates/actor/lpa-not-found.html.twig:24
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
+msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
+msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:25
 msgid ""
@@ -3998,13 +3988,6 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> Dyddiad geni</span>"
 #: src/Actor/templates/actor/check-your-answers.html.twig:78
 msgid "Change<span class=\"govuk-visually-hidden\"> postcode</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> Cod post</span>"
-
-#: src/Actor/templates/actor/check-your-answers.html.twig:93
-msgid ""
-"These details must match the information we have about you on our records."
-msgstr ""
-"Rhaid i’r manylion hyn gyfateb i’r wybodaeth sydd gennym amdanoch ar ein "
-"cofnodion."
 
 #: src/Actor/templates/actor/home-page.html.twig:3
 msgid "Sign in or create an account"
@@ -4608,14 +4591,6 @@ msgstr ""
 "Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
 "neu ar 1 Ionawr 2016."
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:12
-msgid ""
-"You can only use this service if your LPA was registered on or after 1 "
-"September 2019."
-msgstr ""
-"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
-"neu ar ôl 1 Medi 2019."
-
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
 msgid ""
@@ -4626,25 +4601,6 @@ msgstr ""
 "Bydd eich <a class=\"govuk-link\" href=\"{link}\" "
 "target=\"_blank\">adborth<span class=\"govuk-visually-hidden\">(yn agor mewn "
 "tab newydd)</span></a> yn ein helpu wella"
-
-#: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:9
-#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:6
-#: src/Viewer/templates/viewer/partials/upcoming-service-downtime.html.twig:9
-msgid ""
-"This service will be unavailable between 9pm on Friday 31st March 2023 and "
-"9:30am on Saturday 1st April 2023."
-msgstr ""
-"Ni fydd y gwasanaeth hwn ar gael rhwng 9pm ar Ddydd Gwener 31 Mawrth hyd "
-"9:30am ar Ddydd Sadwrn 1 Ebrill."
-
-#: src/Actor/templates/actor/partials/upcoming-service-downtime.html.twig:11
-#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:10
-msgid ""
-"If you need to use your lasting power of attorney during this time you can "
-"still use the paper LPA document."
-msgstr ""
-"Os mae arnoch angen defnyddio eich atwrneiaeth arhosol yn ystod y cyfnod hwn "
-"gallwch dal ddefnyddio’r copi papur o’r LPA."
 
 #: src/Actor/templates/actor/partials/cancel-code-option.html.twig:8
 msgid "Cancel organisation's access"
@@ -4679,6 +4635,27 @@ msgid ""
 msgstr ""
 "Mae gan yr LPA hon gyfarwyddiadau a ddymuniadau. Efallai y bydd angen i chi "
 "ddangos LPA papur i sefydliadau."
+
+#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:6
+msgid ""
+"This service will be unavailable between 9pm on Friday 31st March 2023 and "
+"9:30am on Saturday 1st April 2023."
+msgstr ""
+"Ni fydd y gwasanaeth hwn ar gael rhwng 9pm ar Ddydd Gwener 31 Mawrth hyd "
+"9:30am ar Ddydd Sadwrn 1 Ebrill."
+
+#: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:10
+msgid ""
+"If you need to use your lasting power of attorney during this time you can "
+"still use the paper LPA document."
+msgstr ""
+"Os mae arnoch angen defnyddio eich atwrneiaeth arhosol yn ystod y cyfnod hwn "
+"gallwch dal ddefnyddio’r copi papur o’r LPA."
+
+#: src/Actor/templates/actor/partials/service-message.html.twig:16
+#: src/Viewer/templates/viewer/partials/service-message.html.twig:16
+msgid "Important"
+msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:3
 msgid "Let us know if a donor or attorney’s details change"
@@ -4716,9 +4693,9 @@ msgstr "os yw’r rhoddwr neu atwrnai wedi newid ei enw"
 msgid "the donor's or an attorney's name or address is misspelt"
 msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
 
-#: src/Actor/templates/actor/change-details.html.twig:36
-msgid "a date of birth is wrong"
-msgstr "os yw dyddiad geni rhywun yn anghywir"
+#: src/Actor/templates/actor/change-details.html.twig:33
+msgid "an attorneys date of birth is wrong"
+msgstr "mae dyddiad geni atwrnai yn anghywir"
 
 #: src/Actor/templates/actor/change-details.html.twig:37
 msgid "the donor or an attorney dies"
@@ -5173,18 +5150,23 @@ msgstr "Mae’r atwrneiaeth arhosol hon dros eiddo a materion ariannol yn ddilys
 msgid "This health and welfare LPA is valid"
 msgstr "Mae’r atwrneiaeth arhosol hon dros iechyd a lles ariannol yn ddilys"
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:38
-msgid "This LPA can only be used when the donor has lost capacity"
-msgstr ""
-"Ni ellir defnyddio’r LPA hon ond pan nad oes gan y rhoddwr alluedd meddyliol"
-
-#: src/Common/templates/partials/full-lpa-display.html.twig:40
+#: src/Common/templates/partials/full-lpa-display.html.twig:33
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:20
 msgid ""
-"This LPA can be used as soon as it's registered unless instructions say "
-"otherwise"
+"This <abbr title=\"lasting power of attorney\">LPA</abbr> can only be used "
+"when the donor has lost capacity"
 msgstr ""
-"Gellir defnyddio’r LPA hon cyn gynted ag y bydd wedi’i chofrestru heblaw bod y "
-"cyfarwyddiadau yn dweud fel arall"
+"Ni ellir defnyddio’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon ond "
+"pan nad oes gan y rhoddwr alluedd meddyliol"
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:35
+msgid ""
+"This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as soon "
+"as it's registered unless instructions say otherwise"
+msgstr ""
+"Gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon cyn "
+"gynted ag y bydd wedi’i chofrestru heblaw bod y cyfarwyddiadau yn dweud fel "
+"arall"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:50
 msgid "This LPA has instructions and/or preferences"
@@ -5285,15 +5267,6 @@ msgstr ""
 "chi gael caniatâd y rhoddwr i ddefnyddio’r <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:33
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:20
-msgid ""
-"This <abbr title=\"lasting power of attorney\">LPA</abbr> can only be used "
-"when the donor has lost capacity"
-msgstr ""
-"Ni ellir defnyddio’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon ond "
-"pan nad oes gan y rhoddwr alluedd meddyliol"
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:30
 msgid "Life-sustaining <br>treatment"
 msgstr "Triniaeth <br>cynnal bywyd"
@@ -5324,11 +5297,6 @@ msgstr ""
 msgid "Registration date"
 msgstr "Dyddiad cofrestru"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:24
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
-msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
-msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:66
 msgid "Yes, the donor made instructions and/or preferences on their LPA."
 msgstr ""
@@ -5351,16 +5319,6 @@ msgstr ""
 "Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch i gael gweld fersiwn papur o’r "
 "Atwrneiaeth Arhosol neu’r Gorchymyn Lly."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:98
-msgid ""
-"Some words in these instructions or preferences may have been removed by the "
-"Court of Protection. If you need to check this, please see the paper <abbr "
-"title=\"lasting power of attorney\">LPA</abbr>."
-msgstr ""
-"Efallai y bydd rhai o geiriau yn y cyfarwyddiadau a’r dewisiadau hyn wedi eu "
-"dileu gan y llys gwarchod. Os ydych angen gwirio hyn, edrychwch ar yr LPA "
-"bapur <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
 msgid "Preferences"
 msgstr "Dymuniadau"
@@ -5371,50 +5329,6 @@ msgstr ""
 "Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:119
-msgid ""
-"We cannot show the preferences for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show the "
-"paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs "
-"to see them. You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
-"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
-"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
-"o’r mater hwn."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:125
-msgid ""
-"We cannot show the preferences for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>. Until we can fix this problem, if you need to see these "
-"you’ll need to ask the person who gave you the access code to show you the "
-"paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do not need to "
-"contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
-"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
-"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
-"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
-msgid ""
-"A scanned image of the donor’s preferences will appear here soon. The first "
-"time may take up to 10 minutes. Please refresh this page."
-msgstr ""
-"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan. "
-"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y dudalen "
-"hon os gwelwch yn dda."
-
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:3
-msgid ""
-"A scanned copy of the donor’s preferences and/or instructions - the text "
-"cannot be digitised at present"
-msgstr ""
-"Copi wedi ei sganio o’r hyn fyddai orau gan y rhoddwr a/neu ei gyfarwyddiadau- "
-"ni ellir digideiddio’r testun ar hyn o bryd"
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
@@ -5424,46 +5338,6 @@ msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi nodi dymuniadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:183
-msgid ""
-"We cannot show the instructions for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show the "
-"paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs "
-"to see them. You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
-"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
-"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
-"o’r mater hwn."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:189
-msgid ""
-"We cannot show the instructions for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>. Until we can fix this problem, if you need to see these "
-"you’ll need to ask the person who gave you the access code to show you the "
-"paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do not need to "
-"contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
-"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
-"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
-"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:204
-msgid ""
-"A scanned image of the donor’s instructions will appear here soon. The first "
-"time may take up to 10 minutes. Please refresh this page."
-msgstr ""
-"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
-"fuan. Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y "
-"dudalen hon os gwelwch yn dda."
-
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:37
-msgid "Additional Information"
-msgstr "Gwybodaeth ychwanegol"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:1
 msgid "The attorneys"
@@ -5509,6 +5383,125 @@ msgstr[3] "%attorneyOrdinal% atwrnai"
 msgstr[4] "%attorneyOrdinal% atwrnai"
 msgstr[5] "%attorneyOrdinal% atwrnai"
 
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:44
+msgid "(Trust corporation)"
+msgstr "(Corfforaeth Ymddiriedolaeth)"
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:3
+msgid ""
+"A scanned copy of the donor’s preferences and/or instructions - the text "
+"cannot be digitised at present"
+msgstr ""
+"Copi wedi ei sganio o’r hyn fyddai orau gan y rhoddwr a/neu ei gyfarwyddiadau- "
+"ni ellir digideiddio’r testun ar hyn o bryd"
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:37
+msgid "Additional Information"
+msgstr "Gwybodaeth ychwanegol"
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:49
+msgid ""
+"We cannot show the preferences for this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>.\n"
+"            Until we can fix this problem, you’ll need to show the paper\n"
+"            <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who "
+"needs to see them.\n"
+"            You do not need to contact us. We are aware of this issue."
+msgstr ""
+"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
+"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
+"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
+"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
+"o’r mater hwn."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:56
+msgid ""
+"We cannot show the preferences for this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>.\n"
+"            Until we can fix this problem, if you need to see these you’ll "
+"need to ask the person who\n"
+"            gave you the access code to show you the paper <abbr "
+"title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You do not need to contact us. We are aware of this issue."
+msgstr ""
+"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
+"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
+"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
+"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
+"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:65
+msgid ""
+"A scanned image of the donor’s preferences will appear here soon.\n"
+"        The first time may take up to 10 minutes.\n"
+"        You do not need to stay on the page or refresh it whilst you wait."
+msgstr ""
+"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan.\n"
+"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
+"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:72
+msgid ""
+"A scanned image of the donor’s preferences will appear here soon. The first "
+"time may\n"
+"        take up to 10 minutes. Please refresh this page."
+msgstr ""
+"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan. "
+"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y dudalen "
+"hon os gwelwch yn dda."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:82
+msgid ""
+"We cannot show the instructions for this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>.\n"
+"            Until we can fix this problem, you’ll need to show the paper\n"
+"            <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who "
+"needs to see them.\n"
+"            You do not need to contact us. We are aware of this issue."
+msgstr ""
+"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
+"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
+"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
+"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
+"o’r mater hwn."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
+msgid ""
+"We cannot show the instructions for this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>.\n"
+"            Until we can fix this problem, if you need to see these you’ll "
+"need to ask the person who\n"
+"            gave you the access code to show you the paper <abbr "
+"title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You do not need to contact us. We are aware of this issue."
+msgstr ""
+"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
+"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
+"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
+"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
+"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:97
+msgid ""
+"A scanned image of the donor’s instructions will appear here soon. The first "
+"time may\n"
+"        take up to 10 minutes. Please refresh this page."
+msgstr ""
+"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
+"fuan. Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y "
+"dudalen hon os gwelwch yn dda."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:105
+msgid ""
+"A scanned image of the donor’s instructions will appear here soon.\n"
+"        The first time may take up to 10 minutes.\n"
+"        You do not need to stay on the page or refresh it whilst you wait."
+msgstr ""
+"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
+"fuan\n"
+"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
+"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
+
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:1
 msgid "The donor"
 msgstr "Y rhoddwr"
@@ -5533,13 +5526,13 @@ msgstr "Ffonio"
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
-"a><br> Textphone: 0115 934 2778 <br> Monday to Friday, 9:30am to 5pm, except "
+"a><br> Textphone: 0115 934 2778 <br> Monday to Friday, 9:00am to 5pm, except "
 "Wednesday, 10am to 5pm"
 msgstr ""
 "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 "
 "0300</a><br>\n"
 "        Ffôn testun: 0115 934 2778 <br>\n"
-"        Dydd Llun i ddydd Gwener, 9.30am tan 5pm, heblaw bob dydd Mercher 10am "
+"        Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:8
@@ -5557,6 +5550,10 @@ msgstr ""
 #: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr "E-bost"
+
+#: src/Common/templates/partials/flash-message.html.twig:5
+msgid "Success"
+msgstr ""
 
 #: src/Common/templates/partials/flash-message.html.twig:10
 msgid "You’ve set your cookie preferences."
@@ -5725,7 +5722,7 @@ msgstr ""
 "bodoli, neu na ellir ei gweld yn rhywle arall."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:32
-#: src/Viewer/templates/viewer/enter-code.html.twig:39
+#: src/Viewer/templates/viewer/enter-code.html.twig:42
 msgid "LPA access code"
 msgstr "Cod mynediad yr LPA"
 
@@ -5813,11 +5810,11 @@ msgstr ""
 msgid "Enter LPA access code"
 msgstr "Rhowch god mynediad yr LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:19
+#: src/Viewer/templates/viewer/enter-code.html.twig:22
 msgid "Enter the LPA access code"
 msgstr "Rhowch god mynediad LPA"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:24
+#: src/Viewer/templates/viewer/enter-code.html.twig:27
 msgid ""
 "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a "
 "unique code given to you by the donor or an attorney named on a lasting power "
@@ -5826,11 +5823,11 @@ msgstr ""
 "Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a "
 "roir i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:31
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 msgid "Donor's last name"
 msgstr "Enw olaf y rhoddwr"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:41
+#: src/Viewer/templates/viewer/enter-code.html.twig:44
 msgid ""
 "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-"
 "CD34-EF56"
@@ -5838,15 +5835,15 @@ msgstr ""
 "Mae codau mynediad yn gyfuniad o 13 llythyren a rhifau ac yn dechrau gyda V<br/"
 ">Er enghraifft, V-AB12-CD34-EF56"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:49
+#: src/Viewer/templates/viewer/enter-code.html.twig:52
 msgid "The code I've been given does not begin with a V"
 msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:53
+#: src/Viewer/templates/viewer/enter-code.html.twig:56
 msgid "The donor or attorney may have given you the wrong code."
 msgstr "Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:54
+#: src/Viewer/templates/viewer/enter-code.html.twig:57
 msgid ""
 "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your "
 "organisation."
@@ -5854,7 +5851,7 @@ msgstr ""
 "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod "
 "mynediad LPA ar gyfer eich sefydliad."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:58
+#: src/Viewer/templates/viewer/enter-code.html.twig:61
 msgid ""
 "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" "
 "class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new "
@@ -6253,11 +6250,6 @@ msgstr ""
 "Rydym yn gweithredu’r gwasanaeth gweld atwrneiaeth arhosol fel rhan o’n "
 "swyddogaethau cyfreithiol o dan Ddeddf Galluedd Meddyliol 2005."
 
-#: src/Actor/templates/actor/actor-privacy-notice.html.twig:117
-#: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:96
-msgid "How we store data"
-msgstr "Sut yr ydym yn storio data"
-
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:103
 msgid ""
 "It may sometimes be necessary to transfer personal information overseas. Any "
@@ -6464,174 +6456,169 @@ msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:133
-msgid ""
-"If any scanned images are not readable, organisations may ask to see the paper "
-"LPA so that they can find out what the instructions or preferences are."
-msgstr ""
-"Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
-"roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
+#~ msgid ""
+#~ "If the scanned image is not readable, organisations may ask to see the "
+#~ "paper LPA so that they can find out what the instructions or preferences "
+#~ "are."
+#~ msgstr ""
+#~ "Os nad yw’r ddelwedd, sydd wedi ei sganio, yn glir, gallai sefydliadau ofyn "
+#~ "am gael gweld y fersiwn papur o’r Atwrneiaeth Arhosol, fel y gallant weld "
+#~ "beth yw’r cyfarwyddiadau neu’r dewisiadau."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:28
-msgid ""
-"This scanned image is also shown to anyone you give an access code to. Please "
-"check that the scanned image is readable before giving an access code to "
-"organisations. This will work for all access codes made after 4 July 2023."
-msgstr ""
-"Dangosir hefyd y ddelwedd hon sydd wedi ei sganio i unrhyw un y rhoddwch gôd "
-"mynediad iddo. Gwiriwch fod modd darllen y ddelwedd sydd wedi ei sganio cyn "
-"rhoi côd mynediad i sefydliadau. Bydd hwn yn gweithio ar gyfer pob cod "
-"mynediad a grëwyd ar ôl 4 Gorffennaf 2023."
+#~ msgid ""
+#~ "This scanned image is also shown to anyone you give an access code to. "
+#~ "Please check that the scanned image is readable before giving an access "
+#~ "code to organisations."
+#~ msgstr ""
+#~ "Dangosir hefyd y ddelwedd hon sydd wedi ei sganio i unrhyw un y rhoddwch "
+#~ "gôd mynediad iddo. Gwiriwch fod modd darllen y ddelwedd sydd wedi ei sganio "
+#~ "cyn rhoi côd mynediad i sefydliadau."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:60
-msgid ""
-"On some LPAs made in or before 2015, instructions and preferences are called "
-"'restrictions and conditions'. You’ll find them on page 9 of the <abbr "
-"title=\"lasting power of attorney\">LPA</abbr>."
-msgstr ""
-"Ar rhai LPAs a wnaed yn, neu cyn 2015, gelwir cyfarwyddiadau a dymuniadau yn "
-"‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
-"title=\"atwrneiaeth arhosol\">LPA</abbr>."
+#~ msgid ""
+#~ "On some LPAs made in or before 2015, instructions and preferences are "
+#~ "called ‘restrictions and conditions’. You’ll find them on page 9 of the "
+#~ "<abbr title=\"lasting power of attorney\">LPA</abbr>."
+#~ msgstr ""
+#~ "Ar rhai LPAs a wnaed yn, neu cyn 2015, gelwir cyfarwyddiadau a dymuniadau "
+#~ "yn ‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
+#~ "title=\"lasting power of attorney\">LPA</abbr>."
 
-#: src/Common/templates/partials/full-lpa-display.html.twig:35
-msgid ""
-"This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as soon "
-"as it's registered unless instructions say otherwise"
-msgstr ""
-"Gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon cyn "
-"gynted ag y bydd wedi’i chofrestru heblaw bod y cyfarwyddiadau yn dweud fel "
-"arall"
+#~ msgid ""
+#~ "In some older LPAs, instructions and preferences are called 'restrictions "
+#~ "and conditions'."
+#~ msgstr ""
+#~ "Mewn rhai LPAs hŷn, gelwir cyfarwyddiadau a dewisiadau yn ‘gyfyngiadau ac "
+#~ "amodau’."
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:39
-msgid ""
-"The organisation could be a hospital, care home, or other health care "
-"provider. This is for your reference only"
-msgstr ""
-"Gallai’r sefydliad fod yn ysbyty, cartref gofal neu ddarparwr gofal iechyd "
-"arall. I chi gyfeirio ato yn unig mae hyn"
+#~ msgid ""
+#~ "We are working to open up the service to more LPAs. Please try again in a "
+#~ "few weeks time."
+#~ msgstr ""
+#~ "Rydym wrthi’n ceisio agor y gwasanaeth i fwy o atwrneiaethau arhosol. "
+#~ "Rhowch gynnig arall arni mewn wythnos neu ddwy."
 
-#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:41
-msgid ""
-"The organisation could be a bank, energy provider, or another business. This "
-"is for your reference only"
-msgstr ""
-"Gallai’r sefydliad fod yn fanc, darparwr ynni, neu’n fusnes arall. I chi "
-"gyfeirio ato yn unig mae hyn"
+#~ msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
+#~ msgstr "Cyfeirnod <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>:"
 
-#: src/Actor/templates/actor/change-details.html.twig:33
-msgid "an attorneys date of birth is wrong"
-msgstr "mae dyddiad geni atwrnai yn anghywir"
+#~ msgid ""
+#~ "These details must match the information we have about you on our records."
+#~ msgstr ""
+#~ "Rhaid i’r manylion hyn gyfateb i’r wybodaeth sydd gennym amdanoch ar ein "
+#~ "cofnodion."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:44
-msgid "(Trust corporation)"
-msgstr "(Corfforaeth Ymddiriedolaeth)"
+#~ msgid ""
+#~ "You can only use this service if your LPA was registered on or after 1 "
+#~ "September 2019."
+#~ msgstr ""
+#~ "Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
+#~ "neu ar ôl 1 Medi 2019."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:49
-msgid ""
-"We cannot show the preferences for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>.\n"
-"            Until we can fix this problem, you’ll need to show the paper\n"
-"            <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who "
-"needs to see them.\n"
-"            You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
-"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
-"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
-"o’r mater hwn."
+#~ msgid "a date of birth is wrong"
+#~ msgstr "os yw dyddiad geni rhywun yn anghywir"
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:56
-msgid ""
-"We cannot show the preferences for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>.\n"
-"            Until we can fix this problem, if you need to see these you’ll "
-"need to ask the person who\n"
-"            gave you the access code to show you the paper <abbr "
-"title=\"lasting power of attorney\">LPA</abbr>.\n"
-"            You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
-"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
-"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
-"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
+#~ msgid "This LPA can only be used when the donor has lost capacity"
+#~ msgstr ""
+#~ "Ni ellir defnyddio’r LPA hon ond pan nad oes gan y rhoddwr alluedd meddyliol"
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:72
-msgid ""
-"A scanned image of the donor’s preferences will appear here soon. The first "
-"time may\n"
-"        take up to 10 minutes. Please refresh this page."
-msgstr ""
-"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan. "
-"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y dudalen "
-"hon os gwelwch yn dda."
+#~ msgid ""
+#~ "This LPA can be used as soon as it's registered unless instructions say "
+#~ "otherwise"
+#~ msgstr ""
+#~ "Gellir defnyddio’r LPA hon cyn gynted ag y bydd wedi’i chofrestru heblaw "
+#~ "bod y cyfarwyddiadau yn dweud fel arall"
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:82
-msgid ""
-"We cannot show the instructions for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>.\n"
-"            Until we can fix this problem, you’ll need to show the paper\n"
-"            <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who "
-"needs to see them.\n"
-"            You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd rhaid "
-"ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw "
-"un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol "
-"o’r mater hwn."
+#~ msgid ""
+#~ "Some words in these instructions or preferences may have been removed by "
+#~ "the Court of Protection. If you need to check this, please see the paper "
+#~ "<abbr title=\"lasting power of attorney\">LPA</abbr>."
+#~ msgstr ""
+#~ "Efallai y bydd rhai o geiriau yn y cyfarwyddiadau a’r dewisiadau hyn wedi "
+#~ "eu dileu gan y llys gwarchod. Os ydych angen gwirio hyn, edrychwch ar yr "
+#~ "LPA bapur <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
-msgid ""
-"We cannot show the instructions for this <abbr title=\"lasting power of "
-"attorney\">LPA</abbr>.\n"
-"            Until we can fix this problem, if you need to see these you’ll "
-"need to ask the person who\n"
-"            gave you the access code to show you the paper <abbr "
-"title=\"lasting power of attorney\">LPA</abbr>.\n"
-"            You do not need to contact us. We are aware of this issue."
-msgstr ""
-"Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch "
-"angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y cod mynediad "
-"i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi. "
-"Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r mater hwn."
+#~ msgid ""
+#~ "We cannot show the preferences for this <abbr title=\"lasting power of "
+#~ "attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show "
+#~ "the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone "
+#~ "who needs to see them. You do not need to contact us. We are aware of this "
+#~ "issue."
+#~ msgstr ""
+#~ "Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
+#~ "arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd "
+#~ "rhaid ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i "
+#~ "unrhyw un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn "
+#~ "ymwybodol o’r mater hwn."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:97
-msgid ""
-"A scanned image of the donor’s instructions will appear here soon. The first "
-"time may\n"
-"        take up to 10 minutes. Please refresh this page."
-msgstr ""
-"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
-"fuan. Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y "
-"dudalen hon os gwelwch yn dda."
+#~ msgid ""
+#~ "We cannot show the preferences for this <abbr title=\"lasting power of "
+#~ "attorney\">LPA</abbr>. Until we can fix this problem, if you need to see "
+#~ "these you’ll need to ask the person who gave you the access code to show "
+#~ "you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do "
+#~ "not need to contact us. We are aware of this issue."
+#~ msgstr ""
+#~ "Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth "
+#~ "arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os "
+#~ "byddwch angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y "
+#~ "cod mynediad i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</"
+#~ "abbr> bapur i chi. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r "
+#~ "mater hwn."
 
-#: src/Common/templates/partials/flash-message.html.twig:5
-msgid "Success"
-msgstr ""
+#~ msgid ""
+#~ "A scanned image of the donor’s preferences will appear here soon. The first "
+#~ "time may take up to 10 minutes. Please refresh this page."
+#~ msgstr ""
+#~ "Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n "
+#~ "fuan. Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y "
+#~ "dudalen hon os gwelwch yn dda."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:65
-msgid ""
-"A scanned image of the donor’s preferences will appear here soon.\n"
-"        The first time may take up to 10 minutes.\n"
-"        You do not need to stay on the page or refresh it whilst you wait."
-msgstr ""
-"Bydd delwedd wedi ei sganio o ddewisiadau’r rhoddwr yn ymddangos yma’n fuan.\n"
-"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
-"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
+#~ msgid ""
+#~ "We cannot show the instructions for this <abbr title=\"lasting power of "
+#~ "attorney\">LPA</abbr>. Until we can fix this problem, you’ll need to show "
+#~ "the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone "
+#~ "who needs to see them. You do not need to contact us. We are aware of this "
+#~ "issue."
+#~ msgstr ""
+#~ "Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
+#~ "arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, bydd "
+#~ "rhaid ichi ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i "
+#~ "unrhyw un sydd angen ei gweld. Nid oes angen ichi gysylltu â ni, rydym yn "
+#~ "ymwybodol o’r mater hwn."
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:105
-msgid ""
-"A scanned image of the donor’s instructions will appear here soon.\n"
-"        The first time may take up to 10 minutes.\n"
-"        You do not need to stay on the page or refresh it whilst you wait."
-msgstr ""
-"Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
-"fuan\n"
-"Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf.\n"
-"Nid oes angen ichi aros ar y dudalen nac adnewyddu’r dudalen wrth ichi aros."
+#~ msgid ""
+#~ "We cannot show the instructions for this <abbr title=\"lasting power of "
+#~ "attorney\">LPA</abbr>. Until we can fix this problem, if you need to see "
+#~ "these you’ll need to ask the person who gave you the access code to show "
+#~ "you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>. You do "
+#~ "not need to contact us. We are aware of this issue."
+#~ msgstr ""
+#~ "Ni allwn ddangos y cyfarwyddiadau ar gyfer y <abbr title=\"atwrneiaeth "
+#~ "arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os "
+#~ "byddwch angen gweld y rhain, bydd rhaid i chi ofyn i’r person a roddodd y "
+#~ "cod mynediad i chi i ddangos y <abbr title=\"atwrneiaeth arhosol\">LPA</"
+#~ "abbr> bapur i chi. Nid oes angen ichi gysylltu â ni, rydym yn ymwybodol o’r "
+#~ "mater hwn."
+
+#~ msgid ""
+#~ "A scanned image of the donor’s instructions will appear here soon. The "
+#~ "first time may take up to 10 minutes. Please refresh this page."
+#~ msgstr ""
+#~ "Bydd delwedd wedi ei sganio o gyfarwyddiadau’r rhoddwr yn ymddangos yma’n "
+#~ "fuan. Efallai y bydd yn cymryd hyd at 10 munud y tro cyntaf. Adnewyddwch y "
+#~ "dudalen hon os gwelwch yn dda."
+
+#~ msgid ""
+#~ "The organisation could be a hospital, care home, or other health care "
+#~ "provider. This is for your reference only"
+#~ msgstr ""
+#~ "Gallai’r sefydliad fod yn ysbyty, cartref gofal neu ddarparwr gofal iechyd "
+#~ "arall. I chi gyfeirio ato yn unig mae hyn"
+
+#~ msgid ""
+#~ "The organisation could be a bank, energy provider, or another business. "
+#~ "This is for your reference only"
+#~ msgstr ""
+#~ "Gallai’r sefydliad fod yn fanc, darparwr ynni, neu’n fusnes arall. I chi "
+#~ "gyfeirio ato yn unig mae hyn"
 
 #~ msgid ""
 #~ "Some semantic elements were implemented in a way that did not convey the "
