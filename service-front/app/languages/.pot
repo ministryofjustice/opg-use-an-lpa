@@ -3283,14 +3283,6 @@ msgstr ""
 msgid "Stay signed in"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:12
-msgid "You can only use this service if your LPA was registered on or after 1 September 2019."
-msgstr ""
-
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
 msgid "Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to improve"

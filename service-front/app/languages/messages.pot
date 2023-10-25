@@ -3278,9 +3278,6 @@ msgstr ""
 msgid "Stay signed in"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
-msgstr ""
 
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
