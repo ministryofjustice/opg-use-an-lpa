@@ -96,8 +96,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login',Actor\Handler\AuthoriseOneLoginHandler::class, ['GET', 'POST'], 'login');
-
+    $app->route('/login',Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
