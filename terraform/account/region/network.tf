@@ -17,7 +17,7 @@ data "aws_availability_zones" "default" {
 
 resource "aws_default_subnet" "public" {
   count                   = 3
-  availability_zone       = data.aws_availability_zones.default.names[count.index]
+  availability_zone       = element(data.aws_availability_zones.default.names, count.index)
   map_public_ip_on_launch = false
   tags                    = { "Name" = "public" }
 
