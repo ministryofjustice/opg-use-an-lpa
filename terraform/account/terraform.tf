@@ -1,5 +1,5 @@
 terraform {
-  required_version = "<= 1.5.6"
+  required_version = "<= 1.5.7"
 
   backend "s3" {
     bucket         = "opg.terraform.state"
@@ -41,6 +41,33 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "eu_west_1"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+  alias  = "eu_west_2"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
 
 provider "aws" {
   region = "eu-west-1"

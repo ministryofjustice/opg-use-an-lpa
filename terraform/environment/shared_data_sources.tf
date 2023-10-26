@@ -49,15 +49,15 @@ data "aws_acm_certificate" "public_facing_certificate_use" {
 }
 
 data "aws_kms_alias" "sessions_viewer" {
-  name = "alias/sessions-viewer"
+  name = "alias/sessions-viewer-mrk"
 }
 
 data "aws_kms_alias" "sessions_actor" {
-  name = "alias/sessions-actor"
+  name = "alias/sessions-actor-mrk"
 }
 
 data "aws_kms_alias" "secrets_manager" {
-  name = "alias/secrets_manager_encryption"
+  name = "alias/secrets_manager_encryption-mrk"
 }
 
 data "aws_kms_alias" "pagerduty_sns" {

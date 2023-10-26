@@ -1,11 +1,21 @@
 resource "aws_secretsmanager_secret" "gov_uk_onelogin_identity_private_key" {
   name       = "gov-uk-onelogin-identity-private-key"
-  kms_key_id = aws_kms_key.secrets_manager.key_id
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
 }
 
 resource "aws_secretsmanager_secret" "gov_uk_onelogin_identity_public_key" {
   name       = "gov-uk-onelogin-identity-public-key"
-  kms_key_id = aws_kms_key.secrets_manager.key_id
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_identity_private_key" {
@@ -20,13 +30,37 @@ resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_identity_public_ke
 
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"
-  kms_key_id = aws_kms_key.secrets_manager.key_id
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
 }
 
 resource "aws_secretsmanager_secret" "notify_api_key_demo" {
   count      = local.account_name == "development" ? 1 : 0
   name       = "notify-api-key-demo"
-  kms_key_id = aws_kms_key.secrets_manager.key_id
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
+}
+
+module "secrets_manager_mrk" {
+  source = "./modules/multi_region_kms"
+
+  key_description         = "Secrets Manager encryption ${local.environment}"
+  key_policy              = data.aws_iam_policy_document.secrets_manager_kms.json
+  key_alias               = "secrets_manager_encryption-mrk"
+  deletion_window_in_days = 10
+
+  providers = {
+    aws.primary   = aws.eu_west_1
+    aws.secondary = aws.eu_west_2
+  }
 }
 
 resource "aws_kms_key" "secrets_manager" {

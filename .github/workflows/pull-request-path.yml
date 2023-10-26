@@ -135,7 +135,7 @@ jobs:
       workspace: development
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-      apply: true
+      apply: false
     secrets: inherit
     if: |
       always() &&
@@ -182,7 +182,7 @@ jobs:
       needs.terraform_lint.result == 'success' &&
       needs.docker_build_scan_push.result == 'success' &&
       needs.workflow_variables.result == 'success'
-    
+
   seed_dynamodb:
     name: seed dynamodb
     uses: ./.github/workflows/_seed-database.yml
@@ -250,7 +250,7 @@ jobs:
       always() &&
       needs.code_coverage.result == 'success' &&
       needs.terraform_apply_environment.result == 'success'
-    
+
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow

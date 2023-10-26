@@ -3,11 +3,15 @@ resource "aws_kms_key" "pagerduty_sns" {
   deletion_window_in_days = 10
   policy                  = data.aws_iam_policy_document.pagerduty_sns_kms.json
   enable_key_rotation     = true
+
+  provider = aws.region
 }
 
 resource "aws_kms_alias" "pagerduty_sns" {
   name          = "alias/pagerduty-sns"
   target_key_id = aws_kms_key.pagerduty_sns.key_id
+
+  provider = aws.region
 }
 
 
@@ -71,14 +75,16 @@ data "pagerduty_vendor" "cloudwatch" {
 }
 
 resource "pagerduty_service_integration" "cloudwatch_integration" {
-  name    = "${data.pagerduty_vendor.cloudwatch.name} ${local.environment} Account"
-  service = local.account.pagerduty_service_id
+  name    = "${data.pagerduty_vendor.cloudwatch.name} ${var.environment_name} Account"
+  service = var.account.pagerduty_service_id
   vendor  = data.pagerduty_vendor.cloudwatch.id
 }
 
 resource "aws_sns_topic" "cloudwatch_to_pagerduty" {
-  name              = "CloudWatch-to-PagerDuty-${local.environment}-Account"
+  name              = "CloudWatch-to-PagerDuty-${var.environment_name}-Account"
   kms_master_key_id = aws_kms_key.pagerduty_sns.key_id
+
+  provider = aws.region
 }
 
 resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
@@ -86,4 +92,6 @@ resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
   protocol               = "https"
   endpoint_auto_confirms = true
   endpoint               = "https://events.pagerduty.com/integration/${pagerduty_service_integration.cloudwatch_integration.integration_key}/enqueue"
+
+  provider = aws.region
 }

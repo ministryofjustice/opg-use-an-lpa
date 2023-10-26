@@ -5,11 +5,15 @@ resource "aws_security_group" "brute_force_cache_service" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 resource "aws_elasticache_subnet_group" "private_subnets" {
   name       = "private-subnets"
   subnet_ids = aws_subnet.private[*].id
+
+  provider = aws.region
 }
 
 resource "aws_elasticache_replication_group" "brute_force_cache_replication_group" {
@@ -25,4 +29,6 @@ resource "aws_elasticache_replication_group" "brute_force_cache_replication_grou
   at_rest_encryption_enabled = true
   subnet_group_name          = aws_elasticache_subnet_group.private_subnets.name
   security_group_ids         = [aws_security_group.brute_force_cache_service.id]
+
+  provider = aws.region
 }
