@@ -101,6 +101,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
 
+    $app->route('/auth/redirect', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'auth-redirect');
+
+
     $app->get(
         '/logout',
         [

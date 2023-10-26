@@ -22,7 +22,7 @@ class OneLoginAuthorisationRequestService
     ) {
     }
 
-    public function createAuthorisationRequest(string $uiLocale): array
+    public function createAuthorisationRequest(string $uiLocale, string $redirectURL): array
     {
 
         $cachedBuilder = new MetadataProviderBuilder();
@@ -59,7 +59,7 @@ class OneLoginAuthorisationRequestService
             [
                 'scope'        => 'openid email',
                 'state'        => $state,
-                'redirect_uri' => 'http://localhost:9002/auth/redirect', //TODO: use dynamic domain UML-3121
+                'redirect_uri' => $redirectURL,
                 'nonce'        => $nonce,
                 'vtr'          => '["Cl.Cm.P2"]',
                 'ui_locales'   => $uiLocale,

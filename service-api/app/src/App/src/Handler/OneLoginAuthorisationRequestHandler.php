@@ -35,11 +35,17 @@ class OneLoginAuthorisationRequestHandler implements RequestHandlerInterface
             throw new BadRequestException('Ui locale must be provided');
         }
 
+        if (empty($requestData['redirect_url'])) {
+            throw new BadRequestException('Redirect URL must be provided');
+        }
+
         $ui_locale = strtolower($requestData['ui_locale']);
+        $redirect_url = $requestData['redirect_url'];
+
         if ($ui_locale !== 'en' and $ui_locale !== 'cy') {
             throw new BadRequestException('ui_locale is not set to en or cy');
         }
 
-        return new JsonResponse($this->authorisationRequestService->createAuthorisationRequest($ui_locale));
+        return new JsonResponse($this->authorisationRequestService->createAuthorisationRequest($ui_locale, $redirect_url));
     }
 }
