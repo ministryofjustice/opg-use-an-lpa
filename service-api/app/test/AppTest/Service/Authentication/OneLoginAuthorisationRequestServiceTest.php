@@ -56,15 +56,13 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
             $this->issuerBuilder->reveal(),
             $this->cacheFactory->reveal(),
         );
-        $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
+        $fakeRedirect                = 'http://fakehost/auth/redirect';
+        $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en', $fakeRedirect);
         $authorisationRequestUrl     = $authorisationRequest['url'];
         $this->assertStringContainsString('client_id=client-id', $authorisationRequestUrl);
         $this->assertStringContainsString('scope=openid+email', $authorisationRequestUrl);
         $this->assertStringContainsString('vtr=["Cl.Cm.P2"]', urldecode($authorisationRequestUrl));
         $this->assertStringContainsString('ui_locales=en', $authorisationRequestUrl);
-        $this->assertStringContainsString(
-            'redirect_uri=http://localhost:9002/auth/redirect',
-            urldecode($authorisationRequestUrl)
-        );
+        $this->assertStringContainsString('redirect_uri=' . $fakeRedirect, urldecode($authorisationRequestUrl));
     }
 }

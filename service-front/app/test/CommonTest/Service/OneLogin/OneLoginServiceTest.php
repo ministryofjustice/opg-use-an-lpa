@@ -16,14 +16,15 @@ class OneLoginServiceTest extends TestCase
     /** @test */
     public function can_get_authorisation_request_uri(): void
     {
-        $state = 'STATE';
-        $nonce = 'aEwkamaos5B';
-        $uri   = '/authorize?response_type=code
+        $state    = 'STATE';
+        $nonce    = 'aEwkamaos5B';
+        $redirect = 'FAKE_REDIRECT';
+        $uri      = '/authorize?response_type=code
             &scope=YOUR_SCOPES
             &client_id=YOUR_CLIENT_ID
             &state=' . $state .
-            '&redirect_uri=YOUR_REDIRECT_URI
-            &nonce=' . $nonce .
+            '&redirect_uri=' . $redirect .
+            '&nonce=' . $nonce .
             '&vtr=["Cl.Cm"]
             &ui_locales=en';
 
@@ -33,12 +34,13 @@ class OneLoginServiceTest extends TestCase
             ->httpGet(
                 '/v1/auth-one-login',
                 [
-                    'ui_locale' => 'en',
+                    'ui_locale'    => 'en',
+                    'redirect_url' => $redirect,
                 ]
             )->willReturn(['state' => $state, 'nonce' => $nonce, 'url' => $uri]);
 
         $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
-        $response        = $oneLoginService->authorise('en');
+        $response        = $oneLoginService->authorise('en', $redirect);
         $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
     }
 }
