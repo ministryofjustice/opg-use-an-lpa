@@ -1,4 +1,4 @@
-name: "[Workflow] All branch based pushes"
+name: "[Workflow] PR Environment"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -8,15 +8,10 @@ defaults:
     shell: bash
 
 on:
-  push:
+  pull_request:
     branches:
-      - '*'              # matches every branch that doesn't contain a '/'
-      - '*/*'            # matches every branch containing a single '/'
-      - '**'             # matches every branch
-      - '!main'          # reverse match main
-      - '!dependabot/**' # reverse match dependabot PRs
-      - 'dependabot/docker/**' # match dependabot PRs that update docker
-      - 'dependabot/pip/**' # match dependabot PRs that update pip
+      - main
+
 
 permissions:
   contents: write
@@ -31,6 +26,9 @@ permissions:
   statuses: none
 
 jobs:
+  workspace_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
+
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
@@ -79,8 +77,9 @@ jobs:
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&
@@ -148,8 +147,9 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
       terraform_path: environment
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       apply: true
@@ -201,8 +201,9 @@ jobs:
     needs:
       - seed_dynamodb
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&
@@ -259,12 +260,13 @@ jobs:
       - ecr_scan_results
       - slack_notify
       - workflow_variables
+      - workspace_name
     steps:
       - name: workflow has ended without issue
         run: |
           echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
+          echo "URL: https://${{ needs.workspace_name.outputs.name }}.use-lasting-power-of-attorney.service.gov.uk"
     if: |
       always() &&
       needs.ecr_scan_results.result == 'success' &&
