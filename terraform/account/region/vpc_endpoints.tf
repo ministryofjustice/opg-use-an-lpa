@@ -1,7 +1,5 @@
 resource "aws_security_group" "vpc_endpoints_private" {
-  #TODO: Fix name_prefix
-  name_prefix = "vpc-endpoint-access-private-subnets-eu-west-1"
-  # name_prefix = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}"
+  name_prefix = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}"
   description = "vpc endpoint private sg"
   vpc_id      = aws_default_vpc.default.id
   tags        = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}" }
