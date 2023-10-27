@@ -58,7 +58,7 @@ jobs:
             echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           fi
 
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
         with:
           fetch-depth: '0'
 
@@ -69,7 +69,7 @@ jobs:
           terraform_version: 1.5.6
 
       - name: configure AWS credentials for getting pagerduty token
-        uses: aws-actions/configure-aws-credentials@375a690dc0af3921541e5f427167f333d7e85f67 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e6c766a518826746395987edb73a1a5767d0b602 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -86,7 +86,7 @@ jobs:
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@375a690dc0af3921541e5f427167f333d7e85f67 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e6c766a518826746395987edb73a1a5767d0b602 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -145,7 +145,7 @@ jobs:
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # pin@v3.1.0
         with:
           name: environment_config_file
           path: terraform/environment/cluster_config.json
