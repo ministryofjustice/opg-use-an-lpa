@@ -5,7 +5,6 @@ module "eu_west_1" {
   admin_container_version                   = var.admin_container_version
   autoscaling                               = local.environment.autoscaling
   associate_alb_with_waf_web_acl_enabled    = local.environment.associate_alb_with_waf_web_acl_enabled
-  aws_service_discovery_service             = aws_service_discovery_private_dns_namespace.internal_ecs
   capacity_provider                         = local.capacity_provider
   container_version                         = var.container_version
   cookie_expires_use                        = local.environment.cookie_expires_use
