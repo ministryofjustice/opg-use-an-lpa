@@ -12,7 +12,7 @@ class OneLoginService
     {
     }
 
-    public function authorise(string $uiLocale): ?array
+    public function authenticate(string $uiLocale): ?array
     {
         return $this->apiClient->httpGet('/v1/auth-one-login', [
             'ui_locale' => $uiLocale,

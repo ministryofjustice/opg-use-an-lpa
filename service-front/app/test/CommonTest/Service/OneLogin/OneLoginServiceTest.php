@@ -38,7 +38,7 @@ class OneLoginServiceTest extends TestCase
             )->willReturn(['state' => $state, 'nonce' => $nonce, 'url' => $uri]);
 
         $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
-        $response        = $oneLoginService->authorise('en');
+        $response        = $oneLoginService->authenticate('en');
         $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
     }
 }

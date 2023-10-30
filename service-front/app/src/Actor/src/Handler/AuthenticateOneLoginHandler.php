@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
+class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
 {
     use CsrfGuard;
     use Logger;
@@ -38,7 +38,7 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private OneLoginService $authoriseOneLoginService,
+        private OneLoginService $authenticateOneLoginService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -50,7 +50,7 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
         if ($request->getMethod() === 'POST') {
             $url      = $this->urlHelper->generate();
             $uiLocale = (str_contains($url, '/cy/') ? 'cy' : 'en');
-            $result   = $this->authoriseOneLoginService->authorise($uiLocale);
+            $result   = $this->authenticateOneLoginService->authenticate($uiLocale);
             $this
                 ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
                 ?->set(self::OIDC_AUTH_INTERFACE, AuthSession::fromArray($result));
