@@ -50,10 +50,8 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
         $form = new OneLoginForm($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
-            $url      = $this->urlHelper->generate();
-            $uiLocale = (str_contains($url, '/cy/') ? 'cy' : 'en');
-            $loginUrl   = $this->urlHelper->generate('auth-redirect');
-            $signInLink = $this->serverUrlHelper->generate($loginUrl);
+            $signInLink = $this->serverUrlHelper->generate('/auth/redirect');
+            $uiLocale = (str_contains($signInLink, '/cy/') ? 'cy' : 'en');
             $result     = $this->authenticateOneLoginService->authenticate($uiLocale, $signInLink);
             $this
                 ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
