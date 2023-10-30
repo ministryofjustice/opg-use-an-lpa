@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory;
 use Aws;
 use Http;
+use Facile;
 use Laminas;
 use Psr;
 
@@ -56,12 +56,16 @@ class ConfigProvider
                 DataAccess\Repository\LpasInterface::class => DataAccess\ApiGateway\Lpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
+
+                //One Login
+                Facile\OpenIDClient\Issuer\IssuerBuilderInterface::class => Facile\OpenIDClient\Issuer\IssuerBuilder::class
             ],
 
             'factories'  => [
                 // Services
                 Aws\Sdk::class => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class => Service\Aws\DynamoDbClientFactory::class,
+                Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
                 Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
                 Service\Email\EmailClient::class => Service\Email\EmailClientFactory::class,
 
@@ -91,6 +95,9 @@ class ConfigProvider
             'delegators' => [
                 Laminas\Stratigility\Middleware\ErrorHandler::class => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
+                ],
+                Laminas\Cache\Storage\AdapterPluginManager::class => [
+                    Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
                 ],
             ],
         ];

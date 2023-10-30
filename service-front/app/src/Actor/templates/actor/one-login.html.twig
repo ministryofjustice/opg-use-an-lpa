@@ -1,0 +1,19 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}One Login{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block service_name %}{% trans %}Use a lasting power of attorney{% endtrans %}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                {{ govuk_form_open(form) }}
+
+                <button data-prevent-double-click="true" name="sign-in-one-login" type="submit" class="govuk-button">{% trans %}Sign in via One Login{% endtrans %}</button>
+
+                {{ govuk_form_close() }}
+            </div>
+        </main>
+    </div>
+{% endblock %}

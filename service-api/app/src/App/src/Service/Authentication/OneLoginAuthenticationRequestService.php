@@ -13,20 +13,20 @@ use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 
 use function Facile\OpenIDClient\base64url_encode;
 
-class OneLoginAuthorisationRequestService
+class OneLoginAuthenticationRequestService
 {
     public function __construct(
         private JWKFactory $jwkFactory,
         private IssuerBuilderInterface $issuerBuilder,
-        private CacheFactory $cacheFactory
+        private CacheFactory $cacheFactory,
     ) {
     }
 
-    public function createAuthorisationRequest(string $uiLocale): string
+    public function createAuthenticationRequest(string $uiLocale): array
     {
 
         $cachedBuilder = new MetadataProviderBuilder();
-        $cachedBuilder->setCache(($this->cacheFactory)('cache'))
+        $cachedBuilder->setCache(($this->cacheFactory)('one-login'))
         ->setCacheTtl(3600);
 
         $issuer = $this->issuerBuilder
@@ -52,17 +52,25 @@ class OneLoginAuthorisationRequestService
 
         $authorisationService = (new AuthorizationServiceBuilder())->build();
 
-        return $authorisationService->getAuthorizationUri(
+        $state                   = base64url_encode(random_bytes(12));
+        $nonce                   = openssl_digest(random_bytes(24), 'sha256');
+        $authorisationRequestUrl = $authorisationService->getAuthorizationUri(
             $client,
             [
                 'scope'        => 'openid email',
-                'state'        => base64url_encode(random_bytes(12)),
-                'redirect_uri' => '/lpa/dashboard',
-                'nonce'        => openssl_digest(base64url_encode(random_bytes(12)), 'sha256'),
+                'state'        => $state,
+                'redirect_uri' => 'http://localhost:9002/auth/redirect', //TODO: use dynamic domain UML-3121
+                'nonce'        => $nonce,
                 'vtr'          => '["Cl.Cm.P2"]',
                 'ui_locales'   => $uiLocale,
                 'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
             ]
         );
+
+        return [
+            'state' => $state,
+            'nonce' => $nonce,
+            'url'   => $authorisationRequestUrl,
+        ];
     }
 }

@@ -36,7 +36,7 @@ return [
         'delete_lpa_feature'                                         => true,
         'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => true,
         'instructions_and_preferences'                               => true,
-        'allow_gov_one_login'                                        => true,
+        'allow_gov_one_login'                                        => false,
     ],
     'notify'                       => [
         'api' => [
