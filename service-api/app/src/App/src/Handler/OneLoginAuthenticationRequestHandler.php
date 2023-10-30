@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Authentication\OneLoginAuthorisationRequestService;
+use App\Service\Authentication\OneLoginAuthenticationRequestService;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class OneLoginAuthenticationRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private OneLoginAuthorisationRequestService $authorisationRequestService,
+        private OneLoginAuthenticationRequestService $authenticationRequestService,
     ) {
     }
 
@@ -40,6 +40,6 @@ class OneLoginAuthenticationRequestHandler implements RequestHandlerInterface
             throw new BadRequestException('ui_locale is not set to en or cy');
         }
 
-        return new JsonResponse($this->authorisationRequestService->createAuthorisationRequest($ui_locale));
+        return new JsonResponse($this->authenticationRequestService->createAuthenticationRequest($ui_locale));
     }
 }

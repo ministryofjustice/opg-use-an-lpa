@@ -13,7 +13,7 @@ use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 
 use function Facile\OpenIDClient\base64url_encode;
 
-class OneLoginAuthorisationRequestService
+class OneLoginAuthenticationRequestService
 {
     public function __construct(
         private JWKFactory $jwkFactory,
@@ -22,7 +22,7 @@ class OneLoginAuthorisationRequestService
     ) {
     }
 
-    public function createAuthorisationRequest(string $uiLocale): array
+    public function createAuthenticationRequest(string $uiLocale): array
     {
 
         $cachedBuilder = new MetadataProviderBuilder();

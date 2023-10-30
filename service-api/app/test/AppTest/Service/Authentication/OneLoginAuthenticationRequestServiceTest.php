@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Authentication;
 
-use App\Service\Authentication\OneLoginAuthorisationRequestService;
+use App\Service\Authentication\OneLoginAuthenticationRequestService;
 use App\Service\Authentication\JWKFactory;
 use App\Service\Cache\CacheFactory;
 use App\Service\Authentication\IssuerBuilder;
@@ -20,7 +20,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\SimpleCache\CacheInterface;
 
-class OneLoginAuthorisationRequestServiceTest extends TestCase
+class OneLoginAuthenticationRequestServiceTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -49,14 +49,14 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
     /**
      * @test
      */
-    public function create_authorisation_request(): void
+    public function create_authentication_request(): void
     {
-        $authorisationRequestService = new OneLoginAuthorisationRequestService(
+        $authorisationRequestService = new OneLoginAuthenticationRequestService(
             $this->jwkFactory->reveal(),
             $this->issuerBuilder->reveal(),
             $this->cacheFactory->reveal(),
         );
-        $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
+        $authorisationRequest        = $authorisationRequestService->createAuthenticationRequest('en');
         $authorisationRequestUrl     = $authorisationRequest['url'];
         $this->assertStringContainsString('client_id=client-id', $authorisationRequestUrl);
         $this->assertStringContainsString('scope=openid+email', $authorisationRequestUrl);
