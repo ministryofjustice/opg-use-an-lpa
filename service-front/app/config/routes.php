@@ -72,7 +72,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_GOV_ONE_LOGIN,
-            Actor\Handler\AuthoriseOneLoginHandler::class,
+            Actor\Handler\AuthenticateOneLoginHandler::class,
             Actor\Handler\ActorTriagePageHandler::class
         )
     ], ['GET', 'POST'], 'home');
