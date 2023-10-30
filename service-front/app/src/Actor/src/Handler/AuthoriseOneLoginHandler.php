@@ -48,7 +48,6 @@ class AuthoriseOneLoginHandler extends AbstractHandler implements CsrfGuardAware
         $form = new OneLoginForm($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
-            $this->getLogger()->info('SUBMIT PRESSED');
             $url      = $this->urlHelper->generate();
             $uiLocale = (str_contains($url, '/cy/') ? 'cy' : 'en');
             $result   = $this->authoriseOneLoginService->authorise($uiLocale);

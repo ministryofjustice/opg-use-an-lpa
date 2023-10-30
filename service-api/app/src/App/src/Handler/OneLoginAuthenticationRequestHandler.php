@@ -15,7 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * @codeCoverageIgnore
  */
-class OneLoginAuthorisationRequestHandler implements RequestHandlerInterface
+class OneLoginAuthenticationRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
         private OneLoginAuthorisationRequestService $authorisationRequestService,

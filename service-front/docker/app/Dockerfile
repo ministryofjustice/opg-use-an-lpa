@@ -43,6 +43,7 @@ COPY --from=dependency /app/vendor /app/vendor
 FROM app as development
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
+
 COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
 
 RUN set -xe \
@@ -51,6 +52,7 @@ RUN set -xe \
 
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
+
 CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
   && php-fpm
 
