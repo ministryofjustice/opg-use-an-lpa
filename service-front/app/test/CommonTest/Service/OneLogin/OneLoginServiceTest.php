@@ -14,7 +14,7 @@ class OneLoginServiceTest extends TestCase
     use ProphecyTrait;
 
     /** @test */
-    public function can_get_authorisation_request_uri(): void
+    public function can_get_authentication_request_uri(): void
     {
         $state = 'STATE';
         $nonce = 'aEwkamaos5B';
