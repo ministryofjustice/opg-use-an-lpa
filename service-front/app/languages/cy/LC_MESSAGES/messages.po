@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-10-12T09:26:27+00:00\n"
+"POT-Creation-Date: 2023-10-31T13:45:30+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6455,6 +6455,16 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#. login
+#: src/Actor/templates/actor/form-error-messages.html.twig:24
+msgctxt "error"
+msgid ""
+"Check your details and try again. We could not find a Use a lasting power of "
+"attorney account with that email address and password."
+msgstr ""
+"Gwiriwch eich manylion a rhowch gynnig arall arni. Nid ydym wedi gallu dod o "
+"hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-bost a’r cyfrinair hwnnw."
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "
