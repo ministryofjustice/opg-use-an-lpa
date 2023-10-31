@@ -44,6 +44,7 @@ class AccountContext implements Context
     private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
     private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
+    private const ONE_LOGIN_SERVICE_AUTHENTICATE = 'OneLoginService::authenticate';
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -2057,7 +2058,7 @@ class AccountContext implements Context
                         'url'   => 'http://fake.url/authorize',
                     ]
                 ),
-                self::USER_SERVICE_REQUEST_PASSWORD_RESET
+                self::ONE_LOGIN_SERVICE_AUTHENTICATE
             )
         );
 

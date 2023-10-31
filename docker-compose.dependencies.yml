@@ -109,4 +109,4 @@ services:
     environment:
       PUBLIC_URL: http://localhost:4013
       INTERNAL_URL: http://mock-one-login:8080
-      REDIRECT_URL: http://localhost:9002/auth/redirect
+      REDIRECT_URL: http://localhost:9002/home/login
