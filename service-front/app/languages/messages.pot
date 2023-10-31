@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-10-25T07:58:30+00:00\n"
+"POT-Creation-Date: 2023-10-25T13:09:50+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4457,4 +4457,8 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:170
+msgid "You cannot use a download or printout of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Always use the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
 msgstr ""
