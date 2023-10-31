@@ -77,7 +77,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: outofcoffee/imposter:3.29.0
+    image: outofcoffee/imposter:3.31.6
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -109,4 +109,4 @@ services:
     environment:
       PUBLIC_URL: http://localhost:4013
       INTERNAL_URL: http://mock-one-login:8080
-      REDIRECT_URL: http://localhost:9002/
+      REDIRECT_URL: http://localhost:9002/auth/redirect

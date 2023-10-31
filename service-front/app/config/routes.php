@@ -64,10 +64,18 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $USE_OLDER_LPA_JOURNEY = 'use_older_lpa_journey';
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
+    $ALLOW_GOV_ONE_LOGIN = 'allow_gov_one_login';
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
-    $app->route('/home', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/home', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_GOV_ONE_LOGIN,
+            Actor\Handler\AuthenticateOneLoginHandler::class,
+            Actor\Handler\ActorTriagePageHandler::class
+        )
+    ], ['GET', 'POST'], 'home');
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');

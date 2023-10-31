@@ -31,6 +31,11 @@ variable "admin_container_version" {
   type        = string
 }
 
+variable "associate_alb_with_waf_web_acl_enabled" {
+  description = "Whether or not to associate the ALBs with the WAF web ACL."
+  type        = bool
+}
+
 variable "autoscaling" {
   description = "The min and max number of instances to run for each ECS service."
   type = map(object({
