@@ -861,3 +861,13 @@ moved {
   from = aws_lambda_permission.allow_cloudwatch
   to   = module.eu_west_1.aws_lambda_permission.allow_cloudwatch
 }
+
+moved {
+  from = aws_wafv2_web_acl_association.actor[0]
+  to   = module.eu_west_1.aws_wafv2_web_acl_association.actor[0]
+}
+
+moved {
+  from = aws_wafv2_web_acl_association.viewer[0]
+  to   = module.eu_west_1.aws_wafv2_web_acl_association.viewer[0]
+}

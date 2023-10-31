@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Authentication;
 
-use App\Service\Authentication\OneLoginAuthorisationRequestService;
+use App\Service\Authentication\OneLoginAuthenticationRequestService;
 use App\Service\Authentication\JWKFactory;
 use App\Service\Cache\CacheFactory;
 use App\Service\Authentication\IssuerBuilder;
-use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Facile\OpenIDClient\Issuer\Metadata\IssuerMetadataInterface;
-use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
-use Interop\Container\Containerinterface;
 use Jose\Component\Core\JWK;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -20,7 +17,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\SimpleCache\CacheInterface;
 
-class OneLoginAuthorisationRequestServiceTest extends TestCase
+class OneLoginAuthenticationRequestServiceTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -43,24 +40,28 @@ class OneLoginAuthorisationRequestServiceTest extends TestCase
         $issuerMetaData->getAuthorizationEndpoint()->willReturn('fake endpoint');
         $this->issuerBuilder->setMetadataProviderBuilder(Argument::any())->willReturn($this->issuerBuilder);
         $this->issuerBuilder->build('http://mock-one-login:8080/.well-known/openid-configuration')->willReturn($issuer);
-        $this->cacheFactory->__invoke('cache')->willReturn($cacheInterface);
+        $this->cacheFactory->__invoke('one-login')->willReturn($cacheInterface);
     }
 
     /**
      * @test
      */
-    public function create_authorisation_request(): void
+    public function create_authentication_request(): void
     {
-        $authorisationRequestService = new OneLoginAuthorisationRequestService(
+        $authorisationRequestService = new OneLoginAuthenticationRequestService(
             $this->jwkFactory->reveal(),
             $this->issuerBuilder->reveal(),
             $this->cacheFactory->reveal(),
         );
-        $authorisationRequest        = $authorisationRequestService->createAuthorisationRequest('en');
-        $this->assertStringContainsString('client_id=client-id', $authorisationRequest);
-        $this->assertStringContainsString('scope=openid+email', $authorisationRequest);
-        $this->assertStringContainsString('vtr=%5B%22Cl.Cm.P2%22%5D', $authorisationRequest);
-        $this->assertStringContainsString('ui_locales=en', $authorisationRequest);
-        $this->assertStringContainsString('redirect_uri=%2Flpa%2Fdashboard', $authorisationRequest);
+        $authorisationRequest        = $authorisationRequestService->createAuthenticationRequest('en');
+        $authorisationRequestUrl     = $authorisationRequest['url'];
+        $this->assertStringContainsString('client_id=client-id', $authorisationRequestUrl);
+        $this->assertStringContainsString('scope=openid+email', $authorisationRequestUrl);
+        $this->assertStringContainsString('vtr=["Cl.Cm.P2"]', urldecode($authorisationRequestUrl));
+        $this->assertStringContainsString('ui_locales=en', $authorisationRequestUrl);
+        $this->assertStringContainsString(
+            'redirect_uri=http://localhost:9002/auth/redirect',
+            urldecode($authorisationRequestUrl)
+        );
     }
 }

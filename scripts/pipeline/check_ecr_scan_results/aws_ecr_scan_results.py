@@ -177,6 +177,7 @@ class ECRScanChecker:
 
     def ci_check_and_output(self, report):
         severity_dict = {
+            "UNTRIAGED": 0,
             "LOW": 0,
             "MEDIUM": 0,
             "HIGH": 0,
