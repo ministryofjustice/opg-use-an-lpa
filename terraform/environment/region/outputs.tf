@@ -31,7 +31,13 @@ output "security_group_names" {
   }
 }
 
-output "admin_domain" {
-  description = "The URL for the admin interface"
-  value       = "https://${var.route_53_fqdns.admin}"
+output "route53_fqdns" {
+  description = "The FQDNs for the various services"
+  value = {
+    public_facing_view = local.route53_fqdns.public_facing_view
+    public_facing_use  = local.route53_fqdns.public_facing_use
+    admin              = local.route53_fqdns.admin
+    actor              = local.route53_fqdns.actor
+    viewer             = local.route53_fqdns.viewer
+  }
 }

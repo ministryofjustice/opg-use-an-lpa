@@ -194,7 +194,7 @@ locals {
       environment = [
         {
           name  = "WEB_DOMAIN",
-          value = "https://${var.route_53_fqdns.public_use}"
+          value = "https://${local.route53_fqdns.public_facing_use}"
         },
         {
           name  = "APP_HOST",
