@@ -108,7 +108,7 @@ resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
     type = "redirect"
 
     redirect {
-      host        = var.route_53_fqdns.public_view
+      host        = local.route53_fqdns.public_facing_view
       path        = "/#{path}"
       query       = "#{query}"
       port        = "443"
@@ -119,7 +119,7 @@ resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
   condition {
     host_header {
       values = [
-        var.route_53_fqdns.viewer
+        local.route53_fqdns.viewer
       ]
     }
   }
