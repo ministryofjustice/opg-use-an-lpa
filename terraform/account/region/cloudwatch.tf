@@ -10,7 +10,7 @@ resource "aws_cloudwatch_log_group" "use-an-lpa" {
 }
 
 data "aws_kms_alias" "cloudwatch_mrk" {
-  name = "alias/cloudwatch_encryption"
+  name = "alias/cloudwatch-encryption-mrk"
 
   provider = aws.region
 }
