@@ -2048,6 +2048,36 @@ class AccountContext implements Context
      */
     public function iClickTheOneLoginButton(): void
     {
+        $this->signInViaOneLogin();
+        $request = $this->apiFixtures->getLastRequest();
+        $params  = $request->getUri()->getQuery();
+        Assert::assertStringContainsString('ui_locale=en', $params);
+    }
+
+    /**
+     * @When /^I click the one login button in welsh$/
+     */
+    public function iClickTheOneLoginButtonInWelsh(): void
+    {
+        $this->signInViaOneLogin();
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params  = $request->getUri()->getQuery();
+        Assert::assertStringContainsString('ui_locale=cy', $params);
+    }
+
+    /**
+     * @Then /^I am redirected to the redirect page$/
+     */
+    public function iAmRedirectedToTheRedirectPage(): void
+    {
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        assert::assertTrue(isset($locationHeader));
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
+    }
+
+    public function signInViaOneLogin(): void
+    {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
@@ -2065,19 +2095,5 @@ class AccountContext implements Context
         $this->iDoNotFollowRedirects();
         $this->ui->pressButton('Sign in via One Login');
         $this->iDoFollowRedirects();
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params  = $request->getUri()->getQuery();
-        Assert::assertStringContainsString('ui_locale=en', $params);
-    }
-
-    /**
-     * @Then /^I am redirected to the redirect page$/
-     */
-    public function iAmRedirectedToTheRedirectPage(): void
-    {
-        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
-        assert::assertTrue(isset($locationHeader));
-        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
     }
 }
