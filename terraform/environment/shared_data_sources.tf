@@ -65,7 +65,7 @@ data "aws_kms_alias" "pagerduty_sns" {
 }
 
 data "aws_kms_alias" "cloudwatch_encryption" {
-  name = "alias/cloudwatch-encryption-mrk"
+  name = "alias/cloudwatch_encryption"
 }
 
 //--------------------
