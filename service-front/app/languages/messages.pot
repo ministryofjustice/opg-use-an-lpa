@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-01T10:15:02+00:00\n"
+"POT-Creation-Date: 2023-11-01T11:41:17+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4470,4 +4470,10 @@ msgstr ""
 
 #: src/Actor/templates/actor/one-login.html.twig:13
 msgid "Sign in via One Login"
+msgstr ""
+
+#. login
+#: src/Actor/templates/actor/form-error-messages.html.twig:24
+msgctxt "error"
+msgid "Check your details and try again. We could not find a Use a lasting power of attorney account with that email address and password."
 msgstr ""
