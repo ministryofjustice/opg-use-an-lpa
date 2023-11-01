@@ -418,8 +418,8 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
-        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with ' .
-        'that email address and password. Check your details and try again.');
+        $this->ui->assertPageContainsText('Check your details and try again. We could not find a Use a lasting ' .
+                                          'power of attorney account with that email address and password.');
     }
 
     /**
