@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-10-31T13:45:30+00:00\n"
+"POT-Creation-Date: 2023-10-25T13:09:50+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4583,14 +4583,6 @@ msgstr ""
 msgid "Stay signed in"
 msgstr "Parhau i ddefnyddio’r gwasanaeth"
 
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid ""
-"You can only use this service if your LPA was registered on or after 1 January "
-"2016."
-msgstr ""
-"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
-"neu ar 1 Ionawr 2016."
-
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
 msgid ""
@@ -6456,15 +6448,16 @@ msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
-#. login
-#: src/Actor/templates/actor/form-error-messages.html.twig:24
-msgctxt "error"
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:170
 msgid ""
-"Check your details and try again. We could not find a Use a lasting power of "
-"attorney account with that email address and password."
+"You cannot use a download or printout of this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> summary. Always use the original paper <abbr "
+"title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
 msgstr ""
-"Gwiriwch eich manylion a rhowch gynnig arall arni. Nid ydym wedi gallu dod o "
-"hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-bost a’r cyfrinair hwnnw."
+"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r "
+"crynodeb <abbr title=“atwrneiaeth arhosol”>LPA</abbr> hwn. Defnyddiwch fersiwn "
+"papur y <abbr title=“atwrneiaeth arhosol”>LPA</abbr>  neu rhowch god mynediad "
+"i rywun."
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "

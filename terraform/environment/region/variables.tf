@@ -31,21 +31,17 @@ variable "admin_container_version" {
   type        = string
 }
 
+variable "associate_alb_with_waf_web_acl_enabled" {
+  description = "Whether or not to associate the ALBs with the WAF web ACL."
+  type        = bool
+}
+
 variable "autoscaling" {
   description = "The min and max number of instances to run for each ECS service."
   type = map(object({
     minimum = number
     maximum = number
   }))
-}
-
-variable "aws_service_discovery_service" {
-  description = "The AWS Service Discovery service to use."
-  type = object({
-    id   = string
-    arn  = string
-    name = string
-  })
 }
 
 variable "capacity_provider" {
@@ -66,6 +62,11 @@ variable "cookie_expires_use" {
 variable "cookie_expires_view" {
   description = "The number of seconds before the cookie expires for the viewer service."
   type        = number
+}
+
+variable "dns_namespace_env" {
+  description = "The environment to use for the DNS namespace."
+  type        = string
 }
 
 variable "dynamodb_tables" {
@@ -187,12 +188,6 @@ variable "regions" {
     condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
     error_message = "One (and only one) region must be marked as primary"
   }
-}
-
-variable "route_53_fqdns" {
-  description = "The FQDNs to use for the Route 53 records."
-
-  type = map(string)
 }
 
 variable "session_expires_use" {
