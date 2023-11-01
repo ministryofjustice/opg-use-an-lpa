@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-10-25T13:09:50+00:00\n"
+"POT-Creation-Date: 2023-11-01T10:15:02+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -919,6 +919,7 @@ msgid "You cannot use a download or print out of this <abbr title=\"lasting powe
 msgstr ""
 
 #: src/Actor/templates/actor/layout.html.twig:5
+#: src/Actor/templates/actor/one-login.html.twig:5
 #: src/Actor/templates/actor/home-page.html.twig:5
 msgid "Use a lasting power of attorney"
 msgstr ""
@@ -4461,4 +4462,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:170
 msgid "You cannot use a download or printout of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Always use the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:3
+msgid "One Login"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:13
+msgid "Sign in via One Login"
 msgstr ""
