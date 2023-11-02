@@ -47,7 +47,9 @@ class LpaContext implements Context
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
     private $dashboardLPAs;
 
-    /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
+    /**
+     * @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) 
+     */
     private RequestHandler $requestDashboardLPAs;
     private RequestHandler $requestDashboardLPACodes;
 
@@ -295,10 +297,10 @@ class LpaContext implements Context
     public function iAmGivenAUniqueAccessCodeAndToldImagesAvailableInTheSummary($check): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
-        if ($check ==='instructions and preferences'){
+        if ($check ==='instructions and preferences') {
             $this->ui->assertPageContainsText('Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
         }
-        elseif ($check === 'instructions'){
+        elseif ($check === 'instructions') {
             $this->ui->assertPageContainsText('Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
         }
     }
@@ -1503,9 +1505,11 @@ class LpaContext implements Context
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentialsSignedBefore2016(): void
     {
-        $this->lpa = json_decode(file_get_contents(
-            __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
-        ));
+        $this->lpa = json_decode(
+            file_get_contents(
+                __DIR__ . '../../../../test/fixtures/full_example_signed_before_2016.json'
+            )
+        );
 
         $this->userLpaActorToken = '987654321';
         $this->actorId           = 9;
@@ -2239,7 +2243,7 @@ class LpaContext implements Context
         if ($check === 'instructions and preferences') {
             $this->lpa->applicationHasRestrictions = true;
             $this->lpa->applicationHasGuidance = true;
-        } elseif ($check === 'instructions' ){
+        } elseif ($check === 'instructions' ) {
             $this->lpa->applicationHasRestrictions = false;
         };
 

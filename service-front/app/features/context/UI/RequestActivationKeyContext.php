@@ -15,18 +15,18 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * @property mixed  $lpa
- * @property string $userLpaActorToken
- * @property int    $actorId
- * @property string $actorUId
- * @property array  $lpaData
- * @property string $organisation
- * @property string $accessCode
- * @property string $userFirstName
- * @property int    $userId
- * @property string $userSurname
- * @property string $activationCode
- * @property string $codeCreatedDate
+ * @property     mixed  $lpa
+ * @property     string $userLpaActorToken
+ * @property     int    $actorId
+ * @property     string $actorUId
+ * @property     array  $lpaData
+ * @property     string $organisation
+ * @property     string $accessCode
+ * @property     string $userFirstName
+ * @property     int    $userId
+ * @property     string $userSurname
+ * @property     string $activationCode
+ * @property     string $codeCreatedDate
  * @psalm-ignore UndefinedThisPropertyFetch
  * @psalm-ignore UndefinedThisPropertyAssignment
  */
@@ -149,7 +149,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am asked to check my answers$/
+     * @Then  /^I am asked to check my answers$/
      * @Given /^I am on the check your answers page$/
      */
     public function iAmAskedToCheckMyAnswers()
@@ -714,7 +714,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I select this is not the address same as on paper LPA$/
-     * @When /^I click the Continue button$/
+     * @When  /^I click the Continue button$/
      */
     public function iHaveNotGivenTheAddressOnThePaperLPA()
     {
@@ -784,7 +784,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^The activation key not been received or was lost$/
-     * @Then /^I will receive an email confirming this information$/
+     * @Then  /^I will receive an email confirming this information$/
      * @Given /^My LPA was registered 'on or after' 1st September 2019$/
      */
     public function theActivationKeyHasBeenReceivedOrWasLost()
@@ -1356,7 +1356,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When /^I enter my telephone number$/
+     * @When  /^I enter my telephone number$/
      * @Given I provide my telephone number
      */
     public function whenIEnterMyTelephoneNumber()
@@ -1378,7 +1378,7 @@ class RequestActivationKeyContext implements Context
 
     /**
      * @Given /^I am asked for my address from the paper LPA$/
-     * @Then /^I will be navigated back to address on paper page$/
+     * @Then  /^I will be navigated back to address on paper page$/
      */
     public function iAmAskedForMyAddressFromThePaperLPA()
     {
@@ -1466,7 +1466,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then /^I am on the Check we've found the right LPA page$/
+     * @Then  /^I am on the Check we've found the right LPA page$/
      * @Given /^I have provided valid details that match the Lpa$/
      */
     public function iAmOnTheCheckLPADetailsPage()
@@ -1606,7 +1606,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given  /^I have previously requested an activation key$/
+     * @Given /^I have previously requested an activation key$/
      */
     public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingActivationKeyPreviously()
     {
@@ -1672,7 +1672,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given  /^I provide my contact details$/
+     * @Given /^I provide my contact details$/
      */
     public function iProvideMyContactDetails()
     {
@@ -1682,7 +1682,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @When  /^I confirm that the data is correct and click the confirm and submit button$/
+     * @When /^I confirm that the data is correct and click the confirm and submit button$/
      */
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
     {
@@ -1709,7 +1709,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Then  /^I should expect it within (.*) time$/
+     * @Then /^I should expect it within (.*) time$/
      */
     public function iShouldExpectItWithin($time)
     {
@@ -1726,7 +1726,7 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
-     * @Given  /^I provide the additional details asked$/
+     * @Given /^I provide the additional details asked$/
      */
     public function iProvideTheAdditionalDetailsAsked()
     {

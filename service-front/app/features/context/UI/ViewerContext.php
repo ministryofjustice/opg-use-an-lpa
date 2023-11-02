@@ -51,7 +51,7 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I access the viewer service$/
-     * @Then /^I am taken to viewer service home page$/
+     * @Then  /^I am taken to viewer service home page$/
      */
     public function iAccessTheViewerService()
     {
@@ -191,11 +191,11 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementNotOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementNotContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertElementContainsText('iap-preferences','We cannot show the preferences for this');
+        $this->ui->assertElementContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementNotOnPage('iap-instructions .iap-loader');
         $this->ui->assertElementNotContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
-        $this->ui->assertElementContainsText('iap-instructions','We cannot show the instructions for this');
+        $this->ui->assertElementContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
     /**
@@ -205,16 +205,16 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertElementNotContainsText('iap-preferences','We cannot show the preferences for this');
+        $this->ui->assertElementNotContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementOnPage('iap-instructions .iap-loader');
         $this->ui->assertElementContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
-        $this->ui->assertElementNotContainsText('iap-instructions','We cannot show the instructions for this');
+        $this->ui->assertElementNotContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
     /**
      * @Given /^I am viewing a cancelled LPA$/
-     * @Then /^I can see the full details of the cancelled LPA$/
+     * @Then  /^I can see the full details of the cancelled LPA$/
      */
     public function iAmViewingACancelledLPA()
     {
@@ -230,7 +230,7 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I am viewing a revoked LPA$/
-     * @Then /^I can see the full details of the revoked LPA$/
+     * @Then  /^I can see the full details of the revoked LPA$/
      */
     public function iAmViewingARevokedLPA()
     {
@@ -246,7 +246,7 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I am viewing a valid LPA$/
-     * @Then /^I can see the full details of the valid LPA$/
+     * @Then  /^I can see the full details of the valid LPA$/
      */
     public function iAmViewingAValidLPA()
     {
@@ -494,8 +494,7 @@ class ViewerContext implements Context
             'expires' => (new DateTime('+30 days'))->format('c'),
         ];
 
-        if (
-            (($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false))
+        if ((($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false))
             && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
         ) {
             $data['iap'] = [

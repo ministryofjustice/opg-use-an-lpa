@@ -178,9 +178,9 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I confirm that I want to remove the LPA from my account$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Revoked lpa$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Cancelled lpa$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Registered lpa$/
+     * @Then  /^I am taken to the remove an LPA confirmation page for Revoked lpa$/
+     * @Then  /^I am taken to the remove an LPA confirmation page for Cancelled lpa$/
+     * @Then  /^I am taken to the remove an LPA confirmation page for Registered lpa$/
      */
     public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
     {
@@ -230,7 +230,7 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Then /^a letter is requested containing a one time use code$/
      * @When /^I request for a new activation key again$/
-     * @Then  /^I am told my activation key is being sent$/
+     * @Then /^I am told my activation key is being sent$/
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode()
     {
@@ -538,7 +538,6 @@ class LpaContext extends BaseIntegrationContext
                         'actor' => $this->lpaData['actor'],
                     ]
                 ),
-
             )
         );
 
@@ -997,7 +996,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I have shared the access code with organisations to view my LPA$/
+     * @When  /^I have shared the access code with organisations to view my LPA$/
      * @Given /^I have shared the access code with organisations and they have viewed my LPA$/
      */
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
@@ -1643,7 +1642,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I am shown the details of an LPA$/
+     * @Then  /^I am shown the details of an LPA$/
      * @Given /^I am on the check LPA details page$/
      */
     public function iAmShownTheDetailsOfAnLPA()
@@ -1720,7 +1719,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
+     * @Given /^I have confirmed the details of an older paper LPA after requesting access previously$/
      */
     public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
     {
@@ -1751,10 +1750,10 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I am on the Check we've found the right LPA page$/
      * @Given /^I have provided valid details that match the Lpa$/
-     * @Then /^I should expect it within 2 weeks time$/
-     * @Then /^I will receive an email confirming this information$/
-     * @Then /^I am told my activation key request has been received$/
-     * @Then /^I should expect it within 4 weeks time$/
+     * @Then  /^I should expect it within 2 weeks time$/
+     * @Then  /^I will receive an email confirming this information$/
+     * @Then  /^I am told my activation key request has been received$/
+     * @Then  /^I should expect it within 4 weeks time$/
      * @Given /^I provide my contact details$/
      */
     public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()

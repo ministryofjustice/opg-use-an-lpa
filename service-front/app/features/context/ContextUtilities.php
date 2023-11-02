@@ -12,7 +12,7 @@ class ContextUtilities
 {
     /**
      * @param int    $status The status code of the request
-     * @param string $body the body of the request
+     * @param string $body   the body of the request
      * @param string $reason this hijacks the reason phrase for debug purposes so that we can input the api call that
      *                       the response is for. @see LpaContext::iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
      *

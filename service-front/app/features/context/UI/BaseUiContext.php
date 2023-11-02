@@ -35,7 +35,6 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
  * Class BaseUiContext
  *
  * @package BehatTest\Context\UI
- *
  */
 class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 {

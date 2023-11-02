@@ -127,8 +127,8 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-    * @When /^I give a valid LPA share code on a cancelled LPA$/
-    */
+     * @When /^I give a valid LPA share code on a cancelled LPA$/
+     */
     public function iGiveAValidLPAShareCodeOnACancelledLPA(): void
     {
         // not used in this context
@@ -160,8 +160,8 @@ class ViewerContext extends BaseIntegrationContext
     }
 
     /**
-    * @When /^I give a share code that's been revoked$/
-    */
+     * @When /^I give a share code that's been revoked$/
+     */
     public function iGiveAShareCodeThatsBeenRevoked(): void
     {
         // not used in this context
@@ -169,17 +169,19 @@ class ViewerContext extends BaseIntegrationContext
 
     /**
      * @Given /^I am viewing a valid LPA$/
-     * @Then /^I can see the full details of the valid LPA$/
-     * @Then /^I see a message that LPA has been cancelled$/
+     * @Then  /^I can see the full details of the valid LPA$/
+     * @Then  /^I see a message that LPA has been cancelled$/
      */
     public function iAmViewingAValidLPA(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode([
+                json_encode(
+                    [
                                 'lpa' => $this->lpaData
-                            ]),
+                    ]
+                ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
@@ -209,9 +211,11 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode([
+                json_encode(
+                    [
                                 'lpa' => $this->lpaData
-                            ]),
+                    ]
+                ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );

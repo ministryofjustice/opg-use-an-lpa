@@ -143,7 +143,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I am currently signed in$/
-     * @When /^I sign in$/
+     * @When  /^I sign in$/
      */
     public function iAmCurrentlySignedIn(): void
     {
@@ -417,8 +417,10 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
-        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with ' .
-        'that email address and password. Check your details and try again.');
+        $this->ui->assertPageContainsText(
+            'We could not find a Use a lasting power of attorney account with ' .
+            'that email address and password. Check your details and try again.'
+        );
     }
 
     /**
@@ -1386,11 +1388,13 @@ class AccountContext implements Context
         // Not needed for this context
     }
 
-    public function iDoNotFollowRedirects():void {
+    public function iDoNotFollowRedirects():void
+    {
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(false);
     }
 
-    public function iDoFollowRedirects(): void {
+    public function iDoFollowRedirects(): void
+    {
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(true);
     }
 
@@ -1723,7 +1727,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I should be able to login with my new email address$/
-     * @Then /^I see a flash message confirming my email address has been changed$/
+     * @Then  /^I see a flash message confirming my email address has been changed$/
      */
     public function iShouldBeAbleToLoginWithMyNewEmailAddress(): void
     {

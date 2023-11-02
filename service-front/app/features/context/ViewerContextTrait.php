@@ -9,7 +9,8 @@ trait ViewerContextTrait
     /**
      * @BeforeSuite
      */
-    public static function setupEnv() {
+    public static function setupEnv()
+    {
         // set the side of the application we're using
         putenv('CONTEXT=viewer');
 

@@ -42,8 +42,8 @@ trait BaseUiContextTrait
     /**
      * Checks the response for a particular header being set with a specified value
      *
-     * @param $name
-     * @param $value
+     * @param  $name
+     * @param  $value
      * @throws \Behat\Mink\Exception\ExpectationException
      */
     public function assertResponseHeader($name, $value): void

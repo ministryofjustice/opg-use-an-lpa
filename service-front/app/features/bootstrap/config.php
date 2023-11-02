@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
 
-$aggregator = new ConfigAggregator([
+$aggregator = new ConfigAggregator(
+    [
     Mezzio\Authentication\Session\ConfigProvider::class,
     Mezzio\Router\FastRouteRouter\ConfigProvider::class,
     Laminas\HttpHandlerRunner\ConfigProvider::class,
@@ -33,6 +34,7 @@ $aggregator = new ConfigAggregator([
 
     // Load development config if it exists
     new PhpFileProvider(realpath(__DIR__) . '/behat.config.php'),
-], null);
+    ], null
+);
 
 return $aggregator->getMergedConfig();
