@@ -13,14 +13,16 @@ use Psr\Http\Message\ServerRequestInterface;
 trait State
 {
     /**
-     * @param ServerRequestInterface $request
-     * @param class-string<T> $workflowStateClass
+     * @param  ServerRequestInterface $request
+     * @param  class-string<T>        $workflowStateClass
      * @return T
      * @throws StateNotInitialisedException
      */
     public function loadState(ServerRequestInterface $request, string $workflowStateClass): WorkflowState
     {
-        /** @var StatesCollection $states */
+        /**
+ * @var StatesCollection $states 
+*/
         $states = $request->getAttribute(StatePersistenceMiddleware::WORKFLOW_STATE_ATTRIBUTE);
 
         if ($states->has($workflowStateClass)) {
