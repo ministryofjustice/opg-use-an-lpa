@@ -84,13 +84,15 @@ class LpaAddHandlerTest extends TestCase
 
         $this->rendererProphecy->render(
             'actor::add-lpa/activation-key',
-            new CallbackToken(function ($options) {
-                $this->assertIsArray($options);
-                $this->assertArrayHasKey('form', $options);
-                $this->assertInstanceOf(ActivationKey::class, $options['form']);
+            new CallbackToken(
+                function ($options) {
+                    $this->assertIsArray($options);
+                    $this->assertArrayHasKey('form', $options);
+                    $this->assertInstanceOf(ActivationKey::class, $options['form']);
 
-                return true;
-            })
+                    return true;
+                }
+            )
         )
             ->willReturn('');
 

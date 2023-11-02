@@ -59,11 +59,11 @@ class RequestActivationKeyTest extends TestCase
 
     /**
      * @test
-     * @covers ::__construct
-     * @covers ::getActorRole
-     * @covers ::setActorRole
-     * @covers ::setActorAddressResponse
-     * @covers ::getActorAddressCheckResponse
+     * @covers       ::__construct
+     * @covers       ::getActorRole
+     * @covers       ::setActorRole
+     * @covers       ::setActorAddressResponse
+     * @covers       ::getActorAddressCheckResponse
      * @dataProvider fullActivationKeyWorkflow
      */
     public function it_can_be_created_with_data(array $data): void
@@ -74,34 +74,34 @@ class RequestActivationKeyTest extends TestCase
 
         foreach ($data as $key => $value) {
             switch ($key) {
-                case 'dob':
-                case 'donorDob':
-                    Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
-                    Assert::assertEquals($value, $sut->$key->format('c'));
-                    break;
-                case 'attorneyDob':
-                    Assert::assertNull($sut->$key);
-                    break;
-                case 'actorType':
-                    Assert::assertEquals($data['actorType'], $sut->getActorRole());
-                    break;
-                case 'actorAddressResponse':
-                    Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressCheckResponse());
-                    break;
-                default:
-                    Assert::assertEquals($value, $sut->$key);
+            case 'dob':
+            case 'donorDob':
+                Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
+                Assert::assertEquals($value, $sut->$key->format('c'));
+                break;
+            case 'attorneyDob':
+                Assert::assertNull($sut->$key);
+                break;
+            case 'actorType':
+                Assert::assertEquals($data['actorType'], $sut->getActorRole());
+                break;
+            case 'actorAddressResponse':
+                Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressCheckResponse());
+                break;
+            default:
+                Assert::assertEquals($value, $sut->$key);
             }
         }
     }
 
     /**
      * @test
-     * @covers ::__construct
-     * @covers ::getActorRole
-     * @covers ::setActorRole
-     * @covers ::setActorAddressResponse
-     * @covers ::getActorAddressCheckResponse
-     * @covers ::reset
+     * @covers       ::__construct
+     * @covers       ::getActorRole
+     * @covers       ::setActorRole
+     * @covers       ::setActorAddressResponse
+     * @covers       ::getActorAddressCheckResponse
+     * @covers       ::reset
      * @dataProvider fullActivationKeyWorkflow
      */
     public function it_can_be_reset(array $data): void
@@ -114,23 +114,23 @@ class RequestActivationKeyTest extends TestCase
 
         foreach ($data as $key => $value) {
             switch ($key) {
-                case 'firstNames':
-                case 'lastName':
-                case 'postcode':
-                case 'dob':
-                    Assert::assertNull($sut->$key);
-                    break;
-                case 'actorType':
-                    Assert::assertNull($sut->getActorRole());
-                    break;
-                case 'actorAddressResponse':
-                    Assert::assertNull($sut->getActorAddressCheckResponse());
-                    break;
-                case 'needsCleansing':
-                    Assert::assertFalse($sut->$key);
-                    break;
-                default:
-                    Assert::assertNull($sut->$key);
+            case 'firstNames':
+            case 'lastName':
+            case 'postcode':
+            case 'dob':
+                Assert::assertNull($sut->$key);
+                break;
+            case 'actorType':
+                Assert::assertNull($sut->getActorRole());
+                break;
+            case 'actorAddressResponse':
+                Assert::assertNull($sut->getActorAddressCheckResponse());
+                break;
+            case 'needsCleansing':
+                Assert::assertFalse($sut->$key);
+                break;
+            default:
+                Assert::assertNull($sut->$key);
             }
         }
     }

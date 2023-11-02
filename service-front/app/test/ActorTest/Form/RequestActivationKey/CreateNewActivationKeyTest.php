@@ -44,7 +44,9 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
         $this->form    = new CreateNewActivationKey($guardProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_defaults_to_false()
     {
         $this->assertEquals('no', $this->form->get('force_activation')->getValue());

@@ -43,15 +43,19 @@ class ChangeDetailsHandlerTest extends TestCase
         );
 
         $this->requestProphecy->getQueryParams()
-            ->willReturn([
+            ->willReturn(
+                [
                 'lpa' => self::LPA_ID,
-            ]);
+                ]
+            );
 
         $this->templateRendererProphecy
-            ->render('actor::change-details', [
+            ->render(
+                'actor::change-details', [
                 'actorToken' => self::LPA_ID,
                 'user'       => null,
-            ])
+                ]
+            )
             ->willReturn('');
 
         $response = $handler->handle($this->requestProphecy->reveal());

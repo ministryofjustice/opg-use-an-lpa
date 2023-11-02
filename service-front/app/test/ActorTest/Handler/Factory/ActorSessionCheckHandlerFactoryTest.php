@@ -45,7 +45,9 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
             ->willReturn($httpClientProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function testItCreatesASessionCheckHandler()
     {
         $this->containerProphecy->get('config')
@@ -64,7 +66,9 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(ActorSessionCheckHandler::class, $sessionCheckHandler);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function testThrowsExceptionMissingConfigValue()
     {
         $this->containerProphecy->get('config')
