@@ -20,7 +20,7 @@ class CheckCodeHandlerFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_correctly_configured_instance()
     {
