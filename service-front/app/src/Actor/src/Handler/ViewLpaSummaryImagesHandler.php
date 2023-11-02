@@ -60,8 +60,8 @@ class ViewLpaSummaryImagesHandler extends AbstractHandler implements UserAware
         // In order to reduce initial load on the images service we do data backed checks
         // to see if we should call it. Ideally these would live in the api layer but we
         // can't do that without a big refactor of how that works atm.
-        if (!is_null($lpaData) 
-            && (($lpaData->lpa->getApplicationHasGuidance() ?? false) 
+        if (!is_null($lpaData)
+            && (($lpaData->lpa->getApplicationHasGuidance() ?? false)
             || ($lpaData->lpa->getApplicationHasRestrictions() ?? false))
         ) {
             return new JsonResponse($this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken));

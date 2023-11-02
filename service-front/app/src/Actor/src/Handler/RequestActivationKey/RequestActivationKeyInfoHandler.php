@@ -34,13 +34,13 @@ class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAwa
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
-            return new HtmlResponse(
-                $this->renderer->render(
-                    'actor::request-activation-key/before-requesting-activation-key-info',
-                    [
-                    'user' => $user,
-                    ]
-                )
-            );
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/before-requesting-activation-key-info',
+                [
+                'user' => $user,
+                ]
+            )
+        );
     }
 }

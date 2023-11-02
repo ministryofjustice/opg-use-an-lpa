@@ -39,7 +39,8 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa/activation-key', [
+                'actor::add-lpa/activation-key',
+                [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),
@@ -61,7 +62,8 @@ class ActivationKeyHandler extends AbstractAddLpaHandler
         }
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa/activation-key', [
+                'actor::add-lpa/activation-key',
+                [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),

@@ -61,7 +61,8 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::request-activation-key/address-on-paper', [
+                'actor::request-activation-key/address-on-paper',
+                [
                 'user' => $this->user,
                 'form' => $this->form,
                 'back' => $this->lastPage($this->state($request)),
@@ -73,7 +74,7 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
     public function nextPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
@@ -83,7 +84,7 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
     public function lastPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'

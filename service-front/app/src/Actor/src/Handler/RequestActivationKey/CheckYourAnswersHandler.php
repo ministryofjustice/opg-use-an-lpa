@@ -147,116 +147,116 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             }
 
             switch ($result->getResponse()) {
-            case AccessForAllResult::LPA_ALREADY_ADDED:
-                $lpaAddedData = $result->getData();
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::lpa-already-added',
-                        [
-                                'user'       => $this->user,
-                                'donor'      => $lpaAddedData->getDonor(),
-                                'lpaType'    => $lpaAddedData->getCaseSubtype(),
-                                'actorToken' => $lpaAddedData->getLpaActorToken(),
-                            ]
-                    )
-                );
+                case AccessForAllResult::LPA_ALREADY_ADDED:
+                    $lpaAddedData = $result->getData();
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::lpa-already-added',
+                            [
+                                    'user'       => $this->user,
+                                    'donor'      => $lpaAddedData->getDonor(),
+                                    'lpaType'    => $lpaAddedData->getCaseSubtype(),
+                                    'actorToken' => $lpaAddedData->getLpaActorToken(),
+                                ]
+                        )
+                    );
 
-            case AccessForAllResult::NOT_ELIGIBLE:
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::cannot-send-activation-key',
-                        ['user' => $this->user]
-                    )
-                );
+                case AccessForAllResult::NOT_ELIGIBLE:
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::cannot-send-activation-key',
+                            ['user' => $this->user]
+                        )
+                    );
 
-            case AccessForAllResult::HAS_ACTIVATION_KEY:
-                $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                $form->setAttribute(
-                    'action',
-                    $this->urlHelper->generate('lpa.confirm-activation-key-generation')
-                );
+                case AccessForAllResult::HAS_ACTIVATION_KEY:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
-                $activationKeyDueDate = date(
-                    'Y-m-d',
-                    strtotime(($result->getData()->getDueDate()))
-                );
+                    $activationKeyDueDate = date(
+                        'Y-m-d',
+                        strtotime(($result->getData()->getDueDate()))
+                    );
 
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::already-have-activation-key',
-                        [
-                                'user'    => $this->user,
-                                'dueDate' => $activationKeyDueDate,
-                                'form'    => $form,
-                            ]
-                    )
-                );
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::already-have-activation-key',
+                            [
+                                    'user'    => $this->user,
+                                    'dueDate' => $activationKeyDueDate,
+                                    'form'    => $form,
+                                ]
+                        )
+                    );
 
-            case AccessForAllResult::KEY_ALREADY_REQUESTED:
-                $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
-                $form->setAttribute(
-                    'action',
-                    $this->urlHelper->generate('lpa.confirm-activation-key-generation')
-                );
+                case AccessForAllResult::KEY_ALREADY_REQUESTED:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request), true);
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
-                $activationKeyDueDate = date(
-                    'Y-m-d',
-                    strtotime(($result->getData()->getDueDate()))
-                );
+                    $activationKeyDueDate = date(
+                        'Y-m-d',
+                        strtotime(($result->getData()->getDueDate()))
+                    );
 
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::already-requested-activation-key',
-                        [
-                                'user'    => $this->user,
-                                'dueDate' => $activationKeyDueDate,
-                                'form'    => $form,
-                            ]
-                    )
-                );
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::already-requested-activation-key',
+                            [
+                                    'user'    => $this->user,
+                                    'dueDate' => $activationKeyDueDate,
+                                    'form'    => $form,
+                                ]
+                        )
+                    );
 
-            case AccessForAllResult::DOES_NOT_MATCH:
-                return $this->redirectToRoute('lpa.add.actor-address');
+                case AccessForAllResult::DOES_NOT_MATCH:
+                    return $this->redirectToRoute('lpa.add.actor-address');
 
-            case AccessForAllResult::FOUND:
-                $form = new CreateNewActivationKey($this->getCsrfGuard($request));
-                $form->setAttribute(
-                    'action',
-                    $this->urlHelper->generate('lpa.confirm-activation-key-generation')
-                );
+                case AccessForAllResult::FOUND:
+                    $form = new CreateNewActivationKey($this->getCsrfGuard($request));
+                    $form->setAttribute(
+                        'action',
+                        $this->urlHelper->generate('lpa.confirm-activation-key-generation')
+                    );
 
-                $lpaData = $result->getData();
-                $actor   = $lpaData->getAttorney() ?? $lpaData->getDonor();
+                    $lpaData = $result->getData();
+                    $actor   = $lpaData->getAttorney() ?? $lpaData->getDonor();
 
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::confirm-lpa-for-key-request',
-                        [
-                                'form'      => $form,
-                                'user'      => $this->user,
-                                'actor'     => $actor,
-                                'actorRole' => $lpaData->getAttorney() === null ? 'Donor' : 'Attorney',
-                                'donor'     => $lpaData->getDonor(),
-                                'lpaType'   => $lpaData->getCaseSubtype(),
-                            ]
-                    )
-                );
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::confirm-lpa-for-key-request',
+                            [
+                                    'form'      => $form,
+                                    'user'      => $this->user,
+                                    'actor'     => $actor,
+                                    'actorRole' => $lpaData->getAttorney() === null ? 'Donor' : 'Attorney',
+                                    'donor'     => $lpaData->getDonor(),
+                                    'lpaType'   => $lpaData->getCaseSubtype(),
+                                ]
+                        )
+                    );
 
-            default:
-                return new HtmlResponse(
-                    $this->renderer->render(
-                        'actor::cannot-find-lpa',
-                        [
-                            'user'                 => $this->user,
-                            'lpa_reference_number' => $state->referenceNumber,
-                            'first_name'           => $state->firstNames,
-                            'last_name'            => $state->lastName,
-                            'dob'                  => $state->dob,
-                            'postcode'             => $state->postcode,
-                            'live_in_uk'           => $state->liveInUK,
-                            ],
-                    )
-                );
+                default:
+                    return new HtmlResponse(
+                        $this->renderer->render(
+                            'actor::cannot-find-lpa',
+                            [
+                                'user'                 => $this->user,
+                                'lpa_reference_number' => $state->referenceNumber,
+                                'first_name'           => $state->firstNames,
+                                'last_name'            => $state->lastName,
+                                'dob'                  => $state->dob,
+                                'postcode'             => $state->postcode,
+                                'live_in_uk'           => $state->liveInUK,
+                                ],
+                        )
+                    );
             }
         }
 

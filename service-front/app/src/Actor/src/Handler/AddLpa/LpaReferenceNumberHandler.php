@@ -39,7 +39,8 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa/lpa-reference-number', [
+                'actor::add-lpa/lpa-reference-number',
+                [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),
@@ -61,7 +62,8 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa/lpa-reference-number', [
+                'actor::add-lpa/lpa-reference-number',
+                [
                 'form' => $this->form->prepare(),
                 'user' => $this->getUser($request),
                 'back' => $this->lastPage($this->state($request)),

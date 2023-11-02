@@ -29,7 +29,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         /**
- * @var DateTimeImmutable $dob 
+ * @var DateTimeImmutable $dob
 */
         if (($dob = $this->state($request)->dob) !== null) {
             $this->form->setData(
@@ -45,7 +45,8 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::request-activation-key/date-of-birth', [
+                'actor::request-activation-key/date-of-birth',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
@@ -73,7 +74,8 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::request-activation-key/date-of-birth', [
+                'actor::request-activation-key/date-of-birth',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
@@ -91,7 +93,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
     public function lastPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
     }
@@ -99,7 +101,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
     public function nextPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.postcode';
     }

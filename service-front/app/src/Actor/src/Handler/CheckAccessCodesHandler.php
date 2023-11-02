@@ -52,7 +52,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         /**
- * @var string $actorLpaToken 
+ * @var string $actorLpaToken
 */
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
@@ -153,7 +153,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
                 }
             }
-            
+
             $this->logger->debug(
                 'Created by resolved to {actor_name}',
                 [
@@ -163,13 +163,14 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         }
 
         /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::check-access-codes', [
+                'actor::check-access-codes',
+                [
                 'actorToken' => $actorLpaToken,
                 'user'       => $user,
                 'lpa'        => $lpa,
@@ -182,7 +183,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
 
     private function idMatch(CaseActor $actor, array $code): bool
     {
-            return $actor->getId() === $code['ActorId']
-            || intval($actor->getUId()) === $code['ActorId'];
+        return $actor->getId() === $code['ActorId']
+        || intval($actor->getUId()) === $code['ActorId'];
     }
 }

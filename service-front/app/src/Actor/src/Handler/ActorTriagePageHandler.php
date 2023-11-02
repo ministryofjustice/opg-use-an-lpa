@@ -51,7 +51,8 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::home-page', [
+                'actor::home-page',
+                [
                 'form' => $form->prepare(),
                 ]
             )
@@ -76,7 +77,8 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::home-page', [
+                'actor::home-page',
+                [
                 'form' => $form->prepare(),
                 ]
             )

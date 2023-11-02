@@ -83,7 +83,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
 
                         $verifyNewEmailPath = $this->urlHelper->generate(
-                            'verify-new-email', [
+                            'verify-new-email',
+                            [
                             'token' => $data['EmailResetToken'],
                             ]
                         );
@@ -108,7 +109,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                         return new HtmlResponse(
                             $this->renderer->render(
-                                'actor::request-email-change-success', [
+                                'actor::request-email-change-success',
+                                [
                                 'user'     => $user,
                                 'newEmail' => $newEmail,
                                 ]
@@ -128,7 +130,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
                             return new HtmlResponse(
                                 $this->renderer->render(
-                                    'actor::request-email-change-success', [
+                                    'actor::request-email-change-success',
+                                    [
                                     'user'     => $user,
                                     'newEmail' => $newEmail,
                                     ]
@@ -142,7 +145,8 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::change-email', [
+                'actor::change-email',
+                [
                 'form' => $form->prepare(),
                 'user' => $user,
                 ]

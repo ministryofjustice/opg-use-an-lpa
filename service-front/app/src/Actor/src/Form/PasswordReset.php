@@ -12,7 +12,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class PasswordReset extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'password-reset';
+    public const FORM_NAME = 'password-reset';
 
     public function __construct(CsrfGuardInterface $guard)
     {

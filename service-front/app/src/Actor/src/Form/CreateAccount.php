@@ -17,7 +17,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'create_account';
+    public const FORM_NAME = 'create_account';
 
     public const NEW_EMAIL_CONFLICT = 'NewEmailConflict';
 

@@ -43,7 +43,8 @@ class LpaRemovedHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::lpa-removed', [
+                'actor::lpa-removed',
+                [
                 'user' => $user,
                 ]
             )

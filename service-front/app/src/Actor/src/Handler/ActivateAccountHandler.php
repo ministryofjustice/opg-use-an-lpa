@@ -48,12 +48,12 @@ class ActivateAccountHandler extends AbstractHandler
         ) === false
         ) {
             /**
- * @var bool|string $activated 
+ * @var bool|string $activated
 */
             $activated = $this->userService->activate($activationToken);
 
             /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 

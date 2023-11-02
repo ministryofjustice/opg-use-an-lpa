@@ -56,7 +56,8 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     $resetToken = $this->userService->requestPasswordReset($data['email']);
 
                     $passwordResetPath = $this->urlHelper->generate(
-                        'password-reset-token', [
+                        'password-reset-token',
+                        [
                         'token' => $resetToken,
                         ]
                     );
@@ -89,7 +90,8 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
 
                 return new HtmlResponse(
                     $this->renderer->render(
-                        'actor::password-reset-request-done', [
+                        'actor::password-reset-request-done',
+                        [
                         'email' => strtolower($data['email']),
                         ]
                     )
@@ -99,7 +101,8 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::password-reset-request', [
+                'actor::password-reset-request',
+                [
                 'form' => $form,
                 ]
             )

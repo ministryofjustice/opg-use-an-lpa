@@ -47,7 +47,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
         $params = $request->getQueryParams();
 
         /**
- * @var string $emailAddress 
+ * @var string $emailAddress
 */
         $emailAddress = $params['email'] ?? null;
         $resend       = (isset($params['resend']) && $params['resend'] === 'true');
@@ -63,7 +63,8 @@ class CreateAccountSuccessHandler extends AbstractHandler
                 //  Check to see if the user has activated their account by looking for an activation token
                 if (isset($userData['ActivationToken'])) {
                     $activateAccountPath = $this->urlHelper->generate(
-                        'activate-account', [
+                        'activate-account',
+                        [
                         'token' => $userData['ActivationToken'],
                         ]
                     );
@@ -78,7 +79,9 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
                     //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes
                     return $this->redirectToRoute(
-                        'create-account-success', [], [
+                        'create-account-success',
+                        [],
+                        [
                         'email' => $emailAddress,
                         ]
                     );
@@ -90,7 +93,8 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::create-account-success', [
+                'actor::create-account-success',
+                [
                 'emailAddress' => $emailAddress,
                 ]
             )

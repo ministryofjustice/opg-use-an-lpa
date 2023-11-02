@@ -48,7 +48,8 @@ class DeathNotificationHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::death-notification', [
+                'actor::death-notification',
+                [
                 'actorToken' => $actorLpaToken,
                 'user'       => $user,
                 ]

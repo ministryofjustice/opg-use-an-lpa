@@ -70,7 +70,7 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
         }
 
         /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 

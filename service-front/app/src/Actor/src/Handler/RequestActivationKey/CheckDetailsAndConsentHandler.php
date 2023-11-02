@@ -58,7 +58,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     private ?UserInterface $user;
 
     /**
-     * @var array<string, int|string|bool|DateTimeInterface|array|null>  
+     * @var array<string, int|string|bool|DateTimeInterface|array|null>
      */
     private array $data;
 
@@ -278,7 +278,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
         $alwaysRequired = $alwaysRequired || $this->state($request)->getActorRole() === null
             || (($this->state($request)->actorAddress1 === null
-            || $this->state($request)->actorAddressTown === null ) && $this->state($request)->actorAbroadAddress === null);
+            || $this->state($request)->actorAddressTown === null) && $this->state($request)->actorAbroadAddress === null);
 
         if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
             return $alwaysRequired

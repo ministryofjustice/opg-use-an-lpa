@@ -47,7 +47,8 @@ class ChangeLpaDetailsHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::change-lpa-details', [
+                'actor::change-lpa-details',
+                [
                 'actorToken' => $actorLpaToken,
                 'user'       => $user,
                 ]

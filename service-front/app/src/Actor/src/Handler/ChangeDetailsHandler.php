@@ -48,7 +48,8 @@ class ChangeDetailsHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::change-details', [
+                'actor::change-details',
+                [
                 'actorToken' => $actorLpaToken,
                 'user'       => $user,
                 ]

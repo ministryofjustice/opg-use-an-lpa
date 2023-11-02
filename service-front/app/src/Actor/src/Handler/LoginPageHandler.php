@@ -52,7 +52,7 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         $form = new Login($this->getCsrfGuard($request));
 
         /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
@@ -66,7 +66,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 return new HtmlResponse(
                     $this->renderer->render(
-                        'actor::login', [
+                        'actor::login',
+                        [
                         'form'  => $form,
                         'flash' => $flash,
                         ]
@@ -89,7 +90,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 return new HtmlResponse(
                     $this->renderer->render(
-                        'actor::login', [
+                        'actor::login',
+                        [
                         'form'  => $form,
                         'flash' => $flash,
                         ]
@@ -103,7 +105,9 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                     $emailAddress = $formValues['email'];
 
                     return $this->redirectToRoute(
-                        'create-account-success', [], [
+                        'create-account-success',
+                        [],
+                        [
                         'email' => $emailAddress,
                         ]
                     );
@@ -121,7 +125,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::login', [
+                'actor::login',
+                [
                 'form'  => $form,
                 'flash' => $flash,
                 ]

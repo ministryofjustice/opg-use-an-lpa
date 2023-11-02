@@ -43,7 +43,8 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::your-details', [
+                'actor::your-details',
+                [
                 'user' => $user,
                 ]
             )

@@ -98,7 +98,8 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::confirm-remove-lpa', [
+                'actor::confirm-remove-lpa',
+                [
                 'user'       => $this->user,
                 'actorToken' => $actorLpaToken,
                 'form'       => $this->form,
@@ -120,7 +121,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $removedLpaData = ($this->removeLpa)($this->user->getIdentity(), $actorLpaToken);
 
             /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 

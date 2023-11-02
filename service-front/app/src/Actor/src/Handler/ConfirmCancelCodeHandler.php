@@ -55,7 +55,8 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, Csr
         if ($form->isValid()) {
             return new HtmlResponse(
                 $this->renderer->render(
-                    'actor::confirm-cancel-code', [
+                    'actor::confirm-cancel-code',
+                    [
                     'form' => $form,
                     'user' => $user,
                     ]

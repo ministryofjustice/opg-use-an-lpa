@@ -12,7 +12,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CreateShareCode extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'lpa_sharecode_create';
+    public const FORM_NAME = 'lpa_sharecode_create';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

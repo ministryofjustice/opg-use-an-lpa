@@ -67,7 +67,7 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
             );
 
             /**
- * @var FlashMessagesInterface $flash 
+ * @var FlashMessagesInterface $flash
 */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 

@@ -46,7 +46,8 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa-triage', [
+                'actor::add-lpa-triage',
+                [
                 'user' => $this->getUser($request),
                 'form' => $form->prepare(),
                 ]
@@ -81,7 +82,8 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::add-lpa-triage', [
+                'actor::add-lpa-triage',
+                [
                 'user' => $this->getUser($request),
                 'form' => $form->prepare(),
                 ]

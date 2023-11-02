@@ -43,7 +43,8 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::confirm-delete-account', [
+                'actor::confirm-delete-account',
+                [
                 'user' => $user,
                 ]
             )

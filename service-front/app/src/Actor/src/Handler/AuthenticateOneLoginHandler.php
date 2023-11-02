@@ -59,7 +59,8 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::one-login', [
+                'actor::one-login',
+                [
                 'form' => $form,
                 ]
             )

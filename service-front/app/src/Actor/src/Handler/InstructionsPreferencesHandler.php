@@ -43,7 +43,8 @@ class InstructionsPreferencesHandler extends AbstractHandler implements UserAwar
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::instructions-preferences', [
+                'actor::instructions-preferences',
+                [
                 'user' => $user,
                 ]
             )

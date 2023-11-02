@@ -60,7 +60,8 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 
                     //  Send account activation email to user
                     $activateAccountPath = $this->urlHelper->generate(
-                        'activate-account', [
+                        'activate-account',
+                        [
                         'token' => $userData['ActivationToken'],
                         ]
                     );
@@ -86,7 +87,9 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                 // Redirect to the success screen with the email address so that we can utilise the
                 // resend activation token functionality
                 return $this->redirectToRoute(
-                    'create-account-success', [], [
+                    'create-account-success',
+                    [],
+                    [
                     'email' => $emailAddress,
                     ]
                 );
@@ -95,7 +98,8 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::create-account', [
+                'actor::create-account',
+                [
                 'form' => $form,
                 ]
             )

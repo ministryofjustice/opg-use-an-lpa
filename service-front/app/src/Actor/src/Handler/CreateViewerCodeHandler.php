@@ -74,7 +74,8 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
 
                 return new HtmlResponse(
                     $this->renderer->render(
-                        'actor::lpa-show-viewercode', [
+                        'actor::lpa-show-viewercode',
+                        [
                         'user'         => $user,
                         'actorToken'   => $validated['lpa_token'],
                         'code'         => $codeData['code'],
@@ -107,7 +108,8 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::lpa-create-viewercode', [
+                'actor::lpa-create-viewercode',
+                [
                 'user'       => $user,
                 'lpa'        => $lpaData->lpa,
                 'actorToken' => $form->get('lpa_token')->getValue(),

@@ -91,7 +91,8 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
         if ($tokenValid) {
             return new HtmlResponse(
                 $this->renderer->render(
-                    'actor::password-reset', [
+                    'actor::password-reset',
+                    [
                     'form' => $form->prepare(),
                     ]
                 )

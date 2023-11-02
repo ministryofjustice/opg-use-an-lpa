@@ -101,7 +101,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
     public function lastPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 **/
         if ($state->needsCleansing) {
             return 'lpa.check-answers';

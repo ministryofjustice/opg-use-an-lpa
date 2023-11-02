@@ -36,7 +36,8 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::request-activation-key/your-name', [
+                'actor::request-activation-key/your-name',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
@@ -61,7 +62,8 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::request-activation-key/your-name', [
+                'actor::request-activation-key/your-name',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
@@ -78,7 +80,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
     public function nextPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
@@ -86,7 +88,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
     public function lastPage(WorkflowState $state): string
     {
         /**
- * @var RequestActivationKey $state 
+ * @var RequestActivationKey $state
 */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
