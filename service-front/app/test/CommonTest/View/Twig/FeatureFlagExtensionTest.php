@@ -49,10 +49,10 @@ class FeatureFlagExtensionTest extends TestCase
 
     /**
      * @test
-     * @covers ::featureEnabled
+     * @covers       ::featureEnabled
      * @dataProvider configuredFeatures
-     * @param string $featureName
-     * @param bool   $enabled
+     * @param        string $featureName
+     * @param        bool   $enabled
      */
     public function it_returns_the_features_configured_status(string $featureName, bool $enabled): void
     {

@@ -10,7 +10,9 @@ use Twig\TwigFunction;
 
 class GovUkLaminasFormErrorsExtensionTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_array_of_exported_twig_functions()
     {
         $extension = new GovUKLaminasFormErrorsExtension();
@@ -28,7 +30,9 @@ class GovUkLaminasFormErrorsExtensionTest extends TestCase
         //  Check each function
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
-            /** @var TwigFunction $function */
+            /**
+ * @var TwigFunction $function 
+*/
             $this->assertContains($function->getName(), array_keys($expectedFunctions));
 
             $functionCallable = $function->getCallable();

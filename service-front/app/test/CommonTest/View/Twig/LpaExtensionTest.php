@@ -15,7 +15,9 @@ use Twig\TwigFunction;
 
 class LpaExtensionTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $extension = new LpaExtension();
@@ -395,7 +397,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive()
     {
         $extension = new LpaExtension();
@@ -407,7 +411,9 @@ class LpaExtensionTest extends TestCase
         $this->assertGreaterThan(0, $days);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_empty_string_if_expiry_date_is_null()
     {
         $extension = new LpaExtension();
@@ -417,7 +423,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('', $days);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_hyphenated_viewer_code()
     {
         $extension = new LpaExtension();
@@ -427,7 +435,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
     }
 
-     /** @test */
+     /**
+      * @test 
+      */
     public function it_checks_if_an_LPA_is_cancelled()
     {
         $extension = new LpaExtension();
@@ -440,7 +450,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(true, $status);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_an_LPA_is_not_cancelled()
     {
         $extension = new LpaExtension();
@@ -452,7 +464,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(false, $status);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_an_LPA_is_revoked()
     {
         $extension = new LpaExtension();
@@ -464,7 +478,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(true, $status);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_donor_name_from_donor_nameDob_string()
     {
         $extension = new LpaExtension();
@@ -475,7 +491,9 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('Harry Potter', $donorName);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
     {
         $extension = new LpaExtension();

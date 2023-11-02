@@ -15,7 +15,9 @@ class TranslationSwitchExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $urlHelper = $this->prophesize(UrlHelper::class);
@@ -33,7 +35,9 @@ class TranslationSwitchExtensionTest extends TestCase
         //  Check each function
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
-            /** @var TwigFunction $function */
+            /**
+ * @var TwigFunction $function 
+*/
             $this->assertContains($function->getName(), array_keys($expectedFunctions));
 
             $functionCallable = $function->getCallable();
@@ -42,7 +46,9 @@ class TranslationSwitchExtensionTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_the_current_route_name(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);
@@ -63,7 +69,9 @@ class TranslationSwitchExtensionTest extends TestCase
         $this->assertEquals('lpa.add', $result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_null_when_route_not_found(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);

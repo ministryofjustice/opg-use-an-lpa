@@ -17,7 +17,9 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_create_an_instance_of_the_variable_extension(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -46,7 +48,9 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
         $this->assertInstanceOf(JavascriptVariablesExtension::class, $analyticsConfig);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function throws_exception_when_missing_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

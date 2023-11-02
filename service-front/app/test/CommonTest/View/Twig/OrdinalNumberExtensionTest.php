@@ -29,7 +29,9 @@ class OrdinalNumberExtensionTest extends TestCase
         //  Check each filter
         foreach ($filters as $filter) {
             $this->assertInstanceOf(TwigFilter::class, $filter);
-            /** @var TwigFilter $filter */
+            /**
+ * @var TwigFilter $filter 
+*/
             $this->assertContains($filter->getName(), array_keys($expectedFilters));
 
             $filterCallable = $filter->getCallable();
