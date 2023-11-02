@@ -1388,7 +1388,7 @@ class AccountContext implements Context
         // Not needed for this context
     }
 
-    public function iDoNotFollowRedirects():void
+    public function iDoNotFollowRedirects(): void
     {
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(false);
     }

@@ -104,7 +104,7 @@ class CommonContext implements Context
         // Hopefully the PR for it will get merged in which case the feature test "An inbound tracing header
         // is attached to outbound requests" can be reworked to remove all this nasty.
         /**
- * @var Container $container 
+ * @var Container $container
 */
         $container = $this->base->container;
         $container->set(Client::class, new FactoryDefinitionHelper($container->get(ClientFactory::class)));
@@ -446,7 +446,7 @@ class CommonContext implements Context
     public function mySessionExpires()
     {
         /**
- * @var Container $container 
+ * @var Container $container
 */
         $container = $this->base->container;
 

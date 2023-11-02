@@ -9,7 +9,7 @@ final class SharedState
     private static ?SharedState $instance = null;
 
     /**
-     * @var string The base part of the URL, typically '/' but could be a language prefix i.e. '/cy' 
+     * @var string The base part of the URL, typically '/' but could be a language prefix i.e. '/cy'
      */
     public string $basePath = '';
 

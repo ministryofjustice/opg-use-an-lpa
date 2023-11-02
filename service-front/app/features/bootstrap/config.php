@@ -34,7 +34,8 @@ $aggregator = new ConfigAggregator(
 
     // Load development config if it exists
     new PhpFileProvider(realpath(__DIR__) . '/behat.config.php'),
-    ], null
+    ],
+    null
 );
 
 return $aggregator->getMergedConfig();
