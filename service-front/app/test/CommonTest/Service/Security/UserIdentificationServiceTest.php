@@ -30,7 +30,9 @@ class UserIdentificationServiceTest extends TestCase
      */
     public function it_can_uniquely_identify_a_request_with_no_headers(): void
     {
-        /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
+        /**
+ * @var ObjectProphecy|LoggerInterface $loggerProphecy 
+*/
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new UserIdentificationService($loggerProphecy->reveal());
@@ -49,7 +51,9 @@ class UserIdentificationServiceTest extends TestCase
      */
     public function it_logs_a_identity_mismatch(): void
     {
-        /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
+        /**
+ * @var ObjectProphecy|LoggerInterface $loggerProphecy 
+*/
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy
             ->debug(Argument::type('string'), Argument::type('array'))
@@ -77,12 +81,14 @@ class UserIdentificationServiceTest extends TestCase
     /**
      * @test
      * @dataProvider headerCombinations
-     * @covers ::__construct
-     * @covers ::id
+     * @covers       ::__construct
+     * @covers       ::id
      */
     public function it_can_uniquely_identify_a_request_with_headers(array $headers, string $expectedId): void
     {
-        /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
+        /**
+ * @var ObjectProphecy|LoggerInterface $loggerProphecy 
+*/
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
         $service = new UserIdentificationService($loggerProphecy->reveal());

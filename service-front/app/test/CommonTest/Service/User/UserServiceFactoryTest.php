@@ -17,7 +17,9 @@ class UserServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_valid_UserServiceFactory_instance()
     {
         $clientProphecy = $this->prophesize(Client::class);
@@ -27,8 +29,10 @@ class UserServiceFactoryTest extends TestCase
         $containerProphecy->get(Client::class)
             ->willReturn($clientProphecy->reveal());
         $containerProphecy->get(UserInterface::class)
-            ->willReturn(function () {
-            });
+            ->willReturn(
+                function () {
+                }
+            );
         $containerProphecy->get(LoggerInterface::class)
             ->willReturn($loggerProphecy->reveal());
 

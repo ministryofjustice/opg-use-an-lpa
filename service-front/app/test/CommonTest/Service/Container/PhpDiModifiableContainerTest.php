@@ -15,7 +15,9 @@ class PhpDiModifiableContainerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_only_acts_on_a_phpdi_container()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -24,7 +26,9 @@ class PhpDiModifiableContainerTest extends TestCase
         $di = new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_decorates_set_on_a_phpdi_container()
     {
         $containerProphecy = $this->prophesize(Container::class);

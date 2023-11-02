@@ -44,7 +44,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_dto_from_array_data()
     {
         $this->lpaFactory
@@ -60,7 +62,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertEquals('2021-12-06', $result->getDueDate());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_dto_from_array_data_if_name_fields_are_null()
     {
         $this->response['donor']['firstname']   = null;
@@ -84,7 +88,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertEquals('hw', $result->getCaseSubtype());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -106,7 +112,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -128,7 +136,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -150,7 +160,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_fail_if_lpa_type_is_not_set()
     {
         $this->expectException(InvalidArgumentException::class);

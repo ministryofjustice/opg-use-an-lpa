@@ -37,9 +37,11 @@ class SdkFactoryTest extends TestCase
 
         $containerProphecy
             ->get('config')
-            ->willReturn([
+            ->willReturn(
+                [
                 'aws' => [],
-            ]);
+                ]
+            );
 
         $factory = new SdkFactory();
 

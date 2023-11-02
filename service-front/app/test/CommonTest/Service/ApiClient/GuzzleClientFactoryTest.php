@@ -42,9 +42,9 @@ class GuzzleClientFactoryTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
+     * @covers       ::__invoke
      * @dataProvider badConfigurationData
-     * @param array $configuration Bad configuration data for factory
+     * @param        array $configuration Bad configuration data for factory
      */
     public function it_throws_a_configuration_exception_when_missing(array $configuration): void
     {

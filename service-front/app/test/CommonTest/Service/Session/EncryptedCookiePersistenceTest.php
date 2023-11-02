@@ -69,7 +69,9 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->encrypterProphecy = $this->prophesize(EncryptInterface::class);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_be_instantiated()
     {
         $cp = new EncryptedCookiePersistence(
@@ -208,19 +210,21 @@ class EncryptedCookiePersistenceTest extends TestCase
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
         $this->encrypterProphecy->encodeCookieValue(
-            Argument::that(function ($input) use ($testData) {
-                $this->assertArrayHasKey('int', $input);
-                $this->assertArrayHasKey('string', $input);
-                $this->assertArrayHasKey('bool', $input);
-                $this->assertArrayHasKey('float', $input);
+            Argument::that(
+                function ($input) use ($testData) {
+                    $this->assertArrayHasKey('int', $input);
+                    $this->assertArrayHasKey('string', $input);
+                    $this->assertArrayHasKey('bool', $input);
+                    $this->assertArrayHasKey('float', $input);
 
-                $this->assertEquals($testData['int'], $input['int']);
-                $this->assertEquals($testData['string'], $input['string']);
-                $this->assertEquals($testData['float'], $input['float']);
-                $this->assertEquals($testData['bool'], $input['bool']);
+                    $this->assertEquals($testData['int'], $input['int']);
+                    $this->assertEquals($testData['string'], $input['string']);
+                    $this->assertEquals($testData['float'], $input['float']);
+                    $this->assertEquals($testData['bool'], $input['bool']);
 
-                return true;
-            })
+                    return true;
+                }
+            )
         )->willReturn('ENCRYPTED.CIPHER_TEXT');
 
         $cp = new EncryptedCookiePersistence(
@@ -323,19 +327,21 @@ class EncryptedCookiePersistenceTest extends TestCase
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
         $this->encrypterProphecy->encodeCookieValue(
-            Argument::that(function ($input) use ($testData) {
-                $this->assertArrayHasKey('int', $input);
-                $this->assertArrayHasKey('string', $input);
-                $this->assertArrayHasKey('bool', $input);
-                $this->assertArrayHasKey('float', $input);
+            Argument::that(
+                function ($input) use ($testData) {
+                    $this->assertArrayHasKey('int', $input);
+                    $this->assertArrayHasKey('string', $input);
+                    $this->assertArrayHasKey('bool', $input);
+                    $this->assertArrayHasKey('float', $input);
 
-                $this->assertEquals($testData['int'], $input['int']);
-                $this->assertEquals($testData['string'], $input['string']);
-                $this->assertEquals($testData['float'], $input['float']);
-                $this->assertEquals($testData['bool'], $input['bool']);
+                    $this->assertEquals($testData['int'], $input['int']);
+                    $this->assertEquals($testData['string'], $input['string']);
+                    $this->assertEquals($testData['float'], $input['float']);
+                    $this->assertEquals($testData['bool'], $input['bool']);
 
-                return true;
-            })
+                    return true;
+                }
+            )
         )->willReturn('ENCRYPTED.CIPHER_TEXT');
 
         $cp = new EncryptedCookiePersistence(

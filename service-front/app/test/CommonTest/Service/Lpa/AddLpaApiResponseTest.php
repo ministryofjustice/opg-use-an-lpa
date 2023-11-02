@@ -18,9 +18,9 @@ class AddLpaApiResponseTest extends TestCase
 {
     /**
      * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
-     * @covers ::validateResponseType
+     * @covers       ::__construct
+     * @covers       ::validateDataType
+     * @covers       ::validateResponseType
      * @dataProvider validDataTypeProvider
      */
     public function it_can_be_created_with_a_recognised_response_and_data_type($responseType, $additionalData): void
@@ -67,8 +67,8 @@ class AddLpaApiResponseTest extends TestCase
 
     /**
      * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
+     * @covers       ::__construct
+     * @covers       ::validateDataType
      * @dataProvider invalidDataTypeProvider
      */
     public function it_throws_an_exception_with_an_unrecognised_response_data_type($data): void

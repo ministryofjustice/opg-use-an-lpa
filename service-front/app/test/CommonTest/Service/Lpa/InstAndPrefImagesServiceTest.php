@@ -35,7 +35,9 @@ class InstAndPrefImagesServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_images_for_an_lpa()
     {
         $userToken     = 'i-am-a-user-token';
@@ -72,7 +74,9 @@ class InstAndPrefImagesServiceTest extends TestCase
         $this->assertEquals('http://www.example.com/image3.jpg', $preferencesUrls[0]->url);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_handles_api_exceptions()
     {
         $userToken     = 'i-am-a-user-token';

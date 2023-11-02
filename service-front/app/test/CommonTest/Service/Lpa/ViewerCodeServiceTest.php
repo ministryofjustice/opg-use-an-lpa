@@ -36,7 +36,9 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled();
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_new_viewercode_given_correct_details()
     {
         $lpaId      = '700000000047';
@@ -64,7 +66,9 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals($orgName, $codeData->organisation);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_share_codes_for_a_given_lpa()
     {
         $lpaId = '98765432-01234-01234-01234-012345678901';
@@ -87,7 +91,9 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function returns_empty_array_if_no_share_codes_generated()
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
@@ -104,7 +110,9 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEmpty($shareCodes);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function gets_number_of_active_codes_for_lpa()
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
@@ -148,7 +156,9 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals(2, $shareCodes['activeCodeCount']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_cancels_a_new_viewercode_given_correct_details()
     {
         $lpaId      = '700000000047';
@@ -167,7 +177,9 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals(null, $codeData);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_orders_viewercode_by_order_of_added_date()
     {
         $lpaId  = '98765432-01234-01234-01234-012345678901';

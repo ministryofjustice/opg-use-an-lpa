@@ -15,7 +15,9 @@ class RequestTracingLogProcessorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_adds_the_tracing_parameter()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -29,7 +31,9 @@ class RequestTracingLogProcessorTest extends TestCase
         $this->assertEquals(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'abc']], $result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_adds_a_default_tracing_parameter_if_none_found()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

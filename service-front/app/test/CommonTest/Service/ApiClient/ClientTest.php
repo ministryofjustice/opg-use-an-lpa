@@ -48,7 +48,9 @@ class ClientTest extends TestCase
     // httpGet
     // ============
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_get_a_simple_endpoint_returning_valid_json()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -61,7 +63,9 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_get_an_endpoint_with_parameters_returning_valid_json()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -74,17 +78,21 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function correctly_processeses_a_non_200_response_to_a_get_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'Not found',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
             );
@@ -96,18 +104,22 @@ class ClientTest extends TestCase
         $data = $client->httpGet('/simple_bad_get');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function client_throws_error_with_get_request()
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
@@ -142,17 +154,21 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function correctly_processes_a_non_2xx_response_to_a_post_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
             );
@@ -164,18 +180,22 @@ class ClientTest extends TestCase
         $data = $client->httpPost('/simple_bad_post', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function client_throws_error_with_post_request()
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
@@ -210,17 +230,21 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function correctly_processes_a_non_2xx_response_to_a_put_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'Not found',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
             );
@@ -232,18 +256,22 @@ class ClientTest extends TestCase
         $data = $client->httpPut('/simple_bad_put', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function client_throws_error_with_put_request()
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
@@ -278,17 +306,21 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function correctly_processes_a_non_2xx_response_to_a_patch_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'Not found',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
             );
@@ -300,18 +332,22 @@ class ClientTest extends TestCase
         $data = $client->httpPatch('/simple_bad_patch', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function client_throws_error_with_patch_request()
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
@@ -346,17 +382,21 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function correctly_processes_a_non_2xx_response_to_a_delete_request()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'Not found',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_NOT_FOUND
                 )->reveal()
             );
@@ -368,18 +408,22 @@ class ClientTest extends TestCase
         $data = $client->httpDelete('/simple_bad_delete', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function client_throws_error_with_delete_request()
     {
         $exceptionProphecy = $this->prophesize(HttpException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
-                    json_encode([
+                    json_encode(
+                        [
                         'title'   => 'An API exception has occurred',
                         'details' => '',
                         'data'    => [],
-                    ]),
+                        ]
+                    ),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
                 )->reveal()
             );
@@ -401,19 +445,25 @@ class ClientTest extends TestCase
     // These tests operate on all request methods in the Client class but test identical
     // expected functionality in each.
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function sets_appropriate_request_headers_for_request()
     {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->apiClient->sendRequest(
+            Argument::that(
+                function ($request) {
+                    $this->assertInstanceOf(RequestInterface::class, $request);
 
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('Accept', $headers);
-            $this->assertEquals('application/json', $headers['Accept'][0]);
-            $this->assertArrayHasKey('Content-Type', $headers);
-            $this->assertEquals('application/json', $headers['Content-Type'][0]);
-            return true;
-        }))
+                    $headers = $request->getHeaders();
+                    $this->assertArrayHasKey('Accept', $headers);
+                    $this->assertEquals('application/json', $headers['Accept'][0]);
+                    $this->assertArrayHasKey('Content-Type', $headers);
+                    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+                    return true;
+                }
+            )
+        )
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
@@ -434,17 +484,23 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function sets_token_in_header_if_supplied()
     {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->apiClient->sendRequest(
+            Argument::that(
+                function ($request) {
+                    $this->assertInstanceOf(RequestInterface::class, $request);
 
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('User-Token', $headers);
-            $this->assertEquals('test_token', $headers['User-Token'][0]);
-            return true;
-        }))
+                    $headers = $request->getHeaders();
+                    $this->assertArrayHasKey('User-Token', $headers);
+                    $this->assertEquals('test_token', $headers['User-Token'][0]);
+                    return true;
+                }
+            )
+        )
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
@@ -466,17 +522,23 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function sets_trace_id_in_header_if_supplied()
     {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->apiClient->sendRequest(
+            Argument::that(
+                function ($request) {
+                    $this->assertInstanceOf(RequestInterface::class, $request);
 
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('x-amzn-trace-id', $headers);
-            $this->assertEquals('Root=1-1-11', $headers['x-amzn-trace-id'][0]);
-            return true;
-        }))
+                    $headers = $request->getHeaders();
+                    $this->assertArrayHasKey('x-amzn-trace-id', $headers);
+                    $this->assertEquals('Root=1-1-11', $headers['x-amzn-trace-id'][0]);
+                    return true;
+                }
+            )
+        )
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
 
         $client = new Client($this->apiClient->reveal(), 'https://localhost', 'Root=1-1-11');
@@ -498,7 +560,9 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function gracefully_handles_malformed_response_data()
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))

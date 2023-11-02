@@ -16,7 +16,9 @@ class KeyedRateLimitServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_limit_an_identity_when_required()
     {
         $records = [
@@ -50,7 +52,9 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_check_if_a_request_is_limited()
     {
         $storageProphecy = $this->prophesize(StorageInterface::class);
@@ -73,7 +77,9 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_move_a_cache_window_dropping_records()
     {
         $beforeWindow = [
@@ -111,7 +117,9 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_record_an_identity_access()
     {
         $records = [
@@ -147,7 +155,9 @@ class KeyedRateLimitServiceTest extends TestCase
         $keyedRateLimitService->limit('test-identity');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_throw_an_exception_when_recording_a_limit_that_exceeds()
     {
         $records = [

@@ -29,8 +29,8 @@ class PdfServiceTest extends TestCase
     /**
      * Create a {@link ResponseInterface} prophecy that returns a defined response body and code.
      *
-     * @param string $body
-     * @param int $code
+     * @param  string $body
+     * @param  int    $code
      * @return ObjectProphecy
      */
     protected function setupResponse(string $body, int $code): ObjectProphecy
@@ -48,7 +48,9 @@ class PdfServiceTest extends TestCase
         return $responseProphecy;
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_stream_when_given_an_lpa_without_images()
     {
         $lpa = new Lpa();
@@ -63,21 +65,25 @@ class PdfServiceTest extends TestCase
         )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
-            $this->assertCount(1, $request->getHeader('Content-Type'));
-            $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
+        $clientProphecy->sendRequest(
+            Argument::that(
+                function (RequestInterface $request) {
+                    $this->assertCount(1, $request->getHeader('Content-Type'));
+                    $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
 
-            $this->assertCount(1, $request->getHeader('Strip-Anchor-Tags'));
-            $this->assertEquals('true', $request->getHeader('Strip-Anchor-Tags')[0]);
+                    $this->assertCount(1, $request->getHeader('Strip-Anchor-Tags'));
+                    $this->assertEquals('true', $request->getHeader('Strip-Anchor-Tags')[0]);
 
-            $this->assertCount(1, $request->getHeader('Print-Background'));
-            $this->assertEquals('true', $request->getHeader('Print-Background')[0]);
+                    $this->assertCount(1, $request->getHeader('Print-Background'));
+                    $this->assertEquals('true', $request->getHeader('Print-Background')[0]);
 
-            $this->assertCount(1, $request->getHeader('Emulate-Media-Type'));
-            $this->assertEquals('screen', $request->getHeader('Emulate-Media-Type')[0]);
+                    $this->assertCount(1, $request->getHeader('Emulate-Media-Type'));
+                    $this->assertEquals('screen', $request->getHeader('Emulate-Media-Type')[0]);
 
-            return true;
-        }))
+                    return true;
+                }
+            )
+        )
             ->willReturn($this->setupResponse('', 200));
 
         $stylesProphecy = $this->prophesize(StylesService::class);
@@ -99,7 +105,9 @@ class PdfServiceTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_stream_when_given_an_lpa_with_images()
     {
         $lpa    = new Lpa();
@@ -138,7 +146,9 @@ class PdfServiceTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_throws_an_exception_when_response_not_ok()
     {
         $lpa = new Lpa();
@@ -175,7 +185,9 @@ class PdfServiceTest extends TestCase
         $pdfStream = $service->getLpaAsPdf($lpa);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_handles_a_client_exception_by_throwing_an_api_exception()
     {
         $lpa = new Lpa();
@@ -212,7 +224,9 @@ class PdfServiceTest extends TestCase
         $pdfStream = $service->getLpaAsPdf($lpa);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_correctly_attaches_a_tracing_header()
     {
         $lpa = new Lpa();
@@ -227,12 +241,16 @@ class PdfServiceTest extends TestCase
         )->willReturn('<html></html>');
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
-            $this->assertCount(1, $request->getHeader('x-amzn-trace-id'));
-            $this->assertEquals('Root=1-1-11', $request->getHeader('x-amzn-trace-id')[0]);
+        $clientProphecy->sendRequest(
+            Argument::that(
+                function (RequestInterface $request) {
+                    $this->assertCount(1, $request->getHeader('x-amzn-trace-id'));
+                    $this->assertEquals('Root=1-1-11', $request->getHeader('x-amzn-trace-id')[0]);
 
-            return true;
-        }))
+                    return true;
+                }
+            )
+        )
             ->willReturn($this->setupResponse('', 200));
 
         $stylesProphecy = $this->prophesize(StylesService::class);

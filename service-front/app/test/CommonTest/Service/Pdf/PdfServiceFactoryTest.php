@@ -21,7 +21,9 @@ class PdfServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_configured_pdf_service()
     {
         $config = [
@@ -57,7 +59,9 @@ class PdfServiceFactoryTest extends TestCase
         $this->assertInstanceOf(PdfService::class, $pdfService);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_needs_a_configuration_array_and_fails_if_not_there()
     {
         $config = [];
@@ -74,7 +78,9 @@ class PdfServiceFactoryTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_needs_a_configuration_value_and_fails_if_not_there()
     {
         $config = [

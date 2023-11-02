@@ -10,7 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 class LpaMatchResponseTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_create_a_response_dto()
     {
         $dto = new LpaMatch();
@@ -18,7 +20,9 @@ class LpaMatchResponseTest extends TestCase
         $this->assertInstanceOf(LpaMatch::class, $dto);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_allows_donor_and_attorney_name_and_lpa_type_to_be_set_and_get()
     {
         $donor = new CaseActor();
@@ -43,7 +47,9 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_allows_donor_and_lpa_type_and_empty_attorney_to_be_set_and_get()
     {
         $donor = new CaseActor();
@@ -69,7 +75,9 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_allows_donor_name_and_lpa_type_to_be_set_and_get()
     {
         $donor = new CaseActor();
@@ -87,7 +95,9 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_allows_lpa_activation_key_due_date_to_be_set()
     {
         $donor = new CaseActor();

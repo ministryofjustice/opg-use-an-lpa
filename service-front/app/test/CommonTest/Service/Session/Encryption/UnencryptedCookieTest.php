@@ -14,7 +14,9 @@ class UnencryptedCookieTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function usage_logs_critical_error(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -25,7 +27,9 @@ class UnencryptedCookieTest extends TestCase
         $sut = new UnencryptedCookie($loggerProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_base64_encodes_an_array_of_data(): void
     {
         $data = [
@@ -41,7 +45,9 @@ class UnencryptedCookieTest extends TestCase
         $this->assertEquals('eyJzZXNzaW9uIjoiZGF0YSJ9', $cookieValue);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_base64_encodes_an_empty_array_of_data_to_a_blank_string(): void
     {
         $data = [];
@@ -55,7 +61,9 @@ class UnencryptedCookieTest extends TestCase
         $this->assertEquals('', $cookieValue);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_decodes_base64_data_into_an_array(): void
     {
         $data = [
@@ -71,7 +79,9 @@ class UnencryptedCookieTest extends TestCase
         $this->assertEquals($data, $sessionData);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_base64_decodes_an_empty_string_into_a_blank_array(): void
     {
         $data = [];

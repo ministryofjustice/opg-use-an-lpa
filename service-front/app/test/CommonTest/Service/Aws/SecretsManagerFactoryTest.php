@@ -21,10 +21,14 @@ class SecretsManagerFactoryTest extends TestCase
 
         // Use a real Aws\Sdk to sense check the method.
         $containerProphecy->get(Sdk::class)
-            ->willReturn(new Sdk([
-                'region'  => 'eu-west-1',
-                'version' => 'latest',
-            ]));
+            ->willReturn(
+                new Sdk(
+                    [
+                    'region'  => 'eu-west-1',
+                    'version' => 'latest',
+                    ]
+                )
+            );
 
         //---
 

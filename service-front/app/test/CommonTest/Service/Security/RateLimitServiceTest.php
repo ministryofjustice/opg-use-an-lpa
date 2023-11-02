@@ -15,7 +15,9 @@ class RateLimitServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function its_name_comes_from_the_cache_definition()
     {
         $adapterProphecy = $this->prophesize(AdapterOptions::class);

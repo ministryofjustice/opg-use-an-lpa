@@ -13,7 +13,9 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function successfully_removes_post_lpa_match_session_values(): void
     {
         $removeSessionValues = new RemoveAccessForAllSessionValues();
@@ -37,7 +39,9 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
         $removeSessionValues->removePostLPAMatchSessionValues($sessionProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function successfully_cleans_all_access_for_all_session_values(): void
     {
         $removeSessionValues = new RemoveAccessForAllSessionValues();

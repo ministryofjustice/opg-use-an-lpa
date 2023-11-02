@@ -20,7 +20,9 @@ class NotifyServiceTest extends TestCase
     private const EN_LOCALE = 'en_GB';
     private const CY_LOCALE = 'cy_GB';
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_send_email_to_user()
     {
         $this->defaultLocale = self::CY_LOCALE;

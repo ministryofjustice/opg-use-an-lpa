@@ -11,7 +11,9 @@ use RuntimeException;
 
 class StylesServiceTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_styles_from_a_file(): void
     {
         $fs = vfsStream::setup(null, null, ['styles.css' => '/* css rules */']);
@@ -23,7 +25,9 @@ class StylesServiceTest extends TestCase
         $this->assertEquals('/* css rules */', $css);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_throws_exception_if_styles_not_loaded(): void
     {
         $stylesService = new StylesService('/wont_exist_probably');

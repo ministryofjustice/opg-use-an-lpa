@@ -48,11 +48,15 @@ class SortLpasTest extends LpaFixtureTestCase
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         // pare the sorted fixture data back to what we're interested in.
-        /** @var ArrayObject[] $orderedLpas */
-        $orderedLpas = array_filter($orderedLpas, function (ArrayObject $lpaData) {
-            return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
+        /**
+ * @var ArrayObject[] $orderedLpas 
+*/
+        $orderedLpas = array_filter(
+            $orderedLpas, function (ArrayObject $lpaData) {
+                return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
                 === 'Taylor, Gemma';
-        });
+            }
+        );
 
         $this->assertEquals(
             '1980-01-01',
@@ -77,11 +81,15 @@ class SortLpasTest extends LpaFixtureTestCase
         $orderedLpas = $sorter($lpas)->getArrayCopy();
 
         // pare the sorted fixture data back to what we're interested in.
-        /** @var ArrayObject[] $orderedLpas */
-        $orderedLpas = array_filter($orderedLpas, function (ArrayObject $lpaData) {
-            return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
+        /**
+ * @var ArrayObject[] $orderedLpas 
+*/
+        $orderedLpas = array_filter(
+            $orderedLpas, function (ArrayObject $lpaData) {
+                return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
                 === 'Williams, Daniel';
-        });
+            }
+        );
 
         $this->assertEquals(
             'hw',

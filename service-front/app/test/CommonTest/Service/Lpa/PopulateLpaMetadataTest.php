@@ -12,11 +12,11 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
- * @property string            userToken
- * @property string            actorToken
- * @property ViewerCodeService viewerCodeServiceProphecy
- * @property ArrayObject       lpas
- * @property CaseActor         lpaActor
+ * @property           string            userToken
+ * @property           string            actorToken
+ * @property           ViewerCodeService viewerCodeServiceProphecy
+ * @property           ArrayObject       lpas
+ * @property           CaseActor         lpaActor
  * @coversDefaultClass \Common\Service\Lpa\PopulateLpaMetadata
  */
 class PopulateLpaMetadataTest extends TestCase

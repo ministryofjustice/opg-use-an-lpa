@@ -35,7 +35,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->locale                         = 'en_GB';
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_referer_url_is_valid()
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
@@ -52,7 +54,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertTrue($valid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_referer_url_is_invalid()
     {
         $refererUrl = 'https:///wwww.your_web_app.com/script.php?info_variable=123xyz';
@@ -69,7 +73,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertFalse($valid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_checks_if_referer_route_exists()
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
@@ -83,11 +89,15 @@ class UrlValidityCheckServiceTest extends TestCase
             'php://temp'
         );
 
-        /** @var ServerRequestFactory&ObjectProphecy $serverRequestFactory */
+        /**
+ * @var ServerRequestFactory&ObjectProphecy $serverRequestFactory 
+*/
         $serverRequestFactory = $this->prophesize(ServerRequestFactory::class);
         $serverRequestFactory->createServerRequest('GET', $refererUrl)->willReturn($requestReturn);
 
-        /** @var RouterInterface&ObjectProphecy $router */
+        /**
+ * @var RouterInterface&ObjectProphecy $router 
+*/
         $router = $this->prophesize(RouterInterface::class);
         $router->match($requestReturn)->willReturn($routeResult->reveal());
 
@@ -105,7 +115,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertTrue($valid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_valid_referer()
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/dashboard';
@@ -135,7 +147,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($refererUrl, $resultReferer);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_url_for_home_if_referer_is_invalid()
     {
         $homeUrl    = 'https://localhost:9002/';
@@ -169,7 +183,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($homeUrl, $resultReferer);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_url_for_home_if_referer_is_null()
     {
         $homeUrl = 'https://localhost:9002/';
@@ -187,7 +203,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($homeUrl, $resultReferer);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
     {
         $this->locale      = 'cy_GB';
@@ -223,7 +241,9 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($welshHomeUrl, $resultReferer);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_valid_welsh_referer_if_locale_is_cy()
     {
         $this->locale      = 'cy_GB';

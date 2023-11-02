@@ -9,7 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 class EmailTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_hides_a_string()
     {
         $email = new Email('test@test.com');

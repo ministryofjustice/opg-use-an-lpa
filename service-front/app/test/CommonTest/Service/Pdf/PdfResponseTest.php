@@ -13,7 +13,9 @@ class PdfResponseTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_is_a_custom_response_that_sets_pdf_headers()
     {
         $streamProphecy = $this->prophesize(StreamInterface::class);

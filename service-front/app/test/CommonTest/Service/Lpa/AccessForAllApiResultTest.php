@@ -18,9 +18,9 @@ class AccessForAllApiResultTest extends TestCase
 {
     /**
      * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
-     * @covers ::validateResponseType
+     * @covers       ::__construct
+     * @covers       ::validateDataType
+     * @covers       ::validateResponseType
      * @dataProvider validDataTypeProvider
      */
     public function it_can_be_created_with_a_recognised_response_and_data_type($responseType, $additionalData): void

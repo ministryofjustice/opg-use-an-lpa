@@ -30,20 +30,22 @@ class LogStderrListenerTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
             Argument::type('string'),
-            Argument::that(function ($exceptionArray) {
-                $this->assertArrayHasKey('message', $exceptionArray);
-                $this->assertArrayHasKey('code', $exceptionArray);
-                $this->assertArrayHasKey('line', $exceptionArray);
-                $this->assertArrayHasKey('file', $exceptionArray);
-                $this->assertArrayNotHasKey('trace', $exceptionArray);
+            Argument::that(
+                function ($exceptionArray) {
+                    $this->assertArrayHasKey('message', $exceptionArray);
+                    $this->assertArrayHasKey('code', $exceptionArray);
+                    $this->assertArrayHasKey('line', $exceptionArray);
+                    $this->assertArrayHasKey('file', $exceptionArray);
+                    $this->assertArrayNotHasKey('trace', $exceptionArray);
 
-                $this->assertEquals('It is an error!', $exceptionArray['message']);
-                $this->assertIsInt($exceptionArray['line']);
-                $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
-                $this->assertEquals(40, $exceptionArray['code']);
+                    $this->assertEquals('It is an error!', $exceptionArray['message']);
+                    $this->assertIsInt($exceptionArray['line']);
+                    $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
+                    $this->assertEquals(40, $exceptionArray['code']);
 
-                return true;
-            })
+                    return true;
+                }
+            )
         )
         ->shouldBeCalled();
 
@@ -69,21 +71,23 @@ class LogStderrListenerTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
             Argument::type('string'),
-            Argument::that(function ($exceptionArray) {
-                $this->assertArrayHasKey('message', $exceptionArray);
-                $this->assertArrayHasKey('code', $exceptionArray);
-                $this->assertArrayHasKey('line', $exceptionArray);
-                $this->assertArrayHasKey('file', $exceptionArray);
-                $this->assertArrayHasKey('trace', $exceptionArray);
+            Argument::that(
+                function ($exceptionArray) {
+                    $this->assertArrayHasKey('message', $exceptionArray);
+                    $this->assertArrayHasKey('code', $exceptionArray);
+                    $this->assertArrayHasKey('line', $exceptionArray);
+                    $this->assertArrayHasKey('file', $exceptionArray);
+                    $this->assertArrayHasKey('trace', $exceptionArray);
 
-                $this->assertEquals('It is an error!', $exceptionArray['message']);
-                $this->assertIsInt($exceptionArray['line']);
-                $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
-                $this->assertEquals(40, $exceptionArray['code']);
-                $this->assertStringContainsString('LogStderrListenerTest', $exceptionArray['trace']);
+                    $this->assertEquals('It is an error!', $exceptionArray['message']);
+                    $this->assertIsInt($exceptionArray['line']);
+                    $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
+                    $this->assertEquals(40, $exceptionArray['code']);
+                    $this->assertStringContainsString('LogStderrListenerTest', $exceptionArray['trace']);
 
-                return true;
-            })
+                    return true;
+                }
+            )
         )
             ->shouldBeCalled();
 

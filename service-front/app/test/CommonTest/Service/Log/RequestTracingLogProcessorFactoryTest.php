@@ -14,7 +14,9 @@ class RequestTracingLogProcessorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_constructs_a_request_tracing_log_processor()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

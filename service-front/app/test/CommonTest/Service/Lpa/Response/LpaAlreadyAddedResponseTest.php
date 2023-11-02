@@ -10,7 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 class LpaAlreadyAddedResponseTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_create_a_response_dto()
     {
         $dto = new LpaAlreadyAdded();
@@ -18,7 +20,9 @@ class LpaAlreadyAddedResponseTest extends TestCase
         $this->assertInstanceOf(LpaAlreadyAdded::class, $dto);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_allows_donor_name_and_lpa_type_and_token_to_be_set_and_get()
     {
         $donor = new CaseActor();

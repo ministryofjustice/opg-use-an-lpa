@@ -14,7 +14,9 @@ class TwigFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_extractor(): void
     {
         $factory = new TwigFactory(

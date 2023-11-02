@@ -24,8 +24,8 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * @property array              olderLpa
- * @property AddAccessForAllLpa $sut
+ * @property           array              olderLpa
+ * @property           AddAccessForAllLpa $sut
  * @coversDefaultClass \Common\Service\Lpa\AddAccessForAllLpa
  */
 class AddAccessForAllLpaTest extends TestCase
@@ -124,6 +124,7 @@ class AddAccessForAllLpaTest extends TestCase
 
     /**
      * Provides expected valid response codes that we know our methods should handle.
+     *
      * @return array
      */
     public function exceptionThrown(): array
@@ -138,8 +139,8 @@ class AddAccessForAllLpaTest extends TestCase
     /**
      * @test
      * @dataProvider exceptionThrown
-     * @covers ::validate
-     * @covers ::badRequestReturned
+     * @covers       ::validate
+     * @covers       ::badRequestReturned
      */
     public function it_will_fail_to_validate_due_to_bad_request_exception($message, $accessForAllResult): void
     {

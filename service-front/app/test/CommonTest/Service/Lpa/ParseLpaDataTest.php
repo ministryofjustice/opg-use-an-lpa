@@ -18,13 +18,13 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @coversDefaultClass \Common\Service\Lpa\ParseLpaData
- * @property array     lpaData
- * @property string    actorToken
- * @property string    lpaId
- * @property string    actorId
- * @property Lpa       lpa
- * @property CaseActor actor
- * @property Images    iapImages
+ * @property           array     lpaData
+ * @property           string    actorToken
+ * @property           string    lpaId
+ * @property           string    actorId
+ * @property           Lpa       lpa
+ * @property           CaseActor actor
+ * @property           Images    iapImages
  */
 class ParseLpaDataTest extends TestCase
 {

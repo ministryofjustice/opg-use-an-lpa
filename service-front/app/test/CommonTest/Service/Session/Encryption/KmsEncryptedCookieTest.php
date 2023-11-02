@@ -17,7 +17,9 @@ class KmsEncryptedCookieTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_be_instantiated(): void
     {
         $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
@@ -28,7 +30,9 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertInstanceOf(KmsEncryptedCookie::class, $sut);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_encodes_a_session_array(): void
     {
         $data = [
@@ -53,7 +57,9 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals('1.ZW5jcnlwdGVkU3RyaW5n', $encoded);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_encodes_an_empty_array_of_data_to_a_blank_string(): void
     {
         $data = [];
@@ -68,7 +74,9 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals('', $cookieValue);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_decodes_a_string_into_session_data(): void
     {
         $data = [
@@ -92,7 +100,9 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals($data, $decoded);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_throws_an_exception_when_key_id_not_matched_and_returns_new_session(): void
     {
         $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
@@ -107,7 +117,9 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals([], $decoded);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_decodes_an_empty_string_into_an_empty_array(): void
     {
         $data = [];

@@ -47,7 +47,9 @@ class CatalogueLoaderTest extends TestCase
         return $translations;
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_will_load_all_pot_files_in_a_folder(): void
     {
         $poloaderProphecy = $this->prophesize(LoaderInterface::class);

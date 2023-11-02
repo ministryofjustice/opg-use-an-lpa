@@ -20,7 +20,9 @@ class UserServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_create_a_new_user_account()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -33,11 +35,13 @@ class UserServiceTest extends TestCase
                 'password' => 'test',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'              => '12345',
                 'Email'           => 'a@b.com',
                 'ActivationToken' => 'activate1234567890',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -53,7 +57,9 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('ActivationToken', $return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_get_an_account_by_email()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -65,9 +71,11 @@ class UserServiceTest extends TestCase
                 'email' => 'test@example.com',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Email' => 'a@b.com',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -82,7 +90,9 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('Email', $return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function passes_exception_when_user_not_found_by_email()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -108,7 +118,9 @@ class UserServiceTest extends TestCase
         $return = $service->getByEmail('test@example.com');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_authenticate_with_good_credentials()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -121,11 +133,13 @@ class UserServiceTest extends TestCase
                 'password' => 'test',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'        => '01234567-0123-0123-0123-012345678901',
                 'Email'     => 'test@example.com',
                 'LastLogin' => '2019-07-10T09:00:00',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             $this->assertEquals('01234567-0123-0123-0123-012345678901', $identity);
@@ -147,7 +161,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals('test@example.com', $return->getDetail('email'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function authentication_fails_with_bad_credentials()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -174,7 +190,9 @@ class UserServiceTest extends TestCase
         $this->assertNull($return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function bad_datetime_throws_exception_during_authentication()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -187,11 +205,13 @@ class UserServiceTest extends TestCase
                 'password' => 'test',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'        => '01234567-0123-0123-0123-012345678901',
                 'Email'     => 'test@example.com',
                 'LastLogin' => '2019-07-10T09:00:00',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -204,7 +224,9 @@ class UserServiceTest extends TestCase
         $return = $service->authenticate('test@example.com', 'test');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_activate_a_user()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -216,10 +238,12 @@ class UserServiceTest extends TestCase
                 'activation_token' => 'activate1234567890',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'    => '12345',
                 'Email' => 'test@example.com',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -233,7 +257,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals('test@example.com', $return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function whilst_activating_an_unknown_user_false_is_returned()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -259,7 +285,9 @@ class UserServiceTest extends TestCase
         $this->assertFalse($return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function whilst_activating_a_user_an_exception_can_be_thrown()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -285,7 +313,9 @@ class UserServiceTest extends TestCase
         $return = $service->activate('activate1234567890');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_request_a_password_reset_token_for_a_valid_user()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -297,11 +327,13 @@ class UserServiceTest extends TestCase
                 'email' => 'test@example.com',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'                 => '12345',
                 'Email'              => 'test@example.com',
                 'PasswordResetToken' => 'resettokenAABBCCDDEE',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -315,7 +347,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals('resettokenAABBCCDDEE', $token);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function a_password_reset_request_for_an_invalid_user_will_not_be_found()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -341,7 +375,9 @@ class UserServiceTest extends TestCase
         $token = $service->requestPasswordReset('test@example.com');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request()
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -353,9 +389,11 @@ class UserServiceTest extends TestCase
                 'email' => 'test@example.com',
             ]
         )
-            ->willReturn([
+            ->willReturn(
+                [
                 'InvalidResponse' => 'YouWereExpectingSomethingElse',
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -369,7 +407,9 @@ class UserServiceTest extends TestCase
         $token = $service->requestPasswordReset('test@example.com');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_change_password_for_authenticated_user()
     {
         $password1 = new HiddenString('CurrentPassw0rd');
@@ -399,7 +439,9 @@ class UserServiceTest extends TestCase
         $this->assertEmpty($return);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user()
     {
         $password1 = new HiddenString('BadPassw0rd');
@@ -416,10 +458,12 @@ class UserServiceTest extends TestCase
                 'new-password' => $password2->getString(),
             ]
         )
-            ->willThrow(new ApiException(
-                'Authentication failed for user ID 01234567-0123-0123-0123-012345678901',
-                StatusCodeInterface::STATUS_FORBIDDEN
-            ));
+            ->willThrow(
+                new ApiException(
+                    'Authentication failed for user ID 01234567-0123-0123-0123-012345678901',
+                    StatusCodeInterface::STATUS_FORBIDDEN
+                )
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -433,7 +477,9 @@ class UserServiceTest extends TestCase
         $return = $service->changePassword('01234567-0123-0123-0123-012345678901', $password1, $password2);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user()
     {
         $password1 = new HiddenString('BadPassw0rd');
@@ -464,7 +510,9 @@ class UserServiceTest extends TestCase
         $return = $service->changePassword('01234567-9999-9999-9999-012345678901', $password1, $password2);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_delete_a_users_account()
     {
         $id    = '01234567-0123-0123-0123-012345678901';
@@ -474,12 +522,14 @@ class UserServiceTest extends TestCase
 
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
-            ->willReturn([
+            ->willReturn(
+                [
                 'Id'        => $id,
                 'Email'     => $email,
                 'Password'  => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
                 'LastLogin' => null,
-            ]);
+                ]
+            );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -494,7 +544,9 @@ class UserServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request()
     {
         $id    = '01234567-0123-0123-0123-012345678901';
@@ -504,10 +556,12 @@ class UserServiceTest extends TestCase
 
         $apiClientProphecy = $this->prophesize(Client::class);
         $apiClientProphecy->httpDelete('/v1/delete-account/' . $id)
-            ->willThrow(new ApiException(
-                'HTTP: 500 - Unexpected API response',
-                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
-            ));
+            ->willThrow(
+                new ApiException(
+                    'HTTP: 500 - Unexpected API response',
+                    StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                )
+            );
 
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->expectException(RuntimeException::class);
@@ -522,7 +576,9 @@ class UserServiceTest extends TestCase
         $service->deleteAccount($id);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_request_email_reset()
     {
         $password       = new HiddenString('pa33W0rd');
@@ -536,7 +592,8 @@ class UserServiceTest extends TestCase
                 'new-email' => 'new@email.com',
                 'password'  => $password->getString(),
             ]
-        )->willReturn([
+        )->willReturn(
+            [
                 'EmailResetExpiry' => time() + (60 * 60 * 48),
                 'Email'            => 'old@email.com',
                 'LastLogin'        => null,
@@ -544,7 +601,8 @@ class UserServiceTest extends TestCase
                 'NewEmail'         => 'new@email.com',
                 'EmailResetToken'  => 't0ken12345',
                 'Password'         => $password->getString(),
-            ]);
+            ]
+        );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -563,7 +621,9 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('EmailResetExpiry', $data);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_user_id_not_provided_in_request_email_change()
     {
         $password = new HiddenString('pa33W0rd');
@@ -593,7 +653,9 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('', 'new@email.com', $password);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_new_email_not_provided_in_request_email_change()
     {
         $password       = new HiddenString('pa33W0rd');
@@ -622,7 +684,9 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('12345', '', $password);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function exception_thrown_when_password_not_provided_in_request_email_change()
     {
         $password       = new HiddenString('');
@@ -651,7 +715,9 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('12345', 'new@email.com', $password);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_reset_email_function_returns_true_when_successful()
     {
         $resetToken     = 't0ken12345';
@@ -678,7 +744,9 @@ class UserServiceTest extends TestCase
         $this->assertTrue($canReset);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_reset_email_function_returns_false_when_token_expired_or_not_found()
     {
         $resetToken     = 't0ken12345';
@@ -703,7 +771,9 @@ class UserServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_reset_email_function_throws_anything_other_than_a_gone_exception()
     {
         $resetToken     = 't0ken12345';
@@ -715,10 +785,12 @@ class UserServiceTest extends TestCase
             [
                 'token' => $resetToken,
             ]
-        )->willThrow(new ApiException(
-            'Email reset token has expired',
-            StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
-        ));
+        )->willThrow(
+            new ApiException(
+                'Email reset token has expired',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+            )
+        );
 
         $userFactoryCallable = function ($identity, $roles, $details) {
             // Not returning a user here since it shouldn't be called.
@@ -732,7 +804,9 @@ class UserServiceTest extends TestCase
         $service->canResetEmail($resetToken);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function complete_change_email_returns_nothing_when_successful()
     {
         $resetToken     = 't0ken12345';

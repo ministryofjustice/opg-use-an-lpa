@@ -168,9 +168,11 @@ class KmsManagerTest extends TestCase
         $awsResultProphecy->get('CiphertextBlob')->willReturn($keyCiphertext);
         $awsResultProphecy->get('Plaintext')->willReturn($keyPlaintext);
 
-        $this->kmsClientProphecy->decrypt([
+        $this->kmsClientProphecy->decrypt(
+            [
             'CiphertextBlob' => $keyCiphertext,
-        ])->willReturn($awsResultProphecy)->shouldBeCalled();
+            ]
+        )->willReturn($awsResultProphecy)->shouldBeCalled();
 
         //---
 
@@ -200,10 +202,12 @@ class KmsManagerTest extends TestCase
 
         //---
 
-        $this->cacheProphecy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn([
+        $this->cacheProphecy->get(KmsManager::CURRENT_ENCRYPTION_KEY)->willReturn(
+            [
             'id'           => $keyCiphertext,
             'key_material' => new HiddenString($testMaterial),
-        ]);
+            ]
+        );
 
         //---
 
@@ -261,10 +265,12 @@ class KmsManagerTest extends TestCase
         $awsResultProphecy->get('CiphertextBlob')->willReturn($keyCiphertext);
         $awsResultProphecy->get('Plaintext')->willReturn($keyPlaintext);
 
-        $this->kmsClientProphecy->generateDataKey([
+        $this->kmsClientProphecy->generateDataKey(
+            [
             'KeyId'   => self::TEST_KMS_CMK_ALIAS,
             'KeySpec' => 'AES_256',
-        ])->willReturn($awsResultProphecy)->shouldBeCalled();
+            ]
+        )->willReturn($awsResultProphecy)->shouldBeCalled();
 
         //---
 

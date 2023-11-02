@@ -50,7 +50,9 @@ class LpaServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_a_list_of_lpas_for_a_user()
     {
         $token = '01234567-01234-01234-01234-012345678901';
@@ -85,7 +87,9 @@ class LpaServiceTest extends TestCase
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_a_list_of_sorted_lpas_for_a_user()
     {
         $token = '01234567-01234-01234-01234-012345678901';
@@ -123,7 +127,9 @@ class LpaServiceTest extends TestCase
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_an_lpa_by_passcode_and_surname_for_summary()
     {
         $lpaData = [
@@ -148,7 +154,9 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_an_lpa_by_passcode_and_surname_for_full()
     {
         $lpaData = [
@@ -174,13 +182,17 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
     {
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+        $this->apiClientProphecy->httpPost(
+            '/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])
+            ]
+        )
             ->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
 
         $this->expectException(ApiException::class);
@@ -190,14 +202,18 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_finds_an_expired_share_code_by_passcode_and_surname()
     {
 
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+        $this->apiClientProphecy->httpPost(
+            '/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])
+            ]
+        )
             ->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
 
         $this->expectException(ApiException::class);
@@ -206,13 +222,17 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function lpa_not_found_by_passcode_and_surname()
     {
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+        $this->apiClientProphecy->httpPost(
+            '/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
+            ]
+        )->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -220,7 +240,9 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_gets_an_Lpa_by_Id()
     {
         $token = '01234567-01234-01234-01234-012345678901';
@@ -249,7 +271,9 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function an_invalid_Lpa_id_throws_exception()
     {
         $token = '01234567-01234-01234-01234-012345678901';
