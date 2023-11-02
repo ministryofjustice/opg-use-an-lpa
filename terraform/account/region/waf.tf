@@ -63,9 +63,13 @@ resource "aws_wafv2_web_acl" "main" {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
 
-        excluded_rule {
+        rule_action_override {
           name = "NoUserAgent_HEADER"
+          override_action {
+            count {}
+          }
         }
+
 
       }
     }
