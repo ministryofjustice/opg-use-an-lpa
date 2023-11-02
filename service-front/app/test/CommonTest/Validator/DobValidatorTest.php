@@ -49,15 +49,19 @@ class DobValidatorTest extends TestCase
         $now = new DateTime();
         $now->modify('+1 day');
 
-        $isValid = $this->validator->isValid([
+        $isValid = $this->validator->isValid(
+            [
             'day'   => $now->format('j'),
             'month' => $now->format('n'),
             'year'  => $now->format('Y'),
-        ]);
+            ]
+        );
 
-        $this->assertEquals([
+        $this->assertEquals(
+            [
             DobValidator::AGE_NEGATIVE => 'Date of birth must be in the past',
-        ], $this->validator->getMessages());
+            ], $this->validator->getMessages()
+        );
 
         $this->assertFalse($isValid);
     }
@@ -67,16 +71,20 @@ class DobValidatorTest extends TestCase
         $now = new DateTime();
         $now->modify('-1 day');
 
-        $isValid = $this->validator->isValid([
+        $isValid = $this->validator->isValid(
+            [
             'day'   => $now->format('j'),
             'month' => $now->format('n'),
             'year'  => $now->format('Y'),
-        ]);
+            ]
+        );
 
-        $this->assertEquals([
+        $this->assertEquals(
+            [
             DobValidator::AGE_TOO_YOUNG
                 => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
-        ], $this->validator->getMessages());
+            ], $this->validator->getMessages()
+        );
 
         $this->assertFalse($isValid);
     }

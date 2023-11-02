@@ -24,9 +24,11 @@ class CsrfGuardValidatorTest extends TestCase
     public function testThrowsExceptionWhenIncorrectGuardPassed()
     {
         $this->expectException(InvalidArgumentException::class);
-        $validator = new CsrfGuardValidator([
+        $validator = new CsrfGuardValidator(
+            [
             'guard' => new stdClass(),
-        ]);
+            ]
+        );
     }
 
     public function testIsValidWhenShouldBe()
@@ -34,9 +36,11 @@ class CsrfGuardValidatorTest extends TestCase
         $guard = $this->prophesize(CsrfGuardInterface::class);
         $guard->validateToken('token')->willReturn(true);
 
-        $validator = new CsrfGuardValidator([
+        $validator = new CsrfGuardValidator(
+            [
             'guard' => $guard->reveal(),
-        ]);
+            ]
+        );
 
         $this->assertTrue($validator->isValid('token'));
     }
@@ -46,9 +50,11 @@ class CsrfGuardValidatorTest extends TestCase
         $guard = $this->prophesize(CsrfGuardInterface::class);
         $guard->validateToken('token')->willReturn(false);
 
-        $validator = new CsrfGuardValidator([
+        $validator = new CsrfGuardValidator(
+            [
             'guard' => $guard->reveal(),
-        ]);
+            ]
+        );
 
         $this->assertFalse($validator->isValid('token'));
         $this->assertArrayHasKey(CsrfGuardValidator::NOT_SAME, $validator->getMessages());

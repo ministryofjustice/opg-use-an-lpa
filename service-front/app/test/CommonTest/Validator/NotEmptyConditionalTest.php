@@ -22,7 +22,9 @@ class NotEmptyConditionalTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function isValidWhenDependantIsExpectedValue(): void
     {
         $isValid = $this->validator->isValid(
@@ -35,7 +37,9 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function isValidWhenNotEmpty(): void
     {
         $isValid = $this->validator->isValid(
@@ -48,7 +52,9 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function notValidWhenEmptyAndNoDependant(): void
     {
         $isValid = $this->validator->isValid(
@@ -61,7 +67,9 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function noMessageWhenDependantValueIsNull(): void
     {
         $isValid = $this->validator->isValid(
@@ -76,7 +84,9 @@ class NotEmptyConditionalTest extends TestCase
         self::assertEmpty($this->validator->getMessages());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function errorWhenNoDependantConfigured(): void
     {
         $this->validator = new NotEmptyConditional([]);

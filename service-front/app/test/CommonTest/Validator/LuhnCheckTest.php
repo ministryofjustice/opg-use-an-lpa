@@ -45,9 +45,11 @@ class LuhnCheckTest extends TestCase
     {
         $isValid = $this->validator->isValid($reference_number);
 
-        $this->assertEquals([
+        $this->assertEquals(
+            [
                                 LuhnCheck::INVALID_REFERENCE => 'The LPA reference number provided is not correct',
-                            ], $this->validator->getMessages());
+            ], $this->validator->getMessages()
+        );
 
         $this->assertFalse($isValid);
     }
