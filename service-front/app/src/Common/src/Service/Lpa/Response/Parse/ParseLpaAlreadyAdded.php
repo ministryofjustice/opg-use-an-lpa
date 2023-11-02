@@ -16,7 +16,7 @@ class ParseLpaAlreadyAdded
     }
 
     /**
-     * @param LpaFactory $lpaFactory
+     * @param              LpaFactory $lpaFactory
      * @codeCoverageIgnore
      */
     public function __construct(private LpaFactory $lpaFactory)
@@ -24,7 +24,7 @@ class ParseLpaAlreadyAdded
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string, lpaActorToken: string} $data
+     * @param  array{donor: array, caseSubtype: string, lpaActorToken: string} $data
      * @return LpaAlreadyAdded
      * @throws Exception
      */
@@ -44,7 +44,7 @@ class ParseLpaAlreadyAdded
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string, lpaActorToken: string} $data
+     * @param  array{donor: array, caseSubtype: string, lpaActorToken: string} $data
      * @return bool
      */
     private function isValidData(array $data): bool
@@ -52,9 +52,8 @@ class ParseLpaAlreadyAdded
         $baseLine         = $this->baseLineData($data);
         $hasLpaActorToken = isset($data['lpaActorToken']);
 
-        if (
-            !$baseLine ||
-            !$hasLpaActorToken
+        if (!$baseLine 
+            || !$hasLpaActorToken
         ) {
             return false;
         }

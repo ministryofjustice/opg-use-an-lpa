@@ -9,7 +9,7 @@ use RuntimeException;
 class FeatureEnabled
 {
     /**
-     * @param array<string, mixed> $featureFlags An key value map of feature names to boolean values
+     * @param              array<string, mixed> $featureFlags An key value map of feature names to boolean values
      * @codeCoverageIgnore
      */
     public function __construct(private array $featureFlags)

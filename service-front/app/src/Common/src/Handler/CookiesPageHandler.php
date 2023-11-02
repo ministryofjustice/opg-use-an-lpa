@@ -42,7 +42,9 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var FlashMessagesInterface $flash */
+        /**
+ * @var FlashMessagesInterface $flash 
+*/
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         $form = new CookieConsent($this->getCsrfGuard($request));
@@ -69,11 +71,15 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         $form->get('referer')->setValue($this->urlValidityCheckService->setValidReferrer($cookiesPageReferer));
 
-        return new HtmlResponse($this->renderer->render('common::cookies', [
-            'form'        => $form,
-            'application' => $this->application,
-            'flash'       => $flash,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'common::cookies', [
+                'form'        => $form,
+                'application' => $this->application,
+                'flash'       => $flash,
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -83,7 +89,9 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
 
         $response = new RedirectResponse($this->urlHelper->generate('cookies'));
 
-        /** @var FlashMessagesInterface $flash */
+        /**
+ * @var FlashMessagesInterface $flash 
+*/
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
         $flash->flash(self::COOKIES_SET_FLASH_MSG, $form->get('referer')->getValue());
 

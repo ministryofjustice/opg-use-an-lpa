@@ -27,8 +27,8 @@ class LpaService
     /**
      * Get the users currently registered LPAs
      *
-     * @param string $userToken
-     * @param bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
+     * @param  string $userToken
+     * @param  bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
      * @return ArrayObject|null
      * @throws Exception
      */
@@ -60,8 +60,8 @@ class LpaService
     }
 
     /**
-     * @param string $userToken
-     * @param string $actorLpaToken
+     * @param  string $userToken
+     * @param  string $actorLpaToken
      * @return ArrayObject|null
      * @throws Exception
      */
@@ -89,9 +89,9 @@ class LpaService
     /**
      * Get an LPA
      *
-     * @param string $shareCode
-     * @param string $donorSurname
-     * @param string|null $organisation
+     * @param  string      $shareCode
+     * @param  string      $donorSurname
+     * @param  string|null $organisation
      * @return ArrayObject|null
      * @throws Exception
      */
@@ -131,37 +131,37 @@ class LpaService
             );
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
-                case StatusCodeInterface::STATUS_GONE:
-                    if ($apiEx->getMessage() === 'Share code cancelled') {
-                        $this->logger->notice(
-                            'Share code {code} cancelled when attempting to fetch {type}',
-                            [
-                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
-                                'code'       => $shareCode,
-                                'type'       => $trackRoute,
-                            ]
-                        );
-                    } else {
-                        $this->logger->notice(
-                            'Share code {code} expired when attempting to fetch {type}',
-                            [
-                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
-                                'code'       => $shareCode,
-                                'type'       => $trackRoute,
-                            ]
-                        );
-                    }
-                    break;
-
-                case StatusCodeInterface::STATUS_NOT_FOUND:
+            case StatusCodeInterface::STATUS_GONE:
+                if ($apiEx->getMessage() === 'Share code cancelled') {
                     $this->logger->notice(
-                        'Share code not found when attempting to fetch {type}',
+                        'Share code {code} cancelled when attempting to fetch {type}',
                         [
-                            // attach an code for brute force checking
-                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
+                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
+                            'code'       => $shareCode,
                             'type'       => $trackRoute,
                         ]
                     );
+                } else {
+                    $this->logger->notice(
+                        'Share code {code} expired when attempting to fetch {type}',
+                        [
+                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
+                            'code'       => $shareCode,
+                            'type'       => $trackRoute,
+                        ]
+                    );
+                }
+                break;
+
+            case StatusCodeInterface::STATUS_NOT_FOUND:
+                $this->logger->notice(
+                    'Share code not found when attempting to fetch {type}',
+                    [
+                        // attach an code for brute force checking
+                        'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
+                        'type'       => $trackRoute,
+                    ]
+                );
             }
 
             // still throw the exception up to the caller since handling of the issue will be done there

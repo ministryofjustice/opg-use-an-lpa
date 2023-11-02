@@ -20,7 +20,7 @@ class MerisReferenceCheckValidator extends AbstractValidator
     ];
 
     /**
-     * @param string $reference_number
+     * @param  string $reference_number
      * @return bool
      */
     public function isValid($reference_number): bool

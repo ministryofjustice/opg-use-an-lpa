@@ -16,7 +16,7 @@ interface KeyManagerInterface
     /**
      * Returns the Key with the given $id, to be used for decryption.
      *
-     * @param string $id
+     * @param  string $id
      * @return Key
      */
     public function getDecryptionKey(string $id): Key;

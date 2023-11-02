@@ -9,7 +9,7 @@ use Laminas\Filter\AbstractFilter;
 class StripSpacesAndHyphens extends AbstractFilter
 {
     /**
-     * @param string $value
+     * @param  string $value
      * @return string
      */
     public function filter($value): string

@@ -14,8 +14,8 @@ use Common\Service\Lpa\Response\AccessForAllResult;
 class CleanseLpa
 {
     /**
-     * @param ApiClient       $apiClient
-     * @param LoggerInterface $logger
+     * @param              ApiClient       $apiClient
+     * @param              LoggerInterface $logger
      * @codeCoverageIgnore
      */
     public function __construct(private ApiClient $apiClient)

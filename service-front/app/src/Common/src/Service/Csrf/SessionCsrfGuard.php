@@ -52,9 +52,11 @@ class SessionCsrfGuard implements CsrfGuardInterface
     {
         $currentRequestId = $this->requestId;
 
-        return array_filter($tokens, function ($requestId) use ($currentRequestId) {
-            return $requestId === $currentRequestId;
-        });
+        return array_filter(
+            $tokens, function ($requestId) use ($currentRequestId) {
+                return $requestId === $currentRequestId;
+            }
+        );
     }
 
     protected function formatHash(string $token, string $requestId): string

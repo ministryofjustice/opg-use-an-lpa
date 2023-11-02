@@ -13,9 +13,9 @@ class Images implements JsonSerializable
     private const UNKNOWN      = '/iap-%s-continuation_unknown/';
 
     /**
-        * @param int              $uId
-        * @param ImagesStatus     $status
-        * @param array<SignedUrl> $signedUrls
+     * @param int              $uId
+     * @param ImagesStatus     $status
+     * @param array<SignedUrl> $signedUrls
      */
     public function __construct(
         public readonly int $uId,
@@ -56,9 +56,11 @@ class Images implements JsonSerializable
     protected function getImageUrls(string $pattern): array
     {
         return array_values(
-            array_filter($this->signedUrls, function ($signedUrl) use ($pattern) {
-                return preg_match($pattern, $signedUrl->imageName);
-            })
+            array_filter(
+                $this->signedUrls, function ($signedUrl) use ($pattern) {
+                    return preg_match($pattern, $signedUrl->imageName);
+                }
+            )
         );
     }
 

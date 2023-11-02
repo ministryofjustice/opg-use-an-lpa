@@ -30,7 +30,9 @@ class StatePersistenceMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // load states from session and attach to request
-        /** @var SessionInterface $session */
+        /**
+ * @var SessionInterface $session 
+*/
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
         // get array of possible states from the session
@@ -38,10 +40,12 @@ class StatePersistenceMiddleware implements MiddlewareInterface
 
         // process those states into state objects
         $validStates = new StatesCollection();
-        array_walk($sessionStates, function (array $data, string $class) use (&$validStates) {
-            $this->classIsWorkflow($class);
-            $validStates->add($class, new $class(...$data));
-        });
+        array_walk(
+            $sessionStates, function (array $data, string $class) use (&$validStates) {
+                $this->classIsWorkflow($class);
+                $validStates->add($class, new $class(...$data));
+            }
+        );
 
         // handle the request
         $response = $handler->handle(
@@ -56,7 +60,7 @@ class StatePersistenceMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param class-string<WorkflowState> $class
+     * @param  class-string<WorkflowState> $class
      * @return void
      * @throws RuntimeException Requested workflow state class is not a valid class or does not implement WorkflowState
      */

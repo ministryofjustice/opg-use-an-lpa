@@ -22,7 +22,8 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name'    => 'usageCookies',
             'type'    => 'Radio',
             'options' => [
@@ -31,11 +32,14 @@ class CookieConsent extends AbstractForm implements InputFilterProviderInterface
                     'yes' => 'yes',
                 ],
             ],
-        ]);
-        $this->add([
+            ]
+        );
+        $this->add(
+            [
             'name' => 'referer',
             'type' => 'Hidden',
-        ]);
+            ]
+        );
     }
 
     public function getInputFilterSpecification(): array

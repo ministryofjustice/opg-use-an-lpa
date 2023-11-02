@@ -9,7 +9,7 @@ use Laminas\Filter\AbstractFilter;
 class ActorViewerCodeFilter extends AbstractFilter
 {
     /**
-     * @param string $code
+     * @param  string $code
      * @return string
      */
     public function filter($code): string

@@ -11,7 +11,9 @@ class CaseActor
     protected int $id;
     protected ?string $uId = null;
 
-    /** @var array<array<mixed>>|null */
+    /**
+     * @var array<array<mixed>>|null 
+     */
     protected ?array $linked = null;
 
     protected ?string $email       = null;
@@ -23,7 +25,9 @@ class CaseActor
     protected ?string $companyName = null;
     protected ?bool $systemStatus  = null;
 
-    /** @var Address[] */
+    /**
+     * @var Address[] 
+     */
     protected array $addresses = [];
 
     public function getId(): int
@@ -55,9 +59,11 @@ class CaseActor
             return [$this->getId()];
         }
 
-        return array_map(function ($x) {
-            return $x['id'];
-        }, $this->linked);
+        return array_map(
+            function ($x) {
+                return $x['id'];
+            }, $this->linked
+        );
     }
 
     /**

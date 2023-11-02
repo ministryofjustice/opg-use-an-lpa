@@ -17,7 +17,7 @@ class ApiException extends AbstractApiException
     public const DEFAULT_TITLE = 'An API exception has occurred';
 
     /**
-     * @var int|null
+     * @var           int|null
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $code;

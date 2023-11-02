@@ -61,7 +61,7 @@ class KmsEncryptedCookie implements EncryptInterface
 
             return json_decode($plaintext, true);
         } catch (KeyNotFoundException) {
-            # TODO: add logging
+            // TODO: add logging
         }
 
         // Something went wrong. Restart the session.

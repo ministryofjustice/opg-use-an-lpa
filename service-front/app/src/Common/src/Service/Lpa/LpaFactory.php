@@ -15,21 +15,21 @@ interface LpaFactory
     /**
      * Creates a Lpa from the supplied data array.
      *
-     * @param array $data
+     * @param  array $data
      * @return Lpa
      * @throws InvalidArgumentException|Exception
      */
     public function createLpaFromData(array $data): Lpa;
 
     /**
-     * @param array $caseActorData
+     * @param  array $caseActorData
      * @return CaseActor
      * @throws InvalidArgumentException|Exception
      */
     public function createCaseActorFromData(array $caseActorData): CaseActor;
 
     /**
-     * @param array $addressData
+     * @param  array $addressData
      * @return Address
      * @throws InvalidArgumentException
      */

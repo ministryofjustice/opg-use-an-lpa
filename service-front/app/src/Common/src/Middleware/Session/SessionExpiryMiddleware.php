@@ -37,10 +37,14 @@ class SessionExpiryMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var SessionInterface $session */
+        /**
+ * @var SessionInterface $session 
+*/
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
-        /** @var RouteResult $routeResult */
+        /**
+ * @var RouteResult $routeResult 
+*/
         $routeResult = $request->getAttribute(RouteResult::class);
 
         $time = $session->get(self::SESSION_TIME_KEY);
@@ -61,8 +65,8 @@ class SessionExpiryMiddleware implements MiddlewareInterface
      * If an expiry time is recorded in the session check to see if we've exceeded it and
      * mark the session as expired if we have.
      *
-     * @param SessionInterface $session
-     * @param int|null         $time
+     * @param  SessionInterface $session
+     * @param  int|null         $time
      * @return void
      */
     private function expireSession(SessionInterface $session, ?int $time): void
@@ -80,9 +84,9 @@ class SessionExpiryMiddleware implements MiddlewareInterface
     /**
      * Un-expire the session whilst recording a new expiry time to it.
      *
-     * @param SessionInterface $session
-     * @param RouteResult      $routeResult
-     * @param int|null         $currentSessionsExpiryTime
+     * @param  SessionInterface $session
+     * @param  RouteResult      $routeResult
+     * @param  int|null         $currentSessionsExpiryTime
      * @return void
      */
     private function recordSessionTime(
@@ -106,8 +110,8 @@ class SessionExpiryMiddleware implements MiddlewareInterface
      * Depending on the accessed route we may want to either increment the session expiry appropriately or
      * return the time unchanged.
      *
-     * @param int|null     $currentSessionExpiryTime
-     * @param string|false $routeName
+     * @param  int|null     $currentSessionExpiryTime
+     * @param  string|false $routeName
      * @return int
      */
     private function sessionTime(?int $currentSessionExpiryTime, string|false $routeName): int

@@ -23,7 +23,7 @@ class OrdinalNumberExtension extends AbstractExtension
     }
 
     /**
-     * @param $number
+     * @param  $number
      * @return string
      */
     public function makeOrdinal($number)
@@ -39,7 +39,7 @@ class OrdinalNumberExtension extends AbstractExtension
      * The Welsh ordinal formatter is incorrect for our use so we supply a custom ruleset to build our
      * own for the 'cy' locale.
      *
-     * @param string $locale
+     * @param  string $locale
      * @return NumberFormatter An ordinal formatter for the supplied locale
      */
     protected function getFormatter(string $locale): NumberFormatter

@@ -12,9 +12,9 @@ use Psr\Log\LoggerInterface;
 class RemoveLpa
 {
     /**
-     * @param ApiClient       $apiClient
-     * @param LoggerInterface $logger
-     * @param ParseLpaData    $parseLpaData
+     * @param              ApiClient       $apiClient
+     * @param              LoggerInterface $logger
+     * @param              ParseLpaData    $parseLpaData
      * @codeCoverageIgnore
      */
     public function __construct(

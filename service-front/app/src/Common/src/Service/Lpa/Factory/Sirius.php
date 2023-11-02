@@ -23,7 +23,7 @@ final class Sirius implements LpaFactory
      * Some rudimentary checks are carried out on the suitability of data in the array but for the most
      * part it is assumed the caller has done the right thing with whats been pulled from Sirius.
      *
-     * @param array $data
+     * @param  array $data
      * @return Lpa
      * @throws InvalidArgumentException|Exception
      */
@@ -124,7 +124,7 @@ final class Sirius implements LpaFactory
     }
 
     /**
-     * @param array $caseActorData
+     * @param  array $caseActorData
      * @return CaseActor
      * @throws Exception
      */
@@ -178,7 +178,7 @@ final class Sirius implements LpaFactory
     }
 
     /**
-     * @param array $addressData
+     * @param  array $addressData
      * @return Address
      * @throws InvalidArgumentException
      */

@@ -38,8 +38,8 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
     }
 
     /**
-     * @param Environment $twigEnv
-     * @param ElementInterface $element
+     * @param  Environment      $twigEnv
+     * @param  ElementInterface $element
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -47,15 +47,17 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
     {
         $template = $twigEnv->load(self::THEME_FILE);
 
-        return $template->renderBlock('error_message', [
+        return $template->renderBlock(
+            'error_message', [
             'element' => $element,
             'errors'  => $this->flattenMessages($element->getMessages()),
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param Environment $twigEnv
-     * @param FormInterface $form
+     * @param  Environment   $twigEnv
+     * @param  FormInterface $form
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -72,22 +74,26 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
             $errors[$name] = $this->flattenMessages($input->getMessages());
         }
 
-        return $template->renderBlock('error_summary', [
+        return $template->renderBlock(
+            'error_summary', [
             'errors' => $errors,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param array $messages
+     * @param  array $messages
      * @return array
      */
     private function flattenMessages(array $messages): array
     {
         $messagesToPrint = [];
 
-        array_walk_recursive($messages, function ($item) use (&$messagesToPrint) {
-            $messagesToPrint[] = $item;
-        });
+        array_walk_recursive(
+            $messages, function ($item) use (&$messagesToPrint) {
+                $messagesToPrint[] = $item;
+            }
+        );
 
         return $messagesToPrint;
     }

@@ -11,7 +11,7 @@ class EmailAddressValidator extends LaminasEmailAddressValidator
     /**
      * Overridden function to translate error messages
      *
-     * @param string $value
+     * @param  string $value
      * @return bool
      */
     public function isValid($value)

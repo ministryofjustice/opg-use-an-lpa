@@ -56,7 +56,7 @@ class PdfService
     }
 
     /**
-     * @param string $htmlToRender
+     * @param  string $htmlToRender
      * @return StreamInterface
      * @throws ApiException
      */
@@ -75,18 +75,18 @@ class PdfService
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                    $this->logger->notice(
-                        'Successfully generated PDF and presented for download {code}',
-                        [
-                            'event_code' => EventCodes::DOWNLOAD_SUMMARY,
-                            'code'       => $response->getStatusCode(),
-                        ]
-                    );
+            case StatusCodeInterface::STATUS_OK:
+                $this->logger->notice(
+                    'Successfully generated PDF and presented for download {code}',
+                    [
+                        'event_code' => EventCodes::DOWNLOAD_SUMMARY,
+                        'code'       => $response->getStatusCode(),
+                    ]
+                );
 
-                    return $response->getBody();
-                default:
-                    throw ApiException::create(null, $response);
+                return $response->getBody();
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = $ex instanceof HttpException ? $ex->getResponse() : null;

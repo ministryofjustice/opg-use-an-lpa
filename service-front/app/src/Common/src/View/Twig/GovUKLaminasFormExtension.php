@@ -53,8 +53,8 @@ class GovUKLaminasFormExtension extends AbstractExtension
     }
 
     /**
-     * @param Environment $twigEnv
-     * @param AbstractForm $form
+     * @param  Environment  $twigEnv
+     * @param  AbstractForm $form
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -62,13 +62,15 @@ class GovUKLaminasFormExtension extends AbstractExtension
     {
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
-        return $template->renderBlock('form_open', [
+        return $template->renderBlock(
+            'form_open', [
             'form' => $form,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param Environment $twigEnv
+     * @param  Environment $twigEnv
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -80,10 +82,10 @@ class GovUKLaminasFormExtension extends AbstractExtension
     }
 
     /**
-     * @param Environment $twigEnv
-     * @param ElementInterface $element
-     * @param array $options
-     * @param FieldsetInterface|null $fieldset
+     * @param  Environment            $twigEnv
+     * @param  ElementInterface       $element
+     * @param  array                  $options
+     * @param  FieldsetInterface|null $fieldset
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -110,9 +112,9 @@ class GovUKLaminasFormExtension extends AbstractExtension
     }
 
     /**
-     * @param Environment $twigEnv
-     * @param FieldsetInterface $fieldset
-     * @param array $options
+     * @param  Environment       $twigEnv
+     * @param  FieldsetInterface $fieldset
+     * @param  array             $options
      * @return string
      * @throws Throwable|LoaderError|RuntimeError|SyntaxError
      */
@@ -138,7 +140,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
     }
 
     /**
-     * @param ElementInterface $element
+     * @param  ElementInterface $element
      * @return string
      * @throws Exception
      */

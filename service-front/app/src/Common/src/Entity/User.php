@@ -58,8 +58,8 @@ class User implements UserInterface
     /**
      * Get a detail $name if present, $default otherwise
      *
-     * @param string $name
-     * @param null $default
+     * @param  string $name
+     * @param  null   $default
      * @return mixed|null
      */
     public function getDetail(string $name, $default = null): mixed
@@ -88,7 +88,7 @@ class User implements UserInterface
     /**
      * Attempts to figure out how to construct a valid DateTime from the information made available.
      *
-     * @param array|string $date An array, or string containing a serialised DateTime or ATOM compliant date.
+     * @param  array|string $date An array, or string containing a serialised DateTime or ATOM compliant date.
      * @throws Exception
      */
     public function setLastLogin(array|string $date): void

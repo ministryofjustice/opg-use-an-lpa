@@ -18,8 +18,7 @@ class DatePrefixFilter extends AbstractFilter
      */
     public function filter($value): array
     {
-        if (
-            $value !== null && !empty($value['day']) && !empty($value['month'])
+        if ($value !== null && !empty($value['day']) && !empty($value['month'])
             && ($value['day'] <= 9 || $value['month'] <= 9)
         ) {
             return $this->formatWithLeadingZero($value);
@@ -28,8 +27,8 @@ class DatePrefixFilter extends AbstractFilter
     }
 
     /**
-     * @param array $value
-     * @param array $formattedDate
+     * @param  array $value
+     * @param  array $formattedDate
      * @return array
      */
     protected function formatWithLeadingZero($value): array

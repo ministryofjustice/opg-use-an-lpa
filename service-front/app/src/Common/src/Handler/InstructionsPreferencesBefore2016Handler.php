@@ -30,15 +30,19 @@ class InstructionsPreferencesBefore2016Handler extends AbstractHandler
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $referer = $this->urlValidityCheckService->setValidReferrer($request->getHeaders()['referer'][0]);
 
-        return new HtmlResponse($this->renderer->render('common::instructions-preferences-signed-before-2016', [
-            'referer' => $referer,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'common::instructions-preferences-signed-before-2016', [
+                'referer' => $referer,
+                ]
+            )
+        );
     }
 }

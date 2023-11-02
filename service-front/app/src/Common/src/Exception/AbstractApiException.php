@@ -22,9 +22,9 @@ abstract class AbstractApiException extends RuntimeException
      *
      * Following the sprint of https://framework.zend.com/blog/2017-03-23-expressive-error-handling.html
      *
-     * @param string $title
-     * @param string|null $message
-     * @param array|null $additionalData
+     * @param string         $title
+     * @param string|null    $message
+     * @param array|null     $additionalData
      * @param Throwable|null $previous
      */
     public function __construct(

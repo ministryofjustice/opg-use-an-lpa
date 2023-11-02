@@ -83,11 +83,13 @@ class AddLpa
     ): AddLpaApiResult {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
+        $lpaData = $this->apiClient->httpPost(
+            '/v1/add-lpa/confirm', [
             'actor-code' => $activation_key,
             'uid'        => $lpaUid,
             'dob'        => $dob,
-        ]);
+            ]
+        );
 
         if (isset($lpaData['user-lpa-actor-token'])) {
             $this->logger->notice(
@@ -118,35 +120,35 @@ class AddLpa
      * Translates an exception message returned from the API into a const string that we can use, as well
      * as logging the result
      *
-     * @param string $lpaUid
-     * @param string $message
-     * @param array  $additionalData
+     * @param  string $lpaUid
+     * @param  string $message
+     * @param  array  $additionalData
      * @return AddLpaApiResult
      */
     private function badRequestReturned(string $lpaUid, string $message, array $additionalData): AddLpaApiResult
     {
         switch ($message) {
-            case self::ADD_LPA_NOT_ELIGIBLE:
-                $code     = EventCodes::ADD_LPA_NOT_ELIGIBLE;
-                $response = new AddLpaApiResult(
-                    AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE,
-                    $additionalData
-                );
-                break;
+        case self::ADD_LPA_NOT_ELIGIBLE:
+            $code     = EventCodes::ADD_LPA_NOT_ELIGIBLE;
+            $response = new AddLpaApiResult(
+                AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE,
+                $additionalData
+            );
+            break;
 
-            case self::ADD_LPA_ALREADY_ADDED:
-                $code     = EventCodes::ADD_LPA_ALREADY_ADDED;
-                $response = new AddLpaApiResult(
-                    AddLpaApiResult::ADD_LPA_ALREADY_ADDED,
-                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
-                );
-                break;
+        case self::ADD_LPA_ALREADY_ADDED:
+            $code     = EventCodes::ADD_LPA_ALREADY_ADDED;
+            $response = new AddLpaApiResult(
+                AddLpaApiResult::ADD_LPA_ALREADY_ADDED,
+                ($this->parseLpaAlreadyAddedResponse)($additionalData)
+            );
+            break;
 
-            default:
-                throw new RuntimeException(
-                    'A bad request was made to add an lpa and the reason for rejection is '
+        default:
+            throw new RuntimeException(
+                'A bad request was made to add an lpa and the reason for rejection is '
                     . 'not understood'
-                );
+            );
         }
 
         $this->logger->notice(
@@ -164,8 +166,8 @@ class AddLpa
     /**
      * Translates a 'Not Found' response from our API into an appropriate const value and also logs the result
      *
-     * @param string $lpaUid
-     * @param array  $additionalData
+     * @param  string $lpaUid
+     * @param  array  $additionalData
      * @return AddLpaApiResult
      */
     private function notFoundReturned(string $lpaUid, array $additionalData): AddLpaApiResult

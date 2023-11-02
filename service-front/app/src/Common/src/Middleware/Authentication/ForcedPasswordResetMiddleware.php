@@ -50,12 +50,14 @@ class ForcedPasswordResetMiddleware implements MiddlewareInterface, CsrfGuardAwa
             ]
         );
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::force-password-reset-page',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::force-password-reset-page',
+                [
                 'form' => $form,
                 'user' => $user,
-            ]
-        ));
+                ]
+            )
+        );
     }
 }

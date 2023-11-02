@@ -16,19 +16,25 @@ class Date extends Fieldset
     {
         parent::__construct($name, $options);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'day',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'month',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'year',
             'type' => 'Text',
-        ]);
+            ]
+        );
     }
 }

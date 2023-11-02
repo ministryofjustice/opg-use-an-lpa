@@ -14,8 +14,10 @@ class OneLoginService
 
     public function authenticate(string $uiLocale): ?array
     {
-        return $this->apiClient->httpGet('/v1/auth-one-login', [
+        return $this->apiClient->httpGet(
+            '/v1/auth-one-login', [
             'ui_locale' => $uiLocale,
-        ]);
+            ]
+        );
     }
 }

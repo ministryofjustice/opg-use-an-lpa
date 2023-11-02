@@ -48,15 +48,15 @@ class RateLimitServiceFactory
 
         $type = $config['ratelimits'][$limitName]['type'];
         switch ($type) {
-            case 'keyed':
-                return new KeyedRateLimitService(
-                    $cacheAdaptor,
-                    $config['ratelimits'][$limitName]['options']['interval'] ?? 300,
-                    $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?? 60,
-                    $this->container->get(LoggerInterface::class)
-                );
-            default:
-                throw new RuntimeException('No class available for rate limit type ' . $type);
+        case 'keyed':
+            return new KeyedRateLimitService(
+                $cacheAdaptor,
+                $config['ratelimits'][$limitName]['options']['interval'] ?? 300,
+                $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?? 60,
+                $this->container->get(LoggerInterface::class)
+            );
+        default:
+            throw new RuntimeException('No class available for rate limit type ' . $type);
         }
     }
 
@@ -75,8 +75,10 @@ class RateLimitServiceFactory
             throw new RuntimeException('Missing rate limits configuration');
         }
 
-        return array_map(function (string $limitName) {
-            return $this->factory($limitName);
-        }, array_keys($config['ratelimits']));
+        return array_map(
+            function (string $limitName) {
+                return $this->factory($limitName);
+            }, array_keys($config['ratelimits'])
+        );
     }
 }

@@ -27,7 +27,7 @@ class DobValidator extends DateValidator
         ];
 
     /**
-     * @param mixed $value
+     * @param  mixed $value
      * @return bool
      * @throws \Exception
      */

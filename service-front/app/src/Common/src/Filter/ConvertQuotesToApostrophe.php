@@ -9,7 +9,7 @@ use Laminas\Filter\AbstractFilter;
 class ConvertQuotesToApostrophe extends AbstractFilter
 {
     /**
-     * @param string $name
+     * @param  string $name
      * @return string
      */
     public function filter($name): string

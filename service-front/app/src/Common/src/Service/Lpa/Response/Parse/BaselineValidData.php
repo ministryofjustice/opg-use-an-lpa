@@ -7,7 +7,7 @@ namespace Common\Service\Lpa\Response\Parse;
 trait BaselineValidData
 {
     /**
-     * @param array{donor: array, caseSubtype: string} $data
+     * @param  array{donor: array, caseSubtype: string} $data
      * @return bool
      */
     private function isValidData(array $data): bool

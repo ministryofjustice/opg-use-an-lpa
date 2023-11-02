@@ -11,7 +11,7 @@ use Twig\TwigFunction;
 class FeatureFlagExtension extends AbstractExtension
 {
     /**
-     * @param FeatureEnabled $featureEnabled
+     * @param              FeatureEnabled $featureEnabled
      * @codeCoverageIgnore
      */
     public function __construct(private FeatureEnabled $featureEnabled)
@@ -31,7 +31,7 @@ class FeatureFlagExtension extends AbstractExtension
     /**
      * Returns the enabled state of a feature
      *
-     * @param string $featureName The name of a feature configured in features.php
+     * @param  string $featureName The name of a feature configured in features.php
      * @return bool
      */
     public function featureEnabled(string $featureName): bool

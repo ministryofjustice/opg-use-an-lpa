@@ -21,8 +21,8 @@ class RateLimitMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
+     * @param  ServerRequestInterface  $request
+     * @param  RequestHandlerInterface $handler
      * @return ResponseInterface
      * @throws RateLimitExceededException
      */

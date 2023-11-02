@@ -38,7 +38,9 @@ class UserIdentificationMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var SessionInterface|null $session */
+        /**
+ * @var SessionInterface|null $session 
+*/
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
         $id = $session?->get(self::IDENTIFY_ATTRIBUTE);
@@ -54,13 +56,14 @@ class UserIdentificationMiddleware implements MiddlewareInterface
 
     private function isValidRoute(ServerRequestInterface $request): bool
     {
-        /** @var RouteResult|null $routeResult */
+        /**
+ * @var RouteResult|null $routeResult 
+*/
         $routeResult = $request->getAttribute(RouteResult::class);
 
         $accept = $request->hasHeader('accept') ? $request->getHeader('accept')[0] : null;
 
-        if (
-            in_array($routeResult?->getMatchedRouteName(), self::EXCLUDED_ROUTES)
+        if (in_array($routeResult?->getMatchedRouteName(), self::EXCLUDED_ROUTES)
             && $accept === 'application/json'
         ) {
             return false;

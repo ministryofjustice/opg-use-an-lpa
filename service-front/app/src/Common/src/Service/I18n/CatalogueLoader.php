@@ -18,7 +18,7 @@ class CatalogueLoader
      * Reads all '.pot' files from the given directory and loads them into a domain keyed catalogue of
      * translations.
      *
-     * @param string $directory
+     * @param  string $directory
      * @return Translations[]
      */
     public function loadByDirectory(string $directory): array

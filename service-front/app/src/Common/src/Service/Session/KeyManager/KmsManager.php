@@ -51,10 +51,12 @@ class KmsManager implements KeyManagerInterface
         } else {
             // Else we get a new key
 
-            $newKey = $this->kmsClient->generateDataKey([
+            $newKey = $this->kmsClient->generateDataKey(
+                [
                 'KeyId'   => $this->kmsAlias,
                 'KeySpec' => 'AES_256',
-            ]);
+                ]
+            );
 
             $id = Base64UrlSafe::encode((string)$newKey->get('CiphertextBlob'));
 
@@ -65,10 +67,12 @@ class KmsManager implements KeyManagerInterface
             );
 
             // Make this key the current key for encrypting
-            $this->cache->store(static::CURRENT_ENCRYPTION_KEY, [
+            $this->cache->store(
+                static::CURRENT_ENCRYPTION_KEY, [
                 'id'           => $id,
                 'key_material' => $material,
-            ], self::ENCRYPTION_KEY_TTL);
+                ], self::ENCRYPTION_KEY_TTL
+            );
 
             // And keep a copy for decrypting
             $this->cache->store($id, $material, self::DECRYPTION_KEY_TTL);
@@ -80,7 +84,7 @@ class KmsManager implements KeyManagerInterface
     /**
      * Returns the Key with the given $id, to be used for decryption.
      *
-     * @param string $id
+     * @param  string $id
      * @return Key
      * @throws InvalidKey
      */
@@ -92,9 +96,11 @@ class KmsManager implements KeyManagerInterface
             // Then we don't know the key. Pull it out of KMS.
 
             try {
-                $key = $this->kmsClient->decrypt([
+                $key = $this->kmsClient->decrypt(
+                    [
                     'CiphertextBlob' => Base64UrlSafe::decode($id),
-                ]);
+                    ]
+                );
             } catch (KmsException $e) {
                 if ($e->getAwsErrorCode() === 'InvalidCiphertextException') {
                     throw new KeyNotFoundException();

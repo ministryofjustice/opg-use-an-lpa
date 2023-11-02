@@ -16,14 +16,14 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
     private ContainerInterface $middlewareContainer;
 
     /**
-     * @param ContainerInterface $container It is necessary to pass the container so we can resolve the feature flag
-     *                                      at runtime. Passing just the FeatureEnabled component results in having to
-     *                                      re-initialise a number of container items to facilitate testing
-     *                                      - increasing complexity.
-     * @param string $featureFlagName       The name of the feature flag that will be used to determine the
-     *                                      correct route
-     * @param string             $trueRoute The route taken if the feature flag is true
-     * @param string             $falseRoute The route taken if the feature flag is false Or undefined.
+     * @param ContainerInterface $container       It is necessary to pass the container so we can resolve the feature flag
+     *                                            at runtime. Passing just the FeatureEnabled component results in having
+     *                                            to re-initialise a number of container items to facilitate testing -
+     *                                            increasing complexity.
+     * @param string             $featureFlagName The name of the feature flag that will be used to determine the
+     *                                            correct route
+     * @param string             $trueRoute       The route taken if the feature flag is true
+     * @param string             $falseRoute      The route taken if the feature flag is false Or undefined.
      */
     public function __construct(
         ContainerInterface $container,

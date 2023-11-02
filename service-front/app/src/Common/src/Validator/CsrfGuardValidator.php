@@ -15,7 +15,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 class CsrfGuardValidator extends LaminasCsrf
 {
     /**
-     * @var string[]
+     * @var           string[]
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $messageTemplates = [
@@ -25,7 +25,8 @@ class CsrfGuardValidator extends LaminasCsrf
 
     /**
      * Set to null in order to force the user to manually set it
-     * @var ?string
+     *
+     * @var           ?string
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $name = null;

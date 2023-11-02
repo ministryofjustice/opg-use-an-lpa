@@ -19,7 +19,7 @@ interface ModifiableContainerInterface
     /**
      * Sets a configuration string into the container under a given key
      *
-     * @param string $name The name of the configuration value to store
+     * @param string $name  The name of the configuration value to store
      * @param string $value The configuration value
      */
     public function setValue(string $name, string $value): void;

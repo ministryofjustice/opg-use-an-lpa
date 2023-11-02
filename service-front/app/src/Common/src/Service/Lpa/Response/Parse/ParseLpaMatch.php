@@ -14,7 +14,7 @@ class ParseLpaMatch
     use BaselineValidData;
 
     /**
-     * @param LpaFactory $lpaFactory
+     * @param              LpaFactory $lpaFactory
      * @codeCoverageIgnore
      */
     public function __construct(private LpaFactory $lpaFactory)
@@ -22,7 +22,7 @@ class ParseLpaMatch
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string} $data
+     * @param  array{donor: array, caseSubtype: string} $data
      * @return LpaMatch
      * @throws Exception
      */

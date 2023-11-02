@@ -39,9 +39,9 @@ class NotifyService
      * Example usage:
      * sendEmailToUser('emailTemplate', 'recipient', activateAccountUrl: 'value1', signInLink: 'value2');
      *
-     * @param string $emailTemplate
-     * @param string $recipient
-     * @param mixed  ...$emailData
+     * @param  string $emailTemplate
+     * @param  string $recipient
+     * @param  mixed  ...$emailData
      * @return bool
      */
     public function sendEmailToUser(

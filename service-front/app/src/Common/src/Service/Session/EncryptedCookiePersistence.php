@@ -5,6 +5,7 @@
  * It's been modified to used the cookie for the encrypted session data, rather than the cache id.
  *
  * Original header:
+ *
  * @see       https://github.com/mezzio/mezzio-session-cache for the canonical source repository
  * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
  * @license   https://github.com/mezzio/mezzio-session-cache/blob/master/LICENSE.md New BSD License
@@ -185,7 +186,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     /**
      * Retrieve the session cookie value.
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return string
      */
     private function getCookieFromRequest(ServerRequestInterface $request): string
@@ -196,7 +197,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     /**
      * Check if the response already carries cache headers
      *
-     * @param ResponseInterface $response
+     * @param  ResponseInterface $response
      * @return bool
      */
     private function responseAlreadyHasCacheHeaders(ResponseInterface $response): bool
@@ -211,8 +212,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
     private function getCookieLifetime(SessionInterface $session): int
     {
         $lifetime = $this->cookieTtl;
-        if (
-            $session instanceof SessionCookiePersistenceInterface
+        if ($session instanceof SessionCookiePersistenceInterface
             && $session->has(SessionCookiePersistenceInterface::SESSION_LIFETIME_KEY)
         ) {
             $lifetime = $session->getSessionLifetime();

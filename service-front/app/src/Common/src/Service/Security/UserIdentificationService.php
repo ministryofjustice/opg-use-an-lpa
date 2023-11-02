@@ -16,8 +16,8 @@ class UserIdentificationService
     /**
      * Builds a unique userId that can be used to identify users for security tracking.
      *
-     * @param array<string, array<array-key, string>> $headers
-     * @param string|null $sessionIdentity
+     * @param  array<string, array<array-key, string>> $headers
+     * @param  string|null                             $sessionIdentity
      * @return UserIdentity
      */
     public function id(array $headers, ?string $sessionIdentity): UserIdentity

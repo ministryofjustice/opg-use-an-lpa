@@ -15,7 +15,7 @@ class GroupLpas
     /**
      * Groups LPAs based on name and DoB
      *
-     * @param ArrayObject $lpas
+     * @param  ArrayObject $lpas
      * @return ArrayObject
      */
     public function __invoke(ArrayObject $lpas): ArrayObject

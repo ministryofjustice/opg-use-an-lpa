@@ -18,9 +18,9 @@ class LogStderrListener
     /**
      * Style and output errors to STDERR (For use with Docker)
      *
-     * @param Throwable $error
+     * @param Throwable              $error
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @param ResponseInterface      $response
      */
     public function __invoke(Throwable $error, ServerRequestInterface $request, ResponseInterface $response)
     {

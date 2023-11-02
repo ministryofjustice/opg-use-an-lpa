@@ -38,16 +38,18 @@ class UserService implements UserRepositoryInterface
     }
 
     /**
-     * @param string $email
-     * @param HiddenString $password
+     * @param  string       $email
+     * @param  HiddenString $password
      * @return array
      */
     public function create(string $email, HiddenString $password): array
     {
-        $data = $this->apiClient->httpPost('/v1/user', [
+        $data = $this->apiClient->httpPost(
+            '/v1/user', [
             'email'    => $email,
             'password' => $password->getString(),
-        ]);
+            ]
+        );
 
         $this->logger->notice(
             'Account with Id {id} created using email hash {email}',
@@ -62,30 +64,34 @@ class UserService implements UserRepositoryInterface
     }
 
     /**
-     * @param string $email
+     * @param  string $email
      * @return array|null
      */
     public function getByEmail(string $email): ?array
     {
-        return $this->apiClient->httpGet('/v1/user', [
+        return $this->apiClient->httpGet(
+            '/v1/user', [
             'email' => $email,
-        ]);
+            ]
+        );
     }
 
     /**
      * Attempts authentication of a user based on the passed in credentials.
      *
-     * @param string      $credential
-     * @param string|null $password
+     * @param  string      $credential
+     * @param  string|null $password
      * @return User|null
      */
     public function authenticate(string $credential, ?string $password = null): ?UserInterface
     {
         try {
-            $userData = $this->apiClient->httpPatch('/v1/auth', [
+            $userData = $this->apiClient->httpPatch(
+                '/v1/auth', [
                 'email'    => strtolower(trim($credential)),
                 'password' => $password,
-            ]);
+                ]
+            );
 
             $this->logger->info(
                 'Authentication successful for account with Id {id}',
@@ -135,9 +141,11 @@ class UserService implements UserRepositoryInterface
     public function activate(string $activationToken): bool|string
     {
         try {
-            $userData = $this->apiClient->httpPatch('/v1/user-activation', [
+            $userData = $this->apiClient->httpPatch(
+                '/v1/user-activation', [
                 'activation_token' => $activationToken,
-            ]);
+                ]
+            );
 
             if (!empty($userData)) {
                 $this->logger->notice(
@@ -168,9 +176,11 @@ class UserService implements UserRepositoryInterface
 
     public function requestPasswordReset(string $email): string
     {
-        $data = $this->apiClient->httpPatch('/v1/request-password-reset', [
+        $data = $this->apiClient->httpPatch(
+            '/v1/request-password-reset', [
             'email' => $email,
-        ]);
+            ]
+        );
 
         if (isset($data['PasswordResetToken'])) {
             $this->logger->info(
@@ -189,9 +199,11 @@ class UserService implements UserRepositoryInterface
     public function canPasswordReset(string $token): bool
     {
         try {
-            $data = $this->apiClient->httpGet('/v1/can-password-reset', [
+            $data = $this->apiClient->httpGet(
+                '/v1/can-password-reset', [
                 'token' => $token,
-            ]);
+                ]
+            );
 
             if (!is_null($data) && isset($data['Id'])) {
                 $this->logger->info(
@@ -221,10 +233,12 @@ class UserService implements UserRepositoryInterface
 
     public function completePasswordReset(string $token, HiddenString $password): void
     {
-        $this->apiClient->httpPatch('/v1/complete-password-reset', [
+        $this->apiClient->httpPatch(
+            '/v1/complete-password-reset', [
             'token'    => $token,
             'password' => $password->getString(),
-        ]);
+            ]
+        );
 
         $this->logger->info(
             'Password reset using token {token} has been successful',
@@ -237,11 +251,13 @@ class UserService implements UserRepositoryInterface
     public function requestChangeEmail(string $userId, string $newEmail, HiddenString $password): array
     {
         try {
-            $data = $this->apiClient->httpPatch('/v1/request-change-email', [
+            $data = $this->apiClient->httpPatch(
+                '/v1/request-change-email', [
                 'user-id'   => $userId,
                 'new-email' => $newEmail,
                 'password'  => $password->getString(),
-            ]);
+                ]
+            );
 
             if (isset($data['EmailResetToken'])) {
                 $this->logger->info(
@@ -271,9 +287,11 @@ class UserService implements UserRepositoryInterface
     public function canResetEmail(string $token): bool
     {
         try {
-            $data = $this->apiClient->httpGet('/v1/can-reset-email', [
+            $data = $this->apiClient->httpGet(
+                '/v1/can-reset-email', [
                 'token' => $token,
-            ]);
+                ]
+            );
 
             if (!is_null($data) && isset($data['Id'])) {
                 $this->logger->info(
@@ -303,9 +321,11 @@ class UserService implements UserRepositoryInterface
 
     public function completeChangeEmail(string $resetToken): void
     {
-        $this->apiClient->httpPatch('/v1/complete-change-email', [
+        $this->apiClient->httpPatch(
+            '/v1/complete-change-email', [
             'reset_token' => $resetToken,
-        ]);
+            ]
+        );
 
         $this->logger->info(
             'Email reset using token {token} has been successful',
@@ -318,11 +338,13 @@ class UserService implements UserRepositoryInterface
     public function changePassword(string $id, HiddenString $password, HiddenString $newPassword): void
     {
         try {
-            $this->apiClient->httpPatch('/v1/change-password', [
+            $this->apiClient->httpPatch(
+                '/v1/change-password', [
                 'user-id'      => $id,
                 'password'     => $password->getString(),
                 'new-password' => $newPassword->getString(),
-            ]);
+                ]
+            );
 
             $this->logger->info(
                 'Password reset for user ID {userId} has been successful',

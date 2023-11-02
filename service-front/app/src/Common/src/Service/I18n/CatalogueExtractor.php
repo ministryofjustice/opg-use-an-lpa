@@ -39,9 +39,9 @@ class CatalogueExtractor
      * Merges two catalogues of translations together specifying that the existing catalogue be the starting
      * point for any changes.
      *
-     * @param Translations[] $into An array of translations catalogues to merge new translations into
-     * @param Translations[] $catalogue An array of translations to merge
-     * @param int $strategy The merge strategy to use when merging catalogues
+     * @param  Translations[] $into      An array of translations catalogues to merge new translations into
+     * @param  Translations[] $catalogue An array of translations to merge
+     * @param  int            $strategy  The merge strategy to use when merging catalogues
      * @return array The merged translation catalogues
      */
     public function mergeCatalogues(array $into, array $catalogue, int $strategy = self::MERGE_FLAGS): array
@@ -58,9 +58,9 @@ class CatalogueExtractor
      * Merges a set of translations with a specified domain into and existing set of catalogues.
      *
      * @param Translations[] $catalogues
-     * @param Translations $translations
-     * @param string $domain
-     * @param int $mergeFlags
+     * @param Translations   $translations
+     * @param string         $domain
+     * @param int            $mergeFlags
      */
     protected function mergeIntoCatalogue(
         array &$catalogues,
@@ -76,7 +76,7 @@ class CatalogueExtractor
     }
 
     /**
-     * @param string $path
+     * @param  string $path
      * @return Translations[]
      */
     protected function parseFiles(string $path): array

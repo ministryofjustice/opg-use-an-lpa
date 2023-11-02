@@ -13,7 +13,7 @@ class LocalisedDate
     /**
      * Ensure that the date we send out in the letters if correctly localised.
      *
-     * @param \DateTimeInterface $date
+     * @param  \DateTimeInterface $date
      * @return string
      */
     public function __invoke(DateTimeInterface $date): string

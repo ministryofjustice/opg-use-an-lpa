@@ -24,7 +24,7 @@ abstract class AbstractHandler implements RequestHandlerInterface
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     abstract public function handle(ServerRequestInterface $request): ResponseInterface;
@@ -32,9 +32,9 @@ abstract class AbstractHandler implements RequestHandlerInterface
     /**
      * Redirect to the specified route
      *
-     * @param $route
-     * @param array $routeParams
-     * @param array $queryParams
+     * @param  $route
+     * @param  array $routeParams
+     * @param  array $queryParams
      * @return RedirectResponse
      */
     protected function redirectToRoute($route, $routeParams = [], $queryParams = []): RedirectResponse

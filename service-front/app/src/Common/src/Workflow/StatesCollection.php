@@ -16,7 +16,7 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param class-string $workflowStateClass
+     * @param  class-string $workflowStateClass
      * @return bool
      */
     public function has(string $workflowStateClass): bool
@@ -25,7 +25,7 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param class-string $workflowStateClass
+     * @param  class-string $workflowStateClass
      * @return WorkflowState
      * @throws StateNotInitialisedException
      */
@@ -39,8 +39,8 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param class-string  $workflowStateClass
-     * @param WorkflowState $state
+     * @param  class-string  $workflowStateClass
+     * @param  WorkflowState $state
      * @return void
      */
     public function add(string $workflowStateClass, WorkflowState $state): void

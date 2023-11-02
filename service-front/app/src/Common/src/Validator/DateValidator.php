@@ -30,13 +30,12 @@ class DateValidator extends AbstractValidator
     ];
 
     /**
-     * @param mixed $value
+     * @param  mixed $value
      * @return bool
      */
     public function isValid($value)
     {
-        if (
-            !is_array($value)
+        if (!is_array($value)
             || !array_key_exists('day', $value)
             || !array_key_exists('month', $value)
             || !array_key_exists('year', $value)
@@ -79,15 +78,14 @@ class DateValidator extends AbstractValidator
     /**
      * A parsed date will be returned if the value array represents a valid date value
      *
-     * @param int $day
-     * @param int $month
-     * @param int $year
+     * @param  int $day
+     * @param  int $month
+     * @param  int $year
      * @return bool|DateTime|null
      */
     protected function parseDateArray($day, $month, $year)
     {
-        if (
-            is_numeric($day) && $day > 0
+        if (is_numeric($day) && $day > 0
             && is_numeric($month) && $month > 0
             && is_numeric($year) && $year > 0
         ) {

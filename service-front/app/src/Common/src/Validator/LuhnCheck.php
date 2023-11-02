@@ -19,7 +19,7 @@ class LuhnCheck extends AbstractValidator
     ];
 
     /**
-     * @param mixed $reference_number
+     * @param  mixed $reference_number
      * @return bool
      */
     public function isValid($reference_number): bool
