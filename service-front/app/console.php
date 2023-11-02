@@ -7,8 +7,10 @@ require __DIR__ . '/vendor/autoload.php';
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
-/** @var ContainerInterface $container */
-$container = require __DIR__ . '/config/container.php';
+/**
+ * @var ContainerInterface $container 
+*/
+$container = include __DIR__ . '/config/container.php';
 $application = new Application('Application console');
 
 $commands = $container->get('config')['console']['commands'];
