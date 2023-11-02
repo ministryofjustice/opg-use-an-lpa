@@ -60,7 +60,8 @@ class DobValidatorTest extends TestCase
         $this->assertEquals(
             [
             DobValidator::AGE_NEGATIVE => 'Date of birth must be in the past',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -83,7 +84,8 @@ class DobValidatorTest extends TestCase
             [
             DobValidator::AGE_TOO_YOUNG
                 => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);

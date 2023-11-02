@@ -15,7 +15,7 @@ class UnencryptedCookieTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function usage_logs_critical_error(): void
     {
@@ -28,7 +28,7 @@ class UnencryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_base64_encodes_an_array_of_data(): void
     {
@@ -46,7 +46,7 @@ class UnencryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_base64_encodes_an_empty_array_of_data_to_a_blank_string(): void
     {
@@ -62,7 +62,7 @@ class UnencryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_decodes_base64_data_into_an_array(): void
     {
@@ -80,7 +80,7 @@ class UnencryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_base64_decodes_an_empty_string_into_a_blank_array(): void
     {

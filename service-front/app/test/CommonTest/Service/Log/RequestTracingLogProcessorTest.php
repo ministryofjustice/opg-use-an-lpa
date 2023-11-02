@@ -16,7 +16,7 @@ class RequestTracingLogProcessorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_adds_the_tracing_parameter()
     {
@@ -32,7 +32,7 @@ class RequestTracingLogProcessorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_adds_a_default_tracing_parameter_if_none_found()
     {

@@ -20,7 +20,7 @@ class RateLimitServiceFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_requires_a_ratelimits_configuration()
     {
@@ -33,7 +33,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_requires_a_ratelimits_configuration_for_individual_services()
     {
@@ -52,7 +52,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_requires_a_valid_ratelimits_configuration_type_for_a_service()
     {
@@ -75,7 +75,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_throws_an_exception_with_an_invalid_limiter_service_type()
     {
@@ -113,7 +113,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_configured_keyed_rate_limiter_service()
     {
@@ -154,7 +154,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_multiple_configured_rate_limiters()
     {
@@ -211,7 +211,7 @@ class RateLimitServiceFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_requires_multiple_ratelimits_configuration()
     {

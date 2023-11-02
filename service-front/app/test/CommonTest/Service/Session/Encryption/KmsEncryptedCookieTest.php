@@ -18,7 +18,7 @@ class KmsEncryptedCookieTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_be_instantiated(): void
     {
@@ -31,7 +31,7 @@ class KmsEncryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_encodes_a_session_array(): void
     {
@@ -58,7 +58,7 @@ class KmsEncryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_encodes_an_empty_array_of_data_to_a_blank_string(): void
     {
@@ -75,7 +75,7 @@ class KmsEncryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_decodes_a_string_into_session_data(): void
     {
@@ -101,7 +101,7 @@ class KmsEncryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_throws_an_exception_when_key_id_not_matched_and_returns_new_session(): void
     {
@@ -118,7 +118,7 @@ class KmsEncryptedCookieTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_decodes_an_empty_string_into_an_empty_array(): void
     {

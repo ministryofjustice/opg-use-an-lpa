@@ -30,7 +30,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function test_when_feature_flag_is_on_true_route_is_called(): void
     {
@@ -52,7 +52,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function test_when_feature_flag_is_off_false_route_is_called(): void
     {
@@ -75,7 +75,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function test_when_feature_flag_is_undefined_false_route_is_called(): void
     {
@@ -98,7 +98,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
     }
 
     /**
-     * @test  
+     * @test
      */
     public function test_when_feature_flag_is_not_defined_error_raised(): void
     {

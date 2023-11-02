@@ -49,10 +49,11 @@ class SortLpasTest extends LpaFixtureTestCase
 
         // pare the sorted fixture data back to what we're interested in.
         /**
- * @var ArrayObject[] $orderedLpas 
+ * @var ArrayObject[] $orderedLpas
 */
         $orderedLpas = array_filter(
-            $orderedLpas, function (ArrayObject $lpaData) {
+            $orderedLpas,
+            function (ArrayObject $lpaData) {
                 return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
                 === 'Taylor, Gemma';
             }
@@ -82,10 +83,11 @@ class SortLpasTest extends LpaFixtureTestCase
 
         // pare the sorted fixture data back to what we're interested in.
         /**
- * @var ArrayObject[] $orderedLpas 
+ * @var ArrayObject[] $orderedLpas
 */
         $orderedLpas = array_filter(
-            $orderedLpas, function (ArrayObject $lpaData) {
+            $orderedLpas,
+            function (ArrayObject $lpaData) {
                 return $lpaData->lpa->getDonor()->getSurname() . ', ' . $lpaData->lpa->getDonor()->getFirstname()
                 === 'Williams, Daniel';
             }

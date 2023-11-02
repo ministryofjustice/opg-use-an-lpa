@@ -45,7 +45,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_an_already_added_dto_from_array_data()
     {
@@ -63,7 +63,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_an_already_added_dto_from_array_data_with_null_name_fields()
     {
@@ -90,7 +90,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
     {
@@ -115,7 +115,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
     {
@@ -140,7 +140,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
     {

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class EmailAddressValidatorTest extends TestCase
 {
     /**
-     * @test 
+     * @test
      */
     public function correctly_validates_known_good_email()
     {
@@ -22,7 +22,7 @@ class EmailAddressValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_validates_a_known_bad_email_as_bad()
     {
@@ -34,7 +34,7 @@ class EmailAddressValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_sets_our_message_when_bad_email_validated()
     {

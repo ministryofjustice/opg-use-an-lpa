@@ -21,7 +21,7 @@ class UserServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function can_create_a_new_user_account()
     {
@@ -58,7 +58,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_an_account_by_email()
     {
@@ -91,7 +91,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function passes_exception_when_user_not_found_by_email()
     {
@@ -119,7 +119,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_authenticate_with_good_credentials()
     {
@@ -162,7 +162,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function authentication_fails_with_bad_credentials()
     {
@@ -191,7 +191,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function bad_datetime_throws_exception_during_authentication()
     {
@@ -225,7 +225,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_activate_a_user()
     {
@@ -258,7 +258,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function whilst_activating_an_unknown_user_false_is_returned()
     {
@@ -286,7 +286,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function whilst_activating_a_user_an_exception_can_be_thrown()
     {
@@ -314,7 +314,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_request_a_password_reset_token_for_a_valid_user()
     {
@@ -348,7 +348,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function a_password_reset_request_for_an_invalid_user_will_not_be_found()
     {
@@ -376,7 +376,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request()
     {
@@ -408,7 +408,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_change_password_for_authenticated_user()
     {
@@ -440,7 +440,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user()
     {
@@ -478,7 +478,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user()
     {
@@ -511,7 +511,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_delete_a_users_account()
     {
@@ -545,7 +545,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request()
     {
@@ -577,7 +577,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_request_email_reset()
     {
@@ -622,7 +622,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_user_id_not_provided_in_request_email_change()
     {
@@ -654,7 +654,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_new_email_not_provided_in_request_email_change()
     {
@@ -685,7 +685,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function exception_thrown_when_password_not_provided_in_request_email_change()
     {
@@ -716,7 +716,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_reset_email_function_returns_true_when_successful()
     {
@@ -745,7 +745,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_reset_email_function_returns_false_when_token_expired_or_not_found()
     {
@@ -772,7 +772,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_reset_email_function_throws_anything_other_than_a_gone_exception()
     {
@@ -805,7 +805,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function complete_change_email_returns_nothing_when_successful()
     {

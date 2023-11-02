@@ -16,7 +16,7 @@ use Twig\TwigFunction;
 class LpaExtensionTest extends TestCase
 {
     /**
-     * @test 
+     * @test
      */
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
@@ -398,7 +398,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive()
     {
@@ -412,7 +412,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_an_empty_string_if_expiry_date_is_null()
     {
@@ -424,7 +424,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_an_hyphenated_viewer_code()
     {
@@ -436,7 +436,7 @@ class LpaExtensionTest extends TestCase
     }
 
      /**
-      * @test 
+      * @test
       */
     public function it_checks_if_an_LPA_is_cancelled()
     {
@@ -451,7 +451,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_an_LPA_is_not_cancelled()
     {
@@ -465,7 +465,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_an_LPA_is_revoked()
     {
@@ -479,7 +479,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_donor_name_from_donor_nameDob_string()
     {
@@ -492,7 +492,7 @@ class LpaExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
     {

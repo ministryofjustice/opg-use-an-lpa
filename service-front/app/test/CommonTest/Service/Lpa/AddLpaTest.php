@@ -94,7 +94,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_validate_the_data_and_fetch_the_lpa(): void
     {
@@ -124,7 +124,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_to_add_an_lpa_which_has_already_been_added(): void
     {
@@ -183,7 +183,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_to_add_an_lpa_which_is_not_registered(): void
     {
@@ -220,7 +220,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_to_add_an_lpa_if_code_validation_fails(): void
     {
@@ -257,7 +257,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_to_add_due_to_an_api_exception(): void
     {
@@ -288,7 +288,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
     {
@@ -321,7 +321,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_confirm_adding_the_lpa(): void
     {
@@ -349,7 +349,7 @@ class AddLpaTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_return_failed_event_code_if_failed_when_adding_the_lpa(): void
     {

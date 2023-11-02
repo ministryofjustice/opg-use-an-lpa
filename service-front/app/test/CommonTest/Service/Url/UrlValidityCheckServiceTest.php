@@ -36,7 +36,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_referer_url_is_valid()
     {
@@ -55,7 +55,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_referer_url_is_invalid()
     {
@@ -74,7 +74,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_checks_if_referer_route_exists()
     {
@@ -90,13 +90,13 @@ class UrlValidityCheckServiceTest extends TestCase
         );
 
         /**
- * @var ServerRequestFactory&ObjectProphecy $serverRequestFactory 
+ * @var ServerRequestFactory&ObjectProphecy $serverRequestFactory
 */
         $serverRequestFactory = $this->prophesize(ServerRequestFactory::class);
         $serverRequestFactory->createServerRequest('GET', $refererUrl)->willReturn($requestReturn);
 
         /**
- * @var RouterInterface&ObjectProphecy $router 
+ * @var RouterInterface&ObjectProphecy $router
 */
         $router = $this->prophesize(RouterInterface::class);
         $router->match($requestReturn)->willReturn($routeResult->reveal());
@@ -116,7 +116,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_valid_referer()
     {
@@ -148,7 +148,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_url_for_home_if_referer_is_invalid()
     {
@@ -184,7 +184,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_url_for_home_if_referer_is_null()
     {
@@ -204,7 +204,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
     {
@@ -242,7 +242,7 @@ class UrlValidityCheckServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_valid_welsh_referer_if_locale_is_cy()
     {

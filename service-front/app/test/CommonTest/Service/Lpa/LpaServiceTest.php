@@ -51,7 +51,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_a_list_of_lpas_for_a_user()
     {
@@ -88,7 +88,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_a_list_of_sorted_lpas_for_a_user()
     {
@@ -128,7 +128,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_an_lpa_by_passcode_and_surname_for_summary()
     {
@@ -155,7 +155,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_an_lpa_by_passcode_and_surname_for_full()
     {
@@ -183,12 +183,13 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
     {
         $this->apiClientProphecy->httpPost(
-            '/v1/viewer-codes/summary', [
+            '/v1/viewer-codes/summary',
+            [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
             ]
@@ -203,13 +204,14 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_finds_an_expired_share_code_by_passcode_and_surname()
     {
 
         $this->apiClientProphecy->httpPost(
-            '/v1/viewer-codes/summary', [
+            '/v1/viewer-codes/summary',
+            [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
             ]
@@ -223,12 +225,13 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function lpa_not_found_by_passcode_and_surname()
     {
         $this->apiClientProphecy->httpPost(
-            '/v1/viewer-codes/summary', [
+            '/v1/viewer-codes/summary',
+            [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
             ]
@@ -241,7 +244,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_an_Lpa_by_Id()
     {
@@ -272,7 +275,7 @@ class LpaServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function an_invalid_Lpa_id_throws_exception()
     {

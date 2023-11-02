@@ -19,7 +19,7 @@ class CatalogueExtractorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_extract_a_single_twig_file(): void
     {
@@ -34,7 +34,7 @@ class CatalogueExtractorTest extends TestCase
         $translationsProphecy = $this->prophesize(Translations::class);
 
         /**
- * @var TwigExtractor|ObjectProphecy $extractorProphecy 
+ * @var TwigExtractor|ObjectProphecy $extractorProphecy
 */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
         $extractorProphecy
@@ -52,7 +52,7 @@ class CatalogueExtractorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_extract_a_folder_of_twig(): void
     {
@@ -67,7 +67,7 @@ class CatalogueExtractorTest extends TestCase
         $translationsProphecy = $this->prophesize(Translations::class);
 
         /**
- * @var TwigExtractor|ObjectProphecy $extractorProphecy 
+ * @var TwigExtractor|ObjectProphecy $extractorProphecy
 */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
         $extractorProphecy
@@ -85,7 +85,7 @@ class CatalogueExtractorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_merge_catalogues_across_extractions_of_twig(): void
     {
@@ -101,7 +101,7 @@ class CatalogueExtractorTest extends TestCase
         );
 
         /**
- * @var Translations|ObjectProphecy $translationsProphecy 
+ * @var Translations|ObjectProphecy $translationsProphecy
 */
         $translationsProphecy = $this->prophesize(Translations::class);
         $translationsProphecy
@@ -112,7 +112,7 @@ class CatalogueExtractorTest extends TestCase
             );
 
         /**
- * @var TwigExtractor|ObjectProphecy $extractorProphecy 
+ * @var TwigExtractor|ObjectProphecy $extractorProphecy
 */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
         $extractorProphecy
@@ -129,17 +129,18 @@ class CatalogueExtractorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_merge_translation_catalogues(): void
     {
         /**
- * @var Translations|ObjectProphecy $originalTranslationsProphecy 
+ * @var Translations|ObjectProphecy $originalTranslationsProphecy
 */
         $originalTranslationsProphecy = $this->prophesize(Translations::class);
         $originalTranslationsProphecy
             ->mergeWith(
-                Argument::type(Translations::class), Argument::that(
+                Argument::type(Translations::class),
+                Argument::that(
                     function ($arg) {
                         $this->assertEquals(8704, $arg, 'The merge strategy is incorrect');
                         return true;
@@ -156,7 +157,7 @@ class CatalogueExtractorTest extends TestCase
         ];
 
         /**
- * @var Translations|ObjectProphecy $newTranslationsProphecy 
+ * @var Translations|ObjectProphecy $newTranslationsProphecy
 */
         $newTranslationsProphecy = $this->prophesize(Translations::class);
         $newTranslations         = [
@@ -165,7 +166,7 @@ class CatalogueExtractorTest extends TestCase
         ];
 
         /**
- * @var TwigExtractor|ObjectProphecy $extractorProphecy 
+ * @var TwigExtractor|ObjectProphecy $extractorProphecy
 */
         $extractorProphecy = $this->prophesize(ExtractorInterface::class);
 

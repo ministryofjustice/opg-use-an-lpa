@@ -68,7 +68,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::DATE_INVALID_FORMAT => 'Date value must be provided in an array',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -100,7 +101,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::DATE_EMPTY => 'Enter a date',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -119,7 +121,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::DAY_INCOMPLETE => 'Date must include a day',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -138,7 +141,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::MONTH_INCOMPLETE => 'Date must include a month',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -157,7 +161,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::YEAR_INCOMPLETE => 'Date must include a year',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);
@@ -187,7 +192,8 @@ class DateValidatorTest extends TestCase
         $this->assertEquals(
             [
             DateValidator::DATE_INVALID => 'Enter a real date',
-            ], $this->validator->getMessages()
+            ],
+            $this->validator->getMessages()
         );
 
         $this->assertFalse($isValid);

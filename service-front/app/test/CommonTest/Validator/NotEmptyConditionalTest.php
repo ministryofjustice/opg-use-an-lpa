@@ -23,7 +23,7 @@ class NotEmptyConditionalTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isValidWhenDependantIsExpectedValue(): void
     {
@@ -38,7 +38,7 @@ class NotEmptyConditionalTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isValidWhenNotEmpty(): void
     {
@@ -53,7 +53,7 @@ class NotEmptyConditionalTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function notValidWhenEmptyAndNoDependant(): void
     {
@@ -68,7 +68,7 @@ class NotEmptyConditionalTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function noMessageWhenDependantValueIsNull(): void
     {
@@ -85,7 +85,7 @@ class NotEmptyConditionalTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function errorWhenNoDependantConfigured(): void
     {

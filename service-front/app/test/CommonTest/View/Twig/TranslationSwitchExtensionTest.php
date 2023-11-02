@@ -16,7 +16,7 @@ class TranslationSwitchExtensionTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
@@ -36,7 +36,7 @@ class TranslationSwitchExtensionTest extends TestCase
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
             /**
- * @var TwigFunction $function 
+ * @var TwigFunction $function
 */
             $this->assertContains($function->getName(), array_keys($expectedFunctions));
 
@@ -47,7 +47,7 @@ class TranslationSwitchExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_the_current_route_name(): void
     {
@@ -70,7 +70,7 @@ class TranslationSwitchExtensionTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_null_when_route_not_found(): void
     {

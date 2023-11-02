@@ -20,7 +20,7 @@ class RateLimitMiddlewareTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_functions_without_an_identity(): void
     {
@@ -44,7 +44,7 @@ class RateLimitMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function an_identified_user_is_checked_for_limit_transgressions_and_no_limiters_available()
     {
@@ -72,7 +72,7 @@ class RateLimitMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function an_identified_user_is_checked_for_limit_transgressions_with_one_limiter()
     {
@@ -106,7 +106,7 @@ class RateLimitMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function an_identified_user_is_checked_for_limit_transgressions_with_multiple_limiters()
     {
@@ -146,7 +146,7 @@ class RateLimitMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function an_identified_user_is_limited()
     {

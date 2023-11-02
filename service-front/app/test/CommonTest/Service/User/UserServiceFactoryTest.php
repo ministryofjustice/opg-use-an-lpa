@@ -18,7 +18,7 @@ class UserServiceFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_valid_UserServiceFactory_instance()
     {

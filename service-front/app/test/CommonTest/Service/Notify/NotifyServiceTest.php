@@ -21,7 +21,7 @@ class NotifyServiceTest extends TestCase
     private const CY_LOCALE = 'cy_GB';
 
     /**
-     * @test 
+     * @test
      */
     public function can_send_email_to_user()
     {

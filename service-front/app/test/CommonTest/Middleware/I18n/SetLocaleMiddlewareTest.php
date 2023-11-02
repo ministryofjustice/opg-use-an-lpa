@@ -19,7 +19,7 @@ class SetLocaleMiddlewareTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_sets_a_default_locale_of_en_GB_if_none_provided(): void
     {
@@ -55,7 +55,7 @@ class SetLocaleMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_sets_a_locale_of_cy_GB_if_requested_to(): void
     {

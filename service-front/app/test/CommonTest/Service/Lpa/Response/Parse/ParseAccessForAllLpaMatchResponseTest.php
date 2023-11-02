@@ -24,7 +24,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     private ObjectProphecy|LpaFactory $lpaFactory;
 
     /**
-     * @var array<string, string|array<string, ?string>> $response 
+     * @var array<string, string|array<string, ?string>> $response
      */
     private array $response;
 
@@ -117,7 +117,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_lpa_match_actor_donor_firstname_array_key_doesnt_exist()
     {
@@ -141,7 +141,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_lpa_match_actor_donor_middlenames_array_key_doesnt_exist()
     {
@@ -165,7 +165,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_lpa_match_actor_donor_surname_array_key_doesnt_exist()
     {

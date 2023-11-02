@@ -18,7 +18,7 @@ class PotGeneratorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_write_out_a_catalogue(): void
     {

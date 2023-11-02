@@ -28,7 +28,7 @@ class SessionExpiryMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_correctly_processes_a_non_expired_session(): void
     {
@@ -60,7 +60,7 @@ class SessionExpiryMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_marks_a_session_as_expired(): void
     {
@@ -98,7 +98,7 @@ class SessionExpiryMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_does_not_increment_session_time_for_javascript_calls(): void
     {

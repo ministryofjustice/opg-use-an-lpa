@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class PasswordValidatorTest extends TestCase
 {
     /**
-     * @test 
+     * @test
      */
     public function it_passes_a_good_password()
     {

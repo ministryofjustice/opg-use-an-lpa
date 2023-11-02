@@ -16,7 +16,7 @@ class CsrfGuardTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_guard_from_request_pipeline()
     {

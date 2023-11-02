@@ -17,7 +17,7 @@ class UserFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_valid_callable()
     {
@@ -41,7 +41,7 @@ class UserFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function the_callable_generates_a_user()
     {
@@ -58,7 +58,7 @@ class UserFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function the_callable_will_error_if_no_email_supplied()
     {

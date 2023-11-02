@@ -39,7 +39,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_requires_a_session(): void
     {
@@ -57,7 +57,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_redirects_upon_an_expired_session(): void
     {
@@ -82,7 +82,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_an_unauthorised_response_if_auth_fails(): void
     {
@@ -114,7 +114,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_continues_to_the_handler_if_auth_is_successful(): void
     {
@@ -148,7 +148,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function a_handler_can_request_a_logout(): void
     {

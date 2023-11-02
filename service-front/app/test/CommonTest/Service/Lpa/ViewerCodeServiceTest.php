@@ -37,7 +37,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_new_viewercode_given_correct_details()
     {
@@ -67,7 +67,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_share_codes_for_a_given_lpa()
     {
@@ -92,7 +92,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function returns_empty_array_if_no_share_codes_generated()
     {
@@ -111,7 +111,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function gets_number_of_active_codes_for_lpa()
     {
@@ -157,7 +157,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_cancels_a_new_viewercode_given_correct_details()
     {
@@ -178,7 +178,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_orders_viewercode_by_order_of_added_date()
     {

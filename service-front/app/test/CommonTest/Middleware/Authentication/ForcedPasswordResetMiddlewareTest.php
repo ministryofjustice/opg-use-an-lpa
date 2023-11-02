@@ -46,7 +46,7 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_continues_the_pipeline_if_not_needing_reset(): void
     {
@@ -72,7 +72,7 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_renders_a_page_if_user_password_needs_reset(): void
     {

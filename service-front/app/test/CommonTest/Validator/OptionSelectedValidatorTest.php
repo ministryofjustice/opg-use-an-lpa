@@ -17,7 +17,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isValidWhenOnlyTelephoneNumberPresent(): void
     {
@@ -31,7 +31,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isValidWhenOnlyNoPhoneCheckboxPresent(): void
     {
@@ -46,7 +46,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isNotValidWhenNeitherValuesArePresent(): void
     {
@@ -64,7 +64,7 @@ class OptionSelectedValidatorTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function isNotValidWhenBothValuesArePresent(): void
     {

@@ -15,7 +15,7 @@ class UserTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_be_constructed()
     {
@@ -25,13 +25,15 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_valid_user_details()
     {
         $date = new DateTime();
         $user = new User(
-            'test', [], [
+            'test',
+            [],
+            [
             'Email'      => 'a@b.com',
             'LastLogin'  => $date->format(DateTimeInterface::ATOM),
             'NeedsReset' => strtotime('now'),
@@ -45,13 +47,15 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function needs_reset_is_false_when_not_supplied()
     {
         $date = new DateTime();
         $user = new User(
-            'test', [], [
+            'test',
+            [],
+            [
             'Email'     => 'a@b.com',
             'LastLogin' => $date->format(DateTimeInterface::ATOM),
             ]
@@ -65,7 +69,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_expected_roles()
     {
@@ -76,7 +80,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_valid_lastLogin_time()
     {
@@ -87,7 +91,9 @@ class UserTest extends TestCase
         $date = new DateTime($date);
 
         $user = new User(
-            'test', [], [
+            'test',
+            [],
+            [
             'Email'     => 'a@b.com',
             'LastLogin' => $date->format(DateTimeInterface::ATOM),
             ]
@@ -97,7 +103,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_valid_lastLogin_time_when_constructed_from_DateTime_array()
     {
@@ -121,7 +127,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_default_detail_when_provided_and_necessary()
     {
@@ -131,7 +137,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_null_when_property_not_found()
     {
@@ -141,7 +147,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_null_lastLogin_when_none_provided()
     {
@@ -151,7 +157,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_the_correct_identity()
     {

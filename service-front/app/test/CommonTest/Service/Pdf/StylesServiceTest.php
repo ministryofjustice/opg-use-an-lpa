@@ -12,7 +12,7 @@ use RuntimeException;
 class StylesServiceTest extends TestCase
 {
     /**
-     * @test 
+     * @test
      */
     public function it_returns_styles_from_a_file(): void
     {
@@ -26,7 +26,7 @@ class StylesServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_throws_exception_if_styles_not_loaded(): void
     {

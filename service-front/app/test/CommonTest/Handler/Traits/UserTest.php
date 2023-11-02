@@ -17,7 +17,7 @@ class UserTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_user_from_request_pipeline()
     {
@@ -39,7 +39,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function gets_null_when_user_is_not_logged_in()
     {

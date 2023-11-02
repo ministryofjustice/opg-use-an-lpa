@@ -52,7 +52,7 @@ class TranslatorFactoryTest extends TestCase
         $factory = new TranslatorFactory();
 
         /**
- * @var TranslatorInterface $instance 
+ * @var TranslatorInterface $instance
 */
         $instance = $factory($containerProphecy->reveal());
 
@@ -71,7 +71,7 @@ class TranslatorFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_needs_language_file_configuration(): void
     {

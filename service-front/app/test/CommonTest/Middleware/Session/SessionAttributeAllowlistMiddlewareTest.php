@@ -22,7 +22,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_correctly_handles_request_with_no_session(): void
     {
@@ -46,7 +46,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_correctly_handles_an_non_expired_session(): void
     {
@@ -80,7 +80,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_strips_session_values_that_have_not_been_allowed(): void
     {
@@ -133,7 +133,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_strips_session_values_when_a_logout_has_been_flagged(): void
     {

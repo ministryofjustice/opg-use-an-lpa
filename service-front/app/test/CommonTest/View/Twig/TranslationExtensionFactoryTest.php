@@ -17,7 +17,7 @@ class TranslationExtensionFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_an_extension(): void
     {

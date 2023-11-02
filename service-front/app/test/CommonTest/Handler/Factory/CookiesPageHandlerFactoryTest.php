@@ -20,7 +20,7 @@ class CookiesPageHandlerFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_CookiesPageHandler(): void
     {
@@ -49,7 +49,7 @@ class CookiesPageHandlerFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_needs_an_application_configuration_value(): void
     {

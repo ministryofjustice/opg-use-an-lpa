@@ -16,7 +16,7 @@ class PhpDiModifiableContainerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_only_acts_on_a_phpdi_container()
     {
@@ -27,7 +27,7 @@ class PhpDiModifiableContainerTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_decorates_set_on_a_phpdi_container()
     {

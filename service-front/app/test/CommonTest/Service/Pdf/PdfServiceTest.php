@@ -49,7 +49,7 @@ class PdfServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_stream_when_given_an_lpa_without_images()
     {
@@ -106,7 +106,7 @@ class PdfServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_returns_a_stream_when_given_an_lpa_with_images()
     {
@@ -147,7 +147,7 @@ class PdfServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_throws_an_exception_when_response_not_ok()
     {
@@ -186,7 +186,7 @@ class PdfServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_handles_a_client_exception_by_throwing_an_api_exception()
     {
@@ -225,7 +225,7 @@ class PdfServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_correctly_attaches_a_tracing_header()
     {

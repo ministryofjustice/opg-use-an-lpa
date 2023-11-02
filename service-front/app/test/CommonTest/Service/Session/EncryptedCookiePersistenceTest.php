@@ -70,7 +70,7 @@ class EncryptedCookiePersistenceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_be_instantiated()
     {

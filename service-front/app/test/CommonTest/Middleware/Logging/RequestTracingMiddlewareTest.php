@@ -17,7 +17,7 @@ class RequestTracingMiddlewareTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_sets_a_trace_attribute_if_set_as_a_header(): void
     {
@@ -38,7 +38,7 @@ class RequestTracingMiddlewareTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function trace_id_is_blank_if_no_header(): void
     {

@@ -36,7 +36,7 @@ class InstAndPrefImagesServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_gets_images_for_an_lpa()
     {
@@ -75,7 +75,7 @@ class InstAndPrefImagesServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_handles_api_exceptions()
     {

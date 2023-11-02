@@ -17,7 +17,7 @@ class KeyedRateLimitServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_limit_an_identity_when_required()
     {
@@ -53,7 +53,7 @@ class KeyedRateLimitServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_check_if_a_request_is_limited()
     {
@@ -78,7 +78,7 @@ class KeyedRateLimitServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_move_a_cache_window_dropping_records()
     {
@@ -118,7 +118,7 @@ class KeyedRateLimitServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_record_an_identity_access()
     {
@@ -156,7 +156,7 @@ class KeyedRateLimitServiceTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_throw_an_exception_when_recording_a_limit_that_exceeds()
     {

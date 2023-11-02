@@ -14,7 +14,7 @@ class OneLoginServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_authentication_request_uri(): void
     {

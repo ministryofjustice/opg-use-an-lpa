@@ -16,7 +16,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthenticationMiddlewareTest extends TestCase
 {
     /**
-     * @test 
+     * @test
      */
     public function it_pipes_a_request_through_all_authentication_middlewares(): void
     {

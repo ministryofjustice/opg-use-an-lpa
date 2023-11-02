@@ -10,7 +10,7 @@ use Laminas\InputFilter\InputFilter;
 trait LaminasFormTests
 {
     /**
-     * @test 
+     * @test
      */
     public function it_is_a_form()
     {
@@ -20,7 +20,7 @@ trait LaminasFormTests
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_declares_all_necessary_inputs()
     {
@@ -44,7 +44,7 @@ trait LaminasFormTests
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_declares_all_neccessary_input_filters()
     {

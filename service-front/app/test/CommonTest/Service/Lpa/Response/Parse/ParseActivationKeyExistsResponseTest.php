@@ -45,7 +45,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_dto_from_array_data()
     {
@@ -63,7 +63,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_creates_a_dto_from_array_data_if_name_fields_are_null()
     {
@@ -89,7 +89,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
     {
@@ -113,7 +113,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
     {
@@ -137,7 +137,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
     {
@@ -161,7 +161,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_will_fail_if_lpa_type_is_not_set()
     {

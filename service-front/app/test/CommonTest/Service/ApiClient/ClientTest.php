@@ -49,7 +49,7 @@ class ClientTest extends TestCase
     // ============
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_a_simple_endpoint_returning_valid_json()
     {
@@ -64,7 +64,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function can_get_an_endpoint_with_parameters_returning_valid_json()
     {
@@ -79,7 +79,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_processeses_a_non_200_response_to_a_get_request()
     {
@@ -105,7 +105,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function client_throws_error_with_get_request()
     {
@@ -155,7 +155,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_processes_a_non_2xx_response_to_a_post_request()
     {
@@ -181,7 +181,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function client_throws_error_with_post_request()
     {
@@ -231,7 +231,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_processes_a_non_2xx_response_to_a_put_request()
     {
@@ -257,7 +257,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function client_throws_error_with_put_request()
     {
@@ -307,7 +307,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_processes_a_non_2xx_response_to_a_patch_request()
     {
@@ -333,7 +333,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function client_throws_error_with_patch_request()
     {
@@ -383,7 +383,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function correctly_processes_a_non_2xx_response_to_a_delete_request()
     {
@@ -409,7 +409,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function client_throws_error_with_delete_request()
     {
@@ -446,7 +446,7 @@ class ClientTest extends TestCase
     // expected functionality in each.
 
     /**
-     * @test 
+     * @test
      */
     public function sets_appropriate_request_headers_for_request()
     {
@@ -485,7 +485,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function sets_token_in_header_if_supplied()
     {
@@ -523,7 +523,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function sets_trace_id_in_header_if_supplied()
     {
@@ -561,7 +561,7 @@ class ClientTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function gracefully_handles_malformed_response_data()
     {
