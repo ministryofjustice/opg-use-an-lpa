@@ -18,7 +18,9 @@ class TranslationUpdateCommandFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_creates_a_translation_update_command(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

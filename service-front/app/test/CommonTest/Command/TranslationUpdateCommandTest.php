@@ -21,7 +21,9 @@ class TranslationUpdateCommandTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_be_executed(): void
     {
         $vfs = vfsStream::setup(
@@ -35,7 +37,9 @@ class TranslationUpdateCommandTest extends TestCase
 
         $translationsProphecy = $this->prophesize(Translations::class);
 
-        /** @var CatalogueExtractor|ObjectProphecy $extractorProphecy */
+        /**
+ * @var CatalogueExtractor|ObjectProphecy $extractorProphecy 
+*/
         $extractorProphecy = $this->prophesize(CatalogueExtractor::class);
         $extractorProphecy
             ->extract([$vfs->url()])
@@ -64,7 +68,9 @@ class TranslationUpdateCommandTest extends TestCase
             );
 
 
-        /** @var TwigFactory|ObjectProphecy $extractorProphecy */
+        /**
+ * @var TwigFactory|ObjectProphecy $extractorProphecy 
+*/
         $twigExtractorFactoryProphecy = $this->prophesize(TwigFactory::class);
         $twigExtractorFactoryProphecy
             ->__invoke()
@@ -72,7 +78,9 @@ class TranslationUpdateCommandTest extends TestCase
                 $extractorProphecy->reveal()
             );
 
-        /** @var PhpFactory|ObjectProphecy $extractorProphecy */
+        /**
+ * @var PhpFactory|ObjectProphecy $extractorProphecy 
+*/
         $phpExtractorFactoryProphecy = $this->prophesize(PhpFactory::class);
         $phpExtractorFactoryProphecy
             ->__invoke()
