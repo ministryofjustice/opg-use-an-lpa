@@ -60,19 +60,6 @@ provider "aws" {
 }
 
 provider "aws" {
-  region = "eu-west-2"
-  alias  = "eu_west_2"
-  default_tags {
-    tags = local.default_tags
-  }
-  assume_role {
-    role_arn     = "arn:aws:iam::${local.environment.account_id}:role/${var.default_role}"
-    session_name = "terraform-session"
-  }
-}
-
-
-provider "aws" {
   region = "us-east-1"
   alias  = "us-east-1"
   default_tags {
