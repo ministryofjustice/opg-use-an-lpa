@@ -15,7 +15,7 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
     public const FORM_NAME = 'organisation_name';
 
     /**
-     * @var array<array-key, mixed> 
+     * @var array<array-key, mixed>
      */
     protected array $messageTemplates = [
         self::NOT_SAME => 'Do you want to continue?' .

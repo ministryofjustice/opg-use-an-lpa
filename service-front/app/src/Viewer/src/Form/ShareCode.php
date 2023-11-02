@@ -18,7 +18,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
     public const FORM_NAME = 'share_code';
 
     /**
-     * @var array<array-key, mixed> 
+     * @var array<array-key, mixed>
      */
     protected array $messageTemplates = [
         self::NOT_SAME => 'Do you want to continue?' .
