@@ -46,7 +46,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws InvalidRequestException
      */
@@ -72,15 +72,19 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                 $lpaData   = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
                 $actorRole = $lpaData['actor']['type'] === 'donor' ? 'Donor' : 'Attorney';
 
-                return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
-                    'user'         => $user,
-                    'actorToken'   => $validated['lpa_token'],
-                    'code'         => $codeData['code'],
-                    'expires'      => new DateTimeImmutable($codeData['expires']),
-                    'organisation' => ucwords($codeData['organisation']),
-                    'lpa'          => $lpaData->lpa,
-                    'actorRole'    => $actorRole,
-                ]));
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::lpa-show-viewercode', [
+                        'user'         => $user,
+                        'actorToken'   => $validated['lpa_token'],
+                        'code'         => $codeData['code'],
+                        'expires'      => new DateTimeImmutable($codeData['expires']),
+                        'organisation' => ucwords($codeData['organisation']),
+                        'lpa'          => $lpaData->lpa,
+                        'actorRole'    => $actorRole,
+                        ]
+                    )
+                );
             }
         }
 
@@ -101,11 +105,15 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
             return $this->redirectToRoute('lpa.dashboard');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
-            'user'       => $user,
-            'lpa'        => $lpaData->lpa,
-            'actorToken' => $form->get('lpa_token')->getValue(),
-            'form'       => $form,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::lpa-create-viewercode', [
+                'user'       => $user,
+                'lpa'        => $lpaData->lpa,
+                'actorToken' => $form->get('lpa_token')->getValue(),
+                'form'       => $form,
+                ]
+            )
+        );
     }
 }

@@ -24,7 +24,7 @@ class DateOfBirth extends AbstractForm implements InputFilterProviderInterface
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

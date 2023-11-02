@@ -39,11 +39,11 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
      * RequestChangeEmailHandler constructor
      *
      * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param AuthenticationInterface $authenticator
-     * @param ServerUrlHelper $serverUrlHelper
-     * @param NotifyService $notifyService
+     * @param UrlHelper                 $urlHelper
+     * @param UserService               $userService
+     * @param AuthenticationInterface   $authenticator
+     * @param ServerUrlHelper           $serverUrlHelper
+     * @param NotifyService             $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -82,9 +82,11 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                     try {
                         $data = $this->userService->requestChangeEmail($user->getIdentity(), $newEmail, $password);
 
-                        $verifyNewEmailPath = $this->urlHelper->generate('verify-new-email', [
+                        $verifyNewEmailPath = $this->urlHelper->generate(
+                            'verify-new-email', [
                             'token' => $data['EmailResetToken'],
-                        ]);
+                            ]
+                        );
 
                         $verifyNewEmailUrl = $this->serverUrlHelper->generate($verifyNewEmailPath);
 
@@ -104,10 +106,14 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                         $session->set(EncryptedCookiePersistence::SESSION_EXPIRED_KEY, true);
                         $session->regenerate();
 
-                        return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
-                            'user'     => $user,
-                            'newEmail' => $newEmail,
-                        ]));
+                        return new HtmlResponse(
+                            $this->renderer->render(
+                                'actor::request-email-change-success', [
+                                'user'     => $user,
+                                'newEmail' => $newEmail,
+                                ]
+                            )
+                        );
                     } catch (ApiException $ex) {
                         if ($ex->getCode() === StatusCodeInterface::STATUS_FORBIDDEN) {
                             $form->addErrorMessage(ChangeEmail::INVALID_PASSWORD);
@@ -120,19 +126,27 @@ class RequestChangeEmailHandler extends AbstractHandler implements CsrfGuardAwar
                                 $newEmail
                             );
 
-                            return new HtmlResponse($this->renderer->render('actor::request-email-change-success', [
-                                'user'     => $user,
-                                'newEmail' => $newEmail,
-                            ]));
+                            return new HtmlResponse(
+                                $this->renderer->render(
+                                    'actor::request-email-change-success', [
+                                    'user'     => $user,
+                                    'newEmail' => $newEmail,
+                                    ]
+                                )
+                            );
                         }
                     }
                 }
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::change-email', [
-            'form' => $form->prepare(),
-            'user' => $user,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::change-email', [
+                'form' => $form->prepare(),
+                'user' => $user,
+                ]
+            )
+        );
     }
 }

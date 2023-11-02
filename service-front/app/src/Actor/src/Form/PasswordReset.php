@@ -18,17 +18,19 @@ class PasswordReset extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $guard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'password',
             'type' => 'Password',
-        ]);
+            ]
+        );
     }
 
     /**
      * Should return an array specification compatible with
      * {@link \Laminas\InputFilter\Factory::createInputFilter()}.
      *
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

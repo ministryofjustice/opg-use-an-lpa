@@ -18,18 +18,22 @@ class CreateShareCode extends AbstractForm implements InputFilterProviderInterfa
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'org_name',
             'type' => 'Text',
-        ]);
-        $this->add([
+            ]
+        );
+        $this->add(
+            [
             'name' => 'lpa_token',
             'type' => 'Hidden',
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

@@ -44,7 +44,7 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws InvalidRequestException
      */
@@ -66,7 +66,9 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
                 $validated['viewer_code']
             );
 
-            /** @var FlashMessagesInterface $flash */
+            /**
+ * @var FlashMessagesInterface $flash 
+*/
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
             $formattedCode = str_split($validated['viewer_code'], 4);

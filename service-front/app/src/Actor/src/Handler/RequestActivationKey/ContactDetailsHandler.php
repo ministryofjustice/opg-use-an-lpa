@@ -35,14 +35,16 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             ]
         );
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::contact-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::contact-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -58,14 +60,16 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::contact-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::contact-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
@@ -96,7 +100,9 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /**
+ * @var RequestActivationKey $state 
+**/
         if ($state->needsCleansing) {
             return 'lpa.check-answers';
         }

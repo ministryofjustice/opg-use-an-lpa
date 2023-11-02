@@ -27,21 +27,25 @@ class DonorDetails extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'donor_first_names',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'donor_last_name',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
         $this->add(new Date('donor_dob'));
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

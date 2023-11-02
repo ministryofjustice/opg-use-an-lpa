@@ -41,7 +41,7 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
@@ -51,11 +51,10 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
 
         // The implicitHeadMiddleware will attach an attribute to the request if it detects a HEAD request
         // We only want to continue with email changing if it is not there.
-        if (
-            $request->getAttribute(
-                ImplicitHeadMiddleware::FORWARDED_HTTP_METHOD_ATTRIBUTE,
-                false
-            ) === false
+        if ($request->getAttribute(
+            ImplicitHeadMiddleware::FORWARDED_HTTP_METHOD_ATTRIBUTE,
+            false
+        ) === false
         ) {
             $tokenValid = $this->userService->canResetEmail($resetToken);
 
@@ -70,7 +69,9 @@ class CompleteChangeEmailHandler extends AbstractHandler implements UserAware, S
             $session->regenerate();
         }
 
-        /** @var FlashMessagesInterface $flash */
+        /**
+ * @var FlashMessagesInterface $flash 
+*/
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         $message = $this->translator->translate(

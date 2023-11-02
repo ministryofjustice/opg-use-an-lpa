@@ -36,20 +36,24 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 
         $this->add(new Email('email'));
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'show_hide_password',
             'type' => 'Password',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name'  => 'terms',
             'type'  => 'Checkbox',
             'value' => 1,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

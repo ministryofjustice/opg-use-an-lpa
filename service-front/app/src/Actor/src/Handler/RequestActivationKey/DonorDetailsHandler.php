@@ -41,14 +41,16 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
 
         $this->form->setData($data);
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/donor-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/donor-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -70,14 +72,16 @@ class DonorDetailsHandler extends AbstractCleansingDetailsHandler
             return $this->redirectToRoute($nextPageName);
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/donor-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/donor-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool

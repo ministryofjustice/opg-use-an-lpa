@@ -39,7 +39,7 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -55,9 +55,11 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                 try {
                     $resetToken = $this->userService->requestPasswordReset($data['email']);
 
-                    $passwordResetPath = $this->urlHelper->generate('password-reset-token', [
+                    $passwordResetPath = $this->urlHelper->generate(
+                        'password-reset-token', [
                         'token' => $resetToken,
-                    ]);
+                        ]
+                    );
 
                     $passwordResetUrl = $this->serverUrlHelper->generate($passwordResetPath);
 
@@ -85,14 +87,22 @@ class PasswordResetRequestPageHandler extends AbstractHandler implements CsrfGua
                     }
                 }
 
-                return new HtmlResponse($this->renderer->render('actor::password-reset-request-done', [
-                    'email' => strtolower($data['email']),
-                ]));
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::password-reset-request-done', [
+                        'email' => strtolower($data['email']),
+                        ]
+                    )
+                );
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::password-reset-request', [
-            'form' => $form,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::password-reset-request', [
+                'form' => $form,
+                ]
+            )
+        );
     }
 }

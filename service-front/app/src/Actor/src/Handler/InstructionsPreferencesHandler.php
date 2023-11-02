@@ -34,15 +34,19 @@ class InstructionsPreferencesHandler extends AbstractHandler implements UserAwar
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::instructions-preferences', [
-            'user' => $user,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::instructions-preferences', [
+                'user' => $user,
+                ]
+            )
+        );
     }
 }

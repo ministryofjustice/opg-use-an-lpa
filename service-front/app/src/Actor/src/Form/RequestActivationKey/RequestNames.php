@@ -19,19 +19,23 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'first_names',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'last_name',
             'type' => 'Text',
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

@@ -53,7 +53,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws Exception
      */
@@ -69,7 +69,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws Exception
      */
@@ -96,13 +96,17 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new BadRequestException('Lpa to remove cannot be found');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
-            'user'       => $this->user,
-            'actorToken' => $actorLpaToken,
-            'form'       => $this->form,
-            'lpa'        => $lpaData['lpa'],
-            'lpaType'    => $lpaType,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::confirm-remove-lpa', [
+                'user'       => $this->user,
+                'actorToken' => $actorLpaToken,
+                'form'       => $this->form,
+                'lpa'        => $lpaData['lpa'],
+                'lpaType'    => $lpaType,
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -115,7 +119,9 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
             $removedLpaData = ($this->removeLpa)($this->user->getIdentity(), $actorLpaToken);
 
-            /** @var FlashMessagesInterface $flash */
+            /**
+ * @var FlashMessagesInterface $flash 
+*/
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
             $hw  = $this->translator->translate('health and welfare', [], null, 'flashMessage');

@@ -36,10 +36,12 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
 
         $this->add(new Email('new_email_address'));
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'current_password',
             'type' => 'Password',
-        ]);
+            ]
+        );
     }
 
     /**

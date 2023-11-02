@@ -42,7 +42,7 @@ class RequestPostcode extends AbstractForm implements InputFilterProviderInterfa
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

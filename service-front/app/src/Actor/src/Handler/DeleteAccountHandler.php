@@ -35,9 +35,9 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
      * DeleteAccountHandler constructor
      *
      * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param LoggerInterface $logger
+     * @param UrlHelper                 $urlHelper
+     * @param UserService               $userService
+     * @param LoggerInterface           $logger
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -52,7 +52,7 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws Exception
      */

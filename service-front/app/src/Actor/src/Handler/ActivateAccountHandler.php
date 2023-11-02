@@ -42,16 +42,19 @@ class ActivateAccountHandler extends AbstractHandler
 
         // The ImplicitHeadMiddleware will attach an attribute to the request if it detects a HEAD request
         // We only want to continue with account activation if it is not there.
-        if (
-            $request->getAttribute(
-                ImplicitHeadMiddleware::FORWARDED_HTTP_METHOD_ATTRIBUTE,
-                false
-            ) === false
+        if ($request->getAttribute(
+            ImplicitHeadMiddleware::FORWARDED_HTTP_METHOD_ATTRIBUTE,
+            false
+        ) === false
         ) {
-            /** @var bool|string $activated */
+            /**
+ * @var bool|string $activated 
+*/
             $activated = $this->userService->activate($activationToken);
 
-            /** @var FlashMessagesInterface $flash */
+            /**
+ * @var FlashMessagesInterface $flash 
+*/
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
             if (is_string($activated)) {

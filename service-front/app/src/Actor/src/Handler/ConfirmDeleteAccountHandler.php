@@ -33,7 +33,7 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws Exception
      */
@@ -41,8 +41,12 @@ class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::confirm-delete-account', [
-            'user' => $user,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::confirm-delete-account', [
+                'user' => $user,
+                ]
+            )
+        );
     }
 }

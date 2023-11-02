@@ -34,15 +34,19 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
     {
         parent::__construct(self::FORM_NAME, $guard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'current_password',
             'type' => 'Password',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'new_password',
             'type' => 'Password',
-        ]);
+            ]
+        );
     }
 
     /**

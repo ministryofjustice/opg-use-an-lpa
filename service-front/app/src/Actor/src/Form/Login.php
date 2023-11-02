@@ -35,14 +35,16 @@ class Login extends AbstractForm implements InputFilterProviderInterface
 
         $this->add(new Email('email'));
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'password',
             'type' => 'Password',
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

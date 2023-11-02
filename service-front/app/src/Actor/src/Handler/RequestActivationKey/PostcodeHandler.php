@@ -89,7 +89,9 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
+        /**
+ * @var RequestActivationKey $state 
+*/
         return $state->liveInUK !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 

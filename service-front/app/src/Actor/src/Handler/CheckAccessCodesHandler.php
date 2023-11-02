@@ -45,13 +45,15 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws InvalidRequestException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var string $actorLpaToken */
+        /**
+ * @var string $actorLpaToken 
+*/
         $actorLpaToken = $request->getQueryParams()['lpa'];
 
         if (is_null($actorLpaToken)) {
@@ -70,7 +72,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         }
 
         /**
-         * @var Lpa $lpa
+         * @var            Lpa $lpa
          * @psalm-suppress UndefinedPropertyFetch # Psalm doesn't like ArrayObjects, and why should it?
          */
         $lpa = $lpaData->lpa;
@@ -82,18 +84,19 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         );
 
         foreach ($shareCodes as $key => $code) {
-            if (
-                new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)
+            if (new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)
                 && !array_key_exists('Cancelled', $code)
             ) {
                 $form = new CancelCode($this->getCsrfGuard($request));
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
 
-                $form->setData([
+                $form->setData(
+                    [
                     'lpa_token'    => $actorLpaToken,
                     'viewer_code'  => $code['ViewerCode'],
                     'organisation' => $code['Organisation'],
-                ]);
+                    ]
+                );
 
                 $shareCodes[$key]['form'] = $form;
             }
@@ -159,16 +162,22 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             );
         }
 
-        /** @var FlashMessagesInterface $flash */
+        /**
+ * @var FlashMessagesInterface $flash 
+*/
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
-        return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
-            'actorToken' => $actorLpaToken,
-            'user'       => $user,
-            'lpa'        => $lpa,
-            'shareCodes' => $shareCodes,
-            'flash'      => $flash,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::check-access-codes', [
+                'actorToken' => $actorLpaToken,
+                'user'       => $user,
+                'lpa'        => $lpa,
+                'shareCodes' => $shareCodes,
+                'flash'      => $flash,
+                ]
+            )
+        );
     }
 
     private function idMatch(CaseActor $actor, array $code): bool

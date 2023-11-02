@@ -34,7 +34,7 @@ class DeathNotificationHandler extends AbstractHandler implements UserAware
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
 
@@ -46,9 +46,13 @@ class DeathNotificationHandler extends AbstractHandler implements UserAware
 
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::death-notification', [
-            'actorToken' => $actorLpaToken,
-            'user'       => $user,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::death-notification', [
+                'actorToken' => $actorLpaToken,
+                'user'       => $user,
+                ]
+            )
+        );
     }
 }

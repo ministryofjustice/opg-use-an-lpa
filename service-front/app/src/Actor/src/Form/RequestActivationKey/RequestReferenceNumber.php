@@ -24,14 +24,16 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'opg_reference_number',
             'type' => 'Text',
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

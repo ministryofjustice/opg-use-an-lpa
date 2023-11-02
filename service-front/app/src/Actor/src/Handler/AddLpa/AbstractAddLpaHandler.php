@@ -54,7 +54,7 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -73,21 +73,21 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
     abstract public function handleGet(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return AddLpa
      * @throws StateNotInitialisedException
      */

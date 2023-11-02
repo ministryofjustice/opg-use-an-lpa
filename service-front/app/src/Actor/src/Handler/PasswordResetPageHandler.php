@@ -32,11 +32,11 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
 
     /**
      * @codeCoverageIgnore
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param ServerUrlHelper $serverUrlHelper
-     * @param TranslatorInterface $translator
+     * @param              TemplateRendererInterface $renderer
+     * @param              UrlHelper                 $urlHelper
+     * @param              UserService               $userService
+     * @param              ServerUrlHelper           $serverUrlHelper
+     * @param              TranslatorInterface       $translator
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -51,7 +51,7 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
     /**
      * Handles a request and produces a response
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -89,9 +89,13 @@ class PasswordResetPageHandler extends AbstractHandler implements CsrfGuardAware
         }
 
         if ($tokenValid) {
-            return new HtmlResponse($this->renderer->render('actor::password-reset', [
-                'form' => $form->prepare(),
-            ]));
+            return new HtmlResponse(
+                $this->renderer->render(
+                    'actor::password-reset', [
+                    'form' => $form->prepare(),
+                    ]
+                )
+            );
         }
 
         return new HtmlResponse($this->renderer->render('actor::password-reset-not-found'));

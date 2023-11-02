@@ -30,18 +30,20 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
         if ($this->state($request)->addressOnPaper) {
             $this->form->setData(['address_on_paper_area' => $this->state($request)->addressOnPaper]);
         }
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/address-on-paper',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/address-on-paper',
+                [
                 'user' => $this->user,
                 'form' => $this->form,
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws StateNotInitialisedException
      */
@@ -57,16 +59,22 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/address-on-paper', [
-            'user' => $this->user,
-            'form' => $this->form,
-            'back' => $this->lastPage($this->state($request)),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/address-on-paper', [
+                'user' => $this->user,
+                'form' => $this->form,
+                'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /**
+ * @var RequestActivationKey $state 
+**/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.add.actor-role';
@@ -74,7 +82,9 @@ class AddressOnPaperHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /**
+ * @var RequestActivationKey $state 
+**/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.add.actor-address';

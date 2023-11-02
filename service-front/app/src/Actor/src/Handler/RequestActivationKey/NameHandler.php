@@ -34,11 +34,15 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             ]
         );
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request)),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/your-name', [
+                'user' => $this->user,
+                'form' => $this->form->prepare(),
+                'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -55,11 +59,15 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request)),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/your-name', [
+                'user' => $this->user,
+                'form' => $this->form->prepare(),
+                'back' => $this->lastPage($this->state($request)),
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
@@ -69,13 +77,17 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
+        /**
+ * @var RequestActivationKey $state 
+*/
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
+        /**
+ * @var RequestActivationKey $state 
+*/
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

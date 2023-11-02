@@ -55,16 +55,18 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             );
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-address',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/actor-address',
+                [
                 'user'       => $this->user,
                 'form'       => $this->form->prepare(),
                 'live_in_uk' => $this->state($request)->liveInUK,
                 'back'       => $this->lastPage($this->state($request)),
                 'postcode'   => $this->state($request)->postcode,
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -96,21 +98,25 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             return $this->redirectToRoute($nextPageName);
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/actor-address',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/actor-address',
+                [
                 'user'       => $this->user,
                 'form'       => $this->form->prepare(),
                 'live_in_uk' => $this->state($request)->liveInUK,
                 'postcode'   => $this->state($request)->postcode,
                 'back'       => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /**
+ * @var RequestActivationKey $state 
+**/
         if ($this->hasFutureAnswersInState($state)) {
             return 'lpa.add.check-details-and-consent';
         }
@@ -122,7 +128,9 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
+        /**
+ * @var RequestActivationKey $state 
+**/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.check-answers';

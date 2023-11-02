@@ -60,11 +60,13 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         }
 
         return new HtmlResponse(
-            $this->renderer->render('actor::request-activation-key/actor-role', [
+            $this->renderer->render(
+                'actor::request-activation-key/actor-role', [
                 'user' => $this->user,
                 'form' => $this->form,
                 'back' => $this->lastPage($this->state($request)),
-            ])
+                ]
+            )
         );
     }
 
@@ -76,7 +78,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state * */
+        /**
+ * @var RequestActivationKey $state * 
+*/
         if ($this->hasFutureAnswersInState($state)) {
             return 'lpa.add.check-details-and-consent';
         }
@@ -88,7 +92,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state * */
+        /**
+ * @var RequestActivationKey $state * 
+*/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : $this->lastPageByPreviousAnswers(

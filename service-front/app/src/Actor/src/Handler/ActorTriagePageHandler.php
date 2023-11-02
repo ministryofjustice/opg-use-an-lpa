@@ -49,9 +49,13 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
             return $this->redirectToRoute('lpa.dashboard');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::home-page', [
-            'form' => $form->prepare(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::home-page', [
+                'form' => $form->prepare(),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -70,8 +74,12 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
             return $this->redirectToRoute('create-account');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::home-page', [
-            'form' => $form->prepare(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::home-page', [
+                'form' => $form->prepare(),
+                ]
+            )
+        );
     }
 }

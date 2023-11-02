@@ -51,7 +51,9 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     {
         $form = new Login($this->getCsrfGuard($request));
 
-        /** @var FlashMessagesInterface $flash */
+        /**
+ * @var FlashMessagesInterface $flash 
+*/
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
         if ($request->getMethod() === 'POST') {
@@ -62,10 +64,14 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 $this->getLogger()->notice('Login form validation failed.', $errors);
 
-                return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form'  => $form,
-                    'flash' => $flash,
-                ]));
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::login', [
+                        'form'  => $form,
+                        'flash' => $flash,
+                        ]
+                    )
+                );
             }
 
             try {
@@ -81,20 +87,26 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
                 $form->addErrorMessage(Login::NOT_FOUND);
 
-                return new HtmlResponse($this->renderer->render('actor::login', [
-                    'form'  => $form,
-                    'flash' => $flash,
-                ]));
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::login', [
+                        'form'  => $form,
+                        'flash' => $flash,
+                        ]
+                    )
+                );
             } catch (ApiException $e) {
-               //401 denotes in this case that we hve not activated,
-               // redirect to correct success page with correct data
+                //401 denotes in this case that we hve not activated,
+                // redirect to correct success page with correct data
                 if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {
                     $formValues   = $form->getData();
                     $emailAddress = $formValues['email'];
 
-                    return $this->redirectToRoute('create-account-success', [], [
-                       'email' => $emailAddress,
-                    ]);
+                    return $this->redirectToRoute(
+                        'create-account-success', [], [
+                        'email' => $emailAddress,
+                        ]
+                    );
                 }
             }
         }
@@ -107,9 +119,13 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         $this->rateLimitService->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
-        return new HtmlResponse($this->renderer->render('actor::login', [
-            'form'  => $form,
-            'flash' => $flash,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::login', [
+                'form'  => $form,
+                'flash' => $flash,
+                ]
+            )
+        );
     }
 }

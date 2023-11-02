@@ -120,9 +120,9 @@ class RequestActivationKey implements WorkflowState
     /**
      * TODO replace with enums at PHP 8.1
      *
-     * @param string $role
+     * @param       string $role
      * @psalm-param self::ACTOR_TYPE_* $role
-     * @throws RuntimeException
+     * @throws      RuntimeException
      */
     public function setActorRole(string $role): void
     {
@@ -146,21 +146,20 @@ class RequestActivationKey implements WorkflowState
     /**
      * TODO replace with enums at PHP 8.1
      *
-     * @param string $addressResponse
+     * @param       string $addressResponse
      * @psalm-param self::ACTOR_ADDRESS_SELECTION_* $addressResponse
-     * @throws RuntimeException
+     * @throws      RuntimeException
      */
     public function setActorAddressResponse(string $addressResponse): void
     {
-        if (
-            !in_array(
-                $addressResponse,
-                [
+        if (!in_array(
+            $addressResponse,
+            [
                     self::ACTOR_ADDRESS_SELECTION_YES,
                     self::ACTOR_ADDRESS_SELECTION_NO,
                     self::ACTOR_ADDRESS_SELECTION_NOT_SURE,
                 ]
-            )
+        )
         ) {
             throw new RuntimeException(sprintf("Actor address response '%s' not recognised", $addressResponse));
         }

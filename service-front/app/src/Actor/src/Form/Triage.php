@@ -17,7 +17,8 @@ class Triage extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name'    => 'triageEntry',
             'type'    => 'Radio',
             'options' => [
@@ -26,11 +27,12 @@ class Triage extends AbstractForm implements InputFilterProviderInterface
                     'no'  => 'no',
                 ],
             ],
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

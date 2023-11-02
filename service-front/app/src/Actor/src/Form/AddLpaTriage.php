@@ -17,7 +17,8 @@ class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name'    => 'activation_key_triage',
             'type'    => 'Radio',
             'options' => [
@@ -27,11 +28,12 @@ class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
                     'Expired' => 'Expired',
                 ],
             ],
-        ]);
+            ]
+        );
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

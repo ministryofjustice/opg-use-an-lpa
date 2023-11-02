@@ -50,14 +50,16 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
 
         $this->form->setData($data);
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/attorney-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/attorney-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -79,14 +81,16 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
             return $this->redirectToRoute($nextPageName);
         }
 
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/attorney-details',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/attorney-details',
+                [
                 'user' => $this->user,
                 'form' => $this->form->prepare(),
                 'back' => $this->lastPage($this->state($request)),
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function isMissingPrerequisite(ServerRequestInterface $request): bool

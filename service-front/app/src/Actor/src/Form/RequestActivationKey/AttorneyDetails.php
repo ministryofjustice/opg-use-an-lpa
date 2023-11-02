@@ -27,21 +27,25 @@ class AttorneyDetails extends AbstractForm implements InputFilterProviderInterfa
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'attorney_first_names',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'attorney_last_name',
             'type' => 'Text',
-        ]);
+            ]
+        );
 
         $this->add(new Date('attorney_dob'));
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

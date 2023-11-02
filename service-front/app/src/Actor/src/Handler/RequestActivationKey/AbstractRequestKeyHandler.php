@@ -75,7 +75,7 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return RequestActivationKey
      * @throws StateNotInitialisedException
      */

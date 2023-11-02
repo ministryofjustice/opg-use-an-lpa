@@ -32,7 +32,7 @@ class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInte
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

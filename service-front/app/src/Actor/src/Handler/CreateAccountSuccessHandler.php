@@ -31,7 +31,7 @@ class CreateAccountSuccessHandler extends AbstractHandler
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Http\Client\Exception
      */
@@ -46,7 +46,9 @@ class CreateAccountSuccessHandler extends AbstractHandler
          */
         $params = $request->getQueryParams();
 
-        /** @var string $emailAddress */
+        /**
+ * @var string $emailAddress 
+*/
         $emailAddress = $params['email'] ?? null;
         $resend       = (isset($params['resend']) && $params['resend'] === 'true');
 
@@ -60,9 +62,11 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
                 //  Check to see if the user has activated their account by looking for an activation token
                 if (isset($userData['ActivationToken'])) {
-                    $activateAccountPath = $this->urlHelper->generate('activate-account', [
+                    $activateAccountPath = $this->urlHelper->generate(
+                        'activate-account', [
                         'token' => $userData['ActivationToken'],
-                    ]);
+                        ]
+                    );
 
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
@@ -73,17 +77,23 @@ class CreateAccountSuccessHandler extends AbstractHandler
                     );
 
                     //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes
-                    return $this->redirectToRoute('create-account-success', [], [
+                    return $this->redirectToRoute(
+                        'create-account-success', [], [
                         'email' => $emailAddress,
-                    ]);
+                        ]
+                    );
                 }
             } catch (ApiException) {
                 //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::create-account-success', [
-            'emailAddress' => $emailAddress,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::create-account-success', [
+                'emailAddress' => $emailAddress,
+                ]
+            )
+        );
     }
 }

@@ -41,13 +41,13 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
 
     /**
      * @codeCoverageIgnore
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param AuthenticationInterface $authenticator
-     * @param ServerUrlHelper $serverUrlHelper
-     * @param TranslatorInterface $translator
-     * @param NotifyService $notifyService
+     * @param              TemplateRendererInterface $renderer
+     * @param              UrlHelper                 $urlHelper
+     * @param              UserService               $userService
+     * @param              AuthenticationInterface   $authenticator
+     * @param              ServerUrlHelper           $serverUrlHelper
+     * @param              TranslatorInterface       $translator
+     * @param              NotifyService             $notifyService
      */
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -113,9 +113,13 @@ class ChangePasswordHandler extends AbstractHandler implements CsrfGuardAware, U
             }
         }
 
-        return new HtmlResponse($this->renderer->render('actor::password-change', [
-            'user' => $user,
-            'form' => $form->prepare(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::password-change', [
+                'user' => $user,
+                'form' => $form->prepare(),
+                ]
+            )
+        );
     }
 }

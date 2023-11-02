@@ -83,7 +83,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return RequestActivationKey
      * @throws StateNotInitialisedException
      */

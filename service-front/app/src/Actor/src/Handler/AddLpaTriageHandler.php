@@ -44,10 +44,14 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
             return $this->handlePost($request);
         }
 
-        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
-            'user' => $this->getUser($request),
-            'form' => $form->prepare(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::add-lpa-triage', [
+                'user' => $this->getUser($request),
+                'form' => $form->prepare(),
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
@@ -75,9 +79,13 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
             return $this->redirectToRoute('lpa.add-by-paper-information');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::add-lpa-triage', [
-            'user' => $this->getUser($request),
-            'form' => $form->prepare(),
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::add-lpa-triage', [
+                'user' => $this->getUser($request),
+                'form' => $form->prepare(),
+                ]
+            )
+        );
     }
 }

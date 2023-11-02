@@ -27,7 +27,7 @@ class AddressOnPaper extends AbstractForm implements InputFilterProviderInterfac
     }
 
     /**
-     * @return array
+     * @return             array
      * @codeCoverageIgnore
      */
     public function getInputFilterSpecification(): array

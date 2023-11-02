@@ -99,13 +99,17 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
+        /**
+ * @var RequestActivationKey $state 
+*/
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
+        /**
+ * @var RequestActivationKey $state 
+*/
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
     }
 }

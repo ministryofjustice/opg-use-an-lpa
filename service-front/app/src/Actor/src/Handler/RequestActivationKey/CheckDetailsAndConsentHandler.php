@@ -57,7 +57,9 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     private ?SessionInterface $session;
     private ?UserInterface $user;
 
-    /** @var array<string, int|string|bool|DateTimeInterface|array|null>  */
+    /**
+     * @var array<string, int|string|bool|DateTimeInterface|array|null>  
+     */
     private array $data;
 
     private CleanseLpa $cleanseLPA;
@@ -145,14 +147,16 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render(
-            'actor::request-activation-key/check-details-and-consent',
-            [
+        return new HtmlResponse(
+            $this->renderer->render(
+                'actor::request-activation-key/check-details-and-consent',
+                [
                 'user' => $this->user,
                 'form' => $this->form,
                 'data' => $this->data,
-            ]
-        ));
+                ]
+            )
+        );
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
