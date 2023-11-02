@@ -19,7 +19,9 @@ class CookiesPageHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_CookiesPageHandler(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -46,7 +48,9 @@ class CookiesPageHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(CookiesPageHandler::class, $instance);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_needs_an_application_configuration_value(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -16,7 +16,9 @@ class UserTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function can_get_user_from_request_pipeline()
     {
         $userInterfaceProphecy = $this->prophesize(UserInterface::class);
@@ -36,7 +38,9 @@ class UserTest extends TestCase
         $this->assertInstanceOf(UserInterface::class, $user);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function gets_null_when_user_is_not_logged_in()
     {
         $authenticationProhphecy = $this->prophesize(AuthenticationInterface::class);
