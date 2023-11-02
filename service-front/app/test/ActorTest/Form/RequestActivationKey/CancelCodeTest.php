@@ -33,10 +33,10 @@ class CancelCodeTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'        => Csrf::class,
-            'viewer_code'   => Hidden::class,
-            'organisation'  => Hidden::class,
-            'lpa_token'     => Hidden::class,
+            '__csrf'       => Csrf::class,
+            'viewer_code'  => Hidden::class,
+            'organisation' => Hidden::class,
+            'lpa_token'    => Hidden::class,
         ];
     }
 
