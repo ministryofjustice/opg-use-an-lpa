@@ -16,7 +16,8 @@ class TranslatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test
+    /**
+     * @test
      */
     public function it_returns_a_welsh_translator_instance(): void
     {
@@ -26,10 +27,12 @@ class TranslatorFactoryTest extends TestCase
 
         $gettextTranslator->gettext('LPA access code')->willReturn('LPA access code');
 
-        $gettextTranslator->setLanguage('cy')->will(function ($language) {
-            $this->gettext('LPA access code')->willReturn('Rhowch god mynediad yr ACLL');
-            return $this->reveal();
-        });
+        $gettextTranslator->setLanguage('cy')->will(
+            function ($language) {
+                $this->gettext('LPA access code')->willReturn('Rhowch god mynediad yr ACLL');
+                return $this->reveal();
+            }
+        );
 
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -48,7 +51,9 @@ class TranslatorFactoryTest extends TestCase
 
         $factory = new TranslatorFactory();
 
-        /** @var TranslatorInterface $instance */
+        /**
+ * @var TranslatorInterface $instance 
+*/
         $instance = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(TranslatorInterface::class, $instance);
@@ -65,7 +70,9 @@ class TranslatorFactoryTest extends TestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_needs_language_file_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
