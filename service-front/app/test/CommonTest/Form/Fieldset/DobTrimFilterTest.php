@@ -18,8 +18,8 @@ class DobTrimFilterTest extends TestCase
 
     /**
      * @dataProvider validFormatProvider
-     * @param array $expected
-     * @param array $dob
+     * @param        array $expected
+     * @param        array $dob
      */
     public function testIsDobTrimmed(array $expected, array $dob)
     {

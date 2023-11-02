@@ -9,7 +9,9 @@ use Laminas\InputFilter\InputFilter;
 
 trait LaminasFormTests
 {
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_is_a_form()
     {
         $this->assertInstanceOf(AbstractForm::class, $this->getForm());
@@ -17,7 +19,9 @@ trait LaminasFormTests
         $this->assertEquals($this->getFormName(), $this->getForm()->getName());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_declares_all_necessary_inputs()
     {
         $formElements = $this->getForm()->getElements();
@@ -39,7 +43,9 @@ trait LaminasFormTests
         }
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_declares_all_neccessary_input_filters()
     {
         if (method_exists($this->getForm(), 'getInputFilterSpecification')) {

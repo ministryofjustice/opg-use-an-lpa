@@ -38,7 +38,9 @@ class AbstractFormTest extends TestCase
         };
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function you_can_add_error_messages_to_the_form()
     {
         $this->form->addErrorMessage('testKey');
@@ -47,7 +49,9 @@ class AbstractFormTest extends TestCase
         $this->assertContains('testErrorMessage', $errors['']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function you_can_add_error_messages_to_a_form_element()
     {
         $this->form->addErrorMessage('testKey', 'testElement');
@@ -56,26 +60,34 @@ class AbstractFormTest extends TestCase
         $this->assertContains('testErrorMessage', $errors);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function adding_an_undefined_error_fails()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('doesNotExist');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function adding_an_error_to_a_nonexistent_form_element_fails()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('testKey', 'doesNotExist');
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function returns_a_merged_set_of_all_error_messages()
     {
         $this->form->addErrorMessage('testKey');
 
-        /** @var Text $element */
+        /**
+ * @var Text $element 
+*/
         $element = $this->form->get('testElement');
         $element->setMessages(['testMessage' => 'messageText']);
 
@@ -84,10 +96,14 @@ class AbstractFormTest extends TestCase
         $this->assertContains('messageText', $errors['testElement']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function returns_error_messages_for_an_element()
     {
-        /** @var Text $element */
+        /**
+ * @var Text $element 
+*/
         $element = $this->form->get('testElement');
         $element->setMessages(['testMessage' => 'messageText']);
 
