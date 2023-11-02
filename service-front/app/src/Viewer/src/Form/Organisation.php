@@ -14,7 +14,9 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'organisation_name';
 
-    /** @var array<array-key, mixed> */
+    /**
+     * @var array<array-key, mixed> 
+     */
     protected array $messageTemplates = [
         self::NOT_SAME => 'Do you want to continue?' .
             ' You have not used this service for 30 minutes.' .
@@ -25,10 +27,12 @@ class Organisation extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'organisation',
             'type' => 'Text',
-        ]);
+            ]
+        );
     }
 
     /**

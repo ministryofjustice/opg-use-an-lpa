@@ -37,8 +37,12 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
             }
         }
 
-        return new HtmlResponse($this->renderer->render('viewer::enter-code', [
-            'form' => $form,
-        ]));
+        return new HtmlResponse(
+            $this->renderer->render(
+                'viewer::enter-code', [
+                'form' => $form,
+                ]
+            )
+        );
     }
 }

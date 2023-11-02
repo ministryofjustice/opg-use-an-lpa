@@ -41,7 +41,7 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Http\Client\Exception|\Exception
      */
@@ -69,14 +69,16 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                     $expires = new DateTime($lpa->expires);
                     $status  = strtolower($lpa->lpa->getStatus());
                     if ($this->canDisplayLPA($status)) {
-                        return new HtmlResponse($this->renderer->render(
-                            'viewer::check-code-found',
-                            [
+                        return new HtmlResponse(
+                            $this->renderer->render(
+                                'viewer::check-code-found',
+                                [
                                 'lpa'     => $lpa->lpa,
                                 'expires' => $expires->format('Y-m-d'),
                                 'form'    => $form,
-                            ]
-                        ));
+                                ]
+                            )
+                        );
                     }
                 }
             } catch (ApiException $apiEx) {
@@ -90,13 +92,15 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
             }
 
             $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
-            return new HtmlResponse($this->renderer->render(
-                'viewer::check-code-not-found',
-                [
+            return new HtmlResponse(
+                $this->renderer->render(
+                    'viewer::check-code-not-found',
+                    [
                     'donor_last_name' => $surname,
                     'lpa_access_code' => $code,
-                ]
-            ));
+                    ]
+                )
+            );
         }
 
         //  We don't have a code so the session has timed out

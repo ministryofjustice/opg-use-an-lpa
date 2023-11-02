@@ -28,10 +28,11 @@ class DownloadLpaHandler implements RequestHandlerInterface
         private PdfService $pdfService,
         private FeatureEnabled $featureEnabled,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Exception
      */
