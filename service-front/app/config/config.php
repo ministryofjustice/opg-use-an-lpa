@@ -12,7 +12,8 @@ $cacheConfig = [
     'config_cache_path' => '/tmp/config-cache.php',
 ];
 
-$aggregator = new ConfigAggregator([
+$aggregator = new ConfigAggregator(
+    [
     \Mezzio\Flash\ConfigProvider::class,
     \Laminas\Diactoros\ConfigProvider::class,
     \Laminas\Cache\ConfigProvider::class,
@@ -40,7 +41,9 @@ $aggregator = new ConfigAggregator([
     // Swoole config to overwrite some services (if installed)
     class_exists(\Mezzio\Swoole\ConfigProvider::class)
         ? \Mezzio\Swoole\ConfigProvider::class
-        : function(){ return[]; },
+        : function () {
+            return[]; 
+        },
 
     // App module(s) config
     Common\ConfigProvider::class,
@@ -57,6 +60,7 @@ $aggregator = new ConfigAggregator([
 
     // Load development config if it exists
     new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
-], $cacheConfig['config_cache_path']);
+    ], $cacheConfig['config_cache_path']
+);
 
 return $aggregator->getMergedConfig();
