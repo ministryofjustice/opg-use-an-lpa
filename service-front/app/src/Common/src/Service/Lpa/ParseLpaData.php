@@ -39,19 +39,19 @@ class ParseLpaData
     {
         foreach ($data as $dataItemName => $dataItem) {
             switch ($dataItemName) {
-            case 'lpa':
-                $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
-                break;
-            case 'actor':
-                $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
-                break;
-            case 'iap':
-                $data['iap'] = $this->imagesFactory->createFromData($dataItem);
-                break;
-            default:
-                if (is_array($dataItem)) {
-                    $data[$dataItemName] = ($this)($dataItem);
-                }
+                case 'lpa':
+                    $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                    break;
+                case 'actor':
+                    $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    break;
+                case 'iap':
+                    $data['iap'] = $this->imagesFactory->createFromData($dataItem);
+                    break;
+                default:
+                    if (is_array($dataItem)) {
+                        $data[$dataItemName] = ($this)($dataItem);
+                    }
             }
         }
 

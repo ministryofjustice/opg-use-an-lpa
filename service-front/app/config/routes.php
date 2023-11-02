@@ -498,10 +498,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 };
 
 switch (getenv('CONTEXT')) {
-case 'viewer':
-    return $viewerRoutes;
-case 'actor':
-    return $actorRoutes;
-default:
-    throw new Error('Unknown context');
+    case 'viewer':
+        return $viewerRoutes;
+    case 'actor':
+        return $actorRoutes;
+    default:
+        throw new Error('Unknown context');
 }
