@@ -52,7 +52,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_sets_correct_validator_when_flag_set_to_true(): void
     {
@@ -66,7 +66,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_sets_correct_validator_when_flag_set_to_false(): void
     {

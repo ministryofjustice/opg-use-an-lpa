@@ -46,7 +46,7 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function testItCreatesASessionCheckHandler()
     {
@@ -67,7 +67,7 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function testThrowsExceptionMissingConfigValue()
     {

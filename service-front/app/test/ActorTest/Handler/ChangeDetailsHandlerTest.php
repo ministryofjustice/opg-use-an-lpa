@@ -51,7 +51,8 @@ class ChangeDetailsHandlerTest extends TestCase
 
         $this->templateRendererProphecy
             ->render(
-                'actor::change-details', [
+                'actor::change-details',
+                [
                 'actorToken' => self::LPA_ID,
                 'user'       => null,
                 ]

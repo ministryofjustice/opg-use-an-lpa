@@ -45,7 +45,7 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_defaults_to_false()
     {
