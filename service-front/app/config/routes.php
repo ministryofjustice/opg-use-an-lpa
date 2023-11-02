@@ -69,14 +69,17 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
     $app->route(
-        '/home', [
+        '/home',
+        [
         new ConditionalRoutingMiddleware(
             $container,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\AuthenticateOneLoginHandler::class,
             Actor\Handler\ActorTriagePageHandler::class
         )
-        ], ['GET', 'POST'], 'home'
+        ],
+        ['GET', 'POST'],
+        'home'
     );
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -126,278 +129,379 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         'password-reset-token'
     );
     $app->get(
-        '/verify-new-email/{token}', [
+        '/verify-new-email/{token}',
+        [
         Actor\Handler\CompleteChangeEmailHandler::class,
-        ], 'verify-new-email'
+        ],
+        'verify-new-email'
     );
 
     // User deletion
     $app->get(
-        '/confirm-delete-account', [
+        '/confirm-delete-account',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account'
+        Actor\Handler\ConfirmDeleteAccountHandler::class],
+        'confirm-delete-account'
     );
     $app->get(
-        '/delete-account', [
+        '/delete-account',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\DeleteAccountHandler::class], 'delete-account'
+        Actor\Handler\DeleteAccountHandler::class],
+        'delete-account'
     );
 
     // User details
     $app->get(
-        '/your-details', [
+        '/your-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\YourDetailsHandler::class,
-        ], 'your-details'
+        ],
+        'your-details'
     );
     $app->route(
-        '/change-password', [
+        '/change-password',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
-        ], ['GET','POST'], 'change-password'
+        ],
+        ['GET','POST'],
+        'change-password'
     );
     $app->route(
-        '/change-email', [
+        '/change-email',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\RequestChangeEmailHandler::class
-        ], ['GET','POST'], 'change-email'
+        ],
+        ['GET','POST'],
+        'change-email'
     );
     $app->get(
-        '/lpa/change-details', [
+        '/lpa/change-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
-        ], 'lpa.change-details'
+        ],
+        'lpa.change-details'
     );
 
     // LPA management
     $app->get(
-        '/lpa/dashboard', [
+        '/lpa/dashboard',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaDashboardHandler::class
-        ], 'lpa.dashboard'
+        ],
+        'lpa.dashboard'
     );
     $app->route(
-        '/lpa/check', [
+        '/lpa/check',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckLpaHandler::class
-        ], ['GET', 'POST'], 'lpa.check'
+        ],
+        ['GET', 'POST'],
+        'lpa.check'
     );
     $app->get(
-        '/lpa/view-lpa', [
+        '/lpa/view-lpa',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryHandler::class
-        ], 'lpa.view'
+        ],
+        'lpa.view'
     );
     $app->get(
-        '/lpa/view-lpa/images', [
+        '/lpa/view-lpa/images',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ViewLpaSummaryImagesHandler::class
-        ], 'lpa.view-images'
+        ],
+        'lpa.view-images'
     );
     $app->route(
-        '/lpa/code-make', [
+        '/lpa/code-make',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CreateViewerCodeHandler::class
-        ], ['GET', 'POST'], 'lpa.create-code'
+        ],
+        ['GET', 'POST'],
+        'lpa.create-code'
     );
     $app->route(
-        '/lpa/access-codes', [
+        '/lpa/access-codes',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CheckAccessCodesHandler::class
-        ], ['GET', 'POST'], 'lpa.access-codes'
+        ],
+        ['GET', 'POST'],
+        'lpa.access-codes'
     );
     $app->post(
-        '/lpa/confirm-cancel-code', [
+        '/lpa/confirm-cancel-code',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmCancelCodeHandler::class
-        ], 'lpa.confirm-cancel-code'
+        ],
+        'lpa.confirm-cancel-code'
     );
     $app->post(
-        '/lpa/cancel-code', [
+        '/lpa/cancel-code',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\CancelCodeHandler::class
-        ], 'lpa.cancel-code'
+        ],
+        'lpa.cancel-code'
     );
     $app->get(
-        '/lpa/removed', [
+        '/lpa/removed',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\LpaRemovedHandler::class
-        ], 'lpa.removed'
+        ],
+        'lpa.removed'
     );
     $app->get(
-        '/lpa/instructions-preferences', [
+        '/lpa/instructions-preferences',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
-        ], 'lpa.instructions-preferences'
+        ],
+        'lpa.instructions-preferences'
     );
     $app->get(
-        '/lpa/instructions-preferences-signed-before-2016', [
+        '/lpa/instructions-preferences-signed-before-2016',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Common\Handler\InstructionsPreferencesBefore2016Handler::class
-        ], 'lpa.instructions-preferences-before-2016'
+        ],
+        'lpa.instructions-preferences-before-2016'
     );
     $app->get(
-        '/lpa/death-notification', [
+        '/lpa/death-notification',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
-        ], 'lpa.death-notification'
+        ],
+        'lpa.death-notification'
     );
     $app->get(
-        '/lpa/change-lpa-details', [
+        '/lpa/change-lpa-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeLpaDetailsHandler::class
-        ], 'lpa.change-lpa-details'
+        ],
+        'lpa.change-lpa-details'
     );
 
     //Add by code routes
     $app->route(
-        '/lpa/add-by-key/activation-key', [
+        '/lpa/add-by-key/activation-key',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\AddLpa\ActivationKeyHandler::class,
-        ], ['GET', 'POST'], 'lpa.add-by-key'
+        ],
+        ['GET', 'POST'],
+        'lpa.add-by-key'
     );
 
     $app->route(
-        '/lpa/add-by-key/date-of-birth', [
+        '/lpa/add-by-key/date-of-birth',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\DateOfBirthHandler::class,
-        ], ['GET', 'POST'], 'lpa.add-by-key.date-of-birth'
+        ],
+        ['GET', 'POST'],
+        'lpa.add-by-key.date-of-birth'
     );
 
     $app->route(
-        '/lpa/add-by-key/lpa-reference-number', [
+        '/lpa/add-by-key/lpa-reference-number',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
             \Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
-        ], ['GET', 'POST'], 'lpa.add-by-key.lpa-reference-number'
+        ],
+        ['GET', 'POST'],
+        'lpa.add-by-key.lpa-reference-number'
     );
 
     // Access for All Journey
     $app->route(
-        '/lpa/add/contact-details', [
+        '/lpa/add/contact-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\RequestActivationKey\ContactDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.contact-details'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.contact-details'
     );
 
     $app->route(
-        '/lpa/add/actor-role', [
+        '/lpa/add/actor-role',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\ActorRoleHandler::class
-        ], ['GET', 'POST'], 'lpa.add.actor-role'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.actor-role'
     );
 
     $app->route(
-        '/lpa/add/donor-details', [
+        '/lpa/add/donor-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.donor-details'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.donor-details'
     );
 
     $app->route(
-        '/lpa/add/actor-address', [
+        '/lpa/add/actor-address',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\ActorAddressHandler::class
-        ], ['GET', 'POST'], 'lpa.add.actor-address'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.actor-address'
     );
 
     $app->route(
-        '/lpa/add/attorney-details', [
+        '/lpa/add/attorney-details',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class
-        ], ['GET', 'POST'], 'lpa.add.attorney-details'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.attorney-details'
     );
 
     $app->route(
-        '/lpa/add/check-details-and-consent', [
+        '/lpa/add/check-details-and-consent',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
-        ], ['GET', 'POST'], 'lpa.add.check-details-and-consent'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.check-details-and-consent'
     );
 
     $app->route(
-        '/lpa/add/address-on-paper', [
+        '/lpa/add/address-on-paper',
+        [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class
-        ], ['GET', 'POST'], 'lpa.add.address-on-paper'
+        ],
+        ['GET', 'POST'],
+        'lpa.add.address-on-paper'
     );
 
     // Older LPA journey
-        // if flag true, send user to triage page as entry point
-        $app->route(
-            '/lpa/add', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\AddLpaTriageHandler::class,
-            ], ['GET', 'POST'], 'lpa.add'
-        );
+    // if flag true, send user to triage page as entry point
+    $app->route(
+        '/lpa/add',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\AddLpaTriageHandler::class,
+        ],
+        ['GET', 'POST'],
+        'lpa.add'
+    );
 
-        $app->route(
-            '/lpa/add-by-paper-information', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class
-            ], ['GET', 'POST'], 'lpa.add-by-paper-information'
-        );
+    $app->route(
+        '/lpa/add-by-paper-information',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\RequestActivationKeyInfoHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.add-by-paper-information'
+    );
 
-        $app->route(
-            '/lpa/request-code/lpa-reference-number', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class
-            ], ['GET', 'POST'], 'lpa.add-by-paper'
-        );
+    $app->route(
+        '/lpa/request-code/lpa-reference-number',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\ReferenceNumberHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.add-by-paper'
+    );
 
-        $app->route(
-            '/lpa/request-code/your-name', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\NameHandler::class
-            ], ['GET', 'POST'], 'lpa.your-name'
-        );
+    $app->route(
+        '/lpa/request-code/your-name',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\NameHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.your-name'
+    );
 
-        $app->route(
-            '/lpa/request-code/date-of-birth', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\DateOfBirthHandler::class
-            ], ['GET', 'POST'], 'lpa.date-of-birth'
-        );
+    $app->route(
+        '/lpa/request-code/date-of-birth',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\DateOfBirthHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.date-of-birth'
+    );
 
-        $app->route(
-            '/lpa/request-code/postcode', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\PostcodeHandler::class
-            ], ['GET', 'POST'], 'lpa.postcode'
-        );
+    $app->route(
+        '/lpa/request-code/postcode',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\PostcodeHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.postcode'
+    );
 
-        $app->route(
-            '/lpa/request-code/check-answers', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class
-            ], ['GET', 'POST'], 'lpa.check-answers'
-        );
+    $app->route(
+        '/lpa/request-code/check-answers',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\CheckYourAnswersHandler::class
+        ],
+        ['GET', 'POST'],
+        'lpa.check-answers'
+    );
 
-        $app->post(
-            '/lpa/confirm-activation-key-generation', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
-            ], 'lpa.confirm-activation-key-generation'
-        );
+    $app->post(
+        '/lpa/confirm-activation-key-generation',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\RequestActivationKey\CreateActivationKeyHandler::class
+        ],
+        'lpa.confirm-activation-key-generation'
+    );
 
 
-        $app->route(
-            '/lpa/remove-lpa', [
-            Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            new ConditionalRoutingMiddleware(
-                $container,
-                $DELETE_LPA_FEATURE,
-                Actor\Handler\RemoveLpaHandler::class,
-                $defaultNotFoundPage
-            )
-            ], ['GET', 'POST'], 'lpa.remove-lpa'
-        );
+    $app->route(
+        '/lpa/remove-lpa',
+        [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        new ConditionalRoutingMiddleware(
+            $container,
+            $DELETE_LPA_FEATURE,
+            Actor\Handler\RemoveLpaHandler::class,
+            $defaultNotFoundPage
+        )
+        ],
+        ['GET', 'POST'],
+        'lpa.remove-lpa'
+    );
 };
 
 switch (getenv('CONTEXT')) {
-case 'viewer':
-    return $viewerRoutes;
-case 'actor':
-    return $actorRoutes;
-default:
-    throw new Error('Unknown context');
+    case 'viewer':
+        return $viewerRoutes;
+    case 'actor':
+        return $actorRoutes;
+    default:
+        throw new Error('Unknown context');
 }

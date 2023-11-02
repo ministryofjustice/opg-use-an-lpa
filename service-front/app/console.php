@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
 /**
- * @var ContainerInterface $container 
+ * @var ContainerInterface $container
 */
 $container = include __DIR__ . '/config/container.php';
 $application = new Application('Application console');

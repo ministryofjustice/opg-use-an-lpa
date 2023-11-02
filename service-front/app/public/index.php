@@ -15,12 +15,12 @@ require 'vendor/autoload.php';
  */
 (function () {
     /**
- * @var \Psr\Container\ContainerInterface $container 
+ * @var \Psr\Container\ContainerInterface $container
 */
     $container = include 'config/container.php';
 
     /**
- * @var \Mezzio\Application $app 
+ * @var \Mezzio\Application $app
 */
     $app = $container->get(\Mezzio\Application::class);
     $factory = $container->get(\Mezzio\MiddlewareFactory::class);
