@@ -16,7 +16,9 @@ class UserFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_valid_callable()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -38,7 +40,9 @@ class UserFactoryTest extends TestCase
         $this->assertEquals(UserInterface::class, $r->getReturnType());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function the_callable_generates_a_user()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -53,7 +57,9 @@ class UserFactoryTest extends TestCase
         $this->assertEquals('test', $user->getIdentity());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function the_callable_will_error_if_no_email_supplied()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -14,7 +14,9 @@ class UserTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_be_constructed()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -22,15 +24,19 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_valid_user_details()
     {
         $date = new DateTime();
-        $user = new User('test', [], [
+        $user = new User(
+            'test', [], [
             'Email'      => 'a@b.com',
             'LastLogin'  => $date->format(DateTimeInterface::ATOM),
             'NeedsReset' => strtotime('now'),
-        ]);
+            ]
+        );
 
         $this->assertIsArray($user->getDetails());
         $this->assertCount(3, $user->getDetails());
@@ -38,14 +44,18 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('NeedsReset', $user->getDetails());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function needs_reset_is_false_when_not_supplied()
     {
         $date = new DateTime();
-        $user = new User('test', [], [
+        $user = new User(
+            'test', [], [
             'Email'     => 'a@b.com',
             'LastLogin' => $date->format(DateTimeInterface::ATOM),
-        ]);
+            ]
+        );
 
         $this->assertIsArray($user->getDetails());
         $this->assertCount(3, $user->getDetails());
@@ -54,7 +64,9 @@ class UserTest extends TestCase
         $this->assertFalse($user->getDetail('NeedsReset'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_expected_roles()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -63,7 +75,9 @@ class UserTest extends TestCase
         $this->assertCount(0, $user->getRoles());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_valid_lastLogin_time()
     {
         // this is needed to ensure our datetime is truncated at 0 microseconds
@@ -72,15 +86,19 @@ class UserTest extends TestCase
         $date = $date->format(DateTimeInterface::ATOM);
         $date = new DateTime($date);
 
-        $user = new User('test', [], [
+        $user = new User(
+            'test', [], [
             'Email'     => 'a@b.com',
             'LastLogin' => $date->format(DateTimeInterface::ATOM),
-        ]);
+            ]
+        );
 
         $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_valid_lastLogin_time_when_constructed_from_DateTime_array()
     {
         $date = new DateTime();
@@ -102,7 +120,9 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_default_detail_when_provided_and_necessary()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -110,7 +130,9 @@ class UserTest extends TestCase
         $this->assertEquals('Never', $user->getDetail('LastLogin', 'Never'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_null_when_property_not_found()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -118,7 +140,9 @@ class UserTest extends TestCase
         $this->assertNull($user->getDetail('TestProperty'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_a_null_lastLogin_when_none_provided()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -126,7 +150,9 @@ class UserTest extends TestCase
         $this->assertNull($user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_the_correct_identity()
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
