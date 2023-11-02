@@ -30,6 +30,7 @@ use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 use App\Handler\OneLoginAuthenticationRequestHandler;
+use App\Handler\OneLoginAuthorisationProcessHandler;
 
 /**
  * Setup routes with a single request method:
@@ -136,6 +137,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
 
     $app->get('/v1/auth-one-login', OneLoginAuthenticationRequestHandler::class, 'user.auth-one-login');
+    $app->get('/v1/auth-one-login-process', OneLoginAuthorisationProcessHandler::class, 'user.auth-process');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

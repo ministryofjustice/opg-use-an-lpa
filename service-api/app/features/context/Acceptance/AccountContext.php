@@ -1292,4 +1292,35 @@ class AccountContext implements Context
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
+
+    /**
+     * @Given /^I am on the temporary one login page$/
+     */
+    public function iAmOnTheTemporaryOneLoginPage(): void
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @When /^I click the one login button$/
+     */
+    public function iClickTheOneLoginButton(): void
+    {
+        // Not needed in this context
+    }
+
+    /**
+     * @Then /^I am redirected to the redirect page$/
+     */
+    public function iAmRedirectedToTheRedirectPage(): void
+    {
+        $this->apiGet('/v1/auth-one-login-process', []);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        Assert::assertEquals('one-login-user', $response['Id']);
+        Assert::assertEquals('one-login-user@email.com', $response['Email']);
+    }
 }
