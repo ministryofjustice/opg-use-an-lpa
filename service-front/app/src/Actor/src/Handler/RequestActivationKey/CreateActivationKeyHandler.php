@@ -88,31 +88,31 @@ class CreateActivationKeyHandler extends AbstractHandler implements
             );
 
             switch ($result->getResponse()) {
-                case AccessForAllResult::SUCCESS:
-                    $letterExpectedDate = (new Carbon())->addWeeks(2);
+            case AccessForAllResult::SUCCESS:
+                $letterExpectedDate = (new Carbon())->addWeeks(2);
 
-                    $this->notifyService->sendEmailToUser(
-                        NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE,
-                        $user->getDetails()['Email'],
-                        referenceNumber:(string) $state->referenceNumber,
-                        postCode:strtoupper($state->postcode),
-                        letterExpectedDate:($this->localisedDate)($letterExpectedDate),
-                    );
+                $this->notifyService->sendEmailToUser(
+                    NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE,
+                    $user->getDetails()['Email'],
+                    referenceNumber:(string) $state->referenceNumber,
+                    postCode:strtoupper($state->postcode),
+                    letterExpectedDate:($this->localisedDate)($letterExpectedDate),
+                );
 
-                    return new HtmlResponse(
-                        $this->renderer->render(
-                            'actor::send-activation-key-confirmation',
-                            [
+                return new HtmlResponse(
+                    $this->renderer->render(
+                        'actor::send-activation-key-confirmation',
+                        [
                                     'date' => $letterExpectedDate,
                                     'user' => $user,
                                 ]
-                        )
-                    );
-                case AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING:
-                    $state->needsCleansing = true;
-                    $state->actorUid       = (int) $result->getData()['actor_id'];
+                    )
+                );
+            case AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING:
+                $state->needsCleansing = true;
+                $state->actorUid       = (int) $result->getData()['actor_id'];
 
-                    return $this->redirectToRoute('lpa.add.contact-details');
+                return $this->redirectToRoute('lpa.add.contact-details');
             }
         }
 

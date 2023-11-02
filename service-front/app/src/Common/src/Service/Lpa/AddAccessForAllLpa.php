@@ -165,55 +165,55 @@ class AddAccessForAllLpa
     private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {
         switch ($message) {
-            case self::LPA_ALREADY_ADDED:
-                $code     = EventCodes::OLDER_LPA_ALREADY_ADDED;
-                $response = new AccessForAllApiResult(
-                    AccessForAllResult::LPA_ALREADY_ADDED,
-                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
-                );
-                break;
+        case self::LPA_ALREADY_ADDED:
+            $code     = EventCodes::OLDER_LPA_ALREADY_ADDED;
+            $response = new AccessForAllApiResult(
+                AccessForAllResult::LPA_ALREADY_ADDED,
+                ($this->parseLpaAlreadyAddedResponse)($additionalData)
+            );
+            break;
 
-            case self::LPA_NOT_ELIGIBLE:
-                $code     = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
-                $response = new AccessForAllApiResult(AccessForAllResult::NOT_ELIGIBLE, $additionalData);
-                break;
+        case self::LPA_NOT_ELIGIBLE:
+            $code     = EventCodes::OLDER_LPA_NOT_ELIGIBLE;
+            $response = new AccessForAllApiResult(AccessForAllResult::NOT_ELIGIBLE, $additionalData);
+            break;
 
-            case self::LPA_DOES_NOT_MATCH:
-                $code     = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
-                $response = new AccessForAllApiResult(AccessForAllResult::DOES_NOT_MATCH, $additionalData);
-                break;
+        case self::LPA_DOES_NOT_MATCH:
+            $code     = EventCodes::OLDER_LPA_DOES_NOT_MATCH;
+            $response = new AccessForAllApiResult(AccessForAllResult::DOES_NOT_MATCH, $additionalData);
+            break;
 
-            case self::LPA_HAS_ACTIVATION_KEY:
-                $code     = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
-                $response = new AccessForAllApiResult(
-                    AccessForAllResult::HAS_ACTIVATION_KEY,
-                    ($this->parseActivationKeyExistsResponse)($additionalData)
-                );
-                break;
+        case self::LPA_HAS_ACTIVATION_KEY:
+            $code     = EventCodes::OLDER_LPA_HAS_ACTIVATION_KEY;
+            $response = new AccessForAllApiResult(
+                AccessForAllResult::HAS_ACTIVATION_KEY,
+                ($this->parseActivationKeyExistsResponse)($additionalData)
+            );
+            break;
 
-            case self::LPA_KEY_ALREADY_REQUESTED:
-                $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
-                $response = new AccessForAllApiResult(
-                    AccessForAllResult::KEY_ALREADY_REQUESTED,
-                    ($this->parseActivationKeyExistsResponse)($additionalData)
-                );
-                break;
+        case self::LPA_KEY_ALREADY_REQUESTED:
+            $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
+            $response = new AccessForAllApiResult(
+                AccessForAllResult::KEY_ALREADY_REQUESTED,
+                ($this->parseActivationKeyExistsResponse)($additionalData)
+            );
+            break;
 
-            case self::LPA_POSTCODE_NOT_SUPPLIED:
-                $code     = null;
-                $response = new AccessForAllApiResult(AccessForAllResult::POSTCODE_NOT_SUPPLIED, $additionalData);
-                break;
+        case self::LPA_POSTCODE_NOT_SUPPLIED:
+            $code     = null;
+            $response = new AccessForAllApiResult(AccessForAllResult::POSTCODE_NOT_SUPPLIED, $additionalData);
+            break;
 
-            case self::LPA_STATE_INVALID:
-                $code     = null;
-                $response = new AccessForAllApiResult(AccessForAllResult::STATUS_NOT_VALID, $additionalData);
-                break;
+        case self::LPA_STATE_INVALID:
+            $code     = null;
+            $response = new AccessForAllApiResult(AccessForAllResult::STATUS_NOT_VALID, $additionalData);
+            break;
 
-            default:
-                throw new RuntimeException(
-                    'A bad request was made to add an older lpa and the reason for rejection is '
+        default:
+            throw new RuntimeException(
+                'A bad request was made to add an older lpa and the reason for rejection is '
                         . 'not understood'
-                );
+            );
         }
 
         $this->logger->notice(

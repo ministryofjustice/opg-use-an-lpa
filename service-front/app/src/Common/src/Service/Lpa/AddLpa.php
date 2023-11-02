@@ -129,27 +129,27 @@ class AddLpa
     private function badRequestReturned(string $lpaUid, string $message, array $additionalData): AddLpaApiResult
     {
         switch ($message) {
-            case self::ADD_LPA_NOT_ELIGIBLE:
-                $code     = EventCodes::ADD_LPA_NOT_ELIGIBLE;
-                $response = new AddLpaApiResult(
-                    AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE,
-                    $additionalData
-                );
-                break;
+        case self::ADD_LPA_NOT_ELIGIBLE:
+            $code     = EventCodes::ADD_LPA_NOT_ELIGIBLE;
+            $response = new AddLpaApiResult(
+                AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE,
+                $additionalData
+            );
+            break;
 
-            case self::ADD_LPA_ALREADY_ADDED:
-                $code     = EventCodes::ADD_LPA_ALREADY_ADDED;
-                $response = new AddLpaApiResult(
-                    AddLpaApiResult::ADD_LPA_ALREADY_ADDED,
-                    ($this->parseLpaAlreadyAddedResponse)($additionalData)
-                );
-                break;
+        case self::ADD_LPA_ALREADY_ADDED:
+            $code     = EventCodes::ADD_LPA_ALREADY_ADDED;
+            $response = new AddLpaApiResult(
+                AddLpaApiResult::ADD_LPA_ALREADY_ADDED,
+                ($this->parseLpaAlreadyAddedResponse)($additionalData)
+            );
+            break;
 
-            default:
-                throw new RuntimeException(
-                    'A bad request was made to add an lpa and the reason for rejection is '
+        default:
+            throw new RuntimeException(
+                'A bad request was made to add an lpa and the reason for rejection is '
                         . 'not understood'
-                );
+            );
         }
 
         $this->logger->notice(

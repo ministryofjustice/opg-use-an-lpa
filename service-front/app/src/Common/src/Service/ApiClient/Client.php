@@ -63,10 +63,10 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
+            case StatusCodeInterface::STATUS_OK:
+                return $this->handleResponse($response);
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = $ex instanceof HttpException ? $ex->getResponse() : null;
@@ -93,13 +93,13 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response        = $ex instanceof HttpException ? $ex->getResponse() : null;
@@ -126,13 +126,13 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = $ex instanceof HttpException ? $ex->getResponse() : null;
@@ -159,13 +159,13 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = $ex instanceof HttpException ? $ex->getResponse() : null;
@@ -191,13 +191,13 @@ class Client
             $response = $this->httpClient->sendRequest($request);
 
             switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
+            case StatusCodeInterface::STATUS_OK:
+            case StatusCodeInterface::STATUS_CREATED:
+            case StatusCodeInterface::STATUS_ACCEPTED:
+            case StatusCodeInterface::STATUS_NO_CONTENT:
+                return $this->handleResponse($response);
+            default:
+                throw ApiException::create(null, $response);
             }
         } catch (ClientExceptionInterface $ex) {
             $response = $ex instanceof HttpException ? $ex->getResponse() : null;

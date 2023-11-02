@@ -74,22 +74,22 @@ class RequestActivationKeyTest extends TestCase
 
         foreach ($data as $key => $value) {
             switch ($key) {
-                case 'dob':
-                case 'donorDob':
-                    Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
-                    Assert::assertEquals($value, $sut->$key->format('c'));
-                    break;
-                case 'attorneyDob':
-                    Assert::assertNull($sut->$key);
-                    break;
-                case 'actorType':
-                    Assert::assertEquals($data['actorType'], $sut->getActorRole());
-                    break;
-                case 'actorAddressResponse':
-                    Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressCheckResponse());
-                    break;
-                default:
-                    Assert::assertEquals($value, $sut->$key);
+            case 'dob':
+            case 'donorDob':
+                Assert::assertInstanceOf(DateTimeInterface::class, $sut->$key);
+                Assert::assertEquals($value, $sut->$key->format('c'));
+                break;
+            case 'attorneyDob':
+                Assert::assertNull($sut->$key);
+                break;
+            case 'actorType':
+                Assert::assertEquals($data['actorType'], $sut->getActorRole());
+                break;
+            case 'actorAddressResponse':
+                Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressCheckResponse());
+                break;
+            default:
+                Assert::assertEquals($value, $sut->$key);
             }
         }
     }
@@ -114,23 +114,23 @@ class RequestActivationKeyTest extends TestCase
 
         foreach ($data as $key => $value) {
             switch ($key) {
-                case 'firstNames':
-                case 'lastName':
-                case 'postcode':
-                case 'dob':
-                    Assert::assertNull($sut->$key);
-                    break;
-                case 'actorType':
-                    Assert::assertNull($sut->getActorRole());
-                    break;
-                case 'actorAddressResponse':
-                    Assert::assertNull($sut->getActorAddressCheckResponse());
-                    break;
-                case 'needsCleansing':
-                    Assert::assertFalse($sut->$key);
-                    break;
-                default:
-                    Assert::assertNull($sut->$key);
+            case 'firstNames':
+            case 'lastName':
+            case 'postcode':
+            case 'dob':
+                Assert::assertNull($sut->$key);
+                break;
+            case 'actorType':
+                Assert::assertNull($sut->getActorRole());
+                break;
+            case 'actorAddressResponse':
+                Assert::assertNull($sut->getActorAddressCheckResponse());
+                break;
+            case 'needsCleansing':
+                Assert::assertFalse($sut->$key);
+                break;
+            default:
+                Assert::assertNull($sut->$key);
             }
         }
     }
