@@ -12,7 +12,7 @@ class CaseActor
     protected ?string $uId = null;
 
     /**
-     * @var array<array<mixed>>|null 
+     * @var array<array<mixed>>|null
      */
     protected ?array $linked = null;
 
@@ -26,7 +26,7 @@ class CaseActor
     protected ?bool $systemStatus  = null;
 
     /**
-     * @var Address[] 
+     * @var Address[]
      */
     protected array $addresses = [];
 
@@ -62,7 +62,8 @@ class CaseActor
         return array_map(
             function ($x) {
                 return $x['id'];
-            }, $this->linked
+            },
+            $this->linked
         );
     }
 

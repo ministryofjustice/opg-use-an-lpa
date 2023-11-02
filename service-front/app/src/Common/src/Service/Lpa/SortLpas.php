@@ -23,7 +23,8 @@ class SortLpas
         $lpas = $lpas->getArrayCopy();
 
         uasort(
-            $lpas, function ($a, $b) {
+            $lpas,
+            function ($a, $b) {
                 $aSortKey = sprintf(
                     '%s%s%s',
                     $a->lpa->getDonor()->getSurname(),

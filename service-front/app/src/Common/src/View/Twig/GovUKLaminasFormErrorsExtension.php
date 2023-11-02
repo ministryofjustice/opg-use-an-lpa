@@ -48,7 +48,8 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         $template = $twigEnv->load(self::THEME_FILE);
 
         return $template->renderBlock(
-            'error_message', [
+            'error_message',
+            [
             'element' => $element,
             'errors'  => $this->flattenMessages($element->getMessages()),
             ]
@@ -75,7 +76,8 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         }
 
         return $template->renderBlock(
-            'error_summary', [
+            'error_summary',
+            [
             'errors' => $errors,
             ]
         );
@@ -90,7 +92,8 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         $messagesToPrint = [];
 
         array_walk_recursive(
-            $messages, function ($item) use (&$messagesToPrint) {
+            $messages,
+            function ($item) use (&$messagesToPrint) {
                 $messagesToPrint[] = $item;
             }
         );

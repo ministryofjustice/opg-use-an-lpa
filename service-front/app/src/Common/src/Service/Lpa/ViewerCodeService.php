@@ -30,7 +30,8 @@ class ViewerCodeService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpPost(
-            '/v1/lpas/' . $lpaId . '/codes', [
+            '/v1/lpas/' . $lpaId . '/codes',
+            [
             'organisation' => $organisation,
             ]
         );
@@ -56,7 +57,8 @@ class ViewerCodeService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $this->apiClient->httpPut(
-            '/v1/lpas/' . $lpaId . '/codes', [
+            '/v1/lpas/' . $lpaId . '/codes',
+            [
              'code' => $shareCode,
             ]
         );
@@ -78,7 +80,8 @@ class ViewerCodeService
 
         //sort the result array to appear in order of most recent added
         usort(
-            $shareCodes, function ($a, $b) {
+            $shareCodes,
+            function ($a, $b) {
                 return strtotime($b[self::SORT_ADDED]) - strtotime($a[self::SORT_ADDED]);
             }
         );

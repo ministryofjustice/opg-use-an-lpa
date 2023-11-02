@@ -48,7 +48,7 @@ class SessionAttributeAllowlistMiddleware implements MiddlewareInterface
         // Ensure that we strip out any session information that shouldn't be in there
         // if the session has expired.
         /**
- * @var SessionInterface|null $session 
+ * @var SessionInterface|null $session
 */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 

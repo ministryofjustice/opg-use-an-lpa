@@ -25,7 +25,10 @@ class HealthcheckHandler implements RequestHandlerInterface
             'overall_healthy' => $this->isHealthy(),
             'version'         => $this->version,
             'dependencies'    => $this->checkDependencyEndpoints(),
-            ], StatusCodeInterface::STATUS_OK, [], JSON_PRETTY_PRINT
+            ],
+            StatusCodeInterface::STATUS_OK,
+            [],
+            JSON_PRETTY_PRINT
         );
     }
 

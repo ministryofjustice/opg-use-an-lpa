@@ -131,37 +131,37 @@ class LpaService
             );
         } catch (ApiException $apiEx) {
             switch ($apiEx->getCode()) {
-            case StatusCodeInterface::STATUS_GONE:
-                if ($apiEx->getMessage() === 'Share code cancelled') {
-                    $this->logger->notice(
-                        'Share code {code} cancelled when attempting to fetch {type}',
-                        [
-                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
-                            'code'       => $shareCode,
-                            'type'       => $trackRoute,
-                        ]
-                    );
-                } else {
-                    $this->logger->notice(
-                        'Share code {code} expired when attempting to fetch {type}',
-                        [
-                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
-                            'code'       => $shareCode,
-                            'type'       => $trackRoute,
-                        ]
-                    );
-                }
-                break;
+                case StatusCodeInterface::STATUS_GONE:
+                    if ($apiEx->getMessage() === 'Share code cancelled') {
+                        $this->logger->notice(
+                            'Share code {code} cancelled when attempting to fetch {type}',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_CANCELLED,
+                                'code'       => $shareCode,
+                                'type'       => $trackRoute,
+                            ]
+                        );
+                    } else {
+                        $this->logger->notice(
+                            'Share code {code} expired when attempting to fetch {type}',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_EXPIRED,
+                                'code'       => $shareCode,
+                                'type'       => $trackRoute,
+                            ]
+                        );
+                    }
+                    break;
 
-            case StatusCodeInterface::STATUS_NOT_FOUND:
-                $this->logger->notice(
-                    'Share code not found when attempting to fetch {type}',
-                    [
-                        // attach an code for brute force checking
-                        'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
-                        'type'       => $trackRoute,
-                    ]
-                );
+                case StatusCodeInterface::STATUS_NOT_FOUND:
+                    $this->logger->notice(
+                        'Share code not found when attempting to fetch {type}',
+                        [
+                            // attach an code for brute force checking
+                            'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_NOT_FOUND,
+                            'type'       => $trackRoute,
+                        ]
+                    );
             }
 
             // still throw the exception up to the caller since handling of the issue will be done there

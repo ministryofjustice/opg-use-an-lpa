@@ -31,7 +31,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Csrf::class     => 'form_input_hidden',
         Element\Hidden::class   => 'form_input_hidden',
         Element\Password::class => 'form_input_password',
-        CustomEmail ::class     => 'form_input_email',
+        CustomEmail::class     => 'form_input_email',
         Element\Text::class     => 'form_input_text',
         Element\Radio::class    => 'form_input_radio',
         Element\Textarea::class => 'form_input_area',
@@ -63,7 +63,8 @@ class GovUKLaminasFormExtension extends AbstractExtension
         $template = $twigEnv->load('@partials/govuk_form.html.twig');
 
         return $template->renderBlock(
-            'form_open', [
+            'form_open',
+            [
             'form' => $form,
             ]
         );

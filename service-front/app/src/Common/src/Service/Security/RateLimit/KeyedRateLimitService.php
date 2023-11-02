@@ -27,7 +27,7 @@ class KeyedRateLimitService extends RateLimitService
         $recordKey = $this->getRecordKey($identity, $key);
 
         /**
- * @var array $accessRecords 
+ * @var array $accessRecords
 */
         if (null === $accessRecords = $this->cacheService->getItem($recordKey)) {
             return false;
@@ -36,7 +36,8 @@ class KeyedRateLimitService extends RateLimitService
         // walk the time window and drop expired records
         $expiredTime = time() - $this->interval;
         $accessRecords = array_filter(
-            $accessRecords, function (int $item) use ($expiredTime) {
+            $accessRecords,
+            function (int $item) use ($expiredTime) {
                 return $item >= $expiredTime;
             }
         );
@@ -61,7 +62,7 @@ class KeyedRateLimitService extends RateLimitService
         $recordKey = $this->getRecordKey($identity, $key);
 
         /**
- * @var array $accessRecords 
+ * @var array $accessRecords
 */
         $accessRecords = $this->cacheService->getItem($recordKey) ?: [];
 

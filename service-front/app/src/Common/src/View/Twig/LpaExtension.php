@@ -43,7 +43,8 @@ class LpaExtension extends AbstractExtension
             $address = $actor->getAddresses()[0];
 
             return implode(
-                ', ', array_filter(
+                ', ',
+                array_filter(
                     [
                     $address->getAddressLine1(),
                     $address->getAddressLine2(),

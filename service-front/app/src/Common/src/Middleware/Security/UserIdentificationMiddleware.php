@@ -39,7 +39,7 @@ class UserIdentificationMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /**
- * @var SessionInterface|null $session 
+ * @var SessionInterface|null $session
 */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
@@ -57,7 +57,7 @@ class UserIdentificationMiddleware implements MiddlewareInterface
     private function isValidRoute(ServerRequestInterface $request): bool
     {
         /**
- * @var RouteResult|null $routeResult 
+ * @var RouteResult|null $routeResult
 */
         $routeResult = $request->getAttribute(RouteResult::class);
 

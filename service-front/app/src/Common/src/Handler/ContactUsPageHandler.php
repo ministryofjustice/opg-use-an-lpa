@@ -31,7 +31,8 @@ class ContactUsPageHandler extends AbstractHandler
         $referer = $this->urlValidityCheckService->setValidReferrer($refererHeader);
         return new HtmlResponse(
             $this->renderer->render(
-                'common::contact-us', [
+                'common::contact-us',
+                [
                 'referer' => $referer,
                 ]
             )

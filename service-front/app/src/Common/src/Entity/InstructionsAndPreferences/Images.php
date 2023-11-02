@@ -57,7 +57,8 @@ class Images implements JsonSerializable
     {
         return array_values(
             array_filter(
-                $this->signedUrls, function ($signedUrl) use ($pattern) {
+                $this->signedUrls,
+                function ($signedUrl) use ($pattern) {
                     return preg_match($pattern, $signedUrl->imageName);
                 }
             )

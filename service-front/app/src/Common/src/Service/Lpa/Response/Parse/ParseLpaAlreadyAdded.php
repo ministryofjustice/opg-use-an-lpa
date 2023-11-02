@@ -52,7 +52,7 @@ class ParseLpaAlreadyAdded
         $baseLine         = $this->baseLineData($data);
         $hasLpaActorToken = isset($data['lpaActorToken']);
 
-        if (!$baseLine 
+        if (!$baseLine
             || !$hasLpaActorToken
         ) {
             return false;

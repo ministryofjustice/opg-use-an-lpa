@@ -21,7 +21,7 @@ trait State
     public function loadState(ServerRequestInterface $request, string $workflowStateClass): WorkflowState
     {
         /**
- * @var StatesCollection $states 
+ * @var StatesCollection $states
 */
         $states = $request->getAttribute(StatePersistenceMiddleware::WORKFLOW_STATE_ATTRIBUTE);
 

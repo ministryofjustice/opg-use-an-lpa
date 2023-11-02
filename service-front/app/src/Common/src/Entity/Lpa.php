@@ -31,32 +31,32 @@ class Lpa
     protected ?CaseActor $donor                                = null;
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $attorneys = [];
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $replacementAttorneys = [];
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $certificateProviders = [];
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $trustCorporations = [];
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $activeAttorneys = [];
 
     /**
-     * @var CaseActor[] 
+     * @var CaseActor[]
      */
     protected array $inactiveAttorneys = [];
 

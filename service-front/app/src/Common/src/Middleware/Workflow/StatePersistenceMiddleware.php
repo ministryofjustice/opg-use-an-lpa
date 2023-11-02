@@ -31,7 +31,7 @@ class StatePersistenceMiddleware implements MiddlewareInterface
     {
         // load states from session and attach to request
         /**
- * @var SessionInterface $session 
+ * @var SessionInterface $session
 */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
@@ -41,7 +41,8 @@ class StatePersistenceMiddleware implements MiddlewareInterface
         // process those states into state objects
         $validStates = new StatesCollection();
         array_walk(
-            $sessionStates, function (array $data, string $class) use (&$validStates) {
+            $sessionStates,
+            function (array $data, string $class) use (&$validStates) {
                 $this->classIsWorkflow($class);
                 $validStates->add($class, new $class(...$data));
             }

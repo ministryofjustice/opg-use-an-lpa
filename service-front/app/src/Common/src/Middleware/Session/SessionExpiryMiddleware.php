@@ -38,12 +38,12 @@ class SessionExpiryMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /**
- * @var SessionInterface $session 
+ * @var SessionInterface $session
 */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
         /**
- * @var RouteResult $routeResult 
+ * @var RouteResult $routeResult
 */
         $routeResult = $request->getAttribute(RouteResult::class);
 

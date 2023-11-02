@@ -53,7 +53,8 @@ class SessionCsrfGuard implements CsrfGuardInterface
         $currentRequestId = $this->requestId;
 
         return array_filter(
-            $tokens, function ($requestId) use ($currentRequestId) {
+            $tokens,
+            function ($requestId) use ($currentRequestId) {
                 return $requestId === $currentRequestId;
             }
         );

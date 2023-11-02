@@ -39,7 +39,8 @@ class InstructionsPreferencesBefore2016Handler extends AbstractHandler
 
         return new HtmlResponse(
             $this->renderer->render(
-                'common::instructions-preferences-signed-before-2016', [
+                'common::instructions-preferences-signed-before-2016',
+                [
                 'referer' => $referer,
                 ]
             )

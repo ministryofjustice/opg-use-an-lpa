@@ -45,7 +45,8 @@ class UserService implements UserRepositoryInterface
     public function create(string $email, HiddenString $password): array
     {
         $data = $this->apiClient->httpPost(
-            '/v1/user', [
+            '/v1/user',
+            [
             'email'    => $email,
             'password' => $password->getString(),
             ]
@@ -70,7 +71,8 @@ class UserService implements UserRepositoryInterface
     public function getByEmail(string $email): ?array
     {
         return $this->apiClient->httpGet(
-            '/v1/user', [
+            '/v1/user',
+            [
             'email' => $email,
             ]
         );
@@ -87,7 +89,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $userData = $this->apiClient->httpPatch(
-                '/v1/auth', [
+                '/v1/auth',
+                [
                 'email'    => strtolower(trim($credential)),
                 'password' => $password,
                 ]
@@ -142,7 +145,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $userData = $this->apiClient->httpPatch(
-                '/v1/user-activation', [
+                '/v1/user-activation',
+                [
                 'activation_token' => $activationToken,
                 ]
             );
@@ -177,7 +181,8 @@ class UserService implements UserRepositoryInterface
     public function requestPasswordReset(string $email): string
     {
         $data = $this->apiClient->httpPatch(
-            '/v1/request-password-reset', [
+            '/v1/request-password-reset',
+            [
             'email' => $email,
             ]
         );
@@ -200,7 +205,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $data = $this->apiClient->httpGet(
-                '/v1/can-password-reset', [
+                '/v1/can-password-reset',
+                [
                 'token' => $token,
                 ]
             );
@@ -234,7 +240,8 @@ class UserService implements UserRepositoryInterface
     public function completePasswordReset(string $token, HiddenString $password): void
     {
         $this->apiClient->httpPatch(
-            '/v1/complete-password-reset', [
+            '/v1/complete-password-reset',
+            [
             'token'    => $token,
             'password' => $password->getString(),
             ]
@@ -252,7 +259,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $data = $this->apiClient->httpPatch(
-                '/v1/request-change-email', [
+                '/v1/request-change-email',
+                [
                 'user-id'   => $userId,
                 'new-email' => $newEmail,
                 'password'  => $password->getString(),
@@ -288,7 +296,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $data = $this->apiClient->httpGet(
-                '/v1/can-reset-email', [
+                '/v1/can-reset-email',
+                [
                 'token' => $token,
                 ]
             );
@@ -322,7 +331,8 @@ class UserService implements UserRepositoryInterface
     public function completeChangeEmail(string $resetToken): void
     {
         $this->apiClient->httpPatch(
-            '/v1/complete-change-email', [
+            '/v1/complete-change-email',
+            [
             'reset_token' => $resetToken,
             ]
         );
@@ -339,7 +349,8 @@ class UserService implements UserRepositoryInterface
     {
         try {
             $this->apiClient->httpPatch(
-                '/v1/change-password', [
+                '/v1/change-password',
+                [
                 'user-id'      => $id,
                 'password'     => $password->getString(),
                 'new-password' => $newPassword->getString(),
