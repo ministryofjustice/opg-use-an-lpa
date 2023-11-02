@@ -18,7 +18,9 @@ class SetLocaleMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_sets_a_default_locale_of_en_GB_if_none_provided(): void
     {
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
@@ -52,7 +54,9 @@ class SetLocaleMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_sets_a_locale_of_cy_GB_if_requested_to(): void
     {
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);

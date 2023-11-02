@@ -19,7 +19,9 @@ class RateLimitMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_functions_without_an_identity(): void
     {
         $factoryProphecy = $this->prophesize(RateLimitServiceFactory::class);
@@ -41,7 +43,9 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function an_identified_user_is_checked_for_limit_transgressions_and_no_limiters_available()
     {
         $factoryProphecy = $this->prophesize(RateLimitServiceFactory::class);
@@ -67,7 +71,9 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function an_identified_user_is_checked_for_limit_transgressions_with_one_limiter()
     {
         $limiterProphecy = $this->prophesize(KeyedRateLimitService::class);
@@ -99,7 +105,9 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function an_identified_user_is_checked_for_limit_transgressions_with_multiple_limiters()
     {
         $limiterOneProphecy = $this->prophesize(KeyedRateLimitService::class);
@@ -137,7 +145,9 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function an_identified_user_is_limited()
     {
         $limiterProphecy = $this->prophesize(KeyedRateLimitService::class);

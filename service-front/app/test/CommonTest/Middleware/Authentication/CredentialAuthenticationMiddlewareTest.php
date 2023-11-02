@@ -38,7 +38,9 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_requires_a_session(): void
     {
         $this->request->method('getAttribute')
@@ -54,7 +56,9 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $sut->process($this->request, $this->handler);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_redirects_upon_an_expired_session(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -77,7 +81,9 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_an_unauthorised_response_if_auth_fails(): void
     {
         $session = $this->createStub(SessionInterface::class);
@@ -107,7 +113,9 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_continues_to_the_handler_if_auth_is_successful(): void
     {
         $session = $this->createStub(SessionInterface::class);
@@ -139,7 +147,9 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function a_handler_can_request_a_logout(): void
     {
         $session = $this->createStub(SessionInterface::class);

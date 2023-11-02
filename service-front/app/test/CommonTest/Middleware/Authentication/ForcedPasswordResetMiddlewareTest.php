@@ -45,7 +45,9 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
         $this->response = $this->createStub(ResponseInterface::class);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_continues_the_pipeline_if_not_needing_reset(): void
     {
         $this->authenticator->expects($this->once())
@@ -69,7 +71,9 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
         $this->assertEquals($this->response, $result);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_renders_a_page_if_user_password_needs_reset(): void
     {
         $this->authenticator->expects($this->once())

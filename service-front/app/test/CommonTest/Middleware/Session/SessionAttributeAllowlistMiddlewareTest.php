@@ -21,7 +21,9 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_correctly_handles_request_with_no_session(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
@@ -43,7 +45,9 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_correctly_handles_an_non_expired_session(): void
     {
         $sessionProphecy = $this->prophesize(Session::class);
@@ -75,7 +79,9 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_strips_session_values_that_have_not_been_allowed(): void
     {
         $sessionData = [
@@ -126,7 +132,9 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_strips_session_values_when_a_logout_has_been_flagged(): void
     {
         $sessionData = [

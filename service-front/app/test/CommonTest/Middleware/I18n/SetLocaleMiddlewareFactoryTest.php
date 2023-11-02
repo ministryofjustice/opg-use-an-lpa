@@ -16,7 +16,9 @@ class SetLocaleMiddlewareFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_be_configured_with_a_default_locale(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

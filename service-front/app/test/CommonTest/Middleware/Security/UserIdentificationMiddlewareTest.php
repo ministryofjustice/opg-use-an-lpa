@@ -170,8 +170,8 @@ class UserIdentificationMiddlewareTest extends TestCase
     /**
      * @test
      * @dataProvider javascriptRoutes
-     * @covers ::process
-     * @covers ::isValidRoute
+     * @covers       ::process
+     * @covers       ::isValidRoute
      */
     public function it_does_not_update_identity_for_javascript_endpoints(string $routeName, bool $setExpected): void
     {

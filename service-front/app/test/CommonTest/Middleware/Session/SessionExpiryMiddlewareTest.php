@@ -27,7 +27,9 @@ class SessionExpiryMiddlewareTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_correctly_processes_a_non_expired_session(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -57,7 +59,9 @@ class SessionExpiryMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_marks_a_session_as_expired(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -93,7 +97,9 @@ class SessionExpiryMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_does_not_increment_session_time_for_javascript_calls(): void
     {
         $session = $this->createMock(SessionInterface::class);
