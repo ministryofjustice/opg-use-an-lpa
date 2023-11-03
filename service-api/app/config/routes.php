@@ -19,6 +19,8 @@ use App\Handler\LpasResourceCodesCollectionHandler;
 use App\Handler\LpasResourceHandler;
 use App\Handler\LpasResourceImagesCollectionHandler;
 use App\Handler\NotifyHandler;
+use App\Handler\OneLoginAuthenticationCallbackHandler;
+use App\Handler\OneLoginAuthenticationRequestHandler;
 use App\Handler\RequestChangeEmailHandler;
 use App\Handler\RequestCleanseHandler;
 use App\Handler\RequestPasswordResetHandler;
@@ -29,8 +31,6 @@ use App\Handler\ViewerCodeSummaryHandler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
-use App\Handler\OneLoginAuthenticationRequestHandler;
-use App\Handler\OneLoginAuthenticationCallbackHandler;
 
 /**
  * Setup routes with a single request method:
@@ -136,8 +136,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
 
-    $app->get('/v1/auth-one-login', OneLoginAuthenticationRequestHandler::class, 'user.auth-one-login');
-    $app->get('/v1/auth-one-login-process', OneLoginAuthenticationCallbackHandler::class, 'user.auth-process');
+    $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
+    $app->get('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

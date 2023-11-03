@@ -32,9 +32,9 @@ class OneLoginServiceTest extends TestCase
 
         $apiClientProphecy
             ->httpGet(
-                '/v1/auth-one-login',
+                '/v1/auth/start',
                 [
-                    'ui_locale' => 'en',
+                    'ui_locale'    => 'en',
                     'redirect_url' => $redirect,
                 ]
             )->willReturn(['state' => $state, 'nonce' => $nonce, 'url' => $uri]);

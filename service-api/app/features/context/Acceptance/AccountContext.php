@@ -1314,13 +1314,13 @@ class AccountContext implements Context
      */
     public function iAmRedirectedToTheRedirectPage(): void
     {
-        $this->apiGet('/v1/auth-one-login-process', []);
+        $this->apiGet('/v1/auth/callback', []);
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
 
-        Assert::assertEquals('one-login-user', $response['Id']);
-        Assert::assertEquals('one-login-user@email.com', $response['Email']);
+        Assert::assertEquals('bf9e7e77-f283-49c6-a79c-65d5d309ef77', $response['Id']);
+        Assert::assertEquals('opg-use-an-lpa+test-user@digital.justice.gov.uk', $response['Email']);
     }
 }

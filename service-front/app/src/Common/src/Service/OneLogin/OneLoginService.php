@@ -14,7 +14,7 @@ class OneLoginService
 
     public function authenticate(string $uiLocale, string $redirectUrl): ?array
     {
-        return $this->apiClient->httpGet('/v1/auth-one-login', [
+        return $this->apiClient->httpGet('/v1/auth/start', [
             'ui_locale'    => $uiLocale,
             'redirect_url' => $redirectUrl,
         ]);
