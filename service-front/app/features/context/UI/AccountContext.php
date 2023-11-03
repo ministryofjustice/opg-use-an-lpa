@@ -26,6 +26,7 @@ use function PHPUnit\Framework\assertArrayHasKey;
  * @property string userEmailResetToken
  * @property string email
  * @property string password
+ * @property string language
  */
 class AccountContext implements Context
 {
@@ -2038,6 +2039,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheTemporaryOneLoginPage(): void
     {
+        $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
         $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
@@ -2047,36 +2049,6 @@ class AccountContext implements Context
      * @When /^I click the one login button$/
      */
     public function iClickTheOneLoginButton(): void
-    {
-        $this->signInViaOneLogin();
-        $request = $this->apiFixtures->getLastRequest();
-        $params  = $request->getUri()->getQuery();
-        Assert::assertStringContainsString('ui_locale=en', $params);
-    }
-
-    /**
-     * @When /^I click the one login button in welsh$/
-     */
-    public function iClickTheOneLoginButtonInWelsh(): void
-    {
-        $this->signInViaOneLogin();
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params  = $request->getUri()->getQuery();
-        Assert::assertStringContainsString('ui_locale=cy', $params);
-    }
-
-    /**
-     * @Then /^I am redirected to the redirect page$/
-     */
-    public function iAmRedirectedToTheRedirectPage(): void
-    {
-        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
-        assert::assertTrue(isset($locationHeader));
-        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
-    }
-
-    public function signInViaOneLogin(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -2095,5 +2067,30 @@ class AccountContext implements Context
         $this->iDoNotFollowRedirects();
         $this->ui->pressButton('Sign in via One Login');
         $this->iDoFollowRedirects();
+    }
+
+    /**
+     * @Then /^I am redirected to the redirect page in (English|Welsh)$/
+     */
+    public function iAmRedirectedToTheRedirectPage($language): void
+    {
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        $request        = $this->apiFixtures->getLastRequest();
+        $params         = $request->getUri()->getQuery();
+        $language       = $language === 'English' ? 'en' : 'cy';
+
+        assert::assertTrue(isset($locationHeader));
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
+        assert::assertEquals($language, $this->language);
+        assert::assertStringContainsString('ui_locale=' . $this->language, $params);
+    }
+
+    /**
+     * @When /^I select the Welsh language$/
+     */
+    public function iSelectTheWelshLanguage(): void
+    {
+        $this->language = 'cy';
+        $this->ui->clickLink('Cymraeg');
     }
 }
