@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @codeCoverageIgnore
  */
-class OneLoginAuthorisationProcessHandler implements RequestHandlerInterface
+class OneLoginAuthenticationCallbackHandler implements RequestHandlerInterface
 {
     public function __construct()
     {
@@ -31,9 +31,9 @@ class OneLoginAuthorisationProcessHandler implements RequestHandlerInterface
         $requestData = $request->getQueryParams();
 
         $user = [
-            'Id'        => 'one-login-user',
-            'Email'     => 'one-login-user@email.com',
-            'LastLogin' => (new DateTime('now'))->format(DateTimeInterface::ATOM),
+            'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+            'Email'     => 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
+            'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
         ];
 
         return new JsonResponse($user);
