@@ -12,10 +12,11 @@ class OneLoginService
     {
     }
 
-    public function authenticate(string $uiLocale): ?array
+    public function authenticate(string $uiLocale, string $redirectUrl): ?array
     {
         return $this->apiClient->httpGet('/v1/auth-one-login', [
-            'ui_locale' => $uiLocale,
+            'ui_locale'    => $uiLocale,
+            'redirect_url' => $redirectUrl,
         ]);
     }
 }

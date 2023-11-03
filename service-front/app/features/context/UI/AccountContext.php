@@ -26,6 +26,7 @@ use function PHPUnit\Framework\assertArrayHasKey;
  * @property string userEmailResetToken
  * @property string email
  * @property string password
+ * @property string language
  */
 class AccountContext implements Context
 {
@@ -44,6 +45,7 @@ class AccountContext implements Context
     private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
     private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
+    private const ONE_LOGIN_SERVICE_AUTHENTICATE = 'OneLoginService::authenticate';
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -2037,6 +2039,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheTemporaryOneLoginPage(): void
     {
+        $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
         $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
@@ -2057,26 +2060,37 @@ class AccountContext implements Context
                         'url'   => 'http://fake.url/authorize',
                     ]
                 ),
-                self::USER_SERVICE_REQUEST_PASSWORD_RESET
+                self::ONE_LOGIN_SERVICE_AUTHENTICATE
             )
         );
 
         $this->iDoNotFollowRedirects();
         $this->ui->pressButton('Sign in via One Login');
         $this->iDoFollowRedirects();
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params  = $request->getUri()->getQuery();
-        Assert::assertStringContainsString('ui_locale=en', $params);
     }
 
     /**
-     * @Then /^I am redirected to the redirect page$/
+     * @Then /^I am redirected to the redirect page in (English|Welsh)$/
      */
-    public function iAmRedirectedToTheRedirectPage(): void
+    public function iAmRedirectedToTheRedirectPage($language): void
     {
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        $request        = $this->apiFixtures->getLastRequest();
+        $params         = $request->getUri()->getQuery();
+        $language       = $language === 'English' ? 'en' : 'cy';
+
         assert::assertTrue(isset($locationHeader));
         assert::assertEquals($locationHeader, 'http://fake.url/authorize');
+        assert::assertEquals($language, $this->language);
+        assert::assertStringContainsString('ui_locale=' . $this->language, $params);
+    }
+
+    /**
+     * @When /^I select the Welsh language$/
+     */
+    public function iSelectTheWelshLanguage(): void
+    {
+        $this->language = 'cy';
+        $this->ui->clickLink('Cymraeg');
     }
 }
