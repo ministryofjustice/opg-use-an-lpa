@@ -99,7 +99,14 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
-    $app->get('/home/login', Actor\Handler\OneLoginCallbackHandler::class, 'auth-redirect');
+    $app->get('/home/login', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_GOV_ONE_LOGIN,
+            Actor\Handler\OneLoginCallbackHandler::class,
+            Mezzio\Handler\NotFoundHandler::class
+        )
+    ], 'auth-redirect');
 
     $app->get(
         '/logout',
@@ -210,17 +217,17 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     //Add by code routes
     $app->route('/lpa/add-by-key/activation-key', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\AddLpa\ActivationKeyHandler::class,
+        Actor\Handler\AddLpa\ActivationKeyHandler::class,
     ], ['GET', 'POST'], 'lpa.add-by-key');
 
     $app->route('/lpa/add-by-key/date-of-birth', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\AddLpa\DateOfBirthHandler::class,
+        Actor\Handler\AddLpa\DateOfBirthHandler::class,
     ], ['GET', 'POST'], 'lpa.add-by-key.date-of-birth');
 
     $app->route('/lpa/add-by-key/lpa-reference-number', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-            \Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
+        Actor\Handler\AddLpa\LpaReferenceNumberHandler::class
     ], ['GET', 'POST'], 'lpa.add-by-key.lpa-reference-number');
 
     // Access for All Journey
@@ -231,32 +238,32 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     $app->route('/lpa/add/actor-role', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\ActorRoleHandler::class
+        Actor\Handler\RequestActivationKey\ActorRoleHandler::class
     ], ['GET', 'POST'], 'lpa.add.actor-role');
 
     $app->route('/lpa/add/donor-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
+        Actor\Handler\RequestActivationKey\DonorDetailsHandler::class
     ], ['GET', 'POST'], 'lpa.add.donor-details');
 
     $app->route('/lpa/add/actor-address', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\ActorAddressHandler::class
+        Actor\Handler\RequestActivationKey\ActorAddressHandler::class
     ], ['GET', 'POST'], 'lpa.add.actor-address');
 
     $app->route('/lpa/add/attorney-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class
+        Actor\Handler\RequestActivationKey\AttorneyDetailsHandler::class
     ], ['GET', 'POST'], 'lpa.add.attorney-details');
 
     $app->route('/lpa/add/check-details-and-consent', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
+        Actor\Handler\RequestActivationKey\CheckDetailsAndConsentHandler::class
     ], ['GET', 'POST'], 'lpa.add.check-details-and-consent');
 
     $app->route('/lpa/add/address-on-paper', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        \Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class
+        Actor\Handler\RequestActivationKey\AddressOnPaperHandler::class
     ], ['GET', 'POST'], 'lpa.add.address-on-paper');
 
     // Older LPA journey
