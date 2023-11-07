@@ -21,7 +21,7 @@ class Login extends AbstractForm implements InputFilterProviderInterface
     /**
      * Error messages
      *
-     * @var array
+     * @var string[]
      */
     protected array $messageTemplates = [
         self::NOT_SAME  => 'Security validation failed. Please try again.',
