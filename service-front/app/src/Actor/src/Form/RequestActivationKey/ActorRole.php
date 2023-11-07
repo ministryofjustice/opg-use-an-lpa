@@ -23,8 +23,8 @@ class ActorRole extends AbstractForm implements InputFilterProviderInterface
                 'type'    => 'Radio',
                 'options' => [
                     'value_options' => [
-                        'Donor'    => 'Donor',
-                        'Attorney' => 'Attorney',
+                        'Donor'               => 'Donor',
+                        'Attorney'            => 'Attorney',
                         'ReplacementAttorney' => 'ReplacementAttorney',
                     ],
                 ],

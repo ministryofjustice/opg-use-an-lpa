@@ -225,7 +225,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                         'Request for activation key for LPA {uID} with address abroad',
                         [
                             'event_code' => EventCodes::USER_ABROAD_ADDRESS_REQUEST_SUCCESS,
-                            'uID' => $state->referenceNumber
+                            'uID'        => $state->referenceNumber,
                         ]
                     );
                 }
