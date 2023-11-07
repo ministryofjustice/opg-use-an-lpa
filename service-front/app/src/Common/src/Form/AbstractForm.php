@@ -15,11 +15,13 @@ abstract class AbstractForm extends Form
 
     /**
      * Error messages templates
+     *
+     * @var string[]
      */
     protected array $messageTemplates = [];
 
     /**
-     * @var array This, and its associated functions below allow form level error messages not attached to
+     * @var string[] This, and its associated functions below allow form level error messages not attached to
      *            any individual form elements. Something that Zend form does not provide OOTB.
      */
     protected array $errorMessages = [];
@@ -50,11 +52,11 @@ abstract class AbstractForm extends Form
     public function addErrorMessage(string $messageKey, string $elementName = ''): void
     {
         if (! isset($this->messageTemplates[$messageKey])) {
-            throw new InvalidArgumentException("No message template exists for key '$messageKey'");
+            throw new InvalidArgumentException('No message template exists for key ' . $messageKey);
         }
 
         if ($elementName !== '' && ! $this->has($elementName)) {
-            throw new InvalidArgumentException("No form element named '$elementName' found");
+            throw new InvalidArgumentException('No form element named ' . $elementName . ' found');
         }
 
         if ($elementName === '') {

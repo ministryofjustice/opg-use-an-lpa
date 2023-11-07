@@ -23,6 +23,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Locale;
 
 /**
  * @codeCoverageIgnore
@@ -51,7 +52,7 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
 
         if ($request->getMethod() === 'POST') {
             $signInLink = $this->serverUrlHelper->generate($this->urlHelper->generate('auth-redirect'));
-            $uiLocale   = \Locale::getPrimaryLanguage($request->getAttribute('locale'));
+            $uiLocale   = Locale::getPrimaryLanguage($request->getAttribute('locale'));
 
             if ($uiLocale === 'cy') {
                 $signInLink = str_replace('/cy', '', $signInLink);
