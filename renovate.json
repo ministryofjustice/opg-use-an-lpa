@@ -27,6 +27,7 @@
         "minor",
         "patch"
       ],
+      "prCreation": "immediate",
       "prPriority": 0,
       "stabilityDays": 3,
       "excludePackageNames": [
@@ -46,6 +47,7 @@
       ],
       "prTitle": "chore(deps): update GitHub Actions",
       "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
+      "prCreation": "immediate",
       "schedule": [
         "after 6am and before 9am on Monday"
       ],
@@ -57,7 +59,7 @@
         "Dependencies",
         "Renovate"
     ],
-    "prCreation": "status-success",
+    "prCreation": "immediate",
     "rangeStrategy": "pin",
     "prPriority": 1
   },
