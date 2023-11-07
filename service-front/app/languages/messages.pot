@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-01T11:41:17+00:00\n"
+"POT-Creation-Date: 2023-11-07T16:41:14+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -272,7 +272,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:87
@@ -1009,6 +1009,7 @@ msgid "your email address"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
 msgid "your name and date of birth"
 msgstr ""
 
@@ -1435,7 +1436,7 @@ msgid "you will need to request a new activation key if you want to add the LPA 
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:41
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:56
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:116
 #: src/Actor/templates/actor/check-lpa.html.twig:98
@@ -2118,19 +2119,19 @@ msgstr ""
 msgid "your name, date of birth and address"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
 msgid "the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:45
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:46
 msgid "I do not know the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:49
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:50
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:51
 msgid "On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them."
 msgstr ""
 
@@ -4476,4 +4477,8 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:24
 msgctxt "error"
 msgid "Check your details and try again. We could not find a Use a lasting power of attorney account with that email address and password."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+msgid "your current address - all activation keys are sent by post"
 msgstr ""

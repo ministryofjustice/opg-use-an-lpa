@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-01T11:41:17+00:00\n"
+"POT-Creation-Date: 2023-11-07T16:41:14+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -368,7 +368,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:87
@@ -1520,6 +1520,7 @@ msgid "your email address"
 msgstr "eich cyfeiriad e-bost"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
 msgid "your name and date of birth"
 msgstr "eich enw a’ch dyddiad geni"
 
@@ -2220,7 +2221,7 @@ msgstr ""
 "ar y cyfrif eto"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:41
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:56
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:116
 #: src/Actor/templates/actor/check-lpa.html.twig:98
@@ -3020,7 +3021,7 @@ msgstr "I ofyn am allwedd, bydd angen i chi roi’r canlynol i ni:"
 msgid "your name, date of birth and address"
 msgstr "eich enw, eich dyddiad geni a’ch cyfeiriad"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
 msgid ""
 "the LPA reference number - you'll find this on the paper LPA and on letters "
 "from the Office of the Public Guardian (OPG)"
@@ -3028,11 +3029,11 @@ msgstr ""
 "cyfeirnod yr atwrneiaeth arhosol - fe welwch hwn ar yr atwrneiaeth arhosol "
 "bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:45
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:46
 msgid "I do not know the LPA reference number"
 msgstr "Dydw i ddim yn gwybod beth yw’r cyfeirnod LPA"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:49
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:50
 msgid ""
 "If you do not have the paper LPA or any letters from OPG, check with other "
 "people named on the LPA."
@@ -3041,7 +3042,7 @@ msgstr ""
 "Swyddfa’r Gwarcheidwad Cyhoeddus, holwch bobl eraill sydd wedi’u henwi ar yr "
 "atwrneiaeth arhosol."
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:51
 msgid ""
 "On the LPA, the donor told us who they wanted the registered paper LPA sent "
 "to. This may have been the donor or an attorney. If a professional, such as a "
@@ -6477,6 +6478,11 @@ msgid ""
 msgstr ""
 "Gwiriwch eich manylion a rhowch gynnig arall arni. Nid ydym wedi gallu dod o "
 "hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-bost a’r cyfrinair hwnnw."
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+msgid "your current address - all activation keys are sent by post"
+msgstr ""
+"eich cyfeiriad presennol - anfonir pob allwedd cadarnhau cyfrif drwy’r post"
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "
