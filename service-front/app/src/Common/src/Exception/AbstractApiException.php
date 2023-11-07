@@ -13,7 +13,7 @@ use Throwable;
 abstract class AbstractApiException extends RuntimeException
 {
     /**
-     * @var array
+     * @var string[]
      */
     private array $additionalData = [];
 

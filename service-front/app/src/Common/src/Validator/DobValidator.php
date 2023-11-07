@@ -23,8 +23,9 @@ class DobValidator extends DateValidator
         self::MONTH_INCOMPLETE    => 'Date of birth must include a month',
         self::YEAR_INCOMPLETE     => 'Date of birth must include a year',
         self::AGE_NEGATIVE        => 'Date of birth must be in the past',
-        self::AGE_TOO_YOUNG       => 'Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18',
-        ];
+        self::AGE_TOO_YOUNG       => 'Check your date of birth is correct - you cannot be an attorney or donor'
+            . ' if you’re under 18',
+    ];
 
     /**
      * @param mixed $value

@@ -24,7 +24,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
     /**
      * Map the element types to blocks in the Twig partial template
      *
-     * @var array
+     * @var string[]
      */
     private array $blockMappings = [
         Element\Checkbox::class => 'form_input_checkbox',
@@ -45,10 +45,26 @@ class GovUKLaminasFormExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('govuk_form_open', [$this, 'formOpen'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('govuk_form_close', [$this, 'formClose'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('govuk_form_element', [$this, 'formElement'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('govuk_form_fieldset', [$this, 'formFieldset'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction(
+                'govuk_form_open',
+                [$this, 'formOpen'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'govuk_form_close',
+                [$this, 'formClose'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'govuk_form_element',
+                [$this, 'formElement'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'govuk_form_fieldset',
+                [$this, 'formFieldset'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
         ];
     }
 
