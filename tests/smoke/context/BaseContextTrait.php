@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
@@ -12,11 +13,10 @@ use Behat\MinkExtension\Context\MinkContext;
  * Trait BaseContextTrait
  *
  * A trait that allows a utilising context to access the ui and mink functionality loaded in the BaseContext
- *
- * @package Test\Context
  */
 trait BaseContextTrait
 {
+    /** @psalm-suppress PropertyNotSetInConstructor */
     protected MinkContext $ui;
 
     /**
@@ -24,9 +24,10 @@ trait BaseContextTrait
      */
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
+        /** @psalm-var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
 
-        $base = $environment->getContext(BaseContext::class);
+        $base     = $environment->getContext(BaseContext::class);
         $this->ui = $base->ui; // MinkContext gathered in BaseContext
     }
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-10-12T09:26:27+00:00\n"
+"POT-Creation-Date: 2023-11-01T11:41:17+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -286,7 +286,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:113
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
-#: src/Actor/templates/actor/home-page.html.twig:47
+#: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
 msgid "Continue"
@@ -919,6 +919,7 @@ msgid "You cannot use a download or print out of this <abbr title=\"lasting powe
 msgstr ""
 
 #: src/Actor/templates/actor/layout.html.twig:5
+#: src/Actor/templates/actor/one-login.html.twig:5
 #: src/Actor/templates/actor/home-page.html.twig:5
 msgid "Use a lasting power of attorney"
 msgstr ""
@@ -2823,23 +2824,23 @@ msgstr ""
 msgid "Sign in or create an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:24
+#: src/Actor/templates/actor/home-page.html.twig:23
 msgid "Do you have a Use a lasting power of attorney account?"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:31
+#: src/Actor/templates/actor/home-page.html.twig:30
 msgid "Yes, I already have an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:33
+#: src/Actor/templates/actor/home-page.html.twig:32
 msgid "If you made an LPA online, you will still need to create an account to use this service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:36
+#: src/Actor/templates/actor/home-page.html.twig:35
 msgid "No, this is the first time I’ve used the service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:45
+#: src/Actor/templates/actor/home-page.html.twig:44
 msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
 
@@ -3276,10 +3277,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:12
 msgid "Stay signed in"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid "You can only use this service if your LPA was registered on or after 1 January 2016."
 msgstr ""
 
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
@@ -4461,4 +4458,22 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:170
+msgid "You cannot use a download or printout of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Always use the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:3
+msgid "One Login"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:13
+msgid "Sign in via One Login"
+msgstr ""
+
+#. login
+#: src/Actor/templates/actor/form-error-messages.html.twig:24
+msgctxt "error"
+msgid "Check your details and try again. We could not find a Use a lasting power of attorney account with that email address and password."
 msgstr ""

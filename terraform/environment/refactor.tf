@@ -391,3 +391,533 @@ moved {
   from = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
   to   = module.eu_west_1.aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
 }
+
+moved {
+  from = aws_cloudwatch_log_group.application_logs
+  to   = module.eu_west_1.aws_cloudwatch_log_group.application_logs
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.api_5xx_errors
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.api_5xx_errors
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_ACTIVATED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_ACTIVATED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_CREATED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_CREATED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_DELETED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACCOUNT_DELETED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADDED_LPA_TYPE_HW"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADDED_LPA_TYPE_HW"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADDED_LPA_TYPE_PFA"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADDED_LPA_TYPE_PFA"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_ALREADY_ADDED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_ALREADY_ADDED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_FAILURE"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_FAILURE"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_NOT_ELIGIBLE"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_NOT_ELIGIBLE"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_NOT_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_NOT_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_SUCCESS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.ADD_LPA_SUCCESS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.DOWNLOAD_SUMMARY"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.DOWNLOAD_SUMMARY"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.IDENTITY_HASH_CHANGE"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.IDENTITY_HASH_CHANGE"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.LPA_REMOVED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.LPA_REMOVED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_ALREADY_ADDED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_ALREADY_ADDED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_DOES_NOT_MATCH"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_DOES_NOT_MATCH"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_FORCE_ACTIVATION_KEY"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_FORCE_ACTIVATION_KEY"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_HAS_ACTIVATION_KEY"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_HAS_ACTIVATION_KEY"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_INVALID_STATUS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_INVALID_STATUS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_KEY_ALREADY_REQUESTED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_KEY_ALREADY_REQUESTED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NEEDS_CLEANSING"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NEEDS_CLEANSING"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NOT_ELIGIBLE"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NOT_ELIGIBLE"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NOT_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_NOT_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_PARTIAL_MATCH_TOO_RECENT"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_PARTIAL_MATCH_TOO_RECENT"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_SUCCESS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_SUCCESS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_TOO_OLD"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.OLDER_LPA_TOO_OLD"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.SHARE_CODE_NOT_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.SHARE_CODE_NOT_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.UNEXPECTED_DATA_LPA_API_RESPONSE"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.UNEXPECTED_DATA_LPA_API_RESPONSE"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.USER_ABROAD_ADDRESS_REQUEST_SUCCESS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.USER_ABROAD_ADDRESS_REQUEST_SUCCESS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_CANCELLED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_CANCELLED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_EXPIRED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_EXPIRED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_NOT_FOUND"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_NOT_FOUND"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_SUCCESS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.VIEW_LPA_SHARE_CODE_SUCCESS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_EXISTS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_EXISTS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_EXPIRED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_EXPIRED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_NOT_EXISTS"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["key_status.ACTIVATION_KEY_NOT_EXISTS"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["phone.OOLPA_PHONE_NUMBER_NOT_PROVIDED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["phone.OOLPA_PHONE_NUMBER_NOT_PROVIDED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["phone.OOLPA_PHONE_NUMBER_PROVIDED"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["phone.OOLPA_PHONE_NUMBER_PROVIDED"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["role.OOLPA_KEY_REQUESTED_FOR_ATTORNEY"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["role.OOLPA_KEY_REQUESTED_FOR_ATTORNEY"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.log_event_code_metrics["role.OOLPA_KEY_REQUESTED_FOR_DONOR"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.log_event_code_metrics["role.OOLPA_KEY_REQUESTED_FOR_DONOR"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.login_attempt_failures["401"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.login_attempt_failures["401"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.login_attempt_failures["403"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.login_attempt_failures["403"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.login_attempt_failures["404"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.login_attempt_failures["404"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.rate_limiting_metrics["actor_code_failure"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.rate_limiting_metrics["actor_code_failure"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.rate_limiting_metrics["actor_login_failure"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.rate_limiting_metrics["actor_login_failure"]
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.rate_limiting_metrics["viewer_code_failure"]
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.rate_limiting_metrics["viewer_code_failure"]
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.actor_5xx_errors
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.actor_5xx_errors
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.actor_ddos_attack_external
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.actor_ddos_attack_external
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.admin_ddos_attack_external
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.admin_ddos_attack_external
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.api_5xx_errors
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.api_5xx_errors
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.unexpected_data_lpa_api_resposnes
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.unexpected_data_lpa_api_resposnes
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.viewer_5xx_errors
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.viewer_5xx_errors
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.viewer_ddos_attack_external
+  to   = module.eu_west_1.aws_cloudwatch_metric_alarm.viewer_ddos_attack_external
+}
+
+moved {
+  from = aws_cloudwatch_query_definition.app_container_messages
+  to   = module.eu_west_1.aws_cloudwatch_query_definition.app_container_messages
+}
+
+moved {
+  from = aws_cloudwatch_log_group.application_logs
+  to   = module.eu_west_1.aws_cloudwatch_log_group.application_logs
+}
+
+moved {
+  from = aws_cloudwatch_log_metric_filter.api_5xx_errors
+  to   = module.eu_west_1.aws_cloudwatch_log_metric_filter.api_5xx_errors
+}
+
+moved {
+  from = aws_sns_topic.cloudwatch_to_pagerduty
+  to   = module.eu_west_1.aws_sns_topic.cloudwatch_to_pagerduty
+}
+
+moved {
+  from = pagerduty_service_integration.cloudwatch_integration
+  to   = module.eu_west_1.pagerduty_service_integration.cloudwatch_integration
+}
+
+moved {
+  from = aws_sns_topic_subscription.cloudwatch_sns_subscription
+  to   = module.eu_west_1.aws_sns_topic_subscription.cloudwatch_sns_subscription
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_appautoscaling_policy.down
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_appautoscaling_policy.down
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_appautoscaling_policy.up
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_appautoscaling_policy.up
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+}
+
+moved {
+  from = module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+  to   = module.eu_west_1.module.api_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_appautoscaling_policy.down
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_appautoscaling_policy.down
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_appautoscaling_policy.up
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_appautoscaling_policy.up
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+}
+
+moved {
+  from = module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+  to   = module.eu_west_1.module.pdf_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_appautoscaling_policy.down
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_appautoscaling_policy.down
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_appautoscaling_policy.up
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_appautoscaling_policy.up
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+}
+
+moved {
+  from = module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+  to   = module.eu_west_1.module.use_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_appautoscaling_policy.down
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_appautoscaling_policy.down
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_appautoscaling_policy.up
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_appautoscaling_policy.up
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_appautoscaling_target.ecs_service
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.max_scaling_reached
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_down
+}
+
+moved {
+  from = module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+  to   = module.eu_west_1.module.view_ecs_autoscaling.aws_cloudwatch_metric_alarm.scale_up
+}
+
+moved {
+  from = aws_cloudwatch_log_subscription_filter.events
+  to   = module.eu_west_1.aws_cloudwatch_log_subscription_filter.events
+}
+
+moved {
+  from = aws_lambda_permission.allow_cloudwatch
+  to   = module.eu_west_1.aws_lambda_permission.allow_cloudwatch
+}
+
+moved {
+  from = aws_wafv2_web_acl_association.actor[0]
+  to   = module.eu_west_1.aws_wafv2_web_acl_association.actor[0]
+}
+
+moved {
+  from = aws_wafv2_web_acl_association.viewer[0]
+  to   = module.eu_west_1.aws_wafv2_web_acl_association.viewer[0]
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.actor_health_check_alarm
+  to   = module.eu_west_1.module.actor_use_my_lpa.aws_cloudwatch_metric_alarm.this[0]
+}
+
+moved {
+  from = aws_cloudwatch_metric_alarm.viewer_health_check_alarm
+  to   = module.eu_west_1.module.viewer_use_my_lpa.aws_cloudwatch_metric_alarm.this[0]
+}
+
+moved {
+  from = aws_route53_health_check.actor_health_check
+  to   = module.eu_west_1.module.actor_use_my_lpa.aws_route53_health_check.this[0]
+}
+
+moved {
+  from = aws_route53_health_check.viewer_health_check
+  to   = module.eu_west_1.module.viewer_use_my_lpa.aws_route53_health_check.this[0]
+}
+
+moved {
+  from = aws_route53_record.actor_use_my_lpa
+  to   = module.eu_west_1.module.actor_use_my_lpa.aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.admin_use_my_lpa
+  to   = module.eu_west_1.module.admin_use_my_lpa.aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.public_facing_use_lasting_power_of_attorney
+  to   = module.eu_west_1.module.public_facing_use_lasting_power_of_attorney.aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.public_facing_view_lasting_power_of_attorney
+  to   = module.eu_west_1.module.public_facing_view_lasting_power_of_attorney.aws_route53_record.this
+}
+
+moved {
+  from = aws_route53_record.viewer_use_my_lpa
+  to   = module.eu_west_1.module.viewer_use_my_lpa.aws_route53_record.this
+}
+
+moved {
+  from = aws_service_discovery_private_dns_namespace.internal_ecs
+  to   = module.eu_west_1.aws_service_discovery_private_dns_namespace.internal_ecs
+}

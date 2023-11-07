@@ -49,7 +49,7 @@ resource "aws_service_discovery_service" "api_ecs" {
   name = "api"
 
   dns_config {
-    namespace_id = var.aws_service_discovery_service.id
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
 
     dns_records {
       ttl  = 10
@@ -68,7 +68,7 @@ resource "aws_service_discovery_service" "api_ecs" {
 
 //
 locals {
-  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${var.aws_service_discovery_service.name}"
+  api_service_fqdn = "${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
 }
 
 //----------------------------------
@@ -282,7 +282,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.api-web.use-an-lpa"
         }
@@ -325,7 +325,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
@@ -358,7 +358,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.api-app.use-an-lpa"
         }

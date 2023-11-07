@@ -1,5 +1,5 @@
 terraform {
-  required_version = "<= 1.5.6"
+  required_version = "<= 1.6.2"
 
   backend "s3" {
     bucket         = "opg.terraform.state"
@@ -13,7 +13,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.67.0"
+      version = "~> 5.24.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -21,7 +21,7 @@ terraform {
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
-      version = "~> 3.0.0"
+      version = "~> 3.1.0"
     }
   }
 }
@@ -41,6 +41,33 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "eu_west_1"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+  alias  = "eu_west_2"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
 
 provider "aws" {
   region = "eu-west-1"

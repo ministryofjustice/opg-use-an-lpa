@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AppTest\Service\OneLogin;
+
+use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\OneLogin\OneLoginService;
+use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+
+class OneLoginServiceTest extends TestCase
+{
+    use ProphecyTrait;
+
+    /** @test */
+    public function can_get_authentication_request_uri(): void
+    {
+        $state = 'STATE';
+        $nonce = 'aEwkamaos5B';
+        $redirect = 'FAKE_REDIRECT';
+        $uri   = '/authorize?response_type=code
+            &scope=YOUR_SCOPES
+            &client_id=YOUR_CLIENT_ID
+            &state=' . $state .
+            '&redirect_uri=' . $redirect .
+            '&nonce=' . $nonce .
+            '&vtr=["Cl.Cm"]
+            &ui_locales=en';
+
+        $apiClientProphecy = $this->prophesize(ApiClient::class);
+
+        $apiClientProphecy
+            ->httpGet(
+                '/v1/auth/start',
+                [
+                    'ui_locale'    => 'en',
+                    'redirect_url' => $redirect,
+                ]
+            )->willReturn(['state' => $state, 'nonce' => $nonce, 'url' => $uri]);
+
+        $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
+        $response        = $oneLoginService->authenticate('en', $redirect);
+        $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
+    }
+}

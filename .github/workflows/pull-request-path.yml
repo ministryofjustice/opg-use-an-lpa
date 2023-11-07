@@ -1,4 +1,4 @@
-name: "[Workflow] All branch based pushes"
+name: "[Workflow] PR Environment"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -8,15 +8,10 @@ defaults:
     shell: bash
 
 on:
-  push:
+  pull_request:
     branches:
-      - '*'              # matches every branch that doesn't contain a '/'
-      - '*/*'            # matches every branch containing a single '/'
-      - '**'             # matches every branch
-      - '!main'          # reverse match main
-      - '!dependabot/**' # reverse match dependabot PRs
-      - 'dependabot/docker/**' # match dependabot PRs that update docker
-      - 'dependabot/pip/**' # match dependabot PRs that update pip
+      - main
+
 
 permissions:
   contents: write
@@ -31,6 +26,9 @@ permissions:
   statuses: none
 
 jobs:
+  workspace_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
+
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
@@ -39,18 +37,18 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
         with:
           fetch-depth: 2
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
+        uses: tj-actions/changed-files@1864dc5311069c2319e40ddda20ebf24336dcba9
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@6e4b6b77a3fd4d60bd02608dba69c7eae38a117f
+        uses: tj-actions/changed-files@1864dc5311069c2319e40ddda20ebf24336dcba9
         with:
           files: |
             terraform/**
@@ -79,8 +77,9 @@ jobs:
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&
@@ -135,7 +134,7 @@ jobs:
       workspace: development
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-      apply: true
+      apply: false
     secrets: inherit
     if: |
       always() &&
@@ -148,8 +147,9 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
       terraform_path: environment
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
       apply: true
@@ -182,7 +182,7 @@ jobs:
       needs.terraform_lint.result == 'success' &&
       needs.docker_build_scan_push.result == 'success' &&
       needs.workflow_variables.result == 'success'
-    
+
   seed_dynamodb:
     name: seed dynamodb
     uses: ./.github/workflows/_seed-database.yml
@@ -201,8 +201,9 @@ jobs:
     needs:
       - seed_dynamodb
       - workflow_variables
+      - workspace_name
     with:
-      workspace: ${{ needs.workflow_variables.outputs.parsed_branch }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&
@@ -250,7 +251,7 @@ jobs:
       always() &&
       needs.code_coverage.result == 'success' &&
       needs.terraform_apply_environment.result == 'success'
-    
+
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
@@ -259,12 +260,13 @@ jobs:
       - ecr_scan_results
       - slack_notify
       - workflow_variables
+      - workspace_name
     steps:
       - name: workflow has ended without issue
         run: |
           echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.parsed_branch }}.use-lasting-power-of-attorney.service.gov.uk"
+          echo "URL: https://${{ needs.workspace_name.outputs.name }}.use-lasting-power-of-attorney.service.gov.uk"
     if: |
       always() &&
       needs.ecr_scan_results.result == 'success' &&

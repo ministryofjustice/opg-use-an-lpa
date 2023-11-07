@@ -7,7 +7,12 @@ terraform {
       configuration_aliases = [
         aws.region,
         aws.management,
+        aws.us-east-1,
       ]
+    }
+    pagerduty = {
+      source  = "PagerDuty/pagerduty"
+      version = ">= 3.0.0"
     }
   }
 }

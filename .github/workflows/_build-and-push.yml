@@ -71,11 +71,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222 # pin@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@04f198bf0b2a39f7230a4304bf07747a0bddf146 # pin@v3.0.8
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -94,7 +94,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@375a690dc0af3921541e5f427167f333d7e85f67 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e6c766a518826746395987edb73a1a5767d0b602 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -146,19 +146,9 @@ jobs:
           matrix.run_unit_tests == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
-      - name: ecr login
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@b5f9031d829ac39b7fd26092019aeca3ee6b3ebd # pin@v1.5.1
-        with:
-          registries: 311462405659
-        if: |
-          inputs.push_to_ecr == 'true' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-
       - name: docker integration and acceptance tests
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
-          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
         run: |
           if [[ "${SVC_PREFIX}" = "api" ]]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
@@ -167,15 +157,10 @@ jobs:
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
             docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
-            docker run -d --rm --name mock-one-login $ECR_REGISTRY/use_an_lpa/mock_onelogin_app
 
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
             export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
-            export DOCKER_REMOTE_MOCK_ONELOGIN_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mock-one-login)"
-
-            curl -XGET $DOCKER_REMOTE_MOCK_ONELOGIN_IP:8080/token
-            docker logs mock-one-login
 
             docker run -d --name behattests \
               --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP \
@@ -189,7 +174,6 @@ jobs:
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
             docker stop iap-images-mock
-            docker stop mock-one-login
           elif [[ "${SVC_PREFIX}" = "front" ]]; then
             docker run -d --name behattests front-app:latest
 
@@ -214,7 +198,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05 # pin@v3.1.0
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # pin@v3.1.0
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
@@ -271,6 +255,15 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@f8672cc4c5410eabbb9df3d9bb4c7ad01fc4cc3e # pin@v1.5.1
+        with:
+          registries: 311462405659
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: tag and push container
         env:

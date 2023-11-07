@@ -187,7 +187,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-web.use-an-lpa"
         }
@@ -195,7 +195,7 @@ locals {
       environment = [
         {
           name  = "WEB_DOMAIN",
-          value = "https://${var.route_53_fqdns.public_view}"
+          value = "https://${local.route53_fqdns.public_facing_view}"
         },
         {
           name  = "APP_HOST",
@@ -230,7 +230,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-otel.use-an-lpa"
         }
@@ -263,7 +263,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = var.application_logs_name,
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = data.aws_region.current.name,
           awslogs-stream-prefix = "${var.environment_name}.viewer-app.use-an-lpa"
         }

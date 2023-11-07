@@ -14,6 +14,8 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
+use function PHPUnit\Framework\assertArrayHasKey;
+
 /**
  * @property string userEmail
  * @property string userPassword
@@ -24,6 +26,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string userEmailResetToken
  * @property string email
  * @property string password
+ * @property string language
  */
 class AccountContext implements Context
 {
@@ -42,6 +45,7 @@ class AccountContext implements Context
     private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
     private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
+    private const ONE_LOGIN_SERVICE_AUTHENTICATE = 'OneLoginService::authenticate';
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -415,8 +419,8 @@ class AccountContext implements Context
      */
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
-        $this->ui->assertPageContainsText('We could not find a Use a lasting power of attorney account with ' .
-        'that email address and password. Check your details and try again.');
+        $this->ui->assertPageContainsText('Check your details and try again. We could not find a Use a lasting ' .
+                                          'power of attorney account with that email address and password.');
     }
 
     /**
@@ -2028,5 +2032,65 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/reset-password');
         $this->ui->assertPageContainsText('We\'ve emailed a link to ');
+    }
+
+    /**
+     * @Given /^I am on the temporary one login page$/
+     */
+    public function iAmOnTheTemporaryOneLoginPage(): void
+    {
+        $this->language = 'en';
+        $this->ui->visit('/home');
+        $this->ui->assertPageAddress('/home');
+        $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
+    }
+
+    /**
+     * @When /^I click the one login button$/
+     */
+    public function iClickTheOneLoginButton(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'state' => 'fakestate',
+                        'nonce' => 'fakenonce',
+                        'url'   => 'http://fake.url/authorize',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_AUTHENTICATE
+            )
+        );
+
+        $this->iDoNotFollowRedirects();
+        $this->ui->pressButton('Sign in via One Login');
+        $this->iDoFollowRedirects();
+    }
+
+    /**
+     * @Then /^I am redirected to the redirect page in (English|Welsh)$/
+     */
+    public function iAmRedirectedToTheRedirectPage($language): void
+    {
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        $request        = $this->apiFixtures->getLastRequest();
+        $params         = $request->getUri()->getQuery();
+        $language       = $language === 'English' ? 'en' : 'cy';
+
+        assert::assertTrue(isset($locationHeader));
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
+        assert::assertEquals($language, $this->language);
+        assert::assertStringContainsString('ui_locale=' . $this->language, $params);
+    }
+
+    /**
+     * @When /^I select the Welsh language$/
+     */
+    public function iSelectTheWelshLanguage(): void
+    {
+        $this->language = 'cy';
+        $this->ui->clickLink('Cymraeg');
     }
 }

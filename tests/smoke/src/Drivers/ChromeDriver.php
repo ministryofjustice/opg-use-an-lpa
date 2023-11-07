@@ -8,15 +8,11 @@ use Symfony\Component\Process\Process;
 
 class ChromeDriver implements Driver
 {
-    private array $binArguments;
-
-    private string $binPath;
-
     private ?Process $process;
 
     public function __construct(
-        string $binPath = '/usr/bin/google-chrome-stable',
-        array $binArguments = [
+        private string $binPath = '/usr/bin/google-chrome-stable',
+        private array $binArguments = [
             '--disable-gpu',
             '--headless',
             '--remote-debugging-address=0.0.0.0',
@@ -28,12 +24,9 @@ class ChromeDriver implements Driver
             '--disable-dev-shm-usage',
             '--no-startup-window',
             '--no-first-run',
-            '--no-pings'
-        ]
+            '--no-pings',
+        ],
     ) {
-        $this->binPath = $binPath;
-        $this->binArguments = $binArguments;
-
         $this->process = null;
     }
 
@@ -51,22 +44,24 @@ class ChromeDriver implements Driver
         );
         $this->process->start();
 
-        $this->process->waitUntil(function ($type, $output) {
-            if (! ($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
-                echo $output;
+        $this->process->waitUntil(
+            function (string $type, string $output) {
+                if (!($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
+                    echo $output;
+                }
+                return $running;
             }
-            return $running;
-        });
+        );
     }
 
     public function stop(): void
     {
-        $this->process->stop();
+        $this->process?->stop();
     }
 
     public function isRunning(): bool
     {
-        if ($this->process !== null) {
+        if ($this->process === null) {
             return false;
         }
 

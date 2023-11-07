@@ -1,6 +1,3 @@
-# Many of these variables are temporary and will be removed once the relevant region specific resources are moved to the region module.
-# E.g. dynamodb_tables will no longer be needed once the DynamoDB tables are moved to the region module.
-
 variable "account_name" {
   description = "The name of the AWS account."
   type        = string
@@ -34,9 +31,9 @@ variable "admin_container_version" {
   type        = string
 }
 
-variable "application_logs_name" {
-  description = "The name of the CloudWatch Logs group to send application logs to."
-  type        = string
+variable "associate_alb_with_waf_web_acl_enabled" {
+  description = "Whether or not to associate the ALBs with the WAF web ACL."
+  type        = bool
 }
 
 variable "autoscaling" {
@@ -45,15 +42,6 @@ variable "autoscaling" {
     minimum = number
     maximum = number
   }))
-}
-
-variable "aws_service_discovery_service" {
-  description = "The AWS Service Discovery service to use."
-  type = object({
-    id   = string
-    arn  = string
-    name = string
-  })
 }
 
 variable "capacity_provider" {
@@ -74,6 +62,11 @@ variable "cookie_expires_use" {
 variable "cookie_expires_view" {
   description = "The number of seconds before the cookie expires for the viewer service."
   type        = number
+}
+
+variable "dns_namespace_env" {
+  description = "The environment to use for the DNS namespace."
+  type        = string
 }
 
 variable "dynamodb_tables" {
@@ -132,6 +125,11 @@ variable "logging_level" {
   type        = string
 }
 
+variable "log_retention_days" {
+  description = "The number of days to retain logs for."
+  type        = number
+}
+
 variable "lpa_codes_endpoint" {
   description = "The endpoint to use for LPA codes."
   type        = string
@@ -155,6 +153,11 @@ variable "moj_sites" {
 
 variable "notify_key_secret_name" {
   description = "The name of the secret containing the Notify API key."
+  type        = string
+}
+
+variable "pagerduty_service_id" {
+  description = "The ID of the PagerDuty service to use."
   type        = string
 }
 
@@ -187,12 +190,6 @@ variable "regions" {
   }
 }
 
-variable "route_53_fqdns" {
-  description = "The FQDNs to use for the Route 53 records."
-
-  type = map(string)
-}
-
 variable "session_expires_use" {
   description = "The number of seconds before the session expires for the use service."
   type        = string
@@ -206,6 +203,12 @@ variable "session_expires_view" {
 variable "session_expiry_warning" {
   description = "The number of seconds before the session expires to show the warning for the viewer service."
   type        = string
+}
+
+variable "ship_metrics_queue_enabled" {
+  description = "Whether or not to forward metrics to opg-metrics"
+  type        = bool
+  default     = false
 }
 
 variable "sirius_account_id" {

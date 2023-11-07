@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-10-12T09:26:27+00:00\n"
+"POT-Creation-Date: 2023-11-01T11:41:17+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
 msgid "We've got your activation key request"
@@ -382,7 +382,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:113
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
-#: src/Actor/templates/actor/home-page.html.twig:47
+#: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
 msgid "Continue"
@@ -1368,6 +1368,7 @@ msgstr ""
 "cod mynediad i rywun."
 
 #: src/Actor/templates/actor/layout.html.twig:5
+#: src/Actor/templates/actor/one-login.html.twig:5
 #: src/Actor/templates/actor/home-page.html.twig:5
 msgid "Use a lasting power of attorney"
 msgstr "Defnyddio atwrneiaeth arhosol"
@@ -3993,15 +3994,15 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> Cod post</span>"
 msgid "Sign in or create an account"
 msgstr "Mewngofnodi neu greu cyfrif"
 
-#: src/Actor/templates/actor/home-page.html.twig:24
+#: src/Actor/templates/actor/home-page.html.twig:23
 msgid "Do you have a Use a lasting power of attorney account?"
 msgstr "A oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol?"
 
-#: src/Actor/templates/actor/home-page.html.twig:31
+#: src/Actor/templates/actor/home-page.html.twig:30
 msgid "Yes, I already have an account"
 msgstr "Oes, mae gen i gyfrif yn barod"
 
-#: src/Actor/templates/actor/home-page.html.twig:33
+#: src/Actor/templates/actor/home-page.html.twig:32
 msgid ""
 "If you made an LPA online, you will still need to create an account to use "
 "this service"
@@ -4009,11 +4010,11 @@ msgstr ""
 "Os gwnaethoch LPA ar-lein, bydd dal angen i chi greu cyfrif i allu defnyddio’r "
 "gwasanaeth hwn"
 
-#: src/Actor/templates/actor/home-page.html.twig:36
+#: src/Actor/templates/actor/home-page.html.twig:35
 msgid "No, this is the first time I’ve used the service"
 msgstr "Nac oes, hwn yw’r tro cyntaf i fi ddefnyddio’r gwasanaeth"
 
-#: src/Actor/templates/actor/home-page.html.twig:45
+#: src/Actor/templates/actor/home-page.html.twig:44
 msgid ""
 "If you're named on more than one LPA, you can add all those LPAs to your "
 "account."
@@ -4582,14 +4583,6 @@ msgstr ""
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:12
 msgid "Stay signed in"
 msgstr "Parhau i ddefnyddio’r gwasanaeth"
-
-#: src/Actor/templates/actor/partials/lpas-registered-after.html.twig:9
-msgid ""
-"You can only use this service if your LPA was registered on or after 1 January "
-"2016."
-msgstr ""
-"Gallwch ond ddefnyddio’r gwasanaeth hwn os cafodd eich LPA ei chofrestru ar "
-"neu ar 1 Ionawr 2016."
 
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
@@ -6455,6 +6448,35 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:170
+msgid ""
+"You cannot use a download or printout of this <abbr title=\"lasting power of "
+"attorney\">LPA</abbr> summary. Always use the original paper <abbr "
+"title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
+msgstr ""
+"Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r "
+"crynodeb <abbr title=“atwrneiaeth arhosol”>LPA</abbr> hwn. Defnyddiwch fersiwn "
+"papur y <abbr title=“atwrneiaeth arhosol”>LPA</abbr>  neu rhowch god mynediad "
+"i rywun."
+
+#: src/Actor/templates/actor/one-login.html.twig:3
+msgid "One Login"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:13
+msgid "Sign in via One Login"
+msgstr ""
+
+#. login
+#: src/Actor/templates/actor/form-error-messages.html.twig:24
+msgctxt "error"
+msgid ""
+"Check your details and try again. We could not find a Use a lasting power of "
+"attorney account with that email address and password."
+msgstr ""
+"Gwiriwch eich manylion a rhowch gynnig arall arni. Nid ydym wedi gallu dod o "
+"hyd i gyfrif defnyddio Atwrneiaeth Arhosol gyda’r e-bost a’r cyfrinair hwnnw."
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "
