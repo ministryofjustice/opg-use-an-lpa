@@ -20,7 +20,6 @@ class RateLimitServiceFactory
      * Returns a configured rate limit service loaded using the name given
      *
      * @param string $limitName
-     *
      * @return RateLimitService
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface

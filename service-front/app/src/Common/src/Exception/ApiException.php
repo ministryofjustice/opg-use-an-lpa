@@ -87,7 +87,7 @@ class ApiException extends AbstractApiException
             }
         }
 
-        if ($statusCode != null) {
+        if ($statusCode !== null) {
             $code = $statusCode;
         }
 
