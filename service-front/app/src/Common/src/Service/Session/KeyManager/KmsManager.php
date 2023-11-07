@@ -16,18 +16,18 @@ class KmsManager implements KeyManagerInterface
     /**
      * Time to cache encryption data key.
      */
-    const ENCRYPTION_KEY_TTL = 60 * 60 * 1;
+    public const ENCRYPTION_KEY_TTL = 60 * 60 * 1;
 
     /**
      * Time to cache decryption data keys.
      * These are held longer to allow for rotation crossover.
      */
-    const DECRYPTION_KEY_TTL = 60 * 60 * 2;
+    public const DECRYPTION_KEY_TTL = 60 * 60 * 2;
 
     /**
      * Current Key name within the cache.
      */
-    const CURRENT_ENCRYPTION_KEY = 'current_session_encryption_key';
+    public const CURRENT_ENCRYPTION_KEY = 'current_session_encryption_key';
 
     public function __construct(private KmsClient $kmsClient, private KeyCache $cache, private string $kmsAlias)
     {

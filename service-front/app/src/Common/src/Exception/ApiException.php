@@ -23,7 +23,7 @@ class ApiException extends AbstractApiException
     protected $code;
 
     /**
-     * @var array|null
+     * @var array<string>|null
      */
     protected ?array $additionalData = null;
 
@@ -87,7 +87,7 @@ class ApiException extends AbstractApiException
             }
         }
 
-        if ($statusCode != null) {
+        if ($statusCode !== null) {
             $code = $statusCode;
         }
 
