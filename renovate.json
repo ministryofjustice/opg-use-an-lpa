@@ -29,9 +29,6 @@
         "patch"
       ],
       "prPriority": 0,
-      "schedule": [
-        "after 6am and before 9am on Monday"
-      ],
       "stabilityDays": 3,
       "excludePackageNames": [
         "php"
@@ -64,18 +61,12 @@
     "prCreation": "status-success",
     "rangeStrategy": "pin",
     "prPriority": 1,
-    "schedule": [
-      "after 6am and before 9am on Monday"
-    ]
-  },
+  ,
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
       "Dependencies",
       "Renovate"
-    ],
-    "schedule": [
-      "after 6am and before 9am every weekday"
     ],
     "dependencyDashboardApproval": false,
     "stabilityDays": 0,
