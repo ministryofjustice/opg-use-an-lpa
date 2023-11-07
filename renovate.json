@@ -60,8 +60,8 @@
     ],
     "prCreation": "status-success",
     "rangeStrategy": "pin",
-    "prPriority": 1,
-  ,
+    "prPriority": 1
+  },
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
