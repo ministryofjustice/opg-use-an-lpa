@@ -124,14 +124,15 @@ class AddAccessForAllLpaTest extends TestCase
 
     /**
      * Provides expected valid response codes that we know our methods should handle.
+     *
      * @return array
      */
     public function exceptionThrown(): array
     {
         return [
-            [ 'LPA not eligible due to registration date', AccessForAllResult::NOT_ELIGIBLE ],
-            [ 'LPA details do not match', AccessForAllResult::DOES_NOT_MATCH ],
-            [ 'LPA status invalid', AccessForAllResult::STATUS_NOT_VALID ],
+            ['LPA not eligible due to registration date', AccessForAllResult::NOT_ELIGIBLE],
+            ['LPA details do not match', AccessForAllResult::DOES_NOT_MATCH],
+            ['LPA status invalid', AccessForAllResult::STATUS_NOT_VALID],
         ];
     }
 

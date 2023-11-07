@@ -81,7 +81,8 @@ class ImagesTest extends TestCase
      * @test
      * @covers ::jsonSerialize
      */
-    public function it_implements_jsonserializable_correctly(): void{
+    public function it_implements_jsonserializable_correctly(): void
+    {
         $data = [
             'uId'        => 700000000001,
             'status'     => ImagesStatus::COLLECTION_COMPLETE,

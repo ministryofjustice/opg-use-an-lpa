@@ -46,9 +46,9 @@ class InstAndPrefImagesServiceTest extends TestCase
             'uId'        => $uId,
             'status'     => 'COLLECTION_COMPLETE',
             'signedUrls' => [
-                'iap-' . $uId . '-instructions' => 'http://www.example.com/image1.jpg',
-                'iap-' . $uId . '-preferences'  => 'http://www.example.com/image2.jpg',
-                'iap-' . $uId . '-continuation_unknown_1'  => 'http://www.example.com/image3.jpg',
+                'iap-' . $uId . '-instructions'           => 'http://www.example.com/image1.jpg',
+                'iap-' . $uId . '-preferences'            => 'http://www.example.com/image2.jpg',
+                'iap-' . $uId . '-continuation_unknown_1' => 'http://www.example.com/image3.jpg',
             ],
         ];
         $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')->willReturn($imageDataFromApi);
