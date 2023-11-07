@@ -15,6 +15,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use DateTimeInterface;
+use DateInterval;
 
 /**
  * @codeCoverageIgnore
@@ -28,7 +30,8 @@ class DownloadLpaHandler implements RequestHandlerInterface
         private PdfService $pdfService,
         private FeatureEnabled $featureEnabled,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * @param ServerRequestInterface $request
@@ -53,8 +56,8 @@ class DownloadLpaHandler implements RequestHandlerInterface
             // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
             //      is later)
             // necessary for development. Do not uncomment for live environments.
-            $lpa->expires = (new DateTimeImmutable('+60 days'))->format(\DateTimeInterface::ATOM);
-            $codeCreated  = (new DateTimeImmutable($lpa->expires))->sub(new \DateInterval('P30D'));
+            $lpa->expires = (new DateTimeImmutable('+60 days'))->format(DateTimeInterface::ATOM);
+            $codeCreated  = (new DateTimeImmutable($lpa->expires))->sub(new DateInterval('P30D'));
 
             if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
                 $images = $lpa->iap; // TODO UML-2930 this is the only bit that should be kept
