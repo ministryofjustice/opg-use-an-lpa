@@ -15,10 +15,6 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Class ViewerContext
- *
- * @package BehatTest\Context\UI
- *
  * @property $lpaSurname
  * @property $lpaShareCode
  * @property $lpaData
@@ -191,11 +187,11 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementNotOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementNotContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertElementContainsText('iap-preferences','We cannot show the preferences for this');
+        $this->ui->assertElementContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementNotOnPage('iap-instructions .iap-loader');
         $this->ui->assertElementNotContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
-        $this->ui->assertElementContainsText('iap-instructions','We cannot show the instructions for this');
+        $this->ui->assertElementContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
     /**
@@ -205,11 +201,11 @@ class ViewerContext implements Context
     {
         $this->ui->assertElementOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertElementNotContainsText('iap-preferences','We cannot show the preferences for this');
+        $this->ui->assertElementNotContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementOnPage('iap-instructions .iap-loader');
         $this->ui->assertElementContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
-        $this->ui->assertElementNotContainsText('iap-instructions','We cannot show the instructions for this');
+        $this->ui->assertElementNotContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
     /**
@@ -371,7 +367,7 @@ class ViewerContext implements Context
      */
     public function iConfirmTheCancelledLPAIsCorrect()
     {
-        $this->lpaData['status'] = 'Cancelled';
+        $this->lpaData['status']           = 'Cancelled';
         $this->lpaData['cancellationDate'] = (new DateTime('-1 day'))->format('Y-m-d');
 
         $this->ui->assertPageAddress('/check-code');
@@ -385,8 +381,8 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'lpa'       => $this->lpaData,
+                        'expires'   => (new DateTime('+30 days'))->format('c'),
                         'cancelled' => (new DateTime('-1 day'))->format('c'),
                     ]
                 ),
@@ -398,7 +394,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
@@ -424,8 +420,8 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'lpa'       => $this->lpaData,
+                        'expires'   => (new DateTime('+30 days'))->format('c'),
                         'cancelled' => (new DateTime('-1 day'))->format('c'),
                     ]
                 )
@@ -465,7 +461,7 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
+                        'lpa'     => $this->lpaData,
                         'expires' => (new DateTime('+30 days'))->format('c'),
                     ]
                 ),
@@ -476,6 +472,7 @@ class ViewerContext implements Context
         $this->ui->fillField('organisation', $this->lpaViewedBy);
         $this->ui->pressButton('View this LPA');
     }
+
     /**
      * @When /^I enter an organisation name and confirm the LPA is correct$/
      */
@@ -495,7 +492,7 @@ class ViewerContext implements Context
         ];
 
         if (
-            (($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false))
+            ($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false)
             && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
         ) {
             $data['iap'] = [
@@ -528,7 +525,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
@@ -549,9 +546,9 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_GONE,
                 json_encode(
                     [
-                        'title' => 'Gone',
+                        'title'   => 'Gone',
                         'details' => 'Share code expired',
-                        'data' => [],
+                        'data'    => [],
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -576,9 +573,9 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_GONE,
                 json_encode(
                     [
-                        'title' => 'Gone',
+                        'title'   => 'Gone',
                         'details' => 'Share code cancelled',
-                        'data' => [],
+                        'data'    => [],
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -605,8 +602,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferences()
     {
-        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
-        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
+        $this->lpaData['applicationHasGuidance']     = true;
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
@@ -619,8 +616,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructions()
     {
-        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
-        $this->lpaData['applicationHasGuidance'] = false;
+        $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
+        $this->lpaData['applicationHasGuidance']     = false;
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
@@ -663,8 +660,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasPreferences()
     {
-        $this->lpaData['lpaDonorSignatureDate'] = '2016-01-01';
-        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
+        $this->lpaData['applicationHasGuidance']     = true;
         $this->lpaData['applicationHasRestrictions'] = false;
 
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
@@ -677,8 +674,8 @@ class ViewerContext implements Context
      */
     public function theLPAHasNoInstructionsOrPreferences()
     {
-        $this->lpaData['lpaDonorSignatureDate'] = '2014-01-01';
-        $this->lpaData['applicationHasGuidance'] = false;
+        $this->lpaData['lpaDonorSignatureDate']      = '2014-01-01';
+        $this->lpaData['applicationHasGuidance']     = false;
         $this->lpaData['applicationHasRestrictions'] = false;
 
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
@@ -691,7 +688,7 @@ class ViewerContext implements Context
      */
     public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016()
     {
-        $this->lpaData['applicationHasGuidance'] = true;
+        $this->lpaData['applicationHasGuidance']     = true;
         $this->lpaData['applicationHasRestrictions'] = true;
 
         $this->lpaData['lpaDonorSignatureDate'] = '2015-01-01';
@@ -728,7 +725,7 @@ class ViewerContext implements Context
      */
     public function iGiveAValidLPAShareCodeOf(string $code, string $storedCode)
     {
-        $this->lpaShareCode = $code;
+        $this->lpaShareCode  = $code;
         $this->lpaStoredCode = $storedCode;
         $this->iGiveAValidLPAShareCode();
     }
@@ -756,7 +753,6 @@ class ViewerContext implements Context
             $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
         }
     }
-
 
     /**
      * @Then /^I can clearly see the lpa has instructions$/
@@ -864,40 +860,40 @@ class ViewerContext implements Context
      */
     public function iHaveBeenGivenAccessToAnLPAViaShareCode()
     {
-        $this->lpaSurname = 'Testerson';
-        $this->lpaShareCode = '1111-1111-1111';
+        $this->lpaSurname    = 'Testerson';
+        $this->lpaShareCode  = '1111-1111-1111';
         $this->lpaStoredCode = '111111111111';
-        $this->lpaViewedBy = 'Santander';
-        $this->lpaData = [
-            'id' => 1,
-            'uId' => '700000000000',
-            'receiptDate' => '2014-09-26',
-            'registrationDate' => '2014-10-26',
+        $this->lpaViewedBy   = 'Santander';
+        $this->lpaData       = [
+            'id'                    => 1,
+            'uId'                   => '700000000000',
+            'receiptDate'           => '2014-09-26',
+            'registrationDate'      => '2014-10-26',
             'lpaDonorSignatureDate' => '2015-06-30',
-            'donor' => [
-                'id' => 1,
-                'uId' => '700000000288',
-                'dob' => '1948-11-01',
-                'salutation' => 'Mr',
-                'firstname' => 'Test',
+            'donor'                 => [
+                'id'          => 1,
+                'uId'         => '700000000288',
+                'dob'         => '1948-11-01',
+                'salutation'  => 'Mr',
+                'firstname'   => 'Test',
                 'middlenames' => 'Testable',
-                'surname' => 'Testerson',
-                'addresses' => [
+                'surname'     => 'Testerson',
+                'addresses'   => [
                     0 => [
-                        'id' => 1,
-                        'town' => 'Test',
-                        'county' => 'Testershire',
-                        'postcode' => 'TE57 7ES',
-                        'country' => '',
-                        'type' => 'Primary',
+                        'id'           => 1,
+                        'town'         => 'Test',
+                        'county'       => 'Testershire',
+                        'postcode'     => 'TE57 7ES',
+                        'country'      => '',
+                        'type'         => 'Primary',
                         'addressLine1' => 'Test House',
                         'addressLine2' => 'Test Road',
                         'addressLine3' => '',
                     ],
                 ],
             ],
-            'status' => 'Registered',
-            'caseSubtype' => 'hw',
+            'status'                => 'Registered',
+            'caseSubtype'           => 'hw',
         ];
 
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
@@ -921,7 +917,7 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
+                        'lpa'     => $this->lpaData,
                         'expires' => (new DateTime('+30 days'))->format('c'),
                     ]
                 ),
@@ -932,7 +928,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
@@ -1121,9 +1117,6 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
     }
 
-    /**
-     * @return void
-     */
     private function giveAValidLpaShareCode(): void
     {
         $this->ui->assertPageAddress('/home');
@@ -1134,7 +1127,7 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa' => $this->lpaData,
+                        'lpa'     => $this->lpaData,
                         'expires' => (new DateTime('+30 days'))->format('c'),
                     ]
                 ),

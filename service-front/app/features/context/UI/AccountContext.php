@@ -33,19 +33,19 @@ class AccountContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const USER_SERVICE_ACTIVATE = 'UserService::activate';
-    private const USER_SERVICE_CREATE = 'UserService::create';
-    private const USER_SERVICE_REQUEST_CHANGE_EMAIL = 'UserService::requestChangeEmail';
-    private const USER_SERVICE_CAN_RESET_EMAIL = 'UserService::canResetEmail';
-    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL = 'UserService::completeChangeEmail';
-    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
-    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
-    private const USER_SERVICE_CHANGE_PASSWORD = 'UserService::changePassword';
-    private const USER_SERVICE_REQUEST_PASSWORD_RESET = 'UserService::requestPasswordReset';
-    private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
+    private const USER_SERVICE_ACTIVATE                = 'UserService::activate';
+    private const USER_SERVICE_CREATE                  = 'UserService::create';
+    private const USER_SERVICE_REQUEST_CHANGE_EMAIL    = 'UserService::requestChangeEmail';
+    private const USER_SERVICE_CAN_RESET_EMAIL         = 'UserService::canResetEmail';
+    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL   = 'UserService::completeChangeEmail';
+    private const USER_SERVICE_AUTHENTICATE            = 'UserService::authenticate';
+    private const LPA_SERVICE_GET_LPAS                 = 'LpaService::getLpas';
+    private const USER_SERVICE_CHANGE_PASSWORD         = 'UserService::changePassword';
+    private const USER_SERVICE_REQUEST_PASSWORD_RESET  = 'UserService::requestPasswordReset';
+    private const USER_SERVICE_CAN_PASSWORD_RESET      = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
-    private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
-    private const ONE_LOGIN_SERVICE_AUTHENTICATE = 'OneLoginService::authenticate';
+    private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
+    private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -61,8 +61,8 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => '123',
-                        'Email' => $email,
+                        'Id'              => '123',
+                        'Email'           => $email,
                         'ActivationToken' => $this->activationToken,
                     ]
                 )
@@ -119,10 +119,10 @@ class AccountContext implements Context
      */
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userEmail = 'test@test.com';
+        $this->userEmail    = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
-        $this->userActive = true;
-        $this->userId = '123';
+        $this->userActive   = true;
+        $this->userId       = '123';
     }
 
     /**
@@ -238,13 +238,13 @@ class AccountContext implements Context
      */
     public function iAmOnTheChangeEmailPage(): void
     {
-        $this->newUserEmail = 'newEmail@test.com';
+        $this->newUserEmail        = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
 
         $this->ui->visit('/your-details');
 
         $session = $this->ui->getSession();
-        $page = $session->getPage();
+        $page    = $session->getPage();
 
         $link = $page->find('css', 'a[href="/change-email"]');
         if ($link === null) {
@@ -497,7 +497,7 @@ class AccountContext implements Context
      */
     public function iAskForMyPasswordToBeResetWithAccountThatDoesntExist(
         $email = 'test@example.com',
-        $email_confirmation = 'test@example.com'
+        $email_confirmation = 'test@example.com',
     ): void {
         $this->ui->assertPageAddress('/reset-password');
 
@@ -524,7 +524,7 @@ class AccountContext implements Context
      */
     public function iAskForMyPasswordToBeReset(
         $email = 'test@example.com',
-        $email_confirmation = 'test@example.com'
+        $email_confirmation = 'test@example.com',
     ): void {
         $this->ui->assertPageAddress('/reset-password');
 
@@ -534,7 +534,7 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userId,
+                        'Id'                 => $this->userId,
                         'PasswordResetToken' => '123456',
                     ]
                 ),
@@ -549,12 +549,13 @@ class AccountContext implements Context
         $this->ui->fillField('email_confirm', $email_confirmation);
         $this->ui->pressButton('Email me the link');
     }
+
     /**
      * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
      */
     public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails(
         $email,
-        $email_confirmation
+        $email_confirmation,
     ): void {
         $this->ui->assertPageAddress('/reset-password');
 
@@ -577,7 +578,7 @@ class AccountContext implements Context
     public function iAskToChangeMyPassword(): void
     {
         $session = $this->ui->getSession();
-        $page = $session->getPage();
+        $page    = $session->getPage();
 
         $link = $page->find('css', 'a[href="change-password"]');
         if ($link === null) {
@@ -624,10 +625,10 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($this->userEmail);
 
         $session = $this->ui->getSession();
-        $page = $session->getPage();
+        $page    = $session->getPage();
 
         $changeEmailText = 'Change email address';
-        $link = $page->findLink($changeEmailText);
+        $link            = $page->findLink($changeEmailText);
         if ($link === null) {
             throw new Exception($changeEmailText . ' link not found');
         }
@@ -643,10 +644,10 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Password');
 
         $session = $this->ui->getSession();
-        $page = $session->getPage();
+        $page    = $session->getPage();
 
         $changePasswordtext = 'Change password';
-        $link = $page->findLink($changePasswordtext);
+        $link               = $page->findLink($changePasswordtext);
         if ($link === null) {
             throw new Exception($changePasswordtext . ' link not found');
         }
@@ -737,7 +738,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Change password');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('token', $params);
@@ -841,9 +842,9 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userId,
-                        'Email' => $this->userEmail,
-                        'Password' => $this->userPassword,
+                        'Id'        => $this->userId,
+                        'Email'     => $this->userEmail,
+                        'Password'  => $this->userPassword,
                         'LastLogin' => null,
                     ]
                 ),
@@ -859,8 +860,8 @@ class AccountContext implements Context
      */
     public function iCreateAnAccount(): void
     {
-        $this->userEmail = 'test@example.com';
-        $this->password = 'n3wPassWord!';
+        $this->userEmail       = 'test@example.com';
+        $this->password        = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
 
         $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
@@ -871,9 +872,9 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => '123',
+                        'Id'              => '123',
                         'ActivationToken' => $this->activationToken,
-                        'ExpiresTTL' => 2553602798
+                        'ExpiresTTL'      => 2553602798,
                     ]
                 ),
                 self::USER_SERVICE_CREATE
@@ -906,8 +907,8 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
-        $this->userEmail = 'test@example.com';
-        $this->password = 'n3wPassWord!';
+        $this->userEmail       = 'test@example.com';
+        $this->password        = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
 
         $this->ui->assertPageAddress('/create-account');
@@ -918,7 +919,7 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_CONFLICT,
                 json_encode(
                     [
-                        'Email' => $this->userEmail,
+                        'Email'           => $this->userEmail,
                         'ActivationToken' => $this->activationToken,
                     ]
                 ),
@@ -940,7 +941,7 @@ class AccountContext implements Context
      */
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset(): void
     {
-        $this->userEmail = 'test@test.com';
+        $this->userEmail    = 'test@test.com';
         $this->userPassword = 'pa33W0rd!123';
 
         $this->ui->assertPageAddress('/create-account');
@@ -1012,8 +1013,8 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'Id' => $this->userId,
-                            'Email' => $this->userEmail,
+                            'Id'        => $this->userId,
+                            'Email'     => $this->userEmail,
                             'LastLogin' => '2020-01-01',
                         ]
                     ),
@@ -1058,8 +1059,8 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'Id' => $this->userId,
-                            'Email' => $email_format,
+                            'Id'        => $this->userId,
+                            'Email'     => $email_format,
                             'LastLogin' => '2020-01-01',
                         ]
                     ),
@@ -1212,7 +1213,7 @@ class AccountContext implements Context
     public function iFollowTheInstructionsOnHowToActivateMyAccount(): void
     {
         $this->activationToken = 'abcd2345';
-        $this->userEmail = 'a@b.com';
+        $this->userEmail       = 'a@b.com';
 
         // API fixture for reset token check
         $this->apiFixtures->append(
@@ -1220,8 +1221,8 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => '123',
-                        'Email' => $this->userEmail,
+                        'Id'               => '123',
+                        'Email'            => $this->userEmail,
                         'activation_token' => $this->activationToken,
                     ]
                 ),
@@ -1236,7 +1237,7 @@ class AccountContext implements Context
 
         //Test reset token check
         $request = $this->base->mockClientHistoryContainer[0]['request'];
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
         Assert::assertEquals('abcd2345', $params['activation_token']);
     }
 
@@ -1245,10 +1246,10 @@ class AccountContext implements Context
      */
     public function iHackTheRequestIdOfTheCSRFValue(): void
     {
-        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
-        $separated = explode('-', $value);
+        $value        = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
+        $separated    = explode('-', $value);
         $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
-        $hackedValue = implode('-', $separated);
+        $hackedValue  = implode('-', $separated);
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
 
@@ -1259,9 +1260,9 @@ class AccountContext implements Context
     {
         $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
 
-        $separated = explode('-', $value);
+        $separated    = explode('-', $value);
         $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
-        $hackedValue = implode('-', $separated);
+        $hackedValue  = implode('-', $separated);
 
         $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
     }
@@ -1279,8 +1280,8 @@ class AccountContext implements Context
      */
     public function iHaveAskedToCreateANewAccount(): void
     {
-        $this->email = 'test@example.com';
-        $this->password = 'n3wPassWord!';
+        $this->email           = 'test@example.com';
+        $this->password        = 'n3wPassWord!';
         $this->activationToken = 'activate1234567890';
     }
 
@@ -1323,8 +1324,8 @@ class AccountContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'Id' => $this->userId,
-                            'Email' => $this->userEmail,
+                            'Id'        => $this->userId,
+                            'Email'     => $this->userEmail,
                             'LastLogin' => null,
                         ]
                     ),
@@ -1388,11 +1389,13 @@ class AccountContext implements Context
         // Not needed for this context
     }
 
-    public function iDoNotFollowRedirects():void {
+    public function iDoNotFollowRedirects(): void
+    {
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(false);
     }
 
-    public function iDoFollowRedirects(): void {
+    public function iDoFollowRedirects(): void
+    {
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(true);
     }
 
@@ -1552,12 +1555,12 @@ class AccountContext implements Context
                 json_encode(
                     [
                         'EmailResetExpiry' => time() + (60 * 60 * 48),
-                        'Email' => $this->userEmail,
-                        'LastLogin' => null,
-                        'Id' => $this->userId,
-                        'NewEmail' => $this->newUserEmail,
-                        'EmailResetToken' => $this->userEmailResetToken,
-                        'Password' => $this->userPassword,
+                        'Email'            => $this->userEmail,
+                        'LastLogin'        => null,
+                        'Id'               => $this->userId,
+                        'NewEmail'         => $this->newUserEmail,
+                        'EmailResetToken'  => $this->userEmailResetToken,
+                        'Password'         => $this->userPassword,
                     ]
                 ),
                 self::USER_SERVICE_REQUEST_CHANGE_EMAIL
@@ -1599,7 +1602,7 @@ class AccountContext implements Context
 
         //Test for request change email
         $request = $this->base->mockClientHistoryContainer[2]['request'];
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('user-id', $params);
@@ -1645,7 +1648,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Save new email address');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('user-id', $params);
         Assert::assertArrayHasKey('new-email', $params);
@@ -1747,17 +1750,17 @@ class AccountContext implements Context
      */
     public function iShouldBeTakenToThePreviousPage($page): void
     {
-        if ($page == 'triage') {
+        if ($page === 'triage') {
             $this->ui->assertPageAddress('/home');
-        } elseif ($page == 'login') {
+        } elseif ($page === 'login') {
             $this->ui->assertPageAddress('/login');
-        } elseif ($page == 'dashboard') {
+        } elseif ($page === 'dashboard') {
             $this->ui->assertPageAddress('/lpa/dashboard');
-        } elseif ($page == 'your details') {
+        } elseif ($page === 'your details') {
             $this->ui->assertPageAddress('/your-details');
-        } elseif ($page == 'add a lpa') {
+        } elseif ($page === 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
-        } elseif ($page == 'add by code') {
+        } elseif ($page === 'add by code') {
             $this->ui->assertPageAddress('/lpa/add-by-key');
         }
     }
@@ -1959,9 +1962,9 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userId,
-                        'Email' => $this->userEmail,
-                        'LastLogin' => '2020-01-01',
+                        'Id'         => $this->userId,
+                        'Email'      => $this->userEmail,
+                        'LastLogin'  => '2020-01-01',
                         'NeedsReset' => '2020-10-10',
                     ]
                 ),
@@ -1997,7 +2000,7 @@ class AccountContext implements Context
      */
     public function iRequestForMyPasswordToBeReset(
         $email = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
-        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk'
+        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
     ) {
         // API call for password reset request
         $this->apiFixtures->append(
@@ -2005,7 +2008,7 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userId,
+                        'Id'                 => $this->userId,
                         'PasswordResetToken' => '123456',
                     ]
                 ),
@@ -2019,7 +2022,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('We\'ve emailed a link to');
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertArrayHasKey('passwordResetUrl', $params);
         Assert::assertArrayHasKey('recipient', $params);

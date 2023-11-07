@@ -17,10 +17,7 @@ require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Fu
 
 abstract class BaseIntegrationContext implements Context, Psr11AwareContext
 {
-    /**
-     * @var ContainerInterface|Container
-     */
-    protected $container;
+    protected ContainerInterface|Container $container;
     public MockHandler $apiFixtures;
     public array $mockClientHistoryContainer = [];
 
@@ -32,9 +29,9 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
         $this->container = $container;
 
         //Create handler stack and push to container
-        $mockHandler = $container->get(MockHandler::class);
+        $mockHandler  = $container->get(MockHandler::class);
         $handlerStack = HandlerStack::create($mockHandler);
-        $history = Middleware::history($this->mockClientHistoryContainer);
+        $history      = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
         $handlerStack->remove('http_errors');
         $handlerStack->remove('cookies');

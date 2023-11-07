@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
+use Mezzio\Authentication\Session\ConfigProvider;
 
 $aggregator = new ConfigAggregator([
-    Mezzio\Authentication\Session\ConfigProvider::class,
+    ConfigProvider::class,
     Mezzio\Router\FastRouteRouter\ConfigProvider::class,
     Laminas\HttpHandlerRunner\ConfigProvider::class,
     Laminas\Cache\ConfigProvider::class,

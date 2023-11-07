@@ -27,10 +27,6 @@ use Mezzio\Session\SessionPersistenceInterface;
 use PHPUnit\Framework\Assert;
 
 /**
- * Class CommonContext
- *
- * @package BehatTest\Context\UI
- *
  * @property $traceId  The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
  */
 class CommonContext implements Context
@@ -154,10 +150,10 @@ class CommonContext implements Context
     {
         $this->iAmAbleToLogin();
 
-        $userEmail = 'test@test.com';
-        $password = 'pa33w0rd';
+        $userEmail  = 'test@test.com';
+        $password   = 'pa33w0rd';
         $userActive = true;
-        $userId = '123';
+        $userId     = '123';
 
         $this->ui->fillField('email', $userEmail);
         $this->ui->fillField('password', $password);
@@ -169,8 +165,8 @@ class CommonContext implements Context
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'Id' => $userId,
-                            'Email' => $userEmail,
+                            'Id'        => $userId,
+                            'Email'     => $userEmail,
                             'LastLogin' => '2020-01-01',
                         ]
                     ),
@@ -237,7 +233,7 @@ class CommonContext implements Context
         $this->ui->assertPageAddress('/cookies');
 
         $session = $this->ui->getSession();
-        $seen = $session->getCookie('cookie_policy');
+        $seen    = $session->getCookie('cookie_policy');
 
         if ($seen === null) {
             throw new Exception('Cookies not set');
@@ -447,7 +443,7 @@ class CommonContext implements Context
         $container = $this->base->container;
 
         // change the session expiry to 1 (and we wait at the end to ensure expiry)
-        $config = $container->get('config');
+        $config                       = $container->get('config');
         $config['session']['expires'] = 1;
         $container->set('config', $config);
 

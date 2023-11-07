@@ -16,8 +16,6 @@ use GuzzleHttp\Handler\MockHandler;
  * Trait BaseUiContextTrait
  *
  * A trait that allows a utilising context to access the ui and mink functionality loaded in the BaseUiContext
- *
- * @package BehatTest\Context
  */
 trait BaseUiContextTrait
 {
@@ -33,8 +31,8 @@ trait BaseUiContextTrait
     {
         $environment = $scope->getEnvironment();
 
-        $this->base = $environment->getContext(BaseUiContext::class);
-        $this->ui = $this->base->ui; // MinkContext gathered in BaseUiContext
+        $this->base        = $environment->getContext(BaseUiContext::class);
+        $this->ui          = $this->base->ui; // MinkContext gathered in BaseUiContext
         $this->apiFixtures = $this->base->apiFixtures;
         $this->awsFixtures = $this->base->awsFixtures;
     }
@@ -55,20 +53,16 @@ trait BaseUiContextTrait
      * Verifies a Javascript accordion element is open
      *
      * @param string $searchStr
-     *
      * @return bool
      */
     public function elementIsOpen(string $searchStr): bool
     {
-        $page = $this->ui->getSession()->getPage();
-        $element = $page->find('css', $searchStr);
+        $page        = $this->ui->getSession()->getPage();
+        $element     = $page->find('css', $searchStr);
         $elementHtml = $element->getOuterHtml();
         return str_contains($elementHtml, ' open');
     }
 
-    /**
-     * @return SharedState
-     */
     public function sharedState(): SharedState
     {
         return SharedState::getInstance();
