@@ -17,14 +17,14 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CreateAccount extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'create_account';
+    public const FORM_NAME = 'create_account';
 
     public const NEW_EMAIL_CONFLICT = 'NewEmailConflict';
 
     /**
      * Error messages
      *
-     * @var array
+     * @var string[]
      */
     protected array $messageTemplates = [
         self::NEW_EMAIL_CONFLICT => 'Sorry, there was a problem with that email address. Please try a different one',
@@ -71,7 +71,8 @@ class CreateAccount extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages' => [
-                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, like name@example.com',
+                                NotEmpty::IS_EMPTY => 'Enter an email address in the correct format, ' .
+                                    'like name@example.com',
                             ],
                         ],
                     ],

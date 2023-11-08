@@ -10,7 +10,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CancelCode extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'cancel_code';
+    public const FORM_NAME = 'cancel_code';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

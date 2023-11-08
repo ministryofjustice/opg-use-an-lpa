@@ -1,8 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
-    "schedule:earlyMondays"
+    "config:base"
   ],
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
@@ -28,10 +27,8 @@
         "minor",
         "patch"
       ],
+      "prCreation": "immediate",
       "prPriority": 0,
-      "schedule": [
-        "after 6am and before 9am on Monday"
-      ],
       "stabilityDays": 3,
       "excludePackageNames": [
         "php"
@@ -50,6 +47,7 @@
       ],
       "prTitle": "chore(deps): update GitHub Actions",
       "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
+      "prCreation": "immediate",
       "schedule": [
         "after 6am and before 9am on Monday"
       ],
@@ -61,21 +59,18 @@
         "Dependencies",
         "Renovate"
     ],
-    "prCreation": "status-success",
+    "prCreation": "immediate",
     "rangeStrategy": "pin",
-    "prPriority": 1,
-    "schedule": [
-      "after 6am and before 9am on Monday"
-    ]
+    "prPriority": 1
   },
+  "branchConcurrentLimit": 5,
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 1,
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
       "Dependencies",
       "Renovate"
-    ],
-    "schedule": [
-      "after 6am and before 9am every weekday"
     ],
     "dependencyDashboardApproval": false,
     "stabilityDays": 0,
