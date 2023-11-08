@@ -13,13 +13,13 @@ class DynamoDBExporter:
     export_time = ''
 
     def __init__(self, environment):
-        self.tables = [
-            "ActorCodes",
-            "ActorUsers",
-            "ViewerCodes",
-            "ViewerActivity",
-            "UserLpaActorMap",
-        ]
+        self.tables = {
+            "ActorCodes" : None,
+            "ActorUsers" : None,
+            "ViewerCodes" : None,
+            "ViewerActivity" : None,
+            "UserLpaActorMap" : None,
+        }
 
         self.environment_details = self.set_environment_details(environment)
 
@@ -108,7 +108,7 @@ class DynamoDBExporter:
             sleep(10)
             # assume all tables are completed until we encounter one that is not
             tablesCompleted = True
-            for table in self.tables:
+            for table in self.tables.keys():
                 if not self.get_export_status(table):
                     # we encountered an inconmplete table so they are not all complete
                     tablesCompleted = False
@@ -116,7 +116,7 @@ class DynamoDBExporter:
 
 
     def export_all_tables(self):
-        for table in self.tables:
+        for table in self.tables.keys():
             table_arn = self.get_table_arn('{}-{}'.format(
               self.environment_details['name'],
               table)
@@ -173,6 +173,8 @@ class DynamoDBExporter:
 
         print('completed is ')
         print(completed)
+
+        self.tables[table] = s3_path
 
         return completed
 
