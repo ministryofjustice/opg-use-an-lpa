@@ -130,7 +130,7 @@ class DynamoDBExporter:
             self.export_table(table_arn, bucket_name, s3_prefix)
 
     def export_table(self, table_arn, bucket_name, s3_prefix):
-        print("exporting tables")
+        print("exporting dynamoDb tables")
         response = self.aws_dynamodb_client.export_table_to_point_in_time(
             TableArn=table_arn,
             S3Bucket=bucket_name,
@@ -208,6 +208,14 @@ class DynamoDBExporter:
 
             return response["QueryExecutionId"]
 
+    def run_athena_query(self):
+        create_database()
+        #table_ddl_files = ["tables/viewer_activity.ddl", "tables/viewer_codes.ddl", "tables/actor_users.ddl", "tables/user_lpa_actor_map.ddl"]
+        table_ddl_files = ["tables/actor_users.ddl"]
+        for table_ddl in table_ddl_files:
+            query_execution_id = create_table(table_ddl)
+            print(f"Query execution id: {query_execution_id}")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -218,17 +226,23 @@ def main():
     parser.add_argument('--check_exports', dest='check_only', action='store_const',
                         const=True, default=False,
                         help='Output json data instead of plaintext to terminal')
-    parser.add_argument('--athena_only', dest='athena_only', action='store_const',
+    parser.add_argument('--athena_only', dest='athena_only_flag', action='store_const',
+                        const=True, default=False,
                         help='Only run the athena query not the DynamoDb export. Assume that has already run')
 
     args = parser.parse_args()
     work = DynamoDBExporter(
         args.environment)
+
     if args.check_only:
         work.check_export_status()
-    else:
+        return
+
+    if not args.athena_only_flag:
         work.export_all_tables()
-        work.check_export_status()
+
+    work.check_export_status()
+    work.run_athena_query()
 
 if __name__ == "__main__":
     main()
