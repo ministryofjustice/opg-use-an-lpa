@@ -23,11 +23,12 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
     /**
      * Error messages
      *
-     * @var array
+     * @var string[]
      */
     protected array $messageTemplates = [
         self::INVALID_PASSWORD        => 'The password you entered is incorrect',
-        self::NEW_EMAIL_NOT_DIFFERENT => 'The new email address you entered is the same as your current email address. They must be different.',
+        self::NEW_EMAIL_NOT_DIFFERENT => 'The new email address you entered is the same as '
+            . 'your current email address. They must be different.',
     ];
 
     public function __construct(CsrfGuardInterface $guard)
@@ -74,7 +75,8 @@ class ChangeEmail extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'messages' => [
-                                EmailAddressValidator::INVALID => 'Enter an email address in the correct format, like name@example.com',
+                                EmailAddressValidator::INVALID => 'Enter an email address in the correct format, '
+                                    . 'like name@example.com',
                             ],
                         ],
                     ],

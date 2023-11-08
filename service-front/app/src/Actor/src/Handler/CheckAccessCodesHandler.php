@@ -150,7 +150,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                     $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
                 }
             }
-            
+
             $this->logger->debug(
                 'Created by resolved to {actor_name}',
                 [

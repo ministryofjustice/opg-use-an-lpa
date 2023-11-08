@@ -137,9 +137,11 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 $state->postcode
             );
 
-            if ($state->liveInUK === 'No'
+            if (
+                $state->liveInUK === 'No'
                 && $result->getResponse() !== AccessForAllResult::LPA_ALREADY_ADDED
-                && $result->getResponse() !== AccessForAllResult::STATUS_NOT_VALID) {
+                && $result->getResponse() !== AccessForAllResult::STATUS_NOT_VALID
+            ) {
                 return $this->redirectToRoute('lpa.add.actor-address');
             }
 
@@ -211,7 +213,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                     );
 
                 case AccessForAllResult::DOES_NOT_MATCH:
-                        return $this->redirectToRoute('lpa.add.actor-address');
+                    return $this->redirectToRoute('lpa.add.actor-address');
 
                 case AccessForAllResult::FOUND:
                     $form = new CreateNewActivationKey($this->getCsrfGuard($request));

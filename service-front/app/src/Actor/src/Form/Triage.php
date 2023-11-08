@@ -11,7 +11,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class Triage extends AbstractForm implements InputFilterProviderInterface
 {
-    const FORM_NAME = 'triage';
+    public const FORM_NAME = 'triage';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

@@ -24,7 +24,7 @@ class PasswordChange extends AbstractForm implements InputFilterProviderInterfac
     /**
      * Error messages
      *
-     * @var array
+     * @var string[]
      */
     protected array $messageTemplates = [
         self::INVALID_PASSWORD => 'Current password is incorrect',

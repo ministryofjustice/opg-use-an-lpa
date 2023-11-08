@@ -9,8 +9,12 @@ use Psr\Log\LoggerInterface;
 
 abstract class RateLimitService implements RateLimiterInterface
 {
-    public function __construct(protected StorageInterface $cacheService, protected int $interval, protected int $requestsPerInterval, protected LoggerInterface $logger)
-    {
+    public function __construct(
+        protected StorageInterface $cacheService,
+        protected int $interval,
+        protected int $requestsPerInterval,
+        protected LoggerInterface $logger,
+    ) {
     }
 
     abstract public function isLimited(string $identity): bool;
