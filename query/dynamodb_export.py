@@ -10,6 +10,14 @@ class DynamoDBExporter:
     export_time = ''
 
     def __init__(self, environment):
+        self.tables = [
+            "ActorCodes",
+            "ActorUsers",
+            "ViewerCodes",
+            "ViewerActivity",
+            "UserLpaActorMap",
+        ]
+
         self.environment_details = self.set_environment_details(environment)
 
         aws_iam_session = self.set_iam_role_session()
@@ -87,16 +95,8 @@ class DynamoDBExporter:
         )
         return response['KeyMetadata']['KeyId']
 
-    def export_table_to_point_in_time(self, check_only):
-        tables = [
-            "ActorCodes",
-            "ActorUsers",
-            "ViewerCodes",
-            "ViewerActivity",
-            "UserLpaActorMap",
-        ]
-
-        for table in tables:
+    def check_export_status(self):
+        for table in self.tables:
             table_arn = self.get_table_arn('{}-{}'.format(
               self.environment_details['name'],
               table)
@@ -106,34 +106,58 @@ class DynamoDBExporter:
             s3_prefix = '{}-{}'.format(
                         self.environment_details['name'],
                         table)
-            print('\n')
-            print('DynamoDB Table ARN:',table_arn)
-            print('S3 Bucket Name:', bucket_name)
 
-            if check_only == False:
-                print("exporting tables")
-                response = self.aws_dynamodb_client.export_table_to_point_in_time(
-                    TableArn=table_arn,
-                    S3Bucket=bucket_name,
-                    S3BucketOwner=self.environment_details['account_id'],
-                    S3Prefix=s3_prefix,
-                    S3SseAlgorithm='KMS',
-                    S3SseKmsKeyId=self.kms_key_id,
-                    ExportFormat='DYNAMODB_JSON'
-                )
+            self.print_table_details(table_arn, bucket_name, s3_prefix)
+            self.get_export_status(table_arn, bucket_name, s3_prefix)
 
-            response = self.aws_dynamodb_client.list_exports(
+    def export_all_tables(self):
+        for table in self.tables:
+            table_arn = self.get_table_arn('{}-{}'.format(
+              self.environment_details['name'],
+              table)
+              )
+            bucket_name = 'use-a-lpa-dynamodb-exports-{}'.format(
+                        self.environment_details['account_name'])
+            s3_prefix = '{}-{}'.format(
+                        self.environment_details['name'],
+                        table)
+
+            self.print_table_details(table_arn, bucket_name, s3_prefix)
+            self.export_table(table_arn, bucket_name, s3_prefix)
+            self.get_export_status(table_arn, bucket_name, s3_prefix)
+
+    def print_table_details(self,table_arn, bucket_name, s3_prefix):
+        print('\n')
+        print('DynamoDB Table ARN:',table_arn)
+        print('S3 Bucket Name:', bucket_name)
+
+    def export_table(self, table_arn, bucket_name, s3_prefix):
+        print("exporting tables")
+        response = self.aws_dynamodb_client.export_table_to_point_in_time(
             TableArn=table_arn,
-            MaxResults=1
+            S3Bucket=bucket_name,
+            S3BucketOwner=self.environment_details['account_id'],
+            S3Prefix=s3_prefix,
+            S3SseAlgorithm='KMS',
+            S3SseKmsKeyId=self.kms_key_id,
+            ExportFormat='DYNAMODB_JSON'
+        )
+
+    def get_export_status(self, table_arn, bucket_name, s3_prefix):
+        response = self.aws_dynamodb_client.list_exports(
+        TableArn=table_arn,
+        MaxResults=1
+        )
+        for export in response['ExportSummaries']:
+            export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
+            s3_path = 's3://{}/{}/AWSDynamoDB/{}/data/'.format(
+                bucket_name,
+                s3_prefix,
+                export_arn_hash
             )
-            for export in response['ExportSummaries']:
-                export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
-                s3_path = 's3://{}/{}/AWSDynamoDB/{}/data/'.format(
-                    bucket_name,
-                    s3_prefix,
-                    export_arn_hash
-                )
-                print('\t', export['ExportStatus'], s3_path)
+            print('\t', export['ExportStatus'], s3_path)
+
+
 
     def get_table_arn(self, table_name):
         response = self.aws_dynamodb_client.describe_table(
@@ -156,8 +180,11 @@ def main():
     args = parser.parse_args()
     work = DynamoDBExporter(
         args.environment)
-    work.export_table_to_point_in_time(args.check_only)
-
+    if args.check_only:
+        work.check_export_status()
+    else:
+        work.export_all_tables()
+    # TODO here, poll until status is completed
 
 if __name__ == "__main__":
     main()
