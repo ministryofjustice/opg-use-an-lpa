@@ -63,6 +63,9 @@
     "rangeStrategy": "pin",
     "prPriority": 1
   },
+  "branchConcurrentLimit": 5,
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 1,
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
