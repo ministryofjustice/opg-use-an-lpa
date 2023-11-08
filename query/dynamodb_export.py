@@ -1,7 +1,7 @@
 import datetime
 import argparse
 import boto3
-from time import *
+from time import sleep
 
 
 class DynamoDBExporter:
@@ -214,8 +214,13 @@ class DynamoDBExporter:
         table_ddl_files = ["tables/actor_users.ddl"]
         for table_ddl in table_ddl_files:
             query_execution_id = self.create_athena_table(table_ddl)
+            sleep(10)
             print(f"Query execution id: {query_execution_id}")
-
+            response = self.aws_athena_client.get_query_results(
+                QueryExecutionId=query_execution_id,
+                MaxResults=1
+            )
+            print(response)
 
 def main():
     parser = argparse.ArgumentParser(
