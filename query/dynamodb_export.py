@@ -172,9 +172,6 @@ class DynamoDBExporter:
             if export['ExportStatus'] != "COMPLETED":
                 completed = False
 
-        print('completed is ')
-        print(completed)
-
         self.tables[table] = s3_path
 
         return completed
@@ -188,7 +185,7 @@ class DynamoDBExporter:
 
     def drop_athena_database(self ):
         response = self.aws_athena_client.start_query_execution(
-            QueryString=f"DROP DATABASE IF EXISTS {self.athena_database_name};",
+            QueryString=f"DROP DATABASE {self.athena_database_name} CASCADE;",
             ResultConfiguration={
                     "OutputLocation": f"s3://{self.athena_results_bucket}/"
             }
@@ -204,7 +201,14 @@ class DynamoDBExporter:
             }
         )
 
-        return response["QueryExecutionId"]
+        query_execution_id = response["QueryExecutionId"]
+        sleep(30)
+        print(f"Query execution id: {query_execution_id}")
+        response = self.aws_athena_client.get_query_results(
+            QueryExecutionId=query_execution_id,
+            MaxResults=1
+        )
+        print(response)
 
     def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
@@ -225,6 +229,33 @@ class DynamoDBExporter:
 
             return response["QueryExecutionId"]
 
+
+    def run_single_athena_query(self, query_file):
+        with open(query_file) as ddl:
+            query = ddl.read()
+            print("we are about to execute ")
+            print(query)
+            response = self.aws_athena_client.start_query_execution(
+                QueryString=query,
+                QueryExecutionContext={
+                    "Database": self.athena_database_name
+                },
+                ResultConfiguration={
+                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
+                }
+            )
+
+            query_execution_id = response["QueryExecutionId"]
+            sleep(30)
+            print(f"Query execution id: {query_execution_id}")
+            response = self.aws_athena_client.get_query_results(
+                QueryExecutionId=query_execution_id,
+                MaxResults=123
+            )
+            print(response)
+            results = response['ResultSet']['Rows']
+            print(results)
+
     def run_athena_query(self):
         print(self.tables)
         self.drop_athena_database()
@@ -243,6 +274,9 @@ class DynamoDBExporter:
                 MaxResults=1
             )
             print(response)
+
+        self.run_single_athena_query("sams_query")
+        self.run_single_athena_query("sams_query2")
 
 def main():
     parser = argparse.ArgumentParser(
