@@ -28,7 +28,7 @@ jobs:
         id: set-terraform-version
         run: |
           TF_VERSION=$(cat .terraform-version)
-          echo "TF_VERSION=$TF_VERSION" >> $GITHUB_ENV
+          echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
 
       - uses: hashicorp/setup-terraform@8fa54e78fa196965551aa8c4a4eae3aee5568620 # pin@v2
         with:
