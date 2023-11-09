@@ -397,3 +397,78 @@ moved {
   from = aws_cloudwatch_log_group.workspace_cleanup_log
   to   = module.workspace_cleanup_mrk.aws_cloudwatch_log_group.workspace_cleanup_log
 }
+
+moved {
+  from = aws_acm_certificate.certificate_admin
+  to   = module.eu_west_1.aws_acm_certificate.certificate_admin
+}
+
+moved {
+  from = aws_acm_certificate.certificate_public_facing_use
+  to   = module.eu_west_1.aws_acm_certificate.certificate_public_facing_use
+}
+
+moved {
+  from = aws_acm_certificate.certificate_public_facing_view
+  to   = module.eu_west_1.aws_acm_certificate.certificate_public_facing_view
+}
+
+moved {
+  from = aws_acm_certificate.certificate_use
+  to   = module.eu_west_1.aws_acm_certificate.certificate_use
+}
+
+moved {
+  from = aws_acm_certificate.certificate_view
+  to   = module.eu_west_1.aws_acm_certificate.certificate_view
+}
+
+moved {
+  from = aws_acm_certificate_validation.certificate_public_facing_use
+  to   = module.eu_west_1.aws_acm_certificate_validation.certificate_public_facing_use
+}
+
+moved {
+  from = aws_acm_certificate_validation.certificate_public_facing_view
+  to   = module.eu_west_1.aws_acm_certificate_validation.certificate_public_facing_view
+}
+
+moved {
+  from = aws_acm_certificate_validation.certificate_validation_admin
+  to   = module.eu_west_1.aws_acm_certificate_validation.certificate_validation_admin
+}
+
+moved {
+  from = aws_acm_certificate_validation.certificate_validation_use
+  to   = module.eu_west_1.aws_acm_certificate_validation.certificate_validation_use
+}
+
+moved {
+  from = aws_acm_certificate_validation.certificate_view
+  to   = module.eu_west_1.aws_acm_certificate_validation.certificate_view
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_admin["*.admin.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_admin["*.admin.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_public_facing_use["*.use-lasting-power-of-attorney.service.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_public_facing_use["*.use-lasting-power-of-attorney.service.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_public_facing_view["*.view-lasting-power-of-attorney.service.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_public_facing_view["*.view-lasting-power-of-attorney.service.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_use["*.use.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_use["*.use.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_view["*.view.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_view["*.view.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
