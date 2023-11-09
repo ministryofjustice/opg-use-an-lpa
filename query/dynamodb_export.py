@@ -1,6 +1,7 @@
 import datetime
 import argparse
 import boto3
+import re
 from time import sleep
 
 
@@ -205,9 +206,13 @@ class DynamoDBExporter:
 
         return response["QueryExecutionId"]
 
-    def create_athena_table(self, table_ddl):
+    def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
-            query = ddl.read()
+            rawQuery = ddl.read()
+            searchStr = "'s3(.*)'"
+            query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
+            print("we are about to execute ")
+            print(query)
             response = self.aws_athena_client.start_query_execution(
                 QueryString=query,
                 QueryExecutionContext={
@@ -221,12 +226,16 @@ class DynamoDBExporter:
             return response["QueryExecutionId"]
 
     def run_athena_query(self):
+        print(self.tables)
         self.drop_athena_database()
         self.create_athena_database()
-        #table_ddl_files = ["tables/viewer_activity.ddl", "tables/viewer_codes.ddl", "tables/actor_users.ddl", "tables/user_lpa_actor_map.ddl"]
-        table_ddl_files = ["tables/actor_users.ddl"]
-        for table_ddl in table_ddl_files:
-            query_execution_id = self.create_athena_table(table_ddl)
+        table_ddl_files = {"tables/viewer_activity.ddl" : "ViewerActivity", "tables/viewer_codes.ddl" : "ViewerCodes", "tables/actor_users.ddl" : "ActorUsers", "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
+
+        for table_ddl in table_ddl_files.keys():
+            exported_s3_location = self.tables[table_ddl_files[table_ddl]]
+            print("exportedS3Location is")
+            print(exported_s3_location)
+            query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
             sleep(10)
             print(f"Query execution id: {query_execution_id}")
             response = self.aws_athena_client.get_query_results(
@@ -251,6 +260,7 @@ def main():
     args = parser.parse_args()
     work = DynamoDBExporter(
         args.environment)
+
 
     if args.check_only:
         work.check_export_status()
