@@ -2,13 +2,11 @@ terraform {
   required_version = "<= 1.6.3"
 
   backend "s3" {
-    bucket  = "opg.terraform.state"
-    key     = "opg-use-my-lpa-environment/terraform.tfstate"
-    encrypt = true
-    region  = "eu-west-1"
-    assume_role {
-      role_arn = "arn:aws:iam::311462405659:role/opg-use-an-lpa-ci"
-    }
+    bucket         = "opg.terraform.state"
+    key            = "opg-use-my-lpa-environment/terraform.tfstate"
+    encrypt        = true
+    region         = "eu-west-1"
+    role_arn       = "arn:aws:iam::311462405659:role/opg-use-an-lpa-ci"
     dynamodb_table = "remote_lock"
   }
 
