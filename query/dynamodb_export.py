@@ -185,6 +185,16 @@ class DynamoDBExporter:
 
         return response['Table']['TableArn']
 
+    def drop_athena_database(self ):
+        response = self.aws_athena_client.start_query_execution(
+            QueryString=f"DROP DATABASE IF EXISTS {self.athena_database_name};",
+            ResultConfiguration={
+                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
+            }
+        )
+
+        return response["QueryExecutionId"]
+
     def create_athena_database(self ):
         response = self.aws_athena_client.start_query_execution(
             QueryString=f"CREATE DATABASE IF NOT EXISTS {self.athena_database_name};",
@@ -211,6 +221,7 @@ class DynamoDBExporter:
             return response["QueryExecutionId"]
 
     def run_athena_query(self):
+        self.drop_athena_database()
         self.create_athena_database()
         #table_ddl_files = ["tables/viewer_activity.ddl", "tables/viewer_codes.ddl", "tables/actor_users.ddl", "tables/user_lpa_actor_map.ddl"]
         table_ddl_files = ["tables/actor_users.ddl"]
