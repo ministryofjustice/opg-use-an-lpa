@@ -741,7 +741,7 @@ class RequestActivationKeyContext implements Context
     public function iWillBeAskedForMyFullAddress()
     {
         $this->ui->assertPageAddress('/lpa/add/actor-address');
-        $this->ui->assertPageContainsText('We need some more details');
+        $this->ui->assertPageContainsText('We need a few extra details');
     }
 
     /**
