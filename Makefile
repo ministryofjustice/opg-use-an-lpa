@@ -36,6 +36,12 @@ run:
 	$(COMPOSE) run $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run
 
+pull:
+	@echo "Logging into ECR..."
+	$(ECR_LOGIN)
+	$(COMPOSE) pull
+.PHONY: pull
+
 # Starts the application and seeds initial data.
 up_all: | up_dependencies up_mock up_services up_functions seed
 .PHONY: up_all
