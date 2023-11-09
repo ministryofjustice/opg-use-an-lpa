@@ -1,3 +1,6 @@
+locals {
+  dev_wildcard = var.account_name == "production" ? "" : "*."
+}
 data "aws_route53_zone" "opg_service_justice_gov_uk" {
   provider = aws.management
   name     = "opg.service.justice.gov.uk"
@@ -37,11 +40,15 @@ resource "aws_route53_record" "certificate_validation_view" {
 resource "aws_acm_certificate_validation" "certificate_view" {
   certificate_arn         = aws_acm_certificate.certificate_view.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_view : record.fqdn]
+
+  provider = aws.region
 }
 
 resource "aws_acm_certificate" "certificate_view" {
   domain_name       = "${local.dev_wildcard}view.lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
+
+  provider = aws.region
 }
 
 resource "aws_route53_record" "certificate_validation_public_facing_view" {
@@ -65,11 +72,15 @@ resource "aws_route53_record" "certificate_validation_public_facing_view" {
 resource "aws_acm_certificate_validation" "certificate_public_facing_view" {
   certificate_arn         = aws_acm_certificate.certificate_public_facing_view.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_public_facing_view : record.fqdn]
+
+  provider = aws.region
 }
 
 resource "aws_acm_certificate" "certificate_public_facing_view" {
   domain_name       = "${local.dev_wildcard}${data.aws_route53_zone.live_service_view_lasting_power_of_attorney.name}"
   validation_method = "DNS"
+
+  provider = aws.region
 }
 
 //------------------------
@@ -96,11 +107,15 @@ resource "aws_route53_record" "certificate_validation_use" {
 resource "aws_acm_certificate_validation" "certificate_validation_use" {
   certificate_arn         = aws_acm_certificate.certificate_use.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_use : record.fqdn]
+
+  provider = aws.region
 }
 
 resource "aws_acm_certificate" "certificate_use" {
   domain_name       = "${local.dev_wildcard}use.lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
+
+  provider = aws.region
 }
 
 resource "aws_route53_record" "certificate_validation_public_facing_use" {
@@ -124,11 +139,15 @@ resource "aws_route53_record" "certificate_validation_public_facing_use" {
 resource "aws_acm_certificate_validation" "certificate_public_facing_use" {
   certificate_arn         = aws_acm_certificate.certificate_public_facing_use.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_public_facing_use : record.fqdn]
+
+  provider = aws.region
 }
 
 resource "aws_acm_certificate" "certificate_public_facing_use" {
   domain_name       = "${local.dev_wildcard}${data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name}"
   validation_method = "DNS"
+
+  provider = aws.region
 }
 
 
@@ -156,9 +175,13 @@ resource "aws_route53_record" "certificate_validation_admin" {
 resource "aws_acm_certificate_validation" "certificate_validation_admin" {
   certificate_arn         = aws_acm_certificate.certificate_admin.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_admin : record.fqdn]
+
+  provider = aws.region
 }
 
 resource "aws_acm_certificate" "certificate_admin" {
   domain_name       = "${local.dev_wildcard}admin.lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
+
+  provider = aws.region
 }
