@@ -244,13 +244,13 @@ moved {
 }
 
 moved {
-  from = aws_iam_role.vpc_flow_logs
-  to   = module.eu_west_1.aws_iam_role.vpc_flow_logs
+  from = module.eu_west_1.aws_iam_role.vpc_flow_logs
+  to   = aws_iam_role.vpc_flow_logs
 }
 
 moved {
-  from = aws_iam_role_policy.vpc_flow_logs
-  to   = module.eu_west_1.aws_iam_role_policy.vpc_flow_logs
+  from = module.eu_west_1.aws_iam_role_policy.vpc_flow_logs
+  to   = aws_iam_role_policy.vpc_flow_logs
 }
 
 moved {
