@@ -472,3 +472,28 @@ moved {
   from = aws_route53_record.certificate_validation_view["*.view.lastingpowerofattorney.opg.service.justice.gov.uk"]
   to   = module.eu_west_1.aws_route53_record.certificate_validation_view["*.view.lastingpowerofattorney.opg.service.justice.gov.uk"]
 }
+
+moved {
+  from = aws_route53_record.certificate_validation_admin["admin.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_admin["admin.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_public_facing_use["use-lasting-power-of-attorney.service.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_public_facing_use["use-lasting-power-of-attorney.service.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_public_facing_view["view-lasting-power-of-attorney.service.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_public_facing_view["view-lasting-power-of-attorney.service.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_use["use.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_use["use.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
+
+moved {
+  from = aws_route53_record.certificate_validation_view["view.lastingpowerofattorney.opg.service.justice.gov.uk"]
+  to   = module.eu_west_1.aws_route53_record.certificate_validation_view["view.lastingpowerofattorney.opg.service.justice.gov.uk"]
+}
