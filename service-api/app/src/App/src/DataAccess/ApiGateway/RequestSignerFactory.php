@@ -15,6 +15,6 @@ class RequestSignerFactory
 
         $token = $config['codes_api']['static_auth_token'] ?? null;
 
-        return new RequestSigner(new SignatureV4('execute-api', 'eu-west-1'), $token);
+        return new RequestSigner(new SignatureV4('execute-api', $config['aws']['region']), $token);
     }
 }
