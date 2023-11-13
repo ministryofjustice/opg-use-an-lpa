@@ -20,7 +20,10 @@ class DynamoDBExporter:
             "ViewerCodes" : None,
             "ViewerActivity" : None,
             "UserLpaActorMap" : None,
+            "Stats" : None,
         }
+
+        self.table_ddl_files = {"tables/viewer_activity.ddl" : "ViewerActivity", "tables/viewer_codes.ddl" : "ViewerCodes", "tables/actor_users.ddl" : "ActorUsers", "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
 
         self.environment_details = self.set_environment_details(environment)
 
@@ -131,7 +134,7 @@ class DynamoDBExporter:
             self.export_table(table_arn, bucket_name, s3_prefix)
 
     def export_table(self, table_arn, bucket_name, s3_prefix):
-        print("exporting dynamoDb tables")
+        print(f"exporting {table_arn} dynamoDb table")
         response = self.aws_dynamodb_client.export_table_to_point_in_time(
             TableArn=table_arn,
             S3Bucket=bucket_name,
@@ -260,10 +263,9 @@ class DynamoDBExporter:
         print(self.tables)
         self.drop_athena_database()
         self.create_athena_database()
-        table_ddl_files = {"tables/viewer_activity.ddl" : "ViewerActivity", "tables/viewer_codes.ddl" : "ViewerCodes", "tables/actor_users.ddl" : "ActorUsers", "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
 
         for table_ddl in table_ddl_files.keys():
-            exported_s3_location = self.tables[table_ddl_files[table_ddl]]
+            exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
             print("exportedS3Location is")
             print(exported_s3_location)
             query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
