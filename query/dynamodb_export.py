@@ -131,6 +131,12 @@ class DynamoDBExporter:
                         self.environment_details['name'],
                         table)
 
+            print(f"describing {table_arn} dynamoDb table")
+            response = self.aws_dynamodb_client.describe_table(
+                TableName=f"demo-{table}",
+            )
+            print(response)
+
             self.export_table(table_arn, bucket_name, s3_prefix)
 
     def export_table(self, table_arn, bucket_name, s3_prefix):
@@ -264,7 +270,7 @@ class DynamoDBExporter:
         self.drop_athena_database()
         self.create_athena_database()
 
-        for table_ddl in table_ddl_files.keys():
+        for table_ddl in self.table_ddl_files.keys():
             exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
             print("exportedS3Location is")
             print(exported_s3_location)
