@@ -18,7 +18,7 @@ return [
     ],
 
     'aws' => [
-        'region' => getenv('AWS_REGION') ?: null,
+        'region' => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
 
         'DynamoDb' => [
