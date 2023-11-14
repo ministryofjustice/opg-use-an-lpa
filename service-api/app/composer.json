@@ -47,7 +47,7 @@
         "blazon/psr11-monolog": "^4.0",
         "elie29/zend-phpdi-config": "^8.0",
         "facile-it/php-openid-client": "^0.3.4",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.0",
         "laminas/laminas-cache": "^3.11",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.4",
         "laminas/laminas-config-aggregator": "^1.0",
