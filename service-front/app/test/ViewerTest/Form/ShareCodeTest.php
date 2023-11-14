@@ -20,7 +20,7 @@ class ShareCodeTest extends TestCase
     private ShareCode $form;
 
     /**
-     * @var array
+     * @var string[]
      */
     private array $elements = [
         '__csrf'        => Csrf::class,

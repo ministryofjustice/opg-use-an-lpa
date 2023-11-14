@@ -53,8 +53,8 @@ class ParseLpaDataTest extends TestCase
             'iap'                  => [
                 'uId'        => $this->lpaId,
                 'status'     => 'COLLECTION_COMPLETE',
-                'signedUrls' => []
-            ]
+                'signedUrls' => [],
+            ],
         ];
 
         $this->lpa = new Lpa();

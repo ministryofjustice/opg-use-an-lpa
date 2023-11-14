@@ -2,16 +2,19 @@
 
 declare(strict_types=1);
 
+use Common\Command\TranslationUpdateCommand;
+use Common\Command\TranslationUpdateCommandFactory;
+
 return [
     'dependencies' => [
         'invokables' => [],
         'factories'  => [
-            Common\Command\TranslationUpdateCommand::class => Common\Command\TranslationUpdateCommandFactory::class,
+            TranslationUpdateCommand::class => TranslationUpdateCommandFactory::class,
         ],
     ],
     'console'      => [
         'commands' => [
-            Common\Command\TranslationUpdateCommand::class,
+            TranslationUpdateCommand::class,
         ],
     ],
 ];

@@ -20,7 +20,7 @@ class OrganisationTest extends TestCase
     private Organisation $form;
 
     /**
-     * @var array
+     * @var string[]
      */
     private array $elements = [
         '__csrf'       => Csrf::class,

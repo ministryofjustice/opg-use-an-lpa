@@ -26,7 +26,7 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
             ->willReturn(
                 [
                     'analytics' => [
-                        'uaid'     => 'uaid1234',
+                        'uaid' => 'uaid1234',
                     ],
                 ]
             );

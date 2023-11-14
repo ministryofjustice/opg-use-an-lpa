@@ -30,10 +30,17 @@ trait LaminasFormTests
             $expectedElementClass = $this->getFormElements()[$formElementName];
             $elementClass         = $formElement::class;
 
-            if ($expectedElementClass !== $elementClass) {
-                $this->fail(sprintf('Class type expectation failure for "%s": Expecting %s but found %s', $formElementName, $expectedElementClass, $elementClass));
+            if ($expectedElementClass === $elementClass) {
+            } else {
+                $this->fail(
+                    sprintf(
+                        'Class type expectation failure for "%s": Expecting %s but found %s',
+                        $formElementName,
+                        $expectedElementClass,
+                        $elementClass
+                    )
+                );
             }
-
             //  Put an assertion in here so that the test isn't flagged as risky
             $this->assertEquals($expectedElementClass, $elementClass);
         }

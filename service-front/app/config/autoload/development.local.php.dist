@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Development-only configuration.
  *
@@ -19,16 +20,14 @@ return [
         'cookie_name' => 'session', // The normally configured "__Host-session" name does not work for dev due to SSL
     ],
     'dependencies' => [
-        'invokables' => [
-        ],
+        'invokables' => [],
         'factories'  => [
-            ErrorResponseGenerator::class       => Container\WhoopsErrorResponseGeneratorFactory::class,
-            'Mezzio\Whoops'            => Container\WhoopsFactory::class,
-            'Mezzio\WhoopsPageHandler' => Container\WhoopsPageHandlerFactory::class,
+            ErrorResponseGenerator::class => Container\WhoopsErrorResponseGeneratorFactory::class,
+            'Mezzio\Whoops'               => Container\WhoopsFactory::class,
+            'Mezzio\WhoopsPageHandler'    => Container\WhoopsPageHandlerFactory::class,
         ],
     ],
-
-    'whoops' => [
+    'whoops'       => [
         'json_exceptions' => [
             'display'    => true,
             'show_trace' => true,

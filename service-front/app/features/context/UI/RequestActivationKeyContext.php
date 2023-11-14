@@ -192,8 +192,8 @@ class RequestActivationKeyContext implements Context
                     [
                         'title'   => 'Bad request',
                         'details' => 'LPA already added',
-                        'data'    =>
-                        [
+                        'data'
+                        => [
                             'donor'         => [
                                 'uId'         => $this->lpa->donor->uId,
                                 'firstname'   => $this->lpa->donor->firstname,
@@ -202,7 +202,7 @@ class RequestActivationKeyContext implements Context
                             ],
                             'caseSubtype'   => $this->lpa->caseSubtype,
                             'lpaActorToken' => $this->userLpaActorToken,
-                        ]
+                        ],
                     ]
                 ),
                 self::ADD_OLDER_LPA_VALIDATE,
@@ -222,7 +222,7 @@ class RequestActivationKeyContext implements Context
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title' => 'Bad Request',
+                        'title'   => 'Bad Request',
                         'details' => 'LPA status invalid',
                         'data'    => [],
                     ]
@@ -1550,7 +1550,7 @@ class RequestActivationKeyContext implements Context
                 StatusCodeInterface::STATUS_BAD_REQUEST,
                 json_encode(
                     [
-                        'title' => 'Bad Request',
+                        'title'   => 'Bad Request',
                         'details' => 'LPA status invalid',
                         'data'    => [],
                     ]
@@ -1559,7 +1559,6 @@ class RequestActivationKeyContext implements Context
             )
         );
     }
-
 
     /**
      * @When I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
@@ -1717,7 +1716,7 @@ class RequestActivationKeyContext implements Context
             $date = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
             $this->ui->assertPageContainsText('We\'ve got your activation key request');
-            $this->ui->assertPageContainsText('If you have not heard from us by ' . $date .', please get in touch.');
+            $this->ui->assertPageContainsText('If you have not heard from us by ' . $date . ', please get in touch.');
         } else {
             $date = (new DateTime())->modify('+2 weeks')->format('j F Y');
             $this->ui->assertPageContainsText('We\'re posting you an activation key');

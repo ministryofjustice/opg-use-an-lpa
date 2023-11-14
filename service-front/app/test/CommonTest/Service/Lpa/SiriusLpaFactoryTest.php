@@ -22,7 +22,7 @@ class SiriusLpaFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fullExampleFixtureData = json_decode(
+        $this->fullExampleFixtureData   = json_decode(
             file_get_contents(__DIR__ . '/../../../fixtures/full_example.json'),
             true
         );
@@ -137,7 +137,7 @@ class SiriusLpaFactoryTest extends TestCase
     {
         $factory = new Sirius();
 
-        $data = $this->simpleExampleFixtureData;
+        $data                    = $this->simpleExampleFixtureData;
         $data['donor']['linked'] = [
             ['id' => 5, 'uId' => '7000-0000-0033'],
             ['id' => 6, 'uId' => '7000-0000-0133'],
