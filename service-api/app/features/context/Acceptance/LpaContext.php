@@ -209,8 +209,8 @@ class LpaContext implements Context
     /**
      * @Given /^I am on the dashboard page$/
      * @Given /^I am on the user dashboard page$/
-     * @Then /^I cannot see the added LPA$/
-     * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
+     * @Then  /^I cannot see the added LPA$/
+     * @Then  /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
      */
     public function iAmOnTheDashboardPage(): void
     {
@@ -2822,7 +2822,7 @@ class LpaContext implements Context
 
     /**
      * @Given /^I confirm the details I provided are correct$/
-     * @When /^I confirm details shown to me of the found LPA are correct$/
+     * @When  /^I confirm details shown to me of the found LPA are correct$/
      */
     public function iConfirmTheDetailsIProvidedAreCorrect(): void
     {

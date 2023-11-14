@@ -255,13 +255,13 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I am told that I cannot request an activation key$/
-     * @Then /^I should expect it within 2 weeks time$/
-     * @Then /^I should expect it within 4 weeks time$/
-     * @Then /^I will receive an email confirming this information$/
+     * @Then  /^I am told that I cannot request an activation key$/
+     * @Then  /^I should expect it within 2 weeks time$/
+     * @Then  /^I should expect it within 4 weeks time$/
+     * @Then  /^I will receive an email confirming this information$/
      * @Given /^I provide the additional details asked$/
      * @Given /^I am asked to consent and confirm my details$/
-     * @When /^I confirm that the data is correct and click the confirm and submit button$/
+     * @When  /^I confirm that the data is correct and click the confirm and submit button$/
      */
     public function iAmToldThatICannotRequestAnActivationKey(): void
     {
@@ -1620,10 +1620,10 @@ class LpaContext extends BaseIntegrationContext
     /**
      * @Given /^I confirm the details I provided are correct$/
      * @Given /^I provide the details from a valid paper document$/
-     * @Then /^I am shown the details of an LPA$/
-     * @Then /^I am asked for my contact details$/
-     * @Then /^I being the donor on the LPA I am not shown the attorney details$/
-     * @When /^I confirm details of the found LPA are correct$/
+     * @Then  /^I am shown the details of an LPA$/
+     * @Then  /^I am asked for my contact details$/
+     * @Then  /^I being the donor on the LPA I am not shown the attorney details$/
+     * @When  /^I confirm details of the found LPA are correct$/
      */
     public function iAmShownTheDetailsOfAnLPA(): void
     {
@@ -2065,7 +2065,9 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        /** @var AddLpa $addLpaService */
+        /**
+ * @var AddLpa $addLpaService 
+*/
         $addLpaService = $this->container->get(AddLpa::class);
 
         $validatedLpa = $addLpaService->validateAddLpaData(
@@ -2114,7 +2116,7 @@ class LpaContext extends BaseIntegrationContext
 
     /**
      * @Given /^I request to go back and try again$/
-     * @Then /^I am asked for my role on the LPA$/
+     * @Then  /^I am asked for my role on the LPA$/
      */
     public function iRequestToGoBackAndTryAgain(): void
     {
@@ -3028,7 +3030,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When  /^I am told my activation key request has been received$/
+     * @When /^I am told my activation key request has been received$/
      */
     public function iAmToldMyActivationKeyRequestHasBeenReceived(): void
     {

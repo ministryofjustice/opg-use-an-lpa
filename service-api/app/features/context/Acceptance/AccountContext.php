@@ -42,38 +42,52 @@ class AccountContext implements Context
 
     /**
      * @Given I am currently signed in
-     * @Then /^I am signed in$/
+     * @Then  /^I am signed in$/
      */
     public function iAmCurrentlySignedIn(): void
     {
         $this->base->userAccountPassword = 'pa33w0rd';
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
                     'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin' => null,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::recordSuccessfulLogin
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'        => $this->base->userAccountId,
                     'LastLogin' => null,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/auth', [
+        $this->apiPatch(
+            '/v1/auth', [
             'email'    => $this->base->userAccountEmail,
             'password' => $this->base->userAccountPassword,
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -105,10 +119,12 @@ class AccountContext implements Context
         // ActorUsers::getByEmail
         $this->awsFixtures->append(new Result([]));
 
-        $this->apiPatch('/v1/auth', [
+        $this->apiPatch(
+            '/v1/auth', [
             'email'    => 'incorrect@email.com',
             'password' => $this->base->userAccountPassword,
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
@@ -119,21 +135,29 @@ class AccountContext implements Context
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'        => $this->base->userAccountId,
                     'Email'     => $this->base->userAccountEmail,
                     'Password'  => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin' => null,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/auth', [
+        $this->apiPatch(
+            '/v1/auth', [
             'email'    => $this->base->userAccountEmail,
             'password' => '1nc0rr3ctPa33w0rd',
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
     }
@@ -152,22 +176,30 @@ class AccountContext implements Context
     public function iAmToldMyAccountHasNotBeenActivated(): void
     {
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'              => $this->base->userAccountId,
                     'Email'           => $this->base->userAccountEmail,
                     'Password'        => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                     'LastLogin'       => null,
                     'ActivationToken' => 'a12b3c4d5e',
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/auth', [
+        $this->apiPatch(
+            '/v1/auth', [
             'email'    => $this->base->userAccountEmail,
             'password' => $this->base->userAccountPassword,
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_UNAUTHORIZED);
     }
@@ -191,23 +223,35 @@ class AccountContext implements Context
         ];
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'    => $this->base->userAccountId,
                     'Email' => $this->base->userAccountEmail,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::requestPasswordReset
-        $this->awsFixtures->append(new Result([
-            'Attributes' => $this->marshalAwsResultData([
-                'Id'                  => $this->base->userAccountId,
-                'PasswordResetToken'  => $this->passwordResetData['PasswordResetToken'],
-                'PasswordResetExpiry' => time() + (60 * 60 * 24), // 24 hours in the future
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Attributes' => $this->marshalAwsResultData(
+                    [
+                    'Id'                  => $this->base->userAccountId,
+                    'PasswordResetToken'  => $this->passwordResetData['PasswordResetToken'],
+                    'PasswordResetExpiry' => time() + (60 * 60 * 24), // 24 hours in the future
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiPatch('/v1/request-password-reset', ['email' => $this->base->userAccountEmail], []);
     }
@@ -242,23 +286,35 @@ class AccountContext implements Context
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'    => $this->base->userAccountId,
                     'Email' => $this->base->userAccountEmail,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'                  => $this->base->userAccountId,
-                'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'                  => $this->base->userAccountId,
+                    'Email'               => $this->base->userAccountEmail,
+                    'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
 
@@ -274,31 +330,45 @@ class AccountContext implements Context
     public function iChooseANewPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'    => $this->base->userAccountId,
                     'Email' => $this->base->userAccountEmail,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'                  => $this->base->userAccountId,
-                'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'                  => $this->base->userAccountId,
+                    'Email'               => $this->base->userAccountEmail,
+                    'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+                    ]
+                ),
+                ]
+            )
+        );
 
         // ActorUsers::resetPassword
         $this->awsFixtures->append(new Result([]));
 
-        $this->apiPatch('/v1/complete-password-reset', [
+        $this->apiPatch(
+            '/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
             'password' => 'newPassw0rd',
-        ], []);
+            ], []
+        );
     }
 
     /**
@@ -321,23 +391,35 @@ class AccountContext implements Context
         $this->passwordResetData['PasswordResetExpiry'] = time() - (60 * 60 * 12); // 12 hours in the past
 
         // ActorUsers::getIdByPasswordResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'    => $this->base->userAccountId,
                     'Email' => $this->base->userAccountEmail,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'                  => $this->base->userAccountId,
-                'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'                  => $this->base->userAccountId,
+                    'Email'               => $this->base->userAccountEmail,
+                    'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
     }
@@ -360,28 +442,42 @@ class AccountContext implements Context
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'    => $this->base->userAccountId,
                     'Email' => $this->base->userAccountEmail,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'                  => $this->base->userAccountId,
-                'Email'               => $this->base->userAccountEmail,
-                'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'                  => $this->base->userAccountId,
+                    'Email'               => $this->base->userAccountEmail,
+                    'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
+                    ]
+                ),
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/complete-password-reset', [
+        $this->apiPatch(
+            '/v1/complete-password-reset', [
             'token'    => $this->passwordResetData['PasswordResetToken'],
             'password' => 'newPassw0rd',
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
@@ -415,9 +511,13 @@ class AccountContext implements Context
         ];
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [],
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [],
+                ]
+            )
+        );
 
         // ActorUsers::getUserByNewEmail
         $this->awsFixtures->append(new Result([]));
@@ -425,10 +525,12 @@ class AccountContext implements Context
         // ActorUsers::add
         $this->awsFixtures->append(new Result());
 
-        $this->apiPost('/v1/user', [
+        $this->apiPost(
+            '/v1/user', [
             'email'    => $this->userAccountCreateData['Email'],
             'password' => $this->userAccountCreateData['Password'],
-        ], []);
+            ], []
+        );
 
         $result = $this->getResponseAsJson();
         assertArrayHasKey('Id', $result);
@@ -450,47 +552,67 @@ class AccountContext implements Context
         ];
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
                     'Email'           => $this->userAccountCreateData['Email'],
                     'Password'        => $this->userAccountCreateData['Password'],
                     'Id'              => $this->userAccountCreateData['Id'],
                     'ExpiresTTL'      => $this->userAccountCreateData['ExpiresTTL'],
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
                     'ExpiresTTL'      => $this->userAccountCreateData['ExpiresTTL'],
                     'Email'           => $this->userAccountCreateData['Email'],
                     'Password'        => $this->userAccountCreateData['Password'],
                     'Id'              => $this->userAccountCreateData['Id'],
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::resetActivationDetails
-        $this->awsFixtures->append(new Result([
-            'Item'
-                => $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item'
+                => $this->marshalAwsResultData(
+                    [
                     'ActivationToken' => $this->userAccountCreateData['ActivationToken'] ,
                     'Email'           => $this->userAccountCreateData['Email'],
                     'Password'        => $this->userAccountCreateData['Password'],
                     'Id'              => $this->userAccountCreateData['Id'],
-                ]),
-        ]));
+                    ]
+                ),
+                ]
+            )
+        );
 
 
-        $this->apiPost('/v1/user', [
+        $this->apiPost(
+            '/v1/user', [
             'email'    => $this->userAccountCreateData['Email'],
             'password' => $this->userAccountCreateData['Password'],
-        ], []);
+            ], []
+        );
         Assert::assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
     }
 
@@ -507,27 +629,41 @@ class AccountContext implements Context
         ];
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Email' => $this->userAccountCreateData['Email'],
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Email' => $this->userAccountCreateData['Email'],
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
-        $this->apiPost('/v1/user', [
+        $this->apiPost(
+            '/v1/user', [
             'email'    => $this->userAccountCreateData['Email'],
             'password' => $this->userAccountCreateData['Password'],
-        ], []);
+            ], []
+        );
         Assert::assertContains(
             'User already exists with email address ' . $this->userAccountCreateData['Email'],
             $this->getResponseAsJson()
@@ -581,23 +717,35 @@ class AccountContext implements Context
     {
 
         // ActorUsers::activate
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id' => $this->userAccountCreateData['Id'],
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::activate
         $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id' => $this->userAccountCreateData['Id'],
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id' => $this->userAccountCreateData['Id'],
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiPatch(
             '/v1/user-activation',
@@ -619,21 +767,29 @@ class AccountContext implements Context
     public function iFollowMyInstructionsOnHowToActivateMyAccountAfter24Hours(): void
     {
         // ActorUsers::activate
-        $this->awsFixtures->append(new Result(
-            [
+        $this->awsFixtures->append(
+            new Result(
+                [
                 'Items' => [],
-            ]
-        ));
+                ]
+            )
+        );
 
         // ActorUsers::activate
         $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id' => '1',
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id' => '1',
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiPatch(
             '/v1/user-activation',
@@ -687,21 +843,29 @@ class AccountContext implements Context
         $newPassword = 'Successful-Raid-on-the-Cooki3s!';
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
         // ActorUsers::resetPassword
         $this->awsFixtures->append(new Result([]));
 
-        $this->apiPatch('/v1/change-password', [
+        $this->apiPatch(
+            '/v1/change-password', [
             'user-id'      => $this->base->userAccountId,
             'password'     => $this->base->userAccountPassword,
             'new-password' => $newPassword,
-        ]);
+            ]
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -726,20 +890,28 @@ class AccountContext implements Context
         $failedPassword = 'S0meS0rt0fPassw0rd';
         $newPassword    = 'Successful-Raid-on-the-Cooki3s!';
 
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->awsFixtures->append(new Result([]));
 
-        $this->apiPatch('/v1/change-password', [
+        $this->apiPatch(
+            '/v1/change-password', [
             'user-id'      => $this->base->userAccountId,
             'password'     => $failedPassword,
             'new-password' => $newPassword,
-        ]);
+            ]
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
     }
@@ -793,13 +965,19 @@ class AccountContext implements Context
     public function myAccountIsDeleted(): void
     {
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Email'    => $this->base->userAccountEmail,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
         // ActorUsers::delete
         $this->awsFixtures->append(new Result([]));
@@ -832,19 +1010,27 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailWithAnIncorrectPassword(): void
     {
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Email'    => $this->base->userAccountEmail,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/request-change-email', [
+        $this->apiPatch(
+            '/v1/request-change-email', [
             'user-id'   => $this->base->userAccountId,
             'new-email' => $this->newEmail,
             'password'  => 'inc0rr3cT',
-        ], []);
+            ], []
+        );
     }
 
     /**
@@ -861,36 +1047,49 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailToAnEmailAddressThat($context)
     {
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Email'    => $this->base->userAccountEmail,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
         if ($context === 'is taken by another user on the service') {
             // ActorUsers::getByEmail (exists)
             $this->awsFixtures->append(
-                new Result([
+                new Result(
+                    [
                     'Items' => [
-                        $this->marshalAwsResultData([
+                        $this->marshalAwsResultData(
+                            [
                             'Email'    => $this->base->userAccountEmail,
                             'Password' => $this->base->userAccountPassword,
-                        ]),
+                            ]
+                        ),
                     ],
-                ])
+                    ]
+                )
             );
         } else {
             $this->awsFixtures->append(new Result([]));
         }
 
         switch ($context) {
-            case 'another user has requested to change their email to but their token has not expired':
-                // ActorUsers::getUserByNewEmail
-                $this->awsFixtures->append(new Result([
-                    'Items' => [
-                        $this->marshalAwsResultData([
+        case 'another user has requested to change their email to but their token has not expired':
+            // ActorUsers::getUserByNewEmail
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Items' => [
+                        $this->marshalAwsResultData(
+                            [
                             'EmailResetExpiry' => time() + (60 * 60),
                             'Email'            => 'another@user.com',
                             'LastLogin'        => null,
@@ -898,15 +1097,21 @@ class AccountContext implements Context
                             'NewEmail'         => $this->newEmail,
                             'EmailResetToken'  => 't0ken12345',
                             'Password'         => 'otherU53rsPa55w0rd',
-                        ]),
-                    ],
-                ]));
-                break;
-            case 'another user has requested to change their email to but their token has expired':
-                // ActorUsers::getUserByNewEmail
-                $this->awsFixtures->append(new Result([
-                    'Items' => [
-                        $this->marshalAwsResultData([
+                            ]
+                        ),
+                        ],
+                        ]
+                )
+            );
+            break;
+        case 'another user has requested to change their email to but their token has expired':
+            // ActorUsers::getUserByNewEmail
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Items' => [
+                        $this->marshalAwsResultData(
+                            [
                             'EmailResetExpiry' => time() - (60),
                             'Email'            => 'another@user.com',
                             'LastLogin'        => null,
@@ -914,31 +1119,42 @@ class AccountContext implements Context
                             'NewEmail'         => $this->newEmail,
                             'EmailResetToken'  => 't0ken12345',
                             'Password'         => 'otherU53rsPa55w0rd',
-                        ]),
-                    ],
-                ]));
+                            ]
+                        ),
+                        ],
+                        ]
+                )
+            );
 
-                // ActorUsers::recordChangeEmailRequest
-                $this->awsFixtures->append(new Result([
-                    'Item' => $this->marshalAwsResultData([
-                        'EmailResetExpiry' => time() + (60 * 60 * 48),
-                        'Email'            => $this->base->userAccountEmail,
-                        'LastLogin'        => null,
-                        'Id'               => $this->base->userAccountId,
-                        'NewEmail'         => $this->newEmail,
-                        'EmailResetToken'  => $this->userEmailResetToken,
-                        'Password'         => $this->base->userAccountPassword,
-                    ]),
-                ]));
+            // ActorUsers::recordChangeEmailRequest
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                            'EmailResetExpiry' => time() + (60 * 60 * 48),
+                            'Email'            => $this->base->userAccountEmail,
+                            'LastLogin'        => null,
+                            'Id'               => $this->base->userAccountId,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
+                            'Password'         => $this->base->userAccountPassword,
+                            ]
+                        ),
+                        ]
+                )
+            );
 
-                break;
+            break;
         }
 
-        $this->apiPatch('/v1/request-change-email', [
+        $this->apiPatch(
+            '/v1/request-change-email', [
             'user-id'   => $this->base->userAccountId,
             'new-email' => $this->newEmail,
             'password'  => $this->base->userAccountPassword,
-        ], []);
+            ], []
+        );
     }
 
     /**
@@ -989,13 +1205,19 @@ class AccountContext implements Context
     public function iRequestToChangeMyEmailToAUniqueEmailAddress(): void
     {
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'       => $this->base->userAccountId,
+                    'Email'    => $this->base->userAccountEmail,
+                    'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    ]
+                ),
+                ]
+            )
+        );
 
         // ActorUsers::getByEmail (exists)
         $this->awsFixtures->append(new Result([]));
@@ -1004,23 +1226,31 @@ class AccountContext implements Context
         $this->awsFixtures->append(new Result([]));
 
         // ActorUsers::recordChangeEmailRequest
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'EmailResetExpiry' => time() + (60 * 60 * 48),
-                'Email'            => $this->base->userAccountEmail,
-                'LastLogin'        => null,
-                'Id'               => $this->base->userAccountId,
-                'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken,
-                'Password'         => $this->base->userAccountPassword,
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'EmailResetExpiry' => time() + (60 * 60 * 48),
+                    'Email'            => $this->base->userAccountEmail,
+                    'LastLogin'        => null,
+                    'Id'               => $this->base->userAccountId,
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => $this->userEmailResetToken,
+                    'Password'         => $this->base->userAccountPassword,
+                    ]
+                ),
+                ]
+            )
+        );
 
-        $this->apiPatch('/v1/request-change-email', [
+        $this->apiPatch(
+            '/v1/request-change-email', [
             'user-id'   => $this->base->userAccountId,
             'new-email' => $this->newEmail,
             'password'  => $this->base->userAccountPassword,
-        ]);
+            ]
+        );
     }
 
     /**
@@ -1048,29 +1278,43 @@ class AccountContext implements Context
         // canResetEmail
 
         // ActorUsers::getIdByEmailResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'EmailResetToken' => $this->userEmailResetToken,
-                ]),
-                $this->marshalAwsResultData([
+                    ]
+                ),
+                $this->marshalAwsResultData(
+                    [
                     'Id' => $this->base->userAccountId,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'               => $this->base->userAccountId,
-                'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                'EmailResetExpiry' => time() + (60 * 60),
-                'LastLogin'        => null,
-                'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken,
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'               => $this->base->userAccountId,
+                    'Email'            => $this->base->userAccountEmail,
+                    'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    'EmailResetExpiry' => time() + (60 * 60),
+                    'LastLogin'        => null,
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => $this->userEmailResetToken,
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiGet('/v1/can-reset-email?token=' . $this->userEmailResetToken, []);
 
@@ -1083,36 +1327,52 @@ class AccountContext implements Context
         //completeChangeEmail
 
         // ActorUsers::getIdByEmailResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'EmailResetToken' => $this->userEmailResetToken,
-                ]),
-                $this->marshalAwsResultData([
+                    ]
+                ),
+                $this->marshalAwsResultData(
+                    [
                     'Id' => $this->base->userAccountId,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'               => $this->base->userAccountId,
-                'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                'EmailResetExpiry' => time() + (60 * 60),
-                'LastLogin'        => null,
-                'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken,
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'               => $this->base->userAccountId,
+                    'Email'            => $this->base->userAccountEmail,
+                    'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    'EmailResetExpiry' => time() + (60 * 60),
+                    'LastLogin'        => null,
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => $this->userEmailResetToken,
+                    ]
+                ),
+                ]
+            )
+        );
 
         // ActorUsers::changeEmail
         $this->awsFixtures->append(new Result([]));
 
-        $this->apiPatch('/v1/complete-change-email', [
+        $this->apiPatch(
+            '/v1/complete-change-email', [
             'reset_token' => $this->userEmailResetToken,
-        ]);
+            ]
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -1143,29 +1403,43 @@ class AccountContext implements Context
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired(): void
     {
         // ActorUsers::getIdByEmailResetToken
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'EmailResetToken' => $this->userEmailResetToken,
-                ]),
-                $this->marshalAwsResultData([
+                    ]
+                ),
+                $this->marshalAwsResultData(
+                    [
                     'Id' => $this->base->userAccountId,
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
         // ActorUsers::get
-        $this->awsFixtures->append(new Result([
-            'Item' => $this->marshalAwsResultData([
-                'Id'               => $this->base->userAccountId,
-                'Email'            => $this->base->userAccountEmail,
-                'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                'EmailResetExpiry' => time() - (60 * 60),
-                'LastLogin'        => null,
-                'NewEmail'         => $this->newEmail,
-                'EmailResetToken'  => $this->userEmailResetToken,
-            ]),
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Item' => $this->marshalAwsResultData(
+                    [
+                    'Id'               => $this->base->userAccountId,
+                    'Email'            => $this->base->userAccountEmail,
+                    'Password'         => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                    'EmailResetExpiry' => time() - (60 * 60),
+                    'LastLogin'        => null,
+                    'NewEmail'         => $this->newEmail,
+                    'EmailResetToken'  => $this->userEmailResetToken,
+                    ]
+                ),
+                ]
+            )
+        );
 
         $this->apiGet('/v1/can-reset-email?token=' . $this->userEmailResetToken, []);
 
@@ -1208,14 +1482,21 @@ class AccountContext implements Context
         ];
 
         // ActorUsers::getByEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [],
-        ]));
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [],
+                ]
+            )
+        );
 
         // ActorUsers::getUserByNewEmail
-        $this->awsFixtures->append(new Result([
-            'Items' => [
-                $this->marshalAwsResultData([
+        $this->awsFixtures->append(
+            new Result(
+                [
+                'Items' => [
+                $this->marshalAwsResultData(
+                    [
                     'Id'               => $this->base->userAccountId,
                     'Email'            => 'other@user.co.uk',
                     'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
@@ -1223,14 +1504,19 @@ class AccountContext implements Context
                     'LastLogin'        => null,
                     'NewEmail'         => 'test@test.com',
                     'EmailResetToken'  => 'abc1234567890',
-                ]),
-            ],
-        ]));
+                    ]
+                ),
+                ],
+                ]
+            )
+        );
 
-        $this->apiPost('/v1/user', [
+        $this->apiPost(
+            '/v1/user', [
             'email'    => $this->userAccountCreateData['Email'],
             'password' => $this->userAccountCreateData['Password'],
-        ], []);
+            ], []
+        );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
     }
@@ -1278,11 +1564,13 @@ class AccountContext implements Context
      */
     public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyPassword(): void
     {
-        $this->apiPatch('/v1/request-change-email', [
+        $this->apiPatch(
+            '/v1/request-change-email', [
             'user-id'   => $this->base->userAccountId,
             'new-email' => $this->newEmail,
             'password'  => '',
-        ]);
+            ]
+        );
     }
 
     /**

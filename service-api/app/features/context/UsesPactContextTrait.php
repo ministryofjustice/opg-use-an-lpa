@@ -39,11 +39,11 @@ trait UsesPactContextTrait
     }
 
     /**
-     * @param string $providerName
-     * @param string $uri
-     * @param array|stdClass $requestBody
-     * @param int $responseStatus
-     * @param array|stdClass $responseBody
+     * @param  string         $providerName
+     * @param  string         $uri
+     * @param  array|stdClass $requestBody
+     * @param  int            $responseStatus
+     * @param  array|stdClass $responseBody
      * @throws ConnectionException
      */
     protected function pactPostInteraction(
@@ -78,12 +78,12 @@ trait UsesPactContextTrait
     }
 
     /**
-     * @param string $providerName The name of the pact provider to access
-     * @param string $uri The url of the request to make
-     * @param ?string $query A query string to attach to the url
-     * @param int $responseStatus The response code of the mocked response
-     * @param array|stdClass $responseBody The response body of the mocked response, either a JSON
-     *                                   string or an associative array
+     * @param string         $providerName   The name of the pact provider to access
+     * @param string         $uri            The url of the request to make
+     * @param ?string        $query          A query string to attach to the url
+     * @param int            $responseStatus The response code of the mocked response
+     * @param array|stdClass $responseBody   The response body of the mocked response, either a JSON
+     *                                       string or an associative array
      */
     protected function pactGetInteraction(
         string $providerName,
@@ -106,14 +106,16 @@ trait UsesPactContextTrait
      * Processes a more standard multi-dimensional array into the correct format for a TableNode and returns
      * that TableNode ready to be used.
      *
-     * @param array $data
+     * @param  array $data
      * @return TableNode
      */
     private function createTableNode(array $data): TableNode
     {
-        $processed = array_map(function ($key, $value) {
-            return [$key, $value];
-        }, array_keys($data), $data);
+        $processed = array_map(
+            function ($key, $value) {
+                return [$key, $value];
+            }, array_keys($data), $data
+        );
 
         array_unshift($processed, ['parameter', 'value']);
 

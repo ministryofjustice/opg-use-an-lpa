@@ -47,7 +47,9 @@ trait BaseAcceptanceContextTrait
         $logger = $this->base->container->get(LoggerInterface::class);
 
         if ($logger instanceof Logger) {
-            /** @var TestHandler $testHandler */
+            /**
+ * @var TestHandler $testHandler 
+*/
             $testHandler = array_filter(
                 $logger->getHandlers(),
                 fn ($handler) => $handler instanceof TestHandler
@@ -75,7 +77,7 @@ trait BaseAcceptanceContextTrait
      * AwsResult data is in a special array format that tells you
      * what datatype things are. This function creates that data structure.
      *
-     * @param array $input
+     * @param  array $input
      * @return array
      */
     protected function marshalAwsResultData(array $input): array
