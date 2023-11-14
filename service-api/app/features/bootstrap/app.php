@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-/** @var \Mezzio\Application $app */
+/**
+ * @var \Mezzio\Application $app 
+*/
 $app = $container->get(\Mezzio\Application::class);
 $factory = $container->get(\Mezzio\MiddlewareFactory::class);
 
