@@ -16,10 +16,10 @@ class OneLoginServiceTest extends TestCase
     /** @test */
     public function can_get_authentication_request_uri(): void
     {
-        $state = 'STATE';
-        $nonce = 'aEwkamaos5B';
+        $state    = 'STATE';
+        $nonce    = 'aEwkamaos5B';
         $redirect = 'FAKE_REDIRECT';
-        $uri   = '/authorize?response_type=code
+        $uri      = '/authorize?response_type=code
             &scope=YOUR_SCOPES
             &client_id=YOUR_CLIENT_ID
             &state=' . $state .

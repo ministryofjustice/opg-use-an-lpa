@@ -31,12 +31,6 @@ use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
-/**
- * Class BaseUiContext
- *
- * @package BehatTest\Context\UI
- *
- */
 class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 {
     use RuntimeMinkContext;
@@ -53,9 +47,9 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         $this->container = $container;
 
         //Create handler stack and push to container
-        $mockHandler = $container->get(MockHandler::class);
+        $mockHandler  = $container->get(MockHandler::class);
         $handlerStack = HandlerStack::create($mockHandler);
-        $history = Middleware::history($this->mockClientHistoryContainer);
+        $history      = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
         $handlerStack->remove('http_errors');
         $handlerStack->remove('cookies');
@@ -74,7 +68,7 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $environment = $scope->getEnvironment();
-        $this->ui = $environment->getContext(MinkContext::class);
+        $this->ui    = $environment->getContext(MinkContext::class);
     }
 
     /**
@@ -86,8 +80,8 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Plaintext' => random_bytes(32),
-                    'CiphertextBlob' => random_bytes(32)
+                    'Plaintext'      => random_bytes(32),
+                    'CiphertextBlob' => random_bytes(32),
                 ]
             )
         );
@@ -100,5 +94,4 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     {
         SharedState::getInstance()->reset();
     }
-
 }

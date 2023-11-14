@@ -17,8 +17,6 @@ use GuzzleHttp\Handler\MockHandler;
 use PHPUnit\Framework\Assert;
 
 /**
- * Class ViewerContext
- *
  * @property $lpaSurname
  * @property $lpaShareCode
  * @property $lpaData
@@ -28,7 +26,6 @@ use PHPUnit\Framework\Assert;
 class ViewerContext extends BaseIntegrationContext
 {
     use ViewerContextTrait;
-
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
 
@@ -47,35 +44,35 @@ class ViewerContext extends BaseIntegrationContext
     public function iHaveBeenGivenAccessToAnLPAViaShareCode(): void
     {
         $this->lpaShareCode = '1111-1111-1111';
-        $this->lpaSurname = 'Testerson';
-        $this->lpaViewedBy = 'Santander';
-        $this->lpaData = [
-            'id' => 1,
-            'uId' => '7000-0000-0000',
-            'receiptDate' => '2014-09-26',
+        $this->lpaSurname   = 'Testerson';
+        $this->lpaViewedBy  = 'Santander';
+        $this->lpaData      = [
+            'id'               => 1,
+            'uId'              => '7000-0000-0000',
+            'receiptDate'      => '2014-09-26',
             'registrationDate' => '2014-10-26',
-            'donor' => [
-                'id' => 1,
-                'uId' => '7000-0000-0288',
-                'dob' => '1948-11-01',
-                'salutation' => 'Mr',
-                'firstname' => 'Test',
+            'donor'            => [
+                'id'          => 1,
+                'uId'         => '7000-0000-0288',
+                'dob'         => '1948-11-01',
+                'salutation'  => 'Mr',
+                'firstname'   => 'Test',
                 'middlenames' => 'Testable',
-                'surname' => 'Testerson',
-                'addresses' => [
+                'surname'     => 'Testerson',
+                'addresses'   => [
                     0 => [
-                        'id' => 1,
-                        'town' => 'Test',
-                        'county' => 'Testershire',
-                        'postcode' => 'TE57 7ES',
-                        'country' => '',
-                        'type' => 'Primary',
+                        'id'           => 1,
+                        'town'         => 'Test',
+                        'county'       => 'Testershire',
+                        'postcode'     => 'TE57 7ES',
+                        'country'      => '',
+                        'type'         => 'Primary',
                         'addressLine1' => 'Test House',
                         'addressLine2' => 'Test Road',
-                        'addressLine3' => ''
-                    ]
-                ]
-            ]
+                        'addressLine3' => '',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -88,7 +85,6 @@ class ViewerContext extends BaseIntegrationContext
 
         $this->lpaData['status'] = 'Cancelled';
     }
-
 
     /**
      * @Given /^I have been given access to a revoked LPA via share code$/
@@ -150,7 +146,6 @@ class ViewerContext extends BaseIntegrationContext
         // not used in this context
     }
 
-
     /**
      * @When /^I give a share code that's been cancelled$/
      */
@@ -178,7 +173,7 @@ class ViewerContext extends BaseIntegrationContext
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([
-                                'lpa' => $this->lpaData
+                                'lpa' => $this->lpaData,
                             ]),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
@@ -186,14 +181,14 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode(
+        $this->viewedLpa = $lpaService->getLpaByCode(
             $this->lpaShareCode,
             $this->lpaSurname,
             $this->lpaViewedBy
-        ))['lpa'];
+        )['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
-        $body = json_decode($request->getBody()->getContents());
+        $body    = json_decode($request->getBody()->getContents());
 
         Assert::assertEquals('111111111111', $body->code); // code gets hyphens removed
         Assert::assertEquals($this->lpaSurname, $body->name);
@@ -210,7 +205,7 @@ class ViewerContext extends BaseIntegrationContext
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([
-                                'lpa' => $this->lpaData
+                                'lpa' => $this->lpaData,
                             ]),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
@@ -218,19 +213,20 @@ class ViewerContext extends BaseIntegrationContext
 
         $lpaService = $this->container->get(LpaService::class);
 
-        $this->viewedLpa = ($lpaService->getLpaByCode(
+        $this->viewedLpa = $lpaService->getLpaByCode(
             $this->lpaShareCode,
             $this->lpaSurname,
             $this->lpaViewedBy
-        ))['lpa'];
+        )['lpa'];
 
         $request = $this->apiFixtures->getLastRequest();
-        $body = json_decode($request->getBody()->getContents());
+        $body    = json_decode($request->getBody()->getContents());
 
         Assert::assertEquals('111111111111', $body->code); // code gets hyphens removed
         Assert::assertEquals($this->lpaSurname, $body->name);
         Assert::assertEquals($this->lpaViewedBy, $body->organisation);
     }
+
     /**
      * @When /^I choose to download a document version of the LPA$/
      */

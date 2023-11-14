@@ -13,3 +13,11 @@ variable "environment_name" {
 variable "lambda_container_version" {
   description = "The version of the lambda container"
 }
+
+variable "vpc_flow_logs_iam_role" {
+  description = "The IAM role for VPC flow logs"
+  type = object({
+    arn = string
+    id  = string
+  })
+}

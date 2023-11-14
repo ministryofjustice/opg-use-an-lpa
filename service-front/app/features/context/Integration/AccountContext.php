@@ -50,16 +50,16 @@ class AccountContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
-    private const USER_SERVICE_CREATE = 'UserService::create';
-    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
-    private const USER_SERVICE_REQUEST_CHANGE_EMAIL = 'UserService::requestChangeEmail';
-    private const USER_SERVICE_CAN_RESET_EMAIL = 'UserService::canResetEmail';
-    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL = 'UserService::completeChangeEmail';
-    private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
-    private const USER_SERVICE_CHANGE_PASSWORD = 'UserService::changePassword';
-    private const USER_SERVICE_REQUEST_PASSWORD_RESET = 'UserService::requestPasswordReset';
-    private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
+    private const USER_SERVICE_AUTHENTICATE            = 'UserService::authenticate';
+    private const USER_SERVICE_CREATE                  = 'UserService::create';
+    private const LPA_SERVICE_GET_LPAS                 = 'LpaService::getLpas';
+    private const USER_SERVICE_REQUEST_CHANGE_EMAIL    = 'UserService::requestChangeEmail';
+    private const USER_SERVICE_CAN_RESET_EMAIL         = 'UserService::canResetEmail';
+    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL   = 'UserService::completeChangeEmail';
+    private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
+    private const USER_SERVICE_CHANGE_PASSWORD         = 'UserService::changePassword';
+    private const USER_SERVICE_REQUEST_PASSWORD_RESET  = 'UserService::requestPasswordReset';
+    private const USER_SERVICE_CAN_PASSWORD_RESET      = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
 
     private LpaFactory $lpaFactory;
@@ -89,7 +89,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmCurrentlySignedIn()
     {
-        $this->userEmail = 'test@test.com';
+        $this->userEmail    = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
         $this->userIdentity = '123';
 
@@ -98,8 +98,8 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userIdentity,
-                        'Email' => $this->userEmail,
+                        'Id'        => $this->userIdentity,
+                        'Email'     => $this->userEmail,
                         'LastLogin' => null,
                     ]
                 ),
@@ -141,7 +141,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmOnTheChangeEmailPage()
     {
-        $this->newUserEmail = 'newEmail@test.com';
+        $this->newUserEmail        = 'newEmail@test.com';
         $this->userEmailResetToken = '12354abcde';
     }
 
@@ -249,7 +249,7 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => '123',
+                        'Id'                 => '123',
                         'PasswordResetToken' => $this->userPasswordResetToken,
                     ]
                 ),
@@ -298,7 +298,7 @@ class AccountContext extends BaseIntegrationContext
         $this->userService->completePasswordReset($this->userPasswordResetToken, new HiddenString($expectedPassword));
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($this->userPasswordResetToken, $params['token']);
@@ -361,7 +361,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccount()
     {
         $this->activationToken = 'activate1234567890';
-        $this->userPassword = 'n3wPassWord!';
+        $this->userPassword    = 'n3wPassWord!';
 
         // API call for password reset request
         $this->apiFixtures->append(
@@ -369,7 +369,7 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => '123',
+                        'Id'              => '123',
                         'activationToken' => $this->activationToken,
                     ]
                 ),
@@ -396,7 +396,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
     {
-        $this->userEmail = 'test@test.com';
+        $this->userEmail    = 'test@test.com';
         $this->userPassword = 'pa33W0rd!123';
 
         // API call for creating an account
@@ -462,7 +462,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertFalse($canReset);
 
         $request = $this->apiFixtures->getLastRequest();
-        $query = $request->getUri()->getQuery();
+        $query   = $request->getUri()->getQuery();
         Assert::assertStringContainsString($this->userPasswordResetToken, $query);
     }
 
@@ -499,7 +499,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertTrue($canReset);
 
         $request = $this->apiFixtures->getLastRequest();
-        $query = $request->getUri()->getQuery();
+        $query   = $request->getUri()->getQuery();
         Assert::assertStringContainsString($this->userPasswordResetToken, $query);
     }
 
@@ -576,7 +576,7 @@ class AccountContext extends BaseIntegrationContext
         $email2,
         $password1,
         $password2,
-        $terms
+        $terms,
     ) {
         // Not needed for this context
     }
@@ -613,7 +613,7 @@ class AccountContext extends BaseIntegrationContext
         );
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($this->userIdentity, $params['user-id']);
@@ -647,7 +647,7 @@ class AccountContext extends BaseIntegrationContext
             Assert::assertEquals($exception->getCode(), StatusCodeInterface::STATUS_FORBIDDEN);
 
             $request = $this->apiFixtures->getLastRequest();
-            $params = json_decode($request->getBody()->getContents(), true);
+            $params  = json_decode($request->getBody()->getContents(), true);
 
             Assert::assertIsArray($params);
             Assert::assertEquals($this->userIdentity, $params['user-id']);
@@ -661,8 +661,8 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount()
     {
-        $this->userEmail = 'test@test.com';
-        $expectedUrl = 'http://localhost/activate-account/' . $this->activationToken;
+        $this->userEmail    = 'test@test.com';
+        $expectedUrl        = 'http://localhost/activate-account/' . $this->activationToken;
         $expectedTemplateId = 'd897fe13-a0c3-4c50-aa5b-3f0efacda5dc';
 
         $emailTemplate = 'AccountActivationEmail';
@@ -690,19 +690,19 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword()
     {
-        $expectedUrl = 'http://localhost/reset-password/' . $this->userPasswordResetToken;
+        $expectedUrl        = 'http://localhost/reset-password/' . $this->userPasswordResetToken;
         $expectedTemplateId = 'd32af4a6-49ad-4338-a2c2-dcb5801a40fc';
-        $emailTemplate = 'PasswordResetEmail';
+        $emailTemplate      = 'PasswordResetEmail';
 
         // API call for Notify
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-        $result = $this->notifyService->sendEmailToUser(
+        $result      = $this->notifyService->sendEmailToUser(
             $emailTemplate,
             $this->userEmail,
             passwordResetUrl: $expectedUrl
         );
-        $request = $this->apiFixtures->getLastRequest();
+        $request     = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
 
         Assert::assertStringContainsString($this->userEmail, $requestBody);
@@ -727,7 +727,7 @@ class AccountContext extends BaseIntegrationContext
             $this->userEmail
         );
 
-        $request = $this->apiFixtures->getLastRequest();
+        $request     = $this->apiFixtures->getLastRequest();
         $requestBody = $request->getBody()->getContents();
         Assert::assertStringContainsString($this->userEmail, $requestBody);
         Assert::assertStringContainsString('en_GB', $requestBody);
@@ -747,12 +747,12 @@ class AccountContext extends BaseIntegrationContext
                 json_encode(
                     [
                         'EmailResetExpiry' => 1589983070,
-                        'Email' => $this->userEmail,
-                        'LastLogin' => null,
-                        'Id' => $this->userIdentity,
-                        'NewEmail' => $this->newUserEmail,
-                        'EmailResetToken' => 're3eTt0k3N',
-                        'Password' => $this->userPassword,
+                        'Email'            => $this->userEmail,
+                        'LastLogin'        => null,
+                        'Id'               => $this->userIdentity,
+                        'NewEmail'         => $this->newUserEmail,
+                        'EmailResetToken'  => 're3eTt0k3N',
+                        'Password'         => $this->userPassword,
                     ]
                 ),
                 self::USER_SERVICE_REQUEST_CHANGE_EMAIL
@@ -774,7 +774,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('EmailResetExpiry', $data);
 
         $request = $this->apiFixtures->getLastRequest();
-        $params = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode($request->getBody()->getContents(), true);
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('user-id', $params);
         Assert::assertArrayHasKey('new-email', $params);
@@ -805,7 +805,7 @@ class AccountContext extends BaseIntegrationContext
             Assert::assertEquals(409, $aex->getCode());
 
             $request = $this->apiFixtures->getLastRequest();
-            $params = json_decode($request->getBody()->getContents(), true);
+            $params  = json_decode($request->getBody()->getContents(), true);
             Assert::assertIsArray($params);
             Assert::assertArrayHasKey('user-id', $params);
             Assert::assertArrayHasKey('new-email', $params);
@@ -839,7 +839,7 @@ class AccountContext extends BaseIntegrationContext
             Assert::assertEquals(403, $aex->getCode());
 
             $request = $this->apiFixtures->getLastRequest();
-            $params = json_decode($request->getBody()->getContents(), true);
+            $params  = json_decode($request->getBody()->getContents(), true);
             Assert::assertIsArray($params);
             Assert::assertArrayHasKey('user-id', $params);
             Assert::assertArrayHasKey('new-email', $params);
@@ -878,8 +878,8 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userIdentity,
-                        'Email' => $this->newUserEmail,
+                        'Id'        => $this->userIdentity,
+                        'Email'     => $this->newUserEmail,
                         'LastLogin' => '2020-01-21T15:58:47+00:00',
                     ]
                 ),
@@ -899,7 +899,7 @@ class AccountContext extends BaseIntegrationContext
     {
         $emailTemplate1 = 'RequestChangeEmailToCurrentEmail';
         $emailTemplate2 = 'RequestChangeEmailToNewEmail';
-        $expectedUrl = 'http://localhost/verify-new-email/' . $this->userEmailResetToken;
+        $expectedUrl    = 'http://localhost/verify-new-email/' . $this->userEmailResetToken;
 
         // API call for Notify sent to current email
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
@@ -971,8 +971,8 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userIdentity,
-                        'Email' => $this->userEmail,
+                        'Id'        => $this->userIdentity,
+                        'Email'     => $this->userEmail,
                         'LastLogin' => '2020-01-21T15:58:47+00:00',
                     ]
                 ),
@@ -1039,9 +1039,9 @@ class AccountContext extends BaseIntegrationContext
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id' => $this->userIdentity,
-                        'Email' => $this->userEmail,
-                        'Password' => $this->userPassword,
+                        'Id'        => $this->userIdentity,
+                        'Email'     => $this->userEmail,
+                        'Password'  => $this->userPassword,
                         'LastLogin' => null,
                     ]
                 ),
@@ -1053,7 +1053,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertNull($delete);
 
         $request = $this->apiFixtures->getLastRequest();
-        $uri = $request->getUri()->getPath();
+        $uri     = $request->getUri()->getPath();
 
         Assert::assertEquals($uri, '/v1/delete-account/123');
     }
@@ -1088,11 +1088,11 @@ class AccountContext extends BaseIntegrationContext
         // tests wouldn't normally touch but the container expects
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
-        $this->apiFixtures = $this->container->get(MockHandler::class);
-        $this->userService = $this->container->get(UserService::class);
-        $this->lpaService = $this->container->get(LpaService::class);
-        $this->lpaFactory = $this->container->get(LpaFactory::class);
+        $this->apiFixtures       = $this->container->get(MockHandler::class);
+        $this->userService       = $this->container->get(UserService::class);
+        $this->lpaService        = $this->container->get(LpaService::class);
+        $this->lpaFactory        = $this->container->get(LpaFactory::class);
         $this->viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $this->notifyService = $this->container->get(NotifyService::class);
+        $this->notifyService     = $this->container->get(NotifyService::class);
     }
 }

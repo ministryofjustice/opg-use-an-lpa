@@ -11,9 +11,6 @@ final class SharedState
     /** @var string The base part of the URL, typically '/' but could be a language prefix i.e. '/cy' */
     public string $basePath = '';
 
-    /**
-     * @return SharedState
-     */
     public static function getInstance(): SharedState
     {
         if (self::$instance === null) {

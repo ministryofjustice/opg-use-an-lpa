@@ -45,6 +45,7 @@ class LpaContext implements Context
     private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
     private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
+
     private $dashboardLPAs;
 
     /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
@@ -295,10 +296,9 @@ class LpaContext implements Context
     public function iAmGivenAUniqueAccessCodeAndToldImagesAvailableInTheSummary($check): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
-        if ($check ==='instructions and preferences'){
+        if ($check === 'instructions and preferences') {
             $this->ui->assertPageContainsText('Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
-        }
-        elseif ($check === 'instructions'){
+        } elseif ($check === 'instructions') {
             $this->ui->assertPageContainsText('Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
         }
     }
@@ -457,7 +457,6 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
     }
-
 
     /**
      * @Then /^I am taken to request an activation key form$/
@@ -2238,10 +2237,10 @@ class LpaContext implements Context
 
         if ($check === 'instructions and preferences') {
             $this->lpa->applicationHasRestrictions = true;
-            $this->lpa->applicationHasGuidance = true;
-        } elseif ($check === 'instructions' ){
+            $this->lpa->applicationHasGuidance     = true;
+        } elseif ($check === 'instructions') {
             $this->lpa->applicationHasRestrictions = false;
-        };
+        }
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->iRequestToGiveAnOrganisationAccess();

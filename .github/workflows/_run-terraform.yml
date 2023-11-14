@@ -62,11 +62,18 @@ jobs:
         with:
           fetch-depth: '0'
 
+      - name: Set Terraform version
+        working-directory: ./terraform/${{ inputs.terraform_path }}
+        id: set-terraform-version
+        run: |
+          TF_VERSION=$(cat .terraform-version)
+          echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
+
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - uses: hashicorp/setup-terraform@8fa54e78fa196965551aa8c4a4eae3aee5568620 # pin@v2.0.0
         with:
-          terraform_version: 1.5.6
+          terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
       - name: configure AWS credentials for getting pagerduty token
         uses: aws-actions/configure-aws-credentials@e6c766a518826746395987edb73a1a5767d0b602 # pin@v1.7.0
