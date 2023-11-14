@@ -25,7 +25,9 @@ $aggregator = new ConfigAggregator(
         // Swoole config to overwrite some services (if installed)
         class_exists(\Mezzio\Swoole\ConfigProvider::class)
             ? \Mezzio\Swoole\ConfigProvider::class
-            : function () { return []; },
+            : function () {
+                return []; 
+            },
 
         // Default App module config
         \App\ConfigProvider::class,
@@ -41,6 +43,7 @@ $aggregator = new ConfigAggregator(
         // Load development config if it exists
         new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
     ],
-    $cacheConfig['config_cache_path']);
+    $cacheConfig['config_cache_path']
+);
 
 return $aggregator->getMergedConfig();
