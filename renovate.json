@@ -14,6 +14,13 @@
   },
   "packageRules": [
     {
+      "description": "Terraform: bundle all updates together",
+      "labels": ["devDependencies", "Renovate", "Terraform"],
+      "groupName": "Terraform",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": ["terraform"]
+    },
+    {
       "groupName": "Patch & Minor Updates",
       "groupSlug": "all-minor-patch-updates",
       "labels": [
