@@ -6,7 +6,7 @@ RUN apk add --no-cache \
     libstdc++
 
 # Upgrade insecure packages
-RUN apk update && apk upgrade expat krb5-libs libcrypto1.1 libssl1.1 libcom_err ncurses busybox
+RUN apk update && apk upgrade expat krb5-libs libcrypto1.1 libssl1.1 libcom_err ncurses busybox openssl
 RUN pip install setuptools --upgrade
 
 FROM python-alpine as build-image
