@@ -15,21 +15,20 @@ class DynamoDBExporterAndQuerier:
 
     def __init__(self, environment):
         self.tables = {
+            "Stats" : None,
             "ActorCodes" : None,
             "ActorUsers" : None,
             "ViewerCodes" : None,
             "ViewerActivity" : None,
             "UserLpaActorMap" : None,
-            "Stats" : None,
         }
 
-        self.table_ddl_files = {"tables/actor_codes.ddl" : "ActorCodes",
+        self.table_ddl_files = { "tables/stats.ddl" : "Stats",
+                                "tables/actor_codes.ddl" : "ActorCodes",
                                 "tables/actor_users.ddl" : "ActorUsers", 
                                 "tables/viewer_codes.ddl" : "ViewerCodes", 
                                 "tables/viewer_activity.ddl" : "ViewerActivity", 
                                 "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
-                                #"tables/user_lpa_actor_map.ddl" : "UserLpaActorMap",
-#                                "tables/stats.ddl" : "Stats"}
 
         self.environment_details = self.set_environment_details(environment)
 
@@ -141,7 +140,7 @@ class DynamoDBExporterAndQuerier:
 
     def export_dynamo_table(self, table_arn, bucket_name, s3_prefix):
         print(f"exporting {table_arn} dynamoDb table")
-        response = self.aws_dynamodb_client.export_dynamo_table_to_point_in_time(
+        response = self.aws_dynamodb_client.export_table_to_point_in_time(
             TableArn=table_arn,
             S3Bucket=bucket_name,
             S3BucketOwner=self.environment_details['account_id'],
@@ -219,6 +218,7 @@ class DynamoDBExporterAndQuerier:
 
     def create_athena_tables(self):
         self.drop_athena_database()
+        sleep(10)
         self.create_athena_database()
 
         for table_ddl in self.table_ddl_files.keys():
