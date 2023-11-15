@@ -28,13 +28,13 @@ class ActorCodesFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'actor-codes-table' => 'test-table'
-                ]
-            ]
+                    'actor-codes-table' => 'test-table',
+                ],
+            ],
         ]);
 
         $factory = new ActorCodesFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(ActorCodes::class, $repo);
     }
 

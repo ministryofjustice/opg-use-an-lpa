@@ -12,6 +12,7 @@ use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ActorCodesFactoryTest extends TestCase
 {
@@ -26,8 +27,8 @@ class ActorCodesFactoryTest extends TestCase
             ->willReturn(
                 [
                     'codes_api' => [
-                        'endpoint' => 'test'
-                    ]
+                        'endpoint' => 'test',
+                    ],
                 ]
             );
 
@@ -58,14 +59,13 @@ class ActorCodesFactoryTest extends TestCase
             ->get('config')
             ->willReturn(
                 [
-                    'codes_api' => [
-                    ]
+                    'codes_api' => [],
                 ]
             );
 
         $factory = new ActorCodesFactory();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $actorCodes = $factory($containerProphecy->reveal());
     }
 }

@@ -12,11 +12,12 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Aws\CommandInterface;
 
 class ViewerCodesTest extends TestCase
 {
-    use ProphecyTrait;
     use GenerateAwsResultTrait;
+    use ProphecyTrait;
 
     const TABLE_NAME = 'test-table-name';
 
@@ -53,10 +54,10 @@ class ViewerCodesTest extends TestCase
                                                'ViewerCode' => [
                                                    'S' => $testCode,
                                                ],
-                                               'SiriusUid' => [
+                                               'SiriusUid'  => [
                                                    'S' => '123456789012',
                                                ],
-                                               'Expires' => [
+                                               'Expires'    => [
                                                    'S' => '2019-01-01 12:34:56',
                                                ],
                                            ],
@@ -187,12 +188,12 @@ class ViewerCodesTest extends TestCase
     /** @test */
     public function add_unique_code(): void
     {
-        $testCode = 'test-code';
+        $testCode              = 'test-code';
         $testUserLpaActorToken = 'test-token';
-        $testSiriusUid = 'test-uid';
-        $testExpires = new DateTime();
-        $testOrganisation = 'test-organisation';
-        $testActorId = 123;
+        $testSiriusUid         = 'test-uid';
+        $testExpires           = new DateTime();
+        $testOrganisation      = 'test-organisation';
+        $testActorId           = 123;
 
         $this->dynamoDbClientProphecy->putItem(
             Argument::that(function (array $data) use (
@@ -238,7 +239,7 @@ class ViewerCodesTest extends TestCase
             ->willThrow(
                 new DynamoDbException(
                     'exception',
-                    $this->prophesize(\Aws\CommandInterface::class)->reveal(),
+                    $this->prophesize(CommandInterface::class)->reveal(),
                     ['code' => 'ConditionalCheckFailedException']
                 )
             )
@@ -255,7 +256,7 @@ class ViewerCodesTest extends TestCase
             'test-val',
             'test-val',
             'test-val',
-            new DateTime,
+            new DateTime(),
             'test-val',
             123
         );
@@ -279,7 +280,7 @@ class ViewerCodesTest extends TestCase
             'test-val',
             'test-val',
             'test-val',
-            new DateTime,
+            new DateTime(),
             'test-val',
             123
         );
@@ -288,7 +289,7 @@ class ViewerCodesTest extends TestCase
     /** @test */
     public function can_cancel_viewer_code(): void
     {
-        $testCode = 'test-code';
+        $testCode    = 'test-code';
         $currentDate = new DateTime('today');
 
         $this->dynamoDbClientProphecy->updateItem(
@@ -321,7 +322,7 @@ class ViewerCodesTest extends TestCase
     /** @test */
     public function can_remove_actor_and_code_association(): void
     {
-        $testCode = 'test-code';
+        $testCode  = 'test-code';
         $codeOwner = 23;
 
         $this->dynamoDbClientProphecy->updateItem(

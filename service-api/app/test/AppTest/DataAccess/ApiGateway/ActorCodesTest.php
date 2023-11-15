@@ -28,7 +28,7 @@ class ActorCodesTest extends TestCase
         $testData = [
             'lpa'  => 'test-uid',
             'dob'  => 'test-dob',
-            'code' => 'test-code'
+            'code' => 'test-code',
         ];
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
@@ -78,7 +78,7 @@ class ActorCodesTest extends TestCase
         $testData = [
             'lpa'  => 'test-uid',
             'dob'  => 'test-dob',
-            'code' => 'test-code'
+            'code' => 'test-code',
         ];
 
         $httpClientProphecy = $this->prophesize(HttpClient::class);
@@ -109,7 +109,7 @@ class ActorCodesTest extends TestCase
         $testData = [
             'lpa'  => 'test-uid',
             'dob'  => 'test-dob',
-            'code' => 'test-code'
+            'code' => 'test-code',
         ];
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -249,11 +249,11 @@ class ActorCodesTest extends TestCase
     {
         $testData = [
             'lpa'   => 'test-lpa-id',
-            'actor' => 'test-actor-id'
+            'actor' => 'test-actor-id',
         ];
 
         $expectedResponse = [
-            'Created' => $codeExistsResponse
+            'Created' => $codeExistsResponse,
         ];
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
@@ -304,7 +304,7 @@ class ActorCodesTest extends TestCase
     {
         return [
             [null],
-            ['2021-01-01']
+            ['2021-01-01'],
         ];
     }
 

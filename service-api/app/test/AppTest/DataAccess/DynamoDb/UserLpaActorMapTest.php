@@ -428,22 +428,22 @@ class UserLpaActorMapTest extends TestCase
             return true;
         }))->willReturn($this->createAWSResult([
             'Item' => [
-                'Id'        => [
+                'Id'          => [
                     'S' => $testToken,
                 ],
-                'SiriusUid' => [
+                'SiriusUid'   => [
                     'S' => $testSiriusUid,
                 ],
-                'Added'     => [
+                'Added'       => [
                     'S' => $testAdded,
                 ],
-                'ActorId'   => [
+                'ActorId'     => [
                     'S' => $testActorId,
                 ],
-                'UserId'    => [
+                'UserId'      => [
                     'S' => $testUserId,
                 ],
-                'ActivatedOn'   => [
+                'ActivatedOn' => [
                     'S' => $testActivated,
                 ],
             ],

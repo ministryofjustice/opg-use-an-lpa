@@ -39,12 +39,12 @@ class LpasTest extends TestCase
 
     public function setup(): void
     {
-        $this->httpClientProphecy = $this->prophesize(Client::class);
-        $this->signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $this->httpClientProphecy    = $this->prophesize(Client::class);
+        $this->signatureV4Prophecy   = $this->prophesize(SignatureV4::class);
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
-        $this->loggerInterface = $this->prophesize(LoggerInterface::class);
-        $this->apiUrl = 'http://test';
-        $this->traceId = '1234-12-12-12-1234';
+        $this->loggerInterface       = $this->prophesize(LoggerInterface::class);
+        $this->apiUrl                = 'http://test';
+        $this->traceId               = '1234-12-12-12-1234';
 
         putenv('AWS_ACCESS_KEY_ID=testkey');
         putenv('AWS_SECRET_ACCESS_KEY=secretkey');
@@ -135,7 +135,7 @@ class LpasTest extends TestCase
     /** @test */
     public function requests_a_letter_successfully(): void
     {
-        $caseUid = 700000055554;
+        $caseUid  = 700000055554;
         $actorUid = 700000055554;
 
         $assert = $this;
@@ -183,13 +183,13 @@ class LpasTest extends TestCase
         $service->requestLetter($caseUid, $actorUid, null);
 
         // Test with null actor id
-        $service->requestLetter($caseUid, null, "Some random string");
+        $service->requestLetter($caseUid, null, 'Some random string');
     }
 
     /** @test */
     public function requests_a_letter_with_sirius_error(): void
     {
-        $caseUid = 700000055554;
+        $caseUid  = 700000055554;
         $actorUid = 700000055554;
 
         $this->signatureV4Prophecy
@@ -205,7 +205,7 @@ class LpasTest extends TestCase
         $contentsProphecy
             ->getContents()
             ->shouldBeCalled()
-            ->willReturn("");
+            ->willReturn('');
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy
@@ -231,7 +231,7 @@ class LpasTest extends TestCase
     /** @test */
     public function requests_a_letter_with_guzzle_error(): void
     {
-        $caseUid = 700000055554;
+        $caseUid  = 700000055554;
         $actorUid = 700000055554;
 
         $this->signatureV4Prophecy
