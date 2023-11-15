@@ -63,7 +63,7 @@ Feature: Ask for an activation key
     Examples:
     | live_in_uk | postcode | reason                       |
     | Yes        |          | Enter your postcode          |
-    |            |          | Select yes if you live in the UK |
+    |            |          | Select if you live in the UK or do not live in the UK |
     
   @ui
   Scenario: The user is taken to check their answers when they request an activation key with valid details
