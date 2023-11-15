@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+import calendar
 import argparse
 import boto3
 import re
@@ -50,6 +51,20 @@ class DynamoDBExporterAndQuerier:
           'dynamodb-exports-{}'.format(
             self.environment_details['account_name'])
           )
+
+    def set_date_range(self, start, end):
+        self.start_date = start
+        self.end_date = end
+        print(self.start_date)
+        print(self.end_date)
+
+    def set_default_date_range(self):
+        today = datetime.today()
+        days_in_mo = calendar.monthrange(today.year, today.month)
+        self.start_date = f"{today.year}-{today.month}-01"
+        self.end_date = f"{today.year}-{today.month}-{days_in_mo[1]}"
+        print(self.start_date)
+        print(self.end_date)
 
     @staticmethod
     def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
@@ -161,7 +176,7 @@ class DynamoDBExporterAndQuerier:
                     self.environment_details['name'],
                     table)
 
-        print('\n')
+        #print('\n')
         print('DynamoDB Table ARN:',table_arn)
         #print('S3 Bucket Name:', bucket_name)
         response = self.aws_dynamodb_client.list_exports(
@@ -198,6 +213,8 @@ class DynamoDBExporterAndQuerier:
                     "OutputLocation": f"s3://{self.athena_results_bucket}/"
             }
         )
+        # rather than poll for the database drop reported as complete, for now we simply sleep
+        sleep(10)
 
         return response["QueryExecutionId"]
 
@@ -209,25 +226,17 @@ class DynamoDBExporterAndQuerier:
             }
         )
 
-        query_execution_id = response["QueryExecutionId"]
+        # rather than poll for the database create reported as complete, for now we simply sleep
         sleep(30)
-        response = self.aws_athena_client.get_query_results(
-            QueryExecutionId=query_execution_id,
-            MaxResults=1
-        )
 
     def create_athena_tables(self):
         self.drop_athena_database()
-        sleep(10)
         self.create_athena_database()
 
         for table_ddl in self.table_ddl_files.keys():
             exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
-            print("exportedS3Location is")
-            print(exported_s3_location)
             query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
             sleep(10)
-            print(f"Query execution id: {query_execution_id}")
             response = self.aws_athena_client.get_query_results(
                 QueryExecutionId=query_execution_id,
                 MaxResults=1
@@ -240,8 +249,6 @@ class DynamoDBExporterAndQuerier:
             rawQuery = ddl.read()
             searchStr = "'s3(.*)'"
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
-            print("we are about to execute ")
-            print(query)
             response = self.aws_athena_client.start_query_execution(
                 QueryString=query,
                 QueryExecutionContext={
@@ -258,7 +265,7 @@ class DynamoDBExporterAndQuerier:
     def run_single_athena_query(self, query_file):
         with open(query_file) as ddl:
             query = ddl.read()
-            print("we are about to execute ")
+            print()
             print(query)
             response = self.aws_athena_client.start_query_execution(
                 QueryString=query,
@@ -293,11 +300,21 @@ def main():
     parser.add_argument('--athena_only', dest='athena_only_flag', action='store_const',
                         const=True, default=False,
                         help='Only run the athena query not the DynamoDb export. Assume that has already run')
+    parser.add_argument("--start_date",
+                           default="",
+                           help="Start date in the form YYYY-MM-DD")
+    parser.add_argument("--end_date",
+                           default="",
+                           help="End date in the form YYYY-MM-DD")
 
     args = parser.parse_args()
     work = DynamoDBExporterAndQuerier(
         args.environment)
 
+    if args.start_date and args.end_date :
+        work.set_date_range(args.start_date, args.end_date)
+    else:
+        work.set_default_date_range()
 
     if args.check_only:
         work.check_dynamo_export_status()
@@ -308,6 +325,7 @@ def main():
 
     work.check_dynamo_export_status()
     work.create_athena_tables()
+
 
     work.run_single_athena_query("sams_query")
     work.run_single_athena_query("sams_query2")
