@@ -158,6 +158,9 @@ final class Sirius implements LpaFactory
         if (isset($caseActorData['firstname'])) {
             $actor->setFirstname($caseActorData['firstname']);
         }
+        if (isset($caseActorData['otherNames'])) {
+            $actor->setOtherNames($caseActorData['otherNames']);
+        }
         if (isset($caseActorData['middlenames'])) {
             $actor->setMiddlenames($caseActorData['middlenames']);
         }
