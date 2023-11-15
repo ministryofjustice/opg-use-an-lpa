@@ -5,7 +5,7 @@ import re
 from time import sleep
 
 
-class DynamoDBExporter:
+class DynamoDBExporterAndQuerier:
     athena_database_name = "ual"
     athena_results_bucket = "use-a-lpa-dynamodb-exports"
     aws_dynamodb_client = ''
@@ -23,7 +23,13 @@ class DynamoDBExporter:
             "Stats" : None,
         }
 
-        self.table_ddl_files = {"tables/viewer_activity.ddl" : "ViewerActivity", "tables/viewer_codes.ddl" : "ViewerCodes", "tables/actor_users.ddl" : "ActorUsers", "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
+        self.table_ddl_files = {"tables/actor_codes.ddl" : "ActorCodes",
+                                "tables/actor_users.ddl" : "ActorUsers", 
+                                "tables/viewer_codes.ddl" : "ViewerCodes", 
+                                "tables/viewer_activity.ddl" : "ViewerActivity", 
+                                "tables/user_lpa_actor_map.ddl" : "UserLpaActorMap"}
+                                #"tables/user_lpa_actor_map.ddl" : "UserLpaActorMap",
+#                                "tables/stats.ddl" : "Stats"}
 
         self.environment_details = self.set_environment_details(environment)
 
@@ -106,20 +112,20 @@ class DynamoDBExporter:
         )
         return response['KeyMetadata']['KeyId']
 
-    def check_export_status(self):
+    def check_dynamo_export_status(self):
         overallCompleted = False
         while not overallCompleted:
             sleep(10)
             # assume all tables are completed until we encounter one that is not
             tablesCompleted = True
             for table in self.tables.keys():
-                if not self.get_export_status(table):
+                if not self.get_dynamo_export_status(table):
                     # we encountered an inconmplete table so they are not all complete
                     tablesCompleted = False
             overallCompleted = tablesCompleted
 
 
-    def export_all_tables(self):
+    def export_all_dynamo_tables(self):
         for table in self.tables.keys():
             table_arn = self.get_table_arn('{}-{}'.format(
               self.environment_details['name'],
@@ -131,17 +137,11 @@ class DynamoDBExporter:
                         self.environment_details['name'],
                         table)
 
-            print(f"describing {table_arn} dynamoDb table")
-            response = self.aws_dynamodb_client.describe_table(
-                TableName=f"demo-{table}",
-            )
-            print(response)
+            self.export_dynamo_table(table_arn, bucket_name, s3_prefix)
 
-            self.export_table(table_arn, bucket_name, s3_prefix)
-
-    def export_table(self, table_arn, bucket_name, s3_prefix):
+    def export_dynamo_table(self, table_arn, bucket_name, s3_prefix):
         print(f"exporting {table_arn} dynamoDb table")
-        response = self.aws_dynamodb_client.export_table_to_point_in_time(
+        response = self.aws_dynamodb_client.export_dynamo_table_to_point_in_time(
             TableArn=table_arn,
             S3Bucket=bucket_name,
             S3BucketOwner=self.environment_details['account_id'],
@@ -151,7 +151,7 @@ class DynamoDBExporter:
             ExportFormat='DYNAMODB_JSON'
         )
 
-    def get_export_status(self, table):
+    def get_dynamo_export_status(self, table):
         table_arn = self.get_table_arn('{}-{}'.format(
           self.environment_details['name'],
           table)
@@ -164,7 +164,7 @@ class DynamoDBExporter:
 
         print('\n')
         print('DynamoDB Table ARN:',table_arn)
-        print('S3 Bucket Name:', bucket_name)
+        #print('S3 Bucket Name:', bucket_name)
         response = self.aws_dynamodb_client.list_exports(
         TableArn=table_arn,
         MaxResults=1
@@ -212,12 +212,28 @@ class DynamoDBExporter:
 
         query_execution_id = response["QueryExecutionId"]
         sleep(30)
-        print(f"Query execution id: {query_execution_id}")
         response = self.aws_athena_client.get_query_results(
             QueryExecutionId=query_execution_id,
             MaxResults=1
         )
-        print(response)
+
+    def create_athena_tables(self):
+        self.drop_athena_database()
+        self.create_athena_database()
+
+        for table_ddl in self.table_ddl_files.keys():
+            exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
+            print("exportedS3Location is")
+            print(exported_s3_location)
+            query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
+            sleep(10)
+            print(f"Query execution id: {query_execution_id}")
+            response = self.aws_athena_client.get_query_results(
+                QueryExecutionId=query_execution_id,
+                MaxResults=1
+            )
+            print(response)
+
 
     def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
@@ -265,27 +281,6 @@ class DynamoDBExporter:
             results = response['ResultSet']['Rows']
             print(results)
 
-    def run_athena_query(self):
-        print(self.tables)
-        self.drop_athena_database()
-        self.create_athena_database()
-
-        for table_ddl in self.table_ddl_files.keys():
-            exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
-            print("exportedS3Location is")
-            print(exported_s3_location)
-            query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
-            sleep(10)
-            print(f"Query execution id: {query_execution_id}")
-            response = self.aws_athena_client.get_query_results(
-                QueryExecutionId=query_execution_id,
-                MaxResults=1
-            )
-            print(response)
-
-        self.run_single_athena_query("sams_query")
-        self.run_single_athena_query("sams_query2")
-
 def main():
     parser = argparse.ArgumentParser(
         description="Exports DynamoDB tables to S3.")
@@ -300,19 +295,22 @@ def main():
                         help='Only run the athena query not the DynamoDb export. Assume that has already run')
 
     args = parser.parse_args()
-    work = DynamoDBExporter(
+    work = DynamoDBExporterAndQuerier(
         args.environment)
 
 
     if args.check_only:
-        work.check_export_status()
+        work.check_dynamo_export_status()
         return
 
     if not args.athena_only_flag:
-        work.export_all_tables()
+        work.export_all_dynamo_tables()
 
-    work.check_export_status()
-    work.run_athena_query()
+    work.check_dynamo_export_status()
+    work.create_athena_tables()
+
+    work.run_single_athena_query("sams_query")
+    work.run_single_athena_query("sams_query2")
 
 if __name__ == "__main__":
     main()
