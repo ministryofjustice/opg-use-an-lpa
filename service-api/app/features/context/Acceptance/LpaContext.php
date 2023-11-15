@@ -72,7 +72,7 @@ class LpaContext implements Context
      */
     public function aRecordOfMyActivationKeyRequestIsUpdated(): void
     {
-        $dt = (new DateTime('now'))->add(new DateInterval('P1Y'));
+        $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
 
         $lastCommand = $this->awsFixtures->getLastCommand();
         Assert::assertEquals($lastCommand->getName(), 'UpdateItem');
@@ -1842,7 +1842,7 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        if ($status === 'Revoked') {
+        if ($status == 'Revoked') {
             Assert::assertEmpty($response);
         } else {
             Assert::assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
@@ -2643,7 +2643,7 @@ class LpaContext implements Context
                                 'SiriusUid'  => $this->lpaUid,
                                 'ActorId'    => $this->actorId,
                                 'Added'      => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                                'ActivateBy' => (new DateTime())->add(new DateInterval('P1Y'))->getTimestamp(),
+                                'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp(),
                             ]
                         ),
                     ],
@@ -2662,7 +2662,7 @@ class LpaContext implements Context
                             'SiriusUid'  => $this->lpaUid,
                             'ActorId'    => $this->actorId,
                             'Added'      => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                            'ActivateBy' => (new DateTime())->add(new DateInterval('P1Y'))->getTimestamp(),
+                            'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp(),
                         ]
                     ),
                 ]

@@ -12,7 +12,10 @@ use Psr\Container\ContainerInterface;
 
 abstract class BaseIntegrationContext implements Context, Psr11AwareContext
 {
-    protected ContainerInterface|Container $container;
+    /**
+     * @var ContainerInterface|Container
+     */
+    protected $container;
 
     /**
      * @inheritDoc
@@ -31,6 +34,7 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
      * what datatype things are. This function creates that data structure.
      *
      * @param array $input
+     *
      * @return array
      */
     protected function marshalAwsResultData(array $input): array

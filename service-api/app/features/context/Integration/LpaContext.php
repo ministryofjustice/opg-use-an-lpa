@@ -100,7 +100,7 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
-        } catch (ApiException) {
+        } catch (ApiException $exception) {
             throw new Exception('Failed to request access code letter');
         }
     }
@@ -128,7 +128,7 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId, '00-0-0-0-00');
-        } catch (ApiException) {
+        } catch (ApiException $exception) {
             throw new Exception('Failed to request access code letter');
         }
     }
@@ -150,7 +150,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aRecordOfMyActivationKeyRequestIsUpdated(): void
     {
-        $dt = (new DateTime('now'))->add(new DateInterval('P1Y'));
+        $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
 
         $lastCommand = $this->awsFixtures->getLastCommand();
         Assert::assertEquals($lastCommand->getName(), 'UpdateItem');
@@ -219,10 +219,10 @@ class LpaContext extends BaseIntegrationContext
     public function iAmGivenAUniqueAccessCode(): void
     {
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $codeData          = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
+        $codeData = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
 
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
-        $in30Days   = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
+        $in30Days = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         Assert::assertArrayHasKey('code', $codeData);
         Assert::assertNotNull($codeData['code']);
@@ -311,7 +311,7 @@ class LpaContext extends BaseIntegrationContext
         $addLpaService = $this->container->get(AddLpa::class);
 
         $expectedResponse = [
-            'donor'         => [
+            'donor' => [
                 'uId'         => $this->lpa->donor->uId,
                 'firstname'   => $this->lpa->donor->firstname,
                 'middlenames' => $this->lpa->donor->middlenames,
@@ -367,7 +367,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists          = new stdClass();
+        $codeExists = new stdClass();
         $codeExists->Created = null;
 
         $this->pactPostInteraction(
@@ -706,7 +706,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->userDob,
                 $this->userId
             );
-        } catch (Exception) {
+        } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
@@ -967,7 +967,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result());
 
         $viewerCodeService = $this->container->get(ViewerCodeService::class);
-        $codes             = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
+        $codes = $viewerCodeService->getCodes($this->userLpaActorToken, $this->userId);
 
         Assert::assertEmpty($codes);
     }
@@ -1985,7 +1985,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists  = new stdClass();
+        $codeExists = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
@@ -2015,7 +2015,7 @@ class LpaContext extends BaseIntegrationContext
             Assert::assertEquals('LPA has an activation key already', $ex->getMessage());
             Assert::assertEquals(
                 [
-                    'donor'                => [
+                    'donor' => [
                         'uId'         => $this->lpa->donor->uId,
                         'firstname'   => $this->lpa->donor->firstname,
                         'middlenames' => $this->lpa->donor->middlenames,
@@ -2165,7 +2165,7 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
 
-        if ($status === 'Revoked') {
+        if ($status == 'Revoked') {
             Assert::assertEmpty($lpaData);
         } else {
             Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
@@ -2445,7 +2445,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAIsSuccessfullyAdded(): void
     {
-        $now                     = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
         $this->userLpaActorToken = '13579';
 
         // UserLpaActorMap::getUsersLpas
@@ -2488,7 +2488,7 @@ class LpaContext extends BaseIntegrationContext
                 $this->userDob,
                 $this->actorLpaId
             );
-        } catch (Exception) {
+        } catch (Exception $ex) {
             throw new Exception('Lpa confirmation unsuccessful');
         }
 
@@ -2749,7 +2749,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
-        $response    = $addOlderLpa->validateRequest($this->userId, $data);
+        $response = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
             'actor'       => json_decode(json_encode($this->lpa->donor), true),
@@ -2836,7 +2836,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $expectedResponse = [
-            'donor'                => [
+            'donor' => [
                 'uId'         => $this->lpa->donor->uId,
                 'firstname'   => $this->lpa->donor->firstname,
                 'middlenames' => $this->lpa->donor->middlenames,
@@ -3055,7 +3055,7 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
-        } catch (ApiException) {
+        } catch (ApiException $exception) {
             throw new Exception('Failed to request access code letter');
         }
     }
@@ -3089,7 +3089,7 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
-        if ($flagStatus === 'ON') {
+        if ($flagStatus == 'ON') {
             try {
                 $addOlderLpa->validateRequest($this->userId, $data);
             } catch (NotFoundException $ex) {

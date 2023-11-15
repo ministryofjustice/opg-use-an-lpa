@@ -2,22 +2,15 @@
 
 declare(strict_types=1);
 
-use App\DataAccess\ApiGateway\ActorCodes;
-use BehatTest\DataAccess\ApiGateway\PactActorCodesFactory;
-use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
-use BehatTest\DataAccess\ApiGateway\PactInstructionsAndPreferencesImagesFactory;
-use App\DataAccess\ApiGateway\Lpas;
-use BehatTest\DataAccess\ApiGateway\PactLpasFactory;
-
 return [
     'dependencies' => [
         'factories' => [
-            ActorCodes::class
-                => PactActorCodesFactory::class,
-            InstructionsAndPreferencesImages::class
-                => PactInstructionsAndPreferencesImagesFactory::class,
-            Lpas::class
-                => PactLpasFactory::class,
+            App\DataAccess\ApiGateway\ActorCodes::class
+                => BehatTest\DataAccess\ApiGateway\PactActorCodesFactory::class,
+            App\DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
+                => BehatTest\DataAccess\ApiGateway\PactInstructionsAndPreferencesImagesFactory::class,
+            App\DataAccess\ApiGateway\Lpas::class
+                => BehatTest\DataAccess\ApiGateway\PactLpasFactory::class,
         ],
     ],
 ];

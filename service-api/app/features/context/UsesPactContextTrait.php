@@ -51,7 +51,7 @@ trait UsesPactContextTrait
         string $uri,
         $requestBody,
         int $responseStatus,
-        $responseBody = [],
+        $responseBody = []
     ): void {
         // Create request expectation
         $success = $this->pact->requestToWithParameters(
@@ -72,7 +72,7 @@ trait UsesPactContextTrait
                 $responseStatus,
                 is_array($responseBody) ? $this->createTableNode($responseBody) : $responseBody
             );
-        } catch (NoConsumerRequestDefined) {
+        } catch (NoConsumerRequestDefined $ex) {
             throw new ConnectionException('Unable to create response expectation');
         }
     }
@@ -90,7 +90,7 @@ trait UsesPactContextTrait
         string $uri,
         int $responseStatus,
         $responseBody = [],
-        string $query = '',
+        string $query = ''
     ): void {
         $this->pact->registerInteractionWithQueryAndBody(
             $providerName,

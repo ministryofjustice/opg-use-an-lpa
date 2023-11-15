@@ -31,8 +31,8 @@ class FeatureFlagContext extends BaseIntegrationContext
                     throw new Exception('Feature flag values must be boolean');
                 }
 
-                $container                             = $scope->getEnvironment()->getContext(LpaContext::class)->container;
-                $config                                = $container->get('config');
+                $container = $scope->getEnvironment()->getContext(LpaContext::class)->container;
+                $config = $container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
                 $container->set('config', $config);
                 $container->set(

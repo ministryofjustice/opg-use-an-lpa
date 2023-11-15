@@ -9,6 +9,10 @@ use BehatTest\Context\BaseAcceptanceContextTrait;
 use PHPUnit\Framework\Assert;
 
 /**
+ * Class CommonContext
+ *
+ * @package BehatTest\Context\UI
+ *
  * @property $traceId The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
  */
 class CommonContext implements Context

@@ -7,6 +7,7 @@ namespace App\DataAccess\ApiGateway;
 use App\Service\Log\RequestTracing;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ActorCodesFactory
 {
@@ -15,7 +16,7 @@ class ActorCodesFactory
         $config = $container->get('config');
 
         if (!isset($config['codes_api']['endpoint'])) {
-            throw new \Exception('Actor codes API Gateway endpoint is not set');
+            throw new Exception('Actor codes API Gateway endpoint is not set');
         }
 
         return new ActorCodes(
