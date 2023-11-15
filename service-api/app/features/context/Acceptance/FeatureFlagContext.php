@@ -36,7 +36,7 @@ class FeatureFlagContext implements Context
                     throw new Exception('Feature flag values must be boolean');
                 }
 
-                $config = $this->base->container->get('config');
+                $config                                = $this->base->container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
                 $this->base->container->set('config', $config);
                 $this->base->container->set(

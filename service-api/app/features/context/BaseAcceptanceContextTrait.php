@@ -33,8 +33,8 @@ trait BaseAcceptanceContextTrait
     {
         $environment = $scope->getEnvironment();
 
-        $this->base = $environment->getContext(BaseAcceptanceContext::class);
-        $this->ui = $this->base->ui; // MinkContext gathered in BaseUiContext
+        $this->base        = $environment->getContext(BaseAcceptanceContext::class);
+        $this->ui          = $this->base->ui; // MinkContext gathered in BaseUiContext
         $this->apiFixtures = $this->base->apiFixtures;
         $this->awsFixtures = $this->base->awsFixtures;
     }

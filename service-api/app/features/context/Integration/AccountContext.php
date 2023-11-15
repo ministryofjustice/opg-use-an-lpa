@@ -20,10 +20,6 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
- * Class AccountContext
- *
- * @package BehatTest\Context\Integration
- *
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
@@ -55,8 +51,8 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userAccountId = '123456789';
-        $this->userAccountEmail = 'test@example.com';
+        $this->userAccountId       = '123456789';
+        $this->userAccountEmail    = 'test@example.com';
         $this->userAccountPassword = 'pa33w0rd';
     }
 
@@ -66,7 +62,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmCurrentlySignedIn(): void
     {
-        $this->password = 'pa33w0rd';
+        $this->password            = 'pa33w0rd';
         $this->userAccountPassword = 'n3wPassWord';
 
         // ActorUsers::getByEmail
@@ -76,9 +72,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->password, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'Id'        => $this->userAccountId,
+                                'Email'     => $this->userAccountEmail,
+                                'Password'  => password_hash($this->password, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -94,7 +90,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'        => $this->userAccountId,
                                 'LastLogin' => null,
                             ]
                         ),
@@ -149,7 +145,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iAmOnTheChangeEmailPage(): void
     {
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
     }
 
@@ -192,10 +188,10 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                                'LastLogin' => null,
+                                'Id'              => $this->userAccountId,
+                                'Email'           => $this->userAccountEmail,
+                                'Password'        => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'LastLogin'       => null,
                                 'ActivationToken' => 'a12b3c4d5e',
                             ]
                         ),
@@ -232,9 +228,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'Id'        => $this->userAccountId,
+                                'Email'     => $this->userAccountEmail,
+                                'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -310,7 +306,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -325,9 +321,9 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Attributes' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'PasswordResetToken' => $resetToken,
-                            'PasswordResetExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
+                            'Id'                  => $this->userAccountId,
+                            'PasswordResetToken'  => $resetToken,
+                            'PasswordResetExpiry' => time() + (60 * 60 * 24), // 24 hours in the future
                         ]
                     ),
                 ]
@@ -353,7 +349,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCannotEnterMyCurrentPassword(): void
     {
         $failedPassword = 'S0meS0rt0fPassw0rd';
-        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+        $newPassword    = 'Successful-Raid-on-the-Cooki3s!';
 
         // ActorUsers::get
         $this->awsFixtures->append(
@@ -361,7 +357,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
+                            'Id'       => $this->userAccountId,
                             'Password' => password_hash($failedPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -401,7 +397,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -416,8 +412,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -486,13 +482,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'EmailResetExpiry' => time() + (60 * 60),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -533,13 +529,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                            'EmailResetExpiry' => (time() + (60 * 60)),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'EmailResetExpiry' => time() + (60 * 60),
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -585,13 +581,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                            'EmailResetExpiry' => (time() - (60 * 60)),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'EmailResetExpiry' => time() - (60 * 60),
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -623,7 +619,7 @@ class AccountContext extends BaseIntegrationContext
      */
     public function iCreateAnAccount(): void
     {
-        $this->userAccountEmail = 'hello@test.com';
+        $this->userAccountEmail    = 'hello@test.com';
         $this->userAccountPassword = 'n3wPassWord!';
 
         // ActorUsers::getByEmail
@@ -647,7 +643,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Email' => $this->userAccountEmail,
+                            'Email'           => $this->userAccountEmail,
                             'ActivationToken' => '123456789',
                         ]
                     ),
@@ -659,7 +655,7 @@ class AccountContext extends BaseIntegrationContext
 
         $this->createUserResponse = $us->add(
             [
-                'email' => $this->userAccountEmail,
+                'email'    => $this->userAccountEmail,
                 'password' => new HiddenString($this->userAccountPassword),
             ]
         );
@@ -671,7 +667,7 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $userAccountCreateData = [
-            'email' => 'hello@test.com',
+            'email'    => 'hello@test.com',
             'password' => 'n3wPassWord!',
         ];
 
@@ -684,7 +680,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Email' => $userAccountCreateData['email'],
+                                'Email'    => $userAccountCreateData['email'],
                                 'Password' => $userAccountCreateData['password'],
                             ]
                         ),
@@ -699,9 +695,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Email' => $userAccountCreateData['email'],
+                                'Email'    => $userAccountCreateData['email'],
                                 'Password' => $userAccountCreateData['password'],
-                                'Id' => $id,
+                                'Id'       => $id,
                             ]
                         ),
                     ],
@@ -727,11 +723,11 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccountUsingDuplicateDetailsNotActivated(): void
     {
         $userAccountCreateData = [
-            'Id' => '1234567890abcdef',
+            'Id'              => '1234567890abcdef',
             'ActivationToken' => 'activate1234567890',
-            'ExpiresTTL' => '232424232244',
-            'Email' => 'test@test.com',
-            'Password' => 'Pa33w0rd',
+            'ExpiresTTL'      => '232424232244',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
@@ -742,10 +738,10 @@ class AccountContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
-                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
+                                'ExpiresTTL'      => $userAccountCreateData['ExpiresTTL'],
                             ]
                         ),
                     ],
@@ -761,10 +757,10 @@ class AccountContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
+                                'ExpiresTTL'      => $userAccountCreateData['ExpiresTTL'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
                             ]
                         ),
                     ],
@@ -776,13 +772,13 @@ class AccountContext extends BaseIntegrationContext
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Item' =>
-                        $this->marshalAwsResultData(
+                    'Item'
+                        => $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
                             ]
                         ),
                 ]
@@ -794,7 +790,7 @@ class AccountContext extends BaseIntegrationContext
 
         $result = $us->add(
             [
-                'email' => $userAccountCreateData['Email'],
+                'email'    => $userAccountCreateData['Email'],
                 'password' => new HiddenString($userAccountCreateData['Password']),
             ]
         );
@@ -807,10 +803,10 @@ class AccountContext extends BaseIntegrationContext
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset(): void
     {
         $userAccountCreateData = [
-            'Id' => 1,
+            'Id'              => 1,
             'ActivationToken' => 'activate1234567890',
-            'Email' => 'test@test.com',
-            'Password' => 'Pa33w0rd',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
@@ -829,13 +825,13 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => '123456789',
-                                'Email' => 'other@user.co.uk',
-                                'Password' => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
-                                'EmailResetExpiry' => (time() + (60 * 60)),
-                                'LastLogin' => null,
-                                'NewEmail' => 'test@test.com',
-                                'EmailResetToken' => 'abc1234567890',
+                                'Id'               => '123456789',
+                                'Email'            => 'other@user.co.uk',
+                                'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
+                                'EmailResetExpiry' => time() + (60 * 60),
+                                'LastLogin'        => null,
+                                'NewEmail'         => 'test@test.com',
+                                'EmailResetToken'  => 'abc1234567890',
                             ]
                         ),
                     ],
@@ -929,7 +925,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -944,8 +940,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -974,9 +970,8 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
-
                             ]
                         ),
                     ],
@@ -990,8 +985,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -1064,9 +1059,9 @@ class AccountContext extends BaseIntegrationContext
     public function iHaveAskedForMyPasswordToBeReset(): void
     {
         $this->passwordResetData = [
-            'Id' => $this->userAccountId,
-            'PasswordResetToken' => 'AAAABBBBCCCC',
-            'PasswordResetExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                  => $this->userAccountId,
+            'PasswordResetToken'  => 'AAAABBBBCCCC',
+            'PasswordResetExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
@@ -1076,11 +1071,11 @@ class AccountContext extends BaseIntegrationContext
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->actorAccountCreateData = [
-            'Id' => '123456789',
-            'Email' => 'hello@test.com',
-            'Password' => 'Pa33w0rd',
-            'ActivationToken' => 'activate1234567890',
-            'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                    => '123456789',
+            'Email'                 => 'hello@test.com',
+            'Password'              => 'Pa33w0rd',
+            'ActivationToken'       => 'activate1234567890',
+            'ActivationTokenExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
@@ -1106,7 +1101,7 @@ class AccountContext extends BaseIntegrationContext
     public function iHaveRequestedToChangeMyEmailAddress(): void
     {
         $this->userEmailResetToken = '12345abcde';
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
     }
 
     /**
@@ -1130,7 +1125,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
+                            'Id'       => $this->userAccountId,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1164,7 +1159,6 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('Id', $this->createUserResponse);
         Assert::assertArrayHasKey('ActivationToken', $this->createUserResponse);
         Assert::assertArrayHasKey('ExpiresTTL', $this->createUserResponse);
-
     }
 
     /**
@@ -1186,8 +1180,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1208,12 +1202,12 @@ class AccountContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'EmailResetExpiry' => time() + (60 * 60 * 48),
-                            'Email' => $this->userAccountEmail,
-                            'LastLogin' => null,
-                            'Id' => $this->userAccountId,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
-                            'Password' => $this->userAccountPassword,
+                            'Email'            => $this->userAccountEmail,
+                            'LastLogin'        => null,
+                            'Id'               => $this->userAccountId,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
+                            'Password'         => $this->userAccountPassword,
                         ]
                     ),
                 ]
@@ -1232,8 +1226,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1249,7 +1243,7 @@ class AccountContext extends BaseIntegrationContext
                         'Items' => [
                             $this->marshalAwsResultData(
                                 [
-                                    'Email' => $this->userAccountEmail,
+                                    'Email'    => $this->userAccountEmail,
                                     'Password' => $this->userAccountPassword,
                                 ]
                             ),
@@ -1271,12 +1265,12 @@ class AccountContext extends BaseIntegrationContext
                                 $this->marshalAwsResultData(
                                     [
                                         'EmailResetExpiry' => time() + (60 * 60),
-                                        'Email' => 'another@user.com',
-                                        'LastLogin' => null,
-                                        'Id' => 'aaaaaa1111111',
-                                        'NewEmail' => $this->newEmail,
-                                        'EmailResetToken' => 't0ken12345',
-                                        'Password' => 'otherU53rsPa55w0rd',
+                                        'Email'            => 'another@user.com',
+                                        'LastLogin'        => null,
+                                        'Id'               => 'aaaaaa1111111',
+                                        'NewEmail'         => $this->newEmail,
+                                        'EmailResetToken'  => 't0ken12345',
+                                        'Password'         => 'otherU53rsPa55w0rd',
                                     ]
                                 ),
                             ],
@@ -1293,12 +1287,12 @@ class AccountContext extends BaseIntegrationContext
                                 $this->marshalAwsResultData(
                                     [
                                         'EmailResetExpiry' => time() - (60),
-                                        'Email' => 'another@user.com',
-                                        'LastLogin' => null,
-                                        'Id' => 'aaaaaa1111111',
-                                        'NewEmail' => $this->newEmail,
-                                        'EmailResetToken' => 't0ken12345',
-                                        'Password' => 'otherU53rsPa55w0rd',
+                                        'Email'            => 'another@user.com',
+                                        'LastLogin'        => null,
+                                        'Id'               => 'aaaaaa1111111',
+                                        'NewEmail'         => $this->newEmail,
+                                        'EmailResetToken'  => 't0ken12345',
+                                        'Password'         => 'otherU53rsPa55w0rd',
                                     ]
                                 ),
                             ],
@@ -1313,12 +1307,12 @@ class AccountContext extends BaseIntegrationContext
                             'Item' => $this->marshalAwsResultData(
                                 [
                                     'EmailResetExpiry' => time() + (60 * 60 * 48),
-                                    'Email' => $this->userAccountEmail,
-                                    'LastLogin' => null,
-                                    'Id' => $this->userAccountId,
-                                    'NewEmail' => $this->newEmail,
-                                    'EmailResetToken' => $this->userEmailResetToken,
-                                    'Password' => $this->userAccountPassword,
+                                    'Email'            => $this->userAccountEmail,
+                                    'LastLogin'        => null,
+                                    'Id'               => $this->userAccountId,
+                                    'NewEmail'         => $this->newEmail,
+                                    'EmailResetToken'  => $this->userEmailResetToken,
+                                    'Password'         => $this->userAccountPassword,
                                 ]
                             ),
                         ]
@@ -1357,8 +1351,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1436,7 +1430,7 @@ class AccountContext extends BaseIntegrationContext
     public function iShouldBeToldThatMyRequestWasSuccessful(): void
     {
         $userService = $this->container->get(UserService::class);
-        $response = $userService->requestChangeEmail(
+        $response    = $userService->requestChangeEmail(
             $this->userAccountId,
             $this->newEmail,
             new HiddenString($this->userAccountPassword)
@@ -1506,8 +1500,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1521,9 +1515,9 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'Id'        => $this->userAccountId,
+                            'Email'     => $this->userAccountEmail,
+                            'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'LastLogin' => null,
                         ]
                     ),

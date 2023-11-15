@@ -12,7 +12,7 @@ $aggregator = new ConfigAggregator(
         new PhpFileProvider(realpath(__DIR__) . '/../../config/config.php'),
 
         // Load development config if it exists
-        new PhpFileProvider(realpath(__DIR__) . '/config.php')
+        new PhpFileProvider(realpath(__DIR__) . '/config.php'),
     ]
 );
 

@@ -3,33 +3,33 @@
 declare(strict_types=1);
 
 use Laminas\ConfigAggregator\ConfigAggregator;
+use Http\Adapter\Guzzle6\Client;
+use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
+use Aws\Sdk;
+use BehatTest\Common\Service\Aws\SdkFactory;
+use App\Service\Log\RequestTracingLogProcessorFactory;
 
 return [
-    'debug' => true,
+    'debug'                        => true,
     ConfigAggregator::ENABLE_CACHE => false,
-
-    'dependencies' => [
+    'dependencies'                 => [
         'factories' => [
-            Http\Adapter\Guzzle6\Client::class => BehatTest\Http\Adapter\Guzzle6\TestClientFactory::class,
+            Client::class            => TestClientFactory::class,
             GuzzleHttp\Client::class => BehatTest\GuzzleHttp\TestClientFactory::class,
-
-            Aws\Sdk::class => BehatTest\Common\Service\Aws\SdkFactory::class,
+            Sdk::class               => SdkFactory::class,
         ],
     ],
-
-    'aws' => [
-        'region' => 'eu-west-1',
-        'version' => 'latest',
-
+    'aws'                          => [
+        'region'   => 'eu-west-1',
+        'version'  => 'latest',
         'DynamoDb' => [
             'endpoint' => 'https://dynamodb',
         ],
     ],
-
-    'monolog' => [
-        'handlers' => [
+    'monolog'                      => [
+        'handlers'   => [
             'default' => [ // default configuration in normal operation
-                'type' => 'test',
+                'type'       => 'test',
                 'processors' => [
                     'psrLogProcessor',
                     'requestTracingProcessor',
@@ -37,39 +37,34 @@ return [
             ],
         ],
         'processors' => [
-            'psrLogProcessor' => [
-                'type' => 'psrLogMessage',
+            'psrLogProcessor'         => [
+                'type'    => 'psrLogMessage',
                 'options' => [], // No options
             ],
             'requestTracingProcessor' => [
-                'type' => \App\Service\Log\RequestTracingLogProcessorFactory::class,
+                'type'    => RequestTracingLogProcessorFactory::class,
                 'options' => [], // No options
             ],
         ],
     ],
-
-    'repositories' => [
+    'repositories'                 => [
         'dynamodb' => [
-            'actor-codes-table' => 'actor-codes',
-            'actor-users-table' => 'actor-users',
-            'viewer-codes-table' => 'viewer-codes',
+            'actor-codes-table'     => 'actor-codes',
+            'actor-users-table'     => 'actor-users',
+            'viewer-codes-table'    => 'viewer-codes',
             'viewer-activity-table' => 'viewer-activity',
-            'user-lpa-actor-map' => 'user-actor-lpa-map',
+            'user-lpa-actor-map'    => 'user-actor-lpa-map',
         ],
     ],
-
-    'sirius_api' => [
+    'sirius_api'                   => [
         'endpoint' => 'http://api-gateway-pact-mock',
     ],
-
-    'codes_api' => [
-        'endpoint' => 'http://lpa-codes-pact-mock',
+    'codes_api'                    => [
+        'endpoint'          => 'http://lpa-codes-pact-mock',
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
-
-    'iap_images_api' => [
+    'iap_images_api'               => [
         'endpoint' => 'http://iap-images-mock',
     ],
-
-    'feature_flags' => [],
+    'feature_flags'                => [],
 ];
