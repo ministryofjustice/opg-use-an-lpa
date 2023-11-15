@@ -23,7 +23,6 @@ class AuthHandlerTest extends TestCase
 
     /** @test */
     public function can_create_an_instance(): void
-
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 
@@ -41,8 +40,7 @@ class AuthHandlerTest extends TestCase
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getParsedBody()
-            ->willReturn([
-            ]);
+            ->willReturn([]);
 
         $this->expectException(BadRequestException::class);
         $response = $handler->handle($requestProphecy->reveal());
@@ -54,8 +52,8 @@ class AuthHandlerTest extends TestCase
         $userServiceProphecy = $this->prophesize(UserService::class);
         $userServiceProphecy->authenticate('a@b.com', 'test')
             ->willReturn([
-                'Email' => 'a@b.com',
-                'Password' => self::PASS_HASH
+                'Email'    => 'a@b.com',
+                'Password' => self::PASS_HASH,
              ]);
 
         $handler = new AuthHandler($userServiceProphecy->reveal());
@@ -63,8 +61,8 @@ class AuthHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getParsedBody()
             ->willReturn([
-                'email' => 'a@b.com',
-                'password' => 'test'
+                'email'    => 'a@b.com',
+                'password' => 'test',
             ]);
 
         /** @var JsonResponse $response */
@@ -86,8 +84,8 @@ class AuthHandlerTest extends TestCase
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getParsedBody()
             ->willReturn([
-                'email' => 'b@c.com',
-                'password' => 'test'
+                'email'    => 'b@c.com',
+                'password' => 'test',
             ]);
 
         $this->expectException(NotFoundException::class);

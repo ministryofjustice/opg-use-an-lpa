@@ -22,27 +22,27 @@ class HealthcheckHandlerFactoryTest extends TestCase
     {
         $factory = new HealthcheckHandlerFactory();
 
-        $actorUsers = $this->prophesize(ActorUsersInterface::class);
-        $lpaInterface = $this->prophesize(LpasInterface::class);
-        $container = $this->prophesize(ContainerInterface::class);
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
+        $actorUsers            = $this->prophesize(ActorUsersInterface::class);
+        $lpaInterface          = $this->prophesize(LpasInterface::class);
+        $container             = $this->prophesize(ContainerInterface::class);
+        $httpClientProphecy    = $this->prophesize(HttpClient::class);
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
 
         $container->get('config')->willReturn(
             [
-                'version' => 'dev',
-                'sirius_api' => [
-                    'endpoint' => 'localhost'
+                'version'        => 'dev',
+                'sirius_api'     => [
+                    'endpoint' => 'localhost',
                 ],
-                'codes_api' => [
-                    'endpoint' => 'localhost'
+                'codes_api'      => [
+                    'endpoint' => 'localhost',
                 ],
                 'iap_images_api' => [
-                    'endpoint' => 'localhost'
+                    'endpoint' => 'localhost',
                 ],
             ]
         );
-        
+
         $container->get(ActorUsersInterface::class)->willReturn($actorUsers->reveal());
         $container->get(LpasInterface::class)->willReturn($lpaInterface->reveal());
         $container->get(HttpClient::class)->willReturn($httpClientProphecy->reveal());
@@ -53,4 +53,3 @@ class HealthcheckHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(HealthcheckHandler::class, $handler);
     }
 }
-

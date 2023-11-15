@@ -25,7 +25,7 @@ class UserHandlerTest extends TestCase
         ];
 
         $expectedData = [
-            'Email' => $email,
+            'Email'    => $email,
             'Password' => 'H@shedP@55word',
         ];
 
@@ -82,12 +82,12 @@ class UserHandlerTest extends TestCase
         $email = 'a@b.com';
 
         $requestData = [
-            'email' => $email,
+            'email'    => $email,
             'password' => 'P@55word',
         ];
 
         $expectedData = [
-            'Email' => $email,
+            'Email'    => $email,
             'Password' => 'H@shedP@55word',
         ];
 
