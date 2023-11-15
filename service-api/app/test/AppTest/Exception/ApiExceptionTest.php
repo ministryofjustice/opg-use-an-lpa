@@ -30,13 +30,13 @@ class ApiExceptionTest extends TestCase
     /** @test */
     public function creates_instance_with_response(): void
     {
-        $message = 'api message';
+        $message        = 'api message';
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
-        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy   = $this->prophesize(StreamInterface::class);
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
         $streamProphecy->getContents()
@@ -64,11 +64,11 @@ class ApiExceptionTest extends TestCase
     public function can_get_exception_message_from_body_details(): void
     {
         $message = null;
-        $body = [
+        $body    = [
             'details' => 'test exception message',
         ];
 
-        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy   = $this->prophesize(StreamInterface::class);
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
         $streamProphecy->getContents()
@@ -93,9 +93,9 @@ class ApiExceptionTest extends TestCase
     public function can_compose_a_message_from_body_if_no_details(): void
     {
         $message = null;
-        $body = ['some' => 'other data'];
+        $body    = ['some' => 'other data'];
 
-        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy   = $this->prophesize(StreamInterface::class);
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
         $streamProphecy->getContents()

@@ -15,7 +15,7 @@ class NotFoundExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $nfe = new NotFoundException($message, $additionalData);
