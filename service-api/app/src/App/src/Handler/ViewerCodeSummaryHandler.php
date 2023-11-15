@@ -14,8 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class LpaSearchHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class ViewerCodeSummaryHandler implements RequestHandlerInterface

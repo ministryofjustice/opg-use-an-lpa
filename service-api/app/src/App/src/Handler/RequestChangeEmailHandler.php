@@ -14,8 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class RequestChangeEmailHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class RequestChangeEmailHandler implements RequestHandlerInterface

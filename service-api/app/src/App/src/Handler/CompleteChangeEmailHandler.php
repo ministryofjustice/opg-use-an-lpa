@@ -13,8 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class CompleteChangeEmailHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class CompleteChangeEmailHandler implements RequestHandlerInterface
