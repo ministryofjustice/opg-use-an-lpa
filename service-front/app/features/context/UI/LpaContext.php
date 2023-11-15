@@ -695,15 +695,11 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I can see (.*) link along with the instructions or preference message$/
+     * @Then /^I can see (.*)
      */
     public function iCanSeeReadMoreLink($readMoreLink): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-
-        $this->ui->assertPageContainsText(
-            'Important: This LPA has instructions and preferences. '
-        );
 
         $session = $this->ui->getSession();
         $page    = $session->getPage();

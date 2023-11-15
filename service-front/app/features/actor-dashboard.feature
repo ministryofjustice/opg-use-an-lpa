@@ -26,6 +26,7 @@ Feature: The user is able to see correct information on their dashboard
     Given I am on the dashboard page
     Then I can see that no organisations have access to my LPA
 
+
   @ui
   Scenario: As a user I can see the read more link in the message on instructions and preferences
     Given I am on the dashboard page
