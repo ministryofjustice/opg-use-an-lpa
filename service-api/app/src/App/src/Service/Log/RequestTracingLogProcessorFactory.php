@@ -10,8 +10,7 @@ use Psr\Container\ContainerInterface;
 
 class RequestTracingLogProcessorFactory implements FactoryInterface, ContainerAwareInterface
 {
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     public function __invoke(array $options): RequestTracingLogProcessor
     {

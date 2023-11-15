@@ -6,26 +6,20 @@ namespace App\Service\Container;
 
 use DI\Container;
 use Psr\Container\ContainerInterface;
+use InvalidArgumentException;
 
 /**
- * Class PhpDiModifiableContainer
- *
  * Implementation of ModifiableContainerInterface for the PHP-DI dependency injection container.
- *
- * @package App\Service\Container
  */
 class PhpDiModifiableContainer implements ModifiableContainerInterface
 {
-    /**
-     * @var Container|ContainerInterface
-     */
-    private $container;
+    private Container|ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
     {
         if (!$container instanceof Container) {
-            throw new \InvalidArgumentException(
-                'Container passed to ' . __CLASS__ . ' is not a PHP-DI container'
+            throw new InvalidArgumentException(
+                'Container passed to ' . self::class . ' is not a PHP-DI container'
             );
         }
 

@@ -16,43 +16,18 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class Client
- * @package App\Service\ApiClient
- */
 class Client
 {
-    /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var string
-     */
-    private $apiBaseUri;
-
-    /**
-     * @var string
-     */
-    private $awsRegion;
-
-    /**
-     * @var string
-     */
-    private $traceId;
+    private string $apiBaseUri;
 
     /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      */
-    public function __construct(ClientInterface $httpClient, string $apiUrl, string $awsRegion, string $traceId)
+    public function __construct(private ClientInterface $httpClient, string $apiUrl, private string $awsRegion, private string $traceId)
     {
-        $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
-        $this->awsRegion = $awsRegion;
-        $this->traceId = $traceId;
     }
 
     /**
@@ -194,7 +169,7 @@ class Client
     private function signRequest(RequestInterface $request): RequestInterface
     {
         $provider = CredentialProvider::defaultProvider();
-        $s4 = new SignatureV4('execute-api', $this->awsRegion);
+        $s4       = new SignatureV4('execute-api', $this->awsRegion);
         return $s4->signRequest($request, $provider()->wait());
     }
 
@@ -206,8 +181,8 @@ class Client
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
+            'Accept'       => 'application/json',
+            'Content-Type' => 'application/json',
         ];
 
         if (!empty($this->traceId)) {
