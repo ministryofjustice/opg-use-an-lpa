@@ -27,6 +27,7 @@ use Psr\Http\Message\RequestInterface;
  * @property string $userSurname
  * @property string $activationCode
  * @property string $codeCreatedDate
+ * @property string $live_in_uk
  * @psalm-ignore UndefinedThisPropertyFetch
  * @psalm-ignore UndefinedThisPropertyAssignment
  */
@@ -741,7 +742,12 @@ class RequestActivationKeyContext implements Context
     public function iWillBeAskedForMyFullAddress()
     {
         $this->ui->assertPageAddress('/lpa/add/actor-address');
-        $this->ui->assertPageContainsText('We need some more details');
+
+        if ($this->live_in_uk === 'Yes') {
+            $this->ui->assertElementOnPage('input#actor_address_1');
+        } else {
+            $this->ui->assertElementOnPage('textarea#actor_abroad_address');
+        }
     }
 
     /**
@@ -1437,6 +1443,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->fillField('dob[year]', $date->format('Y'));
         $this->ui->pressButton('Continue');
 
+        $this->live_in_uk = 'Yes';
         $this->ui->fillField('live_in_uk', 'Yes');
         $this->ui->fillField('postcode', $this->lpa->donor->addresses[0]->postcode);
         $this->ui->pressButton('Continue');
@@ -1458,6 +1465,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->fillField('dob[year]', $array['dob[year]']);
         $this->ui->pressButton('Continue');
 
+        $this->live_in_uk = $array['live_in_uk'];
         $this->ui->fillField('live_in_uk', $array['live_in_uk']);
         if (!empty($array['postcode'])) {
             $this->ui->fillField('postcode', $array['postcode']);

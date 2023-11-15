@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}We need some more details{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}What is your current address?{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -16,9 +16,8 @@
             <div class="govuk-grid-row">
                 {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-three-quarters">
-                    <h1 class="govuk-heading-xl">{% trans %}We need some more details{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}What is your current address?{% endtrans %}</h1>
                     <p class="govuk-body">{% trans %}We need a few extra details to make sure we have the right LPA for your activation key request.{% endtrans %}</p>
-                    <h2 class="govuk-heading-l">{% trans %}What is your current address?{% endtrans %}</h2>
                     {{ govuk_form_element(form.get('__csrf')) }}
                     {% if live_in_uk == 'No' %}
                         {{ govuk_form_element(form.get('actor_abroad_address'), {
@@ -27,7 +26,6 @@
                         }) }}
                     {% else %}
                         <p class="govuk-body">{% trans with {'%postcode%': postcode } %}You've already given your postcode as %postcode%{% endtrans %}
-                        <p class="govuk-body">{% trans %}Your activation key will be posted to this address.{% endtrans %}</p>
                         {{ govuk_form_element(form.get('actor_address_1'), {
                             'label': 'Address line 1' | trans,
                             'autocomplete': 'address-line1',
