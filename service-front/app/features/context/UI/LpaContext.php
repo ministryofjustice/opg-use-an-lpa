@@ -2369,37 +2369,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageContainsText('View LPA summary');
 
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'user-lpa-actor-token' => $this->userLpaActorToken,
-                        'date'                 => 'date',
-                        'lpa'                  => $this->lpa,
-                        'actor'                => $this->lpaData['actor'],
-                    ]
-                ),
-                self::LPA_SERVICE_GET_LPA_BY_ID
-            )
-        );
-
-        // InstAndPrefImagesService::getImagesById
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'uId'        => (int) $this->lpa->uId,
-                        'status'     => 'COLLECTION_COMPLETE',
-                        'signedUrls' => [],
-                    ]
-                ),
-                self::INPSERVICE_GET_BY_ID
-            )
-        );
-
-        $this->ui->clickLink('View LPA summary');
+        $this->mockApiGetLpaByIdAndGetImagesById();
     }
 
     /**
@@ -2427,37 +2397,7 @@ class LpaContext implements Context
             );
         } else {
             // API call for get LpaById
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'user-lpa-actor-token' => $this->userLpaActorToken,
-                            'date'                 => 'date',
-                            'lpa'                  => $this->lpa,
-                            'actor'                => $this->lpaData['actor'],
-                        ]
-                    ),
-                    self::LPA_SERVICE_GET_LPA_BY_ID
-                )
-            );
-
-            // InstAndPrefImagesService::getImagesById
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'uId'        => (int) $this->lpa->uId,
-                            'status'     => 'COLLECTION_COMPLETE',
-                            'signedUrls' => [],
-                        ]
-                    ),
-                    self::INPSERVICE_GET_BY_ID
-                )
-            );
-
-            $this->ui->clickLink('View LPA summary');
+            $this->mockApiGetLpaByIdAndGetImagesById();
         }
     }
 
@@ -3053,6 +2993,45 @@ class LpaContext implements Context
     {
         $this->ui->assertPageContainsText('View LPA summary');
 
+        $this->mockApiGetLpaByIdAndGetImagesById();
+    }
+
+    /**
+     * @Then /^I will not see (.*) in the attorney section of LPA summary$/
+     */
+    public function iWillNotSeeInactiveAttorneyInTheListOfAttorneys($name): void
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText('The attorneys');
+        $this->ui->assertPageNotContainsText($name);
+    }
+
+    /**
+     * @When /^I request to view an LPA with a donor who is also known as (.*)$/
+     */
+    public function iRequestToViewAnLPAWithADonorWhoIsAlsoKnownAs($name): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->lpa->donor->otherNames = $name;
+        $this->mockApiGetLpaByIdAndGetImagesById();
+    }
+
+    /**
+     * @When /^I request to view an LPA where all actors do not have an also known by name$/
+     */
+    public function iRequestToViewAnWhereAllActorsDoNotHaveAnAlsoKnownByName(): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->lpa->donor->otherNames = null;
+
+        foreach($this->lpa->attorneys as $attorney) {
+            $attorney->otherNames = null;
+        }
+        $this->mockApiGetLpaByIdAndGetImagesById();
+    }
+
+    public function mockApiGetLpaByIdAndGetImagesById(): void
+    {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
@@ -3087,12 +3066,21 @@ class LpaContext implements Context
     }
 
     /**
-     * @Then /^I will not see (.*) in the attorney section of LPA summary$/
+     * @Then /^I will see (.*) in the also known as field$/
      */
-    public function iWillNotSeeInactiveAttorneyInTheListOfAttorneys($name): void
+    public function iWillSeeNameInTheAlsoKnownAsField($name): void
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
-        $this->ui->assertPageContainsText('The attorneys');
-        $this->ui->assertPageNotContainsText($name);
+        $this->ui->assertPageContainsText('Also known as');
+        $this->ui->assertPageContainsText($name);
+    }
+
+    /**
+     * @Then /^I will not see the also known as field$/
+     */
+    public function iWillNotSeeTheAlsoKnownAsField(): void
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageNotContainsText('Also known as');
     }
 }
