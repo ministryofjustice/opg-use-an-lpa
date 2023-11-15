@@ -16,6 +16,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Exception;
 
 class ClientTest extends TestCase
 {
@@ -314,7 +315,7 @@ class ClientTest extends TestCase
     /** @test */
     public function sets_appropriate_request_headers_for_request(): void
     {
-        $this->apiClient->sendRequest(Argument::that(function($request) {
+        $this->apiClient->sendRequest(Argument::that(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -358,46 +359,47 @@ class ClientTest extends TestCase
 
         try {
             $data = $client->httpGet('/simple_get');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPost('/simple_post', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPut('/simple_put', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpPatch('/simple_patch', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
 
         try {
             $data = $client->httpDelete('/simple_delete');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ApiException::class, $e);
         }
     }
 
     /**
      * Provides expected valid response codes that we know our methods should handle.
+     *
      * @return array
      */
     public function validStatusCodes(): array
     {
         return [
-            [ StatusCodeInterface::STATUS_OK ],
-            [ StatusCodeInterface::STATUS_CREATED],
-            [ StatusCodeInterface::STATUS_ACCEPTED],
-            [ StatusCodeInterface::STATUS_NO_CONTENT],
+            [StatusCodeInterface::STATUS_OK],
+            [StatusCodeInterface::STATUS_CREATED],
+            [StatusCodeInterface::STATUS_ACCEPTED],
+            [StatusCodeInterface::STATUS_NO_CONTENT],
         ];
     }
 }

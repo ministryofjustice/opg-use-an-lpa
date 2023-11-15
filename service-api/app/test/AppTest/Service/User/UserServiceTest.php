@@ -26,10 +26,11 @@ class UserServiceTest extends TestCase
     use ProphecyTrait;
 
     // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    private const PASS      = 'test';
+    private const PASS = 'test';
 
     private const INSECURE_PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
-    private const PASS_HASH = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
+    private const PASS_HASH          = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
+
     private int $expiresTTL;
 
     private string $id;
@@ -86,9 +87,9 @@ class UserServiceTest extends TestCase
 
         $this->assertEquals(
             [
-                'Id' => $this->id,
+                'Id'              => $this->id,
                 'ActivationToken' => $this->activationToken,
-                'ExpiresTTL' => $this->expiresTTL,
+                'ExpiresTTL'      => $this->expiresTTL,
             ],
             $return
         );
@@ -178,7 +179,7 @@ class UserServiceTest extends TestCase
                         'Id'               => $id,
                         'Email'            => $email,
                         'EmailResetExpiry' => '' . time() + (60 * 60 * 16), // expires in 16 hours
-                    ]
+                    ],
                 ]
             );
 

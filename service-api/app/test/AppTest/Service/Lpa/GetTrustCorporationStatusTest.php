@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetTrustCorporationStatus;
@@ -22,7 +24,7 @@ class GetTrustCorporationStatusTest extends TestCase
     /** @test */
     public function returns_0_if_trustCorporation_is_active(): void
     {
-        $trustCorporation = ['uId' => 7, 'companyName' => 'ABC Ltd' , 'systemStatus' => true];
+        $trustCorporation = ['uId' => 7, 'companyName' => 'ABC Ltd', 'systemStatus' => true];
 
         $status = new GetTrustCorporationStatus(
             $this->loggerProphecy->reveal()
