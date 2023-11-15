@@ -28,7 +28,7 @@ class LpaTest extends TestCase
     /** @test */
     public function can_get_null_data_array_and_null_time(): void
     {
-        $lpa = new Lpa(null, null);
+        $lpa = new Lpa([], null);
 
         $this->assertNull($lpa->getData());
         $this->assertNull($lpa->getLookupTime());
