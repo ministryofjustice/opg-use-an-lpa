@@ -55,16 +55,12 @@ class DynamoDBExporterAndQuerier:
     def set_date_range(self, start, end):
         self.start_date = start
         self.end_date = end
-        print(self.start_date)
-        print(self.end_date)
 
     def set_default_date_range(self):
         today = datetime.today()
         days_in_mo = calendar.monthrange(today.year, today.month)
         self.start_date = f"{today.year}-{today.month}-01"
         self.end_date = f"{today.year}-{today.month}-{days_in_mo[1]}"
-        print(self.start_date)
-        print(self.end_date)
 
     @staticmethod
     def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
@@ -262,31 +258,48 @@ class DynamoDBExporterAndQuerier:
             return response["QueryExecutionId"]
 
 
-    def run_single_athena_query(self, query_file):
-        with open(query_file) as ddl:
-            query = ddl.read()
-            print()
-            print(query)
-            response = self.aws_athena_client.start_query_execution(
-                QueryString=query,
-                QueryExecutionContext={
-                    "Database": self.athena_database_name
-                },
-                ResultConfiguration={
-                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
-                }
-            )
+    def run_single_athena_query(self, query):
+        print("about to run query")
+        print(query)
+        response = self.aws_athena_client.start_query_execution(
+            QueryString=query,
+            QueryExecutionContext={
+                "Database": self.athena_database_name
+            },
+            ResultConfiguration={
+                "OutputLocation": f"s3://{self.athena_results_bucket}/"
+            }
+        )
 
-            query_execution_id = response["QueryExecutionId"]
-            sleep(30)
-            print(f"Query execution id: {query_execution_id}")
-            response = self.aws_athena_client.get_query_results(
-                QueryExecutionId=query_execution_id,
-                MaxResults=123
-            )
-            print(response)
-            results = response['ResultSet']['Rows']
-            print(results)
+        query_execution_id = response["QueryExecutionId"]
+        sleep(30)
+        print(f"Query execution id: {query_execution_id}")
+        response = self.aws_athena_client.get_query_results(
+            QueryExecutionId=query_execution_id,
+            MaxResults=123
+        )
+        print(response)
+        results = response['ResultSet']['Rows']
+        print(results)
+
+    def get_expired_viewed_access_codes(self):
+        sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
+        self.run_single_athena_query(sql_string)
+
+    def get_expired_unviewed_access_codes(self):
+        sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
+        self.run_single_athena_query(sql_string)
+
+    def get_count_of_viewed_access_codes(self):    
+        sql_string = 'SELECT COUNT(*) FROM "ual"."viewer_activity" WHERE Item.Viewed.S BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
+        self.run_single_athena_query(sql_string)
+
+    def get_count_of_viewed_access_codes(self):    
+        sql_string = 'SELECT COUNT(*) FROM "viewer_codes" as vc WHERE date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
+        self.run_single_athena_query(sql_string)
+
+    #def replace_date_range_in_sql(self, sql_string):
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -297,9 +310,12 @@ def main():
     parser.add_argument('--check_exports', dest='check_only', action='store_const',
                         const=True, default=False,
                         help='Output json data instead of plaintext to terminal')
-    parser.add_argument('--athena_only', dest='athena_only_flag', action='store_const',
+    parser.add_argument('--reload_athena_and_query', dest='reload_athena_and_query_flag', action='store_const',
                         const=True, default=False,
-                        help='Only run the athena query not the DynamoDb export. Assume that has already run')
+                        help='Reload Athena and run query, assuming DynamoDb export has already run')
+    parser.add_argument('--athena_query_only', dest='athena_query_only_flag', action='store_const',
+                        const=True, default=False,
+                        help='Only run the Athena query, assuming that DynamoDb export and load into Athena has already run')
     parser.add_argument("--start_date",
                            default="",
                            help="Start date in the form YYYY-MM-DD")
@@ -320,15 +336,20 @@ def main():
         work.check_dynamo_export_status()
         return
 
-    if not args.athena_only_flag:
+    # do the DynamoDb export, unless we've specified just Athena load and query, or just athena query
+    if not args.reload_athena_and_query_flag and not args.athena_query_only_flag:
         work.export_all_dynamo_tables()
 
-    work.check_dynamo_export_status()
-    work.create_athena_tables()
 
+    # create the Athena tables,  unless we've specified query only
+    if not args.athena_query_only_flag:
+        work.check_dynamo_export_status()
+        work.create_athena_tables()
 
-    work.run_single_athena_query("sams_query")
-    work.run_single_athena_query("sams_query2")
+    work.get_expired_viewed_access_codes()
+    work.get_expired_unviewed_access_codes()
+    work.get_count_of_viewed_access_codes()
+    work.get_count_of_viewed_access_codes()    
 
 if __name__ == "__main__":
     main()
