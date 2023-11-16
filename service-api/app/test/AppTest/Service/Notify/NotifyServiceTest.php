@@ -7,6 +7,7 @@ namespace AppTest\Service\Notify;
 use App\Exception\BadRequestException;
 use App\Service\Email\EmailClient;
 use App\Service\Notify\NotifyService;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
@@ -15,9 +16,11 @@ use PHPUnit\Framework\TestCase;
 
 class NotifyServiceTest extends TestCase
 {
-    private LoggerInterface $loggerProphecy;
+    use ProphecyTrait;
+    
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    private ObjectProphecy $emailClientProphecy;
+    private EmailClient|ObjectProphecy $emailClientProphecy;
 
     public function setUp(): void
     {
