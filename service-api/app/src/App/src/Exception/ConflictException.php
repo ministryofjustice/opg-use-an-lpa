@@ -12,9 +12,9 @@ class ConflictException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Conflict';
+    public const TITLE = 'Conflict';
 
-    protected int $code = StatusCodeInterface::STATUS_CONFLICT;
+    protected $code = StatusCodeInterface::STATUS_CONFLICT;
 
     /**
      * @param string $message
