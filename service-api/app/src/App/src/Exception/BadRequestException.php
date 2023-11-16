@@ -12,9 +12,9 @@ class BadRequestException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Bad Request';
+    public const TITLE = 'Bad Request';
 
-    protected int $code = StatusCodeInterface::STATUS_BAD_REQUEST;
+    protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     /**
      * @param string $message
