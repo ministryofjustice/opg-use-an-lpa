@@ -12,9 +12,9 @@ class NotFoundException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Not found';
+    public const TITLE = 'Not found';
 
-    protected int $code = StatusCodeInterface::STATUS_NOT_FOUND;
+    protected $code = StatusCodeInterface::STATUS_NOT_FOUND;
 
     /**
      * @param string $message
