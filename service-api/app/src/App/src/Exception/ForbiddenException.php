@@ -12,9 +12,9 @@ class ForbiddenException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Forbidden';
+    public const TITLE = 'Forbidden';
 
-    protected int $code = StatusCodeInterface::STATUS_FORBIDDEN;
+    protected $code = StatusCodeInterface::STATUS_FORBIDDEN;
 
     /**
      * @param string $message

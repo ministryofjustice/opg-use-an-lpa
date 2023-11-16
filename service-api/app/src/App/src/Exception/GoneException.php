@@ -14,7 +14,7 @@ class GoneException extends AbstractApiException
      */
     public const TITLE = 'Gone';
 
-    protected int $code = StatusCodeInterface::STATUS_GONE;
+    protected $code = StatusCodeInterface::STATUS_GONE;
 
     /**
      * @param string $message

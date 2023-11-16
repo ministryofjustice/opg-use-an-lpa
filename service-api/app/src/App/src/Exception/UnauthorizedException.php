@@ -12,9 +12,9 @@ class UnauthorizedException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Unauthorized';
+    public const TITLE = 'Unauthorized';
 
-    protected int $code = StatusCodeInterface::STATUS_UNAUTHORIZED;
+    protected $code = StatusCodeInterface::STATUS_UNAUTHORIZED;
 
     /**
      * @param string $message
