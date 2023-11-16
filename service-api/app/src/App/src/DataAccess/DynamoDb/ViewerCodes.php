@@ -15,26 +15,8 @@ class ViewerCodes implements ViewerCodesInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $viewerCodesTable;
-
-    /**
-     * ViewerCodeActivity constructor.
-     *
-     * @param DynamoDbClient $client
-     * @param string         $viewerCodesTable
-     */
-    public function __construct(DynamoDbClient $client, string $viewerCodesTable)
+    public function __construct(private DynamoDbClient $client, private string $viewerCodesTable)
     {
-        $this->client = $client;
-        $this->viewerCodesTable = $viewerCodesTable;
     }
 
     /**
@@ -44,7 +26,7 @@ class ViewerCodes implements ViewerCodesInterface
     {
         $result = $this->client->getItem([
             'TableName' => $this->viewerCodesTable,
-            'Key' => [
+            'Key'       => [
                 'ViewerCode' => [
                     'S' => $code,
                 ],
@@ -64,9 +46,9 @@ class ViewerCodes implements ViewerCodesInterface
         $marshaler = new Marshaler();
 
         $result = $this->client->query([
-            'TableName' => $this->viewerCodesTable,
-            'IndexName' => 'SiriusUidIndex',
-            'KeyConditionExpression' => 'SiriusUid = :uId',
+            'TableName'                 => $this->viewerCodesTable,
+            'IndexName'                 => 'SiriusUidIndex',
+            'KeyConditionExpression'    => 'SiriusUid = :uId',
             'ExpressionAttributeValues' => $marshaler->marshalItem([
                 ':uId' => $siriusUid,
             ]),
@@ -90,23 +72,23 @@ class ViewerCodes implements ViewerCodesInterface
         string $siriusUid,
         DateTime $expires,
         string $organisation,
-        ?int $actorId
+        ?int $actorId,
     ) {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         try {
             $this->client->putItem([
-                'TableName' => $this->viewerCodesTable,
-                'Item' => [
-                    'ViewerCode'    => ['S' => $code],
-                    'UserLpaActor'  => ['S' => $userLpaActorToken],
-                    'SiriusUid'     => ['S' => $siriusUid],
-                    'Added'         => ['S' => $now],
-                    'Expires'       => ['S' => $expires->format('c')],
+                'TableName'           => $this->viewerCodesTable,
+                'Item'                => [
+                    'ViewerCode'   => ['S' => $code],
+                    'UserLpaActor' => ['S' => $userLpaActorToken],
+                    'SiriusUid'    => ['S' => $siriusUid],
+                    'Added'        => ['S' => $now],
+                    'Expires'      => ['S' => $expires->format('c')],
                     // We use 'c' so not to assume UTC.
-                    'Organisation'  => ['S' => $organisation],
-                    'CreatedBy'     => ['N' => (string)$actorId],
+                    'Organisation' => ['S' => $organisation],
+                    'CreatedBy'    => ['N' => (string)$actorId],
                     ],
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
@@ -125,18 +107,18 @@ class ViewerCodes implements ViewerCodesInterface
     {
         //  Update the item by cancelling the code and setting cancelled date
         $this->client->updateItem([
-            'TableName' => $this->viewerCodesTable,
-            'Key' => [
+            'TableName'                 => $this->viewerCodesTable,
+            'Key'                       => [
                 'ViewerCode' => [
                     'S' => $code,
                 ],
             ],
-            'UpdateExpression' => 'SET Cancelled=:c',
+            'UpdateExpression'          => 'SET Cancelled=:c',
             'ExpressionAttributeValues' => [
                 ':c' => [
                     'S' => $cancelledDate->format('c'),
-                ]
-            ]
+                ],
+            ],
         ]);
 
         return true;
@@ -149,21 +131,21 @@ class ViewerCodes implements ViewerCodesInterface
     {
         // Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
-            'TableName' => $this->viewerCodesTable,
-            'Key' => [
+            'TableName'                 => $this->viewerCodesTable,
+            'Key'                       => [
                 'ViewerCode' => [
                     'S' => $code,
                 ],
             ],
-            'UpdateExpression' => 'SET UserLpaActor=:c, CreatedBy=:d',
+            'UpdateExpression'          => 'SET UserLpaActor=:c, CreatedBy=:d',
             'ExpressionAttributeValues' => [
                 ':c' => [
                     'S' => '',
                 ],
                 ':d' => [
                     'N' => (string)$codeOwner,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         return true;

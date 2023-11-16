@@ -223,7 +223,7 @@ class ActorCodeServiceTest extends TestCase
             ->shouldBeCalled();
 
         $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
-            new Repository\Response\Lpa($mockLpa, null)
+            new Repository\Response\Lpa($mockLpa, new DateTime())
         )->shouldBeCalled();
 
         $this->resolveActorProphecy
