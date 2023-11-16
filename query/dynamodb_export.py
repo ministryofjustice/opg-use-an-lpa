@@ -55,12 +55,14 @@ class DynamoDBExporterAndQuerier:
     def set_date_range(self, start, end):
         self.start_date = start
         self.end_date = end
+        print(f"Running query for date range {self.start_date} to {self.end_date}")
 
     def set_default_date_range(self):
         today = datetime.today()
         days_in_mo = calendar.monthrange(today.year, today.month)
         self.start_date = f"{today.year}-{today.month}-01"
         self.end_date = f"{today.year}-{today.month}-{days_in_mo[1]}"
+        print(f"Running query for date range {self.start_date} to {self.end_date}")
 
     @staticmethod
     def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
@@ -124,7 +126,9 @@ class DynamoDBExporterAndQuerier:
 
     def check_dynamo_export_status(self):
         overallCompleted = False
+        print("Waiting for DynamoDb export to be complete")
         while not overallCompleted:
+            print('.',end='',flush=True)
             sleep(10)
             # assume all tables are completed until we encounter one that is not
             tablesCompleted = True
@@ -173,7 +177,7 @@ class DynamoDBExporterAndQuerier:
                     table)
 
         #print('\n')
-        print('DynamoDB Table ARN:',table_arn)
+        #print('DynamoDB Table ARN:',table_arn)
         #print('S3 Bucket Name:', bucket_name)
         response = self.aws_dynamodb_client.list_exports(
         TableArn=table_arn,
@@ -187,7 +191,7 @@ class DynamoDBExporterAndQuerier:
                 s3_prefix,
                 export_arn_hash
             )
-            print('\t', export['ExportStatus'])
+            #print('\t', export['ExportStatus'])
             if export['ExportStatus'] != "COMPLETED":
                 completed = False
 
