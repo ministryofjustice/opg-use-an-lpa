@@ -10,6 +10,7 @@ use Aws\Signature\SignatureV4;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
 
 class LpasFactory
 {
@@ -18,7 +19,7 @@ class LpasFactory
         $config = $container->get('config');
 
         if (!isset($config['sirius_api']['endpoint'])) {
-            throw new \Exception('Sirius API Gateway endpoint is not set');
+            throw new Exception('Sirius API Gateway endpoint is not set');
         }
 
         return new Lpas(

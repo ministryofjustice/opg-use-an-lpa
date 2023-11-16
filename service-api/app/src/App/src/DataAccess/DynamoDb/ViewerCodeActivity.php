@@ -13,25 +13,8 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $viewerActivityTable;
-
-    /**
-     * ViewerCodeActivity constructor.
-     * @param DynamoDbClient $client
-     * @param string $viewerActivityTable
-     */
-    public function __construct(DynamoDbClient $client, string $viewerActivityTable)
+    public function __construct(private DynamoDbClient $client, private string $viewerActivityTable)
     {
-        $this->client = $client;
-        $this->viewerActivityTable = $viewerActivityTable;
     }
 
     /**
@@ -44,11 +27,11 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
 
         $this->client->putItem([
             'TableName' => $this->viewerActivityTable,
-            'Item' => [
-                'ViewerCode'    => ['S' => $activityCode],
-                'Viewed'        => ['S' => $now],
-                'ViewedBy'      => ['S' => $organisation]
-            ]
+            'Item'      => [
+                'ViewerCode' => ['S' => $activityCode],
+                'Viewed'     => ['S' => $now],
+                'ViewedBy'   => ['S' => $organisation],
+            ],
         ]);
     }
 
@@ -61,17 +44,17 @@ class ViewerCodeActivity implements ViewerCodeActivityInterface
 
         foreach ($viewerCodes as $key => $code) {
             $result = $this->client->query([
-                'TableName' => $this->viewerActivityTable,
-                'KeyConditionExpression' => 'ViewerCode = :code',
+                'TableName'                 => $this->viewerActivityTable,
+                'KeyConditionExpression'    => 'ViewerCode = :code',
                 'ExpressionAttributeValues' => $marshaler->marshalItem([
-                    ':code' => $code['ViewerCode']
+                    ':code' => $code['ViewerCode'],
                 ]),
             ]);
 
             if ($result['Count'] === 0) {
                 $viewerCodes[$key]['Viewed'] = false;
             } else {
-                $viewerActivityDetails = $this->getDataCollection($result);
+                $viewerActivityDetails       = $this->getDataCollection($result);
                 $viewerCodes[$key]['Viewed'] = $viewerActivityDetails;
             }
         }
