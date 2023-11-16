@@ -55,14 +55,14 @@ class DynamoDBExporterAndQuerier:
     def set_date_range(self, start, end):
         self.start_date = start
         self.end_date = end
-        print(f"Running query for date range {self.start_date} to {self.end_date}")
+        print(f"Queries will be run for date range {self.start_date} to {self.end_date}")
 
     def set_default_date_range(self):
         today = datetime.today()
         days_in_mo = calendar.monthrange(today.year, today.month)
         self.start_date = f"{today.year}-{today.month}-01"
         self.end_date = f"{today.year}-{today.month}-{days_in_mo[1]}"
-        print(f"Running query for date range {self.start_date} to {self.end_date}")
+        print(f"Queries will be run for date range {self.start_date} to {self.end_date}")
 
     @staticmethod
     def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
@@ -126,7 +126,7 @@ class DynamoDBExporterAndQuerier:
 
     def check_dynamo_export_status(self):
         overallCompleted = False
-        print("Waiting for DynamoDb export to be complete")
+        print("Waiting for DynamoDb export to be complete ( if run with Athena only option, this is just checking the previous export is complete )")
         while not overallCompleted:
             print('.',end='',flush=True)
             sleep(10)
@@ -137,6 +137,7 @@ class DynamoDBExporterAndQuerier:
                     # we encountered an inconmplete table so they are not all complete
                     tablesCompleted = False
             overallCompleted = tablesCompleted
+        print('\n')
 
 
     def export_all_dynamo_tables(self):
@@ -176,9 +177,6 @@ class DynamoDBExporterAndQuerier:
                     self.environment_details['name'],
                     table)
 
-        #print('\n')
-        #print('DynamoDB Table ARN:',table_arn)
-        #print('S3 Bucket Name:', bucket_name)
         response = self.aws_dynamodb_client.list_exports(
         TableArn=table_arn,
         MaxResults=1
@@ -191,7 +189,6 @@ class DynamoDBExporterAndQuerier:
                 s3_prefix,
                 export_arn_hash
             )
-            #print('\t', export['ExportStatus'])
             if export['ExportStatus'] != "COMPLETED":
                 completed = False
 
@@ -230,6 +227,7 @@ class DynamoDBExporterAndQuerier:
         sleep(30)
 
     def create_athena_tables(self):
+        print("Re-creating Athena database and loading Athena tables")
         self.drop_athena_database()
         self.create_athena_database()
 
@@ -241,8 +239,6 @@ class DynamoDBExporterAndQuerier:
                 QueryExecutionId=query_execution_id,
                 MaxResults=1
             )
-            print(response)
-
 
     def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
@@ -263,7 +259,8 @@ class DynamoDBExporterAndQuerier:
 
 
     def run_single_athena_query(self, query):
-        print("about to run query")
+        print('\n')
+        print("Running Athena query : ")
         print(query)
         response = self.aws_athena_client.start_query_execution(
             QueryString=query,
@@ -277,7 +274,6 @@ class DynamoDBExporterAndQuerier:
 
         query_execution_id = response["QueryExecutionId"]
         sleep(30)
-        print(f"Query execution id: {query_execution_id}")
         response = self.aws_athena_client.get_query_results(
             QueryExecutionId=query_execution_id,
             MaxResults=123
