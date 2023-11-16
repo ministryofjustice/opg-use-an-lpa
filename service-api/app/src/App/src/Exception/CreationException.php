@@ -12,9 +12,9 @@ class CreationException extends AbstractApiException
     /**
      * Exception title
      */
-    const TITLE = 'Creation error';
+    public const TITLE = 'Creation error';
 
-    protected int $code = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
+    protected $code = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
 
     /**
      * @param string $message
