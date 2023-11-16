@@ -8,24 +8,21 @@ use DateTime;
 
 final class Lpa implements LpaInterface
 {
-
     /**
      * Array representing the LPA's data.
      *
      * @var array
      */
-    private $data;
+    private array $data;
 
     /**
      * The datetime that the data was looked up in Sirius main database.
-     *
-     * @var DateTime
      */
-    private $lookupTime;
+    private DateTime $lookupTime;
 
     public function __construct(?array $data, ?DateTime $lookupTime)
     {
-        $this->data = $data;
+        $this->data       = $data;
         $this->lookupTime = $lookupTime;
     }
 

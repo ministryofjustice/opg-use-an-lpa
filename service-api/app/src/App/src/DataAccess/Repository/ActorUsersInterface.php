@@ -169,7 +169,6 @@ interface ActorUsersInterface
      *
      * @param string       $id
      * @param HiddenString $password
-     *
      * @return bool
      */
     public function rehashPassword(string $id, HiddenString $password): bool;
