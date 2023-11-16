@@ -15,9 +15,15 @@ use PHPUnit\Framework\TestCase;
 
 class NotifyServiceTest extends TestCase
 {
-    private LoggerInterface $loggerProphecy;
+    /**
+     * @var LoggerInterface
+     */
+    private $loggerProphecy;
 
-    private ObjectProphecy $emailClientProphecy;
+    /**
+     * @var ObjectProphecy
+     */
+    private $emailClientProphecy;
 
     public function setUp(): void
     {
