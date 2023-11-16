@@ -138,6 +138,7 @@ class DynamoDBExporterAndQuerier:
                     tablesCompleted = False
             overallCompleted = tablesCompleted
         print('\n')
+        print("DynamoDB export is complete")
 
 
     def export_all_dynamo_tables(self):
@@ -284,21 +285,24 @@ class DynamoDBExporterAndQuerier:
 
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
-        self.run_single_athena_query(sql_string)
+        self.run_single_athena_query(self.replace_date_range(sql_string))
 
     def get_expired_unviewed_access_codes(self):
         sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
-        self.run_single_athena_query(sql_string)
+        self.run_single_athena_query(self.replace_date_range(sql_string))
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "ual"."viewer_activity" WHERE Item.Viewed.S BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_single_athena_query(sql_string)
+        self.run_single_athena_query(self.replace_date_range(sql_string))
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "viewer_codes" as vc WHERE date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_single_athena_query(sql_string)
+        self.run_single_athena_query(self.replace_date_range(sql_string))
 
-    #def replace_date_range_in_sql(self, sql_string):
+    def replace_date_range(self, sql_string):
+        searchStr = "date\(.*AND.*\)"
+        sql_string = re.sub(searchStr, f"date(\'{self.start_date}\') AND date(\'{self.end_date}\')", sql_string, flags = re.M)
+        return sql_string
 
 
 def main():
