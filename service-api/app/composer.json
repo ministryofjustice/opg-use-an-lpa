@@ -42,7 +42,7 @@
     "require": {
         "php": "^8.1",
         "ext-apcu": "*",
-        "alphagov/notifications-php-client": "^4.1.0",
+        "alphagov/notifications-php-client": "^5.0.0",
         "aws/aws-sdk-php": "^3.93",
         "blazon/psr11-monolog": "^4.0",
         "elie29/zend-phpdi-config": "^8.0",
