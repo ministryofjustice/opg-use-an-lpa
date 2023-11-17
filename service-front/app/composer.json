@@ -50,7 +50,7 @@
         "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
         "laminas/laminas-cache-storage-adapter-memory": "^2.1",
         "laminas/laminas-cache-storage-adapter-redis": "^2.3",
-        "laminas/laminas-component-installer": "^2.1.1",
+        "laminas/laminas-component-installer": "^3.0.0",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-crypt": "^3.3",
         "laminas/laminas-diactoros": "^2.24",
