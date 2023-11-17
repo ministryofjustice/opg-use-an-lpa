@@ -6,6 +6,7 @@ namespace App\DataAccess\DynamoDb;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ViewerCodesFactory
 {
@@ -14,7 +15,7 @@ class ViewerCodesFactory
         $config = $container->get('config');
 
         if (!isset($config['repositories']['dynamodb']['viewer-codes-table'])) {
-            throw new \Exception('Viewer Codes table configuration not present');
+            throw new Exception('Viewer Codes table configuration not present');
         }
 
         return new ViewerCodes(

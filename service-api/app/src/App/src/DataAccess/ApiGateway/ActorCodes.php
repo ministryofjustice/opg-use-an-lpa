@@ -15,20 +15,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class ActorCodes
- *
- * @package App\DataAccess\ApiGateway
- */
 class ActorCodes
 {
     private string $apiBaseUri;
-
-    private RequestSigner $awsSignature;
-
-    private HttpClient $httpClient;
-
-    private string $traceId;
 
     /**
      * ActorCodes Constructor
@@ -38,12 +27,9 @@ class ActorCodes
      * @param string $apiUrl
      * @param string $traceId An amazon trace id to pass to subsequent services
      */
-    public function __construct(HttpClient $httpClient, RequestSigner $awsSignature, string $apiUrl, string $traceId)
+    public function __construct(private HttpClient $httpClient, private RequestSigner $awsSignature, string $apiUrl, private string $traceId)
     {
-        $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
-        $this->awsSignature = $awsSignature;
-        $this->traceId = $traceId;
     }
 
     /**
@@ -60,7 +46,7 @@ class ActorCodes
             [
                 'lpa'  => $uid,
                 'dob'  => $dob,
-                'code' => $code
+                'code' => $code,
             ]
         );
 
@@ -76,21 +62,16 @@ class ActorCodes
      */
     public function flagCodeAsUsed(string $code): void
     {
-        $this->makePostRequest('v1/revoke', [ 'code' => $code ]);
+        $this->makePostRequest('v1/revoke', ['code' => $code]);
     }
 
-    /**
-     * @param string $lpaId
-     * @param string $actorId
-     * @return ActorCode
-     */
     public function checkActorHasCode(string $lpaId, string $actorId): ActorCode
     {
         $response = $this->makePostRequest(
             'v1/exists',
             [
-                'lpa'    => $lpaId,
-                'actor'  => $actorId
+                'lpa'   => $lpaId,
+                'actor' => $actorId,
             ]
         );
 
@@ -108,7 +89,7 @@ class ActorCodes
      */
     private function makePostRequest(string $url, array $body): ResponseInterface
     {
-        $url  = sprintf("%s/%s", $this->apiBaseUri, $url);
+        $url  = sprintf('%s/%s', $this->apiBaseUri, $url);
         $body = json_encode($body);
 
         $request = new Request('POST', $url, $this->buildHeaders(), $body);
@@ -130,8 +111,8 @@ class ActorCodes
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Accept'        => 'application/json',
-            'Content-Type'  => 'application/json',
+            'Accept'       => 'application/json',
+            'Content-Type' => 'application/json',
         ];
 
         if (!empty($this->traceId)) {
