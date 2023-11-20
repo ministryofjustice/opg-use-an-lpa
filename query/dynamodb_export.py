@@ -224,10 +224,10 @@ class DynamoDBExporterAndQuerier:
             rawQuery = ddl.read()
             searchStr = "'s3(.*)'"
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
-            self.run_athena_query(query)
+            self.run_athena_query(query, quiet)
 
-    def run_athena_query(self, query, quiet = False):
-        if not quiet:
+    def run_athena_query(self, query, quiet=False):
+        if quiet != True:
             print('\n')
             print("Running Athena query : ")
             print(query)
@@ -251,9 +251,13 @@ class DynamoDBExporterAndQuerier:
             MaxResults=123
         )
 
-        if not quiet:
-            results = response['ResultSet']['Rows']
-            print(results)
+        # TODO type of output will depend on type of query - db create vs count vs row/column results
+        if quiet != True:
+            self.output_athena_results(response)
+
+    def output_athena_results(self, response):
+        results = response['ResultSet']['Rows']
+        print(results)
 
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
