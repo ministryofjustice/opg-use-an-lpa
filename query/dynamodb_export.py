@@ -211,7 +211,6 @@ class DynamoDBExporterAndQuerier:
 
     def create_athena_tables(self):
         print("Re-creating Athena database and loading Athena tables")
-        # TODO drop is going to need error handling for 1st run
         self.drop_athena_database()
         self.create_athena_database()
 
@@ -243,8 +242,16 @@ class DynamoDBExporterAndQuerier:
         )
 
         query_execution_id = response["QueryExecutionId"]
-        # TODO rather than poll for the query reported as complete, for now we simply sleep, also need to handle FAIL
-        sleep(30)
+        while True:
+            finish_state = self.aws_athena_client.get_query_execution(QueryExecutionId=query_execution_id)[
+                "QueryExecution"
+            ]["Status"]["State"]
+            if finish_state == "RUNNING" or finish_state == "QUEUED":
+                sleep(10)
+            else:
+                break
+
+        assert finish_state == "SUCCEEDED", f"query state is {finish_state}"
 
         response = self.aws_athena_client.get_query_results(
             QueryExecutionId=query_execution_id,
