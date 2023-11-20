@@ -224,9 +224,9 @@ class DynamoDBExporterAndQuerier:
             rawQuery = ddl.read()
             searchStr = "'s3(.*)'"
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
-            self.run_athena_query(query, quiet)
+            self.run_athena_query(query, quiet = True)
 
-    def run_athena_query(self, query, quiet=False):
+    def run_athena_query(self, query, quiet = False):
         if quiet != True:
             print('\n')
             print("Running Athena query : ")
