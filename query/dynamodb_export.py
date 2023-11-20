@@ -8,7 +8,6 @@ from time import sleep
 
 class DynamoDBExporterAndQuerier:
     athena_database_name = "ual"
-    athena_results_bucket = "use-a-lpa-dynamodb-exports"
     aws_dynamodb_client = ''
     aws_kms_client = ''
     environment_details = ''
@@ -51,6 +50,8 @@ class DynamoDBExporterAndQuerier:
           'dynamodb-exports-{}'.format(
             self.environment_details['account_name'])
           )
+        self.export_bucket_name = 'use-a-lpa-dynamodb-exports-{}'.format(
+                        self.environment_details['account_name'])
 
     def set_date_range(self, start, end):
         self.start_date = start
@@ -129,7 +130,6 @@ class DynamoDBExporterAndQuerier:
         print("Waiting for DynamoDb export to be complete ( if run with Athena only option, this is just checking the previous export is complete )")
         while not overallCompleted:
             print('.',end='',flush=True)
-            sleep(10)
             # assume all tables are completed until we encounter one that is not
             tablesCompleted = True
             for table in self.tables.keys():
@@ -137,6 +137,7 @@ class DynamoDBExporterAndQuerier:
                     # we encountered an inconmplete table so they are not all complete
                     tablesCompleted = False
             overallCompleted = tablesCompleted
+            sleep(10)
         print('\n')
         print("DynamoDB export is complete")
 
@@ -147,13 +148,11 @@ class DynamoDBExporterAndQuerier:
               self.environment_details['name'],
               table)
               )
-            bucket_name = 'use-a-lpa-dynamodb-exports-{}'.format(
-                        self.environment_details['account_name'])
             s3_prefix = '{}-{}'.format(
                         self.environment_details['name'],
                         table)
 
-            self.export_dynamo_table(table_arn, bucket_name, s3_prefix)
+            self.export_dynamo_table(table_arn, self.export_bucket_name, s3_prefix)
 
     def export_dynamo_table(self, table_arn, bucket_name, s3_prefix):
         print(f"exporting {table_arn} dynamoDb table")
@@ -172,8 +171,6 @@ class DynamoDBExporterAndQuerier:
           self.environment_details['name'],
           table)
           )
-        bucket_name = 'use-a-lpa-dynamodb-exports-{}'.format(
-                    self.environment_details['account_name'])
         s3_prefix = '{}-{}'.format(
                     self.environment_details['name'],
                     table)
@@ -186,7 +183,7 @@ class DynamoDBExporterAndQuerier:
         for export in response['ExportSummaries']:
             export_arn_hash = export['ExportArn'].rsplit('/', 1)[-1]
             s3_path = 's3://{}/{}/AWSDynamoDB/{}/data/'.format(
-                bucket_name,
+                self.export_bucket_name,
                 s3_prefix,
                 export_arn_hash
             )
@@ -205,99 +202,74 @@ class DynamoDBExporterAndQuerier:
         return response['Table']['TableArn']
 
     def drop_athena_database(self ):
-        response = self.aws_athena_client.start_query_execution(
-            QueryString=f"DROP DATABASE {self.athena_database_name} CASCADE;",
-            ResultConfiguration={
-                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
-            }
-        )
-        # rather than poll for the database drop reported as complete, for now we simply sleep
-        sleep(10)
+        query = f"DROP DATABASE {self.athena_database_name} CASCADE;"
+        self.run_athena_query(query, quiet = True)
 
-        return response["QueryExecutionId"]
-
-    def create_athena_database(self ):
-        response = self.aws_athena_client.start_query_execution(
-            QueryString=f"CREATE DATABASE IF NOT EXISTS {self.athena_database_name};",
-            ResultConfiguration={
-                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
-            }
-        )
-
-        # rather than poll for the database create reported as complete, for now we simply sleep
-        sleep(30)
+    def create_athena_database(self):
+        query = f"CREATE DATABASE IF NOT EXISTS {self.athena_database_name};"
+        self.run_athena_query(query, quiet = True)
 
     def create_athena_tables(self):
         print("Re-creating Athena database and loading Athena tables")
+        # TODO drop is going to need error handling for 1st run
         self.drop_athena_database()
         self.create_athena_database()
 
         for table_ddl in self.table_ddl_files.keys():
             exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
-            query_execution_id = self.create_athena_table(table_ddl, exported_s3_location)
-            sleep(10)
-            response = self.aws_athena_client.get_query_results(
-                QueryExecutionId=query_execution_id,
-                MaxResults=1
-            )
+            self.create_athena_table(table_ddl, exported_s3_location)
 
     def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
             rawQuery = ddl.read()
             searchStr = "'s3(.*)'"
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
-            response = self.aws_athena_client.start_query_execution(
-                QueryString=query,
-                QueryExecutionContext={
-                    "Database": self.athena_database_name
-                },
-                ResultConfiguration={
-                    "OutputLocation": f"s3://{self.athena_results_bucket}/"
-                }
-            )
+            self.run_athena_query(query)
 
-            return response["QueryExecutionId"]
+    def run_athena_query(self, query, quiet = False):
+        if not quiet:
+            print('\n')
+            print("Running Athena query : ")
+            print(query)
 
-
-    def run_single_athena_query(self, query):
-        print('\n')
-        print("Running Athena query : ")
-        print(query)
         response = self.aws_athena_client.start_query_execution(
             QueryString=query,
             QueryExecutionContext={
                 "Database": self.athena_database_name
             },
             ResultConfiguration={
-                "OutputLocation": f"s3://{self.athena_results_bucket}/"
+                "OutputLocation": f"s3://{self.export_bucket_name}/"
             }
         )
 
         query_execution_id = response["QueryExecutionId"]
+        # TODO rather than poll for the query reported as complete, for now we simply sleep, also need to handle FAIL
         sleep(30)
+
         response = self.aws_athena_client.get_query_results(
             QueryExecutionId=query_execution_id,
             MaxResults=123
         )
-        print(response)
-        results = response['ResultSet']['Rows']
-        print(results)
+
+        if not quiet:
+            results = response['ResultSet']['Rows']
+            print(results)
 
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
-        self.run_single_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string))
 
     def get_expired_unviewed_access_codes(self):
         sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
-        self.run_single_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string))
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "ual"."viewer_activity" WHERE Item.Viewed.S BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_single_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string))
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "viewer_codes" as vc WHERE date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_single_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string))
 
     def replace_date_range(self, sql_string):
         searchStr = "date\(.*AND.*\)"
