@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-08T13:43:18+00:00\n"
+"POT-Creation-Date: 2023-11-15T17:09:59+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -533,15 +533,15 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
 #: src/Actor/templates/actor/check-your-answers.html.twig:30
 #: src/Common/templates/common/cookies.html.twig:103
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:43
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:4
 msgid "Name"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:28
-#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:8
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
 msgid "Date of birth"
 msgstr ""
 
@@ -2274,8 +2274,8 @@ msgid "What is your current address?"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:47
-#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:12
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:53
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:18
 #: src/Common/templates/partials/contact-details/address.html.twig:1
 msgid "Address"
 msgstr ""
@@ -3820,12 +3820,12 @@ msgstr ""
 msgid "Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to find out what decisions must be made jointly."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:40
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:46
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
 msgstr[0] ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:44
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
 msgid "(Trust corporation)"
 msgstr ""
 
@@ -4508,4 +4508,9 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
 msgid "We will send your activation key to you by post."
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
+msgid "Also known as"
 msgstr ""

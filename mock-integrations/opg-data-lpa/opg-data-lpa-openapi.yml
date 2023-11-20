@@ -638,6 +638,7 @@ components:
         - dob
         - salutation
         - firstname
+        - otherNames
         - middlenames
         - surname
         - companyName
@@ -668,9 +669,14 @@ components:
           description: The case actor's first name
           example: Ian
           maxLength: 255
+        otherNames:
+          type: string
+          description: The case actor's other name
+          example: George
+          maxLength: 255
         middlenames:
           type: string
-          description: The case actor's last name
+          description: The case actor's middle name
           example: Deputy
           maxLength: 255
         surname:
