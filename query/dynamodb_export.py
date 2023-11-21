@@ -243,11 +243,19 @@ class DynamoDBExporterAndQuerier:
         assert finish_state == "SUCCEEDED", f"query state is {finish_state}"
 
         response = self.aws_athena_client.get_query_results(
-            QueryExecutionId=query_execution_id, MaxResults=123
+            QueryExecutionId=query_execution_id, MaxResults=50
         )
 
+        results = response["ResultSet"]["Rows"]
+
+        while "NextToken" in response:
+            response = self.aws_athena_client.get_query_results(
+                QueryExecutionId=query_execution_id, MaxResults=50,
+                NextToken=response["NextToken"])
+            results.extend(response["ResultSet"]["Rows"])
+
         if outputFileName:
-            self.output_athena_results(response["ResultSet"]["Rows"], outputFileName)
+            self.output_athena_results(results, outputFileName)
 
     def output_athena_results(self, results, outputFileName):
         with open(f"results/{outputFileName}.csv", "w", newline="") as outFile:
