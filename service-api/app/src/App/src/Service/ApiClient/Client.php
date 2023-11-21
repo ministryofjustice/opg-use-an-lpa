@@ -22,11 +22,11 @@ class Client
      * Client constructor
      *
      * @param ClientInterface $httpClient
-     * @param string          $apiBaseUrl
+     * @param string          $apiBaseUri
      * @param string          $awsRegion
      * @param string          $traceId
      */
-    public function __construct(private ClientInterface $httpClient, private string $apiBaseUrl, private string $awsRegion, private string $traceId)
+    public function __construct(private ClientInterface $httpClient, private string $apiBaseUri, private string $awsRegion, private string $traceId)
     {
     }
 
