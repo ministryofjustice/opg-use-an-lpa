@@ -31,7 +31,7 @@ class ApiException extends AbstractApiException
         $this->response = $response;
         $this->code     = $code;
 
-        parent::__construct(self::DEFAULT_TITLE, $message, null, $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message, [], $previous);
     }
 
     public function getResponse(): ?ResponseInterface
