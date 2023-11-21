@@ -243,14 +243,14 @@ class DynamoDBExporterAndQuerier:
         assert finish_state == "SUCCEEDED", f"query state is {finish_state}"
 
         response = self.aws_athena_client.get_query_results(
-            QueryExecutionId=query_execution_id, MaxResults=50
+            QueryExecutionId=query_execution_id, MaxResults=500
         )
 
         results = response["ResultSet"]["Rows"]
 
         while "NextToken" in response:
             response = self.aws_athena_client.get_query_results(
-                QueryExecutionId=query_execution_id, MaxResults=50,
+                QueryExecutionId=query_execution_id, MaxResults=500,
                 NextToken=response["NextToken"])
             results.extend(response["ResultSet"]["Rows"])
 
@@ -274,13 +274,13 @@ class DynamoDBExporterAndQuerier:
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
         self.run_athena_query(
-            self.replace_date_range(sql_string), outputFileName="ExpiredAccessCodes"
+            self.replace_date_range(sql_string), outputFileName="ExpiredViewedAccessCodes"
         )
 
     def get_expired_unviewed_access_codes(self):
         sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
         self.run_athena_query(
-            self.replace_date_range(sql_string), outputFileName="UnviewedAccessCodes"
+            self.replace_date_range(sql_string), outputFileName="ExpiredUnviewedAccessCodes"
         )
 
     def get_count_of_viewed_access_codes(self):
