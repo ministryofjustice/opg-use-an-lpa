@@ -18,16 +18,16 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    private string $apiBaseUri;
-
     /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
+     * @param string          $apiBaseUrl
+     * @param string          $awsRegion
+     * @param string          $traceId
      */
-    public function __construct(private ClientInterface $httpClient, string $apiUrl, private string $awsRegion, private string $traceId)
+    public function __construct(private ClientInterface $httpClient, private string $apiBaseUrl, private string $awsRegion, private string $traceId)
     {
-        $this->apiBaseUri = $apiUrl;
     }
 
     /**
