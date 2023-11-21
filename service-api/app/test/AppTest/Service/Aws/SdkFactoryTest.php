@@ -21,11 +21,11 @@ class SdkFactoryTest extends TestCase
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         $containerProphecy->get('config')->willReturn([
-            'aws' => []
+            'aws' => [],
         ]);
 
         $factory = new SdkFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(Sdk::class, $repo);
     }
 

@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Exception;
 
 class ClientFactoryTest extends TestCase
 {
@@ -25,11 +26,11 @@ class ClientFactoryTest extends TestCase
             ->willReturn(
                 [
                     'sirius_api' => [
-                        'endpoint' => 'test_endpoint'
+                        'endpoint' => 'test_endpoint',
                     ],
-                    'aws' => [
-                        'region' => 'test_region'
-                    ]
+                    'aws'        => [
+                        'region' => 'test_region',
+                    ],
                 ]
             );
 
@@ -56,14 +57,14 @@ class ClientFactoryTest extends TestCase
             ->willReturn(
                 [
                     'aws' => [
-                        'region' => 'test_region'
-                    ]
+                        'region' => 'test_region',
+                    ],
                 ]
             );
 
         $factory = new ClientFactory();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Sirius API configuration not present');
         $factory($containerProphecy->reveal());
     }
@@ -76,14 +77,14 @@ class ClientFactoryTest extends TestCase
             ->willReturn(
                 [
                     'sirius_api' => [
-                        'endpoint' => 'test_endpoint'
+                        'endpoint' => 'test_endpoint',
                     ],
                 ]
             );
 
         $factory = new ClientFactory();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('AWS configuration not present');
         $factory($containerProphecy->reveal());
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\IsValidLpa;
@@ -16,7 +18,7 @@ class IsValidLpaTest extends TestCase
 
     public function setUp(): void
     {
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy     = $this->prophesize(LoggerInterface::class);
         $this->isValidLpaProphecy = $this->prophesize(IsValidLpa::class);
     }
 
@@ -35,11 +37,11 @@ class IsValidLpaTest extends TestCase
             'status' => 'Registered',
             'donor'  => [
                 'id' => 1,
-            ]
+            ],
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
+        $result   = $resolver($lpa);
         $this->assertTrue($result);
     }
 
@@ -51,11 +53,11 @@ class IsValidLpaTest extends TestCase
             'status' => 'Cancelled',
             'donor'  => [
                 'id' => 1,
-            ]
+            ],
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
+        $result   = $resolver($lpa);
         $this->assertTrue($result);
     }
 
@@ -67,11 +69,11 @@ class IsValidLpaTest extends TestCase
             'status' => 'Revoked',
             'donor'  => [
                 'id' => 1,
-            ]
+            ],
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
+        $result   = $resolver($lpa);
         $this->assertFalse($result);
     }
 }
