@@ -12,8 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class LpasCollectionHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class LpasCollectionHandler implements RequestHandlerInterface

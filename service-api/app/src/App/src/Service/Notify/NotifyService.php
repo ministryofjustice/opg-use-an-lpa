@@ -10,11 +10,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
 /**
- * Class NotifyService
- *
  * Single action invokable class that validates parameters send to email client
- *
- * @package App\Service\Notify
  */
 class NotifyService
 {
@@ -32,7 +28,7 @@ class NotifyService
     {
         //Instantiate the reflection object
         $reflector = new ReflectionClass($this->emailClient);
-        $methods = $reflector->getMethods();
+        $methods   = $reflector->getMethods();
 
         //Now go through the $properties array and populate each property
         foreach ($methods as $method) {

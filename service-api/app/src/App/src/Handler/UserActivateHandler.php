@@ -13,8 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class UserActivateHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class UserActivateHandler implements RequestHandlerInterface

@@ -13,9 +13,6 @@ use RuntimeException;
  *
  * Typically this shouldn't be used directly. See SecretsManagerFactory.php for an example of
  * how to create a client for a specific service.
- *
- * Class SdkFactory
- * @package App\Service\Aws
  */
 class SdkFactory
 {

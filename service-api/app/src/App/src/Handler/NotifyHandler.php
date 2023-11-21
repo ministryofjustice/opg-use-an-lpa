@@ -14,32 +14,15 @@ use Psr\Log\LoggerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 /**
- * Class NotifyHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class NotifyHandler implements RequestHandlerInterface
 {
-    private LoggerInterface $logger;
-    private EmailClient $emailClient;
-    private NotifyService $notifyService;
-
-    /**
-     * NotifyHandler constructor.
-     *
-     * @param EmailClient $emailClient
-     * @param LoggerInterface $logger
-     * @param NotifyService $notifyService
-     */
     public function __construct(
-        EmailClient $emailClient,
-        LoggerInterface $logger,
-        NotifyService $notifyService
+        private EmailClient $emailClient,
+        private LoggerInterface $logger,
+        private NotifyService $notifyService,
     ) {
-        $this->emailClient = $emailClient;
-        $this->logger = $logger;
-        $this->notifyService = $notifyService;
     }
 
     /**
@@ -49,7 +32,7 @@ class NotifyHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $requestData = $request->getParsedBody();
+        $requestData   = $request->getParsedBody();
         $emailTemplate = $request->getAttribute('emailTemplate');
 
         if (count($requestData) === 0) {

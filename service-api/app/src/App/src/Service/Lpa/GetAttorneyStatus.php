@@ -8,15 +8,12 @@ use Psr\Log\LoggerInterface;
 
 class GetAttorneyStatus
 {
-    public const ACTIVE_ATTORNEY = 0;
-    public const GHOST_ATTORNEY = 1;
+    public const ACTIVE_ATTORNEY   = 0;
+    public const GHOST_ATTORNEY    = 1;
     public const INACTIVE_ATTORNEY = 2;
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function __invoke(array $attorney): int
