@@ -272,41 +272,30 @@ class DynamoDBExporterAndQuerier:
                 wr.writerow(csvRow)
 
     def get_expired_viewed_access_codes(self):
-        sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
+        sql_string = f'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER by Organisation;'
         self.run_athena_query(
-            self.replace_date_range(sql_string), outputFileName="ExpiredViewedAccessCodes"
+            sql_string, outputFileName="ExpiredViewedAccessCodes"
         )
 
     def get_expired_unviewed_access_codes(self):
-        sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
+        sql_string = f'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER BY vc.item.viewerCode.s'
         self.run_athena_query(
-            self.replace_date_range(sql_string), outputFileName="ExpiredUnviewedAccessCodes"
+            sql_string, outputFileName="ExpiredUnviewedAccessCodes"
         )
 
     def get_count_of_viewed_access_codes(self):
-        sql_string = "SELECT COUNT(*) FROM \"ual\".\"viewer_activity\" WHERE Item.Viewed.S BETWEEN date('2022-10-01') AND date('2023-09-30');"
+        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_activity\" WHERE Item.Viewed.S BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\');"
         self.run_athena_query(
-            self.replace_date_range(sql_string),
+            sql_string,
             outputFileName="CountofViewedAccessCodes",
         )
 
     def get_count_of_expired_access_codes(self):
-        sql_string = "SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date('2022-10-01') AND date('2023-09-30');"
+        sql_string = f"SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\');"
         self.run_athena_query(
-            self.replace_date_range(sql_string),
+            sql_string,
             outputFileName="CountofExpiredAccessCodes",
         )
-
-    def replace_date_range(self, sql_string):
-        searchStr = "date\(.*AND.*\)"
-        sql_string = re.sub(
-            searchStr,
-            f"date('{self.start_date}') AND date('{self.end_date}')",
-            sql_string,
-            flags=re.M,
-        )
-        return sql_string
-
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
