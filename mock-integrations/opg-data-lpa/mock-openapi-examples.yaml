@@ -27,6 +27,7 @@ paths:
                         dob: "1990-05-04"
                         email: ""
                         firstname: Jean
+                        otherNames: ""
                         id: 9
                         middlenames: ""
                         salutation: ""
@@ -47,6 +48,7 @@ paths:
                         dob: "1975-10-05"
                         email: XXXXX
                         firstname: Annette
+                        otherNames: Anne
                         id: 12
                         middlenames: ""
                         salutation: Mrs
@@ -67,6 +69,7 @@ paths:
                         dob: "2000-12-15"
                         email: null
                         firstname: Jess
+                        otherNames: null
                         id: 3453
                         middlenames: null
                         salutation: null
@@ -87,6 +90,7 @@ paths:
                         dob: null
                         email: null
                         firstname: ""
+                        otherNames: ""
                         id: 3481
                         middlenames: null
                         salutation: null
@@ -107,6 +111,7 @@ paths:
                         dob: null
                         email: null
                         firstname: ""
+                        otherNames: ""
                         id: 3482
                         middlenames: null
                         salutation: null
@@ -127,6 +132,7 @@ paths:
                         dob: "1941-01-03"
                         email: null
                         firstname: Ọlá-Bándélé
+                        otherNames: Ṣhókkẹ́
                         id: 3568
                         middlenames: Ṣhókọ̀yà
                         salutation: Mr
@@ -153,6 +159,7 @@ paths:
                         dob: null
                         email: null
                         firstname: Danielle
+                        otherNames: null
                         id: 11
                         middlenames: null
                         salutation: Miss
@@ -174,6 +181,7 @@ paths:
                       dob: "1948-11-01"
                       email: RachelSanderson@opgtest.com
                       firstname: Rachel
+                      otherNames: Rach
                       id: 7
                       linked:
                         - id: 7
@@ -219,6 +227,7 @@ paths:
                         dob: "1975-10-05"
                         email: SimonMatthews@opgtest.com
                         firstname: Simon
+                        otherNames: Si
                         id: 25
                         middlenames: ""
                         salutation: Mr
@@ -239,6 +248,7 @@ paths:
                         dob: "1990-03-17"
                         email: ""
                         firstname: Simone
+                        otherNames: ""
                         id: 2588
                         middlenames: ""
                         salutation: Miss
@@ -259,6 +269,7 @@ paths:
                         dob: "2000-05-14"
                         email: null
                         firstname: Doobie
+                        otherNames: Scooby
                         id: 3352
                         middlenames: null
                         salutation: Mr
@@ -279,6 +290,7 @@ paths:
                         dob: "1981-06-14"
                         email: null
                         firstname: David
+                        otherNames: null
                         id: 3353
                         middlenames: null
                         salutation: null
@@ -299,6 +311,7 @@ paths:
                         dob: "1961-06-14"
                         email: null
                         firstname: Jane
+                        otherNames: null
                         id: 3357
                         middlenames: null
                         salutation: null
@@ -319,6 +332,7 @@ paths:
                         dob: "1981-06-14"
                         email: null
                         firstname: Daisy
+                        otherNames: null
                         id: 3383
                         middlenames: null
                         salutation: null
@@ -339,6 +353,7 @@ paths:
                         dob: "1981-06-14"
                         email: null
                         firstname: Daisy
+                        otherNames: null
                         id: 3396
                         middlenames: null
                         salutation: null
@@ -359,6 +374,7 @@ paths:
                         dob: "1989-01-01"
                         email: null
                         firstname: daniel's
+                        otherNames: null
                         id: 3460
                         middlenames: null
                         salutation: mr
@@ -385,6 +401,7 @@ paths:
                         dob: null
                         email: null
                         firstname: Joanne
+                        otherNames: null
                         id: 27
                         middlenames: null
                         salutation: Mrs
@@ -406,6 +423,7 @@ paths:
                       dob: "1948-11-01"
                       email: babaragilson@opgtest.com
                       firstname: Babara
+                      otherNames: Bab
                       id: 23
                       linked:
                         - id: 23
@@ -451,6 +469,7 @@ paths:
                         dob: "1975-10-05"
                         email: TainaRucker@opgtest.com
                         firstname: Taina
+                        otherNames: ""
                         id: 45
                         middlenames: ""
                         salutation: Mr
@@ -477,6 +496,7 @@ paths:
                         dob: null
                         email: null
                         firstname: Desire
+                        otherNames: null
                         id: 47
                         middlenames: null
                         salutation: Miss
@@ -498,6 +518,7 @@ paths:
                       dob: "1948-11-01"
                       email: orethalang@opgtest.com
                       firstname: Babara
+                      otherNames: null
                       id: 43
                       linked:
                         - id: 43
@@ -543,6 +564,7 @@ paths:
                         dob: "1975-10-05"
                         email: SimonMatthews@opgtest.com
                         firstname: Simon
+                        otherNames: Si
                         id: 64
                         middlenames: null
                         salutation: Mr
@@ -563,6 +585,7 @@ paths:
                         dob: "1975-10-05"
                         email: null
                         firstname: simone
+                        otherNames: null
                         id: 3022
                         middlenames: null
                         salutation: miss
@@ -589,6 +612,7 @@ paths:
                         dob: null
                         email: null
                         firstname: David
+                        otherNames: null
                         id: 63
                         middlenames: null
                         salutation: Mr
@@ -610,6 +634,7 @@ paths:
                       dob: "1948-11-01"
                       email: linkedpersonone@opgtest.com
                       firstname: Linked
+                      otherNames: Link
                       id: 53
                       linked:
                         - id: 53
@@ -661,6 +686,7 @@ paths:
                         dob: "1975-10-05"
                         email: AndreaRobinson@opgtest.com
                         firstname: Andrea
+                        otherNames: null
                         id: 78
                         middlenames: null
                         salutation: Mrs
@@ -687,6 +713,7 @@ paths:
                         dob: null
                         email: null
                         firstname: Rachel
+                        otherNames: Rach
                         id: 80
                         middlenames: null
                         salutation: Mrs
@@ -708,6 +735,7 @@ paths:
                       dob: "1948-11-01"
                       email: demtriceflood@opgtest.com
                       firstname: Demetrice
+                      otherNames: null
                       id: 76
                       linked:
                         - id: 76
@@ -753,6 +781,7 @@ paths:
                         dob: "1975-10-05"
                         email: SimonMatthews@opgtest.com
                         firstname: Simon
+                        otherNames: Si
                         id: 97
                         middlenames: null
                         salutation: Mr
@@ -779,6 +808,7 @@ paths:
                         dob: null
                         email: null
                         firstname: David
+                        otherNames: null
                         id: 96
                         middlenames: null
                         salutation: Mr
@@ -800,6 +830,7 @@ paths:
                       dob: "1948-11-01"
                       email: cherrylschindler@opgtest.com
                       firstname: Cherryl
+                      otherNames: null
                       id: 92
                       linked:
                         - id: 92
@@ -845,6 +876,7 @@ paths:
                         dob: "1975-10-05"
                         email: SimonMatthews@opgtest.com
                         firstname: Simon
+                        otherNames: Si
                         id: 115
                         middlenames: null
                         salutation: Mr
@@ -871,6 +903,7 @@ paths:
                         dob: null
                         email: null
                         firstname: David
+                        otherNames: null
                         id: 114
                         middlenames: null
                         salutation: Mr
@@ -892,6 +925,7 @@ paths:
                       dob: "1948-11-01"
                       email: linkedpersonone@opgtest.com
                       firstname: Linked
+                      otherNames: Link
                       id: 53
                       linked:
                         - id: 53
@@ -943,6 +977,7 @@ paths:
                         dob: "1989-01-01"
                         email: null
                         firstname: ross
+                        otherNames: null
                         id: 3471
                         middlenames: null
                         salutation: mr
@@ -963,6 +998,7 @@ paths:
                         dob: "2010-01-02"
                         email: null
                         firstname: rachel
+                        otherNames: rach
                         id: 3472
                         middlenames: null
                         salutation: mr
@@ -983,6 +1019,7 @@ paths:
                         dob: "1911-01-01"
                         email: null
                         firstname: phoebe
+                        otherNames: null
                         id: 3500
                         middlenames: null
                         salutation: null
@@ -1012,6 +1049,7 @@ paths:
                       dob: "1944-08-14"
                       email: null
                       firstname: Donald
+                      otherNames: null
                       id: 136
                       linked:
                         - id: 136
@@ -1048,6 +1086,7 @@ paths:
                         dob: null
                         email: null
                         firstname: trust
+                        otherNames: null
                         id: 3485
                         middlenames: null
                         salutation: null
@@ -1077,6 +1116,7 @@ paths:
                         dob: "2000-06-09"
                         email: ""
                         firstname: Jessica
+                        otherNames: null
                         id: 3037
                         middlenames: ""
                         salutation: Mrs
@@ -1097,6 +1137,7 @@ paths:
                         dob: "1981-06-14"
                         email: null
                         firstname: John
+                        otherNames: null
                         id: 3318
                         middlenames: null
                         salutation: Mr
@@ -1126,6 +1167,7 @@ paths:
                       dob: "1990-01-01"
                       email: ""
                       firstname: Donor
+                      otherNames: ""
                       id: 3024
                       linked:
                         - id: 3024
@@ -1159,6 +1201,7 @@ paths:
                         dob: "1990-01-01"
                         email: null
                         firstname: Replacement
+                        otherNames: null
                         id: 3039
                         middlenames: null
                         salutation: Mr
@@ -1191,6 +1234,7 @@ paths:
                         dob: "1986-09-01"
                         email: null
                         firstname: bill
+                        otherNames: null
                         id: 3492
                         middlenames: null
                         salutation: null
@@ -1211,6 +1255,7 @@ paths:
                         dob: "1982-07-05"
                         email: null
                         firstname: Julie
+                        otherNames: null
                         id: 3493
                         middlenames: null
                         salutation: null
@@ -1231,6 +1276,7 @@ paths:
                         dob: "1985-09-01"
                         email: null
                         firstname: sarah
+                        otherNames: null
                         id: 3494
                         middlenames: null
                         salutation: null
@@ -1251,6 +1297,7 @@ paths:
                         dob: "2000-12-12"
                         email: cris@crisreynolds.com
                         firstname: jane
+                        otherNames: null
                         id: 3620
                         middlenames: null
                         salutation: null
@@ -1280,6 +1327,7 @@ paths:
                       dob: "1990-07-01"
                       email: ""
                       firstname: Status
+                      otherNames: null
                       id: 3044
                       linked:
                         - id: 3044

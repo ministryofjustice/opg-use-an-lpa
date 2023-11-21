@@ -42,3 +42,17 @@ Feature: View an LPA that I have added to my account
     And I am on the dashboard page
     When I request to view an LPA which has an inactive attorney named 'Harold Stallman'
     Then I will not see 'Harold Stallman' in the attorney section of LPA summary
+
+  @ui
+  Scenario: Show also known as when an actor has other names defined
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA with a donor who is also known as 'Ezra'
+    Then I will see 'Ezra' in the also known as field
+
+  @ui
+  Scenario: Do not show also known as when no actors have other names defined
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA where all actors do not have an also known by name
+    Then I will not see the also known as field
