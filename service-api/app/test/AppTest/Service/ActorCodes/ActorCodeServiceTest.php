@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use DateInterval;
 
 class ActorCodeServiceTest extends TestCase
 {
@@ -32,11 +33,11 @@ class ActorCodeServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->codeValidatorProphecy = $this->prophesize(CodeValidationStrategyInterface::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $this->codeValidatorProphecy            = $this->prophesize(CodeValidationStrategyInterface::class);
+        $this->lpaServiceProphecy               = $this->prophesize(LpaService::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
+        $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
+        $this->resolveActorProphecy             = $this->prophesize(ResolveActor::class);
     }
 
     /** @test */
@@ -97,13 +98,13 @@ class ActorCodeServiceTest extends TestCase
 
         $mapResults = [
             [
-                'Id' => 'token-3',
-                'SiriusUid' => 'test-uid',
-                'ActorId' => 3,
-                'ActivateBy' => (new DateTime('now'))->add(new \DateInterval('P1Y'))->getTimeStamp(),
-                'Added'   => new DateTime('now'),
-                'ActivationCode' => 'test-code'
-            ]
+                'Id'             => 'token-3',
+                'SiriusUid'      => 'test-uid',
+                'ActorId'        => 3,
+                'ActivateBy'     => (new DateTime('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+                'Added'          => new DateTime('now'),
+                'ActivationCode' => 'test-code',
+            ],
         ];
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn($mapResults)->shouldBeCalled();
@@ -172,9 +173,9 @@ class ActorCodeServiceTest extends TestCase
     /** @test */
     public function validation_fails(): void
     {
-        $testCode     = 'test-code';
-        $testUid      = 'test-uid';
-        $testDob      = 'test-dob';
+        $testCode = 'test-code';
+        $testUid  = 'test-uid';
+        $testDob  = 'test-dob';
 
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
             ->willThrow(new ActorCodeValidationException())
@@ -199,10 +200,10 @@ class ActorCodeServiceTest extends TestCase
 
     private function initValidParameterSet(): array
     {
-        $testCode = 'test-code';
-        $testUid = 'test-uid';
-        $testDob = 'test-dob';
-        $testActorId = 1;
+        $testCode           = 'test-code';
+        $testUid            = 'test-uid';
+        $testDob            = 'test-dob';
+        $testActorId        = 1;
         $this->testActorUid = '123456789012';
 
         $mockLpa = [
