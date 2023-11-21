@@ -23,8 +23,8 @@ class RequestSignerFactoryTest extends TestCase
             ->willReturn(
                 [
                     'codes_api' => [
-                        'static_auth_token' => 'test'
-                    ]
+                        'static_auth_token' => 'test',
+                    ],
                 ]
             );
 
@@ -43,8 +43,7 @@ class RequestSignerFactoryTest extends TestCase
             ->get('config')
             ->willReturn(
                 [
-                    'codes_api' => [
-                    ]
+                    'codes_api' => [],
                 ]
             );
 

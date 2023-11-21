@@ -31,8 +31,8 @@ class LpasFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn(
             [
                 'sirius_api' => [
-                    'endpoint' => 'http://test'
-                ]
+                    'endpoint' => 'http://test',
+                ],
             ]
         );
 
@@ -47,7 +47,7 @@ class LpasFactoryTest extends TestCase
         );
 
         $factory = new LpasFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(Lpas::class, $repo);
     }
 

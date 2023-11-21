@@ -76,7 +76,7 @@ trait GenerateAwsResultTrait
         $awsResult
             ->method('get')
             ->with($this->isType('string'))
-            ->will($this->returnCallback(function($index) use ($iterator) {
+            ->will($this->returnCallback(function ($index) use ($iterator) {
                 return $iterator->offsetGet($index);
             }));
 

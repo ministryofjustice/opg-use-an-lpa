@@ -15,7 +15,7 @@ class ForbiddenExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $fe = new ForbiddenException($message, $additionalData);
