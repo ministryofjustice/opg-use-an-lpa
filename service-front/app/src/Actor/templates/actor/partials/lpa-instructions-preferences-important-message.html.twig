@@ -1,7 +1,7 @@
 {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            <strong>Important: </strong>This LPA has instructions.<br>
+            This LPA has instructions.<br>
         {% endtrans %}
         {% if not feature_enabled('instructions_and_preferences') %}
             {% trans %}
@@ -19,7 +19,7 @@
 {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasGuidance and not lpa.applicationHasRestrictions %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            <strong>Important: </strong>This LPA has preferences.<br>
+            This LPA has preferences.<br>
         {% endtrans %}
         {% if not feature_enabled('instructions_and_preferences') %}
             {% trans %}
@@ -37,7 +37,7 @@
 {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            <strong>Important: </strong>This LPA has instructions and preferences.<br>
+            This LPA has instructions and preferences.<br>
         {% endtrans %}
         {% if not feature_enabled('instructions_and_preferences') %}
             {% trans %}
@@ -55,7 +55,7 @@
 {% if actorActive and is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            <strong>Important: </strong>This LPA has instructions and/or preferences.<br>
+            This LPA has instructions and/or preferences.<br>
         {% endtrans %}
         {% if not feature_enabled('instructions_and_preferences') %}
             {% trans %}

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-15T17:09:59+00:00\n"
+"POT-Creation-Date: 2023-11-21T13:42:06+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4513,4 +4513,20 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
 msgid "Also known as"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
+msgid "This LPA has instructions.<br>"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:21
+msgid "This LPA has preferences.<br>"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:39
+msgid "This LPA has instructions and preferences.<br>"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
+msgid "This LPA has instructions and/or preferences.<br>"
 msgstr ""
