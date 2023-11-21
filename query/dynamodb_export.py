@@ -3,6 +3,7 @@ import calendar
 import argparse
 import boto3
 import re
+import csv
 from time import sleep
 
 
@@ -225,7 +226,7 @@ class DynamoDBExporterAndQuerier:
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
             self.run_athena_query(query, quiet = True)
 
-    def run_athena_query(self, query, outputFileName = None, quiet = False, count = False):
+    def run_athena_query(self, query, outputFileName = None, quiet = False ):
         if quiet != True:
             print('\n')
             print("Running Athena query : ")
@@ -258,18 +259,23 @@ class DynamoDBExporterAndQuerier:
             MaxResults=123
         )
 
-        # if we have outputFileName, that means we will want to produce some output
         if outputFileName :
-           self.output_athena_results(response['ResultSet']['Rows'], count)
+           self.output_athena_results(response['ResultSet']['Rows'], outputFileName )
 
-    def output_athena_results(self, results, count):
-        # TODO type of output will depend on type of query - db create vs count vs row/column results
-        for row in results:
-            outputRow = ''
-            for field in row['Data']:
-                cell = (list)(field.values())
-                outputRow = f"{outputRow} | {cell[0]}"
-            print(outputRow)
+    def output_athena_results(self, results, outputFileName):
+        with open(f"results/{outputFileName}.csv", 'w', newline='') as outFile:
+            wr = csv.writer(outFile, quoting=csv.QUOTE_ALL)
+            for row in results:
+                outputRow = ''
+                csvRow = []
+                for field in row['Data']:
+                    cell = (list)(field.values())
+                    outputRow = f"{outputRow} | {cell[0]}"
+                    csvRow.append(cell[0])
+
+                print(outputRow)
+                wr.writerow(csvRow)
+
 
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
@@ -281,11 +287,11 @@ class DynamoDBExporterAndQuerier:
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "ual"."viewer_activity" WHERE Item.Viewed.S BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofViewedAccessCodes", count = True)
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofViewedAccessCodes" )
 
     def get_count_of_expired_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "viewer_codes" as vc WHERE date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofExpiredAccessCodes", count = True)
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofExpiredAccessCodes")
 
     def replace_date_range(self, sql_string):
         searchStr = "date\(.*AND.*\)"
