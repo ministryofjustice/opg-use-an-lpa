@@ -33,7 +33,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->willReturn($responseProphecy->reveal());
 
         $middleware = new ProblemDetailsMiddleware($loggerProphecy->reveal());
-        $response = $middleware->process($requestProphecy->reveal(), $delegateProphecy->reveal());
+        $response   = $middleware->process($requestProphecy->reveal(), $delegateProphecy->reveal());
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }

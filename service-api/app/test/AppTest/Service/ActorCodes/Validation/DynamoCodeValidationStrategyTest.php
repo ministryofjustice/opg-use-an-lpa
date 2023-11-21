@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use DateTime;
+use Exception;
 
 class DynamoCodeValidationStrategyTest extends TestCase
 {
@@ -28,9 +30,9 @@ class DynamoCodeValidationStrategyTest extends TestCase
     public function initDependencies(): void
     {
         $this->actorCodeRepositoryProphecy = $this->prophesize(ActorCodesInterface::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-        $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
+        $this->lpaServiceProphecy          = $this->prophesize(LpaService::class);
+        $this->loggerProphecy              = $this->prophesize(LoggerInterface::class);
+        $this->resolveActorProphecy        = $this->prophesize(ResolveActor::class);
     }
 
     /** @test */
@@ -44,15 +46,15 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => '123456789'
+                    'ActorLpaId' => '123456789',
                 ]
             );
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -64,8 +66,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'details' => [
                         'uId' => 123456789,
-                        'dob' => 'actor-dob'
-                    ]
+                        'dob' => 'actor-dob',
+                    ],
                 ]
             );
 
@@ -106,7 +108,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
             ->get('actor-code')
             ->willReturn(
                 [
-                    'Active' => false
+                    'Active' => false,
                 ]
             );
 
@@ -132,7 +134,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'different-lpa-uid',
-                    'ActorLpaId' => 'actor-lpa-id'
+                    'ActorLpaId' => 'actor-lpa-id',
                 ]
             );
 
@@ -158,7 +160,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => 'actor-lpa-id'
+                    'ActorLpaId' => 'actor-lpa-id',
                 ]
             );
 
@@ -188,15 +190,15 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => '123456789'
+                    'ActorLpaId' => '123456789',
                 ]
             );
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -228,15 +230,15 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'Active'     => true,
                     'SiriusUid'  => 'lpa-uid',
-                    'ActorLpaId' => '123456789'
+                    'ActorLpaId' => '123456789',
                 ]
             );
 
         $lpa = new Lpa(
             [
-                'uId' => 'lpa-uid'
+                'uId' => 'lpa-uid',
             ],
-            new \DateTime('now')
+            new DateTime('now')
         );
 
         $this->lpaServiceProphecy
@@ -248,8 +250,8 @@ class DynamoCodeValidationStrategyTest extends TestCase
                 [
                     'details' => [
                         'uId' => 'actor-uid',
-                        'dob' => 'different-dob'
-                    ]
+                        'dob' => 'different-dob',
+                    ],
                 ]
             );
 
@@ -290,7 +292,7 @@ class DynamoCodeValidationStrategyTest extends TestCase
 
         $this->actorCodeRepositoryProphecy
             ->flagCodeAsUsed('actor-code')
-            ->willThrow(new \Exception());
+            ->willThrow(new Exception());
 
         $strategy = new DynamoCodeValidationStrategy(
             $this->actorCodeRepositoryProphecy->reveal(),

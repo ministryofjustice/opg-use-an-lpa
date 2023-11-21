@@ -15,7 +15,7 @@ class ConflictExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $ce = new ConflictException($message, $additionalData);

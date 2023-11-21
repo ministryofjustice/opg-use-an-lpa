@@ -9,6 +9,7 @@ use DI\Container;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use InvalidArgumentException;
 
 class PhpDiModifiableContainerTest extends TestCase
 {
@@ -19,7 +20,7 @@ class PhpDiModifiableContainerTest extends TestCase
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $di = new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 

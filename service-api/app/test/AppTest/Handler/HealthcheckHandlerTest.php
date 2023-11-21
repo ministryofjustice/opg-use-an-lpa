@@ -33,13 +33,13 @@ class HealthcheckHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->version = 'dev';
-        $this->actorUsersProphecy = $this->prophesize(ActorUsersInterface::class);
-        $this->httpClientProphecy = $this->prophesize(HttpClient::class);
+        $this->version               = 'dev';
+        $this->actorUsersProphecy    = $this->prophesize(ActorUsersInterface::class);
+        $this->httpClientProphecy    = $this->prophesize(HttpClient::class);
         $this->requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $this->siriusApiUrl = 'localhost';
-        $this->codesApiUrl = 'localhost';
-        $this->iapImagesApiUrl = 'localhost';
+        $this->siriusApiUrl          = 'localhost';
+        $this->codesApiUrl           = 'localhost';
+        $this->iapImagesApiUrl       = 'localhost';
     }
 
     public function testReturnsExpectedJsonResponse(): void

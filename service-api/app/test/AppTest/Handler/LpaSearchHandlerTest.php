@@ -21,8 +21,8 @@ class LpaSearchHandlerTest extends TestCase
         $this->markTestSkipped('must be revisited.');
         $params = [
             'code' => '',
-            'uid' => '',
-            'dob' => '1980-01-01',
+            'uid'  => '',
+            'dob'  => '1980-01-01',
         ];
 
         $expectedData = [
@@ -57,6 +57,7 @@ class LpaSearchHandlerTest extends TestCase
             $this->assertEquals($fieldValue, $data[$fieldName]);
         }
     }
+
     public function testHandleMissingParams()
     {
         $this->markTestSkipped('must be revisited.');

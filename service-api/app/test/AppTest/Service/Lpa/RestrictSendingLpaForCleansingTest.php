@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\Exception\NotFoundException;
@@ -10,9 +12,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class RestrictSendingLpaForCleansingTest
- *
- * @package AppTest\Service\Lpa
  * @coversDefaultClass \App\Service\Lpa\RestrictSendingLpaForCleansing
  */
 class RestrictSendingLpaForCleansingTest extends TestCase
@@ -48,6 +47,6 @@ class RestrictSendingLpaForCleansingTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('LPA not found');
 
-        ($this->restrictSendingLpaForCleansing()($lpa, $actorDetailsMatch));
+        $this->restrictSendingLpaForCleansing()($lpa, $actorDetailsMatch);
     }
 }

@@ -14,7 +14,7 @@ class LpaTest extends TestCase
     public function can_get_data_array_and_time(): void
     {
         $testArray = [
-            'test' => true
+            'test' => true,
         ];
 
         $testDateTime = new DateTime();

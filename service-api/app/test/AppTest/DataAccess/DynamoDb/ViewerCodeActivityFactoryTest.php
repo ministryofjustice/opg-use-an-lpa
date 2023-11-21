@@ -27,13 +27,13 @@ class ViewerCodeActivityFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'viewer-activity-table' => 'test-table'
-                ]
-            ]
+                    'viewer-activity-table' => 'test-table',
+                ],
+            ],
         ]);
 
         $factory = new ViewerCodeActivityFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(ViewerCodeActivity::class, $repo);
     }
 

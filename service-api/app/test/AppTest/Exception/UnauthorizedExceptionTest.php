@@ -15,7 +15,7 @@ class UnauthorizedExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $ue = new UnauthorizedException($message, $additionalData);

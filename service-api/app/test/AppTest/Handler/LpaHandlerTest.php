@@ -16,8 +16,7 @@ class LpaHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testHandleForShareCode()
-:void
+    public function testHandleForShareCode(): void
     {
         $this->markTestSkipped('must be revisited.');
         $shareCode = '123456789012';

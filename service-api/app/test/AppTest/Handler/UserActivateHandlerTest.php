@@ -25,7 +25,7 @@ class UserActivateHandlerTest extends TestCase
         ];
 
         $expectedData = [
-            'Email' => 'a@b.com',
+            'Email'    => 'a@b.com',
             'Password' => 'H@shedP@55word',
         ];
 

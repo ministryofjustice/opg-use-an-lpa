@@ -13,8 +13,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 
 class ActorCodesTest extends TestCase
 {
-    use ProphecyTrait;
     use GenerateAwsResultTrait;
+    use ProphecyTrait;
 
     const TABLE_NAME = 'test-table-name';
 
@@ -28,13 +28,13 @@ class ActorCodesTest extends TestCase
     /** @test */
     public function can_lookup_a_code(): void
     {
-        $testCode = 'test-code';
+        $testCode      = 'test-code';
         $testSiriusUid = 'test-uid';
-        $testActorId = 1;
-        $testExpires = gmdate('c');
-        $testActive = true;
+        $testActorId   = 1;
+        $testExpires   = gmdate('c');
+        $testActive    = true;
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -46,19 +46,19 @@ class ActorCodesTest extends TestCase
                 $this->assertEquals(['S' => $testCode], $data['Key']['ActorCode']);
 
                 return true;
-            }))
+        }))
             ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'ActorCode' => [
+                    'ActorCode'  => [
                         'S' => $testCode,
                     ],
-                    'SiriusUid' => [
+                    'SiriusUid'  => [
                         'S' => $testSiriusUid,
                     ],
-                    'Active' => [
+                    'Active'     => [
                         'BOOL' => $testActive,
                     ],
-                    'Expires' => [
+                    'Expires'    => [
                         'S' => $testExpires,
                     ],
                     'ActorLpaId' => [
@@ -84,7 +84,7 @@ class ActorCodesTest extends TestCase
     {
         $testCode = 'test-code';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function(array $data) use ($testCode) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testCode) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -96,9 +96,9 @@ class ActorCodesTest extends TestCase
                 $this->assertEquals(['S' => $testCode], $data['Key']['ActorCode']);
 
                 return true;
-            }))
+        }))
             ->willReturn($this->createAWSResult([
-                'Item' => []
+                'Item' => [],
             ]))->shouldBeCalled();
 
         $repo = new ActorCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -115,7 +115,7 @@ class ActorCodesTest extends TestCase
     {
         $testCode = 'test-code';
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function(array $data) use ($testCode) {
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testCode) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 

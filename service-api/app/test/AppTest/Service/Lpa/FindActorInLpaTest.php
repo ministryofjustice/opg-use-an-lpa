@@ -21,7 +21,7 @@ class FindActorInLpaTest extends TestCase
     public function setUp(): void
     {
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
     }
 
     /**
@@ -179,7 +179,7 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 [
-                    'actor'    => [
+                    'actor'  => [
                         'uId'          => '700000001234',
                         'dob'          => '1980-03-01',
                         'firstname'    => 'Test',
@@ -233,7 +233,7 @@ class FindActorInLpaTest extends TestCase
                     'dob'              => '1982-01-20', // dob will not match
                     'first_names'      => 'Test Tester',
                     'last_name'        => 'Testing',
-                    'postcode'        => 'Ab1 2Cd',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
             [

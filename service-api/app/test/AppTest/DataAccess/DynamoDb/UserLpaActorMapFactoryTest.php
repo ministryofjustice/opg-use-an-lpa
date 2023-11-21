@@ -39,7 +39,7 @@ class UserLpaActorMapFactoryTest extends TestCase
         ]);
 
         $factory = new UserLpaActorMapFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(UserLpaActorMap::class, $repo);
     }
 
