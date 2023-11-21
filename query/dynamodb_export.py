@@ -225,7 +225,7 @@ class DynamoDBExporterAndQuerier:
             query = re.sub(searchStr, f"'{s3_location}'", rawQuery, flags = re.M)
             self.run_athena_query(query, quiet = True)
 
-    def run_athena_query(self, query, quiet = False):
+    def run_athena_query(self, query, outputFileName = None, quiet = False, count = False):
         if quiet != True:
             print('\n')
             print("Running Athena query : ")
@@ -258,29 +258,34 @@ class DynamoDBExporterAndQuerier:
             MaxResults=123
         )
 
-        # TODO type of output will depend on type of query - db create vs count vs row/column results
-        if quiet != True:
-            self.output_athena_results(response)
+        # if we have outputFileName, that means we will want to produce some output
+        if outputFileName :
+           self.output_athena_results(response['ResultSet']['Rows'], count)
 
-    def output_athena_results(self, response):
-        results = response['ResultSet']['Rows']
-        print(results)
+    def output_athena_results(self, results, count):
+        # TODO type of output will depend on type of query - db create vs count vs row/column results
+        for row in results:
+            outputRow = ''
+            for field in row['Data']:
+                cell = (list)(field.values())
+                outputRow = f"{outputRow} | {cell[0]}"
+            print(outputRow)
 
     def get_expired_viewed_access_codes(self):
         sql_string = 'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER by Organisation;'
-        self.run_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "ExpiredAccessCodes")
 
     def get_expired_unviewed_access_codes(self):
         sql_string = 'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\') ORDER BY vc.item.viewerCode.s'
-        self.run_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "UnviewedAccessCodes")
 
     def get_count_of_viewed_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "ual"."viewer_activity" WHERE Item.Viewed.S BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofViewedAccessCodes", count = True)
 
-    def get_count_of_viewed_access_codes(self):    
+    def get_count_of_expired_access_codes(self):    
         sql_string = 'SELECT COUNT(*) FROM "viewer_codes" as vc WHERE date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'2022-10-01\') AND date(\'2023-09-30\');'
-        self.run_athena_query(self.replace_date_range(sql_string))
+        self.run_athena_query(self.replace_date_range(sql_string), outputFileName = "CountofExpiredAccessCodes", count = True)
 
     def replace_date_range(self, sql_string):
         searchStr = "date\(.*AND.*\)"
@@ -336,7 +341,7 @@ def main():
     work.get_expired_viewed_access_codes()
     work.get_expired_unviewed_access_codes()
     work.get_count_of_viewed_access_codes()
-    work.get_count_of_viewed_access_codes()    
+    work.get_count_of_expired_access_codes()    
 
 if __name__ == "__main__":
     main()
