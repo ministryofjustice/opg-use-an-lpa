@@ -16,10 +16,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-/**
- * Class HealthcheckHandler
- * @package App\Handler
- */
 final class HealthcheckHandler implements RequestHandlerInterface
 {
     public function __construct(
@@ -92,19 +88,18 @@ final class HealthcheckHandler implements RequestHandlerInterface
 
     private function checkCodesApiEndpoint(): array
     {
-        $url  = sprintf('%s/v1/healthcheck', $this->codesApiUrl);
+        $url = sprintf('%s/v1/healthcheck', $this->codesApiUrl);
 
         return $this->apiCall(new Request('GET', $url));
     }
 
     /**
      * @param RequestInterface $request
-     *
      * @return array{healthy: bool}
      */
     private function apiCall(RequestInterface $request): array
     {
-        $data = [];
+        $data          = [];
         $signedRequest = $this->awsSignature->sign($request);
 
         try {
@@ -115,7 +110,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
             } else {
                 $data['healthy'] = false;
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             $data['healthy'] = false;
         }
 
@@ -124,7 +119,6 @@ final class HealthcheckHandler implements RequestHandlerInterface
 
     /**
      * @param callable $functionToTime
-     *
      * @return array{response_time: float}
      */
     private function stopwatch(callable $functionToTime): array

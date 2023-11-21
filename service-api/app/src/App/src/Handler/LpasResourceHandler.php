@@ -15,9 +15,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class LpasResourceHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class LpasResourceHandler implements RequestHandlerInterface
@@ -76,7 +73,7 @@ class LpasResourceHandler implements RequestHandlerInterface
     public function handleDelete(ServerRequestInterface $request): ResponseInterface
     {
         $actorLpaToken = $request->getAttribute('user-lpa-actor-token');
-        $userToken =  $request->getAttribute('actor-id');
+        $userToken     =  $request->getAttribute('actor-id');
 
         if (is_null($actorLpaToken)) {
             throw new BadRequestException('user-lpa-actor-token missing from lpa removal request');

@@ -14,9 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class ChangePasswordHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class ChangePasswordHandler implements RequestHandlerInterface

@@ -9,10 +9,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
-/**
- * Class EmailClientFactory
- * @package App\Service\Email
- */
 class EmailClientFactory
 {
     /**
@@ -29,7 +25,7 @@ class EmailClientFactory
 
         $notifyClient = new NotifyClient(
             [
-                'apiKey' => $config['notify']['api']['key'],
+                'apiKey'     => $config['notify']['api']['key'],
                 'httpClient' => $container->get(ClientInterface::class),
             ]
         );

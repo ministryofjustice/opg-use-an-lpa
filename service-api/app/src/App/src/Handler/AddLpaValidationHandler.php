@@ -12,8 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class AddLpaValidationHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class AddLpaValidationHandler implements RequestHandlerInterface
@@ -23,14 +21,10 @@ class AddLpaValidationHandler implements RequestHandlerInterface
     ) {
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $userId = $request->getHeader('user-token')[0];
-        $data = $request->getParsedBody();
+        $data   = $request->getParsedBody();
 
         if (
             empty($data['actor-code']) ||

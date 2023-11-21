@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
  */
 class ValidateAccessForAllLpaRequirements
 {
-    public const NECESSARY_STATUS  = 'Registered';
+    public const NECESSARY_STATUS = 'Registered';
 
     /**
      * @param LoggerInterface $logger
