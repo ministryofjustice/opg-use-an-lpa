@@ -18,6 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
+    
     /**
      * Client constructor
      *
