@@ -18,6 +18,7 @@ class CaseActor
     protected ?DateTime $dob       = null;
     protected ?string $salutation  = null;
     protected ?string $firstname   = null;
+    protected ?string $otherNames  = null;
     protected ?string $middlenames = null;
     protected ?string $surname     = null;
     protected ?string $companyName = null;
@@ -106,6 +107,16 @@ class CaseActor
     public function setFirstname(string $firstname): void
     {
         $this->firstname = $firstname;
+    }
+
+    public function getOtherNames(): ?string
+    {
+        return $this->otherNames;
+    }
+
+    public function setOtherNames(string $otherNames): void
+    {
+        $this->otherNames = $otherNames;
     }
 
     public function getMiddlenames(): ?string

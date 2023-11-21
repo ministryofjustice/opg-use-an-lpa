@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
+use App\Exception\AuthorisationServiceException;
 use App\Service\Cache\CacheFactory;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
-use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 
 use function Facile\OpenIDClient\base64url_encode;
 
@@ -22,6 +22,9 @@ class OneLoginAuthenticationRequestService
     ) {
     }
 
+    /**
+    * @throws AuthorisationServiceException
+     */
     public function createAuthenticationRequest(string $uiLocale, string $redirectURL): array
     {
 
@@ -50,11 +53,11 @@ class OneLoginAuthenticationRequestService
             ->setClientMetadata($clientMetadata)
             ->build();
 
-        $authorisationService = (new AuthorizationServiceBuilder())->build();
+        $authorisationService = (new AuthorisationServiceBuilder())->build();
 
         $state                   = base64url_encode(random_bytes(12));
         $nonce                   = openssl_digest(random_bytes(24), 'sha256');
-        $authorisationRequestUrl = $authorisationService->getAuthorizationUri(
+        $authorisationRequestUrl = $authorisationService->getAuthorisationUri(
             $client,
             [
                 'scope'        => 'openid email',

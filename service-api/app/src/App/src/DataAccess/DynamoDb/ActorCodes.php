@@ -11,25 +11,8 @@ class ActorCodes implements ActorCodesInterface
 {
     use DynamoHydrateTrait;
 
-    /**
-     * @var DynamoDbClient
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $actorLpaCodesTable;
-
-    /**
-     * ViewerCodeActivity constructor.
-     * @param DynamoDbClient $client
-     * @param string $actorLpaCodesTable
-     */
-    public function __construct(DynamoDbClient $client, string $actorLpaCodesTable)
+    public function __construct(private DynamoDbClient $client, private string $actorLpaCodesTable)
     {
-        $this->client = $client;
-        $this->actorLpaCodesTable = $actorLpaCodesTable;
     }
 
     /**
@@ -39,7 +22,7 @@ class ActorCodes implements ActorCodesInterface
     {
         $result = $this->client->getItem([
             'TableName' => $this->actorLpaCodesTable,
-            'Key' => [
+            'Key'       => [
                 'ActorCode' => [
                     'S' => $code,
                 ],
@@ -57,18 +40,18 @@ class ActorCodes implements ActorCodesInterface
     public function flagCodeAsUsed(string $code)
     {
         $this->client->updateItem([
-            'TableName' => $this->actorLpaCodesTable,
-            'Key' => [
+            'TableName'                 => $this->actorLpaCodesTable,
+            'Key'                       => [
                 'ActorCode' => [
                     'S' => $code,
                 ],
             ],
-            'UpdateExpression' => 'set Active=:active',
+            'UpdateExpression'          => 'set Active=:active',
             'ExpressionAttributeValues' => [
                 ':active' => [
                     'BOOL' => false,
                 ],
-            ]
+            ],
         ]);
     }
 }

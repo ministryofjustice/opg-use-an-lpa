@@ -133,6 +133,48 @@ class SiriusLpaFactoryTest extends TestCase
     /**
      * @test
      */
+    public function can_hydrate_donor_from_simple_example(): void
+    {
+        $factory = new Sirius();
+
+        $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
+        $donor = $lpa->getDonor();
+
+        $this->assertEquals(0, $donor->getId());
+        $this->assertEquals('7000-0000-0054', $donor->getUId());
+        $this->assertEquals('string', $donor->getEmail());
+        $this->assertEquals('Mrs', $donor->getSalutation());
+        $this->assertEquals('Ian', $donor->getFirstname());
+        $this->assertEquals(null, $donor->getOtherNames());
+        $this->assertEquals(null, $donor->getMiddlenames());
+        $this->assertEquals('Deputy', $donor->getSurname());
+        $this->assertEquals('ABC Ltd', $donor->getCompanyName());
+    }
+
+    /**
+     * @test
+     */
+    public function can_hydrate_attorney_from_simple_example(): void
+    {
+        $factory = new Sirius();
+
+        $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
+        $attorney = $lpa->getAttorneys()[0];
+
+        $this->assertEquals(0, $attorney->getId());
+        $this->assertEquals('7000-0000-0054', $attorney->getUId());
+        $this->assertEquals('string', $attorney->getEmail());
+        $this->assertEquals('Mrs', $attorney->getSalutation());
+        $this->assertEquals('Ian', $attorney->getFirstname());
+        $this->assertEquals('George', $attorney->getOtherNames());
+        $this->assertEquals('Deputy', $attorney->getMiddlenames());
+        $this->assertEquals('Deputy', $attorney->getSurname());
+        $this->assertEquals('ABC Ltd', $attorney->getCompanyName());
+    }
+
+    /**
+     * @test
+     */
     public function can_create_lpa_from_example_with_linked_donors(): void
     {
         $factory = new Sirius();

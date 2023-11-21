@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-08T13:43:18+00:00\n"
+"POT-Creation-Date: 2023-11-15T17:09:59+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -702,15 +702,15 @@ msgstr "Cyfeirnod LPA"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
 #: src/Actor/templates/actor/check-your-answers.html.twig:30
 #: src/Common/templates/common/cookies.html.twig:103
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:43
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:4
 msgid "Name"
 msgstr "Enw"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:28
-#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:8
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
 msgid "Date of birth"
 msgstr "Dyddiad geni"
 
@@ -3208,8 +3208,8 @@ msgid "What is your current address?"
 msgstr "Beth yw eich cyfeiriad ar hyn o bryd?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:47
-#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:12
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:53
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:18
 #: src/Common/templates/partials/contact-details/address.html.twig:1
 msgid "Address"
 msgstr "Cyfeiriad"
@@ -5364,7 +5364,7 @@ msgstr ""
 "Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod "
 "pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:40
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:46
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
 msgstr[0] "%attorneyOrdinal% atwrnai"
@@ -5374,7 +5374,7 @@ msgstr[3] "%attorneyOrdinal% atwrnai"
 msgstr[4] "%attorneyOrdinal% atwrnai"
 msgstr[5] "%attorneyOrdinal% atwrnai"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:44
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
 msgid "(Trust corporation)"
 msgstr "(Corfforaeth Ymddiriedolaeth)"
 
@@ -6510,6 +6510,11 @@ msgstr "Dewiswch os ydych chi’n byw yn y DU ai peidio"
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
 msgid "We will send your activation key to you by post."
 msgstr "Byddwn yn anfon eich allwedd cadarnhau cyfrif atoch drwy’r post."
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
+msgid "Also known as"
+msgstr "A elwir hefyd yn"
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "

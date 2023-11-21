@@ -24,33 +24,20 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
- *
- * Class Lpas
- * @package App\DataAccess\ApiGateway
  */
 class Lpas implements LpasInterface
 {
     private string $apiBaseUri;
-    private AwsSignatureV4 $awsSignature;
-    private HttpClient $httpClient;
-    private LoggerInterface $logger;
-    private DataSanitiserStrategy $sanitiser;
-    private string $traceId;
 
     public function __construct(
-        HttpClient $httpClient,
-        AwsSignatureV4 $awsSignature,
+        private HttpClient $httpClient,
+        private AwsSignatureV4 $awsSignature,
         string $apiUrl,
-        string $traceId,
-        DataSanitiserStrategy $sanitiser,
-        LoggerInterface $logger
+        private string $traceId,
+        private DataSanitiserStrategy $sanitiser,
+        private LoggerInterface $logger,
     ) {
-        $this->httpClient = $httpClient;
         $this->apiBaseUri = $apiUrl;
-        $this->awsSignature = $awsSignature;
-        $this->traceId = $traceId;
-        $this->sanitiser = $sanitiser;
-        $this->logger = $logger;
     }
 
     /**
@@ -75,7 +62,7 @@ class Lpas implements LpasInterface
      */
     public function lookup(array $uids): array
     {
-        $provider = AwsCredentialProvider::defaultProvider();
+        $provider    = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
 
         // Builds an array of Requests to send
@@ -83,7 +70,7 @@ class Lpas implements LpasInterface
         $requests = array_combine(
             $uids,  // Use as array key
             array_map(function ($v) use ($credentials) {
-                $url = $this->apiBaseUri . sprintf("/v1/use-an-lpa/lpas/%s", $v);
+                $url = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
 
                 $request = new Request('GET', $url, $this->buildHeaders());
 
@@ -98,13 +85,13 @@ class Lpas implements LpasInterface
 
         $pool = new Pool($this->httpClient, $requests, [
             'concurrency' => 50,
-            'options' => [
+            'options'     => [
                 'http_errors' => false,
             ],
-            'fulfilled' => function ($response, $id) use (&$results) {
+            'fulfilled'   => function ($response, $id) use (&$results) {
                 $results[$id] = $response;
             },
-            'rejected' => function ($reason, $id) {
+            'rejected'    => function ($reason, $id) {
                 // Log?
             },
         ]);
@@ -132,8 +119,8 @@ class Lpas implements LpasInterface
                         'Unexpected {status} response from gateway for request of LPA {lpaUid}',
                         [
                             'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
-                            'status' => $statusCode,
-                            'lpaUid' => $uid,
+                            'status'     => $statusCode,
+                            'lpaUid'     => $uid,
                         ]
                     );
                     unset($results[$uid]);
@@ -165,14 +152,14 @@ class Lpas implements LpasInterface
             $payloadContent['actor_uid'] = $actorId;
         }
 
-        $provider = AwsCredentialProvider::defaultProvider();
+        $provider    = AwsCredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
 
         // request payload
         $body = json_encode($payloadContent);
 
         // construct request for API gateway
-        $url = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
+        $url     = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
         $request = new Request('POST', $url, $this->buildHeaders(), $body);
         $request = $this->awsSignature->signRequest($request, $credentials);
 
@@ -195,7 +182,7 @@ class Lpas implements LpasInterface
     private function buildHeaders(): array
     {
         $headerLines = [
-            'Content-Type'  => 'application/json',
+            'Content-Type' => 'application/json',
         ];
 
         if (!empty($this->traceId)) {
