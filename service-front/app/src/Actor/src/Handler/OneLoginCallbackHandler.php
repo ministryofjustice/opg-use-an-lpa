@@ -56,21 +56,18 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
         //TODO: Content and Welsh translations
         ////http://localhost:9002/home/login?error=invalid_request&error_description=Unsupported%20response&state=
         if (array_key_exists('error', $authParams)) {
-            switch ($authParams['error']) {
-                case 'temporarily_unavailable':
-                    //http://localhost:9002/home/login?error=temporarily_unavailable&error_description=Unsupported%20response&state=
-                    return $this->redirectToRoute('home', [], [
-                        'error' => 'temporarily_unavailable',
-                    ]);
-                case 'access_denied':
-                    //http://localhost:9002/home/login?error=access_denied&error_description=Unsupported%20response&state=
-                    return $this->redirectToRoute('home', [], [
-                        'error' => 'access_denied',
-                    ]);
-                default:
-                    $this->logger->notice('User attempted to login via OneLogin however there was an error');
-                    throw new RuntimeException('Error returned from OneLogin', 500);
-            }
+            $this->logger->notice('User attempted to login via OneLogin however there was an error');
+            return match ($authParams['error']) {
+                //http://localhost:9002/home/login?error=access_denied&error_description=Unsupported%20response&state=
+                'access_denied' => $this->redirectToRoute('home', [], [
+                    'error' => 'access_denied',
+                ]),
+                //http://localhost:9002/home/login?error=temporarily_unavailable&error_description=Unsupported%20response&state=
+                'temporarily_unavailable' => $this->redirectToRoute('home', [], [
+                    'error' => 'temporarily_unavailable',
+                ]),
+                default => throw new RuntimeException('Error returned from OneLogin', 500)
+            };
         }
 
         if (!array_key_exists('code', $authParams)) {
