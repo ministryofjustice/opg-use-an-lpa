@@ -16,6 +16,7 @@ scripts/getStatsResultDemo.json
 scripts/analysis_scripts/*.csv
 
 query/s3_objects/**
+query/results/*.csv
 terraform/**/modules/**.terraform.lock.hcl
 
 .structurizr

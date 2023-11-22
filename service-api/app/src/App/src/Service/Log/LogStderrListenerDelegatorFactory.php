@@ -16,7 +16,7 @@ class LogStderrListenerDelegatorFactory
      * @param array $options
      * @return LogStderrListener
      */
-    public function __invoke(ContainerInterface $container, $name, callable $callback, array $options = null)
+    public function __invoke(ContainerInterface $container, $name, callable $callback, ?array $options = null)
     {
         $errorHandler = $callback();
         $errorHandler->attachListener(

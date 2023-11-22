@@ -14,21 +14,12 @@ use Psr\Log\LoggerInterface;
 
 class RemoveLpa
 {
-    private LoggerInterface $logger;
-    private UserLpaActorMapInterface $userLpaActorMapRepository;
-    private ViewerCodesInterface $viewerCodesRepository;
-    private LpaService $lpaService;
-
     public function __construct(
-        LoggerInterface $logger,
-        UserLpaActorMapInterface $userLpaActorMapRepository,
-        ViewerCodesInterface $viewerCodesRepository,
-        LpaService $lpaService
+        private LoggerInterface $logger,
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private ViewerCodesInterface $viewerCodesRepository,
+        private LpaService $lpaService,
     ) {
-        $this->logger = $logger;
-        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->viewerCodesRepository = $viewerCodesRepository;
-        $this->lpaService = $lpaService;
     }
 
     /**
@@ -37,7 +28,6 @@ class RemoveLpa
      *
      * @param string $userId The user account ID that must correlate to the $token
      * @param string $token  UserLpaActorToken that map an LPA to a user account
-     *
      * @return array A structure that contains processed LPA data and metadata
      * @throws NotFoundException|Exception
      */
@@ -99,7 +89,7 @@ class RemoveLpa
                 for UserLpaActorId {expectedId}, actual deletion of data for UserLpaActorId {deletedId}',
                 [
                     'expectedId' => $deletedData['Id'],
-                    'deletedId' => $userActorLpa['Id']
+                    'deletedId'  => $userActorLpa['Id'],
                 ]
             );
             throw new ApiException('Incorrect LPA data deleted from users account');
@@ -122,6 +112,6 @@ class RemoveLpa
                 $viewerCodes[] = $viewerCodeRecord;
             }
         }
-        return ($viewerCodes ?? []);
+        return $viewerCodes ?? [];
     }
 }

@@ -13,9 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class CanPasswordResetHandler
- *
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class CanPasswordResetHandler implements RequestHandlerInterface

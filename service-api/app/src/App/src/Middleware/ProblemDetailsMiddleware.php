@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Middleware;
 
 use App\Exception\AbstractApiException;
@@ -11,21 +13,10 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class ProblemDetailsMiddleware
- *
- * @package App\Middleware
- */
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
@@ -42,9 +33,9 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
         } catch (AbstractApiException $ex) {
             //  Translate this exception type into response JSON
             $problem = [
-                'title' => $ex->getTitle(),
+                'title'   => $ex->getTitle(),
                 'details' => $ex->getMessage(),
-                'data' => $ex->getAdditionalData(),
+                'data'    => $ex->getAdditionalData(),
             ];
 
             $this->logger->info($ex->getMessage(), $ex->getAdditionalData());
@@ -55,7 +46,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
                     $ex->getMessage(),
                     [
                         'previous' => $previous->getMessage(),
-                        'trace' => $previous->getTrace()
+                        'trace'    => $previous->getTrace(),
                     ]
                 );
             }

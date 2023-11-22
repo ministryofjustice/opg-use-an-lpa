@@ -11,8 +11,9 @@ use Throwable;
 
 class LogStderrListener
 {
-
-    public function __construct(public LoggerInterface $logger, public bool $includeTrace = false) {}
+    public function __construct(public LoggerInterface $logger, public bool $includeTrace = false)
+    {
+    }
 
     /**
      * Style and output errors to STDERR (For use with Docker)
@@ -25,9 +26,9 @@ class LogStderrListener
     {
         $data = [
             'message' => $error->getMessage(),
-            'line' => $error->getLine(),
-            'file' => $error->getFile(),
-            'code' => $error->getCode(),
+            'line'    => $error->getLine(),
+            'file'    => $error->getFile(),
+            'code'    => $error->getCode(),
         ];
 
         if ($this->includeTrace) {

@@ -56,7 +56,7 @@ class LpaService
 
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['activeAttorneys'] = array_values(
+            $lpaData['activeAttorneys']    = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
                 })
@@ -65,7 +65,7 @@ class LpaService
 
         if ($lpaData['attorneys'] !== null) {
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['inactiveAttorneys'] = array_values(
+            $lpaData['inactiveAttorneys']  = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === self::INACTIVE_ATTORNEY;
                 })
