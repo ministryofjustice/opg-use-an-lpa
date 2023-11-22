@@ -34,8 +34,6 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
     use Logger;
     use Session;
 
-    public const OIDC_AUTH_INTERFACE = 'oidcauthinterface';
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -59,13 +57,21 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
             }
 
             $result            = $this->authenticateOneLoginService->authenticate($uiLocale, $signInLink);
-            $result['customs'] = ['ui_locale' => $uiLocale];
+            $result['customs'] = [
+                'ui_locale'    => $uiLocale,
+                'redirect_uri' => $signInLink,
+            ];
 
             $this
                 ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
-                ?->set(self::OIDC_AUTH_INTERFACE, AuthSession::fromArray($result));
+                ?->set(OneLoginService::OIDC_AUTH_INTERFACE, AuthSession::fromArray($result));
 
             return new RedirectResponse($result['url']);
+        }
+
+        $params = $request->getQueryParams();
+        if (array_key_exists('error', $params)) {
+            $form->addErrorMessage($params['error']);
         }
 
         return new HtmlResponse($this->renderer->render('actor::one-login', [
