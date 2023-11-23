@@ -59,7 +59,7 @@ class ConfigProvider
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
 
-                //One Login
+                // One Login
                 Facile\OpenIDClient\Issuer\IssuerBuilderInterface::class => Facile\OpenIDClient\Issuer\IssuerBuilder::class
             ],
 
@@ -90,8 +90,13 @@ class ConfigProvider
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
 
-                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class
+                // One Login
+                Service\Authentication\AuthorisationClientManager::class
+                    => Service\Authentication\AuthorisationClientManagerFactory::class,
+                Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilder::class
+                    => Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilderFactory::class,
 
+                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class
             ],
 
             'delegators' => [
