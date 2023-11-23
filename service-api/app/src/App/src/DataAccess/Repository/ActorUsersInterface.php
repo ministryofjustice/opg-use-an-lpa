@@ -10,7 +10,19 @@ use ParagonIE\HiddenString\HiddenString;
 /**
  * Interface for Data relating to Users of the Actor System.
  *
- * Interface ActorUsersInterface
+ * @psalm-type ActorUser = array{
+ *     Id: string,
+ *     Email: string,
+ *     LastLogin: string,
+ *     ActivationToken?: string,
+ *     ExpiresTTL?: int,
+ *     PasswordResetToken?: string,
+ *     PasswordResetExpiry?: int,
+ *     NeedsReset?: bool,
+ *     EmailResetToken?: string,
+ *     EmailResetExpiry?: int,
+ *     NewEmail?: string,
+ * }
  */
 interface ActorUsersInterface
 {
