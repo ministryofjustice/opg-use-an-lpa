@@ -5,6 +5,7 @@
       <tool tool_name="Behat">
         <settings>
           <configurations>
+            <local_configuration configuration_file_path="$PROJECT_DIR$/tests/smoke/behat.yml" executable_path="$PROJECT_DIR$/tests/smoke/vendor/behat/behat/bin/behat" use_configuration_file="true" />
             <local_configuration configuration_file_path="$PROJECT_DIR$/service-api/app/behat.yml" executable_path="$PROJECT_DIR$/service-api/app/vendor/behat/behat/bin/behat" use_configuration_file="true" />
             <local_configuration configuration_file_path="$PROJECT_DIR$/service-front/app/behat.yml" executable_path="$PROJECT_DIR$/service-front/app/vendor/behat/behat/bin/behat" use_configuration_file="true" />
           </configurations>
@@ -17,18 +18,16 @@
       <tool tool_name="Behat">
         <cache>
           <versions>
-            <info id="Local" version="3.8.1" />
-            <info id="interpreter-629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" version="3.8.1" />
-            <info id="interpreter-a252f9af-85e6-4a7b-b4d0-a73204db31c6" version="3.12.0" />
-            <info id="interpreter-d0145a1b-f903-43c7-8428-a985293fe8b9" version="3.11.0" />
-            <info id="interpreter-f727a88f-8a28-4df0-87a2-12a139ed8d31" version="3.11.0" />
+            <info id="interpreter-629f1e4d-0e9c-4595-aa54-e8d28c3ac0df/app/vendor/behat/behat/bin/behat" version="3.11.0" />
+            <info id="interpreter-a252f9af-85e6-4a7b-b4d0-a73204db31c6/app/vendor/behat/behat/bin/behat" version="3.13.0" />
+            <info id="interpreter-d0145a1b-f903-43c7-8428-a985293fe8b9/app/vendor/behat/behat/bin/behat" version="3.13.0" />
           </versions>
         </cache>
       </tool>
       <tool tool_name="PHPUnit">
         <cache>
           <versions>
-            <info id="Local" version="8.5.27" />
+            <info id="Local/Users/adam.cooper/Projects/Applications/opg-use-an-lpa/service-front/app/vendor/autoload.php" version="9.6.7" />
             <info id="interpreter-d0145a1b-f903-43c7-8428-a985293fe8b9" version="8.5.27" />
             <info id="interpreter-f727a88f-8a28-4df0-87a2-12a139ed8d31" version="8.5.27" />
           </versions>
