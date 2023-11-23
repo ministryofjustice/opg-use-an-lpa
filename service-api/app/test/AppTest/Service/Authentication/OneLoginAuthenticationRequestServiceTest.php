@@ -4,62 +4,53 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Authentication;
 
-use App\Service\Authentication\OneLoginAuthenticationRequestService;
-use App\Service\Authentication\JWKFactory;
-use App\Service\Cache\CacheFactory;
-use App\Service\Authentication\IssuerBuilder;
-use Facile\OpenIDClient\Issuer\IssuerInterface;
-use Facile\OpenIDClient\Issuer\Metadata\IssuerMetadataInterface;
-use Jose\Component\Core\JWK;
+use App\Service\Authentication\AuthorisationService;
+use App\Service\Authentication\AuthorisationServiceBuilder;
+use App\Service\Authentication\OneLoginService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\SimpleCache\CacheInterface;
 
 class OneLoginAuthenticationRequestServiceTest extends TestCase
 {
     use ProphecyTrait;
-
-    private ObjectProphecy|JWKFactory $jwkFactory;
-    private ObjectProphecy|IssuerBuilder $issuerBuilder;
-    private ObjectProphecy|CacheFactory $cacheFactory;
-
-    public function setup(): void
-    {
-        $jwk                 = $this->prophesize(JWK::class);
-        $this->jwkFactory    = $this->prophesize(JWKFactory::class);
-        $this->issuerBuilder = $this->prophesize(IssuerBuilder::class);
-        $issuer              = $this->prophesize(IssuerInterface::class);
-        $issuerMetaData      = $this->prophesize(IssuerMetadataInterface::class);
-        $this->cacheFactory  = $this->prophesize(CacheFactory::class);
-        $cacheInterface      = $this->prophesize(CacheInterface::class);
-
-        $this->jwkFactory->__invoke()->willReturn($jwk);
-        $issuer->getMetadata()->willReturn($issuerMetaData);
-        $issuerMetaData->getAuthorizationEndpoint()->willReturn('fake endpoint');
-        $this->issuerBuilder->setMetadataProviderBuilder(Argument::any())->willReturn($this->issuerBuilder);
-        $this->issuerBuilder->build('http://mock-one-login:8080/.well-known/openid-configuration')->willReturn($issuer);
-        $this->cacheFactory->__invoke('one-login')->willReturn($cacheInterface);
-    }
 
     /**
      * @test
      */
     public function create_authentication_request(): void
     {
-        $authorisationRequestService = new OneLoginAuthenticationRequestService(
-            $this->jwkFactory->reveal(),
-            $this->issuerBuilder->reveal(),
-            $this->cacheFactory->reveal(),
-        );
-        $fakeRedirect                = 'http://fakehost/auth/redirect';
-        $authorisationRequest        = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
-        $authorisationRequestUrl     = $authorisationRequest['url'];
-        $this->assertStringContainsString('client_id=client-id', $authorisationRequestUrl);
-        $this->assertStringContainsString('scope=openid+email', $authorisationRequestUrl);
-        $this->assertStringContainsString('vtr=["Cl.Cm.P2"]', urldecode($authorisationRequestUrl));
-        $this->assertStringContainsString('ui_locales=en', $authorisationRequestUrl);
-        $this->assertStringContainsString('redirect_uri=' . $fakeRedirect, urldecode($authorisationRequestUrl));
+        $fakeRedirect = 'http://fakehost/auth/redirect';
+
+        $service = $this->prophesize(AuthorisationService::class);
+        $service->getAuthorisationUri(Argument::that(function (array $configuration) use ($fakeRedirect): bool {
+            $this->assertArrayHasKey('state', $configuration);
+            $this->assertArrayHasKey('nonce', $configuration);
+
+            // these are random values so remove them before compare operation.
+            unset($configuration['state']);
+            unset($configuration['nonce']);
+
+            $this->assertEquals(
+                [
+                    'scope'        => 'openid email',
+                    'redirect_uri' => $fakeRedirect,
+                    'vtr'          => '["Cl.Cm.P2"]',
+                    'ui_locales'   => 'en',
+                    'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
+                ],
+                $configuration,
+            );
+
+            return true;
+        }))->willReturn($fakeRedirect . '?with_suitable_values=true');
+
+        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
+        $serviceBuilder->build()
+            ->willReturn($service->reveal());
+
+        $authorisationRequestService = new OneLoginService($serviceBuilder->reveal());
+
+        $authorisationRequest = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
     }
 }

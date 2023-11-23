@@ -10,7 +10,7 @@ use Jose\Component\Core\JWK;
 use Jose\Component\KeyManagement\JWKFactory as KeyFactory;
 
 /**
- * Generates a JWK when provided using a supplied KeyPairManager.
+ * Generates a JWK when provided a supplied KeyPairManager.
  *
  * The {@link KeyPair} can contain a private key but does not have to.
  */

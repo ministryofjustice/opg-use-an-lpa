@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Authentication;
 
-use App\Service\Authentication\KeyPair;
-use App\Service\Authentication\KeyPairManager;
+use App\Service\Authentication\KeyManager\KeyPair;
+use App\Service\Authentication\KeyManager\KeyPairManager;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
