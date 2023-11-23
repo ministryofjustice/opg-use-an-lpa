@@ -42,6 +42,8 @@ class ConfigProvider
                 Psr\Http\Client\ClientInterface::class => Http\Adapter\Guzzle6\Client::class,
                 Http\Client\HttpClient::class => Http\Adapter\Guzzle6\Client::class,
 
+                Psr\Clock\ClockInterface::class => Service\InternalClock::class,
+
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
