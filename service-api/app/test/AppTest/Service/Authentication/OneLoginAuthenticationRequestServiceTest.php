@@ -7,6 +7,7 @@ namespace AppTest\Service\Authentication;
 use App\Service\Authentication\AuthorisationService;
 use App\Service\Authentication\AuthorisationServiceBuilder;
 use App\Service\Authentication\OneLoginService;
+use App\Service\Authentication\UserInfoService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -37,7 +38,7 @@ class OneLoginAuthenticationRequestServiceTest extends TestCase
                     'redirect_uri' => $fakeRedirect,
                     'vtr'          => '["Cl.Cm.P2"]',
                     'ui_locales'   => 'en',
-                    'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT": null}}',
+                    'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT":null}}',
                 ],
                 $configuration,
             );
@@ -45,11 +46,13 @@ class OneLoginAuthenticationRequestServiceTest extends TestCase
             return true;
         }))->willReturn($fakeRedirect . '?with_suitable_values=true');
 
+        $userInfoService = $this->prophesize(UserInfoService::class);
+
         $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
         $serviceBuilder->build()
             ->willReturn($service->reveal());
 
-        $authorisationRequestService = new OneLoginService($serviceBuilder->reveal());
+        $authorisationRequestService = new OneLoginService($serviceBuilder->reveal(), $userInfoService->reveal());
 
         $authorisationRequest = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
     }
