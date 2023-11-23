@@ -5,9 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/service-api/app/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-front/app/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/smoke/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/service-front/app/spec" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/service-front/app/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/alphagov/notifications-php-client" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/amp" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/byte-stream" />
