@@ -9,7 +9,7 @@ ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
 RUN set -xe \
   && apk add --update --no-cache fcgi \
-  && install-php-extensions apcu \
+  && install-php-extensions apcu gmp \
   && rm /usr/bin/install-php-extensions
 
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/
