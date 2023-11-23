@@ -9,13 +9,13 @@ use Aws\SecretsManager\SecretsManagerClient;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class OneLoginUserInfoKeyManager extends AbstractKeyPairManager implements KeyPairManagerInterface
+class OneLoginUserInfoKeyPairManager extends AbstractKeyPairManager implements KeyPairManagerInterface
 {
     public const PUBLIC_KEY = 'gov_uk_onelogin_userinfo_public_key';
 
     public function getKeyPair(): KeyPair
     {
-        return self::fetchKeyPairFromSecretsManager(self::PUBLIC_KEY);
+        return $this->fetchKeyPairFromSecretsManager(self::PUBLIC_KEY);
     }
 
     public function getAlgorithm(): string
