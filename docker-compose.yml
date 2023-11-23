@@ -204,6 +204,10 @@ services:
       LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
       IAP_IMAGES_API_ENDPOINT: "http://api-gateway:5000"
 
+      ONE_LOGIN_CLIENT_ID: "client-id"
+      ONE_LOGIN_DISCOVERY_URL: "http://mock-one-login:8080/.well-known/openid-configuration"
+      ONE_LOGIN_IDENTITY_ISSUER: "https://identity.account.gov.uk/" #hardcoded mock-one-login value
+
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
       DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM: "true"
