@@ -2083,7 +2083,7 @@ class AccountContext implements Context
         $language       = $language === 'English' ? 'en' : 'cy';
 
         assert::assertTrue(isset($locationHeader));
-        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize?state=fakestate');
         assert::assertEquals($language, $this->language);
         assert::assertStringContainsString('ui_locale=' . $this->language, $params);
     }
@@ -2095,5 +2095,29 @@ class AccountContext implements Context
     {
         $this->language = 'cy';
         $this->ui->clickLink('Cymraeg');
+    }
+
+    /**
+     * @When /^One Login returns a (.*) error$/
+     */
+    public function oneLoginReturnsAError($errorType): void
+    {
+        $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
+    }
+
+    /**
+     * @Then /^I am redirected to the login page with a (.*) error message$/
+     */
+    public function iAmRedirectedToTheErrorPage($errorType): void
+    {
+        $this->ui->assertPageAddress('/home?error=' . $errorType);
+    }
+
+    /**
+     * @Then /^I see the text (.*)$/
+     */
+    public function iSeeTheText($text): void
+    {
+        $this->ui->assertPageContainsText($text);
     }
 }
