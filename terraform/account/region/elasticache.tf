@@ -22,7 +22,7 @@ resource "aws_elasticache_replication_group" "brute_force_cache_replication_grou
   description                = "brute force redis cache replication group"
   parameter_group_name       = "default.redis5.0"
   engine_version             = "5.0.6"
-  node_type                  = "cache.t2.micro"
+  node_type                  = "cache.t4g.micro"
   engine                     = "redis"
   num_cache_clusters         = 2
   transit_encryption_enabled = true
