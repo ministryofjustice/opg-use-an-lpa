@@ -2098,7 +2098,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^One Login returns a (.*) error$/
+     * @When /^One Login returns a "(.*)" error$/
      */
     public function oneLoginReturnsAError($errorType): void
     {
@@ -2106,7 +2106,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am redirected to the login page with a (.*) error message$/
+     * @Then /^I am redirected to the login page with a "(.*)" error message$/
      */
     public function iAmRedirectedToTheErrorPage($errorType): void
     {
@@ -2114,7 +2114,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I see the text (.*)$/
+     * @Then /^I should be told "(.*)"$/
      */
     public function iSeeTheText($text): void
     {
