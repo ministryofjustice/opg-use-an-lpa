@@ -10,7 +10,7 @@ use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class AbstractKeyPairManager
+abstract class AbstractKeyPairManager
 {
     public function __construct(private SecretsManagerClient $secretsManagerClient, private LoggerInterface $logger)
     {

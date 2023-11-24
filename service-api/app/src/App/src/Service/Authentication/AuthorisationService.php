@@ -66,8 +66,7 @@ class AuthorisationService
     {
         try {
             $session     = AuthSession::fromArray($session);
-            $redirectUri = $session->getCustoms()['redirect_uri']
-                ?? throw new RuntimeException('"redirect_uri" not included in AuthSession custom data');
+            $redirectUri = $session->getCustoms()['redirect_uri'];
 
             return $this->authorizationService->callback(
                 $this->getClient(),

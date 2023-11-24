@@ -51,6 +51,10 @@ class OneLoginAuthenticationCallbackHandler implements RequestHandlerInterface
             throw new BadRequestException('The auth session must contain a nonce');
         }
 
+        if (empty($requestData['auth_session']['customs']['redirect_uri'])) {
+            throw new BadRequestException('The auth session must contain a redirect_uri');
+        }
+
         $user = $this->callbackHandlingService->handleCallback(
             $requestData['code'],
             $requestData['state'],
