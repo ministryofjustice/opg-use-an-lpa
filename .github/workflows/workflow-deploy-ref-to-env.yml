@@ -32,7 +32,7 @@ permissions:
   packages: none
   repository-projects: none
   statuses: none
-    
+
 jobs:
   validate_input:
     name: check environment
@@ -57,7 +57,7 @@ jobs:
         with:
           fetch-depth: 2
           ref: ${{ inputs.git_ref }}
-    
+
       - name: get changed files in the admin folder
         id: changed-files-admin
         uses: tj-actions/changed-files@1864dc5311069c2319e40ddda20ebf24336dcba9
@@ -142,6 +142,19 @@ jobs:
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
 
+  code_coverage:
+    name: upload to code coverage
+    uses: ./.github/workflows/_codecov.yml
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    secrets: inherit
+    if: |
+      always() &&
+      ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
+
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -218,19 +231,6 @@ jobs:
     if: |
       always() &&
       needs.run_behat_suite.result == 'success'
-
-  code_coverage:
-    name: upload to code coverage
-    uses: ./.github/workflows/_codecov.yml
-    with:
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-    needs:
-      - docker_build_scan_push
-      - workflow_variables
-    secrets: inherit
-    if: |
-      always() &&
-      needs.docker_build_scan_push.result == 'success'
 
   ecr_scan_results:
     name: ecr scan results
