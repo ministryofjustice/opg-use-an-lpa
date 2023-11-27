@@ -115,7 +115,7 @@ class OidcContext implements Context
 
         $url = parse_url($response['url']);
         Assert::assertSame(
-            'https://one-login/authorize',
+            'https://one-login-mock/authorize',
             sprintf(
                 '%s://%s%s',
                 $url['scheme'],
