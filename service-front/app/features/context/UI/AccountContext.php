@@ -2083,7 +2083,7 @@ class AccountContext implements Context
         $language       = $language === 'English' ? 'en' : 'cy';
 
         assert::assertTrue(isset($locationHeader));
-        assert::assertEquals($locationHeader, 'http://fake.url/authorize?state=fakestate');
+        assert::assertEquals($locationHeader, 'http://fake.url/authorize');
         assert::assertEquals($language, $this->language);
         assert::assertStringContainsString('ui_locale=' . $this->language, $params);
     }

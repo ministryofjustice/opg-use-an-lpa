@@ -27,7 +27,7 @@
       | access_denied           | Tried to login however access is denied |
       | temporarily_unavailable | One Login is temporarily unavailable    |
 
-    @ui @actor @ff:allow_gov_one_login:true
+    @ui @actor @ff:allow_gov_one_login:true @welsh
     Scenario Outline: One Login returns a specific Welsh error
       Given I am on the temporary one login page
       And I select the Welsh language
@@ -56,7 +56,7 @@
         | unsupported_response_type |
         | server_error              |
 
-    @ui @actor @ff:allow_gov_one_login:true
+    @ui @actor @ff:allow_gov_one_login:true @welsh
     Scenario Outline: One Login returns a generic error in Welsh
       Given I am on the temporary one login page
       And I select the Welsh language
