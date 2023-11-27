@@ -7,6 +7,7 @@ namespace App\Service\Authentication;
 use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
 use App\Service\Cache\CacheFactory;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface as PsrClientInterface;
 use RuntimeException;
 
 class AuthorisationClientManagerFactory
@@ -26,6 +27,7 @@ class AuthorisationClientManagerFactory
             $container->get(OneLoginIdentityKeyPairManager::class),
             $container->get(IssuerBuilder::class),
             $container->get(CacheFactory::class),
+            $container->get(PsrClientInterface::class),
         );
     }
 }

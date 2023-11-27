@@ -11,6 +11,7 @@ use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\ClientInterface;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
+use Psr\Http\Client\ClientInterface as HttpClientInterface;
 
 class AuthorisationClientManager
 {
@@ -21,17 +22,22 @@ class AuthorisationClientManager
         private KeyPairManagerInterface $keyPairManager,
         private IssuerBuilder $issuerBuilder,
         private CacheFactory $cacheFactory,
+        private HttpClientInterface $httpClient,
     ) {
     }
 
     public function get(): ClientInterface
     {
         $cachedBuilder = new MetadataProviderBuilder();
-        $cachedBuilder->setCache(($this->cacheFactory)('one-login'))
+        $cachedBuilder
+            ->setHttpClient($this->httpClient)
+            ->setCache(($this->cacheFactory)('one-login'))
             ->setCacheTtl(3600);
 
         $cachedProvider = new JwksProviderBuilder();
-        $cachedProvider->setCache(($this->cacheFactory)('one-login'))
+        $cachedProvider
+            ->setHttpClient($this->httpClient)
+            ->setCache(($this->cacheFactory)('one-login'))
             ->setCacheTtl(3600);
 
         $issuer = $this->issuerBuilder
