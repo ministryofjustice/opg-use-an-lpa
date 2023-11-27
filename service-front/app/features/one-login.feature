@@ -28,11 +28,41 @@
       | temporarily_unavailable | One Login is temporarily unavailable    |
 
     @ui @actor @ff:allow_gov_one_login:true
+    Scenario Outline: One Login returns a specific Welsh error
+      Given I am on the temporary one login page
+      And I select the Welsh language
+      And I click the one login button
+      When One Login returns a "<error_type>" error
+      Then I am redirected to the Welsh login page with a "<error_type>" error message
+      And I should be told "Mae problem"
+
+      Examples:
+        | error_type              |
+        | access_denied           |
+        | temporarily_unavailable |
+
+    @ui @actor @ff:allow_gov_one_login:true
     Scenario Outline: One Login returns a generic error
       Given I am on the temporary one login page
       And I click the one login button
       When One Login returns a "<error_type>" error
       Then I should be shown an error page
+
+      Examples:
+        | error_type                |
+        | unauthorized_client       |
+        | invalid_request           |
+        | invalid_scope             |
+        | unsupported_response_type |
+        | server_error              |
+
+    @ui @actor @ff:allow_gov_one_login:true
+    Scenario Outline: One Login returns a generic error in Welsh
+      Given I am on the temporary one login page
+      And I select the Welsh language
+      And I click the one login button
+      When One Login returns a "<error_type>" error
+      Then I should be shown an error page in Welsh
 
       Examples:
         | error_type                |

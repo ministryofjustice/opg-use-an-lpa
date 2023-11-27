@@ -2114,6 +2114,14 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I am redirected to the Welsh login page with a "(.*)" error message$/
+     */
+    public function iAmRedirectedToTheWelshErrorPage($errorType): void
+    {
+        $this->ui->assertPageAddress('/cy/home?error=' . $errorType);
+    }
+
+    /**
      * @Then /^I should be told "(.*)"$/
      */
     public function iSeeTheText($text): void

@@ -37,10 +37,12 @@ abstract class AbstractHandler implements RequestHandlerInterface
      * @param array $queryParams
      * @return RedirectResponse
      */
-    protected function redirectToRoute($route, $routeParams = [], $queryParams = []): RedirectResponse
+    protected function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $uiLocale = null): RedirectResponse
     {
-        return new RedirectResponse(
-            $this->urlHelper->generate($route, $routeParams, $queryParams)
-        );
+        $url = $this->urlHelper->generate($route, $routeParams, $queryParams);
+        if ($uiLocale === 'cy' && !str_contains($url, 'cy')) {
+            $url = '/cy' . $url;
+        }
+        return new RedirectResponse($url);
     }
 }

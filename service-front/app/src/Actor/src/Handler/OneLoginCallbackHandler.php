@@ -53,19 +53,17 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
             throw new RuntimeException('Session state does not match redirect state', 500);
         }
 
-        //TODO: Content and Welsh translations
-        ////http://localhost:9002/home/login?error=invalid_request&error_description=Unsupported%20response&state=
         if (array_key_exists('error', $authParams)) {
             $this->logger->notice('User attempted to login via OneLogin however there was an error');
             return match ($authParams['error']) {
-                //http://localhost:9002/home/login?error=access_denied&error_description=Unsupported%20response&state=
                 'access_denied' => $this->redirectToRoute('home', [], [
                     'error' => 'access_denied',
-                ]),
-                //http://localhost:9002/home/login?error=temporarily_unavailable&error_description=Unsupported%20response&state=
+                ],
+                $ui_locale),
                 'temporarily_unavailable' => $this->redirectToRoute('home', [], [
                     'error' => 'temporarily_unavailable',
-                ]),
+                ],
+                $ui_locale),
                 default => throw new RuntimeException('Error returned from OneLogin', 500)
             };
         }
