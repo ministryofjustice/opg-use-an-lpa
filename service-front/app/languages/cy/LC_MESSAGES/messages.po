@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-15T17:09:59+00:00\n"
+"POT-Creation-Date: 2023-11-28T16:47:33+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -379,7 +379,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:113
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:122
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:46
@@ -2221,7 +2221,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:56
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:116
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:125
 #: src/Actor/templates/actor/check-lpa.html.twig:98
 msgid "Cancel"
 msgstr "Canslo"
@@ -3654,16 +3654,16 @@ msgstr ""
 "llythyr neu’r e-bost a anfonwyd atoch. Os ydych wedi’i golli, neu os yw wedi "
 "dod i ben, gallwch ofyn am un newydd isod."
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:95
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:104
 msgid "Yes, I have an activation key"
 msgstr "Oes, mae gen i allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:99
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:108
 msgid "No, I do not have an activation key"
 msgstr ""
 "Nac oes, nid oes gennyf allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:103
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:112
 msgid "I have an activation key but it has expired"
 msgstr "Mae gen i allwedd cadarnhau, ond mae wedi dod i ben"
 
@@ -6515,6 +6515,21 @@ msgstr "Byddwn yn anfon eich allwedd cadarnhau cyfrif atoch drwy’r post."
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
 msgid "Also known as"
 msgstr "A elwir hefyd yn"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:92
+msgid "For enduring powers of attorney (EPAs)"
+msgstr "Ar gyfer atwrneiaethau parhaus (EPA)"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:96
+msgid "The Use a lasting power of attorney service cannot be used for EPAs."
+msgstr ""
+"Ni ellir defnyddio’r gwasanaeth defnyddio atwrneiaeth arhosol ar gyfer "
+"atwrneiaethau parhaus (EPA)."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:97
+msgid "You’ll need to show the paper EPA to people or organisations instead."
+msgstr ""
+"Bydd arnoch angen dangos yr EPA papur i’r bobl neu sefydliadau perthnasol."
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "
