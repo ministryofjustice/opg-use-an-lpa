@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\OneLogin;
 
 use Common\Service\ApiClient\Client as ApiClient;
+use Facile\OpenIDClient\Session\AuthSession;
 
 class OneLoginService
 {
@@ -22,10 +23,12 @@ class OneLoginService
         ]);
     }
 
-    public function callback(array $authCredentials): ?array
+    public function callback(string $code, string $state, AuthSession $authCredentials): ?array
     {
         return $this->apiClient->httpPost('/v1/auth/callback', [
-            'auth' => $authCredentials,
+            'code'         => $code,
+            'state'        => $state,
+            'auth_session' => $authCredentials,
         ]);
     }
 }

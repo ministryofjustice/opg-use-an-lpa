@@ -10,6 +10,7 @@ use Common\Handler\SessionAware;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Service\OneLogin\OneLoginService;
+use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -28,7 +29,7 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
     use Session;
 
     public function __construct(
-        OneLoginService $oneLoginService,
+        private OneLoginService $oneLoginService,
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
@@ -40,38 +41,44 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
     {
         $authParams = $request->getQueryParams();
 
-        $session      = $this->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE);
-        $authSession  = $session->get(OneLoginService::OIDC_AUTH_INTERFACE);
-        $sessionState = $authSession['state'];
-        $ui_locale    = $authSession['customs']['ui_locale'];
-
-        if (!array_key_exists('state', $authParams)) {
-            throw new RuntimeException('Required parameters not passed for authentication', 500);
-        }
-
-        if ($sessionState !== $authParams['state']) {
-            throw new RuntimeException('Session state does not match redirect state', 500);
-        }
+        $session     = $this->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE);
+        $authSession = AuthSession::fromArray($session->get(OneLoginService::OIDC_AUTH_INTERFACE));
+        $ui_locale   = $authSession->getCustoms()['ui_locale'];
 
         if (array_key_exists('error', $authParams)) {
             $this->logger->notice('User attempted to login via OneLogin however there was an error');
             return match ($authParams['error']) {
-                'access_denied' => $this->redirectToRoute('home', [], [
-                    'error' => 'access_denied',
-                ],
-                $ui_locale),
-                'temporarily_unavailable' => $this->redirectToRoute('home', [], [
-                    'error' => 'temporarily_unavailable',
-                ],
-                $ui_locale),
+                'access_denied' => $this->redirectToRoute(
+                    'home',
+                    [],
+                    ['error' => 'access_denied'],
+                    $ui_locale
+                ),
+                'temporarily_unavailable' => $this->redirectToRoute(
+                    'home',
+                    [],
+                    ['error' => 'temporarily_unavailable'],
+                    $ui_locale
+                ),
                 default => throw new RuntimeException('Error returned from OneLogin', 500)
             };
         }
 
-        if (!array_key_exists('code', $authParams)) {
+        if (!array_key_exists('code', $authParams) || !array_key_exists('state', $authParams)) {
             throw new RuntimeException('Required parameters not passed for authentication', 500);
         }
 
         return new HtmlResponse('<h1>Hello World</h1>');
+
+        //TODO: UML-3078
+//        $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
+//        //Add user to session
+//        if (! is_null($user)) {
+//            if (empty($user->getDetail('LastLogin'))) {
+//                return $this->redirectToRoute('lpa.add');
+//            } else {
+//                return $this->redirectToRoute('lpa.dashboard');
+//            }
+//        }
     }
 }
