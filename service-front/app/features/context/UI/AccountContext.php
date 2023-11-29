@@ -2073,6 +2073,19 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I have logged in to one login in (English|Welsh)$/
+     */
+    public function iHaveLoggedInToOneLogin($language): void
+    {
+        $this->iAmOnTheTemporaryOneLoginPage();
+        $this->iClickTheOneLoginButton();
+        $language = $language === 'English' ? 'en' : 'cy';
+        if ($language === 'cy') {
+            $this->iSelectTheWelshLanguage();
+        }
+    }
+
+    /**
      * @Then /^I am redirected to the redirect page in (English|Welsh)$/
      */
     public function iAmRedirectedToTheRedirectPage($language): void

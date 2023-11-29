@@ -52,6 +52,7 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
             $signInLink = $this->serverUrlHelper->generate($this->urlHelper->generate('auth-redirect'));
             $uiLocale   = Locale::getPrimaryLanguage($request->getAttribute('locale'));
 
+            //TODO: UML-3203 Identify if OneLogin can handle multiple redirect urls, then remove
             if ($uiLocale === 'cy') {
                 $signInLink = str_replace('/cy', '', $signInLink);
             }

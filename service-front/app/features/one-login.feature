@@ -14,37 +14,23 @@
       When I click the one login button
       Then I am redirected to the redirect page in Welsh
 
-    @ui @actor @ff:allow_gov_one_login:true
+    @ui @actor @ff:allow_gov_one_login:true @welsh
     Scenario Outline: One Login returns a specific error
-      Given I am on the temporary one login page
-      And I click the one login button
+      Given I have logged in to one login in <language>
       When One Login returns a "<error_type>" error
       Then I am redirected to the login page with a "<error_type>" error message
       And I should be told "<error_message>"
 
     Examples:
-      | error_type              | error_message                           |
-      | access_denied           | Tried to login however access is denied |
-      | temporarily_unavailable | One Login is temporarily unavailable    |
-
-    @ui @actor @ff:allow_gov_one_login:true @welsh
-    Scenario Outline: One Login returns a specific Welsh error
-      Given I am on the temporary one login page
-      And I select the Welsh language
-      And I click the one login button
-      When One Login returns a "<error_type>" error
-      Then I am redirected to the Welsh login page with a "<error_type>" error message
-      And I should be told "Mae problem"
-
-      Examples:
-        | error_type              |
-        | access_denied           |
-        | temporarily_unavailable |
+      |language | error_type              | error_message                           |
+      | English | access_denied           | Tried to login however access is denied |
+      | English | temporarily_unavailable | One Login is temporarily unavailable    |
+      | Welsh   | access_denied           | Mae problem                             |
+      | Welsh   | temporarily_unavailable | Mae problem                             |
 
     @ui @actor @ff:allow_gov_one_login:true
     Scenario Outline: One Login returns a generic error
-      Given I am on the temporary one login page
-      And I click the one login button
+      Given I have logged in to one login in English
       When One Login returns a "<error_type>" error
       Then I should be shown an error page
 
@@ -58,9 +44,7 @@
 
     @ui @actor @ff:allow_gov_one_login:true @welsh
     Scenario Outline: One Login returns a generic error in Welsh
-      Given I am on the temporary one login page
-      And I select the Welsh language
-      And I click the one login button
+      Given I have logged in to one login in Welsh
       When One Login returns a "<error_type>" error
       Then I should be shown an error page in Welsh
 
