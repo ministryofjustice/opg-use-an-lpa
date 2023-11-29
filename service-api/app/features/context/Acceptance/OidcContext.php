@@ -8,12 +8,19 @@ use Aws\Command;
 use Aws\Result;
 use Aws\ResultInterface;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Testwork\Suite\Exception\SuiteSetupException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\KeyManagement\JWKFactory;
+use Jose\Component\Signature\Algorithm\ES256;
+use Jose\Component\Signature\Algorithm\RS256;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Signature\JWSVerifier;
+use Jose\Component\Signature\Serializer\CompactSerializer;
+use Jose\Component\Signature\Serializer\JWSSerializerManager;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -23,22 +30,22 @@ class OidcContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
-    private ?string $one_login_client_private_key;
-    private ?string $one_login_client_public_key;
+    public string $oneLoginClientPrivateKey;
+    public string $oneLoginClientPublicKey;
+    public string $oneLoginIssuerPublicKey;
+    public string $oneLoginOutOfBandPublicKey;
+    public string $accessToken = '12345';
+    public string $clientId    = 'client-id';
+    public string $nonce       = 'nonce1234';
+    public string $sub         = 'urn:fdc:gov.uk:2022:unique_id';
+    public string $email       = 'test@example.com';
+    public string $birthday    = '1970-01-01';
 
-    /**
-     * @beforeScenario @onelogin
-     */
-    public function generateRSAKeyPair()
+    public static function generateKeyPair(array $options): array
     {
-        $key = openssl_pkey_new(
-            [
-                'private_key_bits' => 2048,
-                'private_key_type' => OPENSSL_KEYTYPE_RSA,
-            ]
-        );
+        $key = openssl_pkey_new($options);
         if ($key === false) {
-            throw new SuiteSetupException('Unable to create the key', 'onelogin');
+            throw new SuiteSetupException('Unable to create the identity key', 'onelogin');
         }
 
         $details = openssl_pkey_get_details($key);
@@ -46,19 +53,106 @@ class OidcContext implements Context
             throw new SuiteSetupException('Unable to get key details', 'onelogin');
         }
 
-        $success = openssl_pkey_export($key, $this->one_login_client_private_key);
+        $success = openssl_pkey_export($key, $privateKey);
         if (!$success) {
             throw new SuiteSetupException('Unable to export key to string', 'onelogin');
         }
 
-        $this->one_login_client_public_key = $details['key'];
+        return [$privateKey, $details['key']];
     }
 
-    /**
-     * @Then /^I am redirected to the one login service$/
-     */
-    public function iAmRedirectedToTheOneLoginService()
+    protected function coreIdentityTokenSetup(): string
     {
+        $token = json_encode(
+            [
+                'iss' => 'http://identity.one-login-mock/',
+                'sub' => $this->sub,
+                'exp' => time() + 300,
+                'iat' => time(),
+                'nbf' => time(),
+                'vc'  => [
+                    'type'              => [
+                        'VerifiableCredential',
+                        'VerifiableIdentityCredential',
+                    ],
+                    'credentialSubject' => [
+                        'birthDate' => [
+                            ['value' => $this->birthday],
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        [$private, $this->oneLoginOutOfBandPublicKey] = self::generateKeyPair(
+            [
+                'curve_name'       => 'prime256v1',
+                'private_key_type' => OPENSSL_KEYTYPE_EC,
+            ],
+        );
+
+        return $this->signToken($token, $private);
+    }
+
+    protected function identityTokenSetup(): string
+    {
+        $token = json_encode(
+            [
+                'iss'   => 'https://one-login-mock',
+                'sub'   => $this->sub,
+                'aud'   => $this->clientId,
+                'exp'   => time() + 300,
+                'iat'   => time(),
+                'nonce' => $this->nonce,
+            ],
+        );
+
+        [$private, $this->oneLoginIssuerPublicKey] = self::generateKeyPair(
+            [
+                'curve_name'       => 'prime256v1',
+                'private_key_type' => OPENSSL_KEYTYPE_EC,
+            ],
+        );
+
+        return $this->signToken($token, $private);
+    }
+
+    protected function oidcFixtureSetup(bool $withCache = false): void
+    {
+        // if caching is turned on then the fixtures below will be in memory already
+        if ($withCache) {
+            return;
+        }
+
+        apcu_clear_cache();
+
+        [$this->oneLoginClientPrivateKey, $this->oneLoginClientPublicKey] = self::generateKeyPair(
+            [
+                'private_key_bits' => 2048,
+                'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            ]
+        );
+
+        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('GetSecretValue', $command->getName());
+                Assert::assertEquals('gov_uk_onelogin_identity_public_key', $command['SecretId']);
+
+                return new Result(['SecretString' => $this->oneLoginClientPublicKey]);
+            }
+        );
+
+        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('GetSecretValue', $command->getName());
+                Assert::assertEquals('gov_uk_onelogin_identity_private_key', $command['SecretId']);
+
+                return new Result(['SecretString' => $this->oneLoginClientPrivateKey]);
+            }
+        );
+
         // AuthorisationClientManager::get()
         $this->apiFixtures->append(
             function (RequestInterface $request): ResponseInterface {
@@ -79,29 +173,53 @@ class OidcContext implements Context
                 );
             },
         );
+    }
 
-        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
-        $this->awsFixtures->append(
-            function (Command $command): ResultInterface {
-                Assert::assertEquals('GetSecretValue', $command->getName());
-                Assert::assertEquals('gov_uk_onelogin_identity_public_key', $command['SecretId']);
+    /**
+     * Signs a JWT with an ES256 algorithm
+     *
+     * @param string $payload A json encoded array structure representing a JWT.
+     * @param string $key A public or private key in PEM format. Must be an EC key.
+     * @return string
+     */
+    protected function signToken(string $payload, string $key): string
+    {
+        $jwsBuilder = (new JWSBuilder(new AlgorithmManager([new ES256()])))
+            ->create()
+            ->withPayload($payload)
+            ->addSignature(JWKFactory::createFromKey($key), ['alg' => 'ES256'])
+            ->build();
 
-                return new Result(['SecretString' => $this->one_login_client_public_key]);
-            }
-        );
+        return (new CompactSerializer())->serialize($jwsBuilder, 0);
+    }
 
-        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
-        $this->awsFixtures->append(
-            function (Command $command): ResultInterface {
-                Assert::assertEquals('GetSecretValue', $command->getName());
-                Assert::assertEquals('gov_uk_onelogin_identity_private_key', $command['SecretId']);
+    /**
+     * Verifies that the supplied JWS is correctly signed
+     *
+     * @param string $jws A JSON Web Signature
+     * @param string $signingKey A key that can be used to verify the signature. The one of the pair that
+     *                           *was not* used to do the signing.
+     * @return array Claims contained in the signed JWT
+     */
+    protected function verifyTokenSignature(string $jws, string $signingKey): array
+    {
+        $jwsVerifier = new JWSVerifier(new AlgorithmManager([new RS256(), new ES256()]));
 
-                return new Result(['SecretString' => $this->one_login_client_private_key]);
-            }
-        );
+        $jwk               = JWKFactory::createFromKey($signingKey);
+        $serializerManager = new JWSSerializerManager([new CompactSerializer()]);
 
-        $this->apiGet('/v1/auth/start?redirect_url=http://sut&ui_locale=en');
+        $jws = $serializerManager->unserialize($jws);
 
+        Assert::assertTrue($jwsVerifier->verifyWithKey($jws, $jwk, 0));
+
+        return json_decode($jws->getPayload(), true);
+    }
+
+    /**
+     * @Then /^I am redirected to the one login service$/
+     */
+    public function iAmRedirectedToTheOneLoginService(): void
+    {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
@@ -144,7 +262,109 @@ class OidcContext implements Context
      */
     public function iAmReturnedToTheUseAnLpaService(): void
     {
-        // Not needed in this context
+        $this->oidcFixtureSetup();
+
+        // AuthorisationService::callback()
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/token', $request->getUri()->getPath());
+
+                $request->getBody()->rewind();
+                parse_str($request->getBody()->getContents(), $data);
+
+                Assert::assertSame('authorization_code', $data['grant_type']);
+                Assert::assertSame('1234', $data['code']);
+                Assert::assertSame('https://sut', $data['redirect_uri']);
+                Assert::assertSame(
+                    'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                    $data['client_assertion_type'],
+                );
+
+                $this->verifyTokenSignature($data['client_assertion'], $this->oneLoginClientPrivateKey);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'access_token' => $this->accessToken,
+                            'token_type'   => 'Bearer',
+                            'id_token'     => $this->identityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        // AuthorisationService::callback()
+        // Call to fetch issuer signing certificate for id_token
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'keys' => [
+                                JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
+                            ],
+                        ],
+                    ),
+                );
+            },
+        );
+
+        // AuthorisationService::callback()
+        // Call to fetch user identity
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/userinfo', $request->getUri()->getPath());
+                Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'sub'                                             => $this->sub,
+                            'email'                                           => $this->email,
+                            'email_verified'                                  => true,
+                            'phone'                                           => '01406946277',
+                            'phone_verified'                                  => true,
+                            'updated_at'                                      => time(),
+                            'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertSame('GetSecretValue', $command->getName());
+                Assert::assertSame('gov_uk_onelogin_userinfo_public_key', $command['SecretId']);
+
+                return new Result(['SecretString' => $this->oneLoginOutOfBandPublicKey]);
+            }
+        );
+
+        $this->apiPost(
+            '/v1/auth/callback',
+            [
+                'code'         => '1234',
+                'state'        => '1234',
+                'auth_session' => [
+                    'state'   => '1234',
+                    'nonce'   => $this->nonce,
+                    'customs' => [
+                        'redirect_uri' => 'https://sut',
+                    ],
+                ],
+            ],
+        );
     }
 
     /**
@@ -152,7 +372,19 @@ class OidcContext implements Context
      */
     public function iAmTakenToMyDashboard(): void
     {
-        // Not needed in this context
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('Id', $response);
+        Assert::assertArrayHasKey('Identity', $response);
+        Assert::assertArrayHasKey('Email', $response);
+        Assert::assertArrayHasKey('LastLogin', $response);
+        Assert::assertArrayHasKey('Birthday', $response);
+
+        Assert::assertSame($response['Identity'], $this->sub);
+        Assert::assertSame($response['Email'], $this->email);
+        Assert::assertSame($response['Birthday'], $this->birthday);
     }
 
     /**
@@ -160,7 +392,7 @@ class OidcContext implements Context
      */
     public function iHaveAnExistingLocalAccount(): void
     {
-        throw new PendingException();
+        // Not needed in this context
     }
 
     /**
@@ -168,7 +400,7 @@ class OidcContext implements Context
      */
     public function iHaveCompletedASuccessfulOneLoginSignInProcess()
     {
-        throw new PendingException();
+        // Not needed in this context
     }
 
     /**
@@ -176,7 +408,9 @@ class OidcContext implements Context
      */
     public function iStartTheLoginProcess()
     {
-        // Not needed in this context
+        $this->oidcFixtureSetup();
+
+        $this->apiGet('/v1/auth/start?redirect_url=http://sut&ui_locale=en');
     }
 
     /**

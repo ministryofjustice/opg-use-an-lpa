@@ -9,7 +9,6 @@ use Facile\OpenIDClient\Client\ClientInterface as OpenIDClient;
 use Facile\OpenIDClient\Service\AuthorizationService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Facile\OpenIDClient\Token\TokenSetInterface;
-use RuntimeException;
 use Throwable;
 
 /**

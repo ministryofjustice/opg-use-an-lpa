@@ -60,6 +60,7 @@ class AuthorisationClientManager
         );
 
         return (new ClientBuilder())
+            ->setHttpClient($this->httpClient)
             ->setIssuer($issuer)
             ->setClientMetadata($clientMetadata)
             ->setJwksProvider($jwksProvider->build())
