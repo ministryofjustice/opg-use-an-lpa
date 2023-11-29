@@ -99,6 +99,8 @@ services:
       - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:4566/_localstack/health?reload"]
 
   mock-one-login:
     container_name: mock-one-login

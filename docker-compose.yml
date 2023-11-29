@@ -190,8 +190,10 @@ services:
       context: .
       dockerfile: service-api/docker/app/Dockerfile
     depends_on:
-      - dynamodb-local
-      - localstack
+      dynamodb-local:
+        condition: service_started
+      localstack:
+        condition: service_healthy
     volumes:
       - ./service-api/app:/app
     networks:
