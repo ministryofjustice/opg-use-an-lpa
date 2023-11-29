@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Authentication;
 
 use App\Exception\AuthorisationServiceException;
+use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Authentication\KeyPairManager\OneLoginUserInfoKeyPairManager;
 use App\Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilder;
 use Facile\OpenIDClient\Service\Builder\UserInfoServiceBuilder as FacileUserInfoServiceBuilder;
@@ -25,7 +26,7 @@ class UserInfoService
     public function __construct(
         private FacileUserInfoServiceBuilder $userInfoServiceBuilder,
         private AuthorisationClientManager $authorisationClientManager,
-        private OneLoginUserInfoKeyPairManager $outOfBandKeyManager,
+        private KeyPairManagerInterface $outOfBandKeyManager,
         private JWKFactory $jwkFactory,
         private OutOfBandCoreIdentityVerifierBuilder $identityVerifierFactory,
     ) {
