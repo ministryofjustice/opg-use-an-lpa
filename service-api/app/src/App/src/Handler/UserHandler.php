@@ -17,8 +17,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class UserHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class UserHandler implements RequestHandlerInterface
@@ -59,7 +57,6 @@ class UserHandler implements RequestHandlerInterface
         return new JsonResponse($data);
     }
 
-
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -74,7 +71,7 @@ class UserHandler implements RequestHandlerInterface
         }
 
         $requestData['password'] = new HiddenString($requestData['password']);
-        $data = $this->userService->add($requestData);
+        $data                    = $this->userService->add($requestData);
 
         return new JsonResponse($data, StatusCodeInterface::STATUS_CREATED);
     }

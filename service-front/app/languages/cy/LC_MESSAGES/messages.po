@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-28T16:47:33+00:00\n"
+"POT-Creation-Date: 2023-11-21T13:42:06+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6515,6 +6515,22 @@ msgstr "Byddwn yn anfon eich allwedd cadarnhau cyfrif atoch drwy’r post."
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
 msgid "Also known as"
 msgstr "A elwir hefyd yn"
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
+msgid "This LPA has instructions.<br>"
+msgstr "Mae gan yr LPA hon gyfarwyddiadau.<br>"
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:21
+msgid "This LPA has preferences.<br>"
+msgstr "Mae gan yr LPA hon ddymuniadau.<br>"
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:39
+msgid "This LPA has instructions and preferences.<br>"
+msgstr "Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau.<br>"
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
+msgid "This LPA has instructions and/or preferences.<br>"
+msgstr "Mae gan yr LPA hon gyfarwyddiadau a/neu ddymuniadau.<br>"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:92
 msgid "For enduring powers of attorney (EPAs)"

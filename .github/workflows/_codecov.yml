@@ -17,25 +17,31 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: download artifact for front tests
+        id: download-artifact-front-tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        continue-on-error: true
         with:
           name: service-front
           path: service-front
         if: inputs.specific_path == 'all'
       - name: download artifact for api tests
+        id: download-artifact-api-tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        continue-on-error: true
         with:
           name: service-api
           path: service-api
         if: inputs.specific_path == 'all'
       - name: download artifact for admin tests
+        id: download-artifact-admin-tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        continue-on-error: true
         with:
           name: service-admin
           path: service-admin
         if: |
-          inputs.specific_path == 'all' ||
-          inputs.specific_path == 'admin'
+          ${{ inputs.specific_path }} == 'all' ||
+          ${{ inputs.specific_path }} == 'admin'
       - name: service front codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -46,7 +52,7 @@ jobs:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
         if: |
-          inputs.specific_path == 'all'
+          ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service api codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -57,7 +63,7 @@ jobs:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
         if: |
-          inputs.specific_path == 'all'
+          ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service admin codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -68,5 +74,10 @@ jobs:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
         if: |
-          inputs.specific_path == 'all' ||
-          inputs.specific_path == 'admin'
+          ( success() || failure() ) && ( inputs.specific_path == 'all' ||
+          inputs.specific_path == 'admin' )
+        # After uploading the coverage report, we want to fail the pipeline if there are any errors
+      - name: fail pipeline if codecov fails
+        run: exit 1
+        if: |
+          failure()

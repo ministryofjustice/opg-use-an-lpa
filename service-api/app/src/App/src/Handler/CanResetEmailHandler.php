@@ -13,8 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class CanResetEmailHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class CanResetEmailHandler implements RequestHandlerInterface

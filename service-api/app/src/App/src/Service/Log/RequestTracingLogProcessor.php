@@ -11,13 +11,6 @@ use Psr\Container\ContainerInterface;
 class RequestTracingLogProcessor implements ProcessorInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * RequestTracingLogProcessor constructor.
-     *
      * This log process needs access to the latest trace-id that has been discovered. Because this
      * process happens in a middleware and because this processor may be instantiated before that
      * middleware we need to be able to query that traceId at runtime - and so for that we need
@@ -25,9 +18,8 @@ class RequestTracingLogProcessor implements ProcessorInterface
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**
@@ -37,7 +29,7 @@ class RequestTracingLogProcessor implements ProcessorInterface
     {
         try {
             $traceId = $this->container->get(RequestTracing::TRACE_PARAMETER_NAME);
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             // we tried our best
             $traceId = 'NO-TRACE-ID-DISCOVERED';
         }
