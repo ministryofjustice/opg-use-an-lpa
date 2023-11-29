@@ -7,7 +7,7 @@ Feature: Authorise One Login
     When I start the login process
     Then I am redirected to the one login service
 
-  @acceptance @wip
+  @acceptance
   Scenario: I can successfully sign in via one login
     Given I have completed a successful one login sign-in process
       And I have an existing local account
