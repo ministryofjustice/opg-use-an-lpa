@@ -87,6 +87,15 @@
                                         {% endtrans %}
                                     </p>
                                 </div>
+                                <div class="govuk-details__text">
+                                    <h3 class="govuk-heading-s">
+                                        {% trans %}
+                                            For enduring powers of attorney (EPAs)
+                                        {% endtrans %}
+                                    </h3>
+                                    <p>{% trans %}The Use a lasting power of attorney service cannot be used for EPAs. {% endtrans %}</p>
+                                    <p>{% trans %}You’ll need to show the paper EPA to people or organisations instead. {% endtrans %}</p>
+                                </div>
                             </details>
 
                             {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
