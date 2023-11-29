@@ -2078,11 +2078,11 @@ class AccountContext implements Context
     public function iHaveLoggedInToOneLogin($language): void
     {
         $this->iAmOnTheTemporaryOneLoginPage();
-        $this->iClickTheOneLoginButton();
         $language = $language === 'English' ? 'en' : 'cy';
         if ($language === 'cy') {
             $this->iSelectTheWelshLanguage();
         }
+        $this->iClickTheOneLoginButton();
     }
 
     /**
