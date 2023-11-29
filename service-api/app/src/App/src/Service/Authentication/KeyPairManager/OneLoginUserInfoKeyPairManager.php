@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication\KeyPairManager;
 
-use Aws\SecretsManager\Exception\SecretsManagerException;
-use Aws\SecretsManager\SecretsManagerClient;
-use Psr\Log\LoggerInterface;
-use RuntimeException;
-
-class OneLoginUserInfoKeyPairManager extends AbstractKeyPairManager implements KeyPairManagerInterface
+class OneLoginUserInfoKeyPairManager extends AbstractKeyPairManager
 {
     public const PUBLIC_KEY = 'gov_uk_onelogin_userinfo_public_key';
 

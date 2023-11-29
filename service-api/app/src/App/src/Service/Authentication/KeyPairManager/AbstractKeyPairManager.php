@@ -10,7 +10,7 @@ use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-abstract class AbstractKeyPairManager
+abstract class AbstractKeyPairManager implements KeyPairManagerInterface
 {
     public function __construct(private SecretsManagerClient $secretsManagerClient, private LoggerInterface $logger)
     {
@@ -43,4 +43,8 @@ abstract class AbstractKeyPairManager
 
         return new KeyPair($public, $private);
     }
+
+    abstract public function getKeyPair(): KeyPair;
+
+    abstract public function getAlgorithm(): string;
 }
