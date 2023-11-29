@@ -35,8 +35,8 @@ The following environment variables will need to be set:
 |---|---------|
 | `AWS_DYNAMODB_ENDPOINT` | `http://localhost:8000` |
 | `ADMIN_JWT_SIGNING_KEY_URL` | `http://localhost:5000` |
-| `AWS_ACCESS_KEY_ID` | - |
-| `AWS_SECRET_ACCESS_KEY` | - |
+| `AWS_ACCESS_KEY_ID` | devkey |
+| `AWS_SECRET_ACCESS_KEY` | secretdevkey |
 
 Run the proxy using the instructions in [the README](./proxy/README.md).
 

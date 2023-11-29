@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-21T13:42:06+00:00\n"
+"POT-Creation-Date: 2023-11-29T08:57:18+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -283,7 +283,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:113
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:122
 #: src/Actor/templates/actor/check-lpa.html.twig:95
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:46
@@ -1436,7 +1436,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:41
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:56
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:116
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:125
 #: src/Actor/templates/actor/check-lpa.html.twig:98
 msgid "Cancel"
 msgstr ""
@@ -2576,15 +2576,15 @@ msgstr ""
 msgid "If you’ve already requested an activation key, you'll find it on the letter or email we sent you. If you’ve lost it, or it’s expired, you can request a new one below."
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:95
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:104
 msgid "Yes, I have an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:99
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:108
 msgid "No, I do not have an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:103
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:112
 msgid "I have an activation key but it has expired"
 msgstr ""
 
@@ -4529,4 +4529,16 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
 msgid "This LPA has instructions and/or preferences.<br>"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:92
+msgid "For enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:96
+msgid "The Use a lasting power of attorney service cannot be used for EPAs."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:97
+msgid "You’ll need to show the paper EPA to people or organisations instead."
 msgstr ""

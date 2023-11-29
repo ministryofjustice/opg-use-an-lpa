@@ -203,6 +203,7 @@ jobs:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
         if: |
+          (success() || failure()) && contains(fromJson('["front", "api", "admin"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
