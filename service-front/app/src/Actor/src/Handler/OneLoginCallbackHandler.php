@@ -52,13 +52,13 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
                     'home',
                     [],
                     ['error' => 'access_denied'],
-                    $ui_locale
+                    $ui_locale === 'cy' ? $ui_locale : null
                 ),
                 'temporarily_unavailable' => $this->redirectToRoute(
                     'home',
                     [],
                     ['error' => 'temporarily_unavailable'],
-                    $ui_locale
+                    $ui_locale === 'cy' ? $ui_locale : null
                 ),
                 default => throw new RuntimeException('Error returned from OneLogin', 500)
             };

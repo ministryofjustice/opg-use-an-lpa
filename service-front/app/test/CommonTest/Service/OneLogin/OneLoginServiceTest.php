@@ -6,6 +6,9 @@ namespace AppTest\Service\OneLogin;
 
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\OneLogin\OneLoginService;
+use DateTime;
+use DateTimeInterface;
+use Facile\OpenIDClient\Session\AuthSession;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -42,5 +45,53 @@ class OneLoginServiceTest extends TestCase
         $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
         $response        = $oneLoginService->authenticate('en', $redirect);
         $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
+    }
+
+    /** @test */
+    public function can_get_callback_request_uri(): void
+    {
+        $state           = 'fakeState';
+        $code            = 'fakeCode';
+        $nonce           = 'fakeNonce';
+        $redirect        = 'FAKE_REDIRECT';
+        $authCredentials = AuthSession::fromArray([
+            'state'   => $state,
+            'nonce'   => $nonce,
+            'customs' => [
+                 'ui_locale'    => 'en',
+                 'redirect_uri' => $redirect,
+            ],
+        ]);
+
+        $apiClientProphecy = $this->prophesize(ApiClient::class);
+
+        $lastLogin = (new DateTime('-1 day'))->format(DateTimeInterface::ATOM);
+
+        $apiClientProphecy
+            ->httpPost(
+                '/v1/auth/callback',
+                [
+                    'code'         => $code,
+                    'state'        => $state,
+                    'auth_session' => $authCredentials,
+                ]
+            )->willReturn([
+                'Id'        => 'fake-id',
+                'Identity'  => 'fake-sub-identity',
+                'Email'     => 'fake@email.com',
+                'LastLogin' => $lastLogin,
+                'Birthday'  => '01/01/1990'
+            ]);
+
+        $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
+        $response        = $oneLoginService->callback($code, $state, $authCredentials);
+        $this->assertEquals([
+            'Id'        => 'fake-id',
+            'Identity'  => 'fake-sub-identity',
+            'Email'     => 'fake@email.com',
+            'LastLogin' => $lastLogin,
+            'Birthday'  => '01/01/1990'
+        ],
+        $response);
     }
 }

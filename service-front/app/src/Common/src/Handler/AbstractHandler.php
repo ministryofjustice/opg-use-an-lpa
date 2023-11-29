@@ -29,10 +29,20 @@ abstract class AbstractHandler implements RequestHandlerInterface
      */
     abstract public function handle(ServerRequestInterface $request): ResponseInterface;
 
-    protected function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $basePath = null): RedirectResponse
+    /**
+     * Handles a redirect to route
+     * localeOverride used to override from English to Welsh only
+     *
+     * @param $route
+     * @param $routeParams
+     * @param $queryParams
+     * @param string|null $localeOverride
+     * @return RedirectResponse
+     */
+    protected function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $localeOverride = null): RedirectResponse
     {
-        if ($basePath !== null) {
-            $this->urlHelper->setBasePath($basePath);
+        if ($localeOverride !== null) {
+            $this->urlHelper->setBasePath($localeOverride);
         }
 
         return new RedirectResponse($this->urlHelper->generate($route, $routeParams, $queryParams));
