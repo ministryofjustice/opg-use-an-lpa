@@ -1,6 +1,6 @@
 {{ template "default" . }}
 
-{{ define "title" }}Set System Message{{ end }}
+{{ define "title" }}System Message{{ end }}
 
 {{ define "main" }}
 <div class="govuk-grid-row">
@@ -8,19 +8,35 @@
 <form method="post">
 <div class="govuk-form-group {{ if .Errors.Query }}govuk-form-group--error{{ end }}">
 <h1 class="govuk-label-wrapper">
-<label class="govuk-heading-l govuk-!-margin-bottom-2" for="search">
-Set the system message
+<label class="govuk-heading-l govuk-!-margin-bottom-2">
+System message
 </label>
 </h1>
+    <p class="govuk-body">System messages will be seen by all visitors to the LPA service. They should be used to inform users of scheduled periods of maintenance or changes to the LPA service.</p>
 
 {{ if .Errors.Query }}
 <span class="govuk-error-message">
 <span class="govuk-visually-hidden">Error:</span> {{ .Errors.Query }}
 </span>
 {{ end }}
+    <div class="govuk-form-group">
+    <h2 class="govuk-heading-l">Use an LPA</h2>
+    <p class="govuk-body">Message in English</p>
+<input class="govuk-input" id="use-eng">
+        <p class="govuk-body">Message in Welsh</p>
+        <input class="govuk-input" id="use-cy">
+</div>
 
-<input class="govuk-input {{ if .Errors.Query }}govuk-input--error{{ end }} moj-search__input govuk-!-width-one-half" id="query" name="query" type="search" value="{{ .Query }}" aria-describedby="search-hint" autocomplete="off">
-<button class="govuk-button moj-search__button " data-module="govuk-button">
+
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-l">View an LPA</h2>
+        <p class="govuk-body">Message in English</p>
+        <input class="govuk-input" id="view-eng">
+        <p class="govuk-body">Message in Welsh</p>
+        <input class="govuk-input" id="view-cy">
+    </div>
+
+<button class="govuk-button" data-module="govuk-button">
 Set system message
 </button>
 </div>
