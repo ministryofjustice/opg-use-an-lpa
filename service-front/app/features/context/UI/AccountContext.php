@@ -2078,8 +2078,8 @@ class AccountContext implements Context
     public function iHaveLoggedInToOneLogin($language): void
     {
         $this->iAmOnTheTemporaryOneLoginPage();
-        $language = $language === 'English' ? 'en' : 'cy';
-        if ($language === 'cy') {
+        $this->language = $language === 'English' ? 'en' : 'cy';
+        if ($this->language === 'cy') {
             $this->iSelectTheWelshLanguage();
         }
         $this->iClickTheOneLoginButton();
@@ -2119,26 +2119,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am redirected to the login page with a "(.*)" error message$/
+     * @Then /^I am redirected to the login page with a "(.*)" error and "(.*)"$/
      */
-    public function iAmRedirectedToTheErrorPage($errorType): void
+    public function iAmRedirectedToTheLanguageErrorPage($errorType, $errorMessage): void
     {
-        $this->ui->assertPageAddress('/home?error=' . $errorType);
-    }
-
-    /**
-     * @Then /^I am redirected to the Welsh login page with a "(.*)" error message$/
-     */
-    public function iAmRedirectedToTheWelshErrorPage($errorType): void
-    {
-        $this->ui->assertPageAddress('/cy/home?error=' . $errorType);
-    }
-
-    /**
-     * @Then /^I should be told "(.*)"$/
-     */
-    public function iSeeTheText($text): void
-    {
-        $this->ui->assertPageContainsText($text);
+        $basePath = $this->language === 'cy' ? '/cy' : '';
+        $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
+        $this->ui->assertPageContainsText($errorMessage);
     }
 }
