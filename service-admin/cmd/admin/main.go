@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"net/http"
 	"net/url"
 	"os"
@@ -84,11 +85,13 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
+	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config))
+
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
+	app := server.NewAdminApp(*dynamoDB, *ssmConn, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
 
 	srv := &http.Server{
 		Handler:      app.InitialiseServer(*keyURL, u),

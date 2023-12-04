@@ -24,10 +24,11 @@ type errorInterceptResponseWriter struct {
 }
 
 type app struct {
-	db  data.DynamoConnection
-	r   *mux.Router
-	tw  handlers.TemplateWriterService
-	aks data.ActivationKeyService
+	db      data.DynamoConnection
+	ssmConn data.SSMConnection
+	r       *mux.Router
+	tw      handlers.TemplateWriterService
+	aks     data.ActivationKeyService
 }
 
 var ErrPanicRecovery = errors.New("error handler recovering from panic()")
@@ -49,8 +50,8 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	return w.ResponseWriter.Write(p)
 }
 
-func NewAdminApp(db data.DynamoConnection, r *mux.Router, tw handlers.TemplateWriterService, aks data.ActivationKeyService) *app {
-	return &app{db, r, tw, aks}
+func NewAdminApp(db data.DynamoConnection, ssmConn data.SSMConnection, r *mux.Router, tw handlers.TemplateWriterService, aks data.ActivationKeyService) *app {
+	return &app{db, ssmConn, r, tw, aks}
 }
 
 func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Handler {
@@ -59,7 +60,7 @@ func (a *app) InitialiseServer(keyURL string, cognitoLogoutURL *url.URL) http.Ha
 	authMiddleware := NewAuthorisationMiddleware(&auth.Token{SigningKey: &auth.SigningKey{PublicKeyURL: keyURL}})
 	searchServer := *handlers.NewSearchServer(data.NewAccountService(a.db), data.NewLPAService(a.db), handlers.NewTemplateWriterService(), a.aks)
 	statsServer := *handlers.NewStatsServer(data.NewStatisticsService(a.db), handlers.NewTemplateWriterService(), &time.ServerTime{})
-	systemMessageServer := *handlers.NewSystemMessageServer(handlers.NewTemplateWriterService())
+	systemMessageServer := *handlers.NewSystemMessageServer(data.NewSystemMessageService(a.ssmConn), handlers.NewTemplateWriterService())
 
 	JSONLoggingMiddleware := NewJSONLoggingMiddleware(log.Logger)
 	templateMiddleware := NewTemplateMiddleware(LoadTemplates(os.DirFS("web/templates")))
