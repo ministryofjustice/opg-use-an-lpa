@@ -25,6 +25,7 @@ class ChromeDriver implements Driver
             '--no-startup-window',
             '--no-first-run',
             '--no-pings',
+            '--ignore-certificate-errors',
         ],
     ) {
         $this->process = null;
