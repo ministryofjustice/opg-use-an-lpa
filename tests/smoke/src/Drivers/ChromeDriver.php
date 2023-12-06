@@ -11,6 +11,7 @@ class ChromeDriver implements Driver
     private ?Process $process;
 
     public function __construct(
+        bool $allowInsecureHttps = false,
         private string $binPath = '/usr/bin/google-chrome-stable',
         private array $binArguments = [
             '--disable-gpu',
@@ -25,10 +26,13 @@ class ChromeDriver implements Driver
             '--no-startup-window',
             '--no-first-run',
             '--no-pings',
-            '--ignore-certificate-errors',
         ],
     ) {
         $this->process = null;
+
+        if ($allowInsecureHttps) {
+            $this->binArguments[] = '--ignore-certificate-errors';
+        }
     }
 
     public function start(): void
