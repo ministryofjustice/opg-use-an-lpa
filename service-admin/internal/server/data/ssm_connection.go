@@ -2,11 +2,7 @@ package data
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
-	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 )
 
 type SSMClient interface {
@@ -22,7 +18,7 @@ func NewSSMConnection(client SSMClient) *SSMConnection {
 	return &SSMConnection{Client: client}
 }
 
-func (s *SSMConnection) WriteParameter(name string, value string) error {
+/*func (s *SSMConnection) WriteParameter(name string, value string) error {
 	_, err := s.Client.PutParameter(context.TODO(), &ssm.PutParameterInput{
 		Name:  aws.String(name),
 		Value: aws.String(value),
@@ -47,4 +43,4 @@ func (s *SSMConnection) ReadParameter(name string) (string, error) {
 	}
 
 	return *resp.Parameter.Value, nil
-}
+}*/
