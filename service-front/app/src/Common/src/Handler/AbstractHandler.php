@@ -42,13 +42,12 @@ abstract class AbstractHandler implements RequestHandlerInterface
      * @param string|null $localeOverride
      * @return RedirectResponse
      */
-    protected function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $localeOverride = null): RedirectResponse
+    public function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $localeOverride = null): RedirectResponse
     {
         //TODO: UML-3203 Identify if OneLogin can handle multiple redirect urls, then remove
         if ($localeOverride !== null) {
             $this->urlHelper->setBasePath($localeOverride);
         }
-
         return new RedirectResponse($this->urlHelper->generate($route, $routeParams, $queryParams));
     }
 }

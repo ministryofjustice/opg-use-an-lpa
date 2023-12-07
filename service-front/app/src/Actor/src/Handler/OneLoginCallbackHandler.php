@@ -46,18 +46,18 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
         $ui_locale   = $authSession->getCustoms()['ui_locale'];
 
         if (array_key_exists('error', $authParams)) {
-            $this->logger->notice('User attempted to login via OneLogin however there was an error');
-            return match ($authParams['error']) {
-                'access_denied' => $this->redirectToRoute(
+            $error = $authParams['error'];
+            $error === 'temporarily_unavailable' ?
+                $this->logger->warning('User attempted One Login but it is unavailable') :
+                $this->logger->notice(
+                    'User attempted One Login but received an {error} error',
+                    ['error' => $error]
+                );
+            return match ($error) {
+                'access_denied', 'temporarily_unavailable' => $this->redirectToRoute(
                     'home',
                     [],
-                    ['error' => 'access_denied'],
-                    $ui_locale === 'cy' ? $ui_locale : null
-                ),
-                'temporarily_unavailable' => $this->redirectToRoute(
-                    'home',
-                    [],
-                    ['error' => 'temporarily_unavailable'],
+                    ['error' => $error],
                     $ui_locale === 'cy' ? $ui_locale : null
                 ),
                 default => throw new RuntimeException('Error returned from OneLogin', 500)

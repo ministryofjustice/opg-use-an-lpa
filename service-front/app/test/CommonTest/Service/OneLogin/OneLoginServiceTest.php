@@ -80,7 +80,7 @@ class OneLoginServiceTest extends TestCase
                 'Identity'  => 'fake-sub-identity',
                 'Email'     => 'fake@email.com',
                 'LastLogin' => $lastLogin,
-                'Birthday'  => '01/01/1990'
+                'Birthday'  => '1990-01-01'
             ]);
 
         $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
@@ -90,7 +90,7 @@ class OneLoginServiceTest extends TestCase
             'Identity'  => 'fake-sub-identity',
             'Email'     => 'fake@email.com',
             'LastLogin' => $lastLogin,
-            'Birthday'  => '01/01/1990'
+            'Birthday'  => '1990-01-01'
         ],
         $response);
     }
