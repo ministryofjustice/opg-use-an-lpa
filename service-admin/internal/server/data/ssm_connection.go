@@ -17,30 +17,3 @@ type SSMConnection struct {
 func NewSSMConnection(client SSMClient) *SSMConnection {
 	return &SSMConnection{Client: client}
 }
-
-/*func (s *SSMConnection) WriteParameter(name string, value string) error {
-	_, err := s.Client.PutParameter(context.TODO(), &ssm.PutParameterInput{
-		Name:  aws.String(name),
-		Value: aws.String(value),
-		Type:  types.ParameterTypeString,
-	})
-
-	if err != nil {
-		return fmt.Errorf("error writing parameter: %w", err)
-	}
-
-	return nil
-}
-
-func (s *SSMConnection) ReadParameter(name string) (string, error) {
-	resp, err := s.Client.GetParameter(context.TODO(), &ssm.GetParameterInput{
-		Name:           aws.String(name),
-		WithDecryption: aws.Bool(true),
-	})
-
-	if err != nil {
-		return "", fmt.Errorf("error reading parameter: %w", err)
-	}
-
-	return *resp.Parameter.Value, nil
-}*/

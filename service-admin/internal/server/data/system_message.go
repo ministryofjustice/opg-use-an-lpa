@@ -18,11 +18,11 @@ func (s *SystemMessageService) GetSystemMessages(ctx context.Context) (systemMes
 	messageKeys := []string{"use-en", "use-cy", "view-en", "view-cy"}
 	messages := make(map[string]string)
 	for _, messageKey := range messageKeys {
-		messageText, _ := s.ssmConn.GetParameter(context, &ssm.GetParameterInput{
+		messageText, _ := s.ssmConn.Client.GetParameter(ctx, &ssm.GetParameterInput{
 			Name:           aws.String(messageKey),
 			WithDecryption: aws.Bool(true),
 		})
-		messages[messageKey] = messageText
+		messages[messageKey] = *messageText.Parameter.Value
 	}
 
 	return messages, nil
