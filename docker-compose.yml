@@ -79,7 +79,6 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
-      COOKIE_SECURE: "false"
     depends_on:
       - redis
 
@@ -138,7 +137,6 @@ services:
       SESSION_EXPIRES: 20 # session expiry length to support timeout message.
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
-      COOKIE_SECURE: "false"
       NOTIFY_API_KEY:
 
   # ---------------------------
