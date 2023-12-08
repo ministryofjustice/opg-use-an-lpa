@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler;
 
-use CommonTest\Handler\TestableAbstractHandler;
+use Common\Handler\AbstractHandler;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class AbstractHandlerTest extends TestCase
 {
@@ -33,7 +35,12 @@ class AbstractHandlerTest extends TestCase
 
         $renderer = $this->prophesize(TemplateRendererInterface::class);
 
-        $abstractHandler = new TestableAbstractHandler($renderer->reveal(), $urlHelperMock->reveal());
+        $abstractHandler = new class ($renderer->reveal(), $urlHelperMock->reveal()) extends AbstractHandler {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                throw new Exception('Not implemented');
+            }
+        };
         $response        = $abstractHandler->redirectToRoute(
             'fake-route',
             ['fake-route-parameters'],
@@ -55,7 +62,12 @@ class AbstractHandlerTest extends TestCase
 
         $renderer = $this->prophesize(TemplateRendererInterface::class);
 
-        $abstractHandler = new TestableAbstractHandler($renderer->reveal(), $urlHelperMock->reveal());
+        $abstractHandler = new class ($renderer->reveal(), $urlHelperMock->reveal()) extends AbstractHandler {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                throw new Exception('Not implemented');
+            }
+        };
         $response        = $abstractHandler->redirectToRoute('fake-route');
         $this->assertEquals('/fake-route', $response->getHeader('location')[0]);
     }
