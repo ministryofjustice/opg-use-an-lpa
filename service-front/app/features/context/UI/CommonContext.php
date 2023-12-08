@@ -398,14 +398,6 @@ class CommonContext implements Context
     }
 
     /**
-     * @Then /^I should be shown an error page in Welsh$/
-     */
-    public function iShouldBeShownAnErrorPageInWelsh(): void
-    {
-        $this->ui->assertPageContainsText('Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth');
-    }
-
-    /**
      * @When /^I should be shown an error page with details$/
      */
     public function iShouldBeShownAnErrorPageWithDetails()
