@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Authentication;
+namespace AppTest\Service\Authentication\KeyPairManager;
 
 use App\Service\Authentication\KeyPairManager\KeyPair;
 use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
@@ -71,6 +71,7 @@ class KeyPairManagerTest extends TestCase
         $this->assertInstanceOf(KeyPairManagerInterface::class, $keyPairManager);
 
         $this->assertEquals($public, $keyPairManager::PUBLIC_KEY);
+        $this->assertEquals($algorithm, $keyPairManager->getAlgorithm());
 
         $private === null ?: $this->assertEquals($private, $keyPairManager::PRIVATE_KEY);
     }
@@ -91,7 +92,6 @@ class KeyPairManagerTest extends TestCase
 
         $privateKeyResult = $this->prophesize(Result::class);
         $privateKeyResult->get('SecretString')->willReturn($testPrivateKey);
-
 
         $this->secretsManagerClient->getSecretValue(
             [
