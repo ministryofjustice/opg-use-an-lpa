@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class InternalClockTest extends TestCase
 {
-
     /**
      * @test
      * @covers \App\Service\InternalClock::now
