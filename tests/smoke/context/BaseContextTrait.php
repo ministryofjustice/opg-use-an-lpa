@@ -85,4 +85,23 @@ trait BaseContextTrait
 
         return $json;
     }
+
+    /**
+     * Asserts that the current url was accessed over a https connection
+     *
+     * @throws ExpectationException
+     */
+    public function assertHttps(): void
+    {
+        $actual = $this->ui->getSession()->getDriver()->getCurrentUrl();
+
+        $scheme = parse_url($actual, PHP_URL_SCHEME);
+
+        if ($scheme !== 'https') {
+            throw new ExpectationException(
+                sprintf('Current scheme is "%s", but "https" expected.', $scheme),
+                $this->ui->getSession()->getDriver()
+            );
+        }
+    }
 }
