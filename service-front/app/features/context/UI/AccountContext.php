@@ -2073,6 +2073,19 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I have logged in to one login in (English|Welsh)$/
+     */
+    public function iHaveLoggedInToOneLogin($language): void
+    {
+        $this->iAmOnTheTemporaryOneLoginPage();
+        $this->language = $language === 'English' ? 'en' : 'cy';
+        if ($this->language === 'cy') {
+            $this->iSelectTheWelshLanguage();
+        }
+        $this->iClickTheOneLoginButton();
+    }
+
+    /**
      * @Then /^I am redirected to the redirect page in (English|Welsh)$/
      */
     public function iAmRedirectedToTheRedirectPage($language): void
@@ -2095,5 +2108,23 @@ class AccountContext implements Context
     {
         $this->language = 'cy';
         $this->ui->clickLink('Cymraeg');
+    }
+
+    /**
+     * @When /^One Login returns a "(.*)" error$/
+     */
+    public function oneLoginReturnsAError($errorType): void
+    {
+        $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
+    }
+
+    /**
+     * @Then /^I am redirected to the login page with a "(.*)" error and "(.*)"$/
+     */
+    public function iAmRedirectedToTheLanguageErrorPage($errorType, $errorMessage): void
+    {
+        $basePath = $this->language === 'cy' ? '/cy' : '';
+        $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
+        $this->ui->assertPageContainsText($errorMessage);
     }
 }

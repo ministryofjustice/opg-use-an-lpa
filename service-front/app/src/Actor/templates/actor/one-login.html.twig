@@ -8,6 +8,7 @@
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
+                {{ govuk_error_summary(form) }}
                 {{ govuk_form_open(form) }}
 
                 <button data-prevent-double-click="true" name="sign-in-one-login" type="submit" class="govuk-button">{% trans %}Sign in via One Login{% endtrans %}</button>
