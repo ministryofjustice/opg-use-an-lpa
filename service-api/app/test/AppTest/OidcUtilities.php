@@ -13,6 +13,17 @@ use Jose\Component\Signature\Serializer\CompactSerializer;
 
 class OidcUtilities
 {
+    /**
+     * Generates a core identity token as used by Gov One Login.
+     *
+     * @param string $sub The token subject field
+     * @param string $birthday A birthday to return in the identity data
+     * @return array{
+     *     string,
+     *     string
+     * } The signed token and a public key that can be used to verify it.
+     * @throws Exception
+     */
     public static function generateCoreIdentityToken(string $sub, string $birthday): array
     {
         $token = json_encode(
@@ -33,6 +44,44 @@ class OidcUtilities
                         ],
                     ],
                 ],
+            ],
+        );
+
+        [$private, $public] = self::generateKeyPair(
+            [
+                'curve_name'       => 'prime256v1',
+                'private_key_type' => OPENSSL_KEYTYPE_EC,
+            ],
+        );
+
+        return [
+            self::signToken($token, $private),
+            $public,
+        ];
+    }
+
+    /**
+     * Generates an identity token
+     *
+     * @param string $sub The token subject claim
+     * @param string $aud The token audience claim
+     * @param string $nonce A nonce that should be encoded as a claim
+     * @return array{
+     *     string,
+     *     string
+     * } The signed token and a public key that can be used to verify it.
+     * @throws Exception
+     */
+    public static function generateIdentityToken(string $sub, string $aud, string $nonce): array
+    {
+        $token = json_encode(
+            [
+                'iss'   => 'https://one-login-mock',
+                'sub'   => $sub,
+                'aud'   => $aud,
+                'exp'   => time() + 300,
+                'iat'   => time(),
+                'nonce' => $nonce,
             ],
         );
 
