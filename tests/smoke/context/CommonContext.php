@@ -34,8 +34,12 @@ class CommonContext implements Context
      */
     public function iAccessTheViewerServiceInsecurely(): void
     {
-        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $insecureUrl = sprintf('http://%s/home', $baseUrlHost);
+        $urlParts = parse_url($this->ui->getMinkParameter('base_url'));
+
+        $insecureUrl = sprintf(
+            'http://%s/home',
+            $urlParts['host'] . (! empty($urlParts['port']) ? ':' . $urlParts['port'] : '')
+        );
 
         $this->ui->visit($insecureUrl);
     }
@@ -47,10 +51,15 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceRoot(): void
     {
-        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $rootUrl     = sprintf('http://%s/', $baseUrlHost);
+        $urlParts = parse_url($this->ui->getMinkParameter('base_url'));
 
-        $this->ui->visit($rootUrl);
+        $url = sprintf(
+            '%s://%s/',
+            $urlParts['scheme'],
+            $urlParts['host'] . (! empty($urlParts['port']) ? ':' . $urlParts['port'] : '')
+        );
+
+        $this->ui->visit($url);
     }
 
     /**
@@ -58,10 +67,15 @@ class CommonContext implements Context
      */
     public function iAccessTheOldServiceUrl(): void
     {
-        $oldUrlHost = parse_url($this->ui->getMinkParameter('old_base_url'), PHP_URL_HOST);
-        $rootUrl    = sprintf('http://%s/home', $oldUrlHost);
+        $urlParts = parse_url($this->ui->getMinkParameter('old_base_url'));
 
-        $this->ui->visit($rootUrl);
+        $url = sprintf(
+            '%s://%s/home',
+            $urlParts['scheme'],
+            $urlParts['host'] . (! empty($urlParts['port']) ? ':' . $urlParts['port'] : '')
+        );
+
+        $this->ui->visit($url);
     }
 
     /**
@@ -183,10 +197,7 @@ class CommonContext implements Context
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
 
-        $baseUrlHost = parse_url($this->ui->getMinkParameter('base_url'), PHP_URL_HOST);
-        $expectedUrl = sprintf('https://%s/home', $baseUrlHost);
-
-        $this->assertExactUrl($expectedUrl);
+        $this->assertHttps();
     }
 
     /**

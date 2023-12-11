@@ -39,8 +39,6 @@ services:
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
-    ports:
-      - 9001:80
     environment:
       WEB_DOMAIN: http://localhost:9001
       APP_HOST: viewer-app
@@ -81,7 +79,6 @@ services:
       XDEBUG_MODE: develop,debug,coverage
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
-      COOKIE_SECURE: "false"
     depends_on:
       - redis
 
@@ -96,8 +93,6 @@ services:
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
       - webpack_dist:/web
-    ports:
-      - 9002:80
     environment:
       WEB_DOMAIN: http://localhost:9002
       APP_HOST: actor-app
@@ -142,7 +137,6 @@ services:
       SESSION_EXPIRES: 20 # session expiry length to support timeout message.
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
-      COOKIE_SECURE: "false"
       NOTIFY_API_KEY:
 
   # ---------------------------
@@ -282,3 +276,16 @@ services:
     ports:
       - 9007:8080
     entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.upload-statistics.lambda_handler
+
+  proxy:
+    container_name: proxy
+    image: traefik:v2.10
+    ports:
+      - "9001:9001"
+      - "9041:9041"
+      - "9002:9002"
+      - "9042:9042"
+      - "9080:8080"
+    volumes:
+      - ./local-config/proxy/traefik.toml:/etc/traefik/traefik.toml
+      - ./local-config/proxy/dynamic.toml:/etc/traefik/dynamic.toml

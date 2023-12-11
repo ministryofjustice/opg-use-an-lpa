@@ -8,12 +8,11 @@ use Behat\Testwork\EventDispatcher\ServiceContainer\EventDispatcherExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\ServiceContainer\ServiceProcessor;
+use Smoke\Drivers\ChromeDriver;
 use Smoke\Drivers\Driver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Smoke\Drivers\ChromeDriver;
-use Smoke\DriverSubscriber;
 
 class SmokeExtension implements Extension
 {
@@ -60,6 +59,12 @@ class SmokeExtension implements Extension
      */
     public function configure(ArrayNodeDefinition $builder): void
     {
+        $builder
+            ->children()
+                ->scalarNode('allow_insecure_https')
+                    ->defaultFalse()
+                ->end()
+            ->end();
     }
 
     /**
@@ -84,6 +89,7 @@ class SmokeExtension implements Extension
     public function load(ContainerBuilder $container, array $config): void
     {
         $definition = new Definition(ChromeDriver::class);
+        $definition->addArgument($config['allow_insecure_https']);
         $definition->addTag(Driver::DRIVER_TAG);
         $container->setDefinition('smokedriver.driver.chrome', $definition);
 
