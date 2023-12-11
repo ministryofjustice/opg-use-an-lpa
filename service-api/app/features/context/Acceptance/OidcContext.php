@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use AppTest\OidcUtilities;
 use Aws\Command;
 use Aws\Result;
 use Aws\ResultInterface;
 use Behat\Behat\Context\Context;
-use Behat\Testwork\Suite\Exception\SuiteSetupException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
@@ -17,7 +17,6 @@ use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Component\Signature\Algorithm\ES256;
 use Jose\Component\Signature\Algorithm\RS256;
-use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\JWSVerifier;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 use Jose\Component\Signature\Serializer\JWSSerializerManager;
@@ -41,80 +40,23 @@ class OidcContext implements Context
     public string $email       = 'test@example.com';
     public string $birthday    = '1970-01-01';
 
-    public static function generateKeyPair(array $options): array
-    {
-        $key = openssl_pkey_new($options);
-        if ($key === false) {
-            throw new SuiteSetupException('Unable to create the identity key', 'onelogin');
-        }
-
-        $details = openssl_pkey_get_details($key);
-        if (! is_array($details)) {
-            throw new SuiteSetupException('Unable to get key details', 'onelogin');
-        }
-
-        $success = openssl_pkey_export($key, $privateKey);
-        if (!$success) {
-            throw new SuiteSetupException('Unable to export key to string', 'onelogin');
-        }
-
-        return [$privateKey, $details['key']];
-    }
-
     protected function coreIdentityTokenSetup(): string
     {
-        $token = json_encode(
-            [
-                'iss' => 'http://identity.one-login-mock/',
-                'sub' => $this->sub,
-                'exp' => time() + 300,
-                'iat' => time(),
-                'nbf' => time(),
-                'vc'  => [
-                    'type'              => [
-                        'VerifiableCredential',
-                        'VerifiableIdentityCredential',
-                    ],
-                    'credentialSubject' => [
-                        'birthDate' => [
-                            ['value' => $this->birthday],
-                        ],
-                    ],
-                ],
-            ],
-        );
+        [$token, $this->oneLoginOutOfBandPublicKey] =
+            OidcUtilities::generateCoreIdentityToken($this->sub, $this->birthday);
 
-        [$private, $this->oneLoginOutOfBandPublicKey] = self::generateKeyPair(
-            [
-                'curve_name'       => 'prime256v1',
-                'private_key_type' => OPENSSL_KEYTYPE_EC,
-            ],
-        );
-
-        return $this->signToken($token, $private);
+        return $token;
     }
 
     protected function identityTokenSetup(): string
     {
-        $token = json_encode(
-            [
-                'iss'   => 'https://one-login-mock',
-                'sub'   => $this->sub,
-                'aud'   => $this->clientId,
-                'exp'   => time() + 300,
-                'iat'   => time(),
-                'nonce' => $this->nonce,
-            ],
+        [$token, $this->oneLoginIssuerPublicKey] = OidcUtilities::generateIdentityToken(
+            $this->sub,
+            $this->clientId,
+            $this->nonce,
         );
 
-        [$private, $this->oneLoginIssuerPublicKey] = self::generateKeyPair(
-            [
-                'curve_name'       => 'prime256v1',
-                'private_key_type' => OPENSSL_KEYTYPE_EC,
-            ],
-        );
-
-        return $this->signToken($token, $private);
+        return $token;
     }
 
     protected function oidcFixtureSetup(bool $withCache = false): void
@@ -126,7 +68,7 @@ class OidcContext implements Context
 
         apcu_clear_cache();
 
-        [$this->oneLoginClientPrivateKey, $this->oneLoginClientPublicKey] = self::generateKeyPair(
+        [$this->oneLoginClientPrivateKey, $this->oneLoginClientPublicKey] = OidcUtilities::generateKeyPair(
             [
                 'private_key_bits' => 2048,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA,
@@ -173,24 +115,6 @@ class OidcContext implements Context
                 );
             },
         );
-    }
-
-    /**
-     * Signs a JWT with an ES256 algorithm
-     *
-     * @param string $payload A json encoded array structure representing a JWT.
-     * @param string $key A public or private key in PEM format. Must be an EC key.
-     * @return string
-     */
-    protected function signToken(string $payload, string $key): string
-    {
-        $jwsBuilder = (new JWSBuilder(new AlgorithmManager([new ES256()])))
-            ->create()
-            ->withPayload($payload)
-            ->addSignature(JWKFactory::createFromKey($key), ['alg' => 'ES256'])
-            ->build();
-
-        return (new CompactSerializer())->serialize($jwsBuilder, 0);
     }
 
     /**
