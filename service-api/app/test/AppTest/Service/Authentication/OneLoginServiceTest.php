@@ -187,8 +187,8 @@ class OneLoginServiceTest extends TestCase
             ->getUserInfo($tokenSet->reveal())
             ->willReturn(
                 [
-                    'sub'                                             => 'fakeSub',
-                    'email'                                           => 'fakeEmail',
+                    'sub'   => 'fakeSub',
+                    'email' => 'fakeEmail',
                 ]
             );
 
