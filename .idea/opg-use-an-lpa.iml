@@ -2,9 +2,12 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/smoke/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/AppTest" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/BehatTest" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ActorTest" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/CommonTest" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ViewerTest" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/alphagov/notifications-php-client" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/amp" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/byte-stream" />
