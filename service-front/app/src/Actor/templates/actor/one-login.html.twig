@@ -11,9 +11,18 @@
                 {{ govuk_error_summary(form) }}
                 {{ govuk_form_open(form) }}
 
-                <button data-prevent-double-click="true" name="sign-in-one-login" type="submit" class="govuk-button">{% trans %}Sign in via One Login{% endtrans %}</button>
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">Sign in to this service</h1>
+                    <p class="govuk-body-l">To make an LPA online, or to continue to make an LPA you’ve started, go to the Make a lasting power of attorney service. </p>
+                    <p class="govuk-body-l">  You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login.</p>
+                    <p class="govuk-body-l">If you’ve not used  Gov.uk One Login before, you can set up your access on the next page.</p>
+                    <p class="govuk-body-l">Gov.uk One Login is the new way to sign in to government services in one place, using the same email address and password.</p>
+                    <h2 class="govuk-heading-m">What if I’ve used this service before?</h2>
+                    <p class="govuk-body">If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear.</p>
 
+                <button data-prevent-double-click="true" name="sign-in-one-login" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
                 {{ govuk_form_close() }}
+                </div>
             </div>
         </main>
     </div>
