@@ -29,8 +29,8 @@ class OutOfBandCoreIdentityVerifierBuilderFactoryTest extends TestCase
         $container->get('config')->willReturn(
             [
                 'one_login' => [
-                    'identity_issuer' => 'https://fakeUrl'
-                ]
+                    'identity_issuer' => 'https://fakeUrl',
+                ],
             ]
         );
         $container->get(ClockInterface::class)->willReturn($this->prophesize(ClockInterface::class)->reveal());
