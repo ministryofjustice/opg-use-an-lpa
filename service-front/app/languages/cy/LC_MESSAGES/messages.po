@@ -6549,10 +6549,8 @@ msgstr ""
 "Bydd arnoch angen dangos yr EPA papur i’r bobl neu sefydliadau perthnasol."
 
 #: src/Actor/templates/actor/one-login.html.twig:15
-#, fuzzy
-#| msgid "By using this service you:"
 msgid "Sign in to this service"
-msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
+msgstr "Mewngofnodi i’r gwasanaeth hwn"
 
 #: src/Actor/templates/actor/one-login.html.twig:16
 msgid ""
