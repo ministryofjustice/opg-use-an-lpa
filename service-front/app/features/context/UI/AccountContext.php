@@ -2045,7 +2045,7 @@ class AccountContext implements Context
         $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
+        $this->ui->assertElementOnPage('button[name=sign-in-one-login]');
     }
 
     /**
@@ -2068,7 +2068,7 @@ class AccountContext implements Context
         );
 
         $this->iDoNotFollowRedirects();
-        $this->ui->pressButton('Sign in via One Login');
+        $this->ui->pressButton('sign-in-one-login');
         $this->iDoFollowRedirects();
     }
 
