@@ -2068,7 +2068,7 @@ class AccountContext implements Context
         );
 
         $this->iDoNotFollowRedirects();
-        $this->ui->pressButton('Sign in via One Login');
+        $this->ui->pressButton('sign-in-one-login');
         $this->iDoFollowRedirects();
     }
 
