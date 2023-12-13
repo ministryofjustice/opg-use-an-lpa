@@ -2045,7 +2045,7 @@ class AccountContext implements Context
         $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertElementExists('button[name=sign-in-one-login]');
+        $this->ui->assertElementOnPage('button[name=sign-in-one-login]');
     }
 
     /**
