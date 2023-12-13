@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-11-21T13:42:06+00:00\n"
+"POT-Creation-Date: 2023-12-13T08:31:36+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -381,6 +381,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:122
 #: src/Actor/templates/actor/check-lpa.html.twig:95
+#: src/Actor/templates/actor/one-login.html.twig:36
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
@@ -6546,6 +6547,69 @@ msgstr ""
 msgid "You’ll need to show the paper EPA to people or organisations instead."
 msgstr ""
 "Bydd arnoch angen dangos yr EPA papur i’r bobl neu sefydliadau perthnasol."
+
+#: src/Actor/templates/actor/one-login.html.twig:15
+#, fuzzy
+#| msgid "By using this service you:"
+msgid "Sign in to this service"
+msgstr "Trwy ddefnyddio’r gwasanaeth hwn rydych yn:"
+
+#: src/Actor/templates/actor/one-login.html.twig:16
+msgid ""
+"To make an LPA online, or to continue to make an LPA you’ve started, go to the "
+"<a href=\"url\" class=\"govuk-link\">Make a lasting power of attorney service."
+"</a>"
+msgstr ""
+"Er mwyn gwneud atwrneiaeth arhosol ar-lein, neu i barhau ag atwrneiaeth "
+"arhosol rydych chi wedi’i dechrau yn barod, ewch i’r gwasanaeth Gwneud "
+"atwrneiaeth arhosol."
+
+#: src/Actor/templates/actor/one-login.html.twig:19
+msgid ""
+"You’ll need to sign in to the Use a lasting power of attorney service using "
+"GOV.UK One Login."
+msgstr ""
+"Bydd angen i chi fewngofnodi i’r gwasanaeth Defnyddio atwrneiaeth arhosol drwy "
+"Gov.uk One Login."
+
+#: src/Actor/templates/actor/one-login.html.twig:22
+msgid ""
+"If you’ve not used Gov.uk One Login before, you can set up your access on the "
+"next page."
+msgstr ""
+"Os nad ydych chi wedi defnyddio Gov.uk One Login o’r blaen, gallwch greu "
+"cyfrif ar y dudalen nesaf."
+
+#: src/Actor/templates/actor/one-login.html.twig:25
+msgid ""
+"GOV.UK One Login is the new way to sign in to government services in one "
+"place, using the same email address and password."
+msgstr ""
+"Gov.uk One Login yw’r ffordd newydd o fewngofnodi i wasanaethau’r llywodraeth "
+"mewn un lle, gan ddefnyddio’r un cyfeiriad e-bost a chyfrinair."
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid "What if I’ve used this service before?"
+msgstr "Beth os ydw i wedi defnyddio’r gwasanaeth hwn o’r blaen?"
+
+#: src/Actor/templates/actor/one-login.html.twig:29
+msgid ""
+"If you have a Use a lasting power of attorney account from before 1 January "
+"2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve "
+"previously added will automatically appear."
+msgstr ""
+"Os oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol o 1 Ionawr 2024 "
+"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.Uk One Login, "
+"bydd unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
+"ymddangos yn awtomatig."
+
+#: src/Actor/templates/actor/one-login.html.twig:41
+msgid "with GOV.UK One Login</p>"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:41
+msgid "with GOV.UK One Login"
+msgstr "gyda Gov.uk One Login"
 
 #~ msgid ""
 #~ "If the scanned image is not readable, organisations may ask to see the "

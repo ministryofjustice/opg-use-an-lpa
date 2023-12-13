@@ -12,23 +12,23 @@
                 {{ govuk_form_open(form) }}
 
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">Sign in to this service</h1>
-                    <div class="govuk-inset-text">
+                    <h1 class="govuk-heading-xl">{% trans %}Sign in to this service{% endtrans %}</h1>
+                    <div class="govuk-inset-text">{% trans %}
                         To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href="url" class="govuk-link">Make a lasting power of attorney service.</a>
-                    </div>
-                    <p class="govuk-body-l">
+                        {% endtrans %}</div>
+                    <p class="govuk-body-l">{% trans %}
                         You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login.
-                    </p>
-                    <p class="govuk-body-l">
+                        {% endtrans %}</p>
+                    <p class="govuk-body-l">{% trans %}
                         If you’ve not used Gov.uk One Login before, you can set up your access on the next page.
-                    </p>
-                    <p class="govuk-body-l">
+                        {% endtrans %}</p>
+                    <p class="govuk-body-l">{% trans %}
                         GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password.
-                    </p>
-                    <h2 class="govuk-heading-l">What if I’ve used this service before?</h2>
-                    <p class="govuk-body">
+                        {% endtrans %}</p>
+                    <h2 class="govuk-heading-l">{% trans %}What if I’ve used this service before?{% endtrans %}</h2>
+                    <p class="govuk-body">{% trans %}
                         If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear.
-                    </p>
+                        {% endtrans %}</p>
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
@@ -38,8 +38,8 @@
                             <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
                         </svg>
                     </button>
-                    <p class="govuk-body govuk-!-font-size-19">with GOV.UK One Login</p>
-                </div>
+                    <p class="govuk-body govuk-!-font-size-19">{% trans %}with GOV.UK One Login{% endtrans %}</p>
+                    </div>
                 {{ govuk_form_close() }}
             </div>
         </main>

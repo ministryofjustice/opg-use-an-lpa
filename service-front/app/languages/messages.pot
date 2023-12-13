@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2023-11-29T08:57:18+00:00\n"
+"POT-Creation-Date: 2023-12-13T08:31:36+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -285,6 +285,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:122
 #: src/Actor/templates/actor/check-lpa.html.twig:95
+#: src/Actor/templates/actor/one-login.html.twig:36
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:46
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
@@ -4541,4 +4542,40 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:97
 msgid "You’ll need to show the paper EPA to people or organisations instead."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:15
+msgid "Sign in to this service"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:16
+msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"url\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:19
+msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:22
+msgid "If you’ve not used Gov.uk One Login before, you can set up your access on the next page."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:25
+msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid "What if I’ve used this service before?"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:29
+msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:41
+msgid "with GOV.UK One Login</p>"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:41
+msgid "with GOV.UK One Login"
 msgstr ""
