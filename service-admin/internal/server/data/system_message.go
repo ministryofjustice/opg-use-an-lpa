@@ -2,8 +2,10 @@ package data
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 )
 
 type SystemMessageService struct {
@@ -15,42 +17,33 @@ func NewSystemMessageService(ssmConn SSMConnection) *SystemMessageService {
 }
 
 func (s *SystemMessageService) GetSystemMessages(ctx context.Context) (systemMessages map[string]string, err error) {
-	messageKeys := []string{"use-en", "use-cy", "view-en", "view-cy"}
+	messageKeys := []string{"system-message-use-en", "system-message-use-cy", "system-message-view-en", "system-message-view-cy"}
 	messages := make(map[string]string)
 	for _, messageKey := range messageKeys {
 		messageText, _ := s.ssmConn.Client.GetParameter(ctx, &ssm.GetParameterInput{
 			Name:           aws.String(messageKey),
 			WithDecryption: aws.Bool(true),
 		})
-		messages[messageKey] = *messageText.Parameter.Value
+		if messageText != nil {
+			messages[messageKey] = *messageText.Parameter.Value
+		}
 	}
 
 	return messages, nil
 }
 
-/*func (s *SSMConnection) WriteParameter(name string, value string) error {
-	_, err := s.Client.PutParameter(context.TODO(), &ssm.PutParameterInput{
-		Name:  aws.String(name),
-		Value: aws.String(value),
-		Type:  types.ParameterTypeString,
-	})
+func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (err error) {
 
-	if err != nil {
-		return fmt.Errorf("error writing parameter: %w", err)
+	for messageKey, messageValue := range messages {
+		_, err := s.ssmConn.Client.PutParameter(ctx, &ssm.PutParameterInput{
+			Name:  aws.String(messageKey),
+			Value: aws.String(messageValue),
+			Type:  types.ParameterTypeString,
+		})
+		if err != nil {
+			return fmt.Errorf("error writing parameter: %w", err)
+		}
 	}
 
 	return nil
 }
-
-func (s *SSMConnection) ReadParameter(name string) (string, error) {
-	resp, err := s.Client.GetParameter(context.TODO(), &ssm.GetParameterInput{
-		Name:           aws.String(name),
-		WithDecryption: aws.Bool(true),
-	})
-
-	if err != nil {
-		return "", fmt.Errorf("error reading parameter: %w", err)
-	}
-
-	return *resp.Parameter.Value, nil
-}*/
