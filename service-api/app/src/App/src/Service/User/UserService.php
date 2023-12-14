@@ -190,7 +190,7 @@ class UserService
         } catch (Exception $e) {
             $this->logger->notice(
                 'Attempt made to reset password for non-existent account',
-                ['email' => $email]
+                ['email' => new Email($email)]
             );
 
             throw $e;
