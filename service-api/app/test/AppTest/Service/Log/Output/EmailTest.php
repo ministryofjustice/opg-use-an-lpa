@@ -3,9 +3,9 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\Log\Output;
+namespace AppTest\Service\Log\Output;
 
-use Common\Service\Log\Output\Email;
+use App\Service\Log\Output\Email;
 use PHPUnit\Framework\TestCase;
 
 class EmailTest extends TestCase

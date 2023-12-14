@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\Log\Output;
+namespace App\Service\Log\Output;
 
 use function hash;
 
