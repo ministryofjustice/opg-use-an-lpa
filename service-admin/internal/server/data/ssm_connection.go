@@ -11,9 +11,14 @@ type SSMClient interface {
 }
 
 type SSMConnection struct {
+	Prefix string
 	Client SSMClient
 }
 
 func NewSSMConnection(client SSMClient) *SSMConnection {
 	return &SSMConnection{Client: client}
+}
+
+func (s *SSMConnection) prefixedParameterName(name string) string {
+	return s.Prefix + name
 }
