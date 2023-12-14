@@ -12,6 +12,7 @@ use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use App\Service\Log\Output\Email;
 use DateTime;
 use DateTimeInterface;
 use Exception;
