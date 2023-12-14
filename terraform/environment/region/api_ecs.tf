@@ -446,6 +446,18 @@ locals {
         {
           name  = "ALLOW_GOV_ONE_LOGIN",
           value = tostring(var.feature_flags.allow_gov_one_login)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_URL",
+          value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_PORT",
+          value = tostring(data.aws_elasticache_replication_group.brute_force_cache_replication_group.port)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_TIMEOUT",
+          value = "60"
         }
       ]
   })
