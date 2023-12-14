@@ -93,6 +93,10 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
   attribute {
+    name = "Identity"
+    type = "S"
+  }
+  attribute {
     name = "Email"
     type = "S"
   }
@@ -113,6 +117,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
 
+  global_secondary_index {
+    name            = "IdentityIndex"
+    hash_key        = "Identity"
+    projection_type = "ALL"
+  }
   global_secondary_index {
     name            = "EmailIndex"
     hash_key        = "Email"
