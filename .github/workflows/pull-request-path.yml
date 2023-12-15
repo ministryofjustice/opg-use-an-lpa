@@ -52,6 +52,12 @@ jobs:
         with:
           files: |
             terraform/**
+      - name: get changed docs files in any folder
+        id: changed-files-docs
+        uses: tj-actions/changed-files@1864dc5311069c2319e40ddda20ebf24336dcba9
+        with:
+          files: |
+            **/*.md
       - name: extract variables for workflow
         id: variables
         run: |
@@ -63,6 +69,9 @@ jobs:
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo admin)" >> $GITHUB_OUTPUT
+          elif [[ ${{ steps.changed-files-docs.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo docs)" >> $GITHUB_OUTPUT
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
@@ -251,6 +260,17 @@ jobs:
       always() &&
       needs.code_coverage.result == 'success' &&
       needs.terraform_apply_environment.result == 'success'
+  
+  docs_update:
+    name: update documentation
+    uses: ./.github/workflows/documentation-update.yml
+    needs:
+      - workflow_variables
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
+    if: |
+      needs.workflow_variables.outputs.specific_path == 'docs'
 
   # Required end of workflow job
   end_of_workflow:
