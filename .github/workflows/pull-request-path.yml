@@ -286,7 +286,8 @@ jobs:
     steps:
       - name: workflow has ended without issue
         run: |
-          if [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs']]; then
+          if [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs']]
+          then
             echo 'Ending docs workflow'
           else
             echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
