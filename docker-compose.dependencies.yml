@@ -16,6 +16,7 @@ services:
   codes-gateway:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
+      dockerfile: Dockerfile-Local-Helper
     ports:
       - 4343:4343
     volumes:
