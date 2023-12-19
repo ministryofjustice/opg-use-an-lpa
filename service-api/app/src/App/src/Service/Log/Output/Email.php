@@ -14,7 +14,6 @@ class Email
 
     public function __toString(): string
     {
-        $hash = hash('sha256', $this->email);
-        return sprintf($hash);
+        return hash('sha256', $this->email);
     }
 }
