@@ -20,6 +20,8 @@ func (m MockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamete
 
 // test for new method, which takes in ssmclient
 func TestNewSSMConnection(t *testing.T) {
+	t.Parallel()
+
 	got := data.NewSSMConnection(&MockSSMClient{})
 	assert.NotNil(t, got)
 }

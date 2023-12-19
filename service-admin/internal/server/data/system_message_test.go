@@ -22,20 +22,22 @@ func (m mockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamete
 func TestPutSystemMessages(t *testing.T) {
 	// TODO do we need to ensure mock ssm client got called 4 times?
 	t.Parallel()
+
 	ssmConn := data.NewSSMConnection(mockSSMClient{})
 	service := data.NewSystemMessageService(*ssmConn)
 
 	initialMessages := map[string]string{"system-message-use-en": "use hello world en", "system-message-use-cy": "use helo byd",
 		"system-message-view-en": "view hello world", "system-message-view-cy": "view helo byd"}
 	err := service.PutSystemMessages(context.Background(), initialMessages)
+
 	if err != nil {
 		t.Errorf("Failure during write of parameter %s", err)
 	}
-
 }
 
 func TestGetSystemMessages(t *testing.T) {
 	t.Parallel()
+
 	ssmConn := data.NewSSMConnection(mockSSMClient{})
 	service := data.NewSystemMessageService(*ssmConn)
 	messages, _ := service.GetSystemMessages(context.Background())
