@@ -8,26 +8,26 @@ import (
 type mockSystemMessageService struct{}
 
 func (m mockSystemMessageService) GetSystemMessages(ctx context.Context) (systemMessages map[string]string, err error) {
-	return nil, nil
+	return map[string]string{"system-message-use-en": "use hello world en", "system-message-use-cy": "use helo byd",
+		"system-message-view-en": "view hello world", "system-message-view-cy": "view helo byd"}, nil
 }
 
 func (m mockSystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (err error) {
 	return nil
 }
 
-// 1. rendering template loads data from parameter store
-// 2. save button calls appropriate functions (4 combinations) to save to parameter store
-
-// template error panic test - do we need this?
+// TODO template error panic test - do we need this?
 
 func Test_RenderTemplateLoadsFromParameterStore(t *testing.T) {
-	// mock class that loads
 	t.Parallel()
+	// TODO the mock should record a call to GetSystemMessages
+	// TODO the text areas should now contain the messages defined in the mock at the top of this file
 	t.Errorf("Oh no !!!")
 }
 
 func Test_SaveButtonSavesToParameterStore(t *testing.T) {
-	// mock class that loads
 	t.Parallel()
+	// TODO ensure we called PutSsytemMessages on mock service
+
 	t.Errorf("Oh no 2!!!")
 }

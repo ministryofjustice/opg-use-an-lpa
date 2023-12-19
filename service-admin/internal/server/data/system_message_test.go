@@ -16,10 +16,11 @@ func (m mockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParamete
 }
 
 func (m mockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error) {
-	return nil, nil
+	return nil, nil // TODO should this be some actual data rather than nil?  or are we just happy we called the ssm client?
 }
 
 func TestPutSystemMessages(t *testing.T) {
+	// TODO do we need to ensure mock ssm client got called 4 times?
 	t.Parallel()
 	ssmConn := data.NewSSMConnection(mockSSMClient{})
 	service := data.NewSystemMessageService(*ssmConn)
@@ -38,5 +39,6 @@ func TestGetSystemMessages(t *testing.T) {
 	ssmConn := data.NewSSMConnection(mockSSMClient{})
 	service := data.NewSystemMessageService(*ssmConn)
 	messages, _ := service.GetSystemMessages(context.Background())
+	// TODO mock needs to actually return something now?  or do we just check it got called?
 	assert.NotEmpty(t, messages)
 }

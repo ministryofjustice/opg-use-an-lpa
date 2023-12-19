@@ -24,13 +24,18 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
-			//	log.Error().Err(err).Msg("failed to parse form input")
+			log.Error().Err(err).Msg("failed to parse form input")
 		}
 	}
 
-	// TODO pass textarea values in to template
+	// TODO messages currently hardcoded but needs to get from service
 
-	if err := s.templateService.RenderTemplate(w, r.Context(), "systemmessage.page.gohtml", nil); err != nil {
+	messages := map[string]string{"system-message-use-en": "use hello world en", "system-message-use-cy": "use helo byd",
+		"system-message-view-en": "view hello world", "system-message-view-cy": "view helo byd"}
+
+	log.Ctx(r.Context()).Info().Msgf(messages["system-message-use-en"])
+
+	if err := s.templateService.RenderTemplate(w, r.Context(), "systemmessage.page.gohtml", messages); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
 }

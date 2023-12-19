@@ -22,18 +22,18 @@ System message
     <div class="govuk-form-group">
     <h2 class="govuk-heading-l">Use an LPA</h2>
     <p class="govuk-body">Message in English</p>
-<textarea class="govuk-textarea" id="use-eng"></textarea>
+<textarea class="govuk-textarea" id="use-eng">{{ index . "system-message-use-en"}}</textarea>
         <p class="govuk-body">Message in Welsh</p>
-        <textarea class="govuk-textarea" id="use-cy"></textarea>
+        <textarea class="govuk-textarea" id="use-cy">{{ index . "system-message-use-cy"}}</textarea>
 </div>
 
 
     <div class="govuk-form-group">
         <h2 class="govuk-heading-l">View an LPA</h2>
         <p class="govuk-body">Message in English</p>
-        <textarea class="govuk-textarea" id="view-eng"></textarea>
+        <textarea class="govuk-textarea" id="view-eng">{{ index . "system-message-view-en"}}</textarea>
         <p class="govuk-body">Message in Welsh</p>
-        <textarea class="govuk-textarea" id="view-cy"></textarea>
+        <textarea class="govuk-textarea" id="view-cy">{{ index . "system-message-view-cy"}}</textarea>
     </div>
 
 <button class="govuk-button" data-module="govuk-button">
