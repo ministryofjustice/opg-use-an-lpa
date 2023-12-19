@@ -275,6 +275,15 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
   }
 
+  statement {
+    sid    = "${local.policy_region_prefix}CloudWatchMetricsAccess"
+    effect = "Allow"
+    actions = [
+      "cloudwatch:PutMetricData",
+    ]
+    resources = ["*"]
+  }
+
   provider = aws.region
 }
 
