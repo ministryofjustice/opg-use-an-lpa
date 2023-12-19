@@ -609,7 +609,7 @@
     <phpunit_settings>
       <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
-      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" custom_loader_path="$PROJECT_DIR$/service-api/app/vendor/autoload.php" use_configuration_file="true" />
+      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" custom_loader_path="$PROJECT_DIR$/service-api/app/vendor/autoload.php" phpunit_phar_path="" use_configuration_file="true" />
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/service-front/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
