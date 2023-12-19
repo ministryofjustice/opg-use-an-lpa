@@ -353,10 +353,10 @@ locals {
 
   fpm_stats_export = jsonencode(
     {
-      cpu         = 0,
-      essential   = false,
-      image       = "ntse/export-php-metrics:v0.3.0",
-      name        = "fpm-stats-export",
+      cpu       = 0,
+      essential = false,
+      image     = "ntse/export-php-metrics:v0.3.0",
+      name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -368,7 +368,7 @@ locals {
       dependsOn = [{
         containerName = "app"
         condition     = "HEALTHY"
-       }]
+      }]
     }
   )
 
