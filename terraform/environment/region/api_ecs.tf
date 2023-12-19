@@ -164,7 +164,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
+  container_definitions    = "[${local.fpm_stats_export}, ${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.api_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
@@ -350,6 +350,27 @@ locals {
       },
       environment = []
   })
+
+  fpm_stats_export = jsonencode(
+    {
+      cpu         = 0,
+      essential   = false,
+      image       = "ntse/export-php-metrics:v0.3.0",
+      name        = "fpm-stats-export",
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
+        }
+      },
+      dependsOn = [{
+        containerName = "app"
+        condition     = "HEALTHY"
+       }]
+    }
+  )
 
   api_app = jsonencode(
     {
