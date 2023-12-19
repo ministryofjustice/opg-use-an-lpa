@@ -1,14 +1,9 @@
-FROM owasp/zap2docker-bare
+FROM owasp/zap2docker-bare:2.14.0
 
 WORKDIR /zap
 
 USER root
 
-RUN apk upgrade \
- && apk add python3 py3-pip \
- && rm -rf /var/cache/apk/* \
- && pip3 install --no-cache-dir --upgrade zapcli
-
-COPY ./scripts/ /scripts
+COPY ./scripts/ .
 
 CMD [ "zap-cli" ]
