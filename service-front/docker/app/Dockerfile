@@ -1,7 +1,7 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM php:8.1.23-fpm-alpine3.18 AS php-base
+FROM php:8.1.25-fpm-alpine3.18 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
