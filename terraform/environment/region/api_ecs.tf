@@ -364,7 +364,7 @@ locals {
     {
       cpu       = 0,
       essential = false,
-      image     = "ntse/export-php-metrics:v0.7.0",
+      image     = "ntse/export-php-metrics:v0.8.0",
       name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
@@ -374,6 +374,12 @@ locals {
           awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
         }
       },
+      environment = [
+        {
+          name  = "METADATA_LINK_LOCAL_ADDRESS",
+          value = "http://169.254.169.254"
+        }
+      ]
       dependsOn = [{
         containerName = "app"
         condition     = "HEALTHY"
