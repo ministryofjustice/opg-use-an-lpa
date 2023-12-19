@@ -191,7 +191,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function logsNoticeWhenPasswordResetIsRequestedForNonExistentAccount(): void
+    public function logs_Notice_When_Password_Reset_Is_Requested_For_Non_Existent_Account(): void
     {
         $email        = 'nonexistent@example.com';
         $hashed_email = hash('sha256', $email);
