@@ -377,7 +377,7 @@ locals {
       environment = [
         {
           name  = "METADATA_LINK_LOCAL_ADDRESS",
-          value = "http://169.254.169.254"
+          value = "http://169.254.170.2"
         }
       ]
       dependsOn = [{
