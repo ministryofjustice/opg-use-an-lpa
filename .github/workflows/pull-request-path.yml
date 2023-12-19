@@ -52,6 +52,12 @@ jobs:
         with:
           files: |
             terraform/**
+      - name: get changed docs files in any folder
+        id: changed-files-docs
+        uses: tj-actions/changed-files@1864dc5311069c2319e40ddda20ebf24336dcba9
+        with:
+          files: |
+            **/*.md
       - name: extract variables for workflow
         id: variables
         run: |
@@ -63,6 +69,9 @@ jobs:
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo admin)" >> $GITHUB_OUTPUT
+          elif [[ ${{ steps.changed-files-docs.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo docs)" >> $GITHUB_OUTPUT
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
@@ -71,6 +80,17 @@ jobs:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
         run: |
           echo "path chosen - $SPECIFIC_PATH"
+
+  update_documentation:
+    name: update documentation
+    runs-on: ubuntu-latest
+    needs:
+      - workflow_variables
+    steps:
+      - name: only update documentation
+        run: echo 'Only docs have changed - skipping rest of pipeline'
+    if: |
+      needs.workflow_variables.outputs.specific_path == 'docs'
 
   terraform_lint:
     name: lint terraform code
@@ -83,7 +103,8 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      needs.workflow_variables.result == 'success'
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path != 'docs'
 
   node_test:
     name: test node dependencies
@@ -176,7 +197,7 @@ jobs:
       needs.workflow_variables.result == 'success'
 
   terraform_preproduction_plan_environment:
-    name: terraform apply environment
+    name: terraform plan preproduction environment
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - docker_build_scan_push
@@ -261,14 +282,21 @@ jobs:
       - slack_notify
       - workflow_variables
       - workspace_name
+      - update_documentation
     steps:
       - name: workflow has ended without issue
         run: |
-          echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
-          echo "URL: https://${{ needs.workspace_name.outputs.name }}.use-lasting-power-of-attorney.service.gov.uk"
+          if [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]
+          then
+            echo 'Ending docs workflow'
+          else
+            echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
+            echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
+            echo "URL: https://${{ needs.workspace_name.outputs.name }}.use-lasting-power-of-attorney.service.gov.uk"
+          fi
     if: |
       always() &&
-      needs.ecr_scan_results.result == 'success' &&
-      needs.slack_notify.result == 'success' &&
-      needs.workflow_variables.result == 'success'
+      ((needs.ecr_scan_results.result == 'success' || needs.ecr_scan_results.result == 'skipped') &&
+      (needs.slack_notify.result == 'success' || needs.slack_notify.result == 'skipped') &&
+      needs.workflow_variables.result == 'success') ||
+      needs.update_documentation.result == 'success'
