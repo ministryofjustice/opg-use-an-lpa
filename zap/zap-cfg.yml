@@ -1,0 +1,72 @@
+---
+env:
+  contexts:
+  - name: "Use An LPA Basic Scan"
+    urls:
+    - "${ULPA_URI}home"
+    includePaths: []
+    excludePaths: []
+    authentication:
+      method: "form"
+      parameters:
+         loginPageUrl: ${ULPA_URI}login
+         loginRequestUrl: ${ULPA_URI}login
+         loginRequestBody: "email={%username%}&password={%password%}"
+    sessionManagement:
+      method: "cookie"
+      parameters: {}
+    users:
+    - name: "test user"
+      credentials:
+      username: "${ULPA_USER}"
+      password: "${ULPA_PWORD}"
+  technology:
+      exclude: [
+            "Db.CouchDB",
+            "Db.Firebird",
+            "Db.HypersonicSQL",
+            "Db.IBM DB2",
+            "Db.Microsoft Access",
+            "Db.Microsoft SQL Server",
+            "Db.MongoDB",
+            "Db.Oracle",
+            "Db.SAP MaxDB",
+            "Db.SQLite",
+            "Db.Sybase",
+            "Language.ASP",
+            "Language.Java",
+            "Language.Java.Spring",
+            "Language.Ruby",
+            "OS.MacOS",
+            "OS.Windows",
+            "SCM.SVN",
+            "WS.Apache",
+            "WS.IIS",
+            "WS.Tomcat",
+      ]
+  parameters:
+    failOnError: false
+    failOnWarning: false
+    progressToStdout: true
+  vars: {}
+jobs:
+  - parameters:
+      template: "sarif-json"
+      reportDir: "/zap/report"
+      reportFile: "SarifReport.json"
+      reportTitle: "Sarif JSON"
+      reportDescription: ""
+      displayReport: false
+    risks:
+    - "info"
+    - "low"
+    - "medium"
+    - "high"
+    confidences:
+    - "falsepositive"
+    - "low"
+    - "medium"
+    - "high"
+    - "confirmed"
+    name: "Sarif JSON"
+    type: "report"

@@ -4,6 +4,6 @@ WORKDIR /zap
 
 USER root
 
-COPY ./scripts/ .
+COPY . .
 
-CMD [ "zap-cli" ]
+CMD [ "zap.sh" ]

@@ -1,13 +1,7 @@
 #OWASP ZAP container
 
-Can be run against actor or viewer in local environment with:
+Can be run against actor in local environment with:
 
 ```bash
-docker run zap /scripts/actor.sh
-```
-
-or
-
-```bash
-docker run zap /scripts/viewer.sh
+make security_test
 ```
