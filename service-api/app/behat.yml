@@ -49,6 +49,7 @@ acceptance:
         - BehatTest\Context\Acceptance\CommonContext
         - BehatTest\Context\Acceptance\LpaContext
         - BehatTest\Context\Acceptance\FeatureFlagContext
+        - BehatTest\Context\Acceptance\OidcContext
       filters:
         tags: "@actor&&@acceptance"
     viewer:

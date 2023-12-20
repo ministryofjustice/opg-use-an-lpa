@@ -137,7 +137,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
 
     $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
-    $app->get('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
+    $app->post('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

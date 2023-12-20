@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
+use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\OpenIDClient\Issuer\IssuerBuilderInterface;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
@@ -21,6 +22,12 @@ class IssuerBuilder implements IssuerBuilderInterface
     public function setMetadataProviderBuilder(?MetadataProviderBuilder $metadataProviderBuilder): self
     {
         $this->issuerBuilder->setMetadataProviderBuilder($metadataProviderBuilder);
+        return $this;
+    }
+
+    public function setJwksProviderBuilder(?JwksProviderBuilder $jwksProviderBuilder): self
+    {
+        $this->issuerBuilder->setJwksProviderBuilder($jwksProviderBuilder);
         return $this;
     }
 
