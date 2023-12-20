@@ -48,10 +48,17 @@ jobs:
           TEMPLATE: ${{ inputs.template }}
         if: inputs.workflow_status == 'success'
         run: |
+          commit_message="Merge ${{ github.head_ref }} into ${{ github.base_ref }}"
+
+          if [[ ${{ inputs.template }} != "successful_dev_build.txt" ]]
+          then
+            commit_message="$(git log -1 --pretty=%B)"
+          fi
+
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-          --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
-          --commit_message "$(git log -2 --pretty=%B)"
+            --slack_webhook ${SLACK_WEB_HOOK} \
+            --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
+            --commit_message "$commit_message"
 
       - name: Notify Slack Failure
         env:
