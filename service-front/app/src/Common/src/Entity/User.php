@@ -19,6 +19,7 @@ class User implements UserInterface
 
     protected bool $needsReset;
     protected ?DateTime $lastLogin;
+    protected ?string $subject;
 
     public function __construct(protected string $identity, array $roles, array $details)
     {
@@ -30,6 +31,7 @@ class User implements UserInterface
 
         $this->email      = $details['Email'];
         $this->needsReset = !empty($details['NeedsReset']);
+        $this->subject    = $details['Subject'] ?? null;
 
         if (!empty($details['LastLogin'])) {
             $this->setLastLogin($details['LastLogin']);
@@ -78,11 +80,15 @@ class User implements UserInterface
      */
     public function getDetails(): array
     {
-        return [
+        $array = [
             'Email'      => $this->email,
             'LastLogin'  => $this->lastLogin,
             'NeedsReset' => $this->needsReset,
         ];
+        if ($this->subject !== null) {
+            $array['Subject'] = $this->subject;
+        }
+        return $array;
     }
 
     /**
