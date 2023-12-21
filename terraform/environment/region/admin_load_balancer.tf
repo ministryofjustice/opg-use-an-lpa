@@ -1,8 +1,3 @@
-resource "aws_shield_application_layer_automatic_response" "admin" {
-  resource_arn = aws_lb.admin.arn
-  action       = "COUNT"
-}
-
 resource "aws_lb_target_group" "admin" {
   name                 = "${var.environment_name}-admin"
   port                 = 80
