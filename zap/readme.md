@@ -1,13 +1,18 @@
 #OWASP ZAP container
 
-Can be run against actor or viewer in local environment with:
+Can be run against actor in local environment with:
 
 ```bash
-docker run zap /scripts/actor.sh
+make up_all
+make security_test
 ```
 
-or
+Reports in sarif and markdown are generated in the zap/reports folder.
 
-```bash
-docker run zap /scripts/viewer.sh
-```
+The zap container takes three environment variables:
+
+ULPA_USER: signin user email
+ULPA_PWORD: their password
+ULPA_URI: the url to hit, i.e. https://proxy:9042/
+
+which are injected into the zap automation config yml file.

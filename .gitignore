@@ -24,3 +24,5 @@ docs/diagrams/dsl/**/workspace.json
 
 *.pem
 tests/vendor
+
+zap/report/*
