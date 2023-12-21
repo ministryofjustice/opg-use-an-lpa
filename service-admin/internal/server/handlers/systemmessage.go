@@ -29,8 +29,12 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		err := r.ParseForm()
 		if err == nil {
 			// TODO hardcoded for now, will need to get this from text area
-			messages := map[string]string{"system-message-use-en": "use hello bob en", "system-message-use-cy": "use helo bob",
+			//messages := map[string]string{"system-message-use-en": "use hello bob en", "system-message-use-cy": "use helo bob",
+			//	"system-message-view-en": "view hello bob", "system-message-view-cy": "view helo bob"}
+
+			messages := map[string]string{"system-message-use-en": r.PostFormValue("index . \"system-message-use-en\""), "system-message-use-cy": "use helo bob",
 				"system-message-view-en": "view hello bob", "system-message-view-cy": "view helo bob"}
+
 			s.systemMessageService.PutSystemMessages(context.Background(), messages)
 		} else {
 			log.Error().Err(err).Msg("failed to parse form input")

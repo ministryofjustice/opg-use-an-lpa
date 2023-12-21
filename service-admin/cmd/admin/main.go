@@ -42,7 +42,7 @@ func main() {
 			"",
 		)
 		awsEndpoint = flag.String(
-			"dbRegion",
+			"awsEndpoint",
 			env.Get("AWS_ENDPOINT_URL", ""),
 			"",
 		)
@@ -69,7 +69,7 @@ func main() {
 		lpaCodesEndpoint = flag.String(
 			"lpa-codes-endpoint",
 			env.Get("LPA_CODES_API_ENDPOINT", ""),
-			"The codes enpoint",
+			"The codes endpoint",
 		)
 	)
 
