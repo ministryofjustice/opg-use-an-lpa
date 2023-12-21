@@ -69,17 +69,20 @@
                             {{ govuk_form_element(form.get('__csrf')) }}
                             {{ govuk_form_element(form.get('force_activation')) }}
 
-                            <div class="moj-button-menu">
-                                <div class="moj-button-menu__wrapper">
-                                    <button type="submit" draggable="false" class="govuk-button moj-button-menu__item  " data-module="govuk-button">
-                                        {% trans %}Continue{% endtrans %}</button>
-                                    </button>
-                                    <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
-                                        {% trans %}This is not the correct LPA{% endtrans %}
-                                    </a>
-                                </div>
+                        <div class="moj-button-menu">
+                            <div class="moj-button-menu__wrapper">
+
+                                <button role="button" data-prevent-double-click="true" type="submit" draggable="false" class="govuk-button moj-button-menu__item  " data-module="govuk-button">
+                                    {% trans %}Continue{% endtrans %}
+                                </button>
+
+                                <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                                    {% trans %}This is not the correct LPA{% endtrans %}
+                                </a>
                             </div>
                         </div>
+                        </div>
+
                         {{ govuk_form_close() }}
                     </div>
                 </div>
