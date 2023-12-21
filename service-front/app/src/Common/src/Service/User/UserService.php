@@ -117,7 +117,7 @@ class UserService implements UserRepositoryInterface
                 'Authentication failed for {email} with code {code}',
                 [
                     'code'  => $e->getCode(),
-                    'email' => $credential,
+                    'email' =>new Email($credential),
                 ]
             );
             if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Authentication\OneLoginAuthenticationRequestService;
+use App\Service\Authentication\OneLoginService;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class OneLoginAuthenticationRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private OneLoginAuthenticationRequestService $authenticationRequestService,
+        private OneLoginService $authenticationRequestService,
     ) {
     }
 

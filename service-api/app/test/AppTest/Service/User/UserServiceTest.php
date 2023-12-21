@@ -11,6 +11,7 @@ use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use App\Service\Log\Output\Email;
 use App\Service\User\UserService;
 use DateTime;
 use Exception;
@@ -187,6 +188,36 @@ class UserServiceTest extends TestCase
 
         $this->expectException(ConflictException::class);
         $us->add($userData);
+    }
+
+    /** @test */
+    public function logs_Notice_When_Password_Reset_Is_Requested_For_Non_Existent_Account(): void
+    {
+        $email        = 'nonexistent@example.com';
+        $hashed_email = hash('sha256', $email);
+
+        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $repoProphecy
+            ->recordPasswordResetRequest(Argument::cetera())
+            ->willThrow(Exception::class);
+
+        $loggerProphecy
+            ->notice(
+                'Attempt made to reset password for non-existent account',
+                Argument::that(function ($arg) use ($hashed_email) {
+                    return $arg['email'] instanceof Email && (string)($arg['email']) == $hashed_email;
+                })
+            )
+            ->shouldBeCalled();
+
+        $userService = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        try {
+            $userService->requestPasswordReset($email);
+        } catch (Exception) {
+        }
     }
 
     /** @test */

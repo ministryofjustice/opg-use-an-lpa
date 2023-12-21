@@ -4,27 +4,31 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
-use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder as FacileAuthorizationServiceBuilder;
+use Facile\OpenIDClient\Service\Builder\AuthorizationServiceBuilder;
 
 /**
- * Decorator class for Facile AuthorizationServiceBuilder
+ * Facade class for Facile AuthorizationServiceBuilder
+ *
+ * @link https://en.wikipedia.org/wiki/Facade_pattern
  *
  * @codeCoverageIgnore
  */
 class AuthorisationServiceBuilder
 {
-    private FacileAuthorizationServiceBuilder $authorizationServiceBuilder;
-
-    public function __construct()
-    {
-        $this->authorizationServiceBuilder = new FacileAuthorizationServiceBuilder();
+    public function __construct(
+        private AuthorizationServiceBuilder $authorizationServiceBuilder,
+        private AuthorisationClientManager $authorisationClientManager,
+    ) {
     }
 
     /**
-     * Decorates the return of FacileAuthorizationServiceBuilder::build()
+     * Decorates the return of {@link FacileAuthorizationServiceBuilder::build()}
      */
     public function build(): AuthorisationService
     {
-        return new AuthorisationService($this->authorizationServiceBuilder->build());
+        return new AuthorisationService(
+            $this->authorizationServiceBuilder->build(),
+            $this->authorisationClientManager,
+        );
     }
 }

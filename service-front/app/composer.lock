@@ -597,16 +597,16 @@
         },
         {
             "name": "facile-it/php-openid-client",
-            "version": "0.3.4",
+            "version": "0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facile-it/php-openid-client.git",
-                "reference": "ba2b298140df6b70c2e1422447055b5623e78a56"
+                "reference": "5a1e370f57cc822d06fa580160df44fd68eb2c94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facile-it/php-openid-client/zipball/ba2b298140df6b70c2e1422447055b5623e78a56",
-                "reference": "ba2b298140df6b70c2e1422447055b5623e78a56",
+                "url": "https://api.github.com/repos/facile-it/php-openid-client/zipball/5a1e370f57cc822d06fa580160df44fd68eb2c94",
+                "reference": "5a1e370f57cc822d06fa580160df44fd68eb2c94",
                 "shasum": ""
             },
             "require": {
@@ -703,9 +703,9 @@
             ],
             "support": {
                 "issues": "https://github.com/facile-it/php-openid-client/issues",
-                "source": "https://github.com/facile-it/php-openid-client/tree/0.3.4"
+                "source": "https://github.com/facile-it/php-openid-client/tree/0.3.5"
             },
-            "time": "2023-07-28T10:12:30+00:00"
+            "time": "2023-11-21T10:07:21+00:00"
         },
         {
             "name": "fig/http-message-util",
@@ -13539,5 +13539,5 @@
     "platform-overrides": {
         "php": "8.1.18"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

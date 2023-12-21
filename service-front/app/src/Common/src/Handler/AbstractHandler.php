@@ -12,6 +12,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class AbstractHandler implements RequestHandlerInterface
 {
     public function __construct(
@@ -30,17 +33,21 @@ abstract class AbstractHandler implements RequestHandlerInterface
     abstract public function handle(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * Redirect to the specified route
+     * Handles a redirect to route
+     * $basePathOverride used to override from English to Welsh only
      *
      * @param $route
-     * @param array $routeParams
-     * @param array $queryParams
+     * @param $routeParams
+     * @param $queryParams
+     * @param string|null $basePathOverride
      * @return RedirectResponse
      */
-    protected function redirectToRoute($route, $routeParams = [], $queryParams = []): RedirectResponse
+    public function redirectToRoute($route, $routeParams = [], $queryParams = [], ?string $basePathOverride = null): RedirectResponse
     {
-        return new RedirectResponse(
-            $this->urlHelper->generate($route, $routeParams, $queryParams)
-        );
+        //TODO: UML-3203 Identify if OneLogin can handle multiple redirect urls, then remove
+        if ($basePathOverride !== null) {
+            $this->urlHelper->setBasePath($basePathOverride);
+        }
+        return new RedirectResponse($this->urlHelper->generate($route, $routeParams, $queryParams));
     }
 }

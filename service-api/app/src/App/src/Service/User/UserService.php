@@ -12,6 +12,7 @@ use App\Exception\ForbiddenException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
+use App\Service\Log\Output\Email;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -190,7 +191,7 @@ class UserService
         } catch (Exception $e) {
             $this->logger->notice(
                 'Attempt made to reset password for non-existent account',
-                ['email' => $email]
+                ['email' => new Email($email)]
             );
 
             throw $e;

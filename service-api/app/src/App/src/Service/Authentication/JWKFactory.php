@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
-use Jose\Component\KeyManagement\JWKFactory as KeyFactory;
+use App\Service\Authentication\KeyPairManager\KeyPair;
+use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use Jose\Component\Core\JWK;
+use Jose\Component\KeyManagement\JWKFactory as KeyFactory;
 
+/**
+ * Generates a JWK when provided a supplied KeyPairManager.
+ *
+ * The {@link KeyPair} can contain a private key but does not have to.
+ */
 class JWKFactory
 {
-    public function __construct(private KeyPairManager $keyPairManager)
+    public function __invoke(KeyPairManagerInterface $keyPairManager): JWK
     {
-    }
+        $keyPair = $keyPairManager->getKeyPair();
 
-    public function __invoke(): JWK
-    {
         return KeyFactory::createFromKey(
-            $this->keyPairManager->getKeyPair()->private->getString(),
+            $keyPair->hasPrivate() ? $keyPair->private->getString() : $keyPair->public,
             null,
             [
                 //TODO UML-3056 These may need revisiting
-                'alg' => 'RS256',
+                'alg' => $keyPairManager->getAlgorithm(),
                 'use' => 'sig',
             ]
         );
