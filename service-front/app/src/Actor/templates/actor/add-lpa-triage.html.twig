@@ -117,15 +117,21 @@
 
                         </fieldset>
                     </div>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
 
-                    <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                            <a role="button" type="submit" data-prevent-double-click="true" draggable="false" class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </a>
+                            <a href="{{ path('lpa.dashboard') }}"  role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
 
-                    <a href="{{ path('lpa.dashboard') }}" draggable="false"
-                       class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
-
+                        </div>
+                    </div>
                     {{ govuk_form_close() }}
                 </div>
+
             </div>
         </main>
     </div>
