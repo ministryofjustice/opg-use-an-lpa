@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Service\OneLogin;
 
+use Closure;
+use Common\Entity\User;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\OneLogin\OneLoginService;
 use DateTime;
@@ -11,10 +13,29 @@ use DateTimeInterface;
 use Facile\OpenIDClient\Session\AuthSession;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class OneLoginServiceTest extends TestCase
 {
     use ProphecyTrait;
+
+    private ObjectProphecy|LoggerInterface $logger;
+    private Closure $userFactoryCallable;
+
+    public function setUp() : void{
+        $this->logger              = $this->prophesize(LoggerInterface::class);
+        $this->userFactoryCallable = function ($identity, $roles, $details) {
+            $this->assertEquals('fake-id', $identity);
+            $this->assertIsArray($roles);
+            $this->assertIsArray($details);
+            $this->assertArrayHasKey('Email', $details);
+            $this->assertArrayHasKey('LastLogin', $details);
+            $this->assertArrayHasKey('Subject', $details);
+
+            return new User($identity, $roles, $details);
+        };
+    }
 
     /** @test */
     public function can_get_authentication_request_uri(): void
@@ -42,7 +63,11 @@ class OneLoginServiceTest extends TestCase
                 ]
             )->willReturn(['state' => $state, 'nonce' => $nonce, 'url' => $uri]);
 
-        $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
+        $oneLoginService = new OneLoginService(
+            $apiClientProphecy->reveal(),
+            $this->userFactoryCallable,
+            $this->logger->reveal()
+        );
         $response        = $oneLoginService->authenticate('en', $redirect);
         $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
     }
@@ -83,15 +108,17 @@ class OneLoginServiceTest extends TestCase
                 'Birthday'  => '1990-01-01'
             ]);
 
-        $oneLoginService = new OneLoginService($apiClientProphecy->reveal());
+        $oneLoginService = new OneLoginService(
+            $apiClientProphecy->reveal(),
+            $this->userFactoryCallable,
+            $this->logger->reveal()
+        );
         $response        = $oneLoginService->callback($code, $state, $authCredentials);
-        $this->assertEquals([
-            'Id'        => 'fake-id',
-            'Identity'  => 'fake-sub-identity',
-            'Email'     => 'fake@email.com',
-            'LastLogin' => $lastLogin,
-            'Birthday'  => '1990-01-01'
-        ],
-        $response);
+
+        $this->assertInstanceOf(User::class, $response);
+        $this->assertEquals('fake-id', $response->getIdentity());
+        $this->assertEquals(new DateTime($lastLogin), $response->getDetail('lastLogin'));
+        $this->assertEquals('fake@email.com', $response->getDetail('email'));
+        $this->assertEquals('fake-sub-identity', $response->getDetail('subject'));
     }
 }
