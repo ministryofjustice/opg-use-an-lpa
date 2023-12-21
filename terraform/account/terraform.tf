@@ -23,11 +23,17 @@ terraform {
       source  = "PagerDuty/pagerduty"
       version = "~> 3.1.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0.0"
+    }
   }
 }
 
 variable "default_role" {
-  default = "opg-use-an-lpa-ci"
+  default     = "opg-use-an-lpa-ci"
+  type        = string
+  description = "The default role to assume for the AWS providers"
 }
 
 provider "aws" {
