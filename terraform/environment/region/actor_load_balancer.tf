@@ -1,3 +1,8 @@
+resource "aws_shield_application_layer_automatic_response" "actor" {
+  resource_arn = aws_lb.actor.arn
+  action       = "COUNT"
+}
+
 resource "aws_lb_target_group" "actor" {
   name                 = "${var.environment_name}-actor"
   port                 = 80
