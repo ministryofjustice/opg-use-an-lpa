@@ -13,7 +13,7 @@ services:
     environment:
       ULPA_USER: opg-use-an-lpa+test-user@digital.justice.gov.uk
       ULPA_PWORD: umlTest1
-      ULPA_URI: https://host.docker.internal:9042/
+      ULPA_URI: https://proxy:9042/
     volumes:
       - ./zap/report:/zap/report
 

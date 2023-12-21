@@ -137,6 +137,7 @@ unit_test_api_app:
 .PHONY: unit_test_api_app
 
 run_security_test:
+	$(TEST_COMPOSE) build zap
 	$(TEST_COMPOSE) run zap zap.sh -cmd -autorun /zap/zap-cfg.yml 
 
 enable_development_mode:

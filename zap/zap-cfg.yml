@@ -3,15 +3,24 @@ env:
   contexts:
   - name: "Use An LPA Basic Scan"
     urls:
-    - "${ULPA_URI}home"
-    includePaths: []
-    excludePaths: []
+    - "${ULPA_URI}login"
+    includePaths: 
+      - "${ULPA_URI}*"
+    excludePaths: 
+      - "https://www.gov.uk/*"
     authentication:
       method: "form"
       parameters:
          loginPageUrl: ${ULPA_URI}login
          loginRequestUrl: ${ULPA_URI}login
          loginRequestBody: "email={%username%}&password={%password%}"
+      verification:
+          method: "response"
+          loggedInRegex: "(Sign out)"
+          pollFrequency: 60
+          pollUnits: "requests"
+          pollUrl: ""
+          pollPostData: ""
     sessionManagement:
       method: "cookie"
       parameters: {}
@@ -50,13 +59,28 @@ env:
     progressToStdout: true
   vars: {}
 jobs:
-  - parameters:
+  - type: passiveScan-config           
+    parameters:
+      maxAlertsPerRule: 10            
+      scanOnlyInScope: true            
+      maxBodySizeInBytesToScan: 0  
+  - type: spider                       
+    parameters:
+  - type: passiveScan-wait             # Passive scan wait for the passive scanner to finish
+    parameters:
+      maxDuration: 5                   # Int: The max time to wait for the passive scanner, default: 0 unlimited
+  - type: activeScan                   # The active scanner - this actively attacks the target so should only be used with permission
+    parameters: 
+      maxScanDurationInMins: 1
+  - type: "report"    
+    name: "Sarif JSON"
+    parameters:
       template: "sarif-json"
-      reportDir: "/zap/report"
+      reportDir: "/zap/report/"
       reportFile: "SarifReport.json"
       reportTitle: "Sarif JSON"
       reportDescription: ""
-      displayReport: false
+    displayReport: false
     risks:
     - "info"
     - "low"
@@ -68,5 +92,27 @@ jobs:
     - "medium"
     - "high"
     - "confirmed"
-    name: "Sarif JSON"
-    type: "report"
+
+  - type: "report"    
+    name: "Markdown report"
+    parameters:
+      template: "traditional-md"
+      reportDir: "/zap/report/"
+      reportFile: "MDReport.json"
+      reportTitle: "Markdown report"
+      reportDescription: ""
+    displayReport: false
+    risks:
+    - "info"
+    - "low"
+    - "medium"
+    - "high"
+    confidences:
+    - "falsepositive"
+    - "low"
+    - "medium"
+    - "high"
+    - "confirmed"
+  
+  
+
